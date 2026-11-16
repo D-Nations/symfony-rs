@@ -1,0 +1,16 @@
+[package]
+name = "request-lab"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Independent consumer of the Symfony request compatibility crate"
+
+[dependencies]
+symfony-http-foundation = { path = "../../crates/http-foundation" }
+axum = "0.8.9"
+serde_json = { version = "1.0.154", features = ["preserve_order"] }
+tokio = { version = "1.54.1", features = ["rt-multi-thread", "macros", "net"] }
+
+[dev-dependencies]
+tower = { version = "0.5.3", features = ["util"] }
