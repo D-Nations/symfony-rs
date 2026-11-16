@@ -1,0 +1,758 @@
+[
+    {
+        "method": "GET",
+        "path": "\/",
+        "expected": {
+            "kind": "found",
+            "route": "root",
+            "bar": null
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/foo",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "POST",
+                "PUT",
+                "DELETE"
+            ]
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/foo\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/item\/rust-port",
+        "expected": {
+            "kind": "found",
+            "route": "item",
+            "bar": "rust-port"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/item\/a--b",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/with",
+        "expected": {
+            "kind": "redirect",
+            "route": "with",
+            "bar": null,
+            "path": "\/with\/"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/with\/",
+        "expected": {
+            "kind": "found",
+            "route": "with",
+            "bar": null
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/with\/\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/foo%3Abar",
+        "expected": {
+            "kind": "redirect",
+            "route": "colon",
+            "bar": null,
+            "path": "\/foo%3Abar\/"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/param\/bar%2523",
+        "expected": {
+            "kind": "found",
+            "route": "param",
+            "bar": "bar%23"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/param\/a%2Fb",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/fallback\/foo",
+        "expected": {
+            "kind": "redirect",
+            "route": "static",
+            "bar": null,
+            "path": "\/fallback\/foo\/"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/fallback\/foo\/",
+        "expected": {
+            "kind": "found",
+            "route": "static",
+            "bar": null
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/head\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "\/missing",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/",
+        "expected": {
+            "kind": "found",
+            "route": "root",
+            "bar": null
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/foo",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "POST",
+                "PUT",
+                "DELETE"
+            ]
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/foo\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/item\/rust-port",
+        "expected": {
+            "kind": "found",
+            "route": "item",
+            "bar": "rust-port"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/item\/a--b",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/with",
+        "expected": {
+            "kind": "redirect",
+            "route": "with",
+            "bar": null,
+            "path": "\/with\/"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/with\/",
+        "expected": {
+            "kind": "found",
+            "route": "with",
+            "bar": null
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/with\/\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/foo%3Abar",
+        "expected": {
+            "kind": "redirect",
+            "route": "colon",
+            "bar": null,
+            "path": "\/foo%3Abar\/"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/param\/bar%2523",
+        "expected": {
+            "kind": "found",
+            "route": "param",
+            "bar": "bar%23"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/param\/a%2Fb",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/fallback\/foo",
+        "expected": {
+            "kind": "redirect",
+            "route": "static",
+            "bar": null,
+            "path": "\/fallback\/foo\/"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/fallback\/foo\/",
+        "expected": {
+            "kind": "found",
+            "route": "static",
+            "bar": null
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/head\/",
+        "expected": {
+            "kind": "redirect",
+            "route": "head",
+            "bar": null,
+            "path": "\/head"
+        }
+    },
+    {
+        "method": "HEAD",
+        "path": "\/missing",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/",
+        "expected": {
+            "kind": "found",
+            "route": "root",
+            "bar": null
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/foo",
+        "expected": {
+            "kind": "found",
+            "route": "foo",
+            "bar": null
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/foo\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/item\/rust-port",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/item\/a--b",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/with",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/with\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/with\/\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/foo%3Abar",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/param\/bar%2523",
+        "expected": {
+            "kind": "found",
+            "route": "param",
+            "bar": "bar%23"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/param\/a%2Fb",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/fallback\/foo",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/fallback\/foo\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/head\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "POST",
+        "path": "\/missing",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/",
+        "expected": {
+            "kind": "found",
+            "route": "root",
+            "bar": null
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/foo",
+        "expected": {
+            "kind": "found",
+            "route": "foo2",
+            "bar": null
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/foo\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/item\/rust-port",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/item\/a--b",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/with",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/with\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/with\/\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/foo%3Abar",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/param\/bar%2523",
+        "expected": {
+            "kind": "found",
+            "route": "param",
+            "bar": "bar%23"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/param\/a%2Fb",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/fallback\/foo",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/fallback\/foo\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/head\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "PUT",
+        "path": "\/missing",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/",
+        "expected": {
+            "kind": "found",
+            "route": "root",
+            "bar": null
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/foo",
+        "expected": {
+            "kind": "found",
+            "route": "foo2",
+            "bar": null
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/foo\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/item\/rust-port",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/item\/a--b",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/with",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/with\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/with\/\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/foo%3Abar",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/param\/bar%2523",
+        "expected": {
+            "kind": "found",
+            "route": "param",
+            "bar": "bar%23"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/param\/a%2Fb",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/fallback\/foo",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/fallback\/foo\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/head\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "DELETE",
+        "path": "\/missing",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/",
+        "expected": {
+            "kind": "found",
+            "route": "root",
+            "bar": null
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/foo",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "POST",
+                "PUT",
+                "DELETE"
+            ]
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/foo\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/item\/rust-port",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/item\/a--b",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/with",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/with\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/with\/\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/foo%3Abar",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/param\/bar%2523",
+        "expected": {
+            "kind": "found",
+            "route": "param",
+            "bar": "bar%23"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/param\/a%2Fb",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/fallback\/foo",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/fallback\/foo\/",
+        "expected": {
+            "kind": "method_not_allowed",
+            "allow": [
+                "GET"
+            ]
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/head\/",
+        "expected": {
+            "kind": "not_found"
+        }
+    },
+    {
+        "method": "OPTIONS",
+        "path": "\/missing",
+        "expected": {
+            "kind": "not_found"
+        }
+    }
+]

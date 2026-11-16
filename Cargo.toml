@@ -1,0 +1,13 @@
+[package]
+name = "symfony-routing"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Typed subset of Symfony routing and URL generation"
+
+[dependencies]
+symfony-http-foundation = { path = "../http-foundation" }
+
+[dev-dependencies]
+serde_json = "1.0.154"
