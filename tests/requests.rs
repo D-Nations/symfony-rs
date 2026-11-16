@@ -111,3 +111,61 @@ async fn scalar_errors_and_fixed_redirects_are_visible_over_http() -> TestResult
     assert_eq!(response.headers()[header::LOCATION], "/inspect");
     Ok(())
 }
+
+#[tokio::test]
+async fn shared_router_checks_requirements_methods_and_slash_redirects() -> TestResult {
+    for (method, path, status, location, allow) in [
+        (
+            "GET",
+            "/inspect/?a=1",
+            StatusCode::MOVED_PERMANENTLY,
+            Some("/inspect?a=1"),
+            None,
+        ),
+        (
+            "POST",
+            "/error",
+            StatusCode::METHOD_NOT_ALLOWED,
+            None,
+            Some("GET"),
+        ),
+        ("GET", "/item/42", StatusCode::OK, None, None),
+        ("GET", "/item/0", StatusCode::NOT_FOUND, None, None),
+        (
+            "GET",
+            "/item/9223372036854775808",
+            StatusCode::NOT_FOUND,
+            None,
+            None,
+        ),
+        ("HEAD", "/item/42", StatusCode::OK, None, None),
+    ] {
+        let response = request_lab::router()
+            .oneshot(
+                Request::builder()
+                    .method(method)
+                    .uri(path)
+                    .body(Body::empty())?,
+            )
+            .await?;
+        assert_eq!(response.status(), status, "{method} {path}");
+        assert_eq!(
+            response
+                .headers()
+                .get(header::LOCATION)
+                .and_then(|v| v.to_str().ok()),
+            location
+        );
+        assert_eq!(
+            response
+                .headers()
+                .get(header::ALLOW)
+                .and_then(|v| v.to_str().ok()),
+            allow
+        );
+        if method == "HEAD" {
+            assert!(to_bytes(response.into_body(), 1024).await?.is_empty());
+        }
+    }
+    Ok(())
+}

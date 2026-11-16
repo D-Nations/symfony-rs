@@ -9,9 +9,9 @@ use axum::{
     extract::Request,
     http::{StatusCode, header},
     response::{IntoResponse, Redirect, Response},
-    routing::{any, get},
 };
 use serde_json::{Map, Value, json};
+use std::sync::LazyLock;
 use symfony_http_foundation::{
     POST_MAX_SIZE, accept_language,
     cookies::Cookies,
@@ -19,11 +19,14 @@ use symfony_http_foundation::{
     query::{Query, QueryValue},
     scheme::Scheme,
 };
+use symfony_routing::{Definition, Match, Requirement, RouteCollection, Segment, Target};
 
+#[derive(Clone, Copy)]
 enum Route {
     Inspect,
     Redirect,
     Error,
+    Item,
 }
 
 impl Route {
@@ -32,26 +35,81 @@ impl Route {
             Self::Inspect => "/inspect",
             Self::Redirect => "/redirect",
             Self::Error => "/error",
+            Self::Item => "/item",
         }
     }
 }
 
+impl Target for Route {
+    fn methods(&self) -> Option<&'static [&'static str]> {
+        match self {
+            Self::Inspect => None,
+            _ => Some(&["GET"]),
+        }
+    }
+}
+
+static ROUTES: LazyLock<RouteCollection<Route>> = LazyLock::new(|| {
+    let mut routes = RouteCollection::default();
+    for route in [Route::Inspect, Route::Redirect, Route::Error] {
+        routes.add(Definition::new(
+            vec![Segment::Literal(route.path().trim_start_matches('/'))],
+            move |_| Some(route),
+        ));
+    }
+    routes.add(Definition::new(
+        vec![
+            Segment::Literal(Route::Item.path().trim_start_matches('/')),
+            Segment::Parameter("id", Requirement::PositiveInt64),
+        ],
+        |_| Some(Route::Item),
+    ));
+    routes
+});
+
 pub fn router() -> Router {
-    Router::new()
-        .route(Route::Inspect.path(), any(inspect))
-        .route(
-            Route::Redirect.path(),
-            get(|| async { Redirect::to(Route::Inspect.path()) }),
+    Router::new().fallback(dispatch)
+}
+
+async fn dispatch(request: Request) -> Response {
+    let head = request.method() == axum::http::Method::HEAD;
+    let mut response = match ROUTES.match_request(request.method().as_str(), request.uri().path()) {
+        Match::Found(Route::Inspect) => inspect(request).await,
+        Match::Found(Route::Redirect) => Redirect::to(Route::Inspect.path()).into_response(),
+        Match::Found(Route::Error) => (
+            StatusCode::BAD_REQUEST,
+            Json(json!({"error": "Example bad request"})),
         )
-        .route(
-            Route::Error.path(),
-            get(|| async {
-                (
-                    StatusCode::BAD_REQUEST,
-                    Json(json!({"error": "Example bad request"})),
+            .into_response(),
+        Match::Found(Route::Item) => Json(json!({"path": request.uri().path()})).into_response(),
+        Match::MethodNotAllowed { allow } => (
+            StatusCode::METHOD_NOT_ALLOWED,
+            [(header::ALLOW, allow.join(", "))],
+        )
+            .into_response(),
+        Match::TrailingSlashRedirect { mut path, .. } => {
+            if let Some(query) = request.uri().query() {
+                path.push('?');
+                path.push_str(query);
+            }
+            match axum::http::HeaderValue::from_str(&path) {
+                Ok(location) => (
+                    StatusCode::MOVED_PERMANENTLY,
+                    [(header::LOCATION, location)],
                 )
-            }),
-        )
+                    .into_response(),
+                Err(error) => {
+                    eprintln!("request-lab: invalid redirect header: {error}");
+                    StatusCode::INTERNAL_SERVER_ERROR.into_response()
+                }
+            }
+        }
+        Match::NotFound => StatusCode::NOT_FOUND.into_response(),
+    };
+    if head {
+        *response.body_mut() = axum::body::Body::empty();
+    }
+    response
 }
 
 fn fields(entries: &[(String, QueryValue)]) -> Value {

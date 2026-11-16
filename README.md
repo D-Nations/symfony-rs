@@ -18,6 +18,12 @@ The default address is `127.0.0.1:8012`. Override it with
 | `/inspect?scalar[]=x` | A 400 response demonstrating `InputBag::get()` rejecting an array |
 | `/redirect` | A fixed 303 redirect to `/inspect` |
 | `/error` | A fixed 400 JSON error |
+| `/item/{id}` | A GET/HEAD route using the shared positive signed 64-bit requirement |
+
+Route dispatch uses the same private routing crate as the demo. GET/HEAD
+slash variants redirect with 301 and preserve the query; method refusals
+send 405 with Allow. HEAD responses have empty bodies. `/item/0` and ids
+outside signed 64-bit range return 404.
 
 Examples:
 
