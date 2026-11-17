@@ -25,6 +25,12 @@ slash variants redirect with 301 and preserve the query; method refusals
 send 405 with Allow. HEAD responses have empty bodies. `/item/0` and ids
 outside signed 64-bit range return 404.
 
+The shared HttpKernel subset surrounds resolution and invocation. Its
+application-owned controller target is `Match<Route>`; an exception listener
+turns the `/error` controller's explicit failure into the same 400 JSON response
+as before. The demo independently uses the kernel around Axum's `Next` target
+to apply its existing security headers to dynamic and static responses.
+
 Examples:
 
 ```sh

@@ -19,6 +19,7 @@ use symfony_http_foundation::{
     query::{Query, QueryValue},
     scheme::Scheme,
 };
+use symfony_http_kernel::{Exception, ExceptionEvent, Kernel, Listener};
 use symfony_routing::{Definition, Match, Requirement, RouteCollection, Segment, Target};
 
 #[derive(Clone, Copy)]
@@ -73,14 +74,53 @@ pub fn router() -> Router {
 
 async fn dispatch(request: Request) -> Response {
     let head = request.method() == axum::http::Method::HEAD;
-    let mut response = match ROUTES.match_request(request.method().as_str(), request.uri().path()) {
+    let mut response = match KERNEL
+        .handle(
+            request,
+            |request| Ok(ROUTES.match_request(request.method().as_str(), request.uri().path())),
+            execute,
+        )
+        .await
+    {
+        Ok(response) => response,
+        Err(error) => {
+            eprintln!("request-lab: unhandled kernel error: {error}");
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
+    };
+    if head {
+        *response.body_mut() = axum::body::Body::empty();
+    }
+    response
+}
+
+static KERNEL: LazyLock<Kernel<Match<Route>>> = LazyLock::new(|| {
+    let mut kernel = Kernel::default();
+    kernel.add_listener(0, LabErrors);
+    kernel
+});
+
+struct LabErrors;
+
+impl Listener<Match<Route>> for LabErrors {
+    fn exception(&self, event: &mut ExceptionEvent<'_>) -> Result<(), Exception> {
+        // This lab deliberately exposes its fixed example error. Applications
+        // should log internal failures and use their own public error pages.
+        event.set_response(Json(json!({"error": event.exception.detail})).into_response());
+        Ok(())
+    }
+}
+
+async fn execute(request: Request, route: Match<Route>) -> Result<Response, Exception> {
+    Ok(match route {
         Match::Found(Route::Inspect) => inspect(request).await,
         Match::Found(Route::Redirect) => Redirect::to(Route::Inspect.path()).into_response(),
-        Match::Found(Route::Error) => (
-            StatusCode::BAD_REQUEST,
-            Json(json!({"error": "Example bad request"})),
-        )
-            .into_response(),
+        Match::Found(Route::Error) => {
+            return Err(Exception::new(
+                StatusCode::BAD_REQUEST,
+                "Example bad request",
+            ));
+        }
         Match::Found(Route::Item) => Json(json!({"path": request.uri().path()})).into_response(),
         Match::MethodNotAllowed { allow } => (
             StatusCode::METHOD_NOT_ALLOWED,
@@ -105,11 +145,7 @@ async fn dispatch(request: Request) -> Response {
             }
         }
         Match::NotFound => StatusCode::NOT_FOUND.into_response(),
-    };
-    if head {
-        *response.body_mut() = axum::body::Body::empty();
-    }
-    response
+    })
 }
 
 fn fields(entries: &[(String, QueryValue)]) -> Value {
