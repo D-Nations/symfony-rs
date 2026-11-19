@@ -1,15 +1,17 @@
 # symfony-rs plan
 
-Copied from symfony-demo-rs `docs/runtime-plan.md` at the start; this file
-is now the maintained version. Paths in "Existing demo code to promote"
-are in symfony-demo-rs.
+This is the maintained runtime plan. The demo keeps a dated snapshot in
+`../symfony-demo-rs/docs/runtime-plan.md`. Paths in "Existing demo code to
+promote" are in symfony-demo-rs. Dependency staging was revised with the
+owner's approval on November 19, 2026; new gates remain pending until proven.
 
 ## From the Symfony Demo port to a Rust Symfony runtime
 
 ## Context
 
 `symfony-demo-rs` reproduces symfony/demo (`f42980c`, Symfony 8.1.10, PHP 8.4)
-byte for byte, phases 1–13 done. Phases 11–13 started pulling reusable parts
+within its documented accepted differences; phases 1–13 are done.
+Phases 11–13 started pulling reusable parts
 out into private workspace crates (`crates/http-foundation`, `crates/routing`,
 `crates/http-kernel`), each a documented *subset* with upstream tests and
 PHP-recorded vectors.
@@ -86,8 +88,11 @@ upstream tests under their original names.
 ExpressionLanguage need PHP semantics: loose `==`, truthiness, string
 conversion of floats, `.` attribute lookup (`getX`/`isX`/`hasX`/property/key).
 Typed Rust structs get a `#[derive(Attributes)]` fast path. Untyped values use
-php2rust's `php-rt` `Value`, which already reproduces those semantics against
-real PHP (decision 3).
+this runtime's `php-value`, shared by Yaml, Config, DI and Twig (owner's
+decision 3). Its PHP 8.4 behavior is checked against oracle vectors; missing
+semantics stay explicit. The early converter fixture must exercise the
+boundary with php2rust's values, including object identity and ownership
+across asynchronous calls.
 
 **Bundles.** A `Bundle` trait: typed config tree (ported `Config`
 TreeBuilder rules, so defaults and error messages match), container
@@ -124,19 +129,29 @@ PLAN.md "Proposed: Symfony bundles as Rust modules".
 4. Record vectors from the pinned PHP for anything tests don't cover (parsers,
    formatters, error messages). For parsers, also run cargo-fuzz with the
    corpus replayed against the oracle (php-rust's approach, run locally).
-5. Done when: no `pending` rows, vectors pass, `cargo fmt --check` / `clippy
-   -D warnings` / `cargo test` pass, the demo's 92 pages + 127 live cases
-   still match, and the README contract table is updated.
+5. A complete package is done when: no `pending` rows, vectors pass,
+   `cargo fmt --check` / `clippy -D warnings` / `cargo test` pass, the demo's
+   92 pages + 127 live cases still match within its documented accepted
+   differences, and the README contract table is updated.
 
 CI gates the manifests: a component marked done with `pending` rows fails,
 and so does a Rust test claiming an upstream name that isn't in the manifest.
 
+A bounded stage can finish while its package remains partial: name the PHP
+files and upstream tests in that stage, pass all of them, and list every
+deferred integration with its dependency and destination stage below. Those
+manifest rows stay `pending`; waiting for another component is not an `n/a`
+reason. Only complete packages enter `parity/done.txt`. Test-method counts
+describe tracked coverage, not a percentage of framework compatibility.
+
 ## Upstream tracking and security
 
-- **Pins:** Symfony `v8.1.10` (monorepo tag, so tests are included; the
-  vendored dist packages have none), Twig `v3.30.0`, Doctrine ORM `3.7.5` /
-  DBAL `4.5.0`, UX `3.6.0`, taken from the demo's `composer.lock`.
-  `upstream/fetch.sh` clones them read-only into an ignored directory.
+- **Pins:** each package's exact version and reference from the demo's
+  `composer.lock`, recorded in `parity/packages.tsv`. Use the split package
+  repositories with their tests: the Symfony monorepo `v8.1.10` tag differs
+  from 24 installed packages (M0 finding below).
+  `scripts/fetch-upstream.sh` clones them into ignored `upstream/`; agents
+  read those checkouts without editing them.
 - **Source map:** module headers → generated `parity/sources.tsv` (Rust
   module ↔ PHP file ↔ pinned commit).
 - **Weekly scheduled CI job:** diff the pinned tag against the newest patch
@@ -152,9 +167,90 @@ and so does a Rust test claiming an upstream name that isn't in the manifest.
 
 ## Milestones
 
-Each milestone ends with the checks above, a log in
-`docs/milestones/NN-name/README.md`, and fresh demo comparisons. Order is
-by dependency. Within a milestone, components go one at a time.
+M0–M8 identify areas of work, not an instruction to finish every package
+in one area before entering the next. Execute bounded stages in dependency
+order, one PHP file and its tests at a time. Each stage ends with the checks
+above, a log under `docs/milestones/`, and fresh comparisons for the apps it
+affects. The demo's original phase order and comparison rules stay in force.
+
+### Delivery order and deferred integrations
+
+| Stage | Prerequisites | Exit evidence / deferred work |
+|---|---|---|
+| M1-A: foundation cores | M0 | Finish the current Config Definition/Builder step with its tests and oracle cases. Yaml and Dotenv cores remain partial packages until their commands pass. |
+| M1-D: early conversion proof and second-app inventory | M1-A; M2 request rewrite before linking request crates | Provisional converter contract and executable fixture; pinned second app and ranked usage inventory. Complete before broad M2 expansion; this is the next scheduling priority after the current Config step. |
+| M1-B: minimum Console and process support | Existing demo Console behavior; core contracts | Extract the command infrastructure needed for Yaml lint and Dotenv commands; add required Process behavior. Run the 11 Yaml and 19 Dotenv command tests. The rest of Console remains M7 work. |
+| M1-C: Config loaders and XML | Config builders/dumpers, Filesystem/Finder; XML gates X1–X3 | Close resources, loaders and XmlUtils by supported loader; do not gate non-XML Config work on unfinished XML. |
+| M2-A: HTTP behavior cores | Required M1 cores; request rewrite gate | Request/response, matcher/generator and lifecycle cores with explicit contracts. Payload mapping remains pending for Serializer/Validator. |
+| M3-A: container and kernel integration | Config loaders actually used, M2-A, minimum Console | DI compiler and EventDispatcher DI passes / AsEventListener (26 pending tests); debug commands using the available Console subset. |
+| M4-A/B: Twig language and runtime | php-value; existing HTTP adapters for initial fixtures | Twig gates T1–T2. Bridge functions wait for their named providers in M5/M6. |
+| M5-A: application providers | Corresponding M1–M4 cores | Serializer/Validator then HTTP payload mapping; Form/Translation/Security then Twig integrations. Entity-backed integrations wait for M6. |
+| M6-A/B/C: Doctrine | php-value and the container integration each stage uses | Doctrine gates D1–D3; then close entity providers, EntityType, UniqueEntity and EntityValueResolver. |
+| M4-C / M5-B: demo framework replacement | All providers required by the original Twig templates and demo flows | Twig gate T3 and the M5 demo acceptance below; run after the relevant M6 integrations when required. |
+| M7 / M8: remaining integration and API stabilization | Accepted earlier stages | Extend the second app's flows and converter corpus; stabilize the API already exercised since M1-D. |
+
+Before starting each stage, record its exact upstream test/file set and any
+new prerequisite exposed by implementation. Additional dependencies change
+the stage order explicitly; they never justify silently dropping coverage.
+
+### Early conversion proof and second application (M1-D)
+
+- Write `docs/converter-contract.md` with a provisional, versioned Rust API:
+  service construction/injection, typed attributes and `php-value`
+  conversion, request/response and error boundaries, and ownership plus
+  `Send + Sync` requirements across asynchronous calls. Track API changes
+  with the fixture before promising a stable public interface at M8.
+- In php2rust, the converter remains its own workstream. Pair a tiny pinned
+  PHP Symfony app with a Rust fixture in this runtime: an injected service,
+  scalar/array/object values, one successful request and one handled error.
+  Start with an explicitly labelled hand-authored generated-code-shaped
+  fixture if converter support is unavailable; that proves the runtime
+  interface only. The conversion gate remains open until symfony2rust
+  actually emits and builds the fixture without manual edits.
+- Record PHP responses and relevant side effects, build the Rust fixture,
+  and compare them. Repeat from an empty working directory in Linux CI.
+  Extend this fixture at DI, Twig, Form/Security and Doctrine stages; do not
+  wait until M8 to discover a converter/runtime mismatch.
+- Select and pin a second open-source Symfony app before broad M2 work.
+  Check its licence and whether its dependencies fit the chosen Symfony
+  version line. Record routes, package/API use, templates, configuration,
+  persistence, queues and external integrations in
+  `docs/acceptance/second-app.md`. Selection is pending; neither the Fast
+  Track guestbook nor wallabag is adopted by this plan revision.
+- Rank component work by the demo plus that inventory: required for the
+  next recorded workflow, required later, or not yet demanded. Capture a
+  small initial workflow as an oracle, then add flows as providers arrive.
+  Distinguish fixtures recorded from PHP, manually ported Rust flows and
+  genuinely converted flows. M7 expands acceptance to async/integration
+  scenarios rather than introducing the second app for the first time.
+
+### Request implementation provenance gate (before M1-D HTTP linkage)
+
+Rewrite `multipart.rs`, `query.rs` and `cookies.rs` from PHP documentation
+and recorded observations, with no php-src-derived implementation, as the
+owner required in decision 8. Retain and pass the existing 156 multipart
+vectors, query/cookie tests and demo request comparisons; add vectors for
+uncovered behavior. Record the replacement sources and provenance review
+in the stage log. This gate precedes linking these request crates into the
+converter fixture and is required before M2-A acceptance or any runtime
+release. It is still pending; existing demo evidence is not a claim that
+the rewrite has happened.
+
+### XML acceptance gates (M1-C)
+
+- **X1, parser:** enumerate the DOM operations XmlUtils needs. Pass recorded
+  valid/malformed XML cases including namespaces, encodings and diagnostics
+  (text, level, code, line and column). Test external entity/DTD rejection
+  without network or filesystem fetches, and bounded depth/entity expansion.
+- **X2, schema validation:** inventory the XSD features used by the pinned
+  DI, Routing and XLIFF 1.2/2.0 schemas. Record valid and invalid documents
+  against each in the oracle. Unsupported features fail with a location;
+  they must never silently bypass validation. Parser acceptance alone does
+  not claim XSD support.
+- **X3, consumers:** port XmlUtils tests, then enable each XML/XLIFF loader
+  only after its schema and error-path comparisons pass. Keep the approved
+  hand-written `php-dom` approach; record stage results and resource limits
+  before broadening it. No general libxml compatibility is claimed.
 
 ### M0: New repository and parity tooling (no new behaviour)
 - Create the private repo (owner confirms at that moment, per AGENTS.md).
@@ -172,7 +268,7 @@ by dependency. Within a milestone, components go one at a time.
 - Backfill manifests for http-foundation, routing and http-kernel. Their
   `pending` rows become the M2 work list.
 
-### M1: Foundations (self-contained, easy upstream tests)
+### M1: Foundations (cores, then dependency-gated integrations)
 Contracts (service/event/translation/cache/http-client traits),
 EventDispatcher (full, generalizing http-kernel's dispatcher), Yaml (full
 port; saphyr/yaml-rust2 implement YAML 1.2, not Symfony's dialect), Dotenv
@@ -182,9 +278,12 @@ Uid (wrap `uuid`/`ulid` crates, Symfony's formats), Stopwatch (needed by
 EventDispatcher's Debug classes and the profiler), Filesystem, Finder (walker
 crate + ported filters/ordering), OptionsResolver, PasswordHasher (bcrypt
 already in; add RustCrypto argon2/pbkdf2; "migrate from" logic), Process.
-Also the Attributes derive and the php-rt integration (decision 3).
+Also the Attributes derive and shared `php-value` integration (decision 3).
+Console support needed by foundation commands is pulled forward in M1-B;
+remaining Console features stay in M7. Package completion follows the
+delivery table, including later DI integrations.
 
-### M2: HTTP core complete
+### M2: HTTP cores and later provider integrations
 HttpFoundation (Request/Response/HeaderBag/ParameterBag/Cookie/
 JsonResponse/StreamedResponse/BinaryFileResponse, RequestStack, sessions with
 file/PDO/Redis handlers and PHP's session serialization as data only, so
@@ -194,8 +293,11 @@ port; evalexpr has another grammar), Routing (PCRE requirements (decision
 full UrlGenerator), HttpKernel (sub-requests, argument and value resolvers
 incl. `MapQueryString`/`MapRequestPayload`, `kernel.view`,
 finish/terminate, fragments/ESI, HttpCache), ErrorHandler renderers and
-FlattenException (no PHP error-hook parts). Acceptance: request-lab and the
-demo's kernel glue run on the full crates.
+FlattenException (no PHP error-hook parts). M2-A acceptance: request-lab and
+the demo's kernel glue use the accepted core contracts and pass fresh
+comparisons. MapQueryString/MapRequestPayload tests requiring Serializer or
+Validator stay pending until M5-A. XML loaders require X3; complete-package
+claims wait for every deferred integration.
 
 ### M3: DependencyInjection, Kernel, FrameworkBundle core
 DI as a build-time compiler: definitions, parameters, `%env()%` processors
@@ -210,6 +312,9 @@ interface symfony2rust reads. Acceptance: the demo's services are wired by the
 container, and those `debug:*` JSON outputs match real Symfony's for the demo
 (normalized).
 
+M3-A closes EventDispatcher's DI integrations and uses the Console subset
+from M1-B for debug commands; it does not require all of M7's Console work.
+
 ### M4: Twig (build-time compiler)
 Port Twig 3.30's Lexer, TokenStream, Parser, token parsers, Node tree and
 operator precedence. The compiler emits Rust (quote + prettyplease, as
@@ -220,9 +325,21 @@ resolved from the compiled registry), whitespace control, sandbox later.
 Twig's `Fixtures/*.test` files are data-driven and port almost directly; add
 them to the manifest. TwigBridge (path, url, asset, csrf, trans, is_granted,
 form functions), TwigBundle, twig extras (intl, markdown, html, string).
-**Acceptance:** the demo renders the original `.twig` files unchanged;
-Askama is removed; the README's "whitespace between tags" difference and its
-`compare/diff.sh` normalization are deleted, and all 92 pages match.
+Acceptance is staged:
+
+- **T1, language/compiler:** lexer/parser/precedence and Rust emission pass
+  their upstream fixtures, including located failures for unsupported input.
+- **T2, runtime:** inheritance, macros, includes, escaping, whitespace,
+  dynamic values and extension calls pass the supported upstream fixtures.
+  A small compiled-template application exercises the converter contract.
+- **T3, bridges and demo:** wait for each Form, Translation, Security,
+  Asset and Doctrine provider actually used. The demo renders the original
+  `.twig` files unchanged; Askama is removed; the README's "whitespace
+  between tags" difference and its `compare/diff.sh` normalization are
+  deleted, and all 92 pages match.
+
+T1/T2 completion does not mark Twig or TwigBridge complete; unimplemented
+extensions and sandbox support retain pending coverage until accepted.
 
 ### M5: Application components (the demo's remaining stack, made complete)
 Translation (all loaders at build time, intl-icu domains, legacy `|`
@@ -241,9 +358,10 @@ Cache (array/filesystem/Redis/tag-aware, `get()` stampede protection;
 scoping, MockHttpClient), Serializer + PropertyAccess/PropertyInfo/TypeInfo
 (metadata from derives), Monolog bridge (line format parity only if needed),
 UX (StimulusBundle, TwigComponent, LiveComponent complete, Icons, Turbo).
-Acceptance: the demo's `src/` holds only the PHP app's own code (controllers,
-entities, forms, commands, subscribers, Twig extensions). Every framework part
-comes from crates.
+M5-A accepts providers and their integrations one at a time. M5-B acceptance,
+after the demo's required M6 integrations: the demo's `src/` holds only the
+PHP app's own code (controllers, entities, forms, commands, subscribers,
+Twig extensions). Every framework part comes from crates.
 
 ### M6: Doctrine
 Collections, EventManager, Persistence, Inflector, DBAL (SQLite, PostgreSQL,
@@ -255,7 +373,19 @@ Migrations, DoctrineBundle, DoctrineBridge (entity user provider,
 UniqueEntity, EntityValueResolver, EntityType), Fixtures. SeaORM/Diesel stay
 rejected, for the same reasons the demo rejected them and because they lack
 unit-of-work semantics. Acceptance: the demo's repositories run on the ORM,
-and the database-diff recording from phase 9 is identical.
+and the database-diff recording from phase 9 is identical. Stage it as:
+
+- **D1, DBAL:** accept SQLite types, schema/query behavior and transactions
+  against the oracle first. PostgreSQL and MySQL/MariaDB remain committed
+  targets, each requiring its own database-backed comparison suite before
+  that platform is claimed supported.
+- **D2, ORM:** record and pass identity-map, UnitOfWork, hydration, lazy
+  association, DQL, pagination, rollback and lifecycle-event scenarios.
+  Define the allowed build-time DQL inputs and located refusals explicitly.
+- **D3, application integration:** enable DoctrineBundle/Bridge, migrations
+  and fixtures as their tests pass; close deferred M5 entity integrations,
+  run the demo database recording, and replay the second app's relevant
+  persistence flows. DBAL completion alone does not claim ORM parity.
 
 ### M7: Async and integration
 Messenger (buses, middleware, retries, failure transport; transports
@@ -265,17 +395,19 @@ migration), Scheduler (cron rules from dragonmantank/cron-expression),
 Lock, Semaphore, RateLimiter (ported algorithms; governor uses another),
 Workflow, Notifier (core + the most-used bridges, by client demand),
 Webhook/RemoteEvent, Console complete (QuestionHelper, ProgressBar, etc.).
-Acceptance: a second open-source Symfony app that uses these, run as an
-oracle only (candidates chosen at M7 start after a licence check, e.g. the
-"Fast Track" guestbook, wallabag).
+Acceptance: extend the second app selected in M1-D with recorded async and
+integration workflows that exercise the components being accepted. The PHP
+copy runs as an oracle only. Finish remaining Console behavior and close
+its pending tests; command infrastructure was introduced in M1-B.
 
 ### M8: Test tooling and the symfony2rust contract
 BrowserKit, DomCrawler, CssSelector (CSS→XPath semantics; evaluate
 `scraper`/`selectors` first), FrameworkBundle's KernelBrowser and
 `WebTestCase` assertions, so converted client apps keep their functional
-tests. Write the stable API that generated code may use (versioned and
-semver-checked). Add a fixture corpus that symfony2rust (in php2rust) builds
-against. The converter itself is php2rust's work, not this plan's.
+tests. Stabilize and semver-check the generated-code API first exercised in
+M1-D. Expand its fixture corpus, requiring actual symfony2rust output to
+build without manual fixes and pass the recorded workflows. The converter
+itself remains php2rust's workstream.
 
 **Out of scope:** WebProfilerBundle, DebugBundle/VarDumper (beyond a minimal
 `dump()`), MakerBundle, Flex, PHPUnit bridge, polyfills, Runtime (replaced by
@@ -289,11 +421,11 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
 2. **Twig approach.** With no usable port, recommended: the build-time
    compiler (M4). Alternative: MiniJinja + a Twig compatibility layer
    (faster to start, but Jinja2 semantics and run-time template parsing).
-3. **PHP value semantics.** Recommended: depend on php2rust's `php-rt` by
-   pinned git rev for the dynamic layers, rather than writing a second copy
-   of PHP's type juggling. Needs a line in php2rust's `docs/approach.md`:
-   symfony2rust's target runtime contains MIT/BSD-derived Symfony, Twig and
-   Doctrine code (php2rust's rule bans copying it into *converter* crates).
+3. **PHP value semantics.** Use symfony-rs's shared `php-value` layer. The
+   original recommendation to depend directly on php2rust's `php-rt` was
+   superseded by the owner's decision below. Document the runtime boundary
+   in php2rust's approach: converted apps link the MIT/BSD-derived Symfony,
+   Twig and Doctrine runtime; converter crates retain their own policy.
 
    **Owner, November 19 (at the Yaml start):** symfony-rs owns the value
    layer. A new `php-value` crate holds PHP's values (null, bool, int,
@@ -322,20 +454,17 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
 8. **php-src-derived code** (found in M0). `symfony-http-foundation`'s
    `multipart.rs` ports `main/rfc1867.c` and `query.rs`/`cookies.rs` follow
    `main/php_variables.c` of PHP 8.4.27, released under the PHP License
-   3.01. php2rust's `docs/approach.md` allows php-src-derived code only from
-   BSD-3-Clause source. Recommended: before symfony2rust links this crate,
-   either re-derive those modules from the BSD-3-Clause main branch (same
-   functions, behaviour re-checked against the 156 recorded vectors) or
-   record an explicit exception in php2rust. Nothing changes until the owner
-   decides.
+   3.01. The initial alternatives (BSD-3-Clause source or a policy exception)
+   were superseded by the owner's decision below; neither is the chosen
+   implementation path.
 
    **Owner, November 19:** no PHP source code at all in the rewritten
    projects, under any licence, including php-src's BSD-3-Clause main
    branch. Behaviour comes only from running PHP (in containers) and from
    documentation. So `multipart.rs`, `query.rs` and `cookies.rs` must be
-   rewritten from their recorded vectors without php-src (scheduled with
-   HttpFoundation in M2, or earlier if the owner prefers); where PHP's
-   behaviour cannot be matched that way, the difference is recorded.
+   rewritten from their recorded vectors without php-src (the explicit
+   provenance gate now precedes M1-D HTTP linkage and M2-A acceptance).
+   Where PHP's behaviour cannot be matched that way, the difference is recorded.
 
 9. **XML (ext-dom / libxml).** Config's `Util/XmlUtils.php` (and through
    it the DI and Routing XML loaders, Translation's XLIFF loader, Validator
@@ -421,6 +550,13 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
 
 ## M1 progress
 
+**Scheduling adjustment, November 19 (owner approved):** finish the current
+Config Definition/Builder step, then establish the M1-D converter contract
+and second-app inventory, doing the request rewrite before the HTTP fixture
+links those crates. Use the delivery table for subsequent prerequisites.
+These new gates are pending; this plan edit does not mark implementation,
+conversion, XML validation or fresh comparisons complete.
+
 Stack rows (searched November 19):
 
 | Component | Options compared | Choice | Reason |
@@ -494,18 +630,27 @@ Stack rows (searched November 19):
 
 ## Verification
 
-- Per component: manifest has no `pending` rows (CI-enforced); upstream tests
-  under their original names pass; PHP-recorded vectors pass; fuzz corpus
+- Per complete package: manifest has no `pending` rows (CI-enforced);
+  upstream tests under their original names pass; PHP-recorded vectors pass; fuzz corpus
   replay against the oracle shows no differences.
+- Per bounded stage: all named files/tests and vectors pass; deferred
+  integrations retain `pending` rows, dependencies and destination stages.
+  A stage exit never overrides the complete-package CI gate.
 - Workspace: `cargo fmt --check`, `cargo clippy --all-targets -- -D
   warnings`, `cargo test` in the new repo and in symfony-demo-rs.
 - Application: after every component the demo uses, run
   `docker compose -f compare/compose.yaml up`, `compare/capture.sh` /
   `compare/diff.sh`: 92/92 pages, 124/127 live cases (the three documented
-  filesystem-case artifacts). From M4 on, the same with no whitespace
-  normalization. From M6 on, the database-diff recording is identical too.
-- `debug:*` JSON output matches real Symfony's for the demo (M3 on); the
-  second app's recorded responses match (M7).
+  filesystem-case artifacts). At T3 remove whitespace normalization only
+  after the original templates match; at D3 the database-diff recording
+  must also match. Use the candidate runtime checkout via the demo's local
+  `[patch]` override, recording both revisions and overrides in the log;
+  testing only the demo's older pinned revision does not validate a runtime
+  change.
+- `debug:*` JSON output matches real Symfony's for the demo (M3-A on).
+  The converter fixture and second app begin at M1-D, with supported flows
+  extended at each provider stage. Record whether output is hand-authored
+  or actually generated; only the latter closes a conversion gate.
 - Upstream process drill at M0 end: replay one past Symfony security fix
   through the watch job → issue → failing test → fix.
 - Housekeeping per AGENTS.md: commit per ported file naming the PHP source,
