@@ -51,8 +51,8 @@ Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testDefaultRequirementOfV
 Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testDeprecatedAlias	pending	
 Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testDeprecatedAliasWithCustomMessage	pending	
 Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testDumpWithLocalizedRoutesPreserveTheGoodLocaleInTheUrl	pending	
-Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testEncodingOfChainedRelativePathSegments	pending	
-Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testEncodingOfRelativePathSegments	pending	
+Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testEncodingOfChainedRelativePathSegments	ported	crates/routing/src/generator.rs::testEncodingOfChainedRelativePathSegments
+Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testEncodingOfRelativePathSegments	ported	crates/routing/src/generator.rs::testEncodingOfRelativePathSegments
 Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testEncodingOfSlashInPath	pending	
 Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testEncodingOfSlashInQueryParameters	pending	
 Tests/Generator/UrlGeneratorTest.php	UrlGeneratorTest::testFragmentsCanBeAppendedToUrls	pending	

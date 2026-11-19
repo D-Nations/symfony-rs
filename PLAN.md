@@ -347,10 +347,40 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       RateLimiter and Serializer, not installed). Backfilled: routing 16 and
       http-kernel 10 ported; only the declaring class's row is marked, so
       inherited copies (e.g. Compiled matchers) stay pending.
-- [ ] Move the vector recorders from symfony-demo-rs (`compare/routing_vectors.py`,
-      `compare/multipart_vectors.py`, `data/*/extract.php`) into `oracle/`.
-- [ ] Weekly upstream watch job (newer patch releases of mapped files, GitHub
-      advisories) and one replayed past security fix as a drill.
+- [x] Recorders for this repository's vectors moved from symfony-demo-rs
+      into `oracle/recorders/` (`scripts/record.sh routing|multipart`); one
+      oracle container each, and both re-recorded files are byte-identical
+      to the committed ones (90 routing cases, 156 multipart bodies). The
+      demo's other `data/*/extract.php` recorders move with their modules
+      (M1, M5).
+- [x] Upstream watch: `scripts/upstream_watch.py` (GitHub advisories whose
+      range holds a pin; every advisory of the last 400 days for ported
+      packages; newer patch releases and the mapped files they change),
+      weekly in `.github/workflows/upstream-watch.yml`, which keeps one
+      "Upstream watch" issue up to date. Triage lives in
+      `parity/advisories.tsv`.
+- [x] Drill (November 19), on real advisories rather than a staged one. The
+      first run listed six advisories for ported packages, all fixed before
+      the pins:
+      - GHSA-r925-mgvr-h9cc (`HeaderUtils::split` ReDoS, fixed in 8.1.7):
+        the fix's upstream test is ported under its name. The oracle shows
+        v8.1.6 failing it (PCRE backtrack limit, empty results) and the pin
+        giving exactly the Rust results.
+      - GHSA-h5x3-xfc9-m39h (UrlGenerator chained dot segments): **a real
+        gap**. The whole-path dot-segment step had not been ported, so a
+        caller passing `a/../b` got a path that collapses off-route.
+        Ported as `generator::encode_dot_segments` with the two upstream
+        tests. The demo was not reachable (its parameters cannot be dot
+        segments).
+      - Four not-ported verdicts (IpUtils, PATH_INFO, `#[IsGranted]` HEAD,
+        regex requirements), each with the milestone that must revisit it.
+      The same run found **v8.1.11** of http-foundation, routing and
+      http-kernel. Triage of the mapped files it changes:
+      `HeaderUtils::makeDisposition` (`/D` anchor), `prepareBaseUrl` /
+      `getUrlencodedPrefix` (client-chosen `//host` base URL) and
+      `setTrustedProxies` (`PRIVATE_RANGES`) are none of them ported, so
+      the Rust code is unaffected. Pins stay at the demo's `composer.lock`
+      (the demo original is read-only); moving them is a version move.
 
 ## Verification
 

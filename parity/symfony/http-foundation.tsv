@@ -178,7 +178,7 @@ Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryDoesNotWarnAboutKeysNes
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryIgnoreBrackets	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testQuote	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplit	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators	pending	
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators	ported	crates/http-foundation/src/accept_language.rs::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testToString	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testUnquote	pending	
 Tests/InputBagTest.php	InputBagTest::testAdd	pending	

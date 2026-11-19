@@ -3,6 +3,7 @@ crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Request.ph
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeader.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeaderItem.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	HeaderUtils.php	79325f87c3a2acc7564ddce9f457046e980e7255
+crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Tests/HeaderUtilsTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/cookies.rs	php-src	main/php_variables.c	php-8.4.27
 crates/http-foundation/src/lib.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/multipart.rs	php-src	main/rfc1867.c	php-8.4.27
@@ -18,6 +19,7 @@ crates/http-kernel/src/lib.rs	symfony/event-dispatcher	EventDispatcher.php	7458d
 crates/http-kernel/src/lib.rs	symfony/http-foundation	Response.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-kernel/tests/lifecycle.rs	symfony/http-kernel	Tests/HttpKernelTest.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
 crates/routing/src/generator.rs	symfony/routing	Generator/UrlGenerator.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
+crates/routing/src/generator.rs	symfony/routing	Tests/Generator/UrlGeneratorTest.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
 crates/routing/src/lib.rs	symfony/routing	Matcher/UrlMatcher.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
 crates/routing/src/lib.rs	symfony/routing	Matcher/RedirectableUrlMatcher.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
 crates/routing/src/lib.rs	symfony/routing	Generator/UrlGenerator.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822

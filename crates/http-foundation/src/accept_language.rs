@@ -19,7 +19,7 @@
 //! The header is read as bytes: a byte that is not ASCII never matches a
 //! locale code, so no text decoding is needed.
 //!
-//! Upstream: symfony/http-foundation Request.php AcceptHeader.php AcceptHeaderItem.php HeaderUtils.php
+//! Upstream: symfony/http-foundation Request.php AcceptHeader.php AcceptHeaderItem.php HeaderUtils.php Tests/HeaderUtilsTest.php
 
 /// The characters PHP's `trim()` removes by default.
 const PHP_TRIM: &[u8] = b" \t\n\r\0\x0B";
@@ -382,6 +382,62 @@ pub fn preferred_language<'a>(header: Option<&[u8]>, locales: &[&'a str]) -> Opt
 mod tests {
 
     use super::*;
+
+    /// `HeaderUtils::split($header, $separators)` for separator lists that
+    /// end in `=`, as this module composes it (`tokenize`, then `groups`
+    /// per level, then `name_and_value`), written like the PHPUnit
+    /// assertions' arrays: `[["x", "1"], ["y", "2"]]`.
+    fn split(header: &str, separators: &str) -> String {
+        fn level(tokens: &[Token], separators: &[u8]) -> String {
+            match separators {
+                [b'='] => {
+                    let (name, value) = name_and_value(tokens);
+                    let quote = |text: &[u8]| format!("{:?}", String::from_utf8_lossy(text));
+                    match value {
+                        Some(value) => format!("[{}, {}]", quote(&name), quote(&value)),
+                        None => format!("[{}]", quote(&name)),
+                    }
+                }
+                [first, rest @ ..] => {
+                    let parts: Vec<String> = groups(tokens, *first)
+                        .into_iter()
+                        .map(|group| level(group, rest))
+                        .collect();
+                    format!("[{}]", parts.join(", "))
+                }
+                [] => String::new(),
+            }
+        }
+        let separators = separators.as_bytes();
+        assert_eq!(separators.last(), Some(&b'='), "helper covers `...=` only");
+        level(&tokenize(header.as_bytes(), separators), separators)
+    }
+
+    /// GHSA-r925-mgvr-h9cc (CVE-2026-108082), fixed upstream in 8.1.7: a
+    /// run of whitespace before a separator made PCRE backtrack. The port
+    /// scans each byte a bounded number of times; this pins the fixed
+    /// results. Upstream: Tests/HeaderUtilsTest.php at the pinned commit.
+    #[test]
+    #[allow(non_snake_case)]
+    fn testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators() {
+        let spaces = " ".repeat(25);
+        assert_eq!(split(&format!("a{spaces},b"), ",="), r#"[["a"], ["b"]]"#);
+        assert_eq!(
+            split(&format!("a{spaces},b"), ",;="),
+            r#"[[["a"]], [["b"]]]"#
+        );
+        assert_eq!(
+            split(&format!("x=1{spaces};y=2"), ";="),
+            r#"[["x", "1"], ["y", "2"]]"#
+        );
+
+        let header = format!("a{spaces},").repeat(200);
+        let tokens = tokenize(header.as_bytes(), b",=");
+        assert_eq!(groups(&tokens, b',').len(), 200);
+
+        // whitespace inside a value is still part of it
+        assert_eq!(split("a b  c", ",="), r#"[["a b  c"]]"#);
+    }
 
     #[test]
     fn php_float_casts() {
