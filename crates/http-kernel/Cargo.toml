@@ -1,0 +1,13 @@
+[package]
+name = "symfony-http-kernel"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Small typed subset of Symfony's request lifecycle for Axum applications"
+
+[dependencies]
+axum = "0.8.9"
+
+[dev-dependencies]
+tokio = { version = "1.54.1", features = ["macros", "rt"] }
