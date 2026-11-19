@@ -178,7 +178,8 @@ EventDispatcher (full, generalizing http-kernel's dispatcher), Yaml (full
 port; saphyr/yaml-rust2 implement YAML 1.2, not Symfony's dialect), Dotenv
 (port; dotenvy expands differently), Config (TreeBuilder + processing, at
 build time), String (complete `u()`/`b()` APIs, inflectors, slugger), Clock,
-Uid (wrap `uuid`/`ulid` crates, Symfony's formats), Filesystem, Finder (walker
+Uid (wrap `uuid`/`ulid` crates, Symfony's formats), Stopwatch (needed by
+EventDispatcher's Debug classes and the profiler), Filesystem, Finder (walker
 crate + ported filters/ordering), OptionsResolver, PasswordHasher (bcrypt
 already in; add RustCrypto argon2/pbkdf2; "migrate from" logic), Process.
 Also the Attributes derive and the php-rt integration (decision 3).
@@ -388,6 +389,7 @@ Stack rows (searched November 19):
 
 | Component | Options compared | Choice | Reason |
 |---|---|---|---|
+| Stopwatch | [fine_grained](https://docs.rs/crate/fine_grained/latest) (one stopwatch with laps, 2017), [ticky](https://docs.rs/ticky/1.0.2/src/ticky/lib.rs.html), [chronometer](https://docs.rs/crate/chronometer/latest), clock-core: single anonymous timers | Port, no dependency (`std::time` underneath) | None has named events, categories, sections, periods with memory, PHP's rounding or Symfony's messages |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
@@ -400,6 +402,17 @@ Stack rows (searched November 19):
       (36 tests, needs Stopwatch) and the DI passes (26 tests, M3).
       symfony-http-kernel keeps its own dispatcher until M2: its events
       borrow the request, and type-erased events must be `'static`.
+- [x] Stopwatch (`symfony-stopwatch`): all 33 upstream tests; in
+      `parity/done.txt`. StopwatchEventTest runs on a mocked clock, as
+      upstream's `time-sensitive` group does. The PHP built-ins it needs
+      (`round()`, `(int)`, `%d`, `%.2F`) are checked against 3,000+ vectors
+      (`scripts/record.sh stopwatch`). `memory_get_usage()` has no Rust
+      equivalent: the default host reports 0, and a host can supply a figure.
+      `round()` follows php-src's code, taken from its **BSD-3-Clause main
+      branch** (commit `b90212aa`, identical to 8.4.27's), which decision 8
+      permits; the BSD notice is in `crates/stopwatch/licenses/`. A simpler
+      shortest-decimal rounding failed 12 of 3,024 vectors (values above
+      1e14), so following PHP's arithmetic was necessary.
 
 ## Verification
 

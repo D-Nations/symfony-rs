@@ -37,3 +37,10 @@ crates/routing/src/lib.rs	symfony/routing	Matcher/RedirectableUrlMatcher.php	41b
 crates/routing/src/lib.rs	symfony/routing	Generator/UrlGenerator.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
 crates/routing/tests/upstream.rs	symfony/routing	Tests/Matcher/UrlMatcherTest.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
 crates/routing/tests/upstream.rs	symfony/routing	Tests/Matcher/RedirectableUrlMatcherTest.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
+crates/stopwatch/src/section.rs	symfony/stopwatch	Section.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/stopwatch/src/stopwatch.rs	symfony/stopwatch	Stopwatch.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/stopwatch/src/stopwatch_event.rs	symfony/stopwatch	StopwatchEvent.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/stopwatch/src/stopwatch_period.rs	symfony/stopwatch	StopwatchPeriod.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/stopwatch/tests/stopwatch.rs	symfony/stopwatch	Tests/StopwatchTest.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/stopwatch/tests/stopwatch_event.rs	symfony/stopwatch	Tests/StopwatchEventTest.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/stopwatch/tests/stopwatch_period.rs	symfony/stopwatch	Tests/StopwatchPeriodTest.php	21c07b026905d596e8379caeb115d87aa479499d
