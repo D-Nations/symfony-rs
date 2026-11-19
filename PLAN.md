@@ -294,6 +294,18 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    of PHP's type juggling. Needs a line in php2rust's `docs/approach.md`:
    symfony2rust's target runtime contains MIT/BSD-derived Symfony, Twig and
    Doctrine code (php2rust's rule bans copying it into *converter* crates).
+
+   **Owner, November 19 (at the Yaml start):** symfony-rs owns the value
+   layer. A new `php-value` crate holds PHP's values (null, bool, int,
+   float, byte strings, ordered arrays with PHP's key rules, objects such
+   as stdClass, DateTimeImmutable, enum cases and component classes like
+   TaggedValue), `Send + Sync`, written from recorded PHP behaviour with no
+   php-src code. Yaml, Config, DI and Twig share it; php-rt can adopt it or
+   convert to it later. Reason: php-rt has no objects, is `Rc`-based, and
+   its `round()` follows pre-8.4 PHP. Also decided: PHP's `serialize()` /
+   `unserialize()` are ported (Yaml's `PARSE_OBJECT` / `DUMP_OBJECT`),
+   with unserialization limited to an allow-list of classes the
+   application registers.
 4. **Security response target.** Recommended: triage within 2 working days of
    an upstream advisory; fix in ported code before the next client release.
 5. **Regex** (route requirements, `Regex` constraint). Recommended: `regex`

@@ -5,6 +5,7 @@
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
+#   scripts/record.sh php-value    crates/php-value/tests/data/php.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -52,11 +53,22 @@ stopwatch() {
     echo "Stopwatch vectors written to $out"
 }
 
+php_value() {
+    local out=crates/php-value/tests/data/php.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_value.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "PHP value vectors written to $out"
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
     event-dispatcher) event_dispatcher ;;
     stopwatch) stopwatch ;;
-    all) routing; multipart; event_dispatcher; stopwatch ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|all" >&2; exit 2 ;;
+    php-value) php_value ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|all" >&2; exit 2 ;;
 esac
