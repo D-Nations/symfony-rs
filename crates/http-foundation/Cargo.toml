@@ -1,0 +1,15 @@
+[package]
+name = "symfony-http-foundation"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "A tested subset of Symfony HttpFoundation and PHP request semantics"
+
+[dependencies]
+axum = "0.8.9"
+
+[dev-dependencies]
+base64 = "0.23.1"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0.154", features = ["preserve_order"] }
