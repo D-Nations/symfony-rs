@@ -8,6 +8,8 @@ description = "Port of the symfony/yaml component"
 
 [dependencies]
 php-value = { path = "../php-value" }
+regex = "1.13.2"
 
 [dev-dependencies]
+php-value = { path = "../php-value", features = ["vectors"] }
 serde_json = "1.0.154"

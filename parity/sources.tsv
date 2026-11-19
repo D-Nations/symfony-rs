@@ -57,6 +57,7 @@ crates/yaml/src/escaper.rs	symfony/yaml	Escaper.php	6107ee26a25215c3df3af0a3315e
 crates/yaml/src/exception.rs	symfony/yaml	Exception/ParseException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/exception.rs	symfony/yaml	Exception/DumpException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/exception.rs	symfony/yaml	Exception/RuntimeException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/inline.rs	symfony/yaml	Inline.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/lib.rs	symfony/yaml	Yaml.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/parser_state.rs	symfony/yaml	ParserState.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/tag.rs	symfony/yaml	Tag/TaggedValue.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db

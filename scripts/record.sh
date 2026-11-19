@@ -67,7 +67,7 @@ php_value() {
 yaml() {
     local name out tmp
     mkdir -p oracle/out crates/yaml/tests/data
-    for name in escaping; do
+    for name in escaping timestamps; do
         out=crates/yaml/tests/data/$name.json
         tmp=$(mktemp -p oracle/out)
         oracle "oracle/recorders/yaml_$name.php" > "$tmp"

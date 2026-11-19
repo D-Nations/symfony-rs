@@ -185,7 +185,9 @@ impl DateTimeImmutable {
                 'U' => write!(out, "{}", self.timestamp),
                 'e' => write!(out, "{}", self.zone.name()),
                 'T' => write!(out, "{}", self.zone.abbreviation()),
-                'c' => write!(out, "{}", self.format("Y-m-d\\TH:i:sP")),
+                // ISO 8601: the year's sign counts toward its four digits
+                // (-1 is "-001"), unlike `Y` ("-0001").
+                'c' => write!(out, "{:04}{}", f.year, self.format("-m-d\\TH:i:sP")),
                 '\\' => match chars.next() {
                     Some(escaped) => write!(out, "{escaped}"),
                     None => write!(out, "\\"),
