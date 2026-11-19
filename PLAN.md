@@ -624,9 +624,16 @@ Stack rows (searched November 19):
       1,938 recorded cases (`scripts/record.sh config`). Placeholders are
       thread-local; PHP's built-ins it needs are written from documentation
       and checked by those cases. `trigger_deprecation()` is the new
-      `symfony-deprecation-contracts` crate. Next: `Definition/Builder/*`,
-      then the dumpers, then loaders and resources (after Filesystem and
-      Finder) and `XmlUtils` (`php-dom`, decision 9).
+      `symfony-deprecation-contracts` crate. Stage 2: `Definition/Builder/*`
+      (TreeBuilder, NodeBuilder, the node definitions, ExprBuilder and the
+      merge, normalization and validation builders),
+      `processConfiguration()` and ConfigurationInterface: 92 more tests
+      (167 of 334), plus 4,624 recorded cases (`config_builder.php`),
+      which also found that a float `$children` is truncated to an int,
+      not cast to a string (fixed in PrototypedArrayNode too).
+      `docUrl()` reads Composer's versions from a registry the application
+      fills. Next: the dumpers, then loaders and resources (after
+      Filesystem and Finder) and `XmlUtils` (`php-dom`, decision 9).
 
 ## Verification
 
