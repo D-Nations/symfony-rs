@@ -442,6 +442,15 @@ Stack rows (searched November 19):
       shortest decimal form (3,270 differ, from 7e13) and php2rust's
       `php-rt` `round()` (14,571 differ, from 2.35: it implements the
       pre-8.4 15-digit pre-rounding, a php2rust bug to report).
+- [ ] Yaml (`symfony-yaml`, values in `php-value`). Ported: `Inline.php`,
+      `Parser.php`, `ParserState.php`, `Escaper.php`, `Unescaper.php`,
+      `Tag/TaggedValue.php`, the exceptions: InlineTest 84 of 85 and
+      ParserTest 171 of 172 (each `n/a` has its reason in the manifest).
+      ParserTest replays every call each upstream test makes to the
+      parser, recorded on the oracle while the upstream test runs and
+      passes (`oracle/recorders/yaml_test_calls.php`). Pending:
+      `Dumper.php`, `Yaml.php`, then DumperTest, YamlTest,
+      YamlTestSuiteTest; `Command/LintCommand.php` after Console.
 
 ## Verification
 

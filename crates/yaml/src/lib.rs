@@ -10,6 +10,7 @@
 pub mod escaper;
 pub mod exception;
 pub mod inline;
+pub mod parser;
 pub mod parser_state;
 pub mod tag;
 mod timestamp;
@@ -19,6 +20,7 @@ use std::ops::{BitOr, BitOrAssign};
 
 pub use exception::{DumpException, InvalidArgumentException, ParseException};
 pub use inline::{Environment, Inline, References};
+pub use parser::Parser;
 pub use tag::TaggedValue;
 
 /// The `Yaml::PARSE_*` and `Yaml::DUMP_*` bit flags, with PHP's values.

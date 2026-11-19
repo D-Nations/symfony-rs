@@ -83,7 +83,7 @@ Tests/InlineTest.php	InlineTest::testDumpNan	ported	crates/yaml/tests/inline_tes
 Tests/InlineTest.php	InlineTest::testDumpNumericKeyAsString	ported	crates/yaml/tests/inline_test.rs::testDumpNumericKeyAsString
 Tests/InlineTest.php	InlineTest::testDumpNumericValueWithLocale	n/a: Rust has no process locale; dump() never depends on one (pinned by testDump)	
 Tests/InlineTest.php	InlineTest::testDumpUnitEnum	ported	crates/yaml/tests/inline_test.rs::testDumpUnitEnum
-Tests/InlineTest.php	InlineTest::testFlowAndBlockProduceSameOutputForAmpersandPrefixedItems	pending	
+Tests/InlineTest.php	InlineTest::testFlowAndBlockProduceSameOutputForAmpersandPrefixedItems	ported	crates/yaml/tests/inline_test.rs::testFlowAndBlockProduceSameOutputForAmpersandPrefixedItems
 Tests/InlineTest.php	InlineTest::testHashStringsResemblingExponentialNumericsShouldNotBeChangedToINF	ported	crates/yaml/tests/inline_test.rs::testHashStringsResemblingExponentialNumericsShouldNotBeChangedToINF
 Tests/InlineTest.php	InlineTest::testImplicitStringCastingOfMappingKeysThrowsException	ported	crates/yaml/tests/inline_test.rs::testImplicitStringCastingOfMappingKeysThrowsException
 Tests/InlineTest.php	InlineTest::testIsHash	ported	crates/yaml/tests/inline_test.rs::testIsHash
@@ -163,178 +163,178 @@ Tests/InlineTest.php	InlineTest::testUnterminatedSequenceEndingWithTag	ported	cr
 Tests/InlineTest.php	InlineTest::testVeryLongQuotedStrings	ported	crates/yaml/tests/inline_test.rs::testVeryLongQuotedStrings
 Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessage	ported	crates/yaml/tests/parse_exception.rs::testGetMessage
 Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessageWithUnicodeInFilename	ported	crates/yaml/tests/parse_exception.rs::testGetMessageWithUnicodeInFilename
-Tests/ParserTest.php	ParserTest::testAdditionallyIndentedLinesAreParsedAsNewLinesInFoldedBlocks	pending	
-Tests/ParserTest.php	ParserTest::testAnchorAfterTag	pending	
-Tests/ParserTest.php	ParserTest::testAnchorOnTheRootNode	pending	
-Tests/ParserTest.php	ParserTest::testBackslashInQuotedMultiLineString	pending	
-Tests/ParserTest.php	ParserTest::testBackslashInSingleQuotedString	pending	
-Tests/ParserTest.php	ParserTest::testBlankLinesAreParsedAsNewLinesInFoldedBlocks	pending	
-Tests/ParserTest.php	ParserTest::testBlankLinesInQuotedMultiLineString	pending	
-Tests/ParserTest.php	ParserTest::testBlockChomping	pending	
-Tests/ParserTest.php	ParserTest::testBlockLiteralWithLeadingNewlines	pending	
-Tests/ParserTest.php	ParserTest::testBlockMappingOnTheDocumentStartMarkerLine	pending	
-Tests/ParserTest.php	ParserTest::testBlockScalarArray	pending	
-Tests/ParserTest.php	ParserTest::testBlockScalarKeepsTrailingNewlineWhenNestedInMergeKey	pending	
-Tests/ParserTest.php	ParserTest::testBlockScalarKeepsTrailingNewlineWhenNestedInSequenceItem	pending	
-Tests/ParserTest.php	ParserTest::testBlockScalarsInCompactNestedCollections	pending	
-Tests/ParserTest.php	ParserTest::testBlockScalarsWithoutContent	pending	
-Tests/ParserTest.php	ParserTest::testBlockSequenceOnTheDocumentStartMarkerLine	pending	
-Tests/ParserTest.php	ParserTest::testBooleanKeys	pending	
-Tests/ParserTest.php	ParserTest::testBuiltInTagsWithoutValue	pending	
-Tests/ParserTest.php	ParserTest::testCanParseContentWithTrailingSpaces	pending	
-Tests/ParserTest.php	ParserTest::testCanParseVeryLongValue	pending	
-Tests/ParserTest.php	ParserTest::testColonInMappingValueException	pending	
-Tests/ParserTest.php	ParserTest::testColonInMappingValueExceptionNotTriggeredByColonInComment	pending	
-Tests/ParserTest.php	ParserTest::testCommentAtTheRootIndent	pending	
-Tests/ParserTest.php	ParserTest::testCommentCharactersInMultiLineQuotedStrings	pending	
-Tests/ParserTest.php	ParserTest::testCommentLikeStringsAreNotStrippedInBlockScalars	pending	
-Tests/ParserTest.php	ParserTest::testComplexMappingNestedInMappingThrowsParseException	pending	
-Tests/ParserTest.php	ParserTest::testComplexMappingNestedInSequenceThrowsParseException	pending	
-Tests/ParserTest.php	ParserTest::testComplexMappingThrowsParseException	pending	
-Tests/ParserTest.php	ParserTest::testContentOnTheDocumentStartMarkerLine	pending	
-Tests/ParserTest.php	ParserTest::testCoreTagsOnBlockScalars	pending	
-Tests/ParserTest.php	ParserTest::testCustomTagSupport	pending	
-Tests/ParserTest.php	ParserTest::testCustomTagsDisabled	pending	
-Tests/ParserTest.php	ParserTest::testDetectCircularReferences	pending	
-Tests/ParserTest.php	ParserTest::testDocumentEndMarkerFollowedByAnotherDocument	pending	
-Tests/ParserTest.php	ParserTest::testDocumentEndMarkerIsAWholeLine	pending	
-Tests/ParserTest.php	ParserTest::testDuplicateYamlDirective	pending	
-Tests/ParserTest.php	ParserTest::testEmptyLinesBeforeTheDocumentStartMarker	pending	
-Tests/ParserTest.php	ParserTest::testEmptyMappingKeyWithCustomTag	pending	
-Tests/ParserTest.php	ParserTest::testEmptyMappingKeyWithTag	pending	
-Tests/ParserTest.php	ParserTest::testEmptyValue	pending	
-Tests/ParserTest.php	ParserTest::testEmptyValueInExpandedMappingIsSupported	pending	
-Tests/ParserTest.php	ParserTest::testEmptyValueInExpandedSequenceIsSupported	pending	
-Tests/ParserTest.php	ParserTest::testEndOfTheDocumentMarker	pending	
-Tests/ParserTest.php	ParserTest::testEscapedQuoteInQuotedMultiLineString	pending	
-Tests/ParserTest.php	ParserTest::testEvalRefException	pending	
-Tests/ParserTest.php	ParserTest::testExceptionWhenUsingUnsupportedBuiltInTags	pending	
-Tests/ParserTest.php	ParserTest::testExplicitStringCasting	pending	
-Tests/ParserTest.php	ParserTest::testFilenamesAreParsedAsStringsWithoutFlag	pending	
-Tests/ParserTest.php	ParserTest::testFloatKeys	pending	
-Tests/ParserTest.php	ParserTest::testFoldedStringBlockWithComments	pending	
-Tests/ParserTest.php	ParserTest::testHashLedLinesAfterMoreIndentedEmptyLinesAreBlockScalarContent	pending	
-Tests/ParserTest.php	ParserTest::testIndentedDocumentMarkersAreContent	pending	
-Tests/ParserTest.php	ParserTest::testInlineMappingFollowedByMoreContentIsInvalid	pending	
-Tests/ParserTest.php	ParserTest::testInlineNotationSpanningMultipleLines	pending	
-Tests/ParserTest.php	ParserTest::testInlineSequenceFollowedByMoreContentIsInvalid	pending	
-Tests/ParserTest.php	ParserTest::testInvalidInlineSequenceContainingStringWithEscapedQuotationCharacter	pending	
-Tests/ParserTest.php	ParserTest::testKeyStartingWithNulByteThrowsParseExceptionWhenMappingsAreParsedAsObjects	pending	
-Tests/ParserTest.php	ParserTest::testLeadingCommentBlockIsIgnored	pending	
-Tests/ParserTest.php	ParserTest::testLineBreaksAroundMoreIndentedLinesInFoldedBlocks	pending	
-Tests/ParserTest.php	ParserTest::testLineNumberInException	pending	
-Tests/ParserTest.php	ParserTest::testMappingDuplicateKeyBlock	pending	
-Tests/ParserTest.php	ParserTest::testMappingDuplicateKeyFlow	pending	
-Tests/ParserTest.php	ParserTest::testMappingInASequence	pending	
-Tests/ParserTest.php	ParserTest::testMappingKeyInMultiLineStringThrowsException	pending	
-Tests/ParserTest.php	ParserTest::testMergeKeysInFlowMappingsWhenMappingsAreParsedAsObjects	pending	
-Tests/ParserTest.php	ParserTest::testMergeKeysWhenMappingsAreParsedAsObjects	pending	
-Tests/ParserTest.php	ParserTest::testMultiLineComment	pending	
-Tests/ParserTest.php	ParserTest::testMultiLineQuotedStringWithTrailingBackslash	pending	
-Tests/ParserTest.php	ParserTest::testMultiLineStringLastResortParsing	pending	
-Tests/ParserTest.php	ParserTest::testMultipleDocumentsNotSupportedException	pending	
-Tests/ParserTest.php	ParserTest::testNestedFoldedStringBlockWithComments	pending	
-Tests/ParserTest.php	ParserTest::testNonSpecificTagSupport	pending	
-Tests/ParserTest.php	ParserTest::testNonStringFollowedByCommentEmbeddedInMapping	pending	
-Tests/ParserTest.php	ParserTest::testNonUtf8Exception	pending	
-Tests/ParserTest.php	ParserTest::testNullAsDuplicatedData	pending	
-Tests/ParserTest.php	ParserTest::testObjectForMap	pending	
-Tests/ParserTest.php	ParserTest::testObjectSupportDisabledButNoExceptions	pending	
-Tests/ParserTest.php	ParserTest::testObjectSupportEnabled	pending	
-Tests/ParserTest.php	ParserTest::testObjectsSupportDisabledWithExceptions	pending	
-Tests/ParserTest.php	ParserTest::testParseAcceptsInlineSequencesAtTheNestingDepth	pending	
-Tests/ParserTest.php	ParserTest::testParseAcceptsLargeCollectionAliasedOnce	pending	
-Tests/ParserTest.php	ParserTest::testParseAcceptsScalarAliasesWithoutCountingThem	pending	
-Tests/ParserTest.php	ParserTest::testParseAliasFollowedByAComment	pending	
-Tests/ParserTest.php	ParserTest::testParseBinaryData	pending	
-Tests/ParserTest.php	ParserTest::testParseCountsTaggedValueCollectionAliases	pending	
-Tests/ParserTest.php	ParserTest::testParseDateAsMappingValue	pending	
-Tests/ParserTest.php	ParserTest::testParseDateWithSubseconds	pending	
-Tests/ParserTest.php	ParserTest::testParseEmptyBinaryData	pending	
-Tests/ParserTest.php	ParserTest::testParseExceptionNotAffectedByMultiLineStringLastResortParsing	pending	
-Tests/ParserTest.php	ParserTest::testParseExceptionOnDuplicate	pending	
-Tests/ParserTest.php	ParserTest::testParseFile	pending	
-Tests/ParserTest.php	ParserTest::testParseHandlesLargeDocumentMarkers	pending	
-Tests/ParserTest.php	ParserTest::testParseHandlesLargeLeadingComments	pending	
-Tests/ParserTest.php	ParserTest::testParseHandlesLargeYamlHeaders	pending	
-Tests/ParserTest.php	ParserTest::testParseHandlesTrailingNewlinesAfterDocumentEndMarker	pending	
-Tests/ParserTest.php	ParserTest::testParseIdeographicSpaces	pending	
-Tests/ParserTest.php	ParserTest::testParseIndentedMappings	pending	
-Tests/ParserTest.php	ParserTest::testParseInlineMappingWithAnchoredQuotedValue	pending	
-Tests/ParserTest.php	ParserTest::testParseInlineMappingWithAnchoredQuotedValueContainingBraces	pending	
-Tests/ParserTest.php	ParserTest::testParseInvalidBinaryData	pending	
-Tests/ParserTest.php	ParserTest::testParseMergeKeyAliasFollowedByAComment	pending	
-Tests/ParserTest.php	ParserTest::testParseMergeKeyFollowedByATab	pending	
-Tests/ParserTest.php	ParserTest::testParseMultiLineMappingValue	pending	
-Tests/ParserTest.php	ParserTest::testParseMultiLineQuotedString	pending	
-Tests/ParserTest.php	ParserTest::testParseMultiLineString	pending	
-Tests/ParserTest.php	ParserTest::testParseMultiLineUnquotedString	pending	
-Tests/ParserTest.php	ParserTest::testParseMultiLineUnquotedStringWithTrailingComment	pending	
-Tests/ParserTest.php	ParserTest::testParseQuotedMergeKeyAsRegularKey	pending	
-Tests/ParserTest.php	ParserTest::testParseQuotedStringContainingEscapedQuotationCharacters	pending	
-Tests/ParserTest.php	ParserTest::testParseReferencesOnMergeKeys	pending	
-Tests/ParserTest.php	ParserTest::testParseReferencesOnMergeKeysWithMappingsParsedAsObjects	pending	
-Tests/ParserTest.php	ParserTest::testParseRejectsBlockAliasesWhenDisabled	pending	
-Tests/ParserTest.php	ParserTest::testParseRejectsDocumentsThatExceedTheConfiguredCollectionAliasLimit	pending	
-Tests/ParserTest.php	ParserTest::testParseRejectsDocumentsThatExceedTheDefaultNestingDepth	pending	
-Tests/ParserTest.php	ParserTest::testParseRejectsInlineAliasesWhenDisabled	pending	
-Tests/ParserTest.php	ParserTest::testParseRejectsUnterminatedInlineMappingsThatExceedTheNestingDepth	pending	
-Tests/ParserTest.php	ParserTest::testParseRejectsUnterminatedInlineSequencesThatExceedTheNestingDepth	pending	
-Tests/ParserTest.php	ParserTest::testParseValueWithModifiers	pending	
-Tests/ParserTest.php	ParserTest::testParseValueWithNegativeModifiers	pending	
-Tests/ParserTest.php	ParserTest::testParserCleansUpReferencesBetweenRuns	pending	
-Tests/ParserTest.php	ParserTest::testParserIsStateless	pending	
-Tests/ParserTest.php	ParserTest::testParserThrowsExceptionWithCorrectLineNumber	pending	
-Tests/ParserTest.php	ParserTest::testParsingIniThrowsException	pending	
-Tests/ParserTest.php	ParserTest::testParsingMultipleDocuments	pending	
-Tests/ParserTest.php	ParserTest::testParsingNonExistentFilesThrowsException	pending	
-Tests/ParserTest.php	ParserTest::testParsingNotReadableFilesThrowsException	pending	
-Tests/ParserTest.php	ParserTest::testPhpConstantTagMappingAsScalarKey	pending	
-Tests/ParserTest.php	ParserTest::testPhpConstantTagMappingKey	pending	
-Tests/ParserTest.php	ParserTest::testReferenceResolvingInInlineStrings	pending	
-Tests/ParserTest.php	ParserTest::testRootLevelInlineMappingFollowedByMoreContentIsInvalid	pending	
-Tests/ParserTest.php	ParserTest::testScalarInSequence	pending	
-Tests/ParserTest.php	ParserTest::testSequenceFollowedByCommentEmbeddedInMapping	pending	
-Tests/ParserTest.php	ParserTest::testSequenceInAMapping	pending	
-Tests/ParserTest.php	ParserTest::testSequenceInMappingStartedBySingleDashLine	pending	
-Tests/ParserTest.php	ParserTest::testShortcutKeyUnindentedCollectionException	pending	
-Tests/ParserTest.php	ParserTest::testSkipBlankLines	pending	
-Tests/ParserTest.php	ParserTest::testSpacesOnlyLinesInBlockScalarsWithIndentationIndicator	pending	
-Tests/ParserTest.php	ParserTest::testSpecifications	pending	
-Tests/ParserTest.php	ParserTest::testStringBlockWithComments	pending	
-Tests/ParserTest.php	ParserTest::testTabLedLinesAreMoreIndentedInFoldedBlocks	pending	
-Tests/ParserTest.php	ParserTest::testTabsAsIndentationInYaml	pending	
-Tests/ParserTest.php	ParserTest::testTabsInBlockScalarHeaders	pending	
-Tests/ParserTest.php	ParserTest::testTagMappingAsScalarKey	pending	
-Tests/ParserTest.php	ParserTest::testTaggedBlockScalarInNestedList	pending	
-Tests/ParserTest.php	ParserTest::testTaggedBlockScalarsAsListItems	pending	
-Tests/ParserTest.php	ParserTest::testTaggedInlineMapping	pending	
-Tests/ParserTest.php	ParserTest::testTaggedTextAsListItem	pending	
-Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelAssoc	pending	
-Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelAssocInline	pending	
-Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelList	pending	
-Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelNull	pending	
-Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelNumber	pending	
-Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelString	pending	
-Tests/ParserTest.php	ParserTest::testTaggedValueWithoutValue	pending	
-Tests/ParserTest.php	ParserTest::testThrowExceptionIfInvalidAdditionalClosingTagOccurs	pending	
-Tests/ParserTest.php	ParserTest::testTopLevelNull	pending	
-Tests/ParserTest.php	ParserTest::testTopLevelNumber	pending	
-Tests/ParserTest.php	ParserTest::testTrailingBackslashInSingleQuotedMultiLineString	pending	
-Tests/ParserTest.php	ParserTest::testTrailingBackslashesBeforeNewlineInQuotedMultiLineString	pending	
-Tests/ParserTest.php	ParserTest::testUnindentedCollectionException	pending	
-Tests/ParserTest.php	ParserTest::testUnquotedMultilineScalarHandlesCommentsAndBlanks	pending	
-Tests/ParserTest.php	ParserTest::testUnquotedMultilineScalarThrowsOnOrphanedLineAfterComment	pending	
-Tests/ParserTest.php	ParserTest::testUnquotedMultilineScalarWithBlankLines	pending	
-Tests/ParserTest.php	ParserTest::testUnsupportedBuiltInTagWithScalar	pending	
-Tests/ParserTest.php	ParserTest::testUnsupportedTagWithScalar	pending	
-Tests/ParserTest.php	ParserTest::testUppercaseHexadecimalPrefixKeys	pending	
-Tests/ParserTest.php	ParserTest::testValidTokenSeparation	pending	
-Tests/ParserTest.php	ParserTest::testWhiteSpaceIsFoldedInMultiLineQuotedString	pending	
-Tests/ParserTest.php	ParserTest::testWhitespaceAtEndOfLine	pending	
-Tests/ParserTest.php	ParserTest::testWrappedUnquotedStringWithMultipleSpacesInValue	pending	
-Tests/ParserTest.php	ParserTest::testWrongPhpConstantSyntax	pending	
-Tests/ParserTest.php	ParserTest::testYamlDirective	pending	
+Tests/ParserTest.php	ParserTest::testAdditionallyIndentedLinesAreParsedAsNewLinesInFoldedBlocks	ported	crates/yaml/tests/parser_test.rs::testAdditionallyIndentedLinesAreParsedAsNewLinesInFoldedBlocks
+Tests/ParserTest.php	ParserTest::testAnchorAfterTag	ported	crates/yaml/tests/parser_test.rs::testAnchorAfterTag
+Tests/ParserTest.php	ParserTest::testAnchorOnTheRootNode	ported	crates/yaml/tests/parser_test.rs::testAnchorOnTheRootNode
+Tests/ParserTest.php	ParserTest::testBackslashInQuotedMultiLineString	ported	crates/yaml/tests/parser_test.rs::testBackslashInQuotedMultiLineString
+Tests/ParserTest.php	ParserTest::testBackslashInSingleQuotedString	ported	crates/yaml/tests/parser_test.rs::testBackslashInSingleQuotedString
+Tests/ParserTest.php	ParserTest::testBlankLinesAreParsedAsNewLinesInFoldedBlocks	ported	crates/yaml/tests/parser_test.rs::testBlankLinesAreParsedAsNewLinesInFoldedBlocks
+Tests/ParserTest.php	ParserTest::testBlankLinesInQuotedMultiLineString	ported	crates/yaml/tests/parser_test.rs::testBlankLinesInQuotedMultiLineString
+Tests/ParserTest.php	ParserTest::testBlockChomping	ported	crates/yaml/tests/parser_test.rs::testBlockChomping
+Tests/ParserTest.php	ParserTest::testBlockLiteralWithLeadingNewlines	ported	crates/yaml/tests/parser_test.rs::testBlockLiteralWithLeadingNewlines
+Tests/ParserTest.php	ParserTest::testBlockMappingOnTheDocumentStartMarkerLine	ported	crates/yaml/tests/parser_test.rs::testBlockMappingOnTheDocumentStartMarkerLine
+Tests/ParserTest.php	ParserTest::testBlockScalarArray	ported	crates/yaml/tests/parser_test.rs::testBlockScalarArray
+Tests/ParserTest.php	ParserTest::testBlockScalarKeepsTrailingNewlineWhenNestedInMergeKey	ported	crates/yaml/tests/parser_test.rs::testBlockScalarKeepsTrailingNewlineWhenNestedInMergeKey
+Tests/ParserTest.php	ParserTest::testBlockScalarKeepsTrailingNewlineWhenNestedInSequenceItem	ported	crates/yaml/tests/parser_test.rs::testBlockScalarKeepsTrailingNewlineWhenNestedInSequenceItem
+Tests/ParserTest.php	ParserTest::testBlockScalarsInCompactNestedCollections	ported	crates/yaml/tests/parser_test.rs::testBlockScalarsInCompactNestedCollections
+Tests/ParserTest.php	ParserTest::testBlockScalarsWithoutContent	ported	crates/yaml/tests/parser_test.rs::testBlockScalarsWithoutContent
+Tests/ParserTest.php	ParserTest::testBlockSequenceOnTheDocumentStartMarkerLine	ported	crates/yaml/tests/parser_test.rs::testBlockSequenceOnTheDocumentStartMarkerLine
+Tests/ParserTest.php	ParserTest::testBooleanKeys	ported	crates/yaml/tests/parser_test.rs::testBooleanKeys
+Tests/ParserTest.php	ParserTest::testBuiltInTagsWithoutValue	ported	crates/yaml/tests/parser_test.rs::testBuiltInTagsWithoutValue
+Tests/ParserTest.php	ParserTest::testCanParseContentWithTrailingSpaces	ported	crates/yaml/tests/parser_test.rs::testCanParseContentWithTrailingSpaces
+Tests/ParserTest.php	ParserTest::testCanParseVeryLongValue	ported	crates/yaml/tests/parser_test.rs::testCanParseVeryLongValue
+Tests/ParserTest.php	ParserTest::testColonInMappingValueException	ported	crates/yaml/tests/parser_test.rs::testColonInMappingValueException
+Tests/ParserTest.php	ParserTest::testColonInMappingValueExceptionNotTriggeredByColonInComment	ported	crates/yaml/tests/parser_test.rs::testColonInMappingValueExceptionNotTriggeredByColonInComment
+Tests/ParserTest.php	ParserTest::testCommentAtTheRootIndent	ported	crates/yaml/tests/parser_test.rs::testCommentAtTheRootIndent
+Tests/ParserTest.php	ParserTest::testCommentCharactersInMultiLineQuotedStrings	ported	crates/yaml/tests/parser_test.rs::testCommentCharactersInMultiLineQuotedStrings
+Tests/ParserTest.php	ParserTest::testCommentLikeStringsAreNotStrippedInBlockScalars	ported	crates/yaml/tests/parser_test.rs::testCommentLikeStringsAreNotStrippedInBlockScalars
+Tests/ParserTest.php	ParserTest::testComplexMappingNestedInMappingThrowsParseException	ported	crates/yaml/tests/parser_test.rs::testComplexMappingNestedInMappingThrowsParseException
+Tests/ParserTest.php	ParserTest::testComplexMappingNestedInSequenceThrowsParseException	ported	crates/yaml/tests/parser_test.rs::testComplexMappingNestedInSequenceThrowsParseException
+Tests/ParserTest.php	ParserTest::testComplexMappingThrowsParseException	ported	crates/yaml/tests/parser_test.rs::testComplexMappingThrowsParseException
+Tests/ParserTest.php	ParserTest::testContentOnTheDocumentStartMarkerLine	ported	crates/yaml/tests/parser_test.rs::testContentOnTheDocumentStartMarkerLine
+Tests/ParserTest.php	ParserTest::testCoreTagsOnBlockScalars	ported	crates/yaml/tests/parser_test.rs::testCoreTagsOnBlockScalars
+Tests/ParserTest.php	ParserTest::testCustomTagSupport	ported	crates/yaml/tests/parser_test.rs::testCustomTagSupport
+Tests/ParserTest.php	ParserTest::testCustomTagsDisabled	ported	crates/yaml/tests/parser_test.rs::testCustomTagsDisabled
+Tests/ParserTest.php	ParserTest::testDetectCircularReferences	ported	crates/yaml/tests/parser_test.rs::testDetectCircularReferences
+Tests/ParserTest.php	ParserTest::testDocumentEndMarkerFollowedByAnotherDocument	ported	crates/yaml/tests/parser_test.rs::testDocumentEndMarkerFollowedByAnotherDocument
+Tests/ParserTest.php	ParserTest::testDocumentEndMarkerIsAWholeLine	ported	crates/yaml/tests/parser_test.rs::testDocumentEndMarkerIsAWholeLine
+Tests/ParserTest.php	ParserTest::testDuplicateYamlDirective	ported	crates/yaml/tests/parser_test.rs::testDuplicateYamlDirective
+Tests/ParserTest.php	ParserTest::testEmptyLinesBeforeTheDocumentStartMarker	ported	crates/yaml/tests/parser_test.rs::testEmptyLinesBeforeTheDocumentStartMarker
+Tests/ParserTest.php	ParserTest::testEmptyMappingKeyWithCustomTag	ported	crates/yaml/tests/parser_test.rs::testEmptyMappingKeyWithCustomTag
+Tests/ParserTest.php	ParserTest::testEmptyMappingKeyWithTag	ported	crates/yaml/tests/parser_test.rs::testEmptyMappingKeyWithTag
+Tests/ParserTest.php	ParserTest::testEmptyValue	ported	crates/yaml/tests/parser_test.rs::testEmptyValue
+Tests/ParserTest.php	ParserTest::testEmptyValueInExpandedMappingIsSupported	ported	crates/yaml/tests/parser_test.rs::testEmptyValueInExpandedMappingIsSupported
+Tests/ParserTest.php	ParserTest::testEmptyValueInExpandedSequenceIsSupported	ported	crates/yaml/tests/parser_test.rs::testEmptyValueInExpandedSequenceIsSupported
+Tests/ParserTest.php	ParserTest::testEndOfTheDocumentMarker	ported	crates/yaml/tests/parser_test.rs::testEndOfTheDocumentMarker
+Tests/ParserTest.php	ParserTest::testEscapedQuoteInQuotedMultiLineString	ported	crates/yaml/tests/parser_test.rs::testEscapedQuoteInQuotedMultiLineString
+Tests/ParserTest.php	ParserTest::testEvalRefException	ported	crates/yaml/tests/parser_test.rs::testEvalRefException
+Tests/ParserTest.php	ParserTest::testExceptionWhenUsingUnsupportedBuiltInTags	ported	crates/yaml/tests/parser_test.rs::testExceptionWhenUsingUnsupportedBuiltInTags
+Tests/ParserTest.php	ParserTest::testExplicitStringCasting	ported	crates/yaml/tests/parser_test.rs::testExplicitStringCasting
+Tests/ParserTest.php	ParserTest::testFilenamesAreParsedAsStringsWithoutFlag	ported	crates/yaml/tests/parser_test.rs::testFilenamesAreParsedAsStringsWithoutFlag
+Tests/ParserTest.php	ParserTest::testFloatKeys	ported	crates/yaml/tests/parser_test.rs::testFloatKeys
+Tests/ParserTest.php	ParserTest::testFoldedStringBlockWithComments	ported	crates/yaml/tests/parser_test.rs::testFoldedStringBlockWithComments
+Tests/ParserTest.php	ParserTest::testHashLedLinesAfterMoreIndentedEmptyLinesAreBlockScalarContent	ported	crates/yaml/tests/parser_test.rs::testHashLedLinesAfterMoreIndentedEmptyLinesAreBlockScalarContent
+Tests/ParserTest.php	ParserTest::testIndentedDocumentMarkersAreContent	ported	crates/yaml/tests/parser_test.rs::testIndentedDocumentMarkersAreContent
+Tests/ParserTest.php	ParserTest::testInlineMappingFollowedByMoreContentIsInvalid	ported	crates/yaml/tests/parser_test.rs::testInlineMappingFollowedByMoreContentIsInvalid
+Tests/ParserTest.php	ParserTest::testInlineNotationSpanningMultipleLines	ported	crates/yaml/tests/parser_test.rs::testInlineNotationSpanningMultipleLines
+Tests/ParserTest.php	ParserTest::testInlineSequenceFollowedByMoreContentIsInvalid	ported	crates/yaml/tests/parser_test.rs::testInlineSequenceFollowedByMoreContentIsInvalid
+Tests/ParserTest.php	ParserTest::testInvalidInlineSequenceContainingStringWithEscapedQuotationCharacter	ported	crates/yaml/tests/parser_test.rs::testInvalidInlineSequenceContainingStringWithEscapedQuotationCharacter
+Tests/ParserTest.php	ParserTest::testKeyStartingWithNulByteThrowsParseExceptionWhenMappingsAreParsedAsObjects	ported	crates/yaml/tests/parser_test.rs::testKeyStartingWithNulByteThrowsParseExceptionWhenMappingsAreParsedAsObjects
+Tests/ParserTest.php	ParserTest::testLeadingCommentBlockIsIgnored	ported	crates/yaml/tests/parser_test.rs::testLeadingCommentBlockIsIgnored
+Tests/ParserTest.php	ParserTest::testLineBreaksAroundMoreIndentedLinesInFoldedBlocks	ported	crates/yaml/tests/parser_test.rs::testLineBreaksAroundMoreIndentedLinesInFoldedBlocks
+Tests/ParserTest.php	ParserTest::testLineNumberInException	ported	crates/yaml/tests/parser_test.rs::testLineNumberInException
+Tests/ParserTest.php	ParserTest::testMappingDuplicateKeyBlock	ported	crates/yaml/tests/parser_test.rs::testMappingDuplicateKeyBlock
+Tests/ParserTest.php	ParserTest::testMappingDuplicateKeyFlow	ported	crates/yaml/tests/parser_test.rs::testMappingDuplicateKeyFlow
+Tests/ParserTest.php	ParserTest::testMappingInASequence	ported	crates/yaml/tests/parser_test.rs::testMappingInASequence
+Tests/ParserTest.php	ParserTest::testMappingKeyInMultiLineStringThrowsException	ported	crates/yaml/tests/parser_test.rs::testMappingKeyInMultiLineStringThrowsException
+Tests/ParserTest.php	ParserTest::testMergeKeysInFlowMappingsWhenMappingsAreParsedAsObjects	ported	crates/yaml/tests/parser_test.rs::testMergeKeysInFlowMappingsWhenMappingsAreParsedAsObjects
+Tests/ParserTest.php	ParserTest::testMergeKeysWhenMappingsAreParsedAsObjects	ported	crates/yaml/tests/parser_test.rs::testMergeKeysWhenMappingsAreParsedAsObjects
+Tests/ParserTest.php	ParserTest::testMultiLineComment	ported	crates/yaml/tests/parser_test.rs::testMultiLineComment
+Tests/ParserTest.php	ParserTest::testMultiLineQuotedStringWithTrailingBackslash	ported	crates/yaml/tests/parser_test.rs::testMultiLineQuotedStringWithTrailingBackslash
+Tests/ParserTest.php	ParserTest::testMultiLineStringLastResortParsing	ported	crates/yaml/tests/parser_test.rs::testMultiLineStringLastResortParsing
+Tests/ParserTest.php	ParserTest::testMultipleDocumentsNotSupportedException	ported	crates/yaml/tests/parser_test.rs::testMultipleDocumentsNotSupportedException
+Tests/ParserTest.php	ParserTest::testNestedFoldedStringBlockWithComments	ported	crates/yaml/tests/parser_test.rs::testNestedFoldedStringBlockWithComments
+Tests/ParserTest.php	ParserTest::testNonSpecificTagSupport	ported	crates/yaml/tests/parser_test.rs::testNonSpecificTagSupport
+Tests/ParserTest.php	ParserTest::testNonStringFollowedByCommentEmbeddedInMapping	ported	crates/yaml/tests/parser_test.rs::testNonStringFollowedByCommentEmbeddedInMapping
+Tests/ParserTest.php	ParserTest::testNonUtf8Exception	ported	crates/yaml/tests/parser_test.rs::testNonUtf8Exception
+Tests/ParserTest.php	ParserTest::testNullAsDuplicatedData	ported	crates/yaml/tests/parser_test.rs::testNullAsDuplicatedData
+Tests/ParserTest.php	ParserTest::testObjectForMap	ported	crates/yaml/tests/parser_test.rs::testObjectForMap
+Tests/ParserTest.php	ParserTest::testObjectSupportDisabledButNoExceptions	ported	crates/yaml/tests/parser_test.rs::testObjectSupportDisabledButNoExceptions
+Tests/ParserTest.php	ParserTest::testObjectSupportEnabled	ported	crates/yaml/tests/parser_test.rs::testObjectSupportEnabled
+Tests/ParserTest.php	ParserTest::testObjectsSupportDisabledWithExceptions	ported	crates/yaml/tests/parser_test.rs::testObjectsSupportDisabledWithExceptions
+Tests/ParserTest.php	ParserTest::testParseAcceptsInlineSequencesAtTheNestingDepth	ported	crates/yaml/tests/parser_test.rs::testParseAcceptsInlineSequencesAtTheNestingDepth
+Tests/ParserTest.php	ParserTest::testParseAcceptsLargeCollectionAliasedOnce	ported	crates/yaml/tests/parser_test.rs::testParseAcceptsLargeCollectionAliasedOnce
+Tests/ParserTest.php	ParserTest::testParseAcceptsScalarAliasesWithoutCountingThem	ported	crates/yaml/tests/parser_test.rs::testParseAcceptsScalarAliasesWithoutCountingThem
+Tests/ParserTest.php	ParserTest::testParseAliasFollowedByAComment	ported	crates/yaml/tests/parser_test.rs::testParseAliasFollowedByAComment
+Tests/ParserTest.php	ParserTest::testParseBinaryData	ported	crates/yaml/tests/parser_test.rs::testParseBinaryData
+Tests/ParserTest.php	ParserTest::testParseCountsTaggedValueCollectionAliases	ported	crates/yaml/tests/parser_test.rs::testParseCountsTaggedValueCollectionAliases
+Tests/ParserTest.php	ParserTest::testParseDateAsMappingValue	ported	crates/yaml/tests/parser_test.rs::testParseDateAsMappingValue
+Tests/ParserTest.php	ParserTest::testParseDateWithSubseconds	ported	crates/yaml/tests/parser_test.rs::testParseDateWithSubseconds
+Tests/ParserTest.php	ParserTest::testParseEmptyBinaryData	ported	crates/yaml/tests/parser_test.rs::testParseEmptyBinaryData
+Tests/ParserTest.php	ParserTest::testParseExceptionNotAffectedByMultiLineStringLastResortParsing	ported	crates/yaml/tests/parser_test.rs::testParseExceptionNotAffectedByMultiLineStringLastResortParsing
+Tests/ParserTest.php	ParserTest::testParseExceptionOnDuplicate	ported	crates/yaml/tests/parser_test.rs::testParseExceptionOnDuplicate
+Tests/ParserTest.php	ParserTest::testParseFile	ported	crates/yaml/tests/parser_test.rs::testParseFile
+Tests/ParserTest.php	ParserTest::testParseHandlesLargeDocumentMarkers	ported	crates/yaml/tests/parser_test.rs::testParseHandlesLargeDocumentMarkers
+Tests/ParserTest.php	ParserTest::testParseHandlesLargeLeadingComments	ported	crates/yaml/tests/parser_test.rs::testParseHandlesLargeLeadingComments
+Tests/ParserTest.php	ParserTest::testParseHandlesLargeYamlHeaders	ported	crates/yaml/tests/parser_test.rs::testParseHandlesLargeYamlHeaders
+Tests/ParserTest.php	ParserTest::testParseHandlesTrailingNewlinesAfterDocumentEndMarker	ported	crates/yaml/tests/parser_test.rs::testParseHandlesTrailingNewlinesAfterDocumentEndMarker
+Tests/ParserTest.php	ParserTest::testParseIdeographicSpaces	ported	crates/yaml/tests/parser_test.rs::testParseIdeographicSpaces
+Tests/ParserTest.php	ParserTest::testParseIndentedMappings	ported	crates/yaml/tests/parser_test.rs::testParseIndentedMappings
+Tests/ParserTest.php	ParserTest::testParseInlineMappingWithAnchoredQuotedValue	ported	crates/yaml/tests/parser_test.rs::testParseInlineMappingWithAnchoredQuotedValue
+Tests/ParserTest.php	ParserTest::testParseInlineMappingWithAnchoredQuotedValueContainingBraces	ported	crates/yaml/tests/parser_test.rs::testParseInlineMappingWithAnchoredQuotedValueContainingBraces
+Tests/ParserTest.php	ParserTest::testParseInvalidBinaryData	ported	crates/yaml/tests/parser_test.rs::testParseInvalidBinaryData
+Tests/ParserTest.php	ParserTest::testParseMergeKeyAliasFollowedByAComment	ported	crates/yaml/tests/parser_test.rs::testParseMergeKeyAliasFollowedByAComment
+Tests/ParserTest.php	ParserTest::testParseMergeKeyFollowedByATab	ported	crates/yaml/tests/parser_test.rs::testParseMergeKeyFollowedByATab
+Tests/ParserTest.php	ParserTest::testParseMultiLineMappingValue	ported	crates/yaml/tests/parser_test.rs::testParseMultiLineMappingValue
+Tests/ParserTest.php	ParserTest::testParseMultiLineQuotedString	ported	crates/yaml/tests/parser_test.rs::testParseMultiLineQuotedString
+Tests/ParserTest.php	ParserTest::testParseMultiLineString	ported	crates/yaml/tests/parser_test.rs::testParseMultiLineString
+Tests/ParserTest.php	ParserTest::testParseMultiLineUnquotedString	ported	crates/yaml/tests/parser_test.rs::testParseMultiLineUnquotedString
+Tests/ParserTest.php	ParserTest::testParseMultiLineUnquotedStringWithTrailingComment	ported	crates/yaml/tests/parser_test.rs::testParseMultiLineUnquotedStringWithTrailingComment
+Tests/ParserTest.php	ParserTest::testParseQuotedMergeKeyAsRegularKey	ported	crates/yaml/tests/parser_test.rs::testParseQuotedMergeKeyAsRegularKey
+Tests/ParserTest.php	ParserTest::testParseQuotedStringContainingEscapedQuotationCharacters	ported	crates/yaml/tests/parser_test.rs::testParseQuotedStringContainingEscapedQuotationCharacters
+Tests/ParserTest.php	ParserTest::testParseReferencesOnMergeKeys	ported	crates/yaml/tests/parser_test.rs::testParseReferencesOnMergeKeys
+Tests/ParserTest.php	ParserTest::testParseReferencesOnMergeKeysWithMappingsParsedAsObjects	ported	crates/yaml/tests/parser_test.rs::testParseReferencesOnMergeKeysWithMappingsParsedAsObjects
+Tests/ParserTest.php	ParserTest::testParseRejectsBlockAliasesWhenDisabled	ported	crates/yaml/tests/parser_test.rs::testParseRejectsBlockAliasesWhenDisabled
+Tests/ParserTest.php	ParserTest::testParseRejectsDocumentsThatExceedTheConfiguredCollectionAliasLimit	ported	crates/yaml/tests/parser_test.rs::testParseRejectsDocumentsThatExceedTheConfiguredCollectionAliasLimit
+Tests/ParserTest.php	ParserTest::testParseRejectsDocumentsThatExceedTheDefaultNestingDepth	ported	crates/yaml/tests/parser_test.rs::testParseRejectsDocumentsThatExceedTheDefaultNestingDepth
+Tests/ParserTest.php	ParserTest::testParseRejectsInlineAliasesWhenDisabled	ported	crates/yaml/tests/parser_test.rs::testParseRejectsInlineAliasesWhenDisabled
+Tests/ParserTest.php	ParserTest::testParseRejectsUnterminatedInlineMappingsThatExceedTheNestingDepth	ported	crates/yaml/tests/parser_test.rs::testParseRejectsUnterminatedInlineMappingsThatExceedTheNestingDepth
+Tests/ParserTest.php	ParserTest::testParseRejectsUnterminatedInlineSequencesThatExceedTheNestingDepth	ported	crates/yaml/tests/parser_test.rs::testParseRejectsUnterminatedInlineSequencesThatExceedTheNestingDepth
+Tests/ParserTest.php	ParserTest::testParseValueWithModifiers	ported	crates/yaml/tests/parser_test.rs::testParseValueWithModifiers
+Tests/ParserTest.php	ParserTest::testParseValueWithNegativeModifiers	ported	crates/yaml/tests/parser_test.rs::testParseValueWithNegativeModifiers
+Tests/ParserTest.php	ParserTest::testParserCleansUpReferencesBetweenRuns	ported	crates/yaml/tests/parser_test.rs::testParserCleansUpReferencesBetweenRuns
+Tests/ParserTest.php	ParserTest::testParserIsStateless	ported	crates/yaml/tests/parser_test.rs::testParserIsStateless
+Tests/ParserTest.php	ParserTest::testParserThrowsExceptionWithCorrectLineNumber	ported	crates/yaml/tests/parser_test.rs::testParserThrowsExceptionWithCorrectLineNumber
+Tests/ParserTest.php	ParserTest::testParsingIniThrowsException	ported	crates/yaml/tests/parser_test.rs::testParsingIniThrowsException
+Tests/ParserTest.php	ParserTest::testParsingMultipleDocuments	ported	crates/yaml/tests/parser_test.rs::testParsingMultipleDocuments
+Tests/ParserTest.php	ParserTest::testParsingNonExistentFilesThrowsException	ported	crates/yaml/tests/parser_test.rs::testParsingNonExistentFilesThrowsException
+Tests/ParserTest.php	ParserTest::testParsingNotReadableFilesThrowsException	n/a: upstream skips it as root and on Windows, and the oracle runs as root; parseFile() keeps the cannot-be-read branch	
+Tests/ParserTest.php	ParserTest::testPhpConstantTagMappingAsScalarKey	ported	crates/yaml/tests/parser_test.rs::testPhpConstantTagMappingAsScalarKey
+Tests/ParserTest.php	ParserTest::testPhpConstantTagMappingKey	ported	crates/yaml/tests/parser_test.rs::testPhpConstantTagMappingKey
+Tests/ParserTest.php	ParserTest::testReferenceResolvingInInlineStrings	ported	crates/yaml/tests/parser_test.rs::testReferenceResolvingInInlineStrings
+Tests/ParserTest.php	ParserTest::testRootLevelInlineMappingFollowedByMoreContentIsInvalid	ported	crates/yaml/tests/parser_test.rs::testRootLevelInlineMappingFollowedByMoreContentIsInvalid
+Tests/ParserTest.php	ParserTest::testScalarInSequence	ported	crates/yaml/tests/parser_test.rs::testScalarInSequence
+Tests/ParserTest.php	ParserTest::testSequenceFollowedByCommentEmbeddedInMapping	ported	crates/yaml/tests/parser_test.rs::testSequenceFollowedByCommentEmbeddedInMapping
+Tests/ParserTest.php	ParserTest::testSequenceInAMapping	ported	crates/yaml/tests/parser_test.rs::testSequenceInAMapping
+Tests/ParserTest.php	ParserTest::testSequenceInMappingStartedBySingleDashLine	ported	crates/yaml/tests/parser_test.rs::testSequenceInMappingStartedBySingleDashLine
+Tests/ParserTest.php	ParserTest::testShortcutKeyUnindentedCollectionException	ported	crates/yaml/tests/parser_test.rs::testShortcutKeyUnindentedCollectionException
+Tests/ParserTest.php	ParserTest::testSkipBlankLines	ported	crates/yaml/tests/parser_test.rs::testSkipBlankLines
+Tests/ParserTest.php	ParserTest::testSpacesOnlyLinesInBlockScalarsWithIndentationIndicator	ported	crates/yaml/tests/parser_test.rs::testSpacesOnlyLinesInBlockScalarsWithIndentationIndicator
+Tests/ParserTest.php	ParserTest::testSpecifications	ported	crates/yaml/tests/parser_test.rs::testSpecifications
+Tests/ParserTest.php	ParserTest::testStringBlockWithComments	ported	crates/yaml/tests/parser_test.rs::testStringBlockWithComments
+Tests/ParserTest.php	ParserTest::testTabLedLinesAreMoreIndentedInFoldedBlocks	ported	crates/yaml/tests/parser_test.rs::testTabLedLinesAreMoreIndentedInFoldedBlocks
+Tests/ParserTest.php	ParserTest::testTabsAsIndentationInYaml	ported	crates/yaml/tests/parser_test.rs::testTabsAsIndentationInYaml
+Tests/ParserTest.php	ParserTest::testTabsInBlockScalarHeaders	ported	crates/yaml/tests/parser_test.rs::testTabsInBlockScalarHeaders
+Tests/ParserTest.php	ParserTest::testTagMappingAsScalarKey	ported	crates/yaml/tests/parser_test.rs::testTagMappingAsScalarKey
+Tests/ParserTest.php	ParserTest::testTaggedBlockScalarInNestedList	ported	crates/yaml/tests/parser_test.rs::testTaggedBlockScalarInNestedList
+Tests/ParserTest.php	ParserTest::testTaggedBlockScalarsAsListItems	ported	crates/yaml/tests/parser_test.rs::testTaggedBlockScalarsAsListItems
+Tests/ParserTest.php	ParserTest::testTaggedInlineMapping	ported	crates/yaml/tests/parser_test.rs::testTaggedInlineMapping
+Tests/ParserTest.php	ParserTest::testTaggedTextAsListItem	ported	crates/yaml/tests/parser_test.rs::testTaggedTextAsListItem
+Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelAssoc	ported	crates/yaml/tests/parser_test.rs::testTaggedValueTopLevelAssoc
+Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelAssocInline	ported	crates/yaml/tests/parser_test.rs::testTaggedValueTopLevelAssocInline
+Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelList	ported	crates/yaml/tests/parser_test.rs::testTaggedValueTopLevelList
+Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelNull	ported	crates/yaml/tests/parser_test.rs::testTaggedValueTopLevelNull
+Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelNumber	ported	crates/yaml/tests/parser_test.rs::testTaggedValueTopLevelNumber
+Tests/ParserTest.php	ParserTest::testTaggedValueTopLevelString	ported	crates/yaml/tests/parser_test.rs::testTaggedValueTopLevelString
+Tests/ParserTest.php	ParserTest::testTaggedValueWithoutValue	ported	crates/yaml/tests/parser_test.rs::testTaggedValueWithoutValue
+Tests/ParserTest.php	ParserTest::testThrowExceptionIfInvalidAdditionalClosingTagOccurs	ported	crates/yaml/tests/parser_test.rs::testThrowExceptionIfInvalidAdditionalClosingTagOccurs
+Tests/ParserTest.php	ParserTest::testTopLevelNull	ported	crates/yaml/tests/parser_test.rs::testTopLevelNull
+Tests/ParserTest.php	ParserTest::testTopLevelNumber	ported	crates/yaml/tests/parser_test.rs::testTopLevelNumber
+Tests/ParserTest.php	ParserTest::testTrailingBackslashInSingleQuotedMultiLineString	ported	crates/yaml/tests/parser_test.rs::testTrailingBackslashInSingleQuotedMultiLineString
+Tests/ParserTest.php	ParserTest::testTrailingBackslashesBeforeNewlineInQuotedMultiLineString	ported	crates/yaml/tests/parser_test.rs::testTrailingBackslashesBeforeNewlineInQuotedMultiLineString
+Tests/ParserTest.php	ParserTest::testUnindentedCollectionException	ported	crates/yaml/tests/parser_test.rs::testUnindentedCollectionException
+Tests/ParserTest.php	ParserTest::testUnquotedMultilineScalarHandlesCommentsAndBlanks	ported	crates/yaml/tests/parser_test.rs::testUnquotedMultilineScalarHandlesCommentsAndBlanks
+Tests/ParserTest.php	ParserTest::testUnquotedMultilineScalarThrowsOnOrphanedLineAfterComment	ported	crates/yaml/tests/parser_test.rs::testUnquotedMultilineScalarThrowsOnOrphanedLineAfterComment
+Tests/ParserTest.php	ParserTest::testUnquotedMultilineScalarWithBlankLines	ported	crates/yaml/tests/parser_test.rs::testUnquotedMultilineScalarWithBlankLines
+Tests/ParserTest.php	ParserTest::testUnsupportedBuiltInTagWithScalar	ported	crates/yaml/tests/parser_test.rs::testUnsupportedBuiltInTagWithScalar
+Tests/ParserTest.php	ParserTest::testUnsupportedTagWithScalar	ported	crates/yaml/tests/parser_test.rs::testUnsupportedTagWithScalar
+Tests/ParserTest.php	ParserTest::testUppercaseHexadecimalPrefixKeys	ported	crates/yaml/tests/parser_test.rs::testUppercaseHexadecimalPrefixKeys
+Tests/ParserTest.php	ParserTest::testValidTokenSeparation	ported	crates/yaml/tests/parser_test.rs::testValidTokenSeparation
+Tests/ParserTest.php	ParserTest::testWhiteSpaceIsFoldedInMultiLineQuotedString	ported	crates/yaml/tests/parser_test.rs::testWhiteSpaceIsFoldedInMultiLineQuotedString
+Tests/ParserTest.php	ParserTest::testWhitespaceAtEndOfLine	ported	crates/yaml/tests/parser_test.rs::testWhitespaceAtEndOfLine
+Tests/ParserTest.php	ParserTest::testWrappedUnquotedStringWithMultipleSpacesInValue	ported	crates/yaml/tests/parser_test.rs::testWrappedUnquotedStringWithMultipleSpacesInValue
+Tests/ParserTest.php	ParserTest::testWrongPhpConstantSyntax	ported	crates/yaml/tests/parser_test.rs::testWrongPhpConstantSyntax
+Tests/ParserTest.php	ParserTest::testYamlDirective	ported	crates/yaml/tests/parser_test.rs::testYamlDirective
 Tests/YamlTest.php	YamlTest::testNegativeIndentationThrowsException	pending	
 Tests/YamlTest.php	YamlTest::testParseAllowsConfiguringTheMaximumNestingLevel	pending	
 Tests/YamlTest.php	YamlTest::testParseAndDump	pending	

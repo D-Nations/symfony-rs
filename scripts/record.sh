@@ -84,6 +84,15 @@ yaml() {
         mv "$tmp" "$out"
         echo "Yaml $class providers written to $out"
     done
+    for class in ParserTest; do
+        name=$(echo "$class" | sed 's/Test$//' | tr '[:upper:]' '[:lower:]')
+        out=crates/yaml/tests/data/${name}_test.json
+        tmp=$(mktemp -p oracle/out)
+        oracle oracle/recorders/yaml_test_calls.php "$class" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Yaml $class calls written to $out"
+    done
 }
 
 case "${1:-}" in

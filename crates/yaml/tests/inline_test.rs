@@ -5,10 +5,8 @@
 //! `expectExceptionMessage` checks that the message contains the text;
 //! `expectExceptionMessageMatches` uses the upstream pattern.
 //!
-//! Not here: testFlowAndBlockProduceSameOutputForAmpersandPrefixedItems
-//! (needs `Yaml::parse()`, ported with Parser.php) and
-//! testDumpNumericValueWithLocale (`n/a`: Rust has no process locale;
-//! `dump()` never depends on one).
+//! Not here: testDumpNumericValueWithLocale (`n/a`: Rust has no process
+//! locale; `dump()` never depends on one).
 //!
 //! Upstream: symfony/yaml Tests/InlineTest.php
 #![allow(non_snake_case)]
@@ -27,7 +25,7 @@ use php_value::{
 };
 use serde_json::Value as Json;
 use symfony_yaml::{
-    Environment, Flags, Inline, ParseException, References, TaggedValue, inline::is_hash,
+    Environment, Flags, Inline, ParseException, Parser, References, TaggedValue, inline::is_hash,
 };
 
 type TestResult = Result<(), Box<dyn std::error::Error>>;
@@ -970,6 +968,47 @@ fn testParseSequenceWithEmptyElement() -> TestResult {
         list(vec!["foo".into(), "bar".into()]),
         parse("[foo, bar, ]", Flags::NONE)?
     );
+    Ok(())
+}
+
+#[test]
+fn testFlowAndBlockProduceSameOutputForAmpersandPrefixedItems() -> TestResult {
+    let list = |items: Vec<Value>| Value::Array(PhpArray::list(items));
+    assert_eq!(list(vec![Value::Null]), parse("[&string4]", Flags::NONE)?);
+    assert_eq!(
+        Value::Array(php_array!["foo" => Value::Null]),
+        parse("{foo: &string4}", Flags::NONE)?
+    );
+
+    assert_eq!(
+        list(vec!["&string3".into()]),
+        parse("[!!str &string3]", Flags::NONE)?
+    );
+    assert_eq!(
+        Value::Array(php_array!["foo" => "&string3"]),
+        parse("{foo: !!str &string3}", Flags::NONE)?
+    );
+
+    let yaml = "block:
+    - '&string1'
+    - \"&string2\"
+    - !!str &string3
+    - &string4
+flow: ['&string1', \"&string2\", !!str &string3, &string4 ]";
+    // Yaml::parse($yaml)
+    let parsed = Parser::with_environment(environment()).parse(yaml.as_bytes(), Flags::NONE)?;
+    let parsed = parsed.as_array().ok_or("not an array")?;
+    let block = parsed.get(&Key::from("block")).ok_or("no block")?;
+    assert_eq!(
+        &list(vec![
+            "&string1".into(),
+            "&string2".into(),
+            "&string3".into(),
+            Value::Null
+        ]),
+        block
+    );
+    assert_eq!(Some(block), parsed.get(&Key::from("flow")));
     Ok(())
 }
 

@@ -59,9 +59,11 @@ crates/yaml/src/exception.rs	symfony/yaml	Exception/DumpException.php	6107ee26a2
 crates/yaml/src/exception.rs	symfony/yaml	Exception/RuntimeException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/inline.rs	symfony/yaml	Inline.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/lib.rs	symfony/yaml	Yaml.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/parser.rs	symfony/yaml	Parser.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/parser_state.rs	symfony/yaml	ParserState.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/tag.rs	symfony/yaml	Tag/TaggedValue.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/timestamp.rs	symfony/yaml	Inline.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/unescaper.rs	symfony/yaml	Unescaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/inline_test.rs	symfony/yaml	Tests/InlineTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/parse_exception.rs	symfony/yaml	Tests/ParseExceptionTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/tests/parser_test.rs	symfony/yaml	Tests/ParserTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
