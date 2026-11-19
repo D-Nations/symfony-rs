@@ -455,6 +455,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-config"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "serde_json",
+ "symfony-deprecation-contracts",
+]
+
+[[package]]
+name = "symfony-deprecation-contracts"
+version = "0.1.0"
+
+[[package]]
 name = "symfony-dotenv"
 version = "0.1.0"
 dependencies = [

@@ -7,6 +7,8 @@ members = [
     "crates/php-value",
     "crates/yaml",
     "crates/dotenv",
+    "crates/deprecation-contracts",
+    "crates/config",
     "crates/http-foundation",
     "crates/routing",
     "crates/http-kernel",

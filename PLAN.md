@@ -479,6 +479,19 @@ Stack rows (searched November 19):
       a value ending in `$(`; the port fails instead (crate README,
       "Differences"). Pending: the two commands (19 tests) after Console.
 
+- [ ] Config (`symfony-config`, values in `php-value`). Ported: the
+      Definition nodes (`BaseNode.php` and the interfaces, VariableNode,
+      ScalarNode, BooleanNode, NumericNode, IntegerNode, FloatNode,
+      StringNode, EnumNode, ArrayNode, PrototypedArrayNode), the Definition
+      exceptions, `Exception/LogicException.php` and `Processor.php`
+      without `processConfiguration()`: 75 of 334 upstream tests, plus
+      1,938 recorded cases (`scripts/record.sh config`). Placeholders are
+      thread-local; PHP's built-ins it needs are written from documentation
+      and checked by those cases. `trigger_deprecation()` is the new
+      `symfony-deprecation-contracts` crate. Next: `Definition/Builder/*`,
+      then the dumpers, then loaders and resources (after Filesystem and
+      Finder) and `XmlUtils` (`php-dom`, decision 9).
+
 ## Verification
 
 - Per component: manifest has no `pending` rows (CI-enforced); upstream tests

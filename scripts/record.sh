@@ -8,6 +8,7 @@
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
+#   scripts/record.sh config       crates/config/tests/data/definition.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -114,6 +115,16 @@ dotenv() {
     echo "Dotenv parse vectors written to $out"
 }
 
+config() {
+    local out=crates/config/tests/data/definition.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_definition.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config Definition vectors written to $out"
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -122,6 +133,7 @@ case "${1:-}" in
     php-value) php_value ;;
     yaml) yaml ;;
     dotenv) dotenv ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|all" >&2; exit 2 ;;
+    config) config ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; config ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|all" >&2; exit 2 ;;
 esac
