@@ -1,0 +1,160 @@
+[
+ {
+  "name": "type-0",
+  "content_type": "application/x-www-form-urlencoded",
+  "post": [
+   [
+    "YQ==",
+    "MQ=="
+   ],
+   [
+    "Yg==",
+    [
+     [
+      0,
+      "Mg=="
+     ]
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "type-1",
+  "content_type": "application/x-www-form-urlencoded; charset=utf-8",
+  "post": [
+   [
+    "YQ==",
+    "MQ=="
+   ],
+   [
+    "Yg==",
+    [
+     [
+      0,
+      "Mg=="
+     ]
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "type-2",
+  "content_type": "APPLICATION/X-WWW-FORM-URLENCODED",
+  "post": [
+   [
+    "YQ==",
+    "MQ=="
+   ],
+   [
+    "Yg==",
+    [
+     [
+      0,
+      "Mg=="
+     ]
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "type-3",
+  "content_type": "application/x-www-form-urlencoded ",
+  "post": [
+   [
+    "YQ==",
+    "MQ=="
+   ],
+   [
+    "Yg==",
+    [
+     [
+      0,
+      "Mg=="
+     ]
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "type-4",
+  "content_type": " application/x-www-form-urlencoded",
+  "post": [
+   [
+    "YQ==",
+    "MQ=="
+   ],
+   [
+    "Yg==",
+    [
+     [
+      0,
+      "Mg=="
+     ]
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "type-5",
+  "content_type": "application/x-www-form-urlencoded,x",
+  "post": [
+   [
+    "YQ==",
+    "MQ=="
+   ],
+   [
+    "Yg==",
+    [
+     [
+      0,
+      "Mg=="
+     ]
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "type-6",
+  "content_type": "application/x-www-form-urlencodedx",
+  "post": []
+ },
+ {
+  "name": "type-7",
+  "content_type": "application/x-www-form-urlencoded\tx",
+  "post": []
+ },
+ {
+  "name": "type-8",
+  "content_type": "application/x-www-form-urlencoded;x",
+  "post": [
+   [
+    "YQ==",
+    "MQ=="
+   ],
+   [
+    "Yg==",
+    [
+     [
+      0,
+      "Mg=="
+     ]
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "type-9",
+  "content_type": "application/x-www-form-urlencode",
+  "post": []
+ },
+ {
+  "name": "type-10",
+  "content_type": "text/plain",
+  "post": []
+ },
+ {
+  "name": "type-11",
+  "content_type": "",
+  "post": []
+ }
+]

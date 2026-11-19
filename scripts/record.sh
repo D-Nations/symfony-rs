@@ -3,6 +3,7 @@
 #
 #   scripts/record.sh routing      crates/routing/tests/data/matcher.json
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
+#   scripts/record.sh request-vars crates/http-foundation/tests/data/{query,cookie,content_type}_vectors.json
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
@@ -36,6 +37,8 @@ routing() {
 }
 
 multipart() { python oracle/recorders/multipart.py; }
+
+request_vars() { python oracle/recorders/request_vars.py; }
 
 event_dispatcher() {
     local out=crates/event-dispatcher/tests/data/edges.txt tmp
@@ -134,12 +137,13 @@ config() {
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
+    request-vars) request_vars ;;
     event-dispatcher) event_dispatcher ;;
     stopwatch) stopwatch ;;
     php-value) php_value ;;
     yaml) yaml ;;
     dotenv) dotenv ;;
     config) config ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; config ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|all" >&2; exit 2 ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|all" >&2; exit 2 ;;
 esac
