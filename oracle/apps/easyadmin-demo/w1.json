@@ -1,0 +1,2006 @@
+{
+ "app": "EasyCorp/easyadmin-demo",
+ "commit": "119c6df2921867eb59cae083f807b8bb3cdd694a",
+ "patch": "oracle/apps/easyadmin-demo/prod-boot.patch",
+ "lock": "the pin's composer.lock (PLAN.md decision 10)",
+ "php": "symfony-rs-oracle:8.4.27",
+ "env": {
+  "APP_ENV": "prod",
+  "APP_DEBUG": "0",
+  "APP_SECRET": "symfony-rs-oracle-recording"
+ },
+ "server": "PHP built-in server (php -S), docroot public/",
+ "kind": "recorded from PHP",
+ "databases": {
+  "pinned": [
+   {
+    "accept_language": null,
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:38 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:41 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "en",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "en"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:43 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "en",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:44 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "fr",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/fr/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:45 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/fr/'\" />\n\n        <title>Redirecting to /fr/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/fr/\">/fr/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/fr/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/fr/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:46 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/fr/admin'\" />\n\n        <title>Redirecting to /fr/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/fr/admin\">/fr/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "de-AT",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "de-AT"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:47 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/'\" />\n\n        <title>Redirecting to /de/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/\">/de/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/de/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "de-AT",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:49 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/admin'\" />\n\n        <title>Redirecting to /de/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/admin\">/de/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "es-ES,es;q=0.9,en;q=0.8",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/es/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:50 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/es/'\" />\n\n        <title>Redirecting to /es/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/es/\">/es/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/es/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/es/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:52 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/es/admin'\" />\n\n        <title>Redirecting to /es/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/es/admin\">/es/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "fr;q=0.5, de;q=0.8",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr;q=0.5, de;q=0.8"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:53 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/'\" />\n\n        <title>Redirecting to /de/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/\">/de/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/de/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr;q=0.5, de;q=0.8",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:54 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/admin'\" />\n\n        <title>Redirecting to /de/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/admin\">/de/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "ja",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "ja"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:55 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "ja",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:56 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "*",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "*"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:58 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "*",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:54:59 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "EN",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "EN"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:55:00 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "EN",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:55:01 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "pt-BR,de;q=0.1",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "pt-BR,de;q=0.1"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:55:02 GMT"
+       ],
+       [
+        "Set-Cookie",
+        "PHPSESSID=<value>; path=/; httponly; samesite=lax"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/'\" />\n\n        <title>Redirecting to /de/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/\">/de/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/de/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "pt-BR,de;q=0.1",
+        "Cookie": "PHPSESSID=<value>"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:55:04 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/admin'\" />\n\n        <title>Redirecting to /de/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/admin\">/de/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   }
+  ],
+  "empty": [
+   {
+    "accept_language": null,
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:03 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:05 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "en",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "en"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:06 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "en"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:08 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "fr",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/fr/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:09 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/fr/'\" />\n\n        <title>Redirecting to /fr/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/fr/\">/fr/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/fr/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/fr/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:10 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/fr/admin'\" />\n\n        <title>Redirecting to /fr/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/fr/admin\">/fr/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "de-AT",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "de-AT"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:11 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/'\" />\n\n        <title>Redirecting to /de/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/\">/de/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/de/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "de-AT"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:13 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/admin'\" />\n\n        <title>Redirecting to /de/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/admin\">/de/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "es-ES,es;q=0.9,en;q=0.8",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/es/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:14 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/es/'\" />\n\n        <title>Redirecting to /es/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/es/\">/es/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/es/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/es/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:15 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/es/admin'\" />\n\n        <title>Redirecting to /es/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/es/admin\">/es/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "fr;q=0.5, de;q=0.8",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr;q=0.5, de;q=0.8"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:16 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/'\" />\n\n        <title>Redirecting to /de/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/\">/de/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/de/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "fr;q=0.5, de;q=0.8"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:17 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/admin'\" />\n\n        <title>Redirecting to /de/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/admin\">/de/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "ja",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "ja"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:18 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "ja"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:19 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "*",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "*"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:20 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "*"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:22 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "EN",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "EN"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:23 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/'\" />\n\n        <title>Redirecting to /en/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/\">/en/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/en/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "EN"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/en/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:24 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/en/admin'\" />\n\n        <title>Redirecting to /en/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/en/admin\">/en/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   },
+   {
+    "accept_language": "pt-BR,de;q=0.1",
+    "steps": [
+     {
+      "request": {
+       "method": "GET",
+       "path": "/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "pt-BR,de;q=0.1"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:25 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/'\" />\n\n        <title>Redirecting to /de/</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/\">/de/</a>.\n    </body>\n</html>"
+     },
+     {
+      "request": {
+       "method": "GET",
+       "path": "/de/",
+       "headers": {
+        "Host": "localhost",
+        "Accept-Language": "pt-BR,de;q=0.1"
+       }
+      },
+      "status": 302,
+      "headers": [
+       [
+        "Host",
+        "localhost"
+       ],
+       [
+        "Connection",
+        "close"
+       ],
+       [
+        "X-Powered-By",
+        "PHP/8.4.27"
+       ],
+       [
+        "Cache-Control",
+        "max-age=0, must-revalidate, private"
+       ],
+       [
+        "Date",
+        "<date>"
+       ],
+       [
+        "Location",
+        "/de/admin"
+       ],
+       [
+        "Content-Type",
+        "text/html; charset=utf-8"
+       ],
+       [
+        "Expires",
+        "Thu, 19 Nov 2026 13:56:26 GMT"
+       ]
+      ],
+      "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='/de/admin'\" />\n\n        <title>Redirecting to /de/admin</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"/de/admin\">/de/admin</a>.\n    </body>\n</html>"
+     }
+    ]
+   }
+  ]
+ }
+}

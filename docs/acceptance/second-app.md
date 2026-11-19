@@ -140,6 +140,17 @@ after the stories are loaded. The recording keeps status, `Location`,
 `Set-Cookie` and `Cache-Control`. Whether the auto-login starts a session
 on these redirects is what the recording will show; it is not assumed here.
 
+**W1 recorded** (`scripts/record.sh second-app-w1` →
+`oracle/apps/easyadmin-demo/w1.json`, recorded from PHP; the app is built
+from an empty directory by `scripts/second-app.sh`). Ten `Accept-Language`
+values, on the database the pin ships (`var/data.db`, its demo data) and
+on an empty schema: 40 responses, all `302`. `/` redirects to `/{locale}/`
+(`en` when nothing matches, `de-AT` → `de`, `pt-BR,de;q=0.1` → `de`), then
+`/{locale}/admin`. With the demo data, the auto-login starts a session on
+the first redirect (`PHPSESSID=…; path=/; httponly; samesite=lax`); on the
+empty schema no cookie is set. The demo's Foundry stories are not used:
+they are unseeded, so their rows change on every run.
+
 | Rank | Components |
 |---|---|
 | Required for W1 | Routing (requirements, `redirectToRoute` via UrlGenerator); HttpFoundation (`getPreferredLanguage`, `RedirectResponse`, sessions and their cookie); HttpKernel's Session, Locale, Router and ValidateRequest listeners; DI parameters (`%kernel.enabled_locales%`); Security (lazy firewall, `Security::login()`, session token storage); Doctrine `findOneBy` on `User` (SQLite) |
