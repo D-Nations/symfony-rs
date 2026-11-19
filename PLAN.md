@@ -215,8 +215,9 @@ the stage order explicitly; they never justify silently dropping coverage.
   Check its licence and whether its dependencies fit the chosen Symfony
   version line. Record routes, package/API use, templates, configuration,
   persistence, queues and external integrations in
-  `docs/acceptance/second-app.md`. Selection is pending; neither the Fast
-  Track guestbook nor wallabag is adopted by this plan revision.
+  `docs/acceptance/second-app.md`. Recommended: the EasyAdmin demo
+  (decision 10; wallabag is on Symfony 5.4, and the Fast Track guestbook
+  was not adopted).
 - Rank component work by the demo plus that inventory: required for the
   next recorded workflow, required later, or not yet demanded. Capture a
   small initial workflow as an oracle, then add flows as providers arrive.
@@ -482,6 +483,26 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    with its location. Needed at `XmlUtils` (Config stage 4); the parser
    comes first, validation after.
 
+10. **Second application (M1-D).** Recommended:
+    [EasyCorp/easyadmin-demo](https://github.com/EasyCorp/easyadmin-demo)
+    at `119c6df` (MIT, Symfony `^8.1`, PHP ≥ 8.4, SQLite). It was the only
+    maintained candidate already on the pinned 8.1 line
+    ([docs/acceptance/second-app.md](docs/acceptance/second-app.md) lists
+    the others). Two points are open for the owner:
+    - **Patch level.** Its lock has v8.1.11 (contracts v3.8.1) for 38 of
+      the 60 packages pinned here, which come from symfony/demo at
+      v8.1.10. Recommended: record this app with its own lock, naming the
+      lock in each comparison, and keep the shared pins at the demo's
+      until a deliberate version move.
+    - **Production boot.** Its `when@prod` Doctrine config sets two options
+      DoctrineBundle 3 removed, so `APP_ENV=prod` fails in Config's
+      ArrayNode. Recommended: run the oracle copy (under `oracle/out/`,
+      never `upstream/`) with only those two lines removed, keeping the
+      patch in the repository and the reason in each recording, and offer
+      the fix upstream once the owner agrees. Alternatives: record `dev`
+      (profiler headers and toolbar) or `test` (mock sessions), or wait
+      for an upstream fix.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -643,10 +664,15 @@ Stack rows (searched November 19):
       stay `pending`.
 - [ ] M1-D. Done: provisional converter contract 0.1
       ([docs/converter-contract.md](docs/converter-contract.md)), with
-      prior art compared (stack row above). Pending, in order: second-app
-      selection and inventory (`docs/acceptance/second-app.md`); the
-      request provenance rewrite, because `symfony-routing` links
-      `symfony-http-foundation`; then the fixture (pinned PHP app,
+      prior art compared (stack row above); the second app recommended
+      (decision 10, EasyAdmin demo pinned in `upstream.tsv`) and
+      inventoried in `prod` with the two-line Doctrine overlay
+      ([docs/acceptance/second-app.md](docs/acceptance/second-app.md):
+      142 routes, 872 services, ranked component work, first workflow W1).
+      Pending, in order: the owner's answer on decision 10's two points,
+      then recording W1; the request provenance rewrite, because
+      `symfony-routing` links `symfony-http-foundation`; then the fixture
+      (pinned PHP app,
       recorded responses, hand-authored generated-code-shaped Rust crate,
       Linux CI from an empty directory). The conversion gate stays open
       until symfony2rust emits the fixture.
