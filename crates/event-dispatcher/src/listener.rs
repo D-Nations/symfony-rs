@@ -48,11 +48,47 @@ impl dyn Callable {
 /// A shared PHP object handle. Identity (`===`) is the allocation.
 pub type Object = Arc<dyn Callable>;
 
-/// The `\Closure` returned by a lazy listener's factory, usually a service
-/// locator's getter. It runs at most once per stored listener in PHP; with
-/// concurrent first dispatches it can run once per thread, so it must be
-/// idempotent.
-pub type Factory = Arc<dyn Fn() -> Object + Send + Sync>;
+/// The `\Closure` of a lazy listener, usually a service locator's getter.
+/// It runs at most once per stored listener in PHP; with concurrent first
+/// dispatches it can run once per thread, so it must be idempotent.
+/// Identity (`===`) is the allocation; clones are the same closure.
+#[derive(Clone)]
+pub struct Factory {
+    create: Arc<dyn Fn() -> Object + Send + Sync>,
+    name: Option<&'static str>,
+}
+
+impl Factory {
+    pub fn new(create: impl Fn() -> Object + Send + Sync + 'static) -> Self {
+        Self {
+            create: Arc::new(create),
+            name: None,
+        }
+    }
+
+    /// A factory carrying `#[\Closure(name: Foo::class)]`, as the container
+    /// writes it: the class it returns, so debug tools can describe the
+    /// listener without creating the service.
+    pub fn named(name: &'static str, create: impl Fn() -> Object + Send + Sync + 'static) -> Self {
+        Self {
+            create: Arc::new(create),
+            name: Some(name),
+        }
+    }
+
+    pub fn name(&self) -> Option<&'static str> {
+        self.name
+    }
+
+    /// `$factory()`.
+    pub fn create(&self) -> Object {
+        (self.create)()
+    }
+
+    fn same(&self, other: &Self) -> bool {
+        same(&self.create, &other.create)
+    }
+}
 
 type ClosureFn = dyn Fn(&mut dyn EventObject, &str, &dyn EventDispatcherInterface) -> Result<(), Throwable>
     + Send
@@ -139,6 +175,13 @@ impl Closure {
         same(&self.function, &other.function)
     }
 
+    /// For `$object->method(...)`: the object's class and the method.
+    pub(crate) fn bound_method(&self) -> Option<(&'static str, &'static str)> {
+        self.bound
+            .as_ref()
+            .map(|(object, method)| (object.class(), *method))
+    }
+
     /// PHP 8.4 `$a == $b` for closures. Method names are case-insensitive
     /// in PHP, so the bound method compares that way.
     fn equal(&self, other: &Self) -> bool {
@@ -190,7 +233,7 @@ impl Listener {
         factory: impl Fn() -> Object + Send + Sync + 'static,
         method: &'static str,
     ) -> Self {
-        Self::Lazy(Arc::new(factory), method)
+        Self::Lazy(Factory::new(factory), method)
     }
 
     /// The object of `[$object, 'method']` or of an invokable listener.
@@ -215,7 +258,7 @@ impl Listener {
             (Self::Closure(a), Self::Closure(b)) => a.identical(b),
             (Self::Method(a, m), Self::Method(b, n)) => same(a, b) && m == n,
             (Self::Invokable(a), Self::Invokable(b)) => same(a, b),
-            (Self::Lazy(a, m), Self::Lazy(b, n)) => same(a, b) && m == n,
+            (Self::Lazy(a, m), Self::Lazy(b, n)) => a.same(b) && m == n,
             _ => false,
         }
     }
@@ -235,7 +278,7 @@ impl Listener {
     /// `$listener[0] = $listener[0](); $listener[1] ??= '__invoke';`
     pub(crate) fn resolve(&self) -> Option<Self> {
         match self {
-            Self::Lazy(factory, method) => Some(Self::Method(factory(), method)),
+            Self::Lazy(factory, method) => Some(Self::Method(factory.create(), method)),
             _ => None,
         }
     }
@@ -251,7 +294,9 @@ impl Listener {
             Self::Closure(closure) => closure.call(event, event_name, dispatcher),
             Self::Method(object, method) => object.call(method, event, event_name, dispatcher),
             Self::Invokable(object) => object.call("__invoke", event, event_name, dispatcher),
-            Self::Lazy(factory, method) => factory().call(method, event, event_name, dispatcher),
+            Self::Lazy(factory, method) => {
+                factory.create().call(method, event, event_name, dispatcher)
+            }
         }
     }
 }

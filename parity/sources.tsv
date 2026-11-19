@@ -1,6 +1,8 @@
 # rust file	package	upstream path	reference
 crates/event-dispatcher-contracts/src/lib.rs	symfony/event-dispatcher-contracts	Event.php	c7de7a00ffb67842132da02ea92988a39ccd9f4e
 crates/event-dispatcher-contracts/src/lib.rs	symfony/event-dispatcher-contracts	EventDispatcherInterface.php	c7de7a00ffb67842132da02ea92988a39ccd9f4e
+crates/event-dispatcher/src/debug/traceable_event_dispatcher.rs	symfony/event-dispatcher	Debug/TraceableEventDispatcher.php	7458da64220376b2e0dc2d8451bf43382c1ad297
+crates/event-dispatcher/src/debug/wrapped_listener.rs	symfony/event-dispatcher	Debug/WrappedListener.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/event-dispatcher/src/event_dispatcher.rs	symfony/event-dispatcher	EventDispatcher.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/event-dispatcher/src/generic_event.rs	symfony/event-dispatcher	GenericEvent.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/event-dispatcher/src/immutable_event_dispatcher.rs	symfony/event-dispatcher	ImmutableEventDispatcher.php	7458da64220376b2e0dc2d8451bf43382c1ad297
@@ -11,6 +13,8 @@ crates/event-dispatcher/tests/event_dispatcher.rs	symfony/event-dispatcher	Tests
 crates/event-dispatcher/tests/event_dispatcher.rs	symfony/event-dispatcher	Tests/ChildEventDispatcherTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/event-dispatcher/tests/generic_event.rs	symfony/event-dispatcher	Tests/GenericEventTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/event-dispatcher/tests/immutable_event_dispatcher.rs	symfony/event-dispatcher	Tests/ImmutableEventDispatcherTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
+crates/event-dispatcher/tests/traceable_event_dispatcher.rs	symfony/event-dispatcher	Tests/Debug/TraceableEventDispatcherTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
+crates/event-dispatcher/tests/wrapped_listener.rs	symfony/event-dispatcher	Tests/Debug/WrappedListenerTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeader.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeaderItem.php	79325f87c3a2acc7564ddce9f457046e980e7255

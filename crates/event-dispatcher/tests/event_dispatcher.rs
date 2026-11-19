@@ -577,7 +577,7 @@ macro_rules! event_dispatcher_tests {
             let factory: Factory = {
                 let called = called.clone();
                 let test = object(&test);
-                Arc::new(move || {
+                Factory::new(move || {
                     called.fetch_add(1, SeqCst);
                     test.clone()
                 })
@@ -604,7 +604,7 @@ macro_rules! event_dispatcher_tests {
             let test = object(&Arc::new(TestWithDispatcher::default()));
             let factory: Factory = {
                 let test = test.clone();
-                Arc::new(move || test.clone())
+                Factory::new(move || test.clone())
             };
 
             dispatcher.add_listener("foo", Listener::Lazy(factory.clone(), "foo"), 0)?;
@@ -625,7 +625,7 @@ macro_rules! event_dispatcher_tests {
             let test = object(&Arc::new(TestWithDispatcher::default()));
             let factory: Factory = {
                 let test = test.clone();
-                Arc::new(move || test.clone())
+                Factory::new(move || test.clone())
             };
 
             dispatcher.add_listener("foo", Listener::Lazy(factory.clone(), "foo"), 3)?;
@@ -649,7 +649,7 @@ macro_rules! event_dispatcher_tests {
             let test = object(&Arc::new(TestWithDispatcher::default()));
             let factory: Factory = {
                 let test = test.clone();
-                Arc::new(move || test.clone())
+                Factory::new(move || test.clone())
             };
 
             dispatcher.add_listener("foo", Listener::Lazy(factory.clone(), "foo"), 3)?;

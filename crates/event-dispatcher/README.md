@@ -35,6 +35,8 @@ assert!(event.is_propagation_stopped());
 | Subscribers: `'m'`, `['m', $priority]`, `[['m1', $p], ['m2']]` | `EventDispatcher.php`, `EventSubscriberInterface.php` | Subscriber upstream tests |
 | `GenericEvent` subject, ordered arguments, `ArrayAccess`, iteration, `Argument "%s" not found.` | `GenericEvent.php` | GenericEventTest (13) |
 | `ImmutableEventDispatcher` delegates reads and refuses changes with `Unmodifiable event dispatchers must not be modified.` | `ImmutableEventDispatcher.php` | ImmutableEventDispatcherTest (7) |
+| Feature `debug`: `TraceableEventDispatcher` wraps each listener during a dispatch and unwraps it after; called / not-called listeners (counted, per request), orphaned events, reset (also mid-dispatch), nested and re-entrant dispatches, priorities while dispatching, `section` / `event_listener` Stopwatch events, PSR-3 debug messages | `Debug/TraceableEventDispatcher.php` | TraceableEventDispatcherTest (34) |
+| Feature `debug`: `WrappedListener` names listeners (`Class::method`, `closure`, `Class::__invoke`, a DI-named lazy factory), records calls and stopped propagation, stops its Stopwatch event when the listener fails | `Debug/WrappedListener.php` | WrappedListenerTest (2) |
 
 Oracle vectors: `scripts/record.sh event-dispatcher` runs
 `oracle/recorders/event_dispatcher_edges.php` on PHP 8.4.27 and writes
@@ -60,10 +62,29 @@ Oracle vectors: `scripts/record.sh event-dispatcher` runs
   threads dispatching a lazy listener for the first time may both call its
   factory; factories must be idempotent (service getters are).
 
-## Not ported yet
+## Debug namespace (feature `debug`)
 
-- `Debug/TraceableEventDispatcher.php`, `Debug/WrappedListener.php`
-  (36 tests): need Stopwatch and a PSR-3 logger.
+Symfony's Debug classes are dev-only, so they sit behind the `debug`
+feature; without it the crate depends only on the contracts crate. With
+it, `symfony-stopwatch` and `psr-log` come in.
+
+- `TraceableEventDispatcher::new` returns an `Arc`: the wrappers refer
+  back to it and pass it to the listeners they call.
+- `RequestStack` is a one-method stand-in for HttpFoundation's (M2): it
+  gives the current request's identity, which PHP takes from
+  `spl_object_id()`.
+- `DispatchHooks` is what a PHP subclass overrides (`beforeDispatch`,
+  `afterDispatch`); `Options::disabled` is the `$disabled` closure.
+- `getNotCalledListeners()` reads the inner dispatcher's listener table by
+  reflection in PHP; here through
+  `EventDispatcher::get_listeners_with_priority()`, so lazy listeners are
+  described without being created.
+- A lazy factory can carry DI's `#[\Closure(name: Foo::class)]` as
+  `Factory::named`.
+- `getInfo()`'s `stub` is the string `pretty()`: VarDumper's `ClassStub` is
+  not ported. `__call()` proxying is not ported.
+
+## Not ported yet
 - `DependencyInjection/RegisterListenersPass.php`, `AddEventAliasesPass.php`
   and `Attribute/AsEventListener.php` (26 tests): container compilation, M3.
 - String callables (`'var_dump'`, `['Class', 'staticMethod']`).

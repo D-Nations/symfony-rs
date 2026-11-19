@@ -412,7 +412,10 @@ dependencies = [
 name = "symfony-event-dispatcher"
 version = "0.1.0"
 dependencies = [
+ "psr-log",
+ "symfony-event-dispatcher",
  "symfony-event-dispatcher-contracts",
+ "symfony-stopwatch",
 ]
 
 [[package]]

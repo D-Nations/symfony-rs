@@ -156,6 +156,39 @@ impl EventDispatcher {
         lock(&self.state)
     }
 
+    /// The private `$listeners` table, which TraceableEventDispatcher reads
+    /// by reflection: events in first-added order (events without
+    /// listeners left out), priority buckets in their current order, lazy
+    /// listeners as stored (unresolved unless something resolved them).
+    pub fn get_listeners_with_priority(&self) -> Vec<(String, Vec<(Listener, i64)>)> {
+        let slots: Vec<(String, Vec<(Slot, i64)>)> = {
+            let state = self.lock();
+            state
+                .listeners
+                .iter()
+                .filter(|event| !event.buckets.is_empty())
+                .map(|event| {
+                    let slots = event
+                        .buckets
+                        .iter()
+                        .flat_map(|(priority, slots)| slots.iter().map(|s| (s.clone(), *priority)))
+                        .collect();
+                    (event.name.clone(), slots)
+                })
+                .collect()
+        };
+        slots
+            .into_iter()
+            .map(|(name, slots)| {
+                let listeners = slots
+                    .into_iter()
+                    .map(|(slot, priority)| (lock(&slot).clone(), priority))
+                    .collect();
+                (name, listeners)
+            })
+            .collect()
+    }
+
     /// `sortListeners()`: resolve lazy listeners in priority order, and
     /// start again if that added or removed listeners of this event.
     fn sort_listeners(&self, name: &str) -> Vec<Listener> {
@@ -391,6 +424,10 @@ impl EventDispatcherInterface for EventDispatcher {
         self.find(event_name, listener, true)
             .first()
             .map(|(priority, _)| *priority)
+    }
+
+    fn as_event_dispatcher(&self) -> Option<&EventDispatcher> {
+        Some(self)
     }
 
     fn has_listeners(&self, event_name: Option<&str>) -> bool {

@@ -13,7 +13,10 @@ use std::{fmt, sync::Arc};
 
 use symfony_event_dispatcher_contracts::EventDispatcherInterface as ContractsEventDispatcherInterface;
 
-use crate::listener::{Callable, Listener};
+use crate::{
+    event_dispatcher::EventDispatcher,
+    listener::{Callable, Listener},
+};
 
 /// PHP's `\BadMethodCallException`, thrown by an unmodifiable dispatcher.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -71,6 +74,66 @@ pub trait EventDispatcherInterface: ContractsEventDispatcherInterface {
 
     /// Whether an event (or, without a name, any event) has listeners.
     fn has_listeners(&self, event_name: Option<&str>) -> bool;
+
+    /// PHP's `$dispatcher instanceof EventDispatcher`, which
+    /// TraceableEventDispatcher checks before reading the listener table.
+    fn as_event_dispatcher(&self) -> Option<&EventDispatcher> {
+        None
+    }
+}
+
+/// A shared dispatcher behaves as the dispatcher it holds.
+impl<T: EventDispatcherInterface + ?Sized> EventDispatcherInterface for Arc<T> {
+    fn add_listener(
+        &self,
+        event_name: &str,
+        listener: Listener,
+        priority: i64,
+    ) -> Result<(), BadMethodCallException> {
+        (**self).add_listener(event_name, listener, priority)
+    }
+
+    fn add_subscriber(
+        &self,
+        subscriber: Arc<dyn EventSubscriber>,
+    ) -> Result<(), BadMethodCallException> {
+        (**self).add_subscriber(subscriber)
+    }
+
+    fn remove_listener(
+        &self,
+        event_name: &str,
+        listener: &Listener,
+    ) -> Result<(), BadMethodCallException> {
+        (**self).remove_listener(event_name, listener)
+    }
+
+    fn remove_subscriber(
+        &self,
+        subscriber: &Arc<dyn EventSubscriber>,
+    ) -> Result<(), BadMethodCallException> {
+        (**self).remove_subscriber(subscriber)
+    }
+
+    fn get_listeners(&self, event_name: &str) -> Vec<Listener> {
+        (**self).get_listeners(event_name)
+    }
+
+    fn get_all_listeners(&self) -> Vec<(String, Vec<Listener>)> {
+        (**self).get_all_listeners()
+    }
+
+    fn get_listener_priority(&self, event_name: &str, listener: &Listener) -> Option<i64> {
+        (**self).get_listener_priority(event_name, listener)
+    }
+
+    fn has_listeners(&self, event_name: Option<&str>) -> bool {
+        (**self).has_listeners(event_name)
+    }
+
+    fn as_event_dispatcher(&self) -> Option<&EventDispatcher> {
+        (**self).as_event_dispatcher()
+    }
 }
 
 /// One value of `getSubscribedEvents()`.

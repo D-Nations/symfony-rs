@@ -402,12 +402,17 @@ Stack rows (searched November 19):
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
-      `GenericEvent.php`, `ImmutableEventDispatcher.php` and the contracts'
+      `GenericEvent.php`, `ImmutableEventDispatcher.php`, the contracts'
       `Event.php` / `EventDispatcherInterface.php` (crates
-      `symfony-event-dispatcher`, `symfony-event-dispatcher-contracts`):
-      78 of 140 upstream tests, plus oracle vectors for what the tests
-      leave open (`scripts/record.sh event-dispatcher`). Pending: Debug
-      (36 tests, needs Stopwatch) and the DI passes (26 tests, M3).
+      `symfony-event-dispatcher`, `symfony-event-dispatcher-contracts`),
+      and behind the `debug` feature `Debug/WrappedListener.php` and
+      `Debug/TraceableEventDispatcher.php`: 114 of 140 upstream tests,
+      plus oracle vectors for what the tests leave open
+      (`scripts/record.sh event-dispatcher`). Pending: the DI passes and
+      `#[AsEventListener]` (26 tests), which belong to M3's container
+      compiler.
+- [x] psr/log (`psr-log`, pinned 3.0.2 from the demo's lock file):
+      LoggerInterface, LogLevel, NullLogger. No upstream tests.
       symfony-http-kernel keeps its own dispatcher until M2: its events
       borrow the request, and type-erased events must be `'static`.
 - [x] Stopwatch (`symfony-stopwatch`): all 33 upstream tests; in

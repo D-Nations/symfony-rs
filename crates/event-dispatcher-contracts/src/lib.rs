@@ -91,6 +91,17 @@ pub trait EventDispatcherInterface: Send + Sync {
     ) -> Result<(), Throwable>;
 }
 
+/// A shared dispatcher dispatches as the dispatcher it holds.
+impl<T: EventDispatcherInterface + ?Sized> EventDispatcherInterface for std::sync::Arc<T> {
+    fn dispatch(
+        &self,
+        event: &mut dyn EventObject,
+        event_name: Option<&str>,
+    ) -> Result<(), Throwable> {
+        (**self).dispatch(event, event_name)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
