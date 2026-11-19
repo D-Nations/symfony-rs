@@ -8,7 +8,8 @@
 #                                             vendor directory DIR
 #
 # Composer packages are checked out at the exact commit symfony/demo
-# installed (parity/packages.tsv); other sources at a tag (upstream.tsv).
+# installed (parity/packages.tsv); other sources at a tag or a commit
+# (upstream.tsv), after the packages, so one can sit inside a package.
 # upstream/ is ignored by Git and is read-only reference material.
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
@@ -55,7 +56,10 @@ done < parity/packages.tsv
 while IFS=$'\t' read -r name repo tag; do
     [[ -z "$name" || "$name" == \#* ]] && continue
     wanted "$name" || continue
-    checkout "upstream/$name" "$repo" "refs/tags/$tag"
+    # a tag, or a commit (40 hex digits)
+    ref=refs/tags/$tag
+    [[ "$tag" =~ ^[0-9a-f]{40}$ ]] && ref=$tag
+    checkout "upstream/$name" "$repo" "$ref"
 done < upstream.tsv
 
 [[ -n "$verify" ]] || exit 0

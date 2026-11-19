@@ -1,266 +1,35 @@
 //! ParserTest.php at symfony/yaml 6107ee26a25215c3df3af0a3315e56bb4fd0b7db.
 //!
 //! Each test has its upstream name and replays every call the upstream
-//! test makes to `Parser::parse()` / `parseFile()` (through
-//! `$this->parser`, `new Parser(...)` or `Yaml::parse()`), for each of its
-//! data-provider rows: same limits, input and flags, and the Rust parser
-//! must return exactly what PHP returned, or fail with PHP's message.
-//! `oracle/recorders/yaml_test_calls.php` records the calls by running the
-//! upstream test methods on the oracle with a recording subclass of the
-//! real Parser, and keeps a recording only when the upstream test passes
-//! there, so PHP's results are the values the upstream assertions accept.
-//! On top, the exception a test expects (`expectException`,
-//! `expectExceptionMessage`, `expectExceptionMessageMatches`) is checked
-//! against the last call, as PHPUnit does.
+//! test makes to the parser (through `$this->parser`, `new Parser(...)`,
+//! `Yaml::parse()`) and the dumper, for each of its data-provider rows,
+//! from tests/data/parser_test.json (common/replay.rs says how).
 //!
 //! Inputs over 64 KiB are not recorded: the four tests that build them
 //! with `str_repeat()` build them here the same way, and check them
 //! against the recorded length. testParsingNotReadableFilesThrowsException
 //! is skipped upstream when run as root or on Windows, as on the oracle.
 //!
-//! The fixtures are upstream's Tests/Fixtures (without the PHP enums) in
-//! tests/Fixtures; `{tests}` in the recordings is this tests directory.
-//!
 //! Upstream: symfony/yaml Tests/ParserTest.php
 #![allow(non_snake_case)]
 
 mod common;
 
-use std::sync::{Arc, LazyLock};
+use std::sync::LazyLock;
 
-use php_value::{
-    PhpArray, Value,
-    datetime::DateTimeImmutable,
-    object::EnumCase,
-    php_array,
-    vectors::{base64, decode},
-};
+use common::replay::{self, TestResult, same};
+use php_value::{Value, php_array};
 use serde_json::Value as Json;
-use symfony_yaml::{Environment, Flags, Inline, ParseException, Parser};
+use symfony_yaml::{Flags, Parser};
 
-type TestResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
-
-const B: &str = r"Symfony\Component\Yaml\Tests\B";
-const FOO_UNIT_ENUM: &str = r"Symfony\Component\Yaml\Tests\Fixtures\FooUnitEnum";
-const FOO_BACKED_ENUM: &str = r"Symfony\Component\Yaml\Tests\Fixtures\FooBackedEnum";
-
-/// The environment of the upstream tests: PHP's constants, the Yaml
-/// class constants, class `B` of ParserTest.php (its constants, and
-/// `unserialize()` may create it) and the two fixture enums.
-fn environment() -> Arc<Environment> {
-    static ENVIRONMENT: LazyLock<Arc<Environment>> = LazyLock::new(|| {
-        let mut environment = Environment::new();
-        for (name, value) in [("FOO", "foo"), ("BAR", "bar"), ("BAZ", "baz")] {
-            environment
-                .constants
-                .define(format!("{B}::{name}"), Value::from(value));
-        }
-        environment
-            .classes
-            .allow_with_defaults(B, php_array!["b" => "foo"]);
-        environment.constants.define_enum(
-            FOO_UNIT_ENUM,
-            vec![EnumCase::new(FOO_UNIT_ENUM, "BAR", None)],
-        );
-        environment.constants.define_enum(
-            FOO_BACKED_ENUM,
-            vec![EnumCase::new(FOO_BACKED_ENUM, "BAR", Some("bar".into()))],
-        );
-        Arc::new(environment)
-    });
-    ENVIRONMENT.clone()
-}
-
-fn recordings() -> &'static Json {
-    static DATA: LazyLock<Json> = LazyLock::new(|| {
-        // the nesting-depth tests record values nested past serde's limit
-        let mut reader = serde_json::Deserializer::from_str(include_str!("data/parser_test.json"));
-        reader.disable_recursion_limit();
-        match reader.into_iter::<Json>().next() {
-            Some(Ok(data)) => data,
-            other => panic!("tests/data/parser_test.json: {other:?}"),
-        }
-    });
+fn recording() -> &'static Json {
+    static DATA: LazyLock<Json> =
+        LazyLock::new(|| replay::load(include_str!("data/parser_test.json")));
     &DATA
 }
 
-/// This tests directory, as `{tests}` stands for it in the recordings.
-fn tests_dir() -> String {
-    format!("{}/tests", env!("CARGO_MANIFEST_DIR")).replace('\\', "/")
-}
-
-fn localize(bytes: &[u8]) -> Vec<u8> {
-    let text = String::from_utf8_lossy(bytes);
-    if text.contains("{tests}") {
-        return text.replace("{tests}", &tests_dir()).into_bytes();
-    }
-    bytes.to_vec()
-}
-
-/// A recorded value with `{tests}` in its strings replaced.
-fn localize_value(value: Value) -> Value {
-    match value {
-        Value::String(s) => Value::String(localize(&s).as_slice().into()),
-        Value::Array(array) => Value::Array(
-            array
-                .iter()
-                .map(|(k, v)| (k.clone(), localize_value(v.clone())))
-                .collect(),
-        ),
-        other => other,
-    }
-}
-
-/// The same value: types, order and contents, objects by class and
-/// properties, dates by their formatted value and time zone.
-fn same(expected: &Value, actual: &Value) -> bool {
-    match (expected, actual) {
-        (Value::Float(a), Value::Float(b)) => {
-            a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan())
-        }
-        (Value::Array(a), Value::Array(b)) => same_array(a, b),
-        (Value::Object(a), Value::Object(b)) => {
-            if a.class() != b.class() {
-                return false;
-            }
-            if let (Some(x), Some(y)) = (
-                a.downcast_ref::<DateTimeImmutable>(),
-                b.downcast_ref::<DateTimeImmutable>(),
-            ) {
-                let format = r"Y-m-d\TH:i:s.uP e";
-                return x.format(format) == y.format(format);
-            }
-            same_array(&a.properties(), &b.properties())
-        }
-        (a, b) => a.identical(b),
-    }
-}
-
-fn same_array(a: &PhpArray, b: &PhpArray) -> bool {
-    a.len() == b.len()
-        && a.iter()
-            .zip(b.iter())
-            .all(|((ka, va), (kb, vb))| ka == kb && same(va, vb))
-}
-
-fn text(json: &Json) -> &str {
-    json.as_str().unwrap_or_default()
-}
-
-/// Replays the recorded calls of `test`; `build` gives the inputs that
-/// were too large to record (by call index within the row).
-fn replay_with(test: &str, build: &dyn Fn(usize) -> Vec<u8>) -> TestResult {
-    let rows = recordings()[test]
-        .as_array()
-        .ok_or_else(|| format!("no recording for {test}"))?;
-    for row in rows {
-        let label = match row["row"].as_str() {
-            Some(name) => format!("{test} [{name}]"),
-            None => test.to_owned(),
-        };
-        if row["status"] == "skipped" {
-            continue;
-        }
-        assert_eq!(row["status"], "pass", "{label}: not passing upstream");
-        let mut last: Option<Result<Value, ParseException>> = None;
-        for (index, call) in row["calls"]
-            .as_array()
-            .ok_or("no calls")?
-            .iter()
-            .enumerate()
-        {
-            let limits = &call["limits"];
-            let mut parser = Parser::with_environment(environment()).with_limits(
-                limits[0].as_i64().ok_or("limits")?,
-                limits[1].as_i64().ok_or("limits")?,
-            )?;
-            let input = if call["input"][0] == "omitted" {
-                let built = build(index);
-                assert_eq!(
-                    Some(built.len() as u64),
-                    call["input"][1].as_u64(),
-                    "{label}: the built input differs from upstream's"
-                );
-                built
-            } else {
-                localize(&base64(text(&call["input"][1]))?)
-            };
-            let flags = Flags(call["flags"].as_u64().ok_or("flags")? as u32);
-            let result = match text(&call["method"]) {
-                "parse" => parser.parse(&input, flags),
-                "parseFile" => parser.parse_file(&String::from_utf8_lossy(&input), flags),
-                other => return Err(format!("unknown method {other}").into()),
-            };
-            let what = format!(
-                "{label}, call {index}: {:?}",
-                String::from_utf8_lossy(&input)
-            );
-            let recorded = &call["result"];
-            match (recorded[0].as_str(), &result) {
-                (Some("omitted"), _) => {}
-                (Some("throws"), Err(error)) => {
-                    assert_eq!(
-                        text(&recorded[1]),
-                        r"Symfony\Component\Yaml\Exception\ParseException",
-                        "{what}"
-                    );
-                    assert_eq!(
-                        error.get_message().to_string_lossy(),
-                        String::from_utf8_lossy(&localize(text(&recorded[2]).as_bytes())),
-                        "{what}"
-                    );
-                }
-                (Some("throws"), Ok(value)) => panic!(
-                    "{what}: expected {} {:?}, got {value:?}",
-                    text(&recorded[1]),
-                    text(&recorded[2])
-                ),
-                (_, Err(error)) => panic!("{what}: expected {recorded}, got {error}"),
-                (_, Ok(value)) => {
-                    let expected = localize_value(decode(recorded)?);
-                    assert!(
-                        same(&expected, value),
-                        "{what}:\nexpected {expected:?}\n     got {value:?}"
-                    );
-                }
-            }
-            last = Some(result);
-        }
-        if let Some(expected) = row["expected"].as_object() {
-            let Some(Err(error)) = &last else {
-                panic!("{label}: expected {:?}, got {last:?}", expected["class"]);
-            };
-            let message = error.get_message().to_string_lossy().into_owned();
-            if let Some(contains) = expected["message"].as_str() {
-                let contains = String::from_utf8_lossy(&localize(contains.as_bytes())).into_owned();
-                assert!(
-                    message.contains(&contains),
-                    "{label}: {message:?} does not contain {contains:?}"
-                );
-            }
-            if let Some(pattern) = expected["matches"].as_str() {
-                let regex = regex::Regex::new(&pcre(pattern))?;
-                assert!(
-                    regex.is_match(&message),
-                    "{label}: {message:?} does not match {pattern}"
-                );
-            }
-        }
-    }
-    Ok(())
-}
-
 fn replay(test: &str) -> TestResult {
-    replay_with(test, &|index| {
-        panic!("{test}: call {index} has no recorded input")
-    })
-}
-
-/// A PCRE pattern (`#…#`) as a Rust regex.
-fn pcre(pattern: &str) -> String {
-    let delimiter = pattern.chars().next().unwrap_or('/');
-    let end = pattern.rfind(delimiter).unwrap_or(pattern.len());
-    pattern[1..end].to_owned()
+    replay::replay(recording(), test)
 }
 
 /// The tests that replay their recording as it is.
@@ -1285,57 +1054,51 @@ const BUILT: &[&str] = &[
 
 #[test]
 fn every_upstream_test_is_here() {
-    let recorded: Vec<&String> = recordings()
-        .as_object()
-        .map(|o| o.keys().collect())
-        .unwrap_or_default();
     let mut here: Vec<&str> = REPLAYED.iter().chain(BUILT).copied().collect();
     here.sort_unstable();
-    assert_eq!(recorded, here);
+    assert_eq!(replay::names(recording()), here);
 }
 
 #[test]
 fn testCanParseVeryLongValue() -> TestResult {
     let long_string_with_spaces = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ".repeat(20000);
-    let tricky_val = php_array!["x" => long_string_with_spaces.as_str()];
-    // Yaml::dump($trickyVal): one mapping line, the value inline
-    let inline = Inline::new(environment());
-    let value = inline.dump(
-        &Value::from(long_string_with_spaces.as_str()),
-        Flags::NONE,
-        false,
-    )?;
-    let yaml_string = format!("x: {}\n", value.to_string_lossy());
-    replay_with("testCanParseVeryLongValue", &|_| {
-        yaml_string.clone().into_bytes()
-    })?;
+    let tricky_val = Value::Array(php_array!["x" => long_string_with_spaces.as_str()]);
 
-    let array_from_yaml =
-        Parser::with_environment(environment()).parse(yaml_string.as_bytes(), Flags::NONE)?;
-    assert!(same(&Value::Array(tricky_val), &array_from_yaml));
-    Ok(())
+    let yaml_string = symfony_yaml::dump(&tricky_val, 2, 4, Flags::NONE)?;
+    let array_from_yaml = Parser::new().parse(&yaml_string, Flags::NONE)?;
+
+    assert!(same(&tricky_val, &array_from_yaml));
+    // the calls: Yaml::dump($trickyVal), then parse($yamlString)
+    replay::replay_with(
+        recording(),
+        "testCanParseVeryLongValue",
+        &|index| match index {
+            0 => tricky_val.clone(),
+            _ => Value::String(yaml_string.clone()),
+        },
+    )
 }
 
 #[test]
 fn testParseHandlesLargeYamlHeaders() -> TestResult {
     let yaml = format!("%YAML:{}\nfoo: bar\n", "1".repeat(100000));
-    replay_with("testParseHandlesLargeYamlHeaders", &|_| {
-        yaml.clone().into_bytes()
+    replay::replay_with(recording(), "testParseHandlesLargeYamlHeaders", &|_| {
+        Value::from(yaml.as_str())
     })
 }
 
 #[test]
 fn testParseHandlesLargeLeadingComments() -> TestResult {
     let yaml = format!("#{}\nfoo: bar\n", "comment".repeat(20000));
-    replay_with("testParseHandlesLargeLeadingComments", &|_| {
-        yaml.clone().into_bytes()
+    replay::replay_with(recording(), "testParseHandlesLargeLeadingComments", &|_| {
+        Value::from(yaml.as_str())
     })
 }
 
 #[test]
 fn testParseHandlesLargeDocumentMarkers() -> TestResult {
     let yaml = format!("--- # {}\nfoo: bar\n...   ", "header".repeat(20000));
-    replay_with("testParseHandlesLargeDocumentMarkers", &|_| {
-        yaml.clone().into_bytes()
+    replay::replay_with(recording(), "testParseHandlesLargeDocumentMarkers", &|_| {
+        Value::from(yaml.as_str())
     })
 }

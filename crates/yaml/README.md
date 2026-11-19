@@ -1,4 +1,4 @@
-# Symfony Yaml (in progress)
+# Symfony Yaml
 
 Private workspace crate: a port of `symfony/yaml` v8.1.9 (`6107ee26`), as
 installed by symfony/demo. MIT; Symfony source and tests copyright Fabien
@@ -7,25 +7,33 @@ Values are `php-value` values (PLAN.md decision 3).
 
 | Contract | Source | Evidence |
 |---|---|---|
-| `Yaml::PARSE_*` / `DUMP_*` flag values | `Yaml.php` | — |
+| `Yaml::PARSE_*` / `DUMP_*` flag values; `parse()`, `parseFile()`, `dump()` | `Yaml.php` | YamlTest (5 of 5), replayed |
 | `ParseException` message: final dot moved after ` in "<file>"` (json_encode, unescaped slashes and Unicode), ` at line N` (N ≥ 0), ` (near "<snippet>")` (truthy snippet) | `Exception/ParseException.php` | ParseExceptionTest (2); unit tests |
 | Double-quoted escapes (`\0 \a \b \t \n \v \f \r \e \  \" \/ \\ \N \_ \L \P \xHH \uHHHH \UHHHHHHHH`), PCRE alternative order (`\xZZ` is `\x` + `ZZ`), `utf8chr()` bytes, `Found unknown escape character "%s".`; single-quoted `''` | `Unescaper.php` | 333 recorded cases |
 | When strings need double or single quoting (keywords, `\s`/`\p{Zs}` under `/u`), and how they are escaped (`str_replace` order) | `Escaper.php` | 347 recorded cases |
 | `TaggedValue` | `Tag/TaggedValue.php` | InlineTest tag tests |
 | Inline YAML: flow sequences and mappings, quoted and plain scalars, ints/floats/octal/hex/`.inf`/`.nan`, booleans and null, anchors and aliases, merge keys, `!!str` `!!float` `!!binary`, custom tags, `!php/const` `!php/enum` `!php/object`, `PARSE_OBJECT_FOR_MAP`, nesting and alias limits, and `dump()` with the `DUMP_*` flags | `Inline.php`, `ParserState.php` | InlineTest (84 of 85; 1 `n/a`), on upstream's provider data |
 | Block YAML: mappings and sequences (compact and unindented), block scalars with chomping and indentation indicators, plain and quoted multi-line scalars, multi-line flow collections, anchors and aliases (circular references), merge keys, tags on blocks, `%YAML` headers, document markers and the root node's properties, line numbers and snippets in errors, `parseFile()` | `Parser.php` | ParserTest (171 of 172, 1 `n/a`): every call each upstream test makes, replayed |
+| Block YAML out: mappings and sequences up to the inline level, `DUMP_MULTI_LINE_LITERAL_BLOCK` (indentation and chomping indicators), tagged values, `DUMP_OBJECT_AS_MAP`, `DUMP_COMPACT_NESTED_MAPPING`, `DUMP_NUMERIC_KEY_AS_STRING`, the indentation | `Dumper.php` | DumperTest (66 of 66), replayed |
+| The YAML test suite cases upstream runs (200 of the 402 in yaml-test-suite 2022.01.17; upstream skips the rest) | `Parser.php` | YamlTestSuiteTest, replayed |
 | Timestamps: what PHP's date parser accepts among strings matching the timestamp regex, rollover of out-of-range fields, int/float timestamps and `PARSE_DATETIME` objects | `Inline.php` + PHP behaviour | 1,221 recorded inputs |
 
 Vectors: `scripts/record.sh yaml` runs `oracle/recorders/yaml_*.php` with
 the pinned Symfony Yaml and writes `tests/data/`, including the upstream
 tests' data-provider rows (`yaml_test_providers.php`) and, for ParserTest,
-every call each upstream test makes to the parser with what PHP returned
+DumperTest, YamlTest and YamlTestSuiteTest, every call each upstream test
+makes to the parser and the dumper with what PHP returned or threw
 (`yaml_test_calls.php`: it runs the upstream test methods on the oracle
-with a recording subclass of the real Parser, and fails unless every
-upstream test passes there). `tests/parser_test.rs` replays those calls
-under the upstream test names and checks the exception each test expects.
+with recording subclasses of the real Parser and Dumper, and fails unless
+every upstream test passes there). The Rust tests replay those calls under
+the upstream test names and check the exception each test expects
+(`tests/common/replay.rs`).
+
 `tests/Fixtures/` is upstream's Tests/Fixtures (MIT), without the PHP
-enums.
+enums. `tests/yaml-test-suite/` has the `in.yaml` of each case
+YamlTestSuiteTest runs, from [yaml-test-suite](https://github.com/yaml/yaml-test-suite)
+at `6ad3d2c6` (MIT, Ingy döt Net; `License` there); `scripts/fetch-upstream.sh`
+fetches the whole suite where upstream's test looks for it.
 
 ## Rust shape
 
@@ -55,6 +63,5 @@ enums.
 
 ## Not ported yet
 
-`Dumper.php`, the `Yaml::parse*` / `dump` entry points and
-`Command/LintCommand.php` (waits for Console); DumperTest, YamlTest,
-YamlTestSuiteTest and LintCommandTest (83 tests).
+`Command/LintCommand.php` and LintCommandTest (11 tests): they wait for
+the Console port.

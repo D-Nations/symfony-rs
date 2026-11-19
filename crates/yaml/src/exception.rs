@@ -164,3 +164,49 @@ impl fmt::Display for InvalidArgumentException {
 }
 
 impl std::error::Error for InvalidArgumentException {}
+
+/// What `Dumper::dump()` and `Yaml::dump()` throw: PHP's
+/// `\InvalidArgumentException` for arguments they refuse, or a
+/// `DumpException` from the inline dumper.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum DumpError {
+    InvalidArgument(InvalidArgumentException),
+    Dump(DumpException),
+}
+
+impl DumpError {
+    /// The PHP exception class.
+    pub fn class(&self) -> &'static str {
+        match self {
+            Self::InvalidArgument(_) => "InvalidArgumentException",
+            Self::Dump(_) => r"Symfony\Component\Yaml\Exception\DumpException",
+        }
+    }
+
+    pub fn message(&self) -> &str {
+        match self {
+            Self::InvalidArgument(e) => &e.message,
+            Self::Dump(e) => &e.message,
+        }
+    }
+}
+
+impl fmt::Display for DumpError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.message())
+    }
+}
+
+impl std::error::Error for DumpError {}
+
+impl From<DumpException> for DumpError {
+    fn from(e: DumpException) -> Self {
+        Self::Dump(e)
+    }
+}
+
+impl From<InvalidArgumentException> for DumpError {
+    fn from(e: InvalidArgumentException) -> Self {
+        Self::InvalidArgument(e)
+    }
+}

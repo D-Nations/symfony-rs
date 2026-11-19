@@ -84,9 +84,10 @@ yaml() {
         mv "$tmp" "$out"
         echo "Yaml $class providers written to $out"
     done
-    for class in ParserTest; do
-        name=$(echo "$class" | sed 's/Test$//' | tr '[:upper:]' '[:lower:]')
-        out=crates/yaml/tests/data/${name}_test.json
+    # YamlTestSuiteTest needs the suite: scripts/fetch-upstream.sh
+    for class in ParserTest DumperTest YamlTest YamlTestSuiteTest; do
+        name=$(echo "$class" | sed -E 's/([a-z])([A-Z])/\1_\2/g' | tr '[:upper:]' '[:lower:]')
+        out=crates/yaml/tests/data/${name}.json
         tmp=$(mktemp -p oracle/out)
         oracle oracle/recorders/yaml_test_calls.php "$class" > "$tmp"
         python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"

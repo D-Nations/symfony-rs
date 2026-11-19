@@ -7,6 +7,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod dumper;
 pub mod escaper;
 pub mod exception;
 pub mod inline;
@@ -18,7 +19,10 @@ pub mod unescaper;
 
 use std::ops::{BitOr, BitOrAssign};
 
-pub use exception::{DumpException, InvalidArgumentException, ParseException};
+use php_value::{PhpString, Value};
+
+pub use dumper::Dumper;
+pub use exception::{DumpError, DumpException, InvalidArgumentException, ParseException};
 pub use inline::{Environment, Inline, References};
 pub use parser::Parser;
 pub use tag::TaggedValue;
@@ -107,4 +111,22 @@ impl BitOrAssign for Flags {
     fn bitor_assign(&mut self, other: Self) {
         self.0 |= other.0;
     }
+}
+
+/// `Yaml::parseFile()`: parses a YAML file. For other limits than
+/// `Parser::DEFAULT_MAX_*`, use [`Parser::with_limits`].
+pub fn parse_file(filename: &str, flags: Flags) -> Result<Value, ParseException> {
+    Parser::new().parse_file(filename, flags)
+}
+
+/// `Yaml::parse()`: parses YAML. For other limits than
+/// `Parser::DEFAULT_MAX_*`, use [`Parser::with_limits`].
+pub fn parse(input: &[u8], flags: Flags) -> Result<Value, ParseException> {
+    Parser::new().parse(input, flags)
+}
+
+/// `Yaml::dump()`: block YAML up to level `inline` (PHP's default 2),
+/// nested nodes indented by `indent` spaces (PHP's default 4).
+pub fn dump(input: &Value, inline: i64, indent: i64, flags: Flags) -> Result<PhpString, DumpError> {
+    Dumper::new(indent)?.dump(input, inline, 0, flags)
 }

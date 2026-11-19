@@ -53,6 +53,7 @@ crates/stopwatch/src/stopwatch_period.rs	symfony/stopwatch	StopwatchPeriod.php	2
 crates/stopwatch/tests/stopwatch.rs	symfony/stopwatch	Tests/StopwatchTest.php	21c07b026905d596e8379caeb115d87aa479499d
 crates/stopwatch/tests/stopwatch_event.rs	symfony/stopwatch	Tests/StopwatchEventTest.php	21c07b026905d596e8379caeb115d87aa479499d
 crates/stopwatch/tests/stopwatch_period.rs	symfony/stopwatch	Tests/StopwatchPeriodTest.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/yaml/src/dumper.rs	symfony/yaml	Dumper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/escaper.rs	symfony/yaml	Escaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/exception.rs	symfony/yaml	Exception/ParseException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/exception.rs	symfony/yaml	Exception/DumpException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
@@ -64,6 +65,9 @@ crates/yaml/src/parser_state.rs	symfony/yaml	ParserState.php	6107ee26a25215c3df3
 crates/yaml/src/tag.rs	symfony/yaml	Tag/TaggedValue.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/timestamp.rs	symfony/yaml	Inline.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/unescaper.rs	symfony/yaml	Unescaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/tests/dumper_test.rs	symfony/yaml	Tests/DumperTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/inline_test.rs	symfony/yaml	Tests/InlineTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/parse_exception.rs	symfony/yaml	Tests/ParseExceptionTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/parser_test.rs	symfony/yaml	Tests/ParserTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/tests/yaml_test.rs	symfony/yaml	Tests/YamlTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/tests/yaml_test_suite_test.rs	symfony/yaml	Tests/YamlTestSuiteTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db

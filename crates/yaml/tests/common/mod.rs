@@ -35,3 +35,5 @@ pub fn base64(text: &Json) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     }
     Ok(out)
 }
+
+pub mod replay;

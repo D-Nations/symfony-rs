@@ -10,72 +10,72 @@ Tests/Command/LintCommandTest.php	LintCommandTest::testLintFileNotReadable	pendi
 Tests/Command/LintCommandTest.php	LintCommandTest::testLintIncorrectFile	pending	
 Tests/Command/LintCommandTest.php	LintCommandTest::testLintIncorrectFileWithGithubFormat	pending	
 Tests/Command/LintCommandTest.php	LintCommandTest::testLintWithExclude	pending	
-Tests/DumperTest.php	DumperTest::testBinaryDataIsDumpedBase64Encoded	pending	
-Tests/DumperTest.php	DumperTest::testCanForceQuotesOnValues	pending	
-Tests/DumperTest.php	DumperTest::testCarriageReturnFollowedByNewlineIsMaintainedWhenDumpingAsMultiLineLiteralBlock	pending	
-Tests/DumperTest.php	DumperTest::testCarriageReturnNotFollowedByNewlineIsPreservedWhenDumpingAsMultiLineLiteralBlock	pending	
-Tests/DumperTest.php	DumperTest::testDumpCompactNestedMapping	pending	
-Tests/DumperTest.php	DumperTest::testDumpDateTime	pending	
-Tests/DumperTest.php	DumperTest::testDumpDocumentMarkersAsTopLevelStrings	pending	
-Tests/DumperTest.php	DumperTest::testDumpEmptyArrayObjectInstanceAsMap	pending	
-Tests/DumperTest.php	DumperTest::testDumpEmptyStdClassInstanceAsMap	pending	
-Tests/DumperTest.php	DumperTest::testDumpIdeographicSpaces	pending	
-Tests/DumperTest.php	DumperTest::testDumpInlineNumericKeyAsString	pending	
-Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlock	pending	
-Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlockWhenFirstLineHasLeadingSpace	pending	
-Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlockWhenFirstLineHasOnlySpaces	pending	
-Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlockWhenFirstLineIsEmptyAndSecondLineHasLeadingSpace	pending	
-Tests/DumperTest.php	DumperTest::testDumpMultiLineStringWithLeadingSpacesOnlyLines	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyAtRoot	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyDumpsNestedMaps	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyDumpsWhenInInlineMapping	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyInExpandedMapping	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyInExpandedSequence	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyWhenInInlineSequence	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyWithObject	pending	
-Tests/DumperTest.php	DumperTest::testDumpNullAsTilde	pending	
-Tests/DumperTest.php	DumperTest::testDumpObjectAsMap	pending	
-Tests/DumperTest.php	DumperTest::testDumpSimpleHashesInSequences	pending	
-Tests/DumperTest.php	DumperTest::testDumpSingleLineBreakAsMultiLineLiteralBlock	pending	
-Tests/DumperTest.php	DumperTest::testDumpTrailingNewlineInMultiLineLiteralBlocks	pending	
-Tests/DumperTest.php	DumperTest::testDumpTrailingNewlineInMultiLineLiteralBlocksForTaggedValues	pending	
-Tests/DumperTest.php	DumperTest::testDumpWithMultipleNullFlagsFormatsThrows	pending	
-Tests/DumperTest.php	DumperTest::testDumpedMergeKeyStringCanBeParsedBack	pending	
-Tests/DumperTest.php	DumperTest::testDumpingArrayObjectInstancesRespectsInlineLevel	pending	
-Tests/DumperTest.php	DumperTest::testDumpingArrayObjectInstancesWithNumericKeysInlined	pending	
-Tests/DumperTest.php	DumperTest::testDumpingArrayObjectInstancesWithNumericKeysRespectsInlineLevel	pending	
-Tests/DumperTest.php	DumperTest::testDumpingInlinedMultiLineIfRnBreakLineInTaggedValue	pending	
-Tests/DumperTest.php	DumperTest::testDumpingMultiLineStringAsScalarBlockTaggedValue	pending	
-Tests/DumperTest.php	DumperTest::testDumpingNotInlinedNullTaggedValue	pending	
-Tests/DumperTest.php	DumperTest::testDumpingNotInlinedScalarTaggedValue	pending	
-Tests/DumperTest.php	DumperTest::testDumpingStdClassInstancesRespectsInlineLevel	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedMultiLineInList	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedMultiLineTrailingNewlinesInList	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedMultiLineTrailingNewlinesInMap	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueMapRespectsInlineLevel	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueMapWithInlinedTagValues	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueSequenceRespectsInlineLevel	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueSequenceWithInlinedTagValues	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueSpecialCharsInTag	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelAssoc	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelAssocInline	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelMultiLine	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelScalar	pending	
-Tests/DumperTest.php	DumperTest::testDumpingTaggedValueWithCarriageReturnAsQuotedString	pending	
-Tests/DumperTest.php	DumperTest::testEscapedEscapeSequencesInQuotedScalar	pending	
-Tests/DumperTest.php	DumperTest::testIndentationInConstructor	pending	
-Tests/DumperTest.php	DumperTest::testInlineLevel	pending	
-Tests/DumperTest.php	DumperTest::testNegativeIndentationThrowsException	pending	
-Tests/DumperTest.php	DumperTest::testNoExtraTrailingNewlineWhenDumpingAsMultiLineLiteralBlock	pending	
-Tests/DumperTest.php	DumperTest::testNonUtf8DataIsDumpedBase64Encoded	pending	
-Tests/DumperTest.php	DumperTest::testObjectSupportDisabledButNoExceptions	pending	
-Tests/DumperTest.php	DumperTest::testObjectSupportDisabledWithExceptions	pending	
-Tests/DumperTest.php	DumperTest::testObjectSupportEnabled	pending	
-Tests/DumperTest.php	DumperTest::testSpecifications	pending	
-Tests/DumperTest.php	DumperTest::testTaggedMultiLineLiteralBlocksRoundTrip	pending	
-Tests/DumperTest.php	DumperTest::testTopLevelMultiLineStringLiteral	pending	
-Tests/DumperTest.php	DumperTest::testTopLevelTaggedMultiLineLiteralBlock	pending	
-Tests/DumperTest.php	DumperTest::testZeroIndentationThrowsException	pending	
+Tests/DumperTest.php	DumperTest::testBinaryDataIsDumpedBase64Encoded	ported	crates/yaml/tests/dumper_test.rs::testBinaryDataIsDumpedBase64Encoded
+Tests/DumperTest.php	DumperTest::testCanForceQuotesOnValues	ported	crates/yaml/tests/dumper_test.rs::testCanForceQuotesOnValues
+Tests/DumperTest.php	DumperTest::testCarriageReturnFollowedByNewlineIsMaintainedWhenDumpingAsMultiLineLiteralBlock	ported	crates/yaml/tests/dumper_test.rs::testCarriageReturnFollowedByNewlineIsMaintainedWhenDumpingAsMultiLineLiteralBlock
+Tests/DumperTest.php	DumperTest::testCarriageReturnNotFollowedByNewlineIsPreservedWhenDumpingAsMultiLineLiteralBlock	ported	crates/yaml/tests/dumper_test.rs::testCarriageReturnNotFollowedByNewlineIsPreservedWhenDumpingAsMultiLineLiteralBlock
+Tests/DumperTest.php	DumperTest::testDumpCompactNestedMapping	ported	crates/yaml/tests/dumper_test.rs::testDumpCompactNestedMapping
+Tests/DumperTest.php	DumperTest::testDumpDateTime	ported	crates/yaml/tests/dumper_test.rs::testDumpDateTime
+Tests/DumperTest.php	DumperTest::testDumpDocumentMarkersAsTopLevelStrings	ported	crates/yaml/tests/dumper_test.rs::testDumpDocumentMarkersAsTopLevelStrings
+Tests/DumperTest.php	DumperTest::testDumpEmptyArrayObjectInstanceAsMap	ported	crates/yaml/tests/dumper_test.rs::testDumpEmptyArrayObjectInstanceAsMap
+Tests/DumperTest.php	DumperTest::testDumpEmptyStdClassInstanceAsMap	ported	crates/yaml/tests/dumper_test.rs::testDumpEmptyStdClassInstanceAsMap
+Tests/DumperTest.php	DumperTest::testDumpIdeographicSpaces	ported	crates/yaml/tests/dumper_test.rs::testDumpIdeographicSpaces
+Tests/DumperTest.php	DumperTest::testDumpInlineNumericKeyAsString	ported	crates/yaml/tests/dumper_test.rs::testDumpInlineNumericKeyAsString
+Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlock	ported	crates/yaml/tests/dumper_test.rs::testDumpMultiLineStringAsScalarBlock
+Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlockWhenFirstLineHasLeadingSpace	ported	crates/yaml/tests/dumper_test.rs::testDumpMultiLineStringAsScalarBlockWhenFirstLineHasLeadingSpace
+Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlockWhenFirstLineHasOnlySpaces	ported	crates/yaml/tests/dumper_test.rs::testDumpMultiLineStringAsScalarBlockWhenFirstLineHasOnlySpaces
+Tests/DumperTest.php	DumperTest::testDumpMultiLineStringAsScalarBlockWhenFirstLineIsEmptyAndSecondLineHasLeadingSpace	ported	crates/yaml/tests/dumper_test.rs::testDumpMultiLineStringAsScalarBlockWhenFirstLineIsEmptyAndSecondLineHasLeadingSpace
+Tests/DumperTest.php	DumperTest::testDumpMultiLineStringWithLeadingSpacesOnlyLines	ported	crates/yaml/tests/dumper_test.rs::testDumpMultiLineStringWithLeadingSpacesOnlyLines
+Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyAtRoot	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsEmptyAtRoot
+Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyDumpsNestedMaps	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsEmptyDumpsNestedMaps
+Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyDumpsWhenInInlineMapping	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsEmptyDumpsWhenInInlineMapping
+Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyInExpandedMapping	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsEmptyInExpandedMapping
+Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyInExpandedSequence	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsEmptyInExpandedSequence
+Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyWhenInInlineSequence	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsEmptyWhenInInlineSequence
+Tests/DumperTest.php	DumperTest::testDumpNullAsEmptyWithObject	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsEmptyWithObject
+Tests/DumperTest.php	DumperTest::testDumpNullAsTilde	ported	crates/yaml/tests/dumper_test.rs::testDumpNullAsTilde
+Tests/DumperTest.php	DumperTest::testDumpObjectAsMap	ported	crates/yaml/tests/dumper_test.rs::testDumpObjectAsMap
+Tests/DumperTest.php	DumperTest::testDumpSimpleHashesInSequences	ported	crates/yaml/tests/dumper_test.rs::testDumpSimpleHashesInSequences
+Tests/DumperTest.php	DumperTest::testDumpSingleLineBreakAsMultiLineLiteralBlock	ported	crates/yaml/tests/dumper_test.rs::testDumpSingleLineBreakAsMultiLineLiteralBlock
+Tests/DumperTest.php	DumperTest::testDumpTrailingNewlineInMultiLineLiteralBlocks	ported	crates/yaml/tests/dumper_test.rs::testDumpTrailingNewlineInMultiLineLiteralBlocks
+Tests/DumperTest.php	DumperTest::testDumpTrailingNewlineInMultiLineLiteralBlocksForTaggedValues	ported	crates/yaml/tests/dumper_test.rs::testDumpTrailingNewlineInMultiLineLiteralBlocksForTaggedValues
+Tests/DumperTest.php	DumperTest::testDumpWithMultipleNullFlagsFormatsThrows	ported	crates/yaml/tests/dumper_test.rs::testDumpWithMultipleNullFlagsFormatsThrows
+Tests/DumperTest.php	DumperTest::testDumpedMergeKeyStringCanBeParsedBack	ported	crates/yaml/tests/dumper_test.rs::testDumpedMergeKeyStringCanBeParsedBack
+Tests/DumperTest.php	DumperTest::testDumpingArrayObjectInstancesRespectsInlineLevel	ported	crates/yaml/tests/dumper_test.rs::testDumpingArrayObjectInstancesRespectsInlineLevel
+Tests/DumperTest.php	DumperTest::testDumpingArrayObjectInstancesWithNumericKeysInlined	ported	crates/yaml/tests/dumper_test.rs::testDumpingArrayObjectInstancesWithNumericKeysInlined
+Tests/DumperTest.php	DumperTest::testDumpingArrayObjectInstancesWithNumericKeysRespectsInlineLevel	ported	crates/yaml/tests/dumper_test.rs::testDumpingArrayObjectInstancesWithNumericKeysRespectsInlineLevel
+Tests/DumperTest.php	DumperTest::testDumpingInlinedMultiLineIfRnBreakLineInTaggedValue	ported	crates/yaml/tests/dumper_test.rs::testDumpingInlinedMultiLineIfRnBreakLineInTaggedValue
+Tests/DumperTest.php	DumperTest::testDumpingMultiLineStringAsScalarBlockTaggedValue	ported	crates/yaml/tests/dumper_test.rs::testDumpingMultiLineStringAsScalarBlockTaggedValue
+Tests/DumperTest.php	DumperTest::testDumpingNotInlinedNullTaggedValue	ported	crates/yaml/tests/dumper_test.rs::testDumpingNotInlinedNullTaggedValue
+Tests/DumperTest.php	DumperTest::testDumpingNotInlinedScalarTaggedValue	ported	crates/yaml/tests/dumper_test.rs::testDumpingNotInlinedScalarTaggedValue
+Tests/DumperTest.php	DumperTest::testDumpingStdClassInstancesRespectsInlineLevel	ported	crates/yaml/tests/dumper_test.rs::testDumpingStdClassInstancesRespectsInlineLevel
+Tests/DumperTest.php	DumperTest::testDumpingTaggedMultiLineInList	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedMultiLineInList
+Tests/DumperTest.php	DumperTest::testDumpingTaggedMultiLineTrailingNewlinesInList	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedMultiLineTrailingNewlinesInList
+Tests/DumperTest.php	DumperTest::testDumpingTaggedMultiLineTrailingNewlinesInMap	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedMultiLineTrailingNewlinesInMap
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueMapRespectsInlineLevel	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueMapRespectsInlineLevel
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueMapWithInlinedTagValues	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueMapWithInlinedTagValues
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueSequenceRespectsInlineLevel	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueSequenceRespectsInlineLevel
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueSequenceWithInlinedTagValues	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueSequenceWithInlinedTagValues
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueSpecialCharsInTag	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueSpecialCharsInTag
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelAssoc	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueTopLevelAssoc
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelAssocInline	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueTopLevelAssocInline
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelMultiLine	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueTopLevelMultiLine
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueTopLevelScalar	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueTopLevelScalar
+Tests/DumperTest.php	DumperTest::testDumpingTaggedValueWithCarriageReturnAsQuotedString	ported	crates/yaml/tests/dumper_test.rs::testDumpingTaggedValueWithCarriageReturnAsQuotedString
+Tests/DumperTest.php	DumperTest::testEscapedEscapeSequencesInQuotedScalar	ported	crates/yaml/tests/dumper_test.rs::testEscapedEscapeSequencesInQuotedScalar
+Tests/DumperTest.php	DumperTest::testIndentationInConstructor	ported	crates/yaml/tests/dumper_test.rs::testIndentationInConstructor
+Tests/DumperTest.php	DumperTest::testInlineLevel	ported	crates/yaml/tests/dumper_test.rs::testInlineLevel
+Tests/DumperTest.php	DumperTest::testNegativeIndentationThrowsException	ported	crates/yaml/tests/dumper_test.rs::testNegativeIndentationThrowsException
+Tests/DumperTest.php	DumperTest::testNoExtraTrailingNewlineWhenDumpingAsMultiLineLiteralBlock	ported	crates/yaml/tests/dumper_test.rs::testNoExtraTrailingNewlineWhenDumpingAsMultiLineLiteralBlock
+Tests/DumperTest.php	DumperTest::testNonUtf8DataIsDumpedBase64Encoded	ported	crates/yaml/tests/dumper_test.rs::testNonUtf8DataIsDumpedBase64Encoded
+Tests/DumperTest.php	DumperTest::testObjectSupportDisabledButNoExceptions	ported	crates/yaml/tests/dumper_test.rs::testObjectSupportDisabledButNoExceptions
+Tests/DumperTest.php	DumperTest::testObjectSupportDisabledWithExceptions	ported	crates/yaml/tests/dumper_test.rs::testObjectSupportDisabledWithExceptions
+Tests/DumperTest.php	DumperTest::testObjectSupportEnabled	ported	crates/yaml/tests/dumper_test.rs::testObjectSupportEnabled
+Tests/DumperTest.php	DumperTest::testSpecifications	ported	crates/yaml/tests/dumper_test.rs::testSpecifications
+Tests/DumperTest.php	DumperTest::testTaggedMultiLineLiteralBlocksRoundTrip	ported	crates/yaml/tests/dumper_test.rs::testTaggedMultiLineLiteralBlocksRoundTrip
+Tests/DumperTest.php	DumperTest::testTopLevelMultiLineStringLiteral	ported	crates/yaml/tests/dumper_test.rs::testTopLevelMultiLineStringLiteral
+Tests/DumperTest.php	DumperTest::testTopLevelTaggedMultiLineLiteralBlock	ported	crates/yaml/tests/dumper_test.rs::testTopLevelTaggedMultiLineLiteralBlock
+Tests/DumperTest.php	DumperTest::testZeroIndentationThrowsException	ported	crates/yaml/tests/dumper_test.rs::testZeroIndentationThrowsException
 Tests/InlineTest.php	InlineTest::testBuiltInTagWithoutValueAsMappingKey	ported	crates/yaml/tests/inline_test.rs::testBuiltInTagWithoutValueAsMappingKey
 Tests/InlineTest.php	InlineTest::testDump	ported	crates/yaml/tests/inline_test.rs::testDump
 Tests/InlineTest.php	InlineTest::testDumpDateTime	ported	crates/yaml/tests/inline_test.rs::testDumpDateTime
@@ -335,9 +335,9 @@ Tests/ParserTest.php	ParserTest::testWhitespaceAtEndOfLine	ported	crates/yaml/te
 Tests/ParserTest.php	ParserTest::testWrappedUnquotedStringWithMultipleSpacesInValue	ported	crates/yaml/tests/parser_test.rs::testWrappedUnquotedStringWithMultipleSpacesInValue
 Tests/ParserTest.php	ParserTest::testWrongPhpConstantSyntax	ported	crates/yaml/tests/parser_test.rs::testWrongPhpConstantSyntax
 Tests/ParserTest.php	ParserTest::testYamlDirective	ported	crates/yaml/tests/parser_test.rs::testYamlDirective
-Tests/YamlTest.php	YamlTest::testNegativeIndentationThrowsException	pending	
-Tests/YamlTest.php	YamlTest::testParseAllowsConfiguringTheMaximumNestingLevel	pending	
-Tests/YamlTest.php	YamlTest::testParseAndDump	pending	
-Tests/YamlTest.php	YamlTest::testParseFileAllowsConfiguringTheMaximumCollectionAliasCount	pending	
-Tests/YamlTest.php	YamlTest::testZeroIndentationThrowsException	pending	
-Tests/YamlTestSuiteTest.php	YamlTestSuiteTest::testYamlTestSuite	pending	
+Tests/YamlTest.php	YamlTest::testNegativeIndentationThrowsException	ported	crates/yaml/tests/yaml_test.rs::testNegativeIndentationThrowsException
+Tests/YamlTest.php	YamlTest::testParseAllowsConfiguringTheMaximumNestingLevel	ported	crates/yaml/tests/yaml_test.rs::testParseAllowsConfiguringTheMaximumNestingLevel
+Tests/YamlTest.php	YamlTest::testParseAndDump	ported	crates/yaml/tests/yaml_test.rs::testParseAndDump
+Tests/YamlTest.php	YamlTest::testParseFileAllowsConfiguringTheMaximumCollectionAliasCount	ported	crates/yaml/tests/yaml_test.rs::testParseFileAllowsConfiguringTheMaximumCollectionAliasCount
+Tests/YamlTest.php	YamlTest::testZeroIndentationThrowsException	ported	crates/yaml/tests/yaml_test.rs::testZeroIndentationThrowsException
+Tests/YamlTestSuiteTest.php	YamlTestSuiteTest::testYamlTestSuite	ported	crates/yaml/tests/yaml_test_suite_test.rs::testYamlTestSuite
