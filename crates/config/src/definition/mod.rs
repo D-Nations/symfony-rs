@@ -13,6 +13,8 @@
 pub mod array_node;
 pub mod base_node;
 pub mod boolean_node;
+pub mod builder;
+pub mod configuration_interface;
 pub mod enum_node;
 pub mod exception;
 pub mod float_node;
@@ -30,6 +32,7 @@ pub use base_node::{
     reset_placeholders, set_placeholder, set_placeholder_unique_prefix,
 };
 pub use boolean_node::BooleanNode;
+pub use configuration_interface::ConfigurationInterface;
 pub use enum_node::EnumNode;
 pub use exception::{Class, Error};
 pub use float_node::FloatNode;

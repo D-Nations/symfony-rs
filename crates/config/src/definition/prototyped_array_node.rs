@@ -120,11 +120,12 @@ impl Node {
     pub fn set_add_children_if_none_set(&self, children: Value) -> Result<(), Error> {
         let children = match children {
             Value::Null => vec![Value::from("defaults")],
-            // int|string|array|null takes a bool as an int, an integral
-            // float as an int and another float as a string.
+            // int|string|array|null takes a bool as an int, a float in
+            // the int range as an int (truncated; PHP's E_DEPRECATED for a
+            // fraction is not reproduced) and another float as a string.
             Value::Bool(b) => int_children(i64::from(b)),
             Value::Int(n) => int_children(n),
-            Value::Float(f) if f.fract() == 0.0 && f.abs() < 9.2e18 => int_children(f as i64),
+            Value::Float(f) if php::float_fits_int(f) => int_children(f as i64),
             Value::Float(f) => vec![Value::from(php::float_string(f))],
             Value::String(s) => vec![Value::String(s)],
             Value::Array(a) => a.values().cloned().collect(),

@@ -7,7 +7,8 @@
 
 #![forbid(unsafe_code)]
 
+pub mod composer;
 pub mod definition;
 pub mod php;
 
-pub use definition::{Class, Error, Node, Processor};
+pub use definition::{Class, ConfigurationInterface, Error, Node, Processor};

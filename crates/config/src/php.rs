@@ -311,3 +311,335 @@ pub fn contains(haystack: &[u8], needle: &[u8]) -> bool {
 pub fn string(bytes: impl Into<Vec<u8>>) -> PhpString {
     PhpString::from(bytes.into())
 }
+
+/// Whether a float is in the int range, so PHP's coercive typing makes
+/// it an int (truncated) where a union also takes a string.
+pub fn float_fits_int(f: f64) -> bool {
+    (-9_223_372_036_854_775_808.0..9_223_372_036_854_775_808.0).contains(&f)
+}
+
+/// A class name as PHP compares it: without a leading backslash and
+/// ASCII-lowercased.
+pub fn class_name_key(class: &str) -> String {
+    class
+        .strip_prefix('\\')
+        .unwrap_or(class)
+        .to_ascii_lowercase()
+}
+
+/// `json_encode($value)` with no flags; `None` where PHP returns `false`
+/// (invalid UTF-8, INF or NAN, a unit enum). A list is a JSON array,
+/// another array or an object's properties a JSON object, and a backed
+/// enum case its value.
+pub fn json_encode(value: &Value) -> Option<Vec<u8>> {
+    let flags = JsonFlags::default();
+    let mut out = Vec::new();
+    let pairs = |out: &mut Vec<u8>, array: &PhpArray| -> Option<()> {
+        out.push(b'{');
+        for (i, (k, v)) in array.iter().enumerate() {
+            if i > 0 {
+                out.push(b',');
+            }
+            out.extend_from_slice(encode_string(&key_bytes(k), flags)?.as_bytes());
+            out.push(b':');
+            out.extend_from_slice(&json_encode(v)?);
+        }
+        out.push(b'}');
+        Some(())
+    };
+    match value {
+        Value::Array(array) if !array.is_empty() && array.is_list() => {
+            out.push(b'[');
+            for (i, v) in array.values().enumerate() {
+                if i > 0 {
+                    out.push(b',');
+                }
+                out.extend_from_slice(&json_encode(v)?);
+            }
+            out.push(b']');
+        }
+        Value::Array(array) if !array.is_empty() => pairs(&mut out, array)?,
+        Value::Object(object) => match object.downcast_ref::<EnumCase>() {
+            Some(case) => return case.value().and_then(json_encode),
+            None => pairs(&mut out, &object.properties())?,
+        },
+        scalar => return json_encode_scalar(scalar, flags, false),
+    }
+    Some(out)
+}
+
+fn format_error(class: &str, message: impl Into<Vec<u8>>) -> crate::Error {
+    crate::Error::new(
+        crate::Class::Other {
+            class: class.to_owned(),
+            exception: false,
+        },
+        message,
+    )
+}
+
+/// `sprintf($format, ...$args)`, as PHP's documentation describes it:
+/// `%[argnum$][flags][width][.precision]specifier` with the flags `-`,
+/// `+`, space, `0` and `'char`. The specifiers `s`, `d`, `u`, `c`, `x`,
+/// `X`, `o`, `b`, `e`, `E`, `f`, `F` and `%` are written (a float's
+/// precision is capped at 53 digits, without PHP's notice); `g`, `G`,
+/// `h`, `H` and `*` widths are refused with an `\Error` naming them,
+/// never approximated. Left-justified `d` and `u` pad with spaces where
+/// `0` is asked, as PHP does. Too few arguments is PHP's
+/// ArgumentCountError, a bad specifier its ValueError.
+pub fn sprintf(format: &[u8], args: &[Value]) -> Result<Vec<u8>, crate::Error> {
+    struct Spec {
+        arg: usize,
+        left: bool,
+        plus: bool,
+        pad: u8,
+        width: usize,
+        precision: Option<usize>,
+        conversion: u8,
+    }
+    let mut pieces: Vec<Result<Vec<u8>, Spec>> = Vec::new();
+    let mut literal = Vec::new();
+    let mut next_arg = 0usize;
+    let mut max_arg = 0usize;
+    let mut i = 0;
+    let digits = |format: &[u8], mut i: usize| -> (usize, Option<usize>) {
+        let start = i;
+        let mut n: usize = 0;
+        while let Some(d) = format.get(i).filter(|b| b.is_ascii_digit()) {
+            n = n.saturating_mul(10).saturating_add(usize::from(d - b'0'));
+            i += 1;
+        }
+        (i, (i > start).then_some(n))
+    };
+    while i < format.len() {
+        let b = format[i];
+        i += 1;
+        if b != b'%' {
+            literal.push(b);
+            continue;
+        }
+        if format.get(i) == Some(&b'%') {
+            literal.push(b'%');
+            i += 1;
+            continue;
+        }
+        pieces.push(Ok(std::mem::take(&mut literal)));
+        // An argnum is digits followed by "$".
+        let mut arg = None;
+        let (end, n) = digits(format, i);
+        if let Some(n) = n
+            && format.get(end) == Some(&b'$')
+        {
+            if n == 0 || n >= 2147483647 {
+                return Err(format_error(
+                    "ValueError",
+                    "Argument number specifier must be greater than zero and less than 2147483647",
+                ));
+            }
+            arg = Some(n - 1);
+            i = end + 1;
+        }
+        let (mut left, mut plus, mut pad) = (false, false, b' ');
+        loop {
+            match format.get(i) {
+                Some(b'-') => left = true,
+                Some(b'+') => plus = true,
+                Some(b' ') => pad = b' ',
+                Some(b'0') => pad = b'0',
+                Some(b'\'') => match format.get(i + 1) {
+                    Some(&c) => {
+                        pad = c;
+                        i += 1;
+                    }
+                    None => {
+                        return Err(format_error("ValueError", "Missing padding character"));
+                    }
+                },
+                _ => break,
+            }
+            i += 1;
+        }
+        if format.get(i) == Some(&b'*') {
+            return Err(format_error(
+                "Error",
+                "sprintf(): a \"*\" width or precision is not supported by this port",
+            ));
+        }
+        let (end, width) = digits(format, i);
+        i = end;
+        let mut precision = None;
+        if format.get(i) == Some(&b'.') {
+            if format.get(i + 1) == Some(&b'*') {
+                return Err(format_error(
+                    "Error",
+                    "sprintf(): a \"*\" width or precision is not supported by this port",
+                ));
+            }
+            let (end, p) = digits(format, i + 1);
+            precision = Some(p.unwrap_or(0));
+            i = end;
+        }
+        let Some(&conversion) = format.get(i) else {
+            return Err(format_error(
+                "ValueError",
+                "Missing format specifier at end of string",
+            ));
+        };
+        i += 1;
+        match conversion {
+            b's' | b'd' | b'u' | b'c' | b'x' | b'X' | b'o' | b'b' | b'e' | b'E' | b'f' | b'F' => {}
+            b'g' | b'G' | b'h' | b'H' => {
+                return Err(format_error(
+                    "Error",
+                    format!(
+                        "sprintf(): the \"{}\" specifier is not supported by this port",
+                        conversion as char
+                    ),
+                ));
+            }
+            other => {
+                return Err(format_error(
+                    "ValueError",
+                    format!("Unknown format specifier \"{}\"", other as char),
+                ));
+            }
+        }
+        let arg = arg.unwrap_or_else(|| {
+            next_arg += 1;
+            next_arg - 1
+        });
+        max_arg = max_arg.max(arg + 1);
+        pieces.push(Err(Spec {
+            arg,
+            left,
+            plus,
+            pad,
+            width: width.unwrap_or(0),
+            precision,
+            conversion,
+        }));
+    }
+    pieces.push(Ok(literal));
+    if max_arg > args.len() {
+        return Err(format_error(
+            "ArgumentCountError",
+            format!(
+                "{} arguments are required, {} given",
+                max_arg + 1,
+                args.len() + 1
+            ),
+        ));
+    }
+
+    let mut out = Vec::new();
+    for piece in pieces {
+        let spec = match piece {
+            Ok(text) => {
+                out.extend_from_slice(&text);
+                continue;
+            }
+            Err(spec) => spec,
+        };
+        let value = &args[spec.arg];
+        let int = || match value {
+            Value::String(s) => php_value::numeric::string_to_int(s),
+            Value::Bool(b) => i64::from(*b),
+            Value::Int(n) => *n,
+            Value::Float(f) => *f as i64,
+            Value::Null => 0,
+            _ => 1,
+        };
+        let float = || match value {
+            Value::String(s) => php_value::numeric::string_to_float(s),
+            Value::Bool(b) => f64::from(u8::from(*b)),
+            Value::Int(n) => *n as f64,
+            Value::Float(f) => *f,
+            Value::Null => 0.0,
+            _ => 1.0,
+        };
+        let float_sign = |f: f64| -> &'static [u8] {
+            if f < 0.0 {
+                b"-"
+            } else if spec.plus {
+                b"+"
+            } else {
+                b""
+            }
+        };
+        let (sign, mut body): (&[u8], Vec<u8>) = match spec.conversion {
+            b's' => {
+                let mut s = to_bytes(value);
+                if let Some(p) = spec.precision {
+                    s.truncate(p);
+                }
+                (b"", s)
+            }
+            b'd' => {
+                let n = int();
+                let sign: &[u8] = if n < 0 {
+                    b"-"
+                } else if spec.plus {
+                    b"+"
+                } else {
+                    b""
+                };
+                (sign, n.unsigned_abs().to_string().into_bytes())
+            }
+            b'u' => (b"", (int() as u64).to_string().into_bytes()),
+            b'c' => {
+                out.push(int() as u8);
+                continue;
+            }
+            b'x' => (b"", format!("{:x}", int() as u64).into_bytes()),
+            b'X' => (b"", format!("{:X}", int() as u64).into_bytes()),
+            b'o' => (b"", format!("{:o}", int() as u64).into_bytes()),
+            b'f' | b'F' => {
+                let f = float();
+                let p = spec.precision.unwrap_or(6).min(53);
+                (float_sign(f), format!("{:.p$}", f.abs()).into_bytes())
+            }
+            b'e' | b'E' => {
+                let f = float();
+                let p = spec.precision.unwrap_or(6).min(53);
+                let text = format!("{:.p$e}", f.abs());
+                let (mantissa, exponent) = text.split_once('e').unwrap_or((&text, "0"));
+                let (exp_sign, digits) = match exponent.strip_prefix('-') {
+                    Some(d) => ("-", d),
+                    None => ("+", exponent),
+                };
+                let e = if spec.conversion == b'E' { 'E' } else { 'e' };
+                (
+                    float_sign(f),
+                    format!("{mantissa}{e}{exp_sign}{digits}").into_bytes(),
+                )
+            }
+            _ => (b"", format!("{:b}", int() as u64).into_bytes()),
+        };
+        let len = sign.len() + body.len();
+        if len >= spec.width {
+            out.extend_from_slice(sign);
+            out.append(&mut body);
+        } else {
+            let pad = if spec.left && spec.pad == b'0' && matches!(spec.conversion, b'd' | b'u') {
+                b' '
+            } else {
+                spec.pad
+            };
+            let fill = vec![pad; spec.width - len];
+            if spec.left {
+                out.extend_from_slice(sign);
+                out.append(&mut body);
+                out.extend_from_slice(&fill);
+            } else if pad == b'0' {
+                out.extend_from_slice(sign);
+                out.extend_from_slice(&fill);
+                out.append(&mut body);
+            } else {
+                out.extend_from_slice(&fill);
+                out.extend_from_slice(sign);
+                out.append(&mut body);
+            }
+        }
+    }
+    Ok(out)
+}

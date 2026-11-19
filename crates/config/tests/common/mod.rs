@@ -4,6 +4,8 @@
 //! Upstream: symfony/config Tests/Fixtures/TestEnum.php Tests/Fixtures/TestEnum2.php Tests/Fixtures/StringBackedTestEnum.php Tests/Fixtures/StringBackedTestEnum2.php Tests/Fixtures/IntegerBackedTestEnum.php
 #![allow(dead_code)]
 
+pub mod builder;
+
 use php_value::{Value, constants::Registry, object::EnumCase};
 use symfony_config::{Class, Error};
 

@@ -8,7 +8,7 @@
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
-#   scripts/record.sh config       crates/config/tests/data/definition.json
+#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -123,6 +123,12 @@ config() {
     python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
     mv "$tmp" "$out"
     echo "Config Definition vectors written to $out"
+    out=crates/config/tests/data/builder.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_builder.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config Builder vectors written to $out"
 }
 
 case "${1:-}" in

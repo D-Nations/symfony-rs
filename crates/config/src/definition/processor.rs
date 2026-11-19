@@ -2,9 +2,6 @@
 //! normalizes, merges and finalizes a list of configs against a tree, and
 //! `normalizeConfig()`, which turns an XML singular into a list.
 //!
-//! `processConfiguration()` takes a ConfigurationInterface, which needs
-//! TreeBuilder; it comes with the Builder port.
-//!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
 //! Upstream: symfony/config Definition/Processor.php
@@ -14,6 +11,7 @@ use php_value::{Key, PhpArray, Value};
 use crate::{
     definition::{
         base_node::Node,
+        configuration_interface::ConfigurationInterface,
         exception::{Class, Error},
     },
     php,
@@ -48,6 +46,17 @@ impl Processor {
                 ),
             )),
         }
+    }
+
+    /// `processConfiguration($configuration, $configs)`: `process()` on
+    /// the configuration's tree.
+    pub fn process_configuration(
+        &self,
+        configuration: &dyn ConfigurationInterface,
+        configs: &PhpArray,
+    ) -> Result<PhpArray, Error> {
+        let tree = configuration.get_config_tree_builder()?.build_tree()?;
+        self.process(&tree, configs)
     }
 
     /// `Processor::normalizeConfig($config, $key, $plural)`: `$plural`
