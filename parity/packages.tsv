@@ -3,6 +3,7 @@
 # package	version	reference	repository
 doctrine/dbal	4.5.0	c435cd7ea33e17d2a89288caf994cf3d4549b879	https://github.com/doctrine/dbal.git
 doctrine/orm	3.7.5	00c2fd70da291cca1ec75f4dae5344fe3df588fa	https://github.com/doctrine/orm.git
+psr/log	3.0.2	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3	https://github.com/php-fig/log.git
 symfony/asset	v8.1.0	4bd4d143b7e53f40d45877df52eb2b18282bdac4	https://github.com/symfony/asset.git
 symfony/asset-mapper	v8.1.9	0842b428dca2e1cff36226b5438807eb73484743	https://github.com/symfony/asset-mapper.git
 symfony/browser-kit	v8.1.9	90f77a846d0772aaf3dec24456410d160d06e6d0	https://github.com/symfony/browser-kit.git

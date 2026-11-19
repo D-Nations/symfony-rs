@@ -30,6 +30,11 @@ crates/http-kernel/src/lib.rs	symfony/http-kernel	Event/ExceptionEvent.php	92497
 crates/http-kernel/src/lib.rs	symfony/event-dispatcher	EventDispatcher.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/http-kernel/src/lib.rs	symfony/http-foundation	Response.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-kernel/tests/lifecycle.rs	symfony/http-kernel	Tests/HttpKernelTest.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
+crates/psr-log/src/lib.rs	psr/log	src/LoggerInterface.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
+crates/psr-log/src/lib.rs	psr/log	src/LogLevel.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
+crates/psr-log/src/lib.rs	psr/log	src/NullLogger.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
+crates/psr-log/src/lib.rs	psr/log	src/AbstractLogger.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
+crates/psr-log/src/lib.rs	psr/log	src/LoggerTrait.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
 crates/routing/src/generator.rs	symfony/routing	Generator/UrlGenerator.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
 crates/routing/src/generator.rs	symfony/routing	Tests/Generator/UrlGeneratorTest.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
 crates/routing/src/lib.rs	symfony/routing	Matcher/UrlMatcher.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822
