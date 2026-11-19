@@ -22,7 +22,7 @@ return the application's own typed route. There is no route-pattern parsing
 or regex compilation at request time. The Axum server remains the HTTP
 adapter. The crate itself has no demo, database, locale-enum or template types.
 
-The demo's registrations live in `src/routing/collection.rs`; `src/routing.rs`
+symfony-demo-rs's registrations live in `src/routing/collection.rs`; `src/routing.rs`
 keeps its route enum, URL layouts and public matching facade. The independent
 lab registers its own routes. Method refusals hold an ordered vector so
 multiple registrations for one path can aggregate their Allow values.
@@ -35,7 +35,8 @@ the expected methods, route names, parameter values and redirect paths are
 preserved. This does not claim all upstream tests have been ported.
 
 An additional test compares 90 outcomes recorded directly from that installed
-PHP matcher: `tests/data/matcher.json`. Regenerate with the original running:
+PHP matcher: `tests/data/matcher.json`. Regenerate from a symfony-demo-rs
+checkout, with the original running, then copy the file here:
 
 ```sh
 uv run python compare/routing_vectors.py

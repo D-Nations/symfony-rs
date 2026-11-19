@@ -1,0 +1,6 @@
+# Scripts and the files they read keep LF endings on Windows checkouts.
+*.sh text eol=lf
+*.php text eol=lf
+*.tsv text eol=lf
+# Vectors recorded from PHP are compared byte for byte.
+**/tests/data/** -text

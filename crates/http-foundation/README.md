@@ -1,6 +1,7 @@
 # Symfony request compatibility subset
 
-Private workspace crate extracted from symfony-demo-rs. It implements the
+Private workspace crate of symfony-rs, extracted from
+[symfony-demo-rs](https://github.com/D-Nations/symfony-demo-rs). It implements the
 request semantics already exercised by the demo, with the PHP source named
 in each module. It is not a complete port of Symfony HttpFoundation.
 
@@ -24,13 +25,13 @@ Run this crate independently with:
 cargo test -p symfony-http-foundation
 ```
 
-The demo's `src/request/mod.rs` re-exports this API. The second consumer is
+symfony-demo-rs's `src/request/mod.rs` re-exports this API. The second consumer is
 [`request-lab`](../../examples/request-lab/README.md); it has no dependency on
 the demo crate, its database, templates, translations or built assets.
 
-The multipart test snapshot is copied from `data/request/multipart_vectors.json`;
-`compare/multipart_vectors.py` updates both when regenerating PHP evidence.
-The application-specific language test remains at
+The multipart test snapshot is copied from symfony-demo-rs's
+`data/request/multipart_vectors.json`; its `compare/multipart_vectors.py` updates both when regenerating PHP evidence.
+The application-specific language test remains in symfony-demo-rs at
 `tests/request_compatibility.rs`, so it continues to verify the demo's actual
 enabled locale set rather than baking that set into this crate.
 

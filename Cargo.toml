@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "crates/http-foundation",
+    "crates/routing",
+    "crates/http-kernel",
+    "examples/request-lab",
+]
+resolver = "3"
