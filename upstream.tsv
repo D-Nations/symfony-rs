@@ -1,5 +1,7 @@
 # Non-Composer upstream sources (Composer packages: parity/packages.tsv).
 # checkout	repository	tag or commit
+# php-src: reference only. None of it may be built, run or ported into a
+# crate (PLAN.md decision 8); PHP behaviour comes from the oracle.
 php-src	https://github.com/php/php-src	php-8.4.27
 # symfony/yaml's require-dev yaml/yaml-test-suite (2022.01.17, pinned in its
 # composer.json), where YamlTestSuiteTest finds it in a standalone checkout
