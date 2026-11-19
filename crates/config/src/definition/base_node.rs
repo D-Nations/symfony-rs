@@ -80,6 +80,9 @@ pub(crate) struct Base {
     pub(crate) equivalent_values: Vec<(Value, Value)>,
     pub(crate) attributes: PhpArray,
     pub(crate) handling_placeholder: Option<Value>,
+    /// The class of a PHP subclass that overrides nothing (`class BarNode
+    /// extends ArrayNode {}`), when the node is one.
+    pub(crate) subclass: Option<Arc<str>>,
 }
 
 /// What `setDeprecated()` stored.
@@ -260,6 +263,7 @@ impl Node {
                 equivalent_values: Vec::new(),
                 attributes: PhpArray::new(),
                 handling_placeholder: None,
+                subclass: None,
             },
             kind,
         }))))
@@ -308,10 +312,40 @@ impl Node {
 
     /// `static::class`.
     pub fn class(&self) -> String {
+        if let Some(class) = self.read(|n| n.base.subclass.clone()) {
+            return class.to_string();
+        }
         match self.kind() {
             Kind::Custom(c) => c.class().to_owned(),
             kind => kind_class(&kind).to_owned(),
         }
+    }
+
+    /// Makes this new node an instance of `class`, a PHP subclass of its
+    /// class that overrides nothing (`class BarNode extends ArrayNode
+    /// {}`). Called right after the node is constructed.
+    pub fn with_class(self, class: &str) -> Self {
+        self.write(|n| n.base.subclass = Some(Arc::from(class)));
+        self
+    }
+
+    /// `$node instanceof $class`: its class, the classes it extends and
+    /// the interfaces it implements. Class names compare without case and
+    /// without a leading backslash, as PHP's do.
+    pub fn is_instance_of(&self, class: &str) -> bool {
+        let wanted = php::class_name_key(class);
+        let (subclass, kind) = self.read(|n| (n.base.subclass.clone(), n.kind.clone()));
+        let mut classes: Vec<String> = subclass.iter().map(|c| c.to_string()).collect();
+        match &kind {
+            Kind::Custom(c) => classes.push(c.class().to_owned()),
+            kind => classes.extend(kind_ancestors(kind).iter().map(|c| (*c).to_owned())),
+        }
+        classes.push(BASE_NODE.to_owned());
+        classes.push(NODE_INTERFACE.to_owned());
+        if self.is_prototype_node() {
+            classes.push(PROTOTYPE_NODE_INTERFACE.to_owned());
+        }
+        classes.iter().any(|c| php::class_name_key(c) == wanted)
     }
 
     /// `instanceof ArrayNode` (ArrayNode and PrototypedArrayNode).
@@ -892,6 +926,37 @@ impl Node {
 /// `setDeprecated()`'s default message.
 pub const DEFAULT_DEPRECATION_MESSAGE: &str =
     "The child node \"%node%\" at path \"%path%\" is deprecated.";
+
+pub const BASE_NODE: &str = "Symfony\\Component\\Config\\Definition\\BaseNode";
+pub const NODE_INTERFACE: &str = "Symfony\\Component\\Config\\Definition\\NodeInterface";
+pub const PROTOTYPE_NODE_INTERFACE: &str =
+    "Symfony\\Component\\Config\\Definition\\PrototypeNodeInterface";
+
+/// The node classes a built-in kind is an instance of, below BaseNode.
+fn kind_ancestors(kind: &Kind) -> Vec<&'static str> {
+    let scalar = |own: &[&'static str]| -> Vec<&'static str> {
+        let mut classes = own.to_vec();
+        classes.extend([scalar_node::CLASS, variable_node::CLASS]);
+        classes
+    };
+    match kind {
+        Kind::Variable { scalar: None, .. } => vec![variable_node::CLASS],
+        Kind::Variable {
+            scalar: Some(s), ..
+        } => match s {
+            ScalarKind::Scalar => scalar(&[]),
+            ScalarKind::Boolean { .. } => scalar(&[boolean_node::CLASS]),
+            ScalarKind::Numeric(_) => scalar(&[numeric_node::CLASS]),
+            ScalarKind::Integer(_) => scalar(&[integer_node::CLASS, numeric_node::CLASS]),
+            ScalarKind::Float(_) => scalar(&[float_node::CLASS, numeric_node::CLASS]),
+            ScalarKind::String => scalar(&[string_node::CLASS]),
+            ScalarKind::Enum(_) => scalar(&[enum_node::CLASS]),
+        },
+        Kind::Array(_) => vec![array_node::CLASS],
+        Kind::Prototyped(..) => vec![prototyped_array_node::CLASS, array_node::CLASS],
+        Kind::Custom(_) => Vec::new(),
+    }
+}
 
 fn kind_class(kind: &Kind) -> &'static str {
     match kind {
