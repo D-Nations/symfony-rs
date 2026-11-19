@@ -53,3 +53,11 @@ crates/stopwatch/src/stopwatch_period.rs	symfony/stopwatch	StopwatchPeriod.php	2
 crates/stopwatch/tests/stopwatch.rs	symfony/stopwatch	Tests/StopwatchTest.php	21c07b026905d596e8379caeb115d87aa479499d
 crates/stopwatch/tests/stopwatch_event.rs	symfony/stopwatch	Tests/StopwatchEventTest.php	21c07b026905d596e8379caeb115d87aa479499d
 crates/stopwatch/tests/stopwatch_period.rs	symfony/stopwatch	Tests/StopwatchPeriodTest.php	21c07b026905d596e8379caeb115d87aa479499d
+crates/yaml/src/escaper.rs	symfony/yaml	Escaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/exception.rs	symfony/yaml	Exception/ParseException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/exception.rs	symfony/yaml	Exception/DumpException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/exception.rs	symfony/yaml	Exception/RuntimeException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/lib.rs	symfony/yaml	Yaml.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/tag.rs	symfony/yaml	Tag/TaggedValue.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/src/unescaper.rs	symfony/yaml	Unescaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/tests/parse_exception.rs	symfony/yaml	Tests/ParseExceptionTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db

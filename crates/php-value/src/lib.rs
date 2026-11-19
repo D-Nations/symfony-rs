@@ -9,7 +9,9 @@
 #![forbid(unsafe_code)]
 
 pub mod array;
+pub mod json;
 pub mod numeric;
+pub mod pcre;
 pub mod string;
 pub mod value;
 

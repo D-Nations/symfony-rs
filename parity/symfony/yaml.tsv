@@ -161,8 +161,8 @@ Tests/InlineTest.php	InlineTest::testUnquotedExclamationMarkThrows	pending
 Tests/InlineTest.php	InlineTest::testUnterminatedMappingEndingWithTag	pending	
 Tests/InlineTest.php	InlineTest::testUnterminatedSequenceEndingWithTag	pending	
 Tests/InlineTest.php	InlineTest::testVeryLongQuotedStrings	pending	
-Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessage	pending	
-Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessageWithUnicodeInFilename	pending	
+Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessage	ported	crates/yaml/tests/parse_exception.rs::testGetMessage
+Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessageWithUnicodeInFilename	ported	crates/yaml/tests/parse_exception.rs::testGetMessageWithUnicodeInFilename
 Tests/ParserTest.php	ParserTest::testAdditionallyIndentedLinesAreParsedAsNewLinesInFoldedBlocks	pending	
 Tests/ParserTest.php	ParserTest::testAnchorAfterTag	pending	
 Tests/ParserTest.php	ParserTest::testAnchorOnTheRootNode	pending	

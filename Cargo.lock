@@ -463,6 +463,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-yaml"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "serde_json",
+]
+
+[[package]]
 name = "syn"
 version = "3.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"

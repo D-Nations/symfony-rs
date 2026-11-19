@@ -5,10 +5,12 @@
 
 use php_value::{
     Key, PhpArray, Value,
+    json::{JsonFlags, encode_string},
     numeric::{
         Number, float_to_string, hexdec, is_numeric, json_float, octdec, string_to_float,
         string_to_int, var_export_float,
     },
+    pcre::{is_space_u, is_zs_u},
 };
 use serde_json::Value as Json;
 
@@ -199,6 +201,52 @@ fn hexdec_and_octdec_match_php() -> TestResult {
             typed(&row[2])?,
             "octdec({input:?})"
         );
+    }
+    Ok(())
+}
+
+#[test]
+fn pcre_space_classes_match_php() -> TestResult {
+    let json = vectors()?;
+    for (key, class) in [
+        ("pcre_space_u", is_space_u as fn(char) -> bool),
+        ("pcre_zs_u", is_zs_u),
+    ] {
+        let expected: Vec<u32> = rows(&json, key)?
+            .iter()
+            .filter_map(Json::as_u64)
+            .map(|c| c as u32)
+            .collect();
+        let actual: Vec<u32> = (0..=0x10FFFFu32)
+            .filter_map(char::from_u32)
+            .filter(|&c| class(c))
+            .map(u32::from)
+            .collect();
+        assert_eq!(actual, expected, "{key}");
+    }
+    Ok(())
+}
+
+#[test]
+fn json_encode_of_strings_matches_php() -> TestResult {
+    let json = vectors()?;
+    for row in rows(&json, "json_strings")? {
+        let input = base64(&row[0])?;
+        for (i, (slashes, unicode)) in [(false, false), (true, false), (false, true), (true, true)]
+            .into_iter()
+            .enumerate()
+        {
+            let flags = JsonFlags {
+                unescaped_slashes: slashes,
+                unescaped_unicode: unicode,
+            };
+            let expected = row[i + 1].as_str().map(str::to_owned);
+            assert_eq!(
+                encode_string(&input, flags),
+                expected,
+                "{input:?} with {flags:?}"
+            );
+        }
     }
     Ok(())
 }

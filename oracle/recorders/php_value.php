@@ -83,7 +83,38 @@ foreach (['0', '1A', 'ff', 'FF', 'fffffffffffffff', '7fffffffffffffff', '8000000
     $radix[] = [$s, typed(hexdec($s)), typed(octdec($s))];
 }
 
+// Code points matched by PCRE's \s and \p{Zs} under PHP's /u modifier.
+$space = [];
+$zs = [];
+for ($c = 0; $c <= 0x10FFFF; ++$c) {
+    if ($c >= 0xD800 && $c <= 0xDFFF) {
+        continue;
+    }
+    $char = mb_chr($c, 'UTF-8');
+    if (preg_match('/\s/u', $char)) {
+        $space[] = $c;
+    }
+    if (preg_match('/\p{Zs}/u', $char)) {
+        $zs[] = $c;
+    }
+}
+
+// json_encode() of strings, with the flag sets Symfony uses.
+$json_inputs = ['', 'plain', 'a/b', 'quote"back\\', "tab\tnl\ncr\rbs\x08ff\x0c", "\x00\x01\x1f\x7f", 'äöü.yml',
+    "\u{1F600}", "\u{2028}\u{2029}", "\xff\xfe", "a\xc3", '<>&\'', "\u{FEFF}", "é/ü"];
+$json_strings = [];
+foreach ($json_inputs as $s) {
+    $row = [base64_encode($s)];
+    foreach ([0, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE] as $flags) {
+        $row[] = json_encode($s, $flags);
+    }
+    $json_strings[] = $row;
+}
+
 echo json_encode([
+    'pcre_space_u' => $space,
+    'pcre_zs_u' => $zs,
+    'json_strings' => $json_strings,
     'keys' => $keys,
     'casts' => $casts,
     'appends' => $appends,

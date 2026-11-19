@@ -6,6 +6,7 @@
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
+#   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -63,12 +64,26 @@ php_value() {
     echo "PHP value vectors written to $out"
 }
 
+yaml() {
+    local name out tmp
+    mkdir -p oracle/out crates/yaml/tests/data
+    for name in escaping; do
+        out=crates/yaml/tests/data/$name.json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/yaml_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Yaml $name vectors written to $out"
+    done
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
     event-dispatcher) event_dispatcher ;;
     stopwatch) stopwatch ;;
     php-value) php_value ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|all" >&2; exit 2 ;;
+    yaml) yaml ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|all" >&2; exit 2 ;;
 esac
