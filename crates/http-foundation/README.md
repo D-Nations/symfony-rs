@@ -2,15 +2,18 @@
 
 Private workspace crate of symfony-rs, extracted from
 [symfony-demo-rs](https://github.com/D-Nations/symfony-demo-rs). It implements the
-request semantics already exercised by the demo, with the PHP source named
-in each module. It is not a complete port of Symfony HttpFoundation.
+request semantics already exercised by the demo, with the Symfony source
+named in each module. PHP's own parsing (query strings, form bodies,
+cookies, multipart) is written from the PHP manual and from PHP 8.4.27's
+recorded answers, with no PHP source code (PLAN.md decision 8). It is not a
+complete port of Symfony HttpFoundation.
 
 | Module/API | Source behavior | Evidence | Limits |
 |---|---|---|---|
-| `query` | PHP `php_default_treat_data`, `php_register_variable_ex`; Symfony `InputBag::get()` | Existing query tests, demo form tests, request-lab HTTP tests | Fixed PHP defaults: 1,000 variables, nesting 64; invalid UTF-8 is replaced and tracked for scalar values |
-| `cookies` | PHP `PARSE_COOKIE` | Existing cookie test, request-lab HTTP test | The existing demo subset; not a full Symfony Cookie/ResponseHeaderBag API |
-| `multipart` | PHP 8.4.27 `main/rfc1867.c` | 156 PHP-recorded vectors plus parser tests | Text fields only; file parts are consumed and discarded; fixed PHP upload limits |
-| `form_fields` | Symfony `Request::createFromGlobals()` method/format selection | Demo write tests, request-lab HTTP tests, multipart comparison | URL-encoded and multipart bodies; no JSON payload API |
+| `query` | PHP's `$_GET` / `$_POST` (urlencoded) registration, recorded; Symfony `InputBag::get()` | 160 PHP-recorded query strings, each as a query string and as a form body (`tests/data/query_vectors.json`); query tests; demo form tests; request-lab HTTP tests | Fixed PHP defaults: 1,000 query variables (1,001 pairs in a form body, as PHP reads), nesting 64; values are stored as UTF-8 with invalid bytes replaced, and `is_utf8` reports a name whose value was not |
+| `cookies` | PHP's `$_COOKIE`, recorded | 54 PHP-recorded Cookie headers (`tests/data/cookie_vectors.json`); cookie test; request-lab HTTP test | Arrays (`a[b]=1`) are kept and reachable through `all()`; `get()` returns strings only. Not a Symfony Cookie/ResponseHeaderBag API |
+| `multipart` | PHP's `multipart/form-data` reading for `$_POST` and `request_parse_body()`, recorded | 274 PHP-recorded bodies (137 as POST and as PUT, `tests/data/multipart_vectors.json`) plus parser tests | Text fields only; file parts are read and discarded; fixed PHP upload limits (`max_input_vars` 1000, `max_file_uploads` 20) |
+| `form_fields` | Symfony `Request::createFromGlobals()` method/format selection | 12 PHP-recorded content types (`tests/data/content_type_vectors.json`); demo write tests; request-lab HTTP tests; multipart comparison | URL-encoded and multipart bodies; no JSON payload API |
 | `accept_language` | Symfony `Request`, `AcceptHeader`, `AcceptHeaderItem`, `HeaderUtils` | Original 77-header test retained in the demo integration suite; float parsing test here | Caller supplies supported locale strings; no demo locale enum dependency |
 | `scheme` | Symfony `Request` trusted HTTPS proxy subset | Demo proxy/security regression tests, request-lab untrusted-header test | Axum adapter; exact trusted peer IPs and one `X-Forwarded-Proto` value only |
 
@@ -29,11 +32,31 @@ symfony-demo-rs's `src/request/mod.rs` re-exports this API. The second consumer 
 [`request-lab`](../../examples/request-lab/README.md); it has no dependency on
 the demo crate, its database, templates, translations or built assets.
 
-The multipart test snapshot is copied from symfony-demo-rs's
-`data/request/multipart_vectors.json`; its `compare/multipart_vectors.py` updates both when regenerating PHP evidence.
+The vectors are recorded in the oracle image: `scripts/record.sh multipart`
+(`oracle/recorders/multipart*.py`) and `scripts/record.sh request-vars`
+(`oracle/recorders/request_vars*`). The first 156 multipart bodies are the
+ones moved from symfony-demo-rs; the rest were added for the rewrite.
 The application-specific language test remains in symfony-demo-rs at
 `tests/request_compatibility.rs`, so it continues to verify the demo's actual
 enabled locale set rather than baking that set into this crate.
+
+## Differences from the earlier implementation
+
+The rewrite (M1-D request provenance gate) follows PHP's recorded answers
+where the earlier, php-src-derived code did not:
+
+- A `+` in a cookie value stays `+` (PHP `rawurldecode`s cookie values);
+  the earlier code made it a space.
+- A cookie named `a[b]` is an array, as in PHP; the earlier code kept the
+  name `a[b]` as written.
+- A URL-encoded form body reads 1,001 pairs, empty pairs counted, as PHP
+  does; a query string reads 1,000 non-empty pairs. The earlier code used
+  the query-string rule for both, and decoded the body as UTF-8 before
+  parsing.
+- `form_fields` ignores spaces and tabs around the content type, as the
+  HTTP server in front of PHP drops them.
+
+## Not implemented
 
 Not implemented: general Request/Response objects, HeaderBag and ParameterBag
 APIs, uploaded-file handling, JSON payload access, sessions, response cache

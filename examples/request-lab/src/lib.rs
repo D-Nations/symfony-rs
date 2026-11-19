@@ -12,7 +12,7 @@ use axum::{
     http::{StatusCode, header},
     response::{IntoResponse, Redirect, Response},
 };
-use serde_json::{Map, Value, json};
+use serde_json::{Value, json};
 use std::sync::LazyLock;
 use symfony_http_foundation::{
     POST_MAX_SIZE, accept_language,
@@ -199,10 +199,7 @@ async fn inspect(request: Request) -> Response {
             .iter()
             .filter_map(|value| value.to_str().ok()),
     );
-    let cookies: Map<String, Value> = cookies
-        .iter()
-        .map(|(key, value)| (key.to_owned(), Value::String(value.to_owned())))
-        .collect();
+    let cookies = fields(cookies.all());
     let language = accept_language::preferred_language(
         parts
             .headers

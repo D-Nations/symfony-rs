@@ -1,30 +1,46 @@
-//! The fields of a `multipart/form-data` body, as PHP fills `$_POST`.
+//! The fields of a `multipart/form-data` body, as PHP fills `$_POST` (and
+//! `request_parse_body()`, which Symfony uses for PUT, DELETE, PATCH and
+//! QUERY). The browser's live search script sends its data this way.
 //!
-//! Ports `main/rfc1867.c` of PHP 8.4.27 (`rfc1867_post_handler()` and the
-//! buffer, line, header and word functions it uses), the parser behind the
-//! original's form fields. The browser's live search script sends its data
-//! this way. Only text fields are kept; file parts are read and dropped as
-//! PHP reads them, because how far PHP reads a file part decides where it
-//! looks for the next boundary.
+//! Written from PHP 8.4.27's recorded answers to 137 bodies, each sent as
+//! POST and as PUT (`tests/data/multipart_vectors.json`, recorded by
+//! `scripts/record.sh multipart`), and the PHP manual's ini defaults; no
+//! PHP source code is used (PLAN.md decision 8). Only text fields are kept;
+//! file parts are read and dropped. Settings are PHP's defaults:
+//! `max_input_vars` 1000, `max_file_uploads` 20, `file_uploads` on.
 //!
-//! PHP reads the body through a buffer of 5 KiB (`FILLUNIT`); lines longer
-//! than the buffer, and boundaries split across two fills, are handled the
-//! way that buffer handles them, so the buffer is ported too, over the
-//! already-read body. Settings are PHP's defaults, as in the original:
-//! `max_input_vars` 1000, `max_file_uploads` 20, `upload_max_filesize`
-//! 2M, `max_multipart_body_parts` -1 (their sum), `file_uploads` on, no
-//! encoding translation, the `unsafe_raw` input filter.
+//! What the recordings show, and this parser does:
 //!
-//! Upstream: php-src main/rfc1867.c
+//! - The boundary is what follows the first `boundary` (any case) in the
+//!   content type, after one more character (normally `=`): a quoted
+//!   string, or the text up to `,` or `;`. No `boundary`, or an unclosed
+//!   quote, fails with no fields.
+//! - Before the first part, and whenever a delimiter line has more text
+//!   after the boundary, lines are skipped until one is exactly
+//!   `--boundary` (a final CR aside). So `--boundary--` does not end the
+//!   body, and `--boundary ` does not start a part.
+//! - Header lines end at LF (a final CR aside) and the headers at an empty
+//!   line; a line starting with a space or tab continues the previous
+//!   header, and a line without `:` is ignored. Only the first
+//!   `Content-Disposition` counts; a part without one is skipped.
+//! - A value ends at the first LF followed by `--boundary`, without that
+//!   LF and one CR before it; at the end of the body, without one final LF
+//!   (and one CR before it). The value may start with `--boundary`.
+//! - A disposition with neither `name` nor `filename` fails and stops
+//!   parsing; so does the 1,001st text field. A part with `filename` is a
+//!   file and is dropped; a 21st non-empty filename fails but parsing
+//!   continues.
+//!
+//! PHP reads the body through a fixed-size buffer. None of the recorded
+//! bodies placed around its size (`pad-*`, `long-*`) shows an effect of
+//! it, so this parser reads the whole body at once.
+//!
+//! Upstream: none
 
-/// `FILLUNIT`: the size of PHP's read buffer.
-const FILLUNIT: usize = 5 * 1024;
-/// `max_input_vars`.
-const MAX_INPUT_VARS: usize = 1000;
+use crate::query::MAX_INPUT_VARS;
+
 /// `max_file_uploads`.
-const MAX_FILE_UPLOADS: i64 = 20;
-/// `upload_max_filesize` (2M).
-const UPLOAD_MAX_FILESIZE: i64 = 2 * 1024 * 1024;
+const MAX_FILE_UPLOADS: usize = 20;
 
 /// What the parser found.
 #[derive(Debug, Default, PartialEq, Eq)]
@@ -32,527 +48,248 @@ pub struct Parsed {
     /// Text fields in order, name and value as sent. Names are registered
     /// as PHP registers them (`Query::from_fields`).
     pub fields: Vec<(Vec<u8>, Vec<u8>)>,
-    /// PHP raised one of its warnings (`EMIT_WARNING_OR_ERROR`). For POST
-    /// they are only warnings; `request_parse_body()`, which Symfony uses
-    /// for PUT, DELETE, PATCH and QUERY, turns them into an exception,
-    /// and Symfony then uses no fields at all.
+    /// PHP raised one of its warnings. For POST they are only warnings;
+    /// `request_parse_body()` turns them into an exception, and Symfony
+    /// then uses no fields at all.
     pub failed: bool,
 }
 
-/// `isspace()` in the C locale.
-const fn is_space(byte: u8) -> bool {
-    matches!(byte, b' ' | b'\t' | b'\n' | 0x0B | 0x0C | b'\r')
-}
-
-/// A C string: the bytes before the first NUL.
-fn c_str(bytes: &[u8]) -> &[u8] {
-    bytes
-        .iter()
-        .position(|&b| b == 0)
-        .map_or(bytes, |end| &bytes[..end])
-}
-
-/// `multipart_buffer`, reading from the body instead of the socket.
-struct Buffer<'a> {
-    input: &'a [u8],
-    /// Bytes of `input` handed to the buffer so far.
-    read: usize,
-    buffer: Vec<u8>,
-    bufsize: usize,
-    begin: usize,
-    in_buffer: usize,
-    boundary: Vec<u8>,
-    boundary_next: Vec<u8>,
-}
-
-impl<'a> Buffer<'a> {
-    /// `multipart_buffer_new()`.
-    fn new(input: &'a [u8], boundary: &[u8]) -> Self {
-        let bufsize = (boundary.len() + 6).max(FILLUNIT);
-        let mut dashed = b"--".to_vec();
-        dashed.extend_from_slice(boundary);
-        let mut next = b"\n--".to_vec();
-        next.extend_from_slice(boundary);
-        Self {
-            input,
-            read: 0,
-            buffer: vec![0; bufsize + 1],
-            bufsize,
-            begin: 0,
-            in_buffer: 0,
-            boundary: dashed,
-            boundary_next: next,
-        }
+pub fn parse(content_type: &[u8], body: &[u8]) -> Parsed {
+    let mut parsed = Parsed::default();
+    let Some(boundary) = boundary(content_type) else {
+        parsed.failed = true;
+        return parsed;
+    };
+    let delimiter = [b"--", boundary].concat();
+    let mut body = Body { bytes: body, at: 0 };
+    if !body.seek(&delimiter) {
+        return parsed;
     }
-
-    /// `fill_buffer()`: moves what is left to the front and reads as much
-    /// as fits. Returns the number of bytes read.
-    fn fill(&mut self) -> usize {
-        if self.in_buffer > 0 && self.begin != 0 {
-            self.buffer
-                .copy_within(self.begin..self.begin + self.in_buffer, 0);
-        }
-        self.begin = 0;
-        let wanted = self.bufsize - self.in_buffer;
-        let available = self.input.len() - self.read;
-        let count = wanted.min(available);
-        let start = self.in_buffer;
-        self.buffer[start..start + count]
-            .copy_from_slice(&self.input[self.read..self.read + count]);
-        self.in_buffer += count;
-        self.read += count;
-        count
-    }
-
-    /// `multipart_buffer_eof()`.
-    fn eof(&mut self) -> bool {
-        self.in_buffer == 0 && self.fill() < 1
-    }
-
-    fn data(&self) -> &[u8] {
-        &self.buffer[self.begin..self.begin + self.in_buffer]
-    }
-
-    /// `next_line()`: the next LF-terminated line without its CR LF, or
-    /// the whole buffer when it is full and holds no LF; `None` when the
-    /// buffer is not full and holds no LF.
-    fn next_line(&mut self) -> Option<Vec<u8>> {
-        match self.data().iter().position(|&b| b == b'\n') {
-            Some(lf) => {
-                let data = self.data();
-                let end = if lf > 0 && data[lf - 1] == b'\r' {
-                    lf - 1
-                } else {
-                    lf
-                };
-                let line = c_str(&data[..end]).to_vec();
-                self.begin += lf + 1;
-                self.in_buffer -= lf + 1;
-                Some(line)
-            }
-            None if self.in_buffer < self.bufsize => None,
-            None => {
-                let line = c_str(&self.buffer[self.begin..self.begin + self.bufsize]).to_vec();
-                self.in_buffer = 0;
-                Some(line)
+    let mut files = 0;
+    loop {
+        let disposition = body.disposition();
+        let (value, next) = body.value(&delimiter);
+        if let Some(disposition) = disposition {
+            let params = Params::of(&disposition);
+            match (params.name, params.filename) {
+                (None, None) => {
+                    parsed.failed = true;
+                    return parsed;
+                }
+                (_, Some(filename)) => {
+                    if !filename.is_empty() {
+                        files += 1;
+                        parsed.failed |= files > MAX_FILE_UPLOADS;
+                    }
+                }
+                (Some(name), None) => {
+                    if parsed.fields.len() == MAX_INPUT_VARS {
+                        parsed.failed = true;
+                        return parsed;
+                    }
+                    parsed.fields.push((name, value.to_vec()));
+                }
             }
         }
-    }
-
-    /// `get_line()`.
-    fn get_line(&mut self) -> Option<Vec<u8>> {
-        if let Some(line) = self.next_line() {
-            return Some(line);
+        match next {
+            Next::Headers => {}
+            Next::Seek if body.seek(&delimiter) => {}
+            Next::Seek | Next::End => return parsed,
         }
-        self.fill();
-        self.next_line()
+    }
+}
+
+/// The boundary named by the content type, `None` when there is none.
+fn boundary(content_type: &[u8]) -> Option<&[u8]> {
+    const KEY: &[u8] = b"boundary";
+    let at = content_type
+        .windows(KEY.len())
+        .position(|window| window.eq_ignore_ascii_case(KEY))?;
+    let value = content_type.get(at + KEY.len() + 1..).unwrap_or_default();
+    match value.strip_prefix(b"\"") {
+        Some(quoted) => quoted
+            .iter()
+            .position(|&b| b == b'"')
+            .map(|end| &quoted[..end]),
+        None => Some(until(value, |b| b == b',' || b == b';')),
+    }
+}
+
+fn until(bytes: &[u8], stop: impl Fn(u8) -> bool) -> &[u8] {
+    &bytes[..bytes.iter().position(|&b| stop(b)).unwrap_or(bytes.len())]
+}
+
+/// Where parsing goes after a value.
+enum Next {
+    /// The delimiter line held only the boundary: a part's headers follow.
+    Headers,
+    /// The delimiter line had more text: look for the next delimiter line.
+    Seek,
+    /// The body ended.
+    End,
+}
+
+/// The body and the position reached in it.
+struct Body<'a> {
+    bytes: &'a [u8],
+    at: usize,
+}
+
+impl<'a> Body<'a> {
+    /// The next line without its LF and one CR before it; `None` at the
+    /// end of the body.
+    fn line(&mut self) -> Option<&'a [u8]> {
+        let rest = self.bytes.get(self.at..).filter(|rest| !rest.is_empty())?;
+        let (line, used) = match rest.iter().position(|&b| b == b'\n') {
+            Some(lf) => (&rest[..lf], lf + 1),
+            None => (rest, rest.len()),
+        };
+        self.at += used;
+        Some(line.strip_suffix(b"\r").unwrap_or(line))
     }
 
-    /// `find_boundary()`: skips lines up to one that is exactly the
-    /// boundary.
-    fn find_boundary(&mut self) -> bool {
-        while let Some(line) = self.get_line() {
-            if line == self.boundary {
+    /// Skips lines up to and including one that is exactly `delimiter`.
+    fn seek(&mut self, delimiter: &[u8]) -> bool {
+        while let Some(line) = self.line() {
+            if line == delimiter {
                 return true;
             }
         }
         false
     }
 
-    /// `multipart_buffer_headers()`: the part's `Content-Disposition` and
-    /// `Content-Type` headers (the first of each), or `None` when no
-    /// boundary follows.
-    fn headers(&mut self) -> Option<Vec<(Vec<u8>, Vec<u8>)>> {
-        if !self.find_boundary() {
-            return None;
-        }
-        let mut headers: Vec<(Vec<u8>, Vec<u8>)> = Vec::new();
-        let mut key: Option<Vec<u8>> = None;
-        let mut value: Option<Vec<u8>> = None;
-        while let Some(line) = self.get_line() {
+    /// Reads a part's headers and returns its first `Content-Disposition`.
+    fn disposition(&mut self) -> Option<Vec<u8>> {
+        let mut headers: Vec<(&[u8], Vec<u8>)> = Vec::new();
+        while let Some(line) = self.line() {
             if line.is_empty() {
                 break;
             }
-            // A line starting with a space continues the previous header.
-            let colon = if is_space(line[0]) {
-                None
-            } else {
-                line.iter().position(|&b| b == b':')
-            };
-            if let Some(colon) = colon {
-                if let (Some(v), Some(k)) = (&value, &key) {
-                    headers.push((k.clone(), v.clone()));
-                    value = None;
+            if matches!(line[0], b' ' | b'\t') {
+                if let Some((_, value)) = headers.last_mut() {
+                    value.extend_from_slice(line);
                 }
-                let name = &line[..colon];
-                let saved = name.eq_ignore_ascii_case(b"Content-Disposition")
-                    || name.eq_ignore_ascii_case(b"Content-Type");
-                if !saved || header_value(&headers, name).is_some() {
-                    key = None;
-                } else {
-                    key = Some(name.to_vec());
-                    // `do { value++; } while (isspace(*value))`
-                    let rest = &line[colon + 1..];
-                    let start = rest
-                        .iter()
-                        .position(|&b| !is_space(b))
-                        .unwrap_or(rest.len());
-                    value
-                        .get_or_insert_with(Vec::new)
-                        .extend_from_slice(&rest[start..]);
-                }
-            } else if let Some(v) = &mut value {
-                v.extend_from_slice(&line);
+            } else if let Some(colon) = line.iter().position(|&b| b == b':') {
+                let value = &line[colon + 1..];
+                let start = value.iter().position(|&b| b != b' ' && b != b'\t');
+                headers.push((
+                    &line[..colon],
+                    start.map_or(Vec::new(), |s| value[s..].to_vec()),
+                ));
             }
         }
-        if let (Some(v), Some(k)) = (value, key) {
-            headers.push((k, v));
-        }
-        Some(headers)
+        headers
+            .into_iter()
+            .find(|(name, _)| name.eq_ignore_ascii_case(b"content-disposition"))
+            .map(|(_, value)| value)
     }
 
-    /// `multipart_buffer_read()`: up to `bytes - 1` bytes before the next
-    /// `"\n--boundary"` (or a prefix of it at the end of the buffer). A CR
-    /// just before the boundary is left out but stays in the buffer.
-    /// `end` is set when the full boundary is in sight.
-    fn read(&mut self, bytes: usize, end: &mut bool) -> Vec<u8> {
-        if bytes > self.in_buffer {
-            self.fill();
-        }
-        let bound = memstr(self.data(), &self.boundary_next, true);
-        let max = match bound {
-            Some(position) => {
-                if memstr(self.data(), &self.boundary_next, false).is_some() {
-                    *end = true;
-                }
-                position
-            }
-            None => self.in_buffer,
+    /// Reads a part's value and finds what follows it.
+    fn value(&mut self, delimiter: &[u8]) -> (&'a [u8], Next) {
+        let rest = self.bytes.get(self.at..).unwrap_or_default();
+        let found = rest
+            .windows(delimiter.len() + 1)
+            .position(|window| window[0] == b'\n' && &window[1..] == delimiter);
+        let Some(lf) = found else {
+            self.at = self.bytes.len();
+            let value = rest
+                .strip_suffix(b"\n")
+                .map_or(rest, |value| value.strip_suffix(b"\r").unwrap_or(value));
+            return (value, Next::End);
         };
-        let mut len = max.min(bytes - 1);
-        if len == 0 {
-            return Vec::new();
-        }
-        let mut out = self.data()[..len].to_vec();
-        if bound.is_some() && out.last() == Some(&b'\r') {
-            out.pop();
-            len -= 1;
-        }
-        self.in_buffer -= len;
-        self.begin += len;
-        out
+        let value = &rest[..lf];
+        self.at += lf + 1 + delimiter.len();
+        let after = self.line().unwrap_or_default();
+        let next = if after.is_empty() {
+            Next::Headers
+        } else {
+            Next::Seek
+        };
+        (value.strip_suffix(b"\r").unwrap_or(value), next)
     }
+}
 
-    /// `multipart_buffer_read_body()`.
-    fn read_body(&mut self) -> Vec<u8> {
-        let mut out = Vec::new();
-        let mut end = false;
+/// The `name` and `filename` parameters of a `Content-Disposition` value.
+/// The last of each counts. Parameters are separated by `;`; spaces and
+/// tabs before a parameter are skipped; its key runs to `=` (keys compare
+/// in any case, and `name *` or `name ` is another key); any `=` after the
+/// first are skipped. A value quoted with `"` or `'` runs to the same
+/// quote, may be unclosed, and is followed by text ignored up to the next
+/// `;`; an unquoted value ends at a space, tab or `;`. In both, a
+/// backslash before the quote character or a backslash stands for that
+/// character; other backslashes stay.
+#[derive(Default)]
+struct Params {
+    name: Option<Vec<u8>>,
+    filename: Option<Vec<u8>>,
+}
+
+impl Params {
+    fn of(disposition: &[u8]) -> Self {
+        let mut params = Self::default();
+        let mut rest = disposition;
         loop {
-            let chunk = self.read(FILLUNIT, &mut end);
-            if chunk.is_empty() {
-                return out;
-            }
-            out.extend_from_slice(&chunk);
-        }
-    }
-}
-
-/// `php_ap_memstr()`: the first place the needle starts, where a match
-/// cut short by the end of the haystack counts if `partial`.
-fn memstr(haystack: &[u8], needle: &[u8], partial: bool) -> Option<usize> {
-    let first = *needle.first()?;
-    let mut from = 0;
-    while let Some(offset) = haystack[from..].iter().position(|&b| b == first) {
-        let at = from + offset;
-        let rest = haystack.len() - at;
-        let compared = needle.len().min(rest);
-        if haystack[at..at + compared] == needle[..compared] && (partial || rest >= needle.len()) {
-            return Some(at);
-        }
-        from = at + 1;
-    }
-    None
-}
-
-/// `php_mime_get_hdr_value()`.
-fn header_value<'h>(headers: &'h [(Vec<u8>, Vec<u8>)], name: &[u8]) -> Option<&'h [u8]> {
-    headers
-        .iter()
-        .find(|(key, _)| key.eq_ignore_ascii_case(name))
-        .map(|(_, value)| value.as_slice())
-}
-
-/// `php_ap_getword()`: the text up to `stop` (outside quotes); the line
-/// moves past it and any repeated `stop`.
-fn getword(line: &mut &[u8], stop: u8) -> Vec<u8> {
-    let text = *line;
-    let mut pos = 0;
-    while pos < text.len() && text[pos] != stop {
-        let quote = text[pos];
-        if quote == b'"' || quote == b'\'' {
-            pos += 1;
-            while pos < text.len() && text[pos] != quote {
-                if text[pos] == b'\\' && text.get(pos + 1) == Some(&quote) {
-                    pos += 2;
-                } else {
-                    pos += 1;
+            let start = rest.iter().position(|&b| b != b' ' && b != b'\t');
+            let Some(start) = start else {
+                return params;
+            };
+            rest = &rest[start..];
+            let key_end = rest.iter().position(|&b| b == b'=' || b == b';');
+            let Some(key_end) = key_end.filter(|&end| rest[end] == b'=') else {
+                match key_end {
+                    Some(semicolon) => {
+                        rest = &rest[semicolon + 1..];
+                        continue;
+                    }
+                    None => return params,
                 }
+            };
+            let key = &rest[..key_end];
+            let after_equals = rest[key_end..].iter().position(|&b| b != b'=');
+            let value_start = after_equals.map_or(rest.len(), |p| key_end + p);
+            let (value, used) = value_of(&rest[value_start..]);
+            if key.eq_ignore_ascii_case(b"name") {
+                params.name = Some(value);
+            } else if key.eq_ignore_ascii_case(b"filename") {
+                params.filename = Some(value);
             }
-            if pos < text.len() {
-                pos += 1;
+            let rest_of_param = &rest[value_start + used..];
+            match rest_of_param.iter().position(|&b| b == b';') {
+                Some(semicolon) => rest = &rest_of_param[semicolon + 1..],
+                None => return params,
             }
-        } else {
-            pos += 1;
-        }
-    }
-    if pos >= text.len() {
-        *line = &text[text.len()..];
-        return text.to_vec();
-    }
-    let word = text[..pos].to_vec();
-    while pos < text.len() && text[pos] == stop {
-        pos += 1;
-    }
-    *line = &text[pos..];
-    word
-}
-
-/// `substring_conf()`: up to `len` bytes, stopping at `quote` (a NUL
-/// `quote` never matches), with `\\` and `\<quote>` unescaped. Like the C
-/// code, an escape may look one byte past `len`.
-fn substring_conf(text: &[u8], len: usize, quote: Option<u8>) -> Vec<u8> {
-    let mut out = Vec::with_capacity(len);
-    let mut i = 0;
-    while i < len && i < text.len() && Some(text[i]) != quote {
-        let next = text.get(i + 1).copied();
-        if text[i] == b'\\' && (next == Some(b'\\') || (quote.is_some() && next == quote)) {
-            i += 1;
-            out.push(text[i]);
-        } else {
-            out.push(text[i]);
-        }
-        i += 1;
-    }
-    out
-}
-
-/// `php_ap_getword_conf()`: a parameter value, quoted or up to the next
-/// space.
-fn getword_conf(text: &[u8]) -> Vec<u8> {
-    let start = text
-        .iter()
-        .position(|&b| !is_space(b))
-        .unwrap_or(text.len());
-    let text = &text[start..];
-    match text.first() {
-        None => Vec::new(),
-        Some(&quote) if quote == b'"' || quote == b'\'' => {
-            substring_conf(&text[1..], text.len() - 1, Some(quote))
-        }
-        Some(_) => {
-            let end = text.iter().position(|&b| is_space(b)).unwrap_or(text.len());
-            substring_conf(text, end, None)
         }
     }
 }
 
-/// The boundary of a `Content-Type` header value, as the handler finds
-/// it: after the first `boundary` (any case) and its `=`, quoted or up to
-/// `,` or `;`. `Err(())` when PHP warns.
-fn boundary(content_type: &[u8]) -> Result<Option<Vec<u8>>, ()> {
-    let content_type = c_str(content_type);
-    let lower = content_type.to_ascii_lowercase();
-    let Some(found) =
-        memstr(content_type, b"boundary", false).or_else(|| memstr(&lower, b"boundary", false))
-    else {
-        return Err(());
+/// A parameter value and the number of bytes it used.
+fn value_of(text: &[u8]) -> (Vec<u8>, usize) {
+    let quote = match text.first() {
+        Some(&q @ (b'"' | b'\'')) => Some(q),
+        _ => None,
     };
-    let Some(equals) = content_type[found..].iter().position(|&b| b == b'=') else {
-        return Err(());
-    };
-    let value = &content_type[found + equals + 1..];
-    let boundary = if value.first() == Some(&b'"') {
-        let quoted = &value[1..];
-        let Some(close) = quoted.iter().position(|&b| b == b'"') else {
-            return Err(());
-        };
-        &quoted[..close]
-    } else {
-        let end = value
-            .iter()
-            .position(|&b| b == b',' || b == b';')
-            .unwrap_or(value.len());
-        &value[..end]
-    };
-    // Too large: PHP stops with a warning that is not an exception.
-    if boundary.len() > FILLUNIT - 4 {
-        return Ok(None);
-    }
-    Ok(Some(boundary.to_vec()))
-}
-
-/// `rfc1867_post_handler()`: the text fields of `body`, sent with the
-/// `Content-Type` value `content_type`.
-pub fn parse(content_type: &[u8], body: &[u8]) -> Parsed {
-    let mut parsed = Parsed::default();
-    let boundary = match boundary(content_type) {
-        Ok(Some(boundary)) => boundary,
-        Ok(None) => return parsed,
-        Err(()) => {
-            parsed.failed = true;
-            return parsed;
+    let start = usize::from(quote.is_some());
+    let escapable = quote.unwrap_or(b'"');
+    let mut value = Vec::new();
+    let mut at = start;
+    while let Some(&byte) = text.get(at) {
+        match quote {
+            Some(q) if byte == q => return (value, at + 1),
+            None if matches!(byte, b' ' | b'\t' | b';') => return (value, at),
+            _ => {}
         }
-    };
-    let mut buffer = Buffer::new(body, &boundary);
-    let mut uploads_left = MAX_FILE_UPLOADS;
-    let mut parts_left = i64::try_from(MAX_INPUT_VARS).unwrap_or(i64::MAX) + MAX_FILE_UPLOADS;
-    let mut count = 0usize;
-    let mut anonymous_index = 0u32;
-    let mut max_file_size: i64 = 0;
-
-    while !buffer.eof() {
-        let Some(headers) = buffer.headers() else {
-            break;
-        };
-        let Some(disposition) = header_value(&headers, b"Content-Disposition") else {
-            continue;
-        };
-        parts_left -= 1;
-        if parts_left < 0 {
-            parsed.failed = true;
-            break;
-        }
-        let start = disposition
-            .iter()
-            .position(|&b| !is_space(b))
-            .unwrap_or(disposition.len());
-        let mut cd = &disposition[start..];
-        let mut param: Option<Vec<u8>> = None;
-        let mut filename: Option<Vec<u8>> = None;
-        while !cd.is_empty() {
-            let pair = getword(&mut cd, b';');
-            let skip = cd.iter().position(|&b| !is_space(b)).unwrap_or(cd.len());
-            cd = &cd[skip..];
-            if pair.contains(&b'=') {
-                let mut rest = pair.as_slice();
-                let key = getword(&mut rest, b'=');
-                if key.eq_ignore_ascii_case(b"name") {
-                    param = Some(getword_conf(rest));
-                } else if key.eq_ignore_ascii_case(b"filename") {
-                    filename = Some(getword_conf(rest));
-                }
+        match (byte, text.get(at + 1)) {
+            (b'\\', Some(&next)) if next == escapable || next == b'\\' => {
+                value.push(next);
+                at += 2;
             }
-        }
-
-        // A normal form field.
-        if let (None, Some(name)) = (&filename, &param) {
-            let value = buffer.read_body();
-            count += 1;
-            if count <= MAX_INPUT_VARS {
-                parsed.fields.push((name.clone(), value.clone()));
-            } else if count == MAX_INPUT_VARS + 1 {
-                parsed.failed = true;
-            }
-            if name.eq_ignore_ascii_case(b"MAX_FILE_SIZE") {
-                max_file_size = strtoll(&value);
-            }
-            continue;
-        }
-
-        // A file part.
-        let mut skip_upload = false;
-        if uploads_left <= 0 {
-            skip_upload = true;
-            if uploads_left == 0 {
-                uploads_left -= 1;
-                parsed.failed = true;
-            }
-        }
-        if param.is_none() && filename.is_none() {
-            parsed.failed = true;
-            break;
-        }
-        let param = param.unwrap_or_else(|| {
-            let name = anonymous_index.to_string().into_bytes();
-            anonymous_index += 1;
-            name
-        });
-        if !skip_upload && !brackets_are_closed(&param) {
-            skip_upload = true;
-        }
-        if skip_upload {
-            continue;
-        }
-        let filename = filename.unwrap_or_default();
-        // Read the file's data as PHP does, then drop it. A file over a
-        // limit is cancelled, after one more read.
-        if !filename.is_empty() {
-            let mut end = false;
-            let mut total: i64 = 0;
-            let mut chunk = buffer.read(FILLUNIT, &mut end);
-            uploads_left -= 1;
-            let mut cancelled = false;
-            while !cancelled && !chunk.is_empty() {
-                let next_total =
-                    total.saturating_add(i64::try_from(chunk.len()).unwrap_or(i64::MAX));
-                if next_total > UPLOAD_MAX_FILESIZE
-                    || (max_file_size != 0 && next_total > max_file_size)
-                {
-                    cancelled = true;
-                } else {
-                    total = next_total;
-                }
-                chunk = buffer.read(FILLUNIT, &mut end);
+            _ => {
+                value.push(byte);
+                at += 1;
             }
         }
     }
-    parsed
-}
-
-/// "Never repair potential malicious user input": every `]` closes a
-/// `[` and is followed by `[` or the end.
-fn brackets_are_closed(name: &[u8]) -> bool {
-    let mut depth: i64 = 0;
-    for (i, &byte) in name.iter().enumerate() {
-        if byte == b'[' {
-            depth += 1;
-        } else if byte == b']' {
-            depth -= 1;
-            if matches!(name.get(i + 1), Some(&next) if next != b'[') {
-                return false;
-            }
-        }
-        if depth < 0 {
-            return false;
-        }
-    }
-    depth == 0
-}
-
-/// `strtoll(value, NULL, 10)`: leading white space and a sign, then
-/// digits; anything else ends the number; out of range gives the nearest
-/// limit, as C does.
-fn strtoll(value: &[u8]) -> i64 {
-    let value = c_str(value);
-    let start = value
-        .iter()
-        .position(|&b| !is_space(b))
-        .unwrap_or(value.len());
-    let mut digits = &value[start..];
-    let negative = digits.first() == Some(&b'-');
-    if matches!(digits.first(), Some(b'+' | b'-')) {
-        digits = &digits[1..];
-    }
-    let mut number: i64 = 0;
-    for &byte in digits.iter().take_while(|b| b.is_ascii_digit()) {
-        let digit = i64::from(byte - b'0');
-        number = if negative {
-            number.saturating_mul(10).saturating_sub(digit)
-        } else {
-            number.saturating_mul(10).saturating_add(digit)
-        };
-    }
-    number
+    (value, at)
 }
 
 #[cfg(test)]
@@ -564,6 +301,10 @@ mod tests {
     }
 
     const TYPE: &[u8] = b"multipart/form-data; boundary=XyZ";
+
+    /// The size of PHP's read buffer that the earlier implementation
+    /// modelled; kept so the long-value test still crosses it.
+    const FILLUNIT: usize = 5 * 1024;
 
     #[test]
     fn reads_fields_as_browsers_send_them() {
@@ -697,27 +438,34 @@ mod tests {
         )
     }
 
-    /// Every body of `data/request/multipart_vectors.json`, recorded from
-    /// PHP 8.4.27 itself by `compare/multipart_vectors.py`: `$_POST` for
-    /// POST, `request_parse_body()` for PUT (empty when it throws).
+    /// Every body of `tests/data/multipart_vectors.json`, recorded from
+    /// PHP 8.4.27 itself by `scripts/record.sh multipart`: `$_POST` for
+    /// POST, `request_parse_body()` for PUT (empty when it throws). The
+    /// content type is trimmed of spaces and tabs first, as the HTTP
+    /// server in front of PHP trims header values.
     #[test]
     fn reads_every_recorded_body_as_php_does() -> Result<(), Box<dyn std::error::Error>> {
         use base64::Engine as _;
         let vectors: Vec<serde_json::Value> =
             serde_json::from_str(include_str!("../tests/data/multipart_vectors.json"))?;
-        assert!(vectors.len() > 100);
+        assert!(vectors.len() > 250);
         let mut failures = Vec::new();
         for vector in &vectors {
             let name = vector["name"].as_str().unwrap_or("?");
             let method = vector["method"].as_str().unwrap_or("?");
-            let content_type = vector["content_type"].as_str().unwrap_or_default();
+            let content_type = crate::trim_ows(
+                vector["content_type"]
+                    .as_str()
+                    .unwrap_or_default()
+                    .as_bytes(),
+            );
             let body = base64::engine::general_purpose::STANDARD
                 .decode(vector["body"].as_str().unwrap_or_default())?;
             // The kernel reads multipart bodies only (`BodyFormat::of`).
-            let is_multipart = crate::BodyFormat::of(content_type.as_bytes())
-                == Some(crate::BodyFormat::Multipart);
+            let is_multipart =
+                crate::BodyFormat::of(content_type) == Some(crate::BodyFormat::Multipart);
             let parsed = if is_multipart {
-                parse(content_type.as_bytes(), &body)
+                parse(content_type, &body)
             } else {
                 Parsed::default()
             };

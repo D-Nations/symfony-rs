@@ -96,10 +96,7 @@ crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHead
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeaderItem.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	HeaderUtils.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Tests/HeaderUtilsTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
-crates/http-foundation/src/cookies.rs	php-src	main/php_variables.c	php-8.4.27
 crates/http-foundation/src/lib.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
-crates/http-foundation/src/multipart.rs	php-src	main/rfc1867.c	php-8.4.27
-crates/http-foundation/src/query.rs	php-src	main/php_variables.c	php-8.4.27
 crates/http-foundation/src/query.rs	symfony/http-foundation	InputBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/scheme.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-kernel/src/lib.rs	symfony/http-kernel	HttpKernel.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
