@@ -1,5 +1,7 @@
 //! A second application using the request crate, without demo dependencies.
 //! These diagnostic routes are examples, not ports of demo controllers.
+//!
+//! Upstream: none
 
 #![forbid(unsafe_code)]
 

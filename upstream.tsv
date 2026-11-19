@@ -1,0 +1,3 @@
+# Non-Composer upstream sources (Composer packages: parity/packages.tsv).
+# checkout	repository	tag
+php-src	https://github.com/php/php-src	php-8.4.27

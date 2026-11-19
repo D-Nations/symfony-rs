@@ -1,4 +1,6 @@
 //! Starts the independent request lab on loopback; no database or assets needed.
+//!
+//! Upstream: none
 
 use std::{net::SocketAddr, process::ExitCode};
 

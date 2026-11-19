@@ -1,6 +1,8 @@
 //! Selected HttpKernelTest.php assertions at installed Symfony commit
 //! 924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1. Names are kept from PHPUnit.
 //! Additional tests pin priority, propagation and explicit Rust error boundaries.
+//!
+//! Upstream: symfony/http-kernel Tests/HttpKernelTest.php
 #![allow(non_snake_case)]
 
 use axum::{

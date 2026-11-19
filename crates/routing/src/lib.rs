@@ -2,6 +2,8 @@
 //! `RedirectableUrlMatcher.php` and `Generator/UrlGenerator.php`.
 //! Routes are registered once as typed segments; there is no request-time
 //! route-pattern or regular-expression compilation. See README for omissions.
+//!
+//! Upstream: symfony/routing Matcher/UrlMatcher.php Matcher/RedirectableUrlMatcher.php Generator/UrlGenerator.php
 
 #![forbid(unsafe_code)]
 

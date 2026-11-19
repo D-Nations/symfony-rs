@@ -3,6 +3,8 @@
 //!
 //! This is a request compatibility subset, not the complete component.
 //! No demo state, routes, templates or database types belong here.
+//!
+//! Upstream: symfony/http-foundation Request.php
 
 #![forbid(unsafe_code)]
 

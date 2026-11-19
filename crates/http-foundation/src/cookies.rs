@@ -4,6 +4,8 @@
 //! `PARSE_COOKIE`): pairs are separated by `;`, leading spaces are skipped,
 //! the value is URL-decoded, `.` and ` ` in a name become `_`, and when a
 //! name appears twice the first value wins.
+//!
+//! Upstream: php-src main/php_variables.c
 
 use super::query::urldecode;
 

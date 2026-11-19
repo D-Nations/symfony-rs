@@ -1,4 +1,6 @@
 //! HTTP-level checks that the second application uses the compatibility core.
+//!
+//! Upstream: none
 
 use axum::{
     body::{Body, to_bytes},

@@ -14,6 +14,8 @@
 //! `max_input_vars` 1000, `max_file_uploads` 20, `upload_max_filesize`
 //! 2M, `max_multipart_body_parts` -1 (their sum), `file_uploads` on, no
 //! encoding translation, the `unsafe_raw` input filter.
+//!
+//! Upstream: php-src main/rfc1867.c
 
 /// `FILLUNIT`: the size of PHP's read buffer.
 const FILLUNIT: usize = 5 * 1024;

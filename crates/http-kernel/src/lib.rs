@@ -4,6 +4,10 @@
 //! Exception redirect classification follows HttpFoundation/Response.php.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
+//!
+//! Upstream: symfony/http-kernel HttpKernel.php Event/RequestEvent.php Event/ControllerEvent.php Event/ResponseEvent.php Event/ExceptionEvent.php
+//! Upstream: symfony/event-dispatcher EventDispatcher.php
+//! Upstream: symfony/http-foundation Response.php
 
 #![forbid(unsafe_code)]
 

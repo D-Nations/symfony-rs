@@ -1,6 +1,8 @@
 //! Selected assertions from Symfony Routing's UrlMatcherTest and
 //! RedirectableUrlMatcherTest at 41b32d2c5d907abe2c3ffaa7a112dd7492353822.
 //! These tests cover the supported subset, not the omitted PCRE/host APIs.
+//!
+//! Upstream: symfony/routing Tests/Matcher/UrlMatcherTest.php Tests/Matcher/RedirectableUrlMatcherTest.php
 
 use symfony_routing::{
     Definition, Match, Parameters, Requirement, RouteCollection, Segment, Target,

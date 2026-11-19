@@ -5,6 +5,9 @@
 //! original's behaviour depends on them: `?a.b=1` arrives as `a_b`,
 //! `?tag[]=x` makes `tag` an array (and `->get('tag')` a 400 error), and the
 //! RSS link copies the whole parsed query.
+//!
+//! Upstream: php-src main/php_variables.c
+//! Upstream: symfony/http-foundation InputBag.php
 
 /// A parsed query value: a string, or an array (PHP arrays keep insertion
 /// order; keys are strings here).

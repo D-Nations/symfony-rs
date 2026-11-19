@@ -1,4 +1,6 @@
 //! Ports the existing subset of Symfony Routing Generator/UrlGenerator.php.
+//!
+//! Upstream: symfony/routing Generator/UrlGenerator.php
 use symfony_http_foundation::query::QueryValue;
 
 /// Characters Symfony's `UrlGenerator` leaves unencoded after

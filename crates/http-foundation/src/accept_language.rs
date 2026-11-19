@@ -18,6 +18,8 @@
 //!
 //! The header is read as bytes: a byte that is not ASCII never matches a
 //! locale code, so no text decoding is needed.
+//!
+//! Upstream: symfony/http-foundation Request.php AcceptHeader.php AcceptHeaderItem.php HeaderUtils.php
 
 /// The characters PHP's `trim()` removes by default.
 const PHP_TRIM: &[u8] = b" \t\n\r\0\x0B";
