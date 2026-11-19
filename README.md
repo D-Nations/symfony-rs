@@ -47,11 +47,16 @@ using the PHP oracle in `oracle/` (Docker).
 | Package | Upstream tests | Ported | Pending |
 |---|---:|---:|---:|
 | symfony/event-dispatcher | 140 | 0 | 140 |
-| symfony/http-foundation | 945 | 0 | 945 |
+| symfony/http-foundation | 945 | 1 | 944 |
 | symfony/http-kernel | 1,040 | 10 | 1,030 |
-| symfony/routing | 871 | 16 | 855 |
+| symfony/routing | 871 | 18 | 853 |
 
 The crates' contracts are subsets; the pending rows are the work list.
+
+Test vectors from real PHP: `scripts/record.sh routing|multipart|all`
+(recorders in `oracle/recorders/`). Upstream security: `python
+scripts/upstream_watch.py` (weekly in CI) lists advisories and newer patch
+releases for the pinned packages; `parity/advisories.tsv` holds the triage.
 
 ## Licence
 

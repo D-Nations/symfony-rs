@@ -27,7 +27,8 @@ of real PHP running it. **Read upstream, never edit it.**
    (`//! Port of Symfony\Component\X\Y.php`); `scripts/sources.sh` builds
    `parity/sources.tsv` from those lines.
 4. Port the upstream tests in the same change, with the same names and
-   assertions. Record vectors from real PHP for what tests leave open.
+   assertions. Record vectors from real PHP for what tests leave open
+   (a recorder in `oracle/recorders/`, run by `scripts/record.sh`).
 5. Update the crate README's contract table. Nothing outside it is claimed.
 
 ## Behaviour rules
@@ -71,6 +72,15 @@ checks and page comparison against this checkout (its `[patch]` override).
 An unexplained difference is a failure, not a note. Do not weaken, skip or
 delete a test or comparison rule to get a pass; if a check is wrong, say so
 and ask. Debug builds only.
+
+## Upstream advisories
+
+Every advisory the upstream watch lists for a ported package gets a row in
+`parity/advisories.tsv`: `covered` (name the Rust test that pins the fixed
+behaviour, ideally the fix's own upstream test), `not-ported` (say which
+milestone must revisit it) or `affected` (fix it first; it blocks other
+work). Check a `covered` verdict against the oracle: the pre-fix PHP should
+fail the test's inputs.
 
 ## Housekeeping
 
