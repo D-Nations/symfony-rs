@@ -632,8 +632,14 @@ Stack rows (searched November 19):
       which also found that a float `$children` is truncated to an int,
       not cast to a string (fixed in PrototypedArrayNode too).
       `docUrl()` reads Composer's versions from a registry the application
-      fills. Next: the dumpers, then loaders and resources (after
-      Filesystem and Finder) and `XmlUtils` (`php-dom`, decision 9).
+      fills. This completes M1-A's Config Definition/Builder step; next
+      is M1-D (scheduling adjustment below). Config stays partial:
+      deferred are the reference dumpers and `ArrayShapeGenerator` (no new
+      prerequisite; before M1-C, which needs them), `Definition/Loader`,
+      `Definition/Configurator` and `Definition/Configuration.php` (they
+      need Config's loaders; M1-C), and loaders, resources and `XmlUtils`
+      (Filesystem, Finder, `php-dom`, decision 9; M1-C). Their 167 rows
+      stay `pending`.
 
 ## Verification
 
