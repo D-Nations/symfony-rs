@@ -263,6 +263,25 @@ fn radix(s: &[u8], base: u32) -> Number {
     value
 }
 
+/// A float in `serialize()`: the shortest digits, exponent form from
+/// 10^17 and below 1e-4 with `E`, no `.0` added; `INF`, `-INF`, `NAN`.
+pub fn serialize_float(value: f64) -> String {
+    if let Some(s) = special(value) {
+        return s.to_owned();
+    }
+    if value == 0.0 {
+        return if value.is_sign_negative() { "-0" } else { "0" }.to_owned();
+    }
+    let (digits, exponent) = decimal_digits(value, None);
+    layout(value, &digits, exponent, 17, 'E')
+}
+
+/// The int key of a float array key: truncated toward zero; NAN and
+/// infinities give 0.
+pub fn float_key(value: f64) -> i64 {
+    if value.is_finite() { value as i64 } else { 0 }
+}
+
 /// `hexdec($string)`.
 pub fn hexdec(s: &[u8]) -> Number {
     radix(s, 16)

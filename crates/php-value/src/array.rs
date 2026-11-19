@@ -69,6 +69,24 @@ fn canonical_int(bytes: &[u8]) -> Option<i64> {
     std::str::from_utf8(bytes).ok()?.parse().ok()
 }
 
+impl Key {
+    /// The key PHP uses for `$array[$value]`: ints and strings as
+    /// `from_bytes`, `true`/`false` as 1/0, `null` as `""`, floats
+    /// truncated toward zero (PHP warns when it drops a fraction).
+    /// Arrays and objects are not keys (`None`, PHP's "Illegal offset
+    /// type").
+    pub fn from_value(value: &Value) -> Option<Self> {
+        Some(match value {
+            Value::Null => Self::Str(PhpString::default()),
+            Value::Bool(b) => Self::Int(i64::from(*b)),
+            Value::Int(i) => Self::Int(*i),
+            Value::Float(f) => Self::Int(crate::numeric::float_key(*f)),
+            Value::String(s) => Self::from(s.clone()),
+            Value::Array(_) | Value::Object(_) => return None,
+        })
+    }
+}
+
 impl From<i64> for Key {
     fn from(i: i64) -> Self {
         Self::Int(i)
@@ -251,6 +269,16 @@ impl PhpArray {
             .iter()
             .enumerate()
             .all(|(i, (k, _))| *k == Key::Int(i as i64))
+    }
+
+    /// `$this += $other`: the keys of `other` not in `self`, appended in
+    /// `other`'s order.
+    pub fn union(&mut self, other: &PhpArray) {
+        for (key, value) in other.iter() {
+            if !self.contains_key(key) {
+                self.insert(key.clone(), value.clone());
+            }
+        }
     }
 
     /// A mutable reference to the value at `key`, if present.

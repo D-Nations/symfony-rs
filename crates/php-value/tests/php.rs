@@ -250,3 +250,70 @@ fn json_encode_of_strings_matches_php() -> TestResult {
     }
     Ok(())
 }
+
+fn recorder_classes() -> (
+    php_value::serialize::Classes,
+    php_value::constants::Registry,
+) {
+    use php_value::{constants::Registry, object::EnumCase, serialize::Classes};
+    let mut classes = Classes::new();
+    classes.allow_with_defaults(
+        "RecorderAllowed",
+        php_value::php_array!["a" => "foo", "b" => 1],
+    );
+    let mut constants = Registry::with_core();
+    constants.define_enum(
+        "RecorderSuit",
+        vec![
+            EnumCase::new("RecorderSuit", "Hearts", Some("H".into())),
+            EnumCase::new("RecorderSuit", "Spades", Some("S".into())),
+        ],
+    );
+    constants.define_enum(
+        "RecorderUnit",
+        vec![EnumCase::new("RecorderUnit", "One", None)],
+    );
+    (classes, constants)
+}
+
+#[test]
+fn serialize_matches_php() -> TestResult {
+    let json = vectors()?;
+    for row in rows(&json, "serialize")? {
+        let value = php_value::vectors::decode(&row[0]).map_err(|e| e.to_string())?;
+        let expected = base64(&row[1])?;
+        let actual = php_value::serialize::serialize(&value);
+        assert_eq!(
+            actual.as_bytes(),
+            expected.as_slice(),
+            "serialize({value:?})"
+        );
+    }
+    Ok(())
+}
+
+#[test]
+fn unserialize_matches_php_with_an_allow_list() -> TestResult {
+    let json = vectors()?;
+    let (classes, constants) = recorder_classes();
+    for row in rows(&json, "unserialize")? {
+        let input = base64(&row[0])?;
+        let shown = String::from_utf8_lossy(&input).into_owned();
+        let actual = php_value::serialize::unserialize(&input, &classes, &constants);
+        if row[1][0] == "false" {
+            assert!(
+                actual.is_none(),
+                "unserialize({shown:?}) should fail, got {actual:?}"
+            );
+            continue;
+        }
+        let expected = php_value::vectors::decode(&row[1]).map_err(|e| e.to_string())?;
+        let actual = actual.ok_or_else(|| format!("unserialize({shown:?}) failed"))?;
+        assert_eq!(actual.debug_type(), expected.debug_type(), "{shown:?}");
+        assert!(
+            php_value::vectors::phpunit_equals(&expected, &actual),
+            "unserialize({shown:?}): {actual:?} vs {expected:?}"
+        );
+    }
+    Ok(())
+}

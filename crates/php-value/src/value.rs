@@ -7,6 +7,7 @@ use std::{any::Any, fmt, sync::Arc};
 use crate::{
     array::{Key, PhpArray},
     numeric::float_to_string,
+    object::EnumCase,
     string::PhpString,
 };
 
@@ -94,7 +95,14 @@ impl Value {
             (Self::Float(a), Self::Float(b)) => a == b,
             (Self::String(a), Self::String(b)) => a == b,
             (Self::Array(a), Self::Array(b)) => a == b,
-            (Self::Object(a), Self::Object(b)) => std::ptr::addr_eq(Arc::as_ptr(a), Arc::as_ptr(b)),
+            (Self::Object(a), Self::Object(b)) => {
+                std::ptr::addr_eq(Arc::as_ptr(a), Arc::as_ptr(b))
+                    // Enum cases are singletons in PHP.
+                    || matches!(
+                        (a.downcast_ref::<EnumCase>(), b.downcast_ref::<EnumCase>()),
+                        (Some(x), Some(y)) if x.class() == y.class() && x.name() == y.name()
+                    )
+            }
             _ => false,
         }
     }

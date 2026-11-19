@@ -9,11 +9,18 @@
 #![forbid(unsafe_code)]
 
 pub mod array;
+pub mod base64;
+pub mod constants;
+pub mod datetime;
 pub mod json;
 pub mod numeric;
+pub mod object;
 pub mod pcre;
+pub mod serialize;
 pub mod string;
 pub mod value;
+#[cfg(feature = "vectors")]
+pub mod vectors;
 
 pub use array::{Key, NextElementOccupied, PhpArray};
 pub use numeric::Number;

@@ -5,6 +5,8 @@
 
 error_reporting(E_ALL & ~E_WARNING & ~E_DEPRECATED);
 
+require __DIR__ . '/lib/typed.php';
+
 function bits(float $x): string
 {
     return bin2hex(pack('E', $x));
@@ -111,7 +113,43 @@ foreach ($json_inputs as $s) {
     $json_strings[] = $row;
 }
 
+// serialize() and unserialize(). The allow-list the Rust side uses is
+// modelled by allowed_classes: only RecorderAllowed may be created; any
+// other class becomes __PHP_Incomplete_Class.
+enum RecorderSuit: string { case Hearts = 'H'; case Spades = 'S'; }
+enum RecorderUnit { case One; }
+class RecorderAllowed { public $a = 'foo'; public $b = 1; }
+class RecorderOther { public $x = [1]; }
+$o = new \stdClass();
+$o->name = 'n';
+$o->{'0'} = 'zero';
+$serialize_inputs = [null, true, false, 0, -7, PHP_INT_MAX, PHP_INT_MIN, 0.0, -0.0, 1.0, 0.1, 1 / 3, 1e25, -1.5e-7,
+    1e15, 1e16, 123456789012345678.0, INF, -INF, NAN, '', 'abc', "a\"b\0c", 'é', [], [1, 2], ['k' => 'v', 5 => [true]],
+    [-1 => 'neg', '01' => 'str'], $o, new RecorderAllowed(), RecorderSuit::Hearts, RecorderUnit::One,
+    new \DateTimeImmutable('2001-12-14 21:59:43.1', new \DateTimeZone('UTC'))];
+$serialized = [];
+foreach ($serialize_inputs as $v) {
+    $serialized[] = base64_encode(serialize($v));
+}
+$unserialize_inputs = array_map('serialize', $serialize_inputs);
+array_push($unserialize_inputs, serialize(new RecorderOther()), 'O:11:"NoSuchClass":1:{s:1:"p";i:1;}', '',
+    'N', 'N;', 'N;extra', 'b:2;', 'b:1', 'i:12;', 'i:+12;', 'i:-0;', 'i:1.5;', 'i:99999999999999999999;', 'i:;',
+    'd:1;', 'd:1.5e3;', 'd:.5;', 'd:INF;', 'd:-INF;', 'd:NAN;', 'd:abc;', 's:3:"abc";', 's:4:"abc";', 's:2:"abc";',
+    's:3:"abc"', 's:-1:"";', 'S:3:"abc";', 'a:1:{i:0;i:1;}', 'a:2:{i:0;i:1;}', 'a:1:{i:0;i:1;', 'a:1:{d:1;i:1;}',
+    'a:1:{s:1:"1";i:1;}', 'a:2:{i:0;i:1;i:0;i:2;}', 'a:2:{i:0;a:0:{}i:1;r:2;}', 'a:2:{i:0;s:1:"x";i:1;R:2;}',
+    'a:1:{i:0;r:9;}', 'O:8:"stdClass":1:{s:1:"a";i:1;}', 'O:8:"stdClass":0:{}', 'O:8:"stdclass":0:{}',
+    'O:15:"RecorderAllowed":1:{s:1:"a";s:3:"bar";}', 'O:13:"RecorderOther":0:{}',
+    'E:16:"RecorderSuit:Hearts";', 'E:16:"RecorderSuit:Clubs";', 'E:15:"RecorderUnit:One";', 'E:10:"NoSuch:One";',
+    'C:8:"stdClass":0:{}', 'x:1;', 'O:8:"stdClass":1:{i:0;i:1;}');
+$unserialized = [];
+foreach ($unserialize_inputs as $s) {
+    $value = @unserialize($s, ['allowed_classes' => ['RecorderAllowed']]);
+    $unserialized[] = [base64_encode($s), false === $value && 'b:0;' !== $s ? ['false'] : typed_value($value)];
+}
+
 echo json_encode([
+    'serialize' => array_map(static fn ($v, $s) => [typed_value($v), $s], $serialize_inputs, $serialized),
+    'unserialize' => $unserialized,
     'pcre_space_u' => $space,
     'pcre_zs_u' => $zs,
     'json_strings' => $json_strings,
