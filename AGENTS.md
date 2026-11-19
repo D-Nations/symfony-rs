@@ -73,6 +73,21 @@ An unexplained difference is a failure, not a note. Do not weaken, skip or
 delete a test or comparison rule to get a pass; if a check is wrong, say so
 and ask. Debug builds only.
 
+## Running PHP
+
+- Never install PHP, Composer or PHP extensions on the host. PHP runs only
+  in a container, removed when it exits (`--rm`).
+- Anything that loads the pinned packages or produces a vector or a test
+  expectation runs in the oracle image (`oracle/`): its PHP version, libc
+  and extensions are what the recorded vectors mean. Add to that image only
+  what a recorder needs.
+- A quick check of plain PHP behaviour that loads no packages may use the
+  smallest official image of the pinned version instead, e.g.
+  `docker run --rm -i php:8.4.27-cli-alpine php < probe.php`. Its answer is
+  a lead, not evidence: confirm in the oracle before relying on it.
+- Mount repositories read-only. Probe scripts go through stdin or into the
+  ignored `oracle/out/`, never into `upstream/` or `../symfony-demo`.
+
 ## Upstream advisories
 
 Every advisory the upstream watch lists for a ported package gets a row in
