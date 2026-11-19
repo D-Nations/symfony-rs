@@ -4,3 +4,5 @@
 *.tsv text eol=lf
 # Vectors recorded from PHP are compared byte for byte.
 **/tests/data/** -text
+# Upstream test fixtures stay byte for byte as upstream ships them.
+**/tests/Fixtures/** -text
