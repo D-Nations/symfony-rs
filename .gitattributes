@@ -7,3 +7,4 @@
 # Upstream test fixtures stay byte for byte as upstream ships them.
 **/tests/Fixtures/** -text
 **/tests/yaml-test-suite/** -text
+**/tests/fixtures/** -text

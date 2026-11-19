@@ -1,0 +1,58 @@
+# symfony/dotenv at 4ea87b35c75f7052309ec9735c0eb5c1fd7d2182: upstream test	method	status	rust test
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testCompletion	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testEmptyDotEnvVarsList	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testErrorOnUninitializedDotenv	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InDevEnv	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InDevEnvWithNameFilter	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InProdEnv	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InProdEnvWithMissingNameFilter	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InTestEnv	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2InProdEnv	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2InProdEnvWithNameFilterPrefix	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2WithCustomPath	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnEnvAndEnvDistFile	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnEnvAndEnvDistFileWithCustomPath	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnPhpEnvFile	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnPhpEnvFileWithCustomPath	pending	
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecute	pending	
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteEmpty	pending	
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteTestEnvs	pending	
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteWithRuntimeOptionsDotenvPath	pending	
+Tests/DotenvTest.php	DotenvTest::testBootEnv	ported	crates/dotenv/tests/dotenv_test.rs::testBootEnv
+Tests/DotenvTest.php	DotenvTest::testDoNotUsePutenv	ported	crates/dotenv/tests/dotenv_test.rs::testDoNotUsePutenv
+Tests/DotenvTest.php	DotenvTest::testEnvVarIsNotOverridden	ported	crates/dotenv/tests/dotenv_test.rs::testEnvVarIsNotOverridden
+Tests/DotenvTest.php	DotenvTest::testEnvVarIsOverridden	ported	crates/dotenv/tests/dotenv_test.rs::testEnvVarIsOverridden
+Tests/DotenvTest.php	DotenvTest::testExceptionWithBom	ported	crates/dotenv/tests/dotenv_test.rs::testExceptionWithBom
+Tests/DotenvTest.php	DotenvTest::testGetVariablesValueFromEnvFirst	ported	crates/dotenv/tests/dotenv_test.rs::testGetVariablesValueFromEnvFirst
+Tests/DotenvTest.php	DotenvTest::testGetVariablesValueFromGetenv	ported	crates/dotenv/tests/dotenv_test.rs::testGetVariablesValueFromGetenv
+Tests/DotenvTest.php	DotenvTest::testHttpVarIsPartiallyOverridden	ported	crates/dotenv/tests/dotenv_test.rs::testHttpVarIsPartiallyOverridden
+Tests/DotenvTest.php	DotenvTest::testLoad	ported	crates/dotenv/tests/dotenv_test.rs::testLoad
+Tests/DotenvTest.php	DotenvTest::testLoadDirectory	ported	crates/dotenv/tests/dotenv_test.rs::testLoadDirectory
+Tests/DotenvTest.php	DotenvTest::testLoadDoesNotExecuteShellSyntaxFromExternalEnvVarOnlyPresentInGetenv	ported	crates/dotenv/tests/dotenv_test.rs::testLoadDoesNotExecuteShellSyntaxFromExternalEnvVarOnlyPresentInGetenv
+Tests/DotenvTest.php	DotenvTest::testLoadDoesNotReResolveAlreadyLoadedVars	ported	crates/dotenv/tests/dotenv_test.rs::testLoadDoesNotReResolveAlreadyLoadedVars
+Tests/DotenvTest.php	DotenvTest::testLoadDoesNotResolveExternalEnvVarsOnlyPresentInServer	ported	crates/dotenv/tests/dotenv_test.rs::testLoadDoesNotResolveExternalEnvVarsOnlyPresentInServer
+Tests/DotenvTest.php	DotenvTest::testLoadDoesNotTruncateExternalEnvVarOnlyPresentInGetenvOnSelfReference	ported	crates/dotenv/tests/dotenv_test.rs::testLoadDoesNotTruncateExternalEnvVarOnlyPresentInGetenvOnSelfReference
+Tests/DotenvTest.php	DotenvTest::testLoadDoesNotTruncateExternalEnvVarReferencedFromDotenv	ported	crates/dotenv/tests/dotenv_test.rs::testLoadDoesNotTruncateExternalEnvVarReferencedFromDotenv
+Tests/DotenvTest.php	DotenvTest::testLoadEnv	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnv
+Tests/DotenvTest.php	DotenvTest::testLoadEnvResolvesCommandsWithOverriddenVars	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnvResolvesCommandsWithOverriddenVars
+Tests/DotenvTest.php	DotenvTest::testLoadEnvResolvesUnquotedCommandsWithOverriddenVars	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnvResolvesUnquotedCommandsWithOverriddenVars
+Tests/DotenvTest.php	DotenvTest::testLoadEnvResolvesVariablesFromOverriddenFiles	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnvResolvesVariablesFromOverriddenFiles
+Tests/DotenvTest.php	DotenvTest::testLoadEnvSelfReferencingEnvKeyControlsFileLoading	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnvSelfReferencingEnvKeyControlsFileLoading
+Tests/DotenvTest.php	DotenvTest::testLoadEnvSelfReferencingVariableWithDefault	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnvSelfReferencingVariableWithDefault
+Tests/DotenvTest.php	DotenvTest::testLoadEnvThrowsOnCircularVariableReferences	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnvThrowsOnCircularVariableReferences
+Tests/DotenvTest.php	DotenvTest::testLoadEnvUnquotedSpaceWithVariableDoesNotThrow	ported	crates/dotenv/tests/dotenv_test.rs::testLoadEnvUnquotedSpaceWithVariableDoesNotThrow
+Tests/DotenvTest.php	DotenvTest::testLoadMultiplePathsResolvesVariables	ported	crates/dotenv/tests/dotenv_test.rs::testLoadMultiplePathsResolvesVariables
+Tests/DotenvTest.php	DotenvTest::testLoadPrefersExternalEnvVarOnlyPresentInGetenvOverSelfReferencingDefault	ported	crates/dotenv/tests/dotenv_test.rs::testLoadPrefersExternalEnvVarOnlyPresentInGetenvOverSelfReferencingDefault
+Tests/DotenvTest.php	DotenvTest::testLoadResolvesSelfReferencingDefaultWhenNoExternalEnvVarExists	ported	crates/dotenv/tests/dotenv_test.rs::testLoadResolvesSelfReferencingDefaultWhenNoExternalEnvVarExists
+Tests/DotenvTest.php	DotenvTest::testLoadSelfReferencingVariableWithSuffix	ported	crates/dotenv/tests/dotenv_test.rs::testLoadSelfReferencingVariableWithSuffix
+Tests/DotenvTest.php	DotenvTest::testMemorizingLoadedVarsNamesInSpecialVar	ported	crates/dotenv/tests/dotenv_test.rs::testMemorizingLoadedVarsNamesInSpecialVar
+Tests/DotenvTest.php	DotenvTest::testNoDeprecationWarning	ported	crates/dotenv/tests/dotenv_test.rs::testNoDeprecationWarning
+Tests/DotenvTest.php	DotenvTest::testOverload	ported	crates/dotenv/tests/dotenv_test.rs::testOverload
+Tests/DotenvTest.php	DotenvTest::testOverloadDoesNotExecuteShellSyntaxFromExternalEnvOnSelfReference	ported	crates/dotenv/tests/dotenv_test.rs::testOverloadDoesNotExecuteShellSyntaxFromExternalEnvOnSelfReference
+Tests/DotenvTest.php	DotenvTest::testOverridingEnvVarsWithNamesMemorizedInSpecialVar	ported	crates/dotenv/tests/dotenv_test.rs::testOverridingEnvVarsWithNamesMemorizedInSpecialVar
+Tests/DotenvTest.php	DotenvTest::testParse	ported	crates/dotenv/tests/dotenv_test.rs::testParse
+Tests/DotenvTest.php	DotenvTest::testParseWithFormatError	ported	crates/dotenv/tests/dotenv_test.rs::testParseWithFormatError
+Tests/DotenvTest.php	DotenvTest::testPreservesBackslashesOfExternalEnvVar	ported	crates/dotenv/tests/dotenv_test.rs::testPreservesBackslashesOfExternalEnvVar
+Tests/DotenvTest.php	DotenvTest::testResolveLoadedVarsClearsStateOnCircularReferenceException	ported	crates/dotenv/tests/dotenv_test.rs::testResolveLoadedVarsClearsStateOnCircularReferenceException
+Tests/DotenvTest.php	DotenvTest::testSERVERVarsDuplicationInENV	ported	crates/dotenv/tests/dotenv_test.rs::testSERVERVarsDuplicationInENV
+Tests/DotenvTest.php	DotenvTest::testServerSuperglobalIsNotOverridden	ported	crates/dotenv/tests/dotenv_test.rs::testServerSuperglobalIsNotOverridden
