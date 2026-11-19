@@ -13,6 +13,7 @@ function typed_value(mixed $v): array
         \is_array($v) => ['array', typed_pairs($v)],
         $v instanceof \UnitEnum => ['enum', $v::class, $v->name, $v instanceof \BackedEnum ? typed_value($v->value) : null],
         $v instanceof \DateTimeInterface => ['datetime', $v->format('Y-m-d\TH:i:s.uP'), $v->getTimezone()->getName(), $v->format('U')],
+        $v instanceof \ArrayObject => ['arrayobject', typed_pairs($v->getArrayCopy())],
         $v instanceof \Symfony\Component\Yaml\Tag\TaggedValue => ['tagged', $v->getTag(), typed_value($v->getValue())],
         \is_object($v) => ['object', $v::class, typed_pairs(get_object_vars($v))],
         default => ['unsupported', get_debug_type($v)],

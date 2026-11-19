@@ -75,6 +75,15 @@ yaml() {
         mv "$tmp" "$out"
         echo "Yaml $name vectors written to $out"
     done
+    for class in InlineTest; do
+        name=$(echo "$class" | sed 's/Test$//' | tr '[:upper:]' '[:lower:]')
+        out=crates/yaml/tests/data/${name}_test.json
+        tmp=$(mktemp -p oracle/out)
+        oracle oracle/recorders/yaml_test_providers.php "$class" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Yaml $class providers written to $out"
+    done
 }
 
 case "${1:-}" in

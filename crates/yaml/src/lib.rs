@@ -45,6 +45,48 @@ impl Flags {
     pub const DUMP_FORCE_DOUBLE_QUOTES_ON_VALUES: Self = Self(32768);
     pub const PARSE_EXCEPTION_ON_ALIAS: Self = Self(65536);
 
+    /// Every flag with its constant name.
+    pub const NAMED: [(&'static str, Self); 17] = [
+        ("DUMP_OBJECT", Self::DUMP_OBJECT),
+        (
+            "PARSE_EXCEPTION_ON_INVALID_TYPE",
+            Self::PARSE_EXCEPTION_ON_INVALID_TYPE,
+        ),
+        ("PARSE_OBJECT", Self::PARSE_OBJECT),
+        ("PARSE_OBJECT_FOR_MAP", Self::PARSE_OBJECT_FOR_MAP),
+        (
+            "DUMP_EXCEPTION_ON_INVALID_TYPE",
+            Self::DUMP_EXCEPTION_ON_INVALID_TYPE,
+        ),
+        ("PARSE_DATETIME", Self::PARSE_DATETIME),
+        ("DUMP_OBJECT_AS_MAP", Self::DUMP_OBJECT_AS_MAP),
+        (
+            "DUMP_MULTI_LINE_LITERAL_BLOCK",
+            Self::DUMP_MULTI_LINE_LITERAL_BLOCK,
+        ),
+        ("PARSE_CONSTANT", Self::PARSE_CONSTANT),
+        ("PARSE_CUSTOM_TAGS", Self::PARSE_CUSTOM_TAGS),
+        (
+            "DUMP_EMPTY_ARRAY_AS_SEQUENCE",
+            Self::DUMP_EMPTY_ARRAY_AS_SEQUENCE,
+        ),
+        ("DUMP_NULL_AS_TILDE", Self::DUMP_NULL_AS_TILDE),
+        (
+            "DUMP_NUMERIC_KEY_AS_STRING",
+            Self::DUMP_NUMERIC_KEY_AS_STRING,
+        ),
+        ("DUMP_NULL_AS_EMPTY", Self::DUMP_NULL_AS_EMPTY),
+        (
+            "DUMP_COMPACT_NESTED_MAPPING",
+            Self::DUMP_COMPACT_NESTED_MAPPING,
+        ),
+        (
+            "DUMP_FORCE_DOUBLE_QUOTES_ON_VALUES",
+            Self::DUMP_FORCE_DOUBLE_QUOTES_ON_VALUES,
+        ),
+        ("PARSE_EXCEPTION_ON_ALIAS", Self::PARSE_EXCEPTION_ON_ALIAS),
+    ];
+
     /// `$flags & FLAG`.
     pub fn contains(self, flag: Self) -> bool {
         self.0 & flag.0 != 0

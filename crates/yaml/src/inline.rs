@@ -25,7 +25,7 @@ use php_value::{
     numeric::{
         Number, float_to_string, hexdec, is_numeric, octdec, string_to_float, string_to_int,
     },
-    object::{EnumCase, StdClass, to_array},
+    object::{ArrayObject, EnumCase, StdClass, to_array},
     serialize::{Classes, serialize, unserialize},
 };
 use regex::bytes::Regex;
@@ -52,10 +52,18 @@ pub struct Environment {
 }
 
 impl Environment {
-    /// PHP's core constants, no classes.
+    /// PHP's core constants and the `Symfony\Component\Yaml\Yaml::*`
+    /// flag constants (defined whenever the class is loaded); no classes.
     pub fn new() -> Self {
+        let mut constants = Registry::with_core();
+        for (name, flag) in Flags::NAMED {
+            constants.define(
+                format!(r"Symfony\Component\Yaml\Yaml::{name}"),
+                Value::Int(i64::from(flag.0)),
+            );
+        }
         Self {
-            constants: Registry::with_core(),
+            constants,
             classes: Classes::new(),
         }
     }
@@ -309,6 +317,12 @@ impl Inline {
             Some(tag) if !tag.is_empty() => tagged(&tag, result),
             _ => result,
         })
+    }
+
+    /// `Inline::parseScalar($scalar)`: one scalar, evaluated, with no
+    /// delimiters and the static flags.
+    pub fn parse_scalar_value(&mut self, scalar: &[u8]) -> Result<Value, ParseException> {
+        self.parse_scalar_simple(scalar, Flags::NONE, true)
     }
 
     /// `parseScalar()` with the defaults PHP code uses when it passes only
@@ -1408,7 +1422,9 @@ impl Inline {
             out.extend_from_slice(&self.dump(&Value::String(serialized), Flags::NONE, false)?);
             return Ok(PhpString::from(out));
         }
-        if flags.contains(Flags::DUMP_OBJECT_AS_MAP) && object.downcast_ref::<StdClass>().is_some()
+        if flags.contains(Flags::DUMP_OBJECT_AS_MAP)
+            && (object.downcast_ref::<StdClass>().is_some()
+                || object.downcast_ref::<ArrayObject>().is_some())
         {
             return self.dump_hash_array(&object.properties(), flags);
         }
@@ -1456,12 +1472,14 @@ impl Inline {
     }
 }
 
-/// `Inline::isHash()`: true for `stdClass` and for arrays that are not a
-/// list.
+/// `Inline::isHash()`: true for `stdClass` and `ArrayObject`, and for arrays
+/// that are not a list.
 pub fn is_hash(value: &Value) -> bool {
     match value {
         Value::Array(array) => !array.is_list(),
-        Value::Object(o) => o.downcast_ref::<StdClass>().is_some(),
+        Value::Object(o) => {
+            o.downcast_ref::<StdClass>().is_some() || o.downcast_ref::<ArrayObject>().is_some()
+        }
         _ => false,
     }
 }

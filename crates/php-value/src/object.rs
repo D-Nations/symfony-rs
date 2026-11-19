@@ -69,6 +69,36 @@ impl PhpObject for GenericObject {
     }
 }
 
+/// `ArrayObject`: an object wrapping an array (its storage).
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct ArrayObject {
+    storage: PhpArray,
+}
+
+impl ArrayObject {
+    pub const CLASS: &'static str = "ArrayObject";
+
+    pub fn new(storage: PhpArray) -> Self {
+        Self { storage }
+    }
+
+    /// `getArrayCopy()`, which is also what iterating it gives.
+    pub fn storage(&self) -> &PhpArray {
+        &self.storage
+    }
+}
+
+impl PhpObject for ArrayObject {
+    fn class(&self) -> &str {
+        Self::CLASS
+    }
+
+    /// `(array)` of an ArrayObject gives its storage.
+    fn properties(&self) -> PhpArray {
+        self.storage.clone()
+    }
+}
+
 /// A case of a PHP enum. Cases are singletons in PHP, so `===` compares
 /// the class and the case name.
 #[derive(Debug, Clone, PartialEq)]

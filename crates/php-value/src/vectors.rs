@@ -5,7 +5,7 @@
 //! `["string", "<base64>"]`, `["array", [[key, value], ...]]`,
 //! `["object", class, [[name, value], ...]]`, `["enum", class, case,
 //! value|null]`, `["datetime", "Y-m-d\TH:i:s.uP", zone, U]`,
-//! `["tagged", tag, value]` (decoded as an object of class
+//! `["arrayobject", [[key, value], ...]]`, `["tagged", tag, value]` (decoded as an object of class
 //! `Symfony\Component\Yaml\Tag\TaggedValue`), and `["throws", class,
 //! message]` for an exception.
 //!
@@ -18,7 +18,7 @@ use serde_json::Value as Json;
 use crate::{
     array::{Key, PhpArray},
     datetime::{DateTimeImmutable, Fields, TimeZone},
-    object::{EnumCase, GenericObject, StdClass},
+    object::{ArrayObject, EnumCase, GenericObject, StdClass},
     string::PhpString,
     value::Value,
 };
@@ -125,6 +125,7 @@ pub fn decode(json: &Json) -> Result<Value, Error> {
                 Value::Object(Arc::new(GenericObject::new(class, properties)))
             }
         }
+        "arrayobject" => Value::Object(Arc::new(ArrayObject::new(pairs(&json[1])?))),
         "enum" => {
             let backing = if json[3].is_null() {
                 None

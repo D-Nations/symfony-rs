@@ -76,91 +76,91 @@ Tests/DumperTest.php	DumperTest::testTaggedMultiLineLiteralBlocksRoundTrip	pendi
 Tests/DumperTest.php	DumperTest::testTopLevelMultiLineStringLiteral	pending	
 Tests/DumperTest.php	DumperTest::testTopLevelTaggedMultiLineLiteralBlock	pending	
 Tests/DumperTest.php	DumperTest::testZeroIndentationThrowsException	pending	
-Tests/InlineTest.php	InlineTest::testBuiltInTagWithoutValueAsMappingKey	pending	
-Tests/InlineTest.php	InlineTest::testDump	pending	
-Tests/InlineTest.php	InlineTest::testDumpDateTime	pending	
-Tests/InlineTest.php	InlineTest::testDumpNan	pending	
-Tests/InlineTest.php	InlineTest::testDumpNumericKeyAsString	pending	
-Tests/InlineTest.php	InlineTest::testDumpNumericValueWithLocale	pending	
-Tests/InlineTest.php	InlineTest::testDumpUnitEnum	pending	
+Tests/InlineTest.php	InlineTest::testBuiltInTagWithoutValueAsMappingKey	ported	crates/yaml/tests/inline_test.rs::testBuiltInTagWithoutValueAsMappingKey
+Tests/InlineTest.php	InlineTest::testDump	ported	crates/yaml/tests/inline_test.rs::testDump
+Tests/InlineTest.php	InlineTest::testDumpDateTime	ported	crates/yaml/tests/inline_test.rs::testDumpDateTime
+Tests/InlineTest.php	InlineTest::testDumpNan	ported	crates/yaml/tests/inline_test.rs::testDumpNan
+Tests/InlineTest.php	InlineTest::testDumpNumericKeyAsString	ported	crates/yaml/tests/inline_test.rs::testDumpNumericKeyAsString
+Tests/InlineTest.php	InlineTest::testDumpNumericValueWithLocale	n/a: Rust has no process locale; dump() never depends on one (pinned by testDump)	
+Tests/InlineTest.php	InlineTest::testDumpUnitEnum	ported	crates/yaml/tests/inline_test.rs::testDumpUnitEnum
 Tests/InlineTest.php	InlineTest::testFlowAndBlockProduceSameOutputForAmpersandPrefixedItems	pending	
-Tests/InlineTest.php	InlineTest::testHashStringsResemblingExponentialNumericsShouldNotBeChangedToINF	pending	
-Tests/InlineTest.php	InlineTest::testImplicitStringCastingOfMappingKeysThrowsException	pending	
-Tests/InlineTest.php	InlineTest::testIsHash	pending	
-Tests/InlineTest.php	InlineTest::testMappingKeysCannotBeOmitted	pending	
-Tests/InlineTest.php	InlineTest::testNotSupportedMissingValue	pending	
-Tests/InlineTest.php	InlineTest::testParse	pending	
-Tests/InlineTest.php	InlineTest::testParseAnchoredInlineValues	pending	
-Tests/InlineTest.php	InlineTest::testParseAnchoredMergeKey	pending	
-Tests/InlineTest.php	InlineTest::testParseBackedEnumValue	pending	
-Tests/InlineTest.php	InlineTest::testParseBinaryData	pending	
-Tests/InlineTest.php	InlineTest::testParseCommentNotPrefixedBySpaces	pending	
-Tests/InlineTest.php	InlineTest::testParseDoubleQuotedTaggedString	pending	
-Tests/InlineTest.php	InlineTest::testParseEmbeddedMappingWithDuplicateKeysShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseIdeographicSpace	pending	
-Tests/InlineTest.php	InlineTest::testParseInvalidBinaryData	pending	
-Tests/InlineTest.php	InlineTest::testParseInvalidDate	pending	
-Tests/InlineTest.php	InlineTest::testParseInvalidMappingKeyShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseInvalidMappingShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseInvalidSequenceShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseInvalidTaggedSequenceShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseKeyStartingWithNulByteWithMapObjectsThrowsParseException	pending	
-Tests/InlineTest.php	InlineTest::testParseMapReferenceInSequence	pending	
-Tests/InlineTest.php	InlineTest::testParseMappingKeyWithColonNotFollowedBySpace	pending	
-Tests/InlineTest.php	InlineTest::testParseMergeKeyWithScalarValueThrowsParseException	pending	
-Tests/InlineTest.php	InlineTest::testParseMergeKeyWithSequenceOfScalarsThrowsParseException	pending	
-Tests/InlineTest.php	InlineTest::testParseMissingMappingValueAsNull	pending	
-Tests/InlineTest.php	InlineTest::testParseNan	pending	
-Tests/InlineTest.php	InlineTest::testParseNestedTimestampListAsDateTimeObject	pending	
-Tests/InlineTest.php	InlineTest::testParseOctalNumbers	pending	
-Tests/InlineTest.php	InlineTest::testParseOctalNumbersYaml11Notation	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpConstantThrowsExceptionOnInvalidType	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpConstantThrowsExceptionWhenUndefined	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpConstants	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionOnInvalidType	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenNameUndefined	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenNotAnEnum	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenNotBacked	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenUndefined	pending	
-Tests/InlineTest.php	InlineTest::testParsePhpObjectThrowsExceptionOnNonStringScalar	pending	
-Tests/InlineTest.php	InlineTest::testParseQuotedMergeKeyAsRegularKey	pending	
-Tests/InlineTest.php	InlineTest::testParseQuotedReferenceLikeStringsInMapping	pending	
-Tests/InlineTest.php	InlineTest::testParseQuotedReferenceLikeStringsInSequence	pending	
-Tests/InlineTest.php	InlineTest::testParseReferences	pending	
-Tests/InlineTest.php	InlineTest::testParseScalarWithCorrectlyQuotedStringShouldReturnString	pending	
-Tests/InlineTest.php	InlineTest::testParseScalarWithIncorrectlyDoubleQuotedStringShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseScalarWithIncorrectlyQuotedStringShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseScalarWithNonEscapedBlackslashAtTheEndShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseScalarWithNonEscapedBlackslashShouldThrowException	pending	
-Tests/InlineTest.php	InlineTest::testParseSequenceWithEmptyElement	pending	
-Tests/InlineTest.php	InlineTest::testParseSingleQuotedTaggedString	pending	
-Tests/InlineTest.php	InlineTest::testParseTimestampAsDateTimeObject	pending	
-Tests/InlineTest.php	InlineTest::testParseTimestampAsUnixTimestampByDefault	pending	
-Tests/InlineTest.php	InlineTest::testParseTimestampBeforeUnixEpochAsUnixTimestamp	pending	
-Tests/InlineTest.php	InlineTest::testParseUnitEnum	pending	
-Tests/InlineTest.php	InlineTest::testParseUnitEnumCases	pending	
-Tests/InlineTest.php	InlineTest::testParseUnquotedAsterisk	pending	
-Tests/InlineTest.php	InlineTest::testParseUnquotedAsteriskFollowedByAComment	pending	
-Tests/InlineTest.php	InlineTest::testParseUnquotedScalarStartingWithReservedIndicator	pending	
-Tests/InlineTest.php	InlineTest::testParseUnquotedScalarStartingWithScalarIndicator	pending	
-Tests/InlineTest.php	InlineTest::testParseUnquotedStringContainingHashTagNotPrefixedBySpace	pending	
-Tests/InlineTest.php	InlineTest::testParseWithMapObjects	pending	
-Tests/InlineTest.php	InlineTest::testPhpConstTagWithEmptyValue	pending	
-Tests/InlineTest.php	InlineTest::testPhpEnumTagWithEmptyValue	pending	
-Tests/InlineTest.php	InlineTest::testPhpObjectWithEmptyValue	pending	
-Tests/InlineTest.php	InlineTest::testQuotedExclamationMark	pending	
-Tests/InlineTest.php	InlineTest::testTagWithEmptyValueInMapping	pending	
-Tests/InlineTest.php	InlineTest::testTagWithEmptyValueInSequence	pending	
-Tests/InlineTest.php	InlineTest::testTagWithQuotedInteger	pending	
-Tests/InlineTest.php	InlineTest::testTagWithUnquotedInteger	pending	
-Tests/InlineTest.php	InlineTest::testTagWithoutValueInMapping	pending	
-Tests/InlineTest.php	InlineTest::testTagWithoutValueInSequence	pending	
-Tests/InlineTest.php	InlineTest::testTheEmptyStringIsAValidMappingKey	pending	
-Tests/InlineTest.php	InlineTest::testUnfinishedInlineMap	pending	
-Tests/InlineTest.php	InlineTest::testUnquotedExclamationMarkThrows	pending	
-Tests/InlineTest.php	InlineTest::testUnterminatedMappingEndingWithTag	pending	
-Tests/InlineTest.php	InlineTest::testUnterminatedSequenceEndingWithTag	pending	
-Tests/InlineTest.php	InlineTest::testVeryLongQuotedStrings	pending	
+Tests/InlineTest.php	InlineTest::testHashStringsResemblingExponentialNumericsShouldNotBeChangedToINF	ported	crates/yaml/tests/inline_test.rs::testHashStringsResemblingExponentialNumericsShouldNotBeChangedToINF
+Tests/InlineTest.php	InlineTest::testImplicitStringCastingOfMappingKeysThrowsException	ported	crates/yaml/tests/inline_test.rs::testImplicitStringCastingOfMappingKeysThrowsException
+Tests/InlineTest.php	InlineTest::testIsHash	ported	crates/yaml/tests/inline_test.rs::testIsHash
+Tests/InlineTest.php	InlineTest::testMappingKeysCannotBeOmitted	ported	crates/yaml/tests/inline_test.rs::testMappingKeysCannotBeOmitted
+Tests/InlineTest.php	InlineTest::testNotSupportedMissingValue	ported	crates/yaml/tests/inline_test.rs::testNotSupportedMissingValue
+Tests/InlineTest.php	InlineTest::testParse	ported	crates/yaml/tests/inline_test.rs::testParse
+Tests/InlineTest.php	InlineTest::testParseAnchoredInlineValues	ported	crates/yaml/tests/inline_test.rs::testParseAnchoredInlineValues
+Tests/InlineTest.php	InlineTest::testParseAnchoredMergeKey	ported	crates/yaml/tests/inline_test.rs::testParseAnchoredMergeKey
+Tests/InlineTest.php	InlineTest::testParseBackedEnumValue	ported	crates/yaml/tests/inline_test.rs::testParseBackedEnumValue
+Tests/InlineTest.php	InlineTest::testParseBinaryData	ported	crates/yaml/tests/inline_test.rs::testParseBinaryData
+Tests/InlineTest.php	InlineTest::testParseCommentNotPrefixedBySpaces	ported	crates/yaml/tests/inline_test.rs::testParseCommentNotPrefixedBySpaces
+Tests/InlineTest.php	InlineTest::testParseDoubleQuotedTaggedString	ported	crates/yaml/tests/inline_test.rs::testParseDoubleQuotedTaggedString
+Tests/InlineTest.php	InlineTest::testParseEmbeddedMappingWithDuplicateKeysShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseEmbeddedMappingWithDuplicateKeysShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseIdeographicSpace	ported	crates/yaml/tests/inline_test.rs::testParseIdeographicSpace
+Tests/InlineTest.php	InlineTest::testParseInvalidBinaryData	ported	crates/yaml/tests/inline_test.rs::testParseInvalidBinaryData
+Tests/InlineTest.php	InlineTest::testParseInvalidDate	ported	crates/yaml/tests/inline_test.rs::testParseInvalidDate
+Tests/InlineTest.php	InlineTest::testParseInvalidMappingKeyShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseInvalidMappingKeyShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseInvalidMappingShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseInvalidMappingShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseInvalidSequenceShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseInvalidSequenceShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseInvalidTaggedSequenceShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseInvalidTaggedSequenceShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseKeyStartingWithNulByteWithMapObjectsThrowsParseException	ported	crates/yaml/tests/inline_test.rs::testParseKeyStartingWithNulByteWithMapObjectsThrowsParseException
+Tests/InlineTest.php	InlineTest::testParseMapReferenceInSequence	ported	crates/yaml/tests/inline_test.rs::testParseMapReferenceInSequence
+Tests/InlineTest.php	InlineTest::testParseMappingKeyWithColonNotFollowedBySpace	ported	crates/yaml/tests/inline_test.rs::testParseMappingKeyWithColonNotFollowedBySpace
+Tests/InlineTest.php	InlineTest::testParseMergeKeyWithScalarValueThrowsParseException	ported	crates/yaml/tests/inline_test.rs::testParseMergeKeyWithScalarValueThrowsParseException
+Tests/InlineTest.php	InlineTest::testParseMergeKeyWithSequenceOfScalarsThrowsParseException	ported	crates/yaml/tests/inline_test.rs::testParseMergeKeyWithSequenceOfScalarsThrowsParseException
+Tests/InlineTest.php	InlineTest::testParseMissingMappingValueAsNull	ported	crates/yaml/tests/inline_test.rs::testParseMissingMappingValueAsNull
+Tests/InlineTest.php	InlineTest::testParseNan	ported	crates/yaml/tests/inline_test.rs::testParseNan
+Tests/InlineTest.php	InlineTest::testParseNestedTimestampListAsDateTimeObject	ported	crates/yaml/tests/inline_test.rs::testParseNestedTimestampListAsDateTimeObject
+Tests/InlineTest.php	InlineTest::testParseOctalNumbers	ported	crates/yaml/tests/inline_test.rs::testParseOctalNumbers
+Tests/InlineTest.php	InlineTest::testParseOctalNumbersYaml11Notation	ported	crates/yaml/tests/inline_test.rs::testParseOctalNumbersYaml11Notation
+Tests/InlineTest.php	InlineTest::testParsePhpConstantThrowsExceptionOnInvalidType	ported	crates/yaml/tests/inline_test.rs::testParsePhpConstantThrowsExceptionOnInvalidType
+Tests/InlineTest.php	InlineTest::testParsePhpConstantThrowsExceptionWhenUndefined	ported	crates/yaml/tests/inline_test.rs::testParsePhpConstantThrowsExceptionWhenUndefined
+Tests/InlineTest.php	InlineTest::testParsePhpConstants	ported	crates/yaml/tests/inline_test.rs::testParsePhpConstants
+Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionOnInvalidType	ported	crates/yaml/tests/inline_test.rs::testParsePhpEnumThrowsExceptionOnInvalidType
+Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenNameUndefined	ported	crates/yaml/tests/inline_test.rs::testParsePhpEnumThrowsExceptionWhenNameUndefined
+Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenNotAnEnum	ported	crates/yaml/tests/inline_test.rs::testParsePhpEnumThrowsExceptionWhenNotAnEnum
+Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenNotBacked	ported	crates/yaml/tests/inline_test.rs::testParsePhpEnumThrowsExceptionWhenNotBacked
+Tests/InlineTest.php	InlineTest::testParsePhpEnumThrowsExceptionWhenUndefined	ported	crates/yaml/tests/inline_test.rs::testParsePhpEnumThrowsExceptionWhenUndefined
+Tests/InlineTest.php	InlineTest::testParsePhpObjectThrowsExceptionOnNonStringScalar	ported	crates/yaml/tests/inline_test.rs::testParsePhpObjectThrowsExceptionOnNonStringScalar
+Tests/InlineTest.php	InlineTest::testParseQuotedMergeKeyAsRegularKey	ported	crates/yaml/tests/inline_test.rs::testParseQuotedMergeKeyAsRegularKey
+Tests/InlineTest.php	InlineTest::testParseQuotedReferenceLikeStringsInMapping	ported	crates/yaml/tests/inline_test.rs::testParseQuotedReferenceLikeStringsInMapping
+Tests/InlineTest.php	InlineTest::testParseQuotedReferenceLikeStringsInSequence	ported	crates/yaml/tests/inline_test.rs::testParseQuotedReferenceLikeStringsInSequence
+Tests/InlineTest.php	InlineTest::testParseReferences	ported	crates/yaml/tests/inline_test.rs::testParseReferences
+Tests/InlineTest.php	InlineTest::testParseScalarWithCorrectlyQuotedStringShouldReturnString	ported	crates/yaml/tests/inline_test.rs::testParseScalarWithCorrectlyQuotedStringShouldReturnString
+Tests/InlineTest.php	InlineTest::testParseScalarWithIncorrectlyDoubleQuotedStringShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseScalarWithIncorrectlyDoubleQuotedStringShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseScalarWithIncorrectlyQuotedStringShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseScalarWithIncorrectlyQuotedStringShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseScalarWithNonEscapedBlackslashAtTheEndShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseScalarWithNonEscapedBlackslashAtTheEndShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseScalarWithNonEscapedBlackslashShouldThrowException	ported	crates/yaml/tests/inline_test.rs::testParseScalarWithNonEscapedBlackslashShouldThrowException
+Tests/InlineTest.php	InlineTest::testParseSequenceWithEmptyElement	ported	crates/yaml/tests/inline_test.rs::testParseSequenceWithEmptyElement
+Tests/InlineTest.php	InlineTest::testParseSingleQuotedTaggedString	ported	crates/yaml/tests/inline_test.rs::testParseSingleQuotedTaggedString
+Tests/InlineTest.php	InlineTest::testParseTimestampAsDateTimeObject	ported	crates/yaml/tests/inline_test.rs::testParseTimestampAsDateTimeObject
+Tests/InlineTest.php	InlineTest::testParseTimestampAsUnixTimestampByDefault	ported	crates/yaml/tests/inline_test.rs::testParseTimestampAsUnixTimestampByDefault
+Tests/InlineTest.php	InlineTest::testParseTimestampBeforeUnixEpochAsUnixTimestamp	ported	crates/yaml/tests/inline_test.rs::testParseTimestampBeforeUnixEpochAsUnixTimestamp
+Tests/InlineTest.php	InlineTest::testParseUnitEnum	ported	crates/yaml/tests/inline_test.rs::testParseUnitEnum
+Tests/InlineTest.php	InlineTest::testParseUnitEnumCases	ported	crates/yaml/tests/inline_test.rs::testParseUnitEnumCases
+Tests/InlineTest.php	InlineTest::testParseUnquotedAsterisk	ported	crates/yaml/tests/inline_test.rs::testParseUnquotedAsterisk
+Tests/InlineTest.php	InlineTest::testParseUnquotedAsteriskFollowedByAComment	ported	crates/yaml/tests/inline_test.rs::testParseUnquotedAsteriskFollowedByAComment
+Tests/InlineTest.php	InlineTest::testParseUnquotedScalarStartingWithReservedIndicator	ported	crates/yaml/tests/inline_test.rs::testParseUnquotedScalarStartingWithReservedIndicator
+Tests/InlineTest.php	InlineTest::testParseUnquotedScalarStartingWithScalarIndicator	ported	crates/yaml/tests/inline_test.rs::testParseUnquotedScalarStartingWithScalarIndicator
+Tests/InlineTest.php	InlineTest::testParseUnquotedStringContainingHashTagNotPrefixedBySpace	ported	crates/yaml/tests/inline_test.rs::testParseUnquotedStringContainingHashTagNotPrefixedBySpace
+Tests/InlineTest.php	InlineTest::testParseWithMapObjects	ported	crates/yaml/tests/inline_test.rs::testParseWithMapObjects
+Tests/InlineTest.php	InlineTest::testPhpConstTagWithEmptyValue	ported	crates/yaml/tests/inline_test.rs::testPhpConstTagWithEmptyValue
+Tests/InlineTest.php	InlineTest::testPhpEnumTagWithEmptyValue	ported	crates/yaml/tests/inline_test.rs::testPhpEnumTagWithEmptyValue
+Tests/InlineTest.php	InlineTest::testPhpObjectWithEmptyValue	ported	crates/yaml/tests/inline_test.rs::testPhpObjectWithEmptyValue
+Tests/InlineTest.php	InlineTest::testQuotedExclamationMark	ported	crates/yaml/tests/inline_test.rs::testQuotedExclamationMark
+Tests/InlineTest.php	InlineTest::testTagWithEmptyValueInMapping	ported	crates/yaml/tests/inline_test.rs::testTagWithEmptyValueInMapping
+Tests/InlineTest.php	InlineTest::testTagWithEmptyValueInSequence	ported	crates/yaml/tests/inline_test.rs::testTagWithEmptyValueInSequence
+Tests/InlineTest.php	InlineTest::testTagWithQuotedInteger	ported	crates/yaml/tests/inline_test.rs::testTagWithQuotedInteger
+Tests/InlineTest.php	InlineTest::testTagWithUnquotedInteger	ported	crates/yaml/tests/inline_test.rs::testTagWithUnquotedInteger
+Tests/InlineTest.php	InlineTest::testTagWithoutValueInMapping	ported	crates/yaml/tests/inline_test.rs::testTagWithoutValueInMapping
+Tests/InlineTest.php	InlineTest::testTagWithoutValueInSequence	ported	crates/yaml/tests/inline_test.rs::testTagWithoutValueInSequence
+Tests/InlineTest.php	InlineTest::testTheEmptyStringIsAValidMappingKey	ported	crates/yaml/tests/inline_test.rs::testTheEmptyStringIsAValidMappingKey
+Tests/InlineTest.php	InlineTest::testUnfinishedInlineMap	ported	crates/yaml/tests/inline_test.rs::testUnfinishedInlineMap
+Tests/InlineTest.php	InlineTest::testUnquotedExclamationMarkThrows	ported	crates/yaml/tests/inline_test.rs::testUnquotedExclamationMarkThrows
+Tests/InlineTest.php	InlineTest::testUnterminatedMappingEndingWithTag	ported	crates/yaml/tests/inline_test.rs::testUnterminatedMappingEndingWithTag
+Tests/InlineTest.php	InlineTest::testUnterminatedSequenceEndingWithTag	ported	crates/yaml/tests/inline_test.rs::testUnterminatedSequenceEndingWithTag
+Tests/InlineTest.php	InlineTest::testVeryLongQuotedStrings	ported	crates/yaml/tests/inline_test.rs::testVeryLongQuotedStrings
 Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessage	ported	crates/yaml/tests/parse_exception.rs::testGetMessage
 Tests/ParseExceptionTest.php	ParseExceptionTest::testGetMessageWithUnicodeInFilename	ported	crates/yaml/tests/parse_exception.rs::testGetMessageWithUnicodeInFilename
 Tests/ParserTest.php	ParserTest::testAdditionallyIndentedLinesAreParsedAsNewLinesInFoldedBlocks	pending	
