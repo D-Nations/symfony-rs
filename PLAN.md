@@ -568,6 +568,7 @@ Stack rows (searched November 19):
 | Config | No Rust port of Symfony Config found. Serde-struct config crates: [schematic](https://docs.rs/schematic) (per-field merge strategies, garde validation; the closest), [clapfig](https://docs.rs/crate/clapfig/latest) (layered files/env/CLI, post-merge hook), [confique](https://awesome.ecosyste.ms/projects/github.com%2Flukaskalbertodt%2Fconfique) / [einstellung](https://docs.rs/crate/einstellung/0.1.6) (derive-time defaults and validators), [rust-config-tree](https://docs.rs/crate/rust-config-tree/0.2.0) (include trees on confique + Figment), config-rs / figment (untyped layering) | Port on `php-value`, no dependency | All of them fix the schema as a Rust type. Symfony's is a node tree built in code by bundles (prototypes, `ExprBuilder` if/then rules, normalization keys, `canBeEnabled`, deep merge vs `performNoDeepMerging`, deprecations), with its own error paths and messages |
 | XML for `XmlUtils` (owner, November 19; decision 9) | [roxmltree](https://docs.rs/roxmltree) / [quick-xml](https://docs.rs/quick-xml) (parsers, no validation); libxml2 bindings (C, FFI, the real libxml but `unsafe` underneath); pure-Rust XSD: [uppsala](https://docs.rs/crate/uppsala/0.4.0) (DOM, XPath, XSD 1.1), [xsd-schema](https://docs.rs/crate/xsd-schema/0.1.0), [xmlschema](https://docs.rs/xmlschema), [fastxml](https://docs.rs/crate/fastxml/0.1.0) | Hand-written `php-dom` crate, no dependency | None reproduces libxml's error messages, levels and positions, which `XmlUtils` puts into its exception texts; FFI conflicts with no-`unsafe`; scoping validation to Symfony's schemas keeps the surface small |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+| Converter runtime contract (M1-D) | [PeachPie](https://github.com/peachpiecompiler/peachpie) (dynamic `PhpValue` everywhere, per-request `Context`), [KPHP](https://vkcom.github.io/kphp/) (inferred types, `class_instance<T>`, `mixed` only where dynamic), Symfony's `PhpDumper` and [Quarkus ArC](https://quarkus.io/guides/cdi-reference) (container compiled at build time), DI crates [shaku](https://docs.rs/crate/shaku), [fundle](https://docs.rs/crate/fundle/0.3.5/source/README.md), [injectable-rs](https://docs.rs/injectable-rs) | Typed code with `php-value` only where PHP is dynamic; the compiled container emitted as Rust; no DI crate | Types keep speed and reviewability; the converter already has Symfony's full service graph, so a generic container would duplicate it; PHP-FPM's per-request isolation decides which services may be shared ([docs/converter-contract.md](docs/converter-contract.md)) |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
@@ -640,6 +641,15 @@ Stack rows (searched November 19):
       need Config's loaders; M1-C), and loaders, resources and `XmlUtils`
       (Filesystem, Finder, `php-dom`, decision 9; M1-C). Their 167 rows
       stay `pending`.
+- [ ] M1-D. Done: provisional converter contract 0.1
+      ([docs/converter-contract.md](docs/converter-contract.md)), with
+      prior art compared (stack row above). Pending, in order: second-app
+      selection and inventory (`docs/acceptance/second-app.md`); the
+      request provenance rewrite, because `symfony-routing` links
+      `symfony-http-foundation`; then the fixture (pinned PHP app,
+      recorded responses, hand-authored generated-code-shaped Rust crate,
+      Linux CI from an empty directory). The conversion gate stays open
+      until symfony2rust emits the fixture.
 
 ## Verification
 
