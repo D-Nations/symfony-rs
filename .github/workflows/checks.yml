@@ -19,3 +19,4 @@ jobs:
       - run: cargo +stable clippy --locked --all-targets -- -D warnings
       - run: cargo +stable test --locked
       - run: scripts/sources.sh --check
+      - run: scripts/parity-check.sh

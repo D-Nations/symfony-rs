@@ -34,12 +34,24 @@ Read [AGENTS.md](AGENTS.md) and [PLAN.md](PLAN.md). Checks:
 cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo test
-scripts/sources.sh --check   # source map is current
+scripts/sources.sh --check
+scripts/parity-check.sh   # source map is current
 ```
 
 Pinned upstream sources (with their tests), for porting and for parity
 manifests: `scripts/fetch-upstream.sh` clones them into the ignored
-`upstream/` directory.
+`upstream/` directory. `scripts/manifest.sh <package>` (re)generates
+`parity/<package>.tsv`, the list of every upstream test with its status,
+using the PHP oracle in `oracle/` (Docker).
+
+| Package | Upstream tests | Ported | Pending |
+|---|---:|---:|---:|
+| symfony/event-dispatcher | 140 | 0 | 140 |
+| symfony/http-foundation | 945 | 0 | 945 |
+| symfony/http-kernel | 1,040 | 10 | 1,030 |
+| symfony/routing | 871 | 16 | 855 |
+
+The crates' contracts are subsets; the pending rows are the work list.
 
 ## Licence
 

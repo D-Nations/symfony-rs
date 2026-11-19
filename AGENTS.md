@@ -63,6 +63,7 @@ cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo test
 scripts/sources.sh --check
+scripts/parity-check.sh
 ```
 
 Then, for any change to a crate symfony-demo-rs uses, run that repository's

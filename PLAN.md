@@ -332,11 +332,21 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
 - [x] Source map: `//! Upstream:` lines in every Rust file,
       `parity/sources.tsv` generated and checked by `scripts/sources.sh`
       (also in CI).
-- [ ] Oracle image (`oracle/`): PHP 8.4 + the pinned packages + `run.php`
-      for JSON-described cases. Needs Docker.
-- [ ] Parity manifest generator (PHP tokenizer over each package's `Tests/`,
-      run in the oracle image) and its CI gate; backfill manifests for
-      http-foundation, routing, http-kernel.
+- [x] Oracle image (`oracle/`, `php:8.4.27-cli-bookworm` + intl, pdo_sqlite;
+      mounts this repo and `../symfony-demo` read-only). A generic `run.php`
+      for JSON-described cases comes with the first recorder moved in.
+- [x] Parity manifests: `oracle/manifest.php` lists upstream tests with PHP's
+      tokenizer (no code loaded, so packages whose tests need uninstalled
+      components work too), `scripts/manifest.sh` merges into
+      `parity/<package>.tsv` keeping statuses, `scripts/parity-check.sh`
+      gates CI (statuses, claimed Rust tests exist, every upstream-porting
+      Rust `test*` fn is claimed, `parity/done.txt` packages have no
+      pending rows). Checked against PHPUnit 11.5's own `--list-tests`:
+      identical for event-dispatcher (140) and routing (871); PHPUnit cannot
+      list http-foundation and http-kernel at all (their tests need
+      RateLimiter and Serializer, not installed). Backfilled: routing 16 and
+      http-kernel 10 ported; only the declaring class's row is marked, so
+      inherited copies (e.g. Compiled matchers) stay pending.
 - [ ] Move the vector recorders from symfony-demo-rs (`compare/routing_vectors.py`,
       `compare/multipart_vectors.py`, `data/*/extract.php`) into `oracle/`.
 - [ ] Weekly upstream watch job (newer patch releases of mapped files, GitHub

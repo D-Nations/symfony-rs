@@ -1,0 +1,11 @@
+# symfony-rs's PHP oracle. Expects symfony/demo checked out next to this
+# repository (../symfony-demo) with its dependencies installed.
+#
+#   docker compose -f oracle/compose.yaml run --rm php oracle/manifest.php upstream/symfony/routing
+services:
+  php:
+    build: .
+    image: symfony-rs-oracle:8.4.27
+    volumes:
+      - ..:/work:ro
+      - ../../symfony-demo:/demo:ro
