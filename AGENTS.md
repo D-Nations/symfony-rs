@@ -33,6 +33,12 @@ of real PHP running it. **Read upstream, never edit it.**
 
 ## Behaviour rules
 
+- No PHP source code in this repository, under any licence (php-src
+  included, even its BSD-3-Clause branch; PLAN.md decision 8). PHP's own
+  behaviour is learned by running it in a container and from its
+  documentation, then written independently. Symfony, Twig and Doctrine
+  sources (MIT/BSD) are the specification and are ported as before.
+
 - Copy behaviour, not style. If PHP behaviour is surprising, keep it and pin
   it with a test. If it cannot be kept, stop and record it under "Decisions
   for the owner" in PLAN.md rather than choosing silently.

@@ -2,12 +2,13 @@
 //! `memory_get_usage(true)`, `round($x, $places)`, `(int) $x`,
 //! `sprintf('%d')` and `sprintf('%.2F')`, and PHP's `int|float` result.
 //!
-//! All are checked against vectors recorded from PHP 8.4.27
-//! (oracle/recorders/stopwatch.php -> tests/data/php.json). Only `round()`
-//! follows php-src code, taken from its BSD-3-Clause main branch (PLAN.md
-//! decision 8); the rest is written from the recorded behaviour:
-//! - `round()` rounds half away from zero in double arithmetic, so above
-//!   about 1e14 it can differ from rounding the shortest decimal form;
+//! None of this comes from php-src. Each is written from PHP 8.4.27's
+//! observed behaviour and checked against vectors recorded from it
+//! (oracle/recorders/stopwatch.php -> tests/data/php.json):
+//! - `round()` rounds half away from zero, with the half-way points
+//!   computed as doubles (so `round(0.285, 2)` is 0.29). This matches PHP
+//!   while `|x| * 10^places < 2^52`; above that PHP's answers depend on its
+//!   internal arithmetic and are not reproduced (README, "Differences");
 //! - `(int)` and `%d` truncate, wrap modulo 2^64 out of range, and give 0
 //!   for INF and NaN;
 //! - `%.2F` rounds the exact binary value, ties to even (0.125 gives
@@ -110,82 +111,41 @@ impl Sub for Number {
 }
 
 /// `round($value, $places)` in PHP's default mode (half away from zero),
-/// for `$places >= 0`.
+/// for `$places` in `0..=22`.
 ///
-/// Derived from `_php_math_round()` and `php_round_helper()` in
-/// ext/standard/math.c of php-src's BSD-3-Clause main branch (commit
-/// b90212aa0f564ee700eec42e728f5f4aa26eb1fe), whose code is identical to
-/// PHP 8.4.27's. Copyright (c) The PHP Group and Contributors; see
-/// licenses/php-src-BSD-3-Clause.txt.
+/// The result is `n / 10^places` for the integer `n` whose half-way
+/// points, computed as doubles, bracket the value:
+/// `(n - 0.5) / 10^places <= |value| < (n + 0.5) / 10^places`. Matches PHP
+/// 8.4 while `|value| * 10^places < 2^52` (checked on 171,025 values);
+/// beyond that, where `n + 0.5` is no longer a double, it may differ.
+/// Values whose scaled magnitude reaches 1e16 are returned unchanged, as
+/// PHP does.
 pub fn round(value: f64, places: usize) -> f64 {
     if !value.is_finite() || value == 0.0 {
         return value;
     }
-    if places == 0 && value == value.trunc() {
+    let Some(&scale) = POWERS_OF_TEN.get(places) else {
+        return value;
+    };
+    let magnitude = value.abs();
+    let mut n = (magnitude * scale).round();
+    if n >= 1e16 {
         return value;
     }
-    let exponent = pow10(places);
-    // Take the integral part of value * 10^places. When the product fell
-    // just short of a whole number through binary error (0.285 * 100 is
-    // 28.499999999999996), the next integral divided back equals value.
-    let scaled = if places > 0 {
-        value * exponent
-    } else {
-        value / exponent
-    };
-    let (mut integral, next) = if value >= 0.0 {
-        let integral = scaled.floor();
-        (integral, integral + 1.0)
-    } else {
-        let integral = scaled.ceil();
-        (integral, integral - 1.0)
-    };
-    if (if places > 0 {
-        next / exponent
-    } else {
-        next * exponent
-    }) == value
-    {
-        integral = next;
+    // The estimate is at most one away from the bracketing integer.
+    if n > 0.0 && magnitude < (n - 0.5) / scale {
+        n -= 1.0;
+    } else if magnitude >= (n + 0.5) / scale {
+        n += 1.0;
     }
-    // Beyond double precision, rounding is pointless.
-    if integral.abs() >= 1e16 {
-        return value;
-    }
-    let edge = if places > 0 {
-        ((integral + 0.5f64.copysign(integral)) / exponent).abs()
-    } else {
-        ((integral + 0.5f64.copysign(integral)) * exponent).abs()
-    };
-    if value.abs() >= edge {
-        integral += 1.0f64.copysign(integral);
-    }
-    if places < 23 {
-        return if places > 0 {
-            integral / exponent
-        } else {
-            integral * exponent
-        };
-    }
-    // Division is inexact here; go through the decimal string, as
-    // `snprintf("%15fe%d")` and `zend_strtod()` do.
-    match format!("{integral:.6}e-{places}").parse::<f64>() {
-        Ok(rounded) if rounded.is_finite() => rounded,
-        _ => value,
-    }
+    (n / scale).copysign(value)
 }
 
-/// `php_intpow10()`: exact for 0..=22.
-fn pow10(power: usize) -> f64 {
-    const POWERS: [f64; 23] = [
-        1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16,
-        1e17, 1e18, 1e19, 1e20, 1e21, 1e22,
-    ];
-    POWERS
-        .get(power)
-        .copied()
-        .unwrap_or_else(|| 10f64.powf(power as f64))
-}
+/// Exact powers of ten as doubles.
+const POWERS_OF_TEN: [f64; 23] = [
+    1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16,
+    1e17, 1e18, 1e19, 1e20, 1e21, 1e22,
+];
 
 /// `(int) $value` for a float.
 pub fn to_int(value: f64) -> i64 {

@@ -317,6 +317,14 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    record an explicit exception in php2rust. Nothing changes until the owner
    decides.
 
+   **Owner, November 19:** no PHP source code at all in the rewritten
+   projects, under any licence, including php-src's BSD-3-Clause main
+   branch. Behaviour comes only from running PHP (in containers) and from
+   documentation. So `multipart.rs`, `query.rs` and `cookies.rs` must be
+   rewritten from their recorded vectors without php-src (scheduled with
+   HttpFoundation in M2, or earlier if the owner prefers); where PHP's
+   behaviour cannot be matched that way, the difference is recorded.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -408,11 +416,13 @@ Stack rows (searched November 19):
       (`round()`, `(int)`, `%d`, `%.2F`) are checked against 3,000+ vectors
       (`scripts/record.sh stopwatch`). `memory_get_usage()` has no Rust
       equivalent: the default host reports 0, and a host can supply a figure.
-      `round()` follows php-src's code, taken from its **BSD-3-Clause main
-      branch** (commit `b90212aa`, identical to 8.4.27's), which decision 8
-      permits; the BSD notice is in `crates/stopwatch/licenses/`. A simpler
-      shortest-decimal rounding failed 12 of 3,024 vectors (values above
-      1e14), so following PHP's arithmetic was necessary.
+      `round()` is written from behaviour (no PHP source, per decision 8):
+      half away from zero with half-way points computed as doubles. On
+      171,025 recorded values it matches PHP below `2^52 / 10` and differs
+      on 122 above it (crate README, "Differences"). Compared: rounding the
+      shortest decimal form (3,270 differ, from 7e13) and php2rust's
+      `php-rt` `round()` (14,571 differ, from 2.35: it implements the
+      pre-8.4 15-digit pre-rounding, a php2rust bug to report).
 
 ## Verification
 
