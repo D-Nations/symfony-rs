@@ -1,0 +1,9 @@
+[package]
+name = "psr-log"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Port of psr/log (PSR-3): LoggerInterface, LogLevel and NullLogger"
+
+[dependencies]

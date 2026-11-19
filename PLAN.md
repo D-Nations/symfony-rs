@@ -178,7 +178,8 @@ EventDispatcher (full, generalizing http-kernel's dispatcher), Yaml (full
 port; saphyr/yaml-rust2 implement YAML 1.2, not Symfony's dialect), Dotenv
 (port; dotenvy expands differently), Config (TreeBuilder + processing, at
 build time), String (complete `u()`/`b()` APIs, inflectors, slugger), Clock,
-Uid (wrap `uuid`/`ulid` crates, Symfony's formats), Filesystem, Finder (walker
+Uid (wrap `uuid`/`ulid` crates, Symfony's formats), Stopwatch (needed by
+EventDispatcher's Debug classes and the profiler), Filesystem, Finder (walker
 crate + ported filters/ordering), OptionsResolver, PasswordHasher (bcrypt
 already in; add RustCrypto argon2/pbkdf2; "migrate from" logic), Process.
 Also the Attributes derive and the php-rt integration (decision 3).
@@ -293,6 +294,18 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    of PHP's type juggling. Needs a line in php2rust's `docs/approach.md`:
    symfony2rust's target runtime contains MIT/BSD-derived Symfony, Twig and
    Doctrine code (php2rust's rule bans copying it into *converter* crates).
+
+   **Owner, November 19 (at the Yaml start):** symfony-rs owns the value
+   layer. A new `php-value` crate holds PHP's values (null, bool, int,
+   float, byte strings, ordered arrays with PHP's key rules, objects such
+   as stdClass, DateTimeImmutable, enum cases and component classes like
+   TaggedValue), `Send + Sync`, written from recorded PHP behaviour with no
+   php-src code. Yaml, Config, DI and Twig share it; php-rt can adopt it or
+   convert to it later. Reason: php-rt has no objects, is `Rc`-based, and
+   its `round()` follows pre-8.4 PHP. Also decided: PHP's `serialize()` /
+   `unserialize()` are ported (Yaml's `PARSE_OBJECT` / `DUMP_OBJECT`),
+   with unserialization limited to an allow-list of classes the
+   application registers.
 4. **Security response target.** Recommended: triage within 2 working days of
    an upstream advisory; fix in ported code before the next client release.
 5. **Regex** (route requirements, `Regex` constraint). Recommended: `regex`
@@ -315,6 +328,14 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    functions, behaviour re-checked against the 156 recorded vectors) or
    record an explicit exception in php2rust. Nothing changes until the owner
    decides.
+
+   **Owner, November 19:** no PHP source code at all in the rewritten
+   projects, under any licence, including php-src's BSD-3-Clause main
+   branch. Behaviour comes only from running PHP (in containers) and from
+   documentation. So `multipart.rs`, `query.rs` and `cookies.rs` must be
+   rewritten from their recorded vectors without php-src (scheduled with
+   HttpFoundation in M2, or earlier if the owner prefers); where PHP's
+   behaviour cannot be matched that way, the difference is recorded.
 
 ## M0 progress
 
@@ -381,6 +402,55 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       `setTrustedProxies` (`PRIVATE_RANGES`) are none of them ported, so
       the Rust code is unaffected. Pins stay at the demo's `composer.lock`
       (the demo original is read-only); moving them is a version move.
+
+## M1 progress
+
+Stack rows (searched November 19):
+
+| Component | Options compared | Choice | Reason |
+|---|---|---|---|
+| Stopwatch | [fine_grained](https://docs.rs/crate/fine_grained/latest) (one stopwatch with laps, 2017), [ticky](https://docs.rs/ticky/1.0.2/src/ticky/lib.rs.html), [chronometer](https://docs.rs/crate/chronometer/latest), clock-core: single anonymous timers | Port, no dependency (`std::time` underneath) | None has named events, categories, sections, periods with memory, PHP's rounding or Symfony's messages |
+| Yaml | No Rust port of Symfony Yaml exists. YAML 1.2 crates ([saphyr](https://docs.rs/serde-saphyr/latest/), [yaml-rust2](https://docs.rs/crate/yaml-rust2/0.11.1), [noyalib](https://github.com/sebastienrousseau/noyalib), [saneyaml](https://docs.rs/crate/saneyaml/latest)) implement the spec, not Symfony's dialect; serde_yaml is archived | Port on `php-value` | Symfony's booleans, `0o` octals, timestamps as ints, merge keys, `!php/*` tags, flags and messages are its own |
+| Regex for ported PCRE patterns (owner, November 19) | `regex` 1.13 (RE2-style, linear time, no backtracking) vs hand-written matchers vs `fancy-regex` (lookaround, backtracking) | `regex`; patterns without its features (Yaml's `(?<!:):(?!:)` delimiter) matched by hand | Upstream patterns translate one for one and stay comparable; linear time rules out ReDoS; possessive quantifiers become greedy where the following class excludes what they consume |
+| EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+
+- [ ] EventDispatcher. Ported: `EventDispatcher.php`,
+      `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
+      `GenericEvent.php`, `ImmutableEventDispatcher.php`, the contracts'
+      `Event.php` / `EventDispatcherInterface.php` (crates
+      `symfony-event-dispatcher`, `symfony-event-dispatcher-contracts`),
+      and behind the `debug` feature `Debug/WrappedListener.php` and
+      `Debug/TraceableEventDispatcher.php`: 114 of 140 upstream tests,
+      plus oracle vectors for what the tests leave open
+      (`scripts/record.sh event-dispatcher`). Pending: the DI passes and
+      `#[AsEventListener]` (26 tests), which belong to M3's container
+      compiler.
+- [x] psr/log (`psr-log`, pinned 3.0.2 from the demo's lock file):
+      LoggerInterface, LogLevel, NullLogger. No upstream tests.
+      symfony-http-kernel keeps its own dispatcher until M2: its events
+      borrow the request, and type-erased events must be `'static`.
+- [x] Stopwatch (`symfony-stopwatch`): all 33 upstream tests; in
+      `parity/done.txt`. StopwatchEventTest runs on a mocked clock, as
+      upstream's `time-sensitive` group does. The PHP built-ins it needs
+      (`round()`, `(int)`, `%d`, `%.2F`) are checked against 3,000+ vectors
+      (`scripts/record.sh stopwatch`). `memory_get_usage()` has no Rust
+      equivalent: the default host reports 0, and a host can supply a figure.
+      `round()` is written from behaviour (no PHP source, per decision 8):
+      half away from zero with half-way points computed as doubles. On
+      171,025 recorded values it matches PHP below `2^52 / 10` and differs
+      on 122 above it (crate README, "Differences"). Compared: rounding the
+      shortest decimal form (3,270 differ, from 7e13) and php2rust's
+      `php-rt` `round()` (14,571 differ, from 2.35: it implements the
+      pre-8.4 15-digit pre-rounding, a php2rust bug to report).
+- [ ] Yaml (`symfony-yaml`, values in `php-value`). Ported: every file
+      but `Command/LintCommand.php` (after Console): 329 of 342 upstream
+      tests, 2 `n/a` with their reasons in the manifest, 11 pending
+      (LintCommandTest). ParserTest, DumperTest, YamlTest and
+      YamlTestSuiteTest replay every call each upstream test makes to the
+      parser and the dumper, recorded on the oracle while the upstream
+      test runs and passes (`oracle/recorders/yaml_test_calls.php`);
+      YamlTestSuiteTest runs on yaml-test-suite at the commit symfony/yaml
+      pins (`upstream.tsv`), 200 cases, upstream's skip list.
 
 ## Verification
 

@@ -1,0 +1,20 @@
+[package]
+name = "symfony-event-dispatcher"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Port of the symfony/event-dispatcher component"
+
+[features]
+# TraceableEventDispatcher and WrappedListener (Symfony's dev-only Debug namespace).
+debug = ["dep:symfony-stopwatch", "dep:psr-log"]
+
+[dependencies]
+symfony-event-dispatcher-contracts = { path = "../event-dispatcher-contracts" }
+symfony-stopwatch = { path = "../stopwatch", optional = true }
+psr-log = { path = "../psr-log", optional = true }
+
+[dev-dependencies]
+# The tests cover the Debug namespace too.
+symfony-event-dispatcher = { path = ".", features = ["debug"] }

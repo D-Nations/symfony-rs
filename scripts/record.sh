@@ -3,6 +3,10 @@
 #
 #   scripts/record.sh routing      crates/routing/tests/data/matcher.json
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
+#   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
+#   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
+#   scripts/record.sh php-value    crates/php-value/tests/data/php.json
+#   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -31,9 +35,74 @@ routing() {
 
 multipart() { python oracle/recorders/multipart.py; }
 
+event_dispatcher() {
+    local out=crates/event-dispatcher/tests/data/edges.txt tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/event_dispatcher_edges.php > "$tmp"
+    mv "$tmp" "$out"
+    echo "$(wc -l < "$out") EventDispatcher lines written to $out"
+}
+
+stopwatch() {
+    local out=crates/stopwatch/tests/data/php.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/stopwatch.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Stopwatch vectors written to $out"
+}
+
+php_value() {
+    local out=crates/php-value/tests/data/php.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_value.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "PHP value vectors written to $out"
+}
+
+yaml() {
+    local name out tmp
+    mkdir -p oracle/out crates/yaml/tests/data
+    for name in escaping timestamps; do
+        out=crates/yaml/tests/data/$name.json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/yaml_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Yaml $name vectors written to $out"
+    done
+    for class in InlineTest; do
+        name=$(echo "$class" | sed 's/Test$//' | tr '[:upper:]' '[:lower:]')
+        out=crates/yaml/tests/data/${name}_test.json
+        tmp=$(mktemp -p oracle/out)
+        oracle oracle/recorders/yaml_test_providers.php "$class" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Yaml $class providers written to $out"
+    done
+    # YamlTestSuiteTest needs the suite: scripts/fetch-upstream.sh
+    for class in ParserTest DumperTest YamlTest YamlTestSuiteTest; do
+        name=$(echo "$class" | sed -E 's/([a-z])([A-Z])/\1_\2/g' | tr '[:upper:]' '[:lower:]')
+        out=crates/yaml/tests/data/${name}.json
+        tmp=$(mktemp -p oracle/out)
+        oracle oracle/recorders/yaml_test_calls.php "$class" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Yaml $class calls written to $out"
+    done
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
-    all) routing; multipart ;;
-    *) echo "usage: scripts/record.sh routing|multipart|all" >&2; exit 2 ;;
+    event-dispatcher) event_dispatcher ;;
+    stopwatch) stopwatch ;;
+    php-value) php_value ;;
+    yaml) yaml ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|all" >&2; exit 2 ;;
 esac

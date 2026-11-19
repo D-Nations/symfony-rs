@@ -33,6 +33,12 @@ of real PHP running it. **Read upstream, never edit it.**
 
 ## Behaviour rules
 
+- No PHP source code in this repository, under any licence (php-src
+  included, even its BSD-3-Clause branch; PLAN.md decision 8). PHP's own
+  behaviour is learned by running it in a container and from its
+  documentation, then written independently. Symfony, Twig and Doctrine
+  sources (MIT/BSD) are the specification and are ported as before.
+
 - Copy behaviour, not style. If PHP behaviour is surprising, keep it and pin
   it with a test. If it cannot be kept, stop and record it under "Decisions
   for the owner" in PLAN.md rather than choosing silently.
@@ -72,6 +78,21 @@ checks and page comparison against this checkout (its `[patch]` override).
 An unexplained difference is a failure, not a note. Do not weaken, skip or
 delete a test or comparison rule to get a pass; if a check is wrong, say so
 and ask. Debug builds only.
+
+## Running PHP
+
+- Never install PHP, Composer or PHP extensions on the host. PHP runs only
+  in a container, removed when it exits (`--rm`).
+- Anything that loads the pinned packages or produces a vector or a test
+  expectation runs in the oracle image (`oracle/`): its PHP version, libc
+  and extensions are what the recorded vectors mean. Add to that image only
+  what a recorder needs.
+- A quick check of plain PHP behaviour that loads no packages may use the
+  smallest official image of the pinned version instead, e.g.
+  `docker run --rm -i php:8.4.27-cli-alpine php < probe.php`. Its answer is
+  a lead, not evidence: confirm in the oracle before relying on it.
+- Mount repositories read-only. Probe scripts go through stdin or into the
+  ignored `oracle/out/`, never into `upstream/` or `../symfony-demo`.
 
 ## Upstream advisories
 

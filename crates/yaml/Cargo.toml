@@ -1,0 +1,15 @@
+[package]
+name = "symfony-yaml"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Port of the symfony/yaml component"
+
+[dependencies]
+php-value = { path = "../php-value" }
+regex = "1.13.2"
+
+[dev-dependencies]
+php-value = { path = "../php-value", features = ["vectors"] }
+serde_json = { version = "1.0.154", features = ["unbounded_depth"] }
