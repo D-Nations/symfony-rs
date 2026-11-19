@@ -382,6 +382,25 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       the Rust code is unaffected. Pins stay at the demo's `composer.lock`
       (the demo original is read-only); moving them is a version move.
 
+## M1 progress
+
+Stack rows (searched November 19):
+
+| Component | Options compared | Choice | Reason |
+|---|---|---|---|
+| EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+
+- [ ] EventDispatcher. Ported: `EventDispatcher.php`,
+      `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
+      `GenericEvent.php`, `ImmutableEventDispatcher.php` and the contracts'
+      `Event.php` / `EventDispatcherInterface.php` (crates
+      `symfony-event-dispatcher`, `symfony-event-dispatcher-contracts`):
+      78 of 140 upstream tests, plus oracle vectors for what the tests
+      leave open (`scripts/record.sh event-dispatcher`). Pending: Debug
+      (36 tests, needs Stopwatch) and the DI passes (26 tests, M3).
+      symfony-http-kernel keeps its own dispatcher until M2: its events
+      borrow the request, and type-erased events must be `'static`.
+
 ## Verification
 
 - Per component: manifest has no `pending` rows (CI-enforced); upstream tests

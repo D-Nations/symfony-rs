@@ -405,6 +405,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-event-dispatcher"
+version = "0.1.0"
+dependencies = [
+ "symfony-event-dispatcher-contracts",
+]
+
+[[package]]
+name = "symfony-event-dispatcher-contracts"
+version = "0.1.0"
+
+[[package]]
 name = "symfony-http-foundation"
 version = "0.1.0"
 dependencies = [

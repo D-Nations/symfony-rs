@@ -3,6 +3,7 @@
 #
 #   scripts/record.sh routing      crates/routing/tests/data/matcher.json
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
+#   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -31,9 +32,19 @@ routing() {
 
 multipart() { python oracle/recorders/multipart.py; }
 
+event_dispatcher() {
+    local out=crates/event-dispatcher/tests/data/edges.txt tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/event_dispatcher_edges.php > "$tmp"
+    mv "$tmp" "$out"
+    echo "$(wc -l < "$out") EventDispatcher lines written to $out"
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
-    all) routing; multipart ;;
-    *) echo "usage: scripts/record.sh routing|multipart|all" >&2; exit 2 ;;
+    event-dispatcher) event_dispatcher ;;
+    all) routing; multipart; event_dispatcher ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|all" >&2; exit 2 ;;
 esac

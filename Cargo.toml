@@ -1,5 +1,7 @@
 [workspace]
 members = [
+    "crates/event-dispatcher-contracts",
+    "crates/event-dispatcher",
     "crates/http-foundation",
     "crates/routing",
     "crates/http-kernel",

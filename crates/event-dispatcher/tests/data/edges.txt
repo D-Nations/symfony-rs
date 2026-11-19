@@ -1,0 +1,35 @@
+closure == closure from one declaration: false
+$o(...) == $o->__invoke(...): true
+$o(...) == $o->__INVOKE(...): true
+$o(...) == $p(...): false
+$o(...) == $o->preFoo(...): false
+# Symfony\Component\EventDispatcher\EventDispatcher
+kept after removing another closure: true
+events after sorting post first: post,pre
+events after adding to pre: post,pre
+priority before sorting: -5
+priority after sorting: 7
+listeners after removing both: false
+default event name: Symfony\Contracts\EventDispatcher\Event
+stdClass listeners called: 2
+thrown: boom
+later listener called: false
+Error: Call to undefined method O::nope()
+added during dispatch: first,second
+next dispatch: first,second,added
+removed during dispatch: first,later
+# Child
+kept after removing another closure: true
+events after sorting post first: post,pre
+events after adding to pre: post,pre
+priority before sorting: -5
+priority after sorting: 7
+listeners after removing both: false
+default event name: Symfony\Contracts\EventDispatcher\Event
+stdClass listeners called: 2
+thrown: boom
+later listener called: false
+Error: Call to undefined method O::nope()
+added during dispatch: first,second
+next dispatch: first,second,added
+removed during dispatch: first,later
