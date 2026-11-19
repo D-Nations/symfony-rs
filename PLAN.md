@@ -503,6 +503,11 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       (profiler headers and toolbar) or `test` (mock sessions), or wait
       for an upstream fix.
 
+    **Owner, November 19:** both recommendations accepted. The EasyAdmin
+    demo is the second app; it is recorded with its own lock; the oracle
+    copy applies `oracle/apps/easyadmin-demo/prod-boot.patch` (the two
+    Doctrine lines) and nothing else.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -669,8 +674,8 @@ Stack rows (searched November 19):
       inventoried in `prod` with the two-line Doctrine overlay
       ([docs/acceptance/second-app.md](docs/acceptance/second-app.md):
       142 routes, 872 services, ranked component work, first workflow W1).
-      Pending, in order: the owner's answer on decision 10's two points,
-      then recording W1; the request provenance rewrite, because
+      Decision 10 accepted by the owner. Pending, in order: the request
+      provenance rewrite (started), because
       `symfony-routing` links `symfony-http-foundation`; then the fixture
       (pinned PHP app,
       recorded responses, hand-authored generated-code-shaped Rust crate,

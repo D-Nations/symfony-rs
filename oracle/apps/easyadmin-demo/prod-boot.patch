@@ -1,0 +1,14 @@
+# Applied to the oracle copy only (PLAN.md decision 10): DoctrineBundle 3
+# removed these options, so APP_ENV=prod fails to boot at the pinned commit.
+diff --git a/config/packages/doctrine.yaml b/config/packages/doctrine.yaml
+--- a/config/packages/doctrine.yaml
++++ b/config/packages/doctrine.yaml
+@@ -30,8 +30,6 @@ when@test:
+ when@prod:
+     doctrine:
+         orm:
+-            auto_generate_proxy_classes: false
+-            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+             query_cache_driver:
+                 type: pool
+                 pool: doctrine.system_cache_pool
