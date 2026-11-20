@@ -16,6 +16,14 @@ if (!$package || !$class) {
     exit(2);
 }
 $tests = "/work/upstream/$package/Tests";
+// Parent test cases and fixtures of the package's own Tests namespace
+// (e.g. symfony/string's AbstractUnicodeTestCase).
+spl_autoload_register(static function (string $name) use ($tests): void {
+    $at = strpos($name, '\\Tests\\');
+    if (false !== $at && is_file($file = $tests . '/' . str_replace('\\', '/', substr($name, $at + 7)) . '.php')) {
+        require_once $file;
+    }
+});
 require_once "$tests/$class.php";
 
 $namespace = null;
