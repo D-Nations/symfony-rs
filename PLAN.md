@@ -337,6 +337,16 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    HttpFoundation in M2, or earlier if the owner prefers); where PHP's
    behaviour cannot be matched that way, the difference is recorded.
 
+12. **`callable` allowed type (OptionsResolver).** PHP's `is_callable()`
+    accepts function-name strings (`'strlen'`) and `[object, 'method']`
+    arrays; `php-value` has no function or method table, so
+    `symfony-options-resolver` treats only closures as callable and
+    rejects such strings and arrays where PHP accepts them. No upstream
+    test or recorded case uses them. Recommended: keep this until the
+    converter can emit a function/method registry, then answer
+    `is_callable()` from it. Alternative: refuse a `callable` allowed type
+    at build time.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -414,6 +424,7 @@ Stack rows (searched November 19):
 | Regex for ported PCRE patterns (owner, November 19) | `regex` 1.13 (RE2-style, linear time, no backtracking) vs hand-written matchers vs `fancy-regex` (lookaround, backtracking) | `regex`; patterns without its features (Yaml's `(?<!:):(?!:)` delimiter) matched by hand | Upstream patterns translate one for one and stay comparable; linear time rules out ReDoS; possessive quantifiers become greedy where the following class excludes what they consume |
 | Dotenv | [dotenvy](https://crates.io/crates/dotenvy), [dotenvs](https://docs.rs/crate/dotenvs/0.2.1/source/README.md) (`${VAR:-default}`), [zenv](https://github.com/numToStr/zenv) (expansion only in double quotes), [dotenvx](https://docs.rs/crate/dotenvx/0.1.0) (encryption, shell commands): other parsers and expansion rules | Port on `php-value`, no dependency | None has Symfony's syntax errors, `.env.local` / `.env.$env` layering, `SYMFONY_DOTENV_VARS`, deferred cross-file resolution or `$_ENV` / `$_SERVER` / `getenv()` precedence |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+| OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
@@ -460,6 +471,13 @@ Stack rows (searched November 19):
       read as dump-env's literal array, not run. Upstream loops forever on
       a value ending in `$(`; the port fails instead (crate README,
       "Differences"). Pending: the two commands (19 tests) after Console.
+
+- [x] OptionsResolver (`symfony-options-resolver`): every file, all 234
+      upstream tests (providers replayed from the oracle), plus 360
+      recorded edge cases (`scripts/record.sh options-resolver`); in
+      `parity/done.txt`. Closures receive the resolver as a shared handle;
+      reflection on default closures is the caller's `DefaultValue::Lazy`.
+      `is_callable()` covers closures only (decision 12).
 
 ## Verification
 
