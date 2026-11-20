@@ -12,6 +12,8 @@
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
+#   scripts/record.sh console      crates/console/tests/data/strip_tags.json
+#   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,unicode_string_test}.json
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
@@ -148,6 +150,35 @@ config() {
     echo "Config Builder vectors written to $out"
 }
 
+console() {
+    local out=crates/console/tests/data/strip_tags.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/console_strip_tags.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Console strip_tags vectors written to $out"
+}
+
+string() {
+    local out tmp name
+    mkdir -p oracle/out crates/string/tests/data
+    for name in unicode wordwrap; do
+        out=crates/string/tests/data/$name.json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/string_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+        mv "$tmp" "$out"
+        echo "String $name vectors written to $out"
+    done
+    out=crates/string/tests/data/unicode_string_test.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/test_providers.php symfony/string UnicodeStringTest > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "String UnicodeStringTest providers written to $out"
+}
+
 css_selector() {
     local out=crates/css-selector/tests/data/php.json tmp
     mkdir -p oracle/out "$(dirname "$out")"
@@ -200,9 +231,11 @@ case "${1:-}" in
     yaml) yaml ;;
     dotenv) dotenv ;;
     config) config ;;
+    string) string ;;
+    console) console ;;
     css-selector) css_selector ;;
     options-resolver) options_resolver ;;
     finder) finder ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; css_selector; options_resolver; finder ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|string|console|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
 esac
