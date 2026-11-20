@@ -9,6 +9,7 @@
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
+#   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -125,6 +126,23 @@ css_selector() {
     echo "CssSelector providers and vectors written to $out"
 }
 
+options_resolver() {
+    local out tmp
+    mkdir -p oracle/out crates/options-resolver/tests/data
+    out=crates/options-resolver/tests/data/options_resolver_test.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/test_providers.php symfony/options-resolver OptionsResolverTest > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "OptionsResolver OptionsResolverTest providers written to $out"
+    out=crates/options-resolver/tests/data/edges.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/options_resolver_edges.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "OptionsResolver edge cases written to $out"
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -134,6 +152,7 @@ case "${1:-}" in
     yaml) yaml ;;
     dotenv) dotenv ;;
     css-selector) css_selector ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; css_selector ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|css-selector|all" >&2; exit 2 ;;
+    options-resolver) options_resolver ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; css_selector; options_resolver ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|css-selector|options-resolver|all" >&2; exit 2 ;;
 esac

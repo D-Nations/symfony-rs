@@ -1,3 +1,4 @@
 # Packages whose manifests must have no pending rows (scripts/parity-check.sh).
 symfony/stopwatch
 symfony/css-selector
+symfony/options-resolver
