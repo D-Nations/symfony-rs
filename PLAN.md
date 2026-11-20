@@ -337,6 +337,15 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    HttpFoundation in M2, or earlier if the owner prefers); where PHP's
    behaviour cannot be matched that way, the difference is recorded.
 
+12. **Finder's dates (`DateComparator`).** `new \DateTimeImmutable($s)`
+    is PHP's whole date/time grammar. Recommended: the subset in
+    `crates/finder/src/date.rs` (ISO dates and times, `@timestamp`,
+    `now`/`today`/`yesterday`/..., relative amounts with `ago`, `last`,
+    `next`; UTC), checked on 37 recorded strings, refusing anything else
+    with its own message. Alternative: port the full grammar (month and
+    weekday names, time zones, ordinals) into `php-value` now, where
+    DI's `%env()%` and Twig's `date()` will need it later.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -414,6 +423,7 @@ Stack rows (searched November 19):
 | Regex for ported PCRE patterns (owner, November 19) | `regex` 1.13 (RE2-style, linear time, no backtracking) vs hand-written matchers vs `fancy-regex` (lookaround, backtracking) | `regex`; patterns without its features (Yaml's `(?<!:):(?!:)` delimiter) matched by hand | Upstream patterns translate one for one and stay comparable; linear time rules out ReDoS; possessive quantifiers become greedy where the following class excludes what they consume |
 | Dotenv | [dotenvy](https://crates.io/crates/dotenvy), [dotenvs](https://docs.rs/crate/dotenvs/0.2.1/source/README.md) (`${VAR:-default}`), [zenv](https://github.com/numToStr/zenv) (expansion only in double quotes), [dotenvx](https://docs.rs/crate/dotenvx/0.1.0) (encryption, shell commands): other parsers and expansion rules | Port on `php-value`, no dependency | None has Symfony's syntax errors, `.env.local` / `.env.$env` layering, `SYMFONY_DOTENV_VARS`, deferred cross-file resolution or `$_ENV` / `$_SERVER` / `getenv()` precedence |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+| Finder (searched November 20) | No Rust port of Symfony Finder. Walkers: [walkdir](https://docs.rs/walkdir) (depth-first, sorting, symlink loops), [ignore](https://docs.rs/ignore) (ripgrep's walker with its own gitignore rules and parallelism), [jwalk](https://docs.rs/jwalk); globs: [globset](https://docs.rs/globset), [glob](https://docs.rs/glob), [wax](https://docs.rs/wax). Regex for the PCRE patterns Finder builds and accepts (`Glob`/`Gitignore` emit lookaround, possessive quantifiers, `$f`): `regex` (no lookaround), [fancy-regex](https://docs.rs/fancy-regex) 0.20 (backtracking, lookaround, atomic and possessive, a bytes mode with ASCII classes), [pcre2](https://docs.rs/pcre2) (FFI, excluded by decision 5) | Port, walking with `std::fs`; `fancy-regex` under a PHP-pattern translator (`crates/finder/src/pcre.rs`) | Finder's order of filters and stat calls (pinned by upstream's stream-wrapper log tests), stream wrappers, `SplFileInfo` relative paths, its own gitignore regexes and Glob's regex text are its behaviour, so no walker or glob crate reproduces them. `fancy-regex` is the regex engine decision 5 names for lookaround; the translator keeps PCRE's meaning (bytes without `/u`, `$` before a final newline, `/x`, `/U`, `/n`, literal `{`) and refuses what it does not translate; checked on 137 patterns x 62 subjects recorded from PHP |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,

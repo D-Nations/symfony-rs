@@ -8,6 +8,7 @@
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
+#   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -114,6 +115,19 @@ dotenv() {
     echo "Dotenv parse vectors written to $out"
 }
 
+finder() {
+    local name out tmp
+    mkdir -p oracle/out crates/finder/tests/data
+    for name in providers vectors; do
+        out=crates/finder/tests/data/$([[ $name == vectors ]] && echo php || echo providers).json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/finder_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Finder $name written to $out"
+    done
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -122,6 +136,7 @@ case "${1:-}" in
     php-value) php_value ;;
     yaml) yaml ;;
     dotenv) dotenv ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|all" >&2; exit 2 ;;
+    finder) finder ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; finder ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|finder|all" >&2; exit 2 ;;
 esac
