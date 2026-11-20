@@ -54,6 +54,19 @@ impl Input {
         )
     }
 
+    /// `new ArgvInput(null, $definition)`: the tokens come from
+    /// `$_SERVER['argv']`. Tokens are `String`s here, so an argument that
+    /// is not UTF-8 is refused (PHP would keep its bytes).
+    pub fn argv_from_server(definition: Option<InputDefinition>) -> Result<Self> {
+        let argv = crate::env::server_argv().map_err(|arg| {
+            ConsoleError::Runtime(format!(
+                "Argument values expected to be UTF-8, got {arg:?}."
+            ))
+        })?;
+        let argv: Vec<&str> = argv.iter().map(String::as_str).collect();
+        Self::argv(&argv, definition)
+    }
+
     /// `CompletionInput`'s base: tokens as given, parse errors ignored.
     pub(crate) fn completion(tokens: Vec<String>) -> Self {
         Self {

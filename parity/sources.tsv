@@ -97,11 +97,13 @@ crates/console/src/output/output.rs	symfony/console	Output/OutputInterface.php	6
 crates/console/src/output/output.rs	symfony/console	Output/StreamOutput.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/src/output/output.rs	symfony/console	Output/BufferedOutput.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/src/terminal.rs	symfony/console	Terminal.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
+crates/console/tests/completion_input.rs	symfony/console	Tests/Completion/CompletionInputTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/formatter.rs	symfony/console	Tests/Formatter/OutputFormatterTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/formatter.rs	symfony/console	Tests/Formatter/OutputFormatterStyleTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/formatter.rs	symfony/console	Tests/Formatter/OutputFormatterStyleStackTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/input_argument_option.rs	symfony/console	Tests/Input/InputArgumentTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/input_argument_option.rs	symfony/console	Tests/Input/InputOptionTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
+crates/console/tests/input_argv.rs	symfony/console	Tests/Input/ArgvInputTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/input_array.rs	symfony/console	Tests/Input/InputTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/input_array.rs	symfony/console	Tests/Input/ArrayInputTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/tests/input_definition.rs	symfony/console	Tests/Input/InputDefinitionTest.php	630e74196a2635ec0f06c12bd3fb47cfedf85157

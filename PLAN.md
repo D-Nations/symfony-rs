@@ -511,6 +511,15 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     copy applies `oracle/apps/easyadmin-demo/prod-boot.patch` (the two
     Doctrine lines) and nothing else.
 
+11. **Non-UTF-8 command-line arguments (M1-B).** PHP's `$_SERVER['argv']`
+    holds bytes; `symfony-console`'s ArgvInput tokens are `String`s, so
+    `Input::argv_from_server()` refuses an argument that is not UTF-8
+    (for example a Latin-1 file name passed to `lint:yaml`) with a
+    `RuntimeException`, where PHP would accept it. Recommended: keep the
+    refusal for M1-B (none of the recorded vectors uses such a name) and
+    move tokens to `PhpString` when Console is completed in M7.
+    Alternative: move them now, before the commands are ported.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of

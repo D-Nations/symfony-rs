@@ -12,7 +12,7 @@ endorsed by Symfony. The rest of Console is M7 work; its manifest rows stay
 | Styles: colors, bright colors, hex colors by color mode, options, hyperlinks (not on JetBrains JediTerm, old Konsole or IDEA) | `Formatter/OutputFormatterStyle.php`, `Color.php`, `Output/AnsiColorMode.php` | OutputFormatterStyleTest (5 of 5) |
 | Style stack: push, pop, pop to a matching style, nesting errors | `Formatter/OutputFormatterStyleStack.php` | OutputFormatterStyleStackTest (5 of 5) |
 | Output: verbosity levels and per-message verbosity, `OUTPUT_NORMAL` / `RAW` / `PLAIN` (PHP's `strip_tags()` written from the manual), decoration, buffered and stream outputs, color support detection (`NO_COLOR`, `FORCE_COLOR`, TTY, `TERM`) | `Output/Output.php`, `Output/StreamOutput.php`, `Output/BufferedOutput.php` | OutputTest (11 of 11), StreamOutputTest (4 of 6, 2 `n/a`); `strip_tags()` on 6,137 calls recorded from PHP |
-| Input: arguments and options (modes, defaults, shortcuts, negation, suggested values, deprecations), definitions and synopsis, ArrayInput parsing, `getFirstArgument()`, `hasParameterOption()` / `getParameterOption()`, `__toString()`, `unparse()`; ArgvInput and CompletionInput parsing are ported, their tests not yet | `Input/*.php`, `Completion/CompletionInput.php`, `Completion/CompletionSuggestions.php`, `Completion/Suggestion.php` | InputArgumentTest (15 of 15), InputOptionTest (24 of 24), InputDefinitionTest (32 of 32), InputTest (11 of 12), ArrayInputTest (8 of 8) |
+| Input: arguments and options (modes, defaults, shortcuts, negation, suggested values, deprecations), definitions and synopsis, ArrayInput and ArgvInput parsing (tokens from a list or `$_SERVER['argv']`), `getFirstArgument()`, `hasParameterOption()` / `getParameterOption()`, `getRawTokens()`, `__toString()`, `unparse()`; CompletionInput: tokens from a list or a string, what is being completed | `Input/*.php`, `Completion/CompletionInput.php`, `Completion/CompletionSuggestions.php`, `Completion/Suggestion.php` | InputArgumentTest (15 of 15), InputOptionTest (24 of 24), InputDefinitionTest (32 of 32), InputTest (11 of 12), ArrayInputTest (8 of 8), ArgvInputTest (23 of 23), CompletionInputTest (5 of 5) |
 | Color mode from `COLORTERM` / `TERM`; width and height from `COLUMNS` / `LINES`, else `stty -a` | `Terminal.php` | Formatter tests; `stty` parsing unit test |
 | `Helper::width()`, `length()`, `substr()`, `removeDecoration()` | `Helper/Helper.php` | Through the formatter and style tests |
 
@@ -28,6 +28,12 @@ endorsed by Symfony. The rest of Console is M7 work; its manifest rows stay
   every system (`stty -a` for the terminal size).
 
 ## Differences
+
+- ArgvInput tokens are UTF-8 `String`s. A non-scalar token (upstream's
+  "Argument values expected to be all scalars" row) cannot be written,
+  and a process argument that is not UTF-8 is refused by
+  `Input::argv_from_server()` where PHP would keep its bytes (PLAN.md,
+  Decisions for the owner).
 
 - The truecolor row of `testInlineStyleOptions` runs only when `COLORTERM`
   is `truecolor`, as upstream's does; it is skipped elsewhere.

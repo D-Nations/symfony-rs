@@ -359,11 +359,11 @@ Tests/CommandLoader/FactoryCommandLoaderTest.php	FactoryCommandLoaderTest::testG
 Tests/CommandLoader/FactoryCommandLoaderTest.php	FactoryCommandLoaderTest::testGetCommandNames	pending	
 Tests/CommandLoader/FactoryCommandLoaderTest.php	FactoryCommandLoaderTest::testGetUnknownCommandThrows	pending	
 Tests/CommandLoader/FactoryCommandLoaderTest.php	FactoryCommandLoaderTest::testHas	pending	
-Tests/Completion/CompletionInputTest.php	CompletionInputTest::testBind	pending	
-Tests/Completion/CompletionInputTest.php	CompletionInputTest::testBindArgumentWithDefault	pending	
-Tests/Completion/CompletionInputTest.php	CompletionInputTest::testBindWithLastArrayArgument	pending	
-Tests/Completion/CompletionInputTest.php	CompletionInputTest::testFromString	pending	
-Tests/Completion/CompletionInputTest.php	CompletionInputTest::testToString	pending	
+Tests/Completion/CompletionInputTest.php	CompletionInputTest::testBind	ported	crates/console/tests/completion_input.rs::testBind
+Tests/Completion/CompletionInputTest.php	CompletionInputTest::testBindArgumentWithDefault	ported	crates/console/tests/completion_input.rs::testBindArgumentWithDefault
+Tests/Completion/CompletionInputTest.php	CompletionInputTest::testBindWithLastArrayArgument	ported	crates/console/tests/completion_input.rs::testBindWithLastArrayArgument
+Tests/Completion/CompletionInputTest.php	CompletionInputTest::testFromString	ported	crates/console/tests/completion_input.rs::testFromString
+Tests/Completion/CompletionInputTest.php	CompletionInputTest::testToString	ported	crates/console/tests/completion_input.rs::testToString
 Tests/Completion/Output/BashCompletionOutputTest.php	BashCompletionOutputTest::testOptionsOutput	pending	
 Tests/Completion/Output/BashCompletionOutputTest.php	BashCompletionOutputTest::testValuesOutput	pending	
 Tests/Completion/Output/FishCompletionOutputTest.php	FishCompletionOutputTest::testOptionsOutput	pending	
@@ -768,29 +768,29 @@ Tests/Helper/TreeStyleTest.php	TreeStyleTest::testDefaultStyle	pending
 Tests/Helper/TreeStyleTest.php	TreeStyleTest::testLightStyle	pending	
 Tests/Helper/TreeStyleTest.php	TreeStyleTest::testMinimalStyle	pending	
 Tests/Helper/TreeStyleTest.php	TreeStyleTest::testRoundedStyle	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testConstructor	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetFirstArgument	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetParameterOptionEqualSign	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetRawTokensFalse	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetRawTokensTrue	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testHasParameterOption	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testHasParameterOptionEdgeCasesAndLimitations	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testHasParameterOptionOnlyOptions	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testInvalidInput	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testInvalidInputNegatable	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testNoWarningOnInvalidParameterOption	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseArguments	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseArrayArgument	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseArrayOption	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseEmptyStringArgument	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseNegativeNumberAfterDoubleDash	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptionWithValueOptionalGivenEmptyAndOptionalArgument	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptionWithValueOptionalGivenEmptyAndRequiredArgument	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptions	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptionsNegatable	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseSingleDashAsArgument	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testToString	pending	
-Tests/Input/ArgvInputTest.php	ArgvInputTest::testUnparse	pending	
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testConstructor	ported	crates/console/tests/input_argv.rs::testConstructor
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetFirstArgument	ported	crates/console/tests/input_argv.rs::testGetFirstArgument
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetParameterOptionEqualSign	ported	crates/console/tests/input_argv.rs::testGetParameterOptionEqualSign
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetRawTokensFalse	ported	crates/console/tests/input_argv.rs::testGetRawTokensFalse
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testGetRawTokensTrue	ported	crates/console/tests/input_argv.rs::testGetRawTokensTrue
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testHasParameterOption	ported	crates/console/tests/input_argv.rs::testHasParameterOption
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testHasParameterOptionEdgeCasesAndLimitations	ported	crates/console/tests/input_argv.rs::testHasParameterOptionEdgeCasesAndLimitations
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testHasParameterOptionOnlyOptions	ported	crates/console/tests/input_argv.rs::testHasParameterOptionOnlyOptions
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testInvalidInput	ported	crates/console/tests/input_argv.rs::testInvalidInput
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testInvalidInputNegatable	ported	crates/console/tests/input_argv.rs::testInvalidInputNegatable
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testNoWarningOnInvalidParameterOption	ported	crates/console/tests/input_argv.rs::testNoWarningOnInvalidParameterOption
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseArguments	ported	crates/console/tests/input_argv.rs::testParseArguments
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseArrayArgument	ported	crates/console/tests/input_argv.rs::testParseArrayArgument
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseArrayOption	ported	crates/console/tests/input_argv.rs::testParseArrayOption
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseEmptyStringArgument	ported	crates/console/tests/input_argv.rs::testParseEmptyStringArgument
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseNegativeNumberAfterDoubleDash	ported	crates/console/tests/input_argv.rs::testParseNegativeNumberAfterDoubleDash
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptionWithValueOptionalGivenEmptyAndOptionalArgument	ported	crates/console/tests/input_argv.rs::testParseOptionWithValueOptionalGivenEmptyAndOptionalArgument
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptionWithValueOptionalGivenEmptyAndRequiredArgument	ported	crates/console/tests/input_argv.rs::testParseOptionWithValueOptionalGivenEmptyAndRequiredArgument
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptions	ported	crates/console/tests/input_argv.rs::testParseOptions
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptionsNegatable	ported	crates/console/tests/input_argv.rs::testParseOptionsNegatable
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseSingleDashAsArgument	ported	crates/console/tests/input_argv.rs::testParseSingleDashAsArgument
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testToString	ported	crates/console/tests/input_argv.rs::testToString
+Tests/Input/ArgvInputTest.php	ArgvInputTest::testUnparse	ported	crates/console/tests/input_argv.rs::testUnparse
 Tests/Input/ArrayInputTest.php	ArrayInputTest::testGetFirstArgument	ported	crates/console/tests/input_array.rs::testGetFirstArgument
 Tests/Input/ArrayInputTest.php	ArrayInputTest::testGetParameterOption	ported	crates/console/tests/input_array.rs::testGetParameterOption
 Tests/Input/ArrayInputTest.php	ArrayInputTest::testHasParameterOption	ported	crates/console/tests/input_array.rs::testHasParameterOption

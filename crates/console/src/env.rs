@@ -16,6 +16,8 @@ struct Overlay {
     /// `putenv('NAME=value')` is `Some(value)`, `putenv('NAME')` is `None`.
     env: HashMap<String, Option<String>>,
     server: HashMap<String, Option<String>>,
+    /// `$_SERVER['argv']` when a caller set it.
+    argv: Option<Vec<String>>,
 }
 
 thread_local! {
@@ -52,4 +54,18 @@ pub fn set_server(name: &str, value: Option<&str>) {
             .server
             .insert(name.to_owned(), value.map(str::to_owned));
     });
+}
+
+/// `$_SERVER['argv']`: the process's arguments, unless a caller set them.
+/// An argument that is not UTF-8 is returned as the error.
+pub fn server_argv() -> std::result::Result<Vec<String>, std::ffi::OsString> {
+    if let Some(argv) = OVERLAY.with(|o| o.borrow().argv.clone()) {
+        return Ok(argv);
+    }
+    std::env::args_os().map(|arg| arg.into_string()).collect()
+}
+
+/// `$_SERVER['argv'] = $argv`; `None` reads the process's arguments again.
+pub fn set_server_argv(argv: Option<Vec<String>>) {
+    OVERLAY.with(|o| o.borrow_mut().argv = argv);
 }
