@@ -519,6 +519,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     refusal for M1-B (none of the recorded vectors uses such a name) and
     move tokens to `PhpString` when Console is completed in M7.
     Alternative: move them now, before the commands are ported.
+
 12. **`callable` allowed type (OptionsResolver).** PHP's `is_callable()`
     accepts function-name strings (`'strlen'`) and `[object, 'method']`
     arrays; `php-value` has no function or method table, so
@@ -528,6 +529,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     converter can emit a function/method registry, then answer
     `is_callable()` from it. Alternative: refuse a `callable` allowed type
     at build time.
+
 13. **Finder's dates (`DateComparator`).** `new \DateTimeImmutable($s)`
     is PHP's whole date/time grammar. Recommended: the subset in
     `crates/finder/src/date.rs` (ISO dates and times, `@timestamp`,
