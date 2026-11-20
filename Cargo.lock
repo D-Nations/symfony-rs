@@ -455,6 +455,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-css-selector"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "regex",
+ "serde_json",
+]
+
+[[package]]
 name = "symfony-dotenv"
 version = "0.1.0"
 dependencies = [
