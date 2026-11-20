@@ -5,6 +5,8 @@
 //! Upstream: none
 #![allow(dead_code)]
 
+pub mod fixture;
+
 use php_value::{Value, vectors::decode};
 use serde_json::Value as Json;
 

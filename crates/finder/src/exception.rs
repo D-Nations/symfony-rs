@@ -23,6 +23,8 @@ pub enum Error {
     UnexpectedValue(String),
     /// `\LogicException`.
     Logic(String),
+    /// `\OutOfRangeException`.
+    OutOfRange(String),
     /// `\RuntimeException`.
     Runtime(String),
     /// A pattern PHP accepts that this port does not translate (pcre.rs).
@@ -40,6 +42,7 @@ impl Error {
             Self::AccessDenied(_) => r"Symfony\Component\Finder\Exception\AccessDeniedException",
             Self::UnexpectedValue(_) => "UnexpectedValueException",
             Self::Logic(_) => "LogicException",
+            Self::OutOfRange(_) => "OutOfRangeException",
             Self::Runtime(_) => "RuntimeException",
             Self::UnsupportedPattern(_) => "symfony_finder::UnsupportedPattern",
         }
@@ -65,6 +68,7 @@ impl Error {
             | Self::AccessDenied(m)
             | Self::UnexpectedValue(m)
             | Self::Logic(m)
+            | Self::OutOfRange(m)
             | Self::Runtime(m)
             | Self::UnsupportedPattern(m) => m,
         }
