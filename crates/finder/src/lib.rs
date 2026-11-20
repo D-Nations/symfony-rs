@@ -13,11 +13,15 @@ struct ReadmeExample;
 pub mod comparator;
 mod date;
 pub mod exception;
+mod gitignore;
+mod glob;
 pub mod pcre;
 pub mod php;
 
 pub use comparator::{Comparator, DateComparator, NumberComparator, Operator};
 pub use exception::Error;
+pub use gitignore::Gitignore;
+pub use glob::Glob;
 
 /// One value or a list, as Finder's `string|array` parameters take them.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]

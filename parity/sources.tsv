@@ -27,8 +27,12 @@ crates/finder/src/comparator/mod.rs	symfony/finder	Comparator/Comparator.php	2f4
 crates/finder/src/comparator/number_comparator.rs	symfony/finder	Comparator/NumberComparator.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/src/exception.rs	symfony/finder	Exception/AccessDeniedException.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/src/exception.rs	symfony/finder	Exception/DirectoryNotFoundException.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/src/gitignore.rs	symfony/finder	Gitignore.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/src/glob.rs	symfony/finder	Glob.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/comparator.rs	symfony/finder	Tests/Comparator/ComparatorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/date_comparator.rs	symfony/finder	Tests/Comparator/DateComparatorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/tests/gitignore.rs	symfony/finder	Tests/GitignoreTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/tests/glob.rs	symfony/finder	Tests/GlobTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/number_comparator.rs	symfony/finder	Tests/Comparator/NumberComparatorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeader.php	79325f87c3a2acc7564ddce9f457046e980e7255

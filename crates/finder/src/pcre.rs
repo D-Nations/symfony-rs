@@ -16,6 +16,8 @@
 //!
 //! Upstream: none
 
+mod nesting;
+
 use std::fmt;
 
 use fancy_regex::{BytesMode, RegexBuilder};
@@ -106,6 +108,9 @@ impl Pcre {
                 "UTF-8 error: the pattern is not valid UTF-8".into(),
             ));
         }
+        // fancy-regex parses at most 64 nested groups, PCRE 250
+        let flattened = if flags.x { None } else { nesting::reduce(body) };
+        let body = flattened.as_deref().unwrap_or(body);
         let mut t = Translator {
             p: body,
             pos: 0,

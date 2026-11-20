@@ -179,3 +179,48 @@ fn dates_match_php() {
         );
     }
 }
+
+#[test]
+fn glob_to_regex_matches_php() {
+    let json = php_json();
+    let mut failures = Vec::new();
+    for row in json["glob"].as_array().into_iter().flatten() {
+        let glob = b64(&row[0]);
+        let delimiter = row[3].as_str().unwrap_or_default().bytes().next();
+        let actual = symfony_finder::Glob::to_regex(
+            &glob,
+            row[1].as_bool().unwrap_or_default(),
+            row[2].as_bool().unwrap_or_default(),
+            delimiter,
+        );
+        let expected = b64(&row[4]);
+        if actual != expected {
+            failures.push(format!(
+                "{:?} {row}: PHP {:?}, Rust {:?}",
+                String::from_utf8_lossy(&glob),
+                String::from_utf8_lossy(&expected),
+                String::from_utf8_lossy(&actual)
+            ));
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
+#[test]
+fn gitignore_to_regex_matches_php() {
+    let json = php_json();
+    for row in json["gitignore"].as_array().into_iter().flatten() {
+        let line = b64(&row[0]);
+        let name = String::from_utf8_lossy(&line).into_owned();
+        assert_eq!(
+            symfony_finder::Gitignore::to_regex(&line).ok(),
+            Some(b64(&row[1])),
+            "{name:?}"
+        );
+        assert_eq!(
+            symfony_finder::Gitignore::to_regex_matching_negated_patterns(&line).ok(),
+            Some(b64(&row[2])),
+            "{name:?}"
+        );
+    }
+}

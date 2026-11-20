@@ -88,22 +88,22 @@ Tests/FinderTest.php	FinderTest::testSortByNameNatural	pending
 Tests/FinderTest.php	FinderTest::testSortByType	pending	
 Tests/FinderTest.php	FinderTest::testSymlinksNotResolved	pending	
 Tests/FinderTest.php	FinderTest::testUseUnixPaths	pending	
-Tests/GitignoreTest.php	GitignoreTest::testToRegex	pending	
-Tests/GitignoreTest.php	GitignoreTest::testToRegexMatchingNegatedPatterns	pending	
-Tests/GitignoreTest.php	GitignoreTest::testToRegexWithMorePatternsThanTheRegexNestingLimit	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexBracketExpressions	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexBracketsAfterAnUnclosedOne	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexCurliesInsideBrackets	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexDelimiters	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexDoubleStarMatchesRootFiles	pending	
+Tests/GitignoreTest.php	GitignoreTest::testToRegex	ported	crates/finder/tests/gitignore.rs::testToRegex
+Tests/GitignoreTest.php	GitignoreTest::testToRegexMatchingNegatedPatterns	ported	crates/finder/tests/gitignore.rs::testToRegexMatchingNegatedPatterns
+Tests/GitignoreTest.php	GitignoreTest::testToRegexWithMorePatternsThanTheRegexNestingLimit	ported	crates/finder/tests/gitignore.rs::testToRegexWithMorePatternsThanTheRegexNestingLimit
+Tests/GlobTest.php	GlobTest::testGlobToRegexBracketExpressions	ported	crates/finder/tests/glob.rs::testGlobToRegexBracketExpressions
+Tests/GlobTest.php	GlobTest::testGlobToRegexBracketsAfterAnUnclosedOne	ported	crates/finder/tests/glob.rs::testGlobToRegexBracketsAfterAnUnclosedOne
+Tests/GlobTest.php	GlobTest::testGlobToRegexCurliesInsideBrackets	ported	crates/finder/tests/glob.rs::testGlobToRegexCurliesInsideBrackets
+Tests/GlobTest.php	GlobTest::testGlobToRegexDelimiters	ported	crates/finder/tests/glob.rs::testGlobToRegexDelimiters
+Tests/GlobTest.php	GlobTest::testGlobToRegexDoubleStarMatchesRootFiles	ported	crates/finder/tests/glob.rs::testGlobToRegexDoubleStarMatchesRootFiles
 Tests/GlobTest.php	GlobTest::testGlobToRegexDoubleStarNonStrictDots	pending	
 Tests/GlobTest.php	GlobTest::testGlobToRegexDoubleStarStrictDots	pending	
 Tests/GlobTest.php	GlobTest::testGlobToRegexDoubleStarWithoutLeadingSlash	pending	
 Tests/GlobTest.php	GlobTest::testGlobToRegexDoubleStarWithoutLeadingSlashNotStrictLeadingDot	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexEscapedBrackets	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexMergesConsecutiveStarsWhenWildcardsCrossSlashes	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexUnclosedBrackets	pending	
-Tests/GlobTest.php	GlobTest::testGlobToRegexUnclosedCurlies	pending	
+Tests/GlobTest.php	GlobTest::testGlobToRegexEscapedBrackets	ported	crates/finder/tests/glob.rs::testGlobToRegexEscapedBrackets
+Tests/GlobTest.php	GlobTest::testGlobToRegexMergesConsecutiveStarsWhenWildcardsCrossSlashes	ported	crates/finder/tests/glob.rs::testGlobToRegexMergesConsecutiveStarsWhenWildcardsCrossSlashes
+Tests/GlobTest.php	GlobTest::testGlobToRegexUnclosedBrackets	ported	crates/finder/tests/glob.rs::testGlobToRegexUnclosedBrackets
+Tests/GlobTest.php	GlobTest::testGlobToRegexUnclosedCurlies	ported	crates/finder/tests/glob.rs::testGlobToRegexUnclosedCurlies
 Tests/Iterator/CustomFilterIteratorTest.php	CustomFilterIteratorTest::testAccept	pending	
 Tests/Iterator/CustomFilterIteratorTest.php	CustomFilterIteratorTest::testWithInvalidFilter	pending	
 Tests/Iterator/DateRangeFilterIteratorTest.php	DateRangeFilterIteratorTest::testAccept	pending	
