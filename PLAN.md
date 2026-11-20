@@ -337,7 +337,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    HttpFoundation in M2, or earlier if the owner prefers); where PHP's
    behaviour cannot be matched that way, the difference is recorded.
 
-12. **Finder's dates (`DateComparator`).** `new \DateTimeImmutable($s)`
+13. **Finder's dates (`DateComparator`).** `new \DateTimeImmutable($s)`
     is PHP's whole date/time grammar. Recommended: the subset in
     `crates/finder/src/date.rs` (ISO dates and times, `@timestamp`,
     `now`/`today`/`yesterday`/..., relative amounts with `ago`, `last`,
@@ -475,7 +475,7 @@ Stack rows (searched November 19):
       139 of 143 upstream tests, 4 `n/a` with reasons; in
       `parity/done.txt`. PHP patterns run on `fancy-regex` through a
       PCRE translator checked on recorded `preg_match` answers; the
-      date grammar is a subset (decision 12). No advisories listed for
+      date grammar is a subset (decision 13). No advisories listed for
       symfony/finder.
 ## Verification
 

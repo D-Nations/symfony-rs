@@ -47,7 +47,7 @@ and `finder_vectors.php` on PHP 8.4.27.
   `ago`, `last`, `next`), in UTC. Other formats PHP accepts (month and
   weekday names, time zones, ordinals) are refused with
   `"..." is not a valid date, or not a date format this port supports.`
-  (PLAN.md, decision 12).
+  (PLAN.md, decision 13).
 - PCRE features the translator does not handle are refused with
   `Error::UnsupportedPattern` (recursion, conditionals, verbs, `\K`,
   `\X`, `\C`, branch reset, callouts, `/J`, `/r`, POSIX classes under
