@@ -1,0 +1,16 @@
+parameters:
+    app.greeting: Hello
+    app.max_length: 12
+    app.tags: [converter, fixture]
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Fixture\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/Service/Greeting.php'
+            - '../src/Service/GreetingException.php'

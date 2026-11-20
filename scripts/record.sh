@@ -5,6 +5,7 @@
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
 #   scripts/record.sh request-vars crates/http-foundation/tests/data/{query,cookie,content_type}_vectors.json
 #   scripts/record.sh second-app-w1 oracle/apps/easyadmin-demo/w1.json (second app, W1)
+#   scripts/record.sh converter-fixture oracle/apps/converter-fixture/responses.json (M1-D fixture)
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
@@ -47,6 +48,8 @@ second_app_w1() {
     SECOND_APP_BASH=$(cygpath -w "$BASH" 2>/dev/null || printf '%s' "$BASH") \
         python oracle/recorders/second_app_w1.py
 }
+
+converter_fixture() { python oracle/recorders/converter_fixture.py; }
 
 event_dispatcher() {
     local out=crates/event-dispatcher/tests/data/edges.txt tmp
@@ -147,6 +150,7 @@ case "${1:-}" in
     multipart) multipart ;;
     request-vars) request_vars ;;
     second-app-w1) second_app_w1 ;;
+    converter-fixture) converter_fixture ;;
     event-dispatcher) event_dispatcher ;;
     stopwatch) stopwatch ;;
     php-value) php_value ;;
@@ -154,5 +158,5 @@ case "${1:-}" in
     dotenv) dotenv ;;
     config) config ;;
     all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|all" >&2; exit 2 ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|all" >&2; exit 2 ;;
 esac

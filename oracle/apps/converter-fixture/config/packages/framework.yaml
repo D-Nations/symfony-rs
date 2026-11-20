@@ -1,0 +1,9 @@
+framework:
+    secret: converter-fixture-oracle-only
+    http_method_override: false
+    handle_all_throwables: true
+    session: false
+    router:
+        utf8: true
+    php_errors:
+        log: true
