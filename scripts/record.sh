@@ -12,6 +12,7 @@
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
+#   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,unicode_string_test}.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -145,6 +146,25 @@ config() {
     echo "Config Builder vectors written to $out"
 }
 
+string() {
+    local out tmp name
+    mkdir -p oracle/out crates/string/tests/data
+    for name in unicode wordwrap; do
+        out=crates/string/tests/data/$name.json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/string_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+        mv "$tmp" "$out"
+        echo "String $name vectors written to $out"
+    done
+    out=crates/string/tests/data/unicode_string_test.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/test_providers.php symfony/string UnicodeStringTest > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "String UnicodeStringTest providers written to $out"
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -157,6 +177,7 @@ case "${1:-}" in
     yaml) yaml ;;
     dotenv) dotenv ;;
     config) config ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|all" >&2; exit 2 ;;
+    string) string ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|string|all" >&2; exit 2 ;;
 esac

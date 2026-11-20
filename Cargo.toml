@@ -3,6 +3,7 @@ members = [
     "crates/event-dispatcher-contracts",
     "crates/event-dispatcher",
     "crates/stopwatch",
+    "crates/string",
     "crates/psr-log",
     "crates/php-value",
     "crates/yaml",

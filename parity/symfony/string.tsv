@@ -194,7 +194,7 @@ Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterLast	pending
 Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterLastIgnoreCase	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testBytesAt	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testCamel	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testChunk	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testChunk	ported	crates/string/tests/unicode_string_test.rs::testChunk
 Tests/UnicodeStringTest.php	UnicodeStringTest::testCodePointsAt	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testCollapseWhitespace	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testContainsAny	pending	
@@ -220,7 +220,7 @@ Tests/UnicodeStringTest.php	UnicodeStringTest::testIsEmpty	pending
 Tests/UnicodeStringTest.php	UnicodeStringTest::testJoin	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testJoinWithLastGlue	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testKebab	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testLength	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testLength	ported	crates/string/tests/unicode_string_test.rs::testLength
 Tests/UnicodeStringTest.php	UnicodeStringTest::testLocaleLower	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testLocaleTitle	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testLocaleUpper	pending	
@@ -238,7 +238,7 @@ Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceMatches	pending
 Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceWithInvalidUtf8Pattern	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceWithInvalidUtf8PatternReplacement	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testReverse	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testSlice	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testSlice	ported	crates/string/tests/unicode_string_test.rs::testSlice
 Tests/UnicodeStringTest.php	UnicodeStringTest::testSnake	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testSplice	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testSpliceMultibyte	pending	
@@ -262,6 +262,6 @@ Tests/UnicodeStringTest.php	UnicodeStringTest::testTruncate	pending
 Tests/UnicodeStringTest.php	UnicodeStringTest::testUnserializeRejectsObjectInTypedStringProperty	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testUnwrap	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testUpper	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testWidth	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testWordwrap	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testWidth	ported	crates/string/tests/unicode_string_test.rs::testWidth
+Tests/UnicodeStringTest.php	UnicodeStringTest::testWordwrap	ported	crates/string/tests/unicode_string_test.rs::testWordwrap
 Tests/UnicodeStringTest.php	UnicodeStringTest::testWrap	pending	

@@ -15,6 +15,8 @@ function typed_value(mixed $v): array
         $v instanceof \DateTimeInterface => ['datetime', $v->format('Y-m-d\TH:i:s.uP'), $v->getTimezone()->getName(), $v->format('U')],
         $v instanceof \ArrayObject => ['arrayobject', typed_pairs($v->getArrayCopy())],
         $v instanceof \Symfony\Component\Yaml\Tag\TaggedValue => ['tagged', $v->getTag(), typed_value($v->getValue())],
+        // symfony/string's objects keep their text in a protected property
+        $v instanceof \Symfony\Component\String\AbstractString => ['object', $v::class, [[typed_value('string'), typed_value((string) $v)]]],
         \is_object($v) => ['object', $v::class, typed_pairs(get_object_vars($v))],
         default => ['unsupported', get_debug_type($v)],
     };
