@@ -47,6 +47,8 @@ crates/finder/src/iterator/vcs_ignored_filter_iterator.rs	symfony/finder	Iterato
 crates/finder/src/spl_file_info.rs	symfony/finder	SplFileInfo.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/comparator.rs	symfony/finder	Tests/Comparator/ComparatorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/date_comparator.rs	symfony/finder	Tests/Comparator/DateComparatorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/tests/finder.rs	symfony/finder	Tests/FinderTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/tests/finder.rs	symfony/finder	Tests/Iterator/VfsIteratorTestTrait.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/gitignore.rs	symfony/finder	Tests/GitignoreTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/glob.rs	symfony/finder	Tests/GlobTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/iterator_filters.rs	symfony/finder	Tests/Iterator/CustomFilterIteratorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
