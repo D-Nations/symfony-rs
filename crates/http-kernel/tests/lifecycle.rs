@@ -565,3 +565,55 @@ async fn exception_replacement_and_handling_stop_lower_priority_listeners() -> T
     assert_eq!(text(response).await?, "replacement");
     Ok(())
 }
+
+#[tokio::test]
+async fn exception_listeners_can_inspect_an_application_throwable() -> TestResult {
+    #[derive(Debug)]
+    struct Domain;
+    impl std::fmt::Display for Domain {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.write_str("domain failure")
+        }
+    }
+    impl std::error::Error for Domain {}
+    struct Unprocessable;
+    impl Listener<()> for Unprocessable {
+        fn exception(&self, event: &mut ExceptionEvent<'_>) -> Result<(), Exception> {
+            let exception = &*event.exception;
+            if !exception.is_http()
+                && exception
+                    .throwable
+                    .as_ref()
+                    .is_some_and(|t| t.downcast_ref::<Domain>().is_some())
+            {
+                let body = exception.detail.clone();
+                event.set_response((StatusCode::UNPROCESSABLE_ENTITY, body).into_response());
+            }
+            Ok(())
+        }
+    }
+    let mut kernel = Kernel::default();
+    kernel.add_listener(0, Unprocessable);
+    let response = kernel
+        .handle(
+            request(),
+            |_| Ok(()),
+            |_, ()| async { Err(Exception::from_throwable(Domain)) },
+        )
+        .await?;
+    assert_eq!(response.status(), StatusCode::UNPROCESSABLE_ENTITY);
+    assert_eq!(text(response).await?, "domain failure");
+    assert!(failure().is_http());
+    let unhandled = Kernel::<()>::default()
+        .handle(
+            request(),
+            |_| Ok(()),
+            |_, ()| async { Err(Exception::from_throwable(Domain)) },
+        )
+        .await;
+    assert_eq!(
+        unhandled.err().map(|e| e.status),
+        Some(StatusCode::INTERNAL_SERVER_ERROR)
+    );
+    Ok(())
+}

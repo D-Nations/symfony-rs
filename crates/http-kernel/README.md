@@ -48,6 +48,7 @@ assert_eq!(response.headers()["x-content-type-options"], "nosniff");
 | Response modification or replacement, including early and handled-error responses | `HttpKernel::filterResponse`, `ResponseEvent` | Selected upstream response-listener test and focused lifecycle test |
 | Explicit failures from request, resolver, controller hooks, invocation or response filtering enter exception hooks | `HttpKernel::handle`, `handleThrowable` | Stage-by-stage failure test |
 | Exception replacement; setting a response stops that event | `ExceptionEvent`, `RequestEvent` | Replacement/propagation test |
+| A non-HTTP exception (`Exception::from_throwable`) reaches exception listeners as a 500 that they can downcast, as `ExceptionEvent::getThrowable()` allows; `is_http()` is `instanceof HttpExceptionInterface` | `HttpKernel::handleThrowable`, `ExceptionEvent::getThrowable` | Throwable-inspection test; converter fixture's 422 case |
 | A successful exception response inherits the failure's status and headers unless custom codes are allowed; redirects and existing error responses keep their status | `HttpKernel::handleThrowable` | Upstream handling, redirection, HTTP exception and custom-status tests |
 | Failure in exception listeners propagates; failure filtering an already handled error does not recursively dispatch exceptions | `HttpKernel::handleThrowable` | Stage failure test |
 | Higher priorities first; ties retain registration order; stop affects only its event | `EventDispatcher::sortListeners`, `callListeners` | Priority/order and per-event propagation tests |
