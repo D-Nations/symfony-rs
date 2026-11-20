@@ -414,6 +414,7 @@ Stack rows (searched November 19):
 | Regex for ported PCRE patterns (owner, November 19) | `regex` 1.13 (RE2-style, linear time, no backtracking) vs hand-written matchers vs `fancy-regex` (lookaround, backtracking) | `regex`; patterns without its features (Yaml's `(?<!:):(?!:)` delimiter) matched by hand | Upstream patterns translate one for one and stay comparable; linear time rules out ReDoS; possessive quantifiers become greedy where the following class excludes what they consume |
 | Dotenv | [dotenvy](https://crates.io/crates/dotenvy), [dotenvs](https://docs.rs/crate/dotenvs/0.2.1/source/README.md) (`${VAR:-default}`), [zenv](https://github.com/numToStr/zenv) (expansion only in double quotes), [dotenvx](https://docs.rs/crate/dotenvx/0.1.0) (encryption, shell commands): other parsers and expansion rules | Port on `php-value`, no dependency | None has Symfony's syntax errors, `.env.local` / `.env.$env` layering, `SYMFONY_DOTENV_VARS`, deferred cross-file resolution or `$_ENV` / `$_SERVER` / `getenv()` precedence |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+| CssSelector (searched November 20) | No Rust port of Symfony CssSelector or Python cssselect. [css-to-xpath](https://docs.rs/css-to-xpath) (Servo's `selectors`/`cssparser`, its own XPath shapes, Generic/Html/Xhtml modes, no nested `:has()`); [selectors](https://docs.rs/selectors) / [scraper](https://docs.rs/scraper) (match against a DOM, no XPath); scrapling's translator (cssselect-like, tied to its crate); cssifier / xcss (XPath to CSS, the other direction) | Port on `php-value` and `regex` (bytes, `(?-u)`), no new dependency | None produces Symfony's XPath strings, node string forms, specificity, `ParseException` texts with token positions, PHP truthiness (`"0"`), byte-wise patterns or the LRU cache |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
@@ -460,6 +461,13 @@ Stack rows (searched November 19):
       read as dump-env's literal array, not run. Upstream loops forever on
       a value ending in `$(`; the port fails instead (crate README,
       "Differences"). Pending: the two commands (19 tests) after Console.
+
+- [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
+      upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath
+      with libxml; no XPath engine under decision 9) whose 191 rows'
+      XPath strings are checked against PHP's; every data provider
+      replayed from the oracle (`scripts/record.sh css-selector`) plus 233
+      recorded cases; in `parity/done.txt`.
 
 ## Verification
 
