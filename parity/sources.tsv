@@ -1,4 +1,5 @@
 # rust file	package	upstream path	reference
+crates/deprecation-contracts/src/lib.rs	symfony/deprecation-contracts	function.php	f3202fa1b5097b0af062dc978b32ecf63404e31d
 crates/dotenv/src/dotenv.rs	symfony/dotenv	Dotenv.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/exception.rs	symfony/dotenv	Exception/ExceptionInterface.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/exception.rs	symfony/dotenv	Exception/FormatException.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
