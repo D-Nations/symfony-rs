@@ -14,6 +14,9 @@
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
 #   scripts/record.sh console      crates/console/tests/data/strip_tags.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,unicode_string_test}.json
+#   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
+#   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
+#   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -176,6 +179,46 @@ string() {
     echo "String UnicodeStringTest providers written to $out"
 }
 
+css_selector() {
+    local out=crates/css-selector/tests/data/php.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/css_selector.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "CssSelector providers and vectors written to $out"
+}
+
+options_resolver() {
+    local out tmp
+    mkdir -p oracle/out crates/options-resolver/tests/data
+    out=crates/options-resolver/tests/data/options_resolver_test.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/test_providers.php symfony/options-resolver OptionsResolverTest > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "OptionsResolver OptionsResolverTest providers written to $out"
+    out=crates/options-resolver/tests/data/edges.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/options_resolver_edges.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "OptionsResolver edge cases written to $out"
+}
+
+finder() {
+    local name out tmp
+    mkdir -p oracle/out crates/finder/tests/data
+    for name in providers vectors; do
+        out=crates/finder/tests/data/$([[ $name == vectors ]] && echo php || echo providers).json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/finder_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Finder $name written to $out"
+    done
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -190,6 +233,9 @@ case "${1:-}" in
     config) config ;;
     string) string ;;
     console) console ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|string|console|all" >&2; exit 2 ;;
+    css-selector) css_selector ;;
+    options-resolver) options_resolver ;;
+    finder) finder ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|string|console|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
 esac
