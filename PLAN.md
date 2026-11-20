@@ -482,6 +482,24 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    with its location. Needed at `XmlUtils` (Config stage 4); the parser
    comes first, validation after.
 
+12. **`callable` allowed type (OptionsResolver).** PHP's `is_callable()`
+    accepts function-name strings (`'strlen'`) and `[object, 'method']`
+    arrays; `php-value` has no function or method table, so
+    `symfony-options-resolver` treats only closures as callable and
+    rejects such strings and arrays where PHP accepts them. No upstream
+    test or recorded case uses them. Recommended: keep this until the
+    converter can emit a function/method registry, then answer
+    `is_callable()` from it. Alternative: refuse a `callable` allowed type
+    at build time.
+13. **Finder's dates (`DateComparator`).** `new \DateTimeImmutable($s)`
+    is PHP's whole date/time grammar. Recommended: the subset in
+    `crates/finder/src/date.rs` (ISO dates and times, `@timestamp`,
+    `now`/`today`/`yesterday`/..., relative amounts with `ago`, `last`,
+    `next`; UTC), checked on 37 recorded strings, refusing anything else
+    with its own message. Alternative: port the full grammar (month and
+    weekday names, time zones, ordinals) into `php-value` now, where
+    DI's `%env()%` and Twig's `date()` will need it later.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -568,6 +586,9 @@ Stack rows (searched November 19):
 | Config | No Rust port of Symfony Config found. Serde-struct config crates: [schematic](https://docs.rs/schematic) (per-field merge strategies, garde validation; the closest), [clapfig](https://docs.rs/crate/clapfig/latest) (layered files/env/CLI, post-merge hook), [confique](https://awesome.ecosyste.ms/projects/github.com%2Flukaskalbertodt%2Fconfique) / [einstellung](https://docs.rs/crate/einstellung/0.1.6) (derive-time defaults and validators), [rust-config-tree](https://docs.rs/crate/rust-config-tree/0.2.0) (include trees on confique + Figment), config-rs / figment (untyped layering) | Port on `php-value`, no dependency | All of them fix the schema as a Rust type. Symfony's is a node tree built in code by bundles (prototypes, `ExprBuilder` if/then rules, normalization keys, `canBeEnabled`, deep merge vs `performNoDeepMerging`, deprecations), with its own error paths and messages |
 | XML for `XmlUtils` (owner, November 19; decision 9) | [roxmltree](https://docs.rs/roxmltree) / [quick-xml](https://docs.rs/quick-xml) (parsers, no validation); libxml2 bindings (C, FFI, the real libxml but `unsafe` underneath); pure-Rust XSD: [uppsala](https://docs.rs/crate/uppsala/0.4.0) (DOM, XPath, XSD 1.1), [xsd-schema](https://docs.rs/crate/xsd-schema/0.1.0), [xmlschema](https://docs.rs/xmlschema), [fastxml](https://docs.rs/crate/fastxml/0.1.0) | Hand-written `php-dom` crate, no dependency | None reproduces libxml's error messages, levels and positions, which `XmlUtils` puts into its exception texts; FFI conflicts with no-`unsafe`; scoping validation to Symfony's schemas keeps the surface small |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+| CssSelector (searched November 20) | No Rust port of Symfony CssSelector or Python cssselect. [css-to-xpath](https://docs.rs/css-to-xpath) (Servo's `selectors`/`cssparser`, its own XPath shapes, Generic/Html/Xhtml modes, no nested `:has()`); [selectors](https://docs.rs/selectors) / [scraper](https://docs.rs/scraper) (match against a DOM, no XPath); scrapling's translator (cssselect-like, tied to its crate); cssifier / xcss (XPath to CSS, the other direction) | Port on `php-value` and `regex` (bytes, `(?-u)`), no new dependency | None produces Symfony's XPath strings, node string forms, specificity, `ParseException` texts with token positions, PHP truthiness (`"0"`), byte-wise patterns or the LRU cache |
+| OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
+| Finder (searched November 20) | No Rust port of Symfony Finder. Walkers: [walkdir](https://docs.rs/walkdir) (depth-first, sorting, symlink loops), [ignore](https://docs.rs/ignore) (ripgrep's walker with its own gitignore rules and parallelism), [jwalk](https://docs.rs/jwalk); globs: [globset](https://docs.rs/globset), [glob](https://docs.rs/glob), [wax](https://docs.rs/wax). Regex for the PCRE patterns Finder builds and accepts (`Glob`/`Gitignore` emit lookaround, possessive quantifiers, `$f`): `regex` (no lookaround), [fancy-regex](https://docs.rs/fancy-regex) 0.20 (backtracking, lookaround, atomic and possessive, a bytes mode with ASCII classes), [pcre2](https://docs.rs/pcre2) (FFI, excluded by decision 5) | Port, walking with `std::fs`; `fancy-regex` under a PHP-pattern translator (`crates/finder/src/pcre.rs`) | Finder's order of filters and stat calls (pinned by upstream's stream-wrapper log tests), stream wrappers, `SplFileInfo` relative paths, its own gitignore regexes and Glob's regex text are its behaviour, so no walker or glob crate reproduces them. `fancy-regex` is the regex engine decision 5 names for lookaround; the translator keeps PCRE's meaning (bytes without `/u`, `$` before a final newline, `/x`, `/U`, `/n`, literal `{`) and refuses what it does not translate; checked on 137 patterns x 62 subjects recorded from PHP |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
@@ -641,6 +662,25 @@ Stack rows (searched November 19):
       (Filesystem, Finder, `php-dom`, decision 9; M1-C). Their 167 rows
       stay `pending`.
 
+- [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
+      upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath
+      with libxml; no XPath engine under decision 9) whose 191 rows'
+      XPath strings are checked against PHP's; every data provider
+      replayed from the oracle (`scripts/record.sh css-selector`) plus 233
+      recorded cases; in `parity/done.txt`.
+- [x] OptionsResolver (`symfony-options-resolver`): every file, all 234
+      upstream tests (providers replayed from the oracle), plus 360
+      recorded edge cases (`scripts/record.sh options-resolver`); in
+      `parity/done.txt`. Closures receive the resolver as a shared handle;
+      reflection on default closures is the caller's `DefaultValue::Lazy`.
+      `is_callable()` covers closures only (decision 12).
+
+- [x] Finder (`symfony-finder`, pilot November 20): every PHP file;
+      139 of 143 upstream tests, 4 `n/a` with reasons; in
+      `parity/done.txt`. PHP patterns run on `fancy-regex` through a
+      PCRE translator checked on recorded `preg_match` answers; the
+      date grammar is a subset (decision 13). No advisories listed for
+      symfony/finder.
 ## Verification
 
 - Per complete package: manifest has no `pending` rows (CI-enforced);

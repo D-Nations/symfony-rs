@@ -12,6 +12,9 @@ members = [
     "crates/http-foundation",
     "crates/routing",
     "crates/http-kernel",
+    "crates/css-selector",
+    "crates/options-resolver",
+    "crates/finder",
     "examples/request-lab",
 ]
 resolver = "3"
