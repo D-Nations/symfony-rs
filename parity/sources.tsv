@@ -64,6 +64,9 @@ crates/finder/tests/iterator_filters.rs	symfony/finder	Tests/Iterator/MockSplFil
 crates/finder/tests/iterator_filters.rs	symfony/finder	Tests/Iterator/RealIteratorTestCase.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/iterator_filters.rs	symfony/finder	Tests/Iterator/IteratorTestCase.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/tests/number_comparator.rs	symfony/finder	Tests/Comparator/NumberComparatorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/tests/recursive_directory_iterator.rs	symfony/finder	Tests/Iterator/RecursiveDirectoryIteratorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/tests/sortable_iterator.rs	symfony/finder	Tests/Iterator/SortableIteratorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
+crates/finder/tests/vcs_ignored_filter_iterator.rs	symfony/finder	Tests/Iterator/VcsIgnoredFilterIteratorTest.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeader.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeaderItem.php	79325f87c3a2acc7564ddce9f457046e980e7255

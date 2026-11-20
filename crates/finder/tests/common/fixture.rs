@@ -58,11 +58,24 @@ pub const FILES: [&str; 23] = [
 
 /// `touch($path, $time)`.
 pub fn touch(path: &str, time: Option<SystemTime>) {
-    let file = fs::OpenOptions::new()
-        .create(true)
-        .append(true)
+    let is_dir = fs::metadata(path).is_ok_and(|m| m.is_dir());
+    let mut options = fs::OpenOptions::new();
+    if is_dir {
+        #[cfg(windows)]
+        {
+            use std::os::windows::fs::OpenOptionsExt;
+            // FILE_WRITE_ATTRIBUTES, FILE_FLAG_BACKUP_SEMANTICS
+            options.access_mode(0x100).custom_flags(0x0200_0000);
+        }
+        #[cfg(not(windows))]
+        options.read(true);
+    } else {
+        options.create(true).append(true);
+    }
+    let file = options
         .open(path)
         .unwrap_or_else(|e| panic!("touch {path}: {e}"));
+    let time = time.or_else(|| is_dir.then(SystemTime::now));
     if let Some(t) = time {
         file.set_times(fs::FileTimes::new().set_accessed(t).set_modified(t))
             .unwrap_or_else(|e| panic!("touch {path}: {e}"));

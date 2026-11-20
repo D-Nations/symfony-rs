@@ -54,8 +54,13 @@ impl SplFileInfo {
         relative_path: impl Into<Vec<u8>>,
         relative_pathname: impl Into<Vec<u8>>,
     ) -> Self {
+        // \SplFileInfo drops trailing slashes
+        let mut pathname = file.into();
+        while pathname.len() > 1 && pathname.ends_with(b"/") {
+            pathname.pop();
+        }
         Self {
-            pathname: file.into(),
+            pathname,
             relative_path: relative_path.into(),
             relative_pathname: relative_pathname.into(),
             stat: OnceLock::new(),
@@ -66,7 +71,10 @@ impl SplFileInfo {
     /// A PHP `\SplFileInfo` turned into this class as Finder::append()
     /// does: `new SplFileInfo($path, $file->getPath(), $path)`.
     pub fn from_path(path: impl Into<Vec<u8>>) -> Self {
-        let path = path.into();
+        let mut path = path.into();
+        while path.len() > 1 && path.ends_with(b"/") {
+            path.pop();
+        }
         let dir = php_get_path(&path).to_vec();
         Self::new(path.clone(), dir, path)
     }
