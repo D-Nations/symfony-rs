@@ -13,5 +13,6 @@ members = [
     "crates/routing",
     "crates/http-kernel",
     "examples/request-lab",
+    "fixtures/converter-app",
 ]
 resolver = "3"

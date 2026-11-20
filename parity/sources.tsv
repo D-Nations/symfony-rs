@@ -144,3 +144,14 @@ crates/yaml/tests/parse_exception.rs	symfony/yaml	Tests/ParseExceptionTest.php	6
 crates/yaml/tests/parser_test.rs	symfony/yaml	Tests/ParserTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/yaml_test.rs	symfony/yaml	Tests/YamlTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/yaml_test_suite_test.rs	symfony/yaml	Tests/YamlTestSuiteTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+fixtures/converter-app/src/runtime/framework_bundle.rs	symfony/framework-bundle	Controller/RedirectController.php	2332352f43f6689c3b1289ca0bb324c006f906c3
+fixtures/converter-app/src/runtime/framework_bundle.rs	symfony/framework-bundle	Routing/RedirectableCompiledUrlMatcher.php	2332352f43f6689c3b1289ca0bb324c006f906c3
+fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
+fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	InputBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
+fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	Response.php	79325f87c3a2acc7564ddce9f457046e980e7255
+fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	ResponseHeaderBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
+fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	RedirectResponse.php	79325f87c3a2acc7564ddce9f457046e980e7255
+fixtures/converter-app/src/runtime/listeners.rs	symfony/http-kernel	EventListener/RouterListener.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
+fixtures/converter-app/src/runtime/listeners.rs	symfony/http-kernel	EventListener/ResponseListener.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
+fixtures/converter-app/src/runtime/listeners.rs	symfony/http-kernel	Exception/MethodNotAllowedHttpException.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
+fixtures/converter-app/src/runtime/listeners.rs	symfony/routing	RequestContext.php	41b32d2c5d907abe2c3ffaa7a112dd7492353822

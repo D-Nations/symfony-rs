@@ -43,7 +43,7 @@ while IFS= read -r file; do
             printf '%s\t%s\t%s\t%s\n' "$file" "$package" "$path" "$ref" >> "$tmp"
         done
     done <<< "$lines"
-done < <(git ls-files --cached --others --exclude-standard -- 'crates/*.rs' 'examples/*.rs' | sort)
+done < <(git ls-files --cached --others --exclude-standard -- 'crates/*.rs' 'examples/*.rs' 'fixtures/*.rs' | sort)
 
 if [[ "${1:-}" == "--check" ]]; then
     if ! diff -u parity/sources.tsv "$tmp"; then

@@ -1,17 +1,19 @@
-# Converter contract (provisional, version 0.1)
+# Converter contract (provisional, version 0.2)
 
 What code generated from a Symfony application may assume about this
 runtime, and what the runtime may assume about that code. It is the
 interface between the symfony2rust converter (a php2rust workstream) and
 the crates in this workspace.
 
-**Status: provisional.** Version 0.1 is written before any converter output
-exists (PLAN.md, M1-D). The converter fixture pins the version it was built
+**Status: provisional.** Version 0.1 was written before any converter
+output existed (PLAN.md, M1-D); 0.2 adds what the first fixture showed. The converter fixture pins the version it was built
 against. Each change to this document bumps the version and adds a row to
 the change log at the end. Nothing here is stable before M8.
 
-The fixture that exercises this contract is a hand-authored,
-generated-code-shaped Rust crate until symfony2rust emits it. Hand-authored
+The fixture that exercises this contract
+([fixtures/converter-app](../fixtures/converter-app), for the PHP app in
+[oracle/apps/converter-fixture](../oracle/apps/converter-fixture)) is a
+hand-authored, generated-code-shaped Rust crate until symfony2rust emits it. Hand-authored
 output proves the runtime interface only; the conversion gate stays open
 until the converter's real output builds and passes without manual edits.
 
@@ -96,7 +98,10 @@ identity maps).
 - **Application-scoped services** are built once at start-up and shared
   between concurrent requests as `Arc<T>`, where `T: Send + Sync`. A
   service is application-scoped only if the converter proves that nothing
-  writes its state after construction.
+  writes its state after construction. Its state includes every object it
+  reaches: a service with only readonly properties that holds a
+  request-scoped service is request-scoped too (the fixture's `Greeter`
+  and `VisitCounter`).
 - **Request-scoped services** are every other shared service. Each request
   builds its own instances, so one request's writes are never visible to
   another, as under PHP-FPM. They need `Send`, not `Sync`.
@@ -111,8 +116,15 @@ identity maps).
   throw. Each exception carries its class name, message, code and
   previous exception, so `getMessage()` and the error pages read the same.
 - `HttpExceptionInterface` exceptions convert into
-  `symfony_http_kernel::Exception` with their status and headers. Any
-  other uncaught exception reaches the kernel as a 500. The kernel's
+  `symfony_http_kernel::Exception::new` with their status, message and
+  headers. Any other uncaught exception reaches the kernel through
+  `Exception::from_throwable`: a 500 that keeps the original error, so
+  `kernel.exception` listeners can downcast it as PHP listeners test
+  `$event->getThrowable()` with `instanceof`; `is_http()` is
+  `instanceof HttpExceptionInterface`.
+- Request exceptions (`RequestExceptionInterface`, such as
+  `BadRequestException` from `InputBag::get()`) become 400 HTTP exceptions
+  with the same message, as `HttpKernel::handle` converts them. The kernel's
   exception listeners decide what the response says (the kernel never
   writes `detail` to a response on its own).
 - Generated code does not panic. No `unwrap` or `expect` is used on
@@ -150,3 +162,4 @@ identity maps).
 | Version | Change |
 |---|---|
 | 0.1 | First provisional contract (M1-D), before any converter output |
+| 0.2 | From the first fixture: a service's state includes the services it reaches (section 4); non-HTTP exceptions reach listeners through `Exception::from_throwable`, and request exceptions become 400s (section 5) |
