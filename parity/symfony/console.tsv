@@ -791,14 +791,14 @@ Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseOptionsNegatable	pending
 Tests/Input/ArgvInputTest.php	ArgvInputTest::testParseSingleDashAsArgument	pending	
 Tests/Input/ArgvInputTest.php	ArgvInputTest::testToString	pending	
 Tests/Input/ArgvInputTest.php	ArgvInputTest::testUnparse	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testGetFirstArgument	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testGetParameterOption	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testHasParameterOption	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testParseArguments	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testParseInvalidInput	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testParseOptions	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testToString	pending	
-Tests/Input/ArrayInputTest.php	ArrayInputTest::testUnparse	pending	
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testGetFirstArgument	ported	crates/console/tests/input_array.rs::testGetFirstArgument
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testGetParameterOption	ported	crates/console/tests/input_array.rs::testGetParameterOption
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testHasParameterOption	ported	crates/console/tests/input_array.rs::testHasParameterOption
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testParseArguments	ported	crates/console/tests/input_array.rs::testParseArguments
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testParseInvalidInput	ported	crates/console/tests/input_array.rs::testParseInvalidInput
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testParseOptions	ported	crates/console/tests/input_array.rs::testParseOptions
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testToString	ported	crates/console/tests/input_array.rs::testToString
+Tests/Input/ArrayInputTest.php	ArrayInputTest::testUnparse	ported	crates/console/tests/input_array.rs::testUnparse
 Tests/Input/File/InputFileTest.php	InputFileTest::testCleanupDoesNothingForNonTempFile	pending	
 Tests/Input/File/InputFileTest.php	InputFileTest::testCleanupRemovesTempFile	pending	
 Tests/Input/File/InputFileTest.php	InputFileTest::testFromDataCreatesTemporaryFile	pending	
@@ -823,89 +823,89 @@ Tests/Input/File/InputFileTest.php	InputFileTest::testMoveCreatesDirectory	pendi
 Tests/Input/File/InputFileTest.php	InputFileTest::testMoveNonTemporaryFileCopies	pending	
 Tests/Input/File/InputFileTest.php	InputFileTest::testMoveTemporaryFile	pending	
 Tests/Input/File/InputFileTest.php	InputFileTest::testMoveToNonWritableDirectory	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testAmbiguousRequirementSpecifierMode	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testCompleteArray	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testCompleteClosure	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testCompleteClosureReturnIncorrectType	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testConstructor	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testGetDefault	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testGetDescription	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testInvalidModes	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testIsArray	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testModes	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefault	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithArrayArgument	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithObject	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithRequiredArgument	pending	
-Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithRequiredArrayArgument	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddArgument	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddArguments	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateNegatedOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateNegatedReverseOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateShortcutOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddOptions	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testArgumentsMustHaveDifferentNames	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testArrayArgumentHasToBeLast	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testConstructorArguments	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testConstructorOptions	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgument	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgumentCount	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgumentDefaults	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgumentRequiredCount	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetInvalidArgument	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetInvalidOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionDefaults	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionForInvalidShortcut	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionForMultiShortcut	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionForShortcut	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetShortSynopsis	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetSynopsis	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testHasArgument	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testHasOption	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testHasShortcut	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testRequiredArgumentCannotFollowAnOptionalOne	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testSetArguments	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testSetOptions	pending	
-Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testSetOptionsClearsOptions	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testArrayModeWithoutValue	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testBooleanWithOptional	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testBooleanWithRequired	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testCombiningInvalidModesIsDeprecated	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testCompleteArray	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testCompleteClosure	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testCompleteClosureReturnIncorrectType	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testConstructor	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testDefaultValueWithIsArrayMode	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testDefaultValueWithNegatableMode	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testDefaultValueWithValueNoneMode	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testDoubleDashNameIsInvalid	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testEmptyNameIsInvalid	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testEquals	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testGetDefault	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testGetDescription	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testInvalidModes	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testIsArray	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testModes	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testSetDefault	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testSetDefaultWithObject	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testShortcut	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testSingleDashOptionIsInvalid	pending	
-Tests/Input/InputOptionTest.php	InputOptionTest::testSuggestedValuesErrorIfNoValue	pending	
-Tests/Input/InputTest.php	InputTest::testArguments	pending	
-Tests/Input/InputTest.php	InputTest::testConstructor	pending	
-Tests/Input/InputTest.php	InputTest::testGetInvalidArgument	pending	
-Tests/Input/InputTest.php	InputTest::testGetInvalidOption	pending	
-Tests/Input/InputTest.php	InputTest::testOptions	pending	
-Tests/Input/InputTest.php	InputTest::testSetGetInteractive	pending	
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testAmbiguousRequirementSpecifierMode	ported	crates/console/tests/input_argument_option.rs::testAmbiguousRequirementSpecifierMode
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testCompleteArray	ported	crates/console/tests/input_argument_option.rs::testCompleteArray
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testCompleteClosure	ported	crates/console/tests/input_argument_option.rs::testCompleteClosure
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testCompleteClosureReturnIncorrectType	ported	crates/console/tests/input_argument_option.rs::testCompleteClosureReturnIncorrectType
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testConstructor	ported	crates/console/tests/input_argument_option.rs::testConstructor
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testGetDefault	ported	crates/console/tests/input_argument_option.rs::testGetDefault
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testGetDescription	ported	crates/console/tests/input_argument_option.rs::testGetDescription
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testInvalidModes	ported	crates/console/tests/input_argument_option.rs::testInvalidModes
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testIsArray	ported	crates/console/tests/input_argument_option.rs::testIsArray
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testModes	ported	crates/console/tests/input_argument_option.rs::testModes
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefault	ported	crates/console/tests/input_argument_option.rs::testSetDefault
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithArrayArgument	ported	crates/console/tests/input_argument_option.rs::testSetDefaultWithArrayArgument
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithObject	ported	crates/console/tests/input_argument_option.rs::testSetDefaultWithObject
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithRequiredArgument	ported	crates/console/tests/input_argument_option.rs::testSetDefaultWithRequiredArgument
+Tests/Input/InputArgumentTest.php	InputArgumentTest::testSetDefaultWithRequiredArrayArgument	ported	crates/console/tests/input_argument_option.rs::testSetDefaultWithRequiredArrayArgument
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddArgument	ported	crates/console/tests/input_definition.rs::testAddArgument
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddArguments	ported	crates/console/tests/input_definition.rs::testAddArguments
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateNegatedOption	ported	crates/console/tests/input_definition.rs::testAddDuplicateNegatedOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateNegatedReverseOption	ported	crates/console/tests/input_definition.rs::testAddDuplicateNegatedReverseOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateOption	ported	crates/console/tests/input_definition.rs::testAddDuplicateOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddDuplicateShortcutOption	ported	crates/console/tests/input_definition.rs::testAddDuplicateShortcutOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddOption	ported	crates/console/tests/input_definition.rs::testAddOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testAddOptions	ported	crates/console/tests/input_definition.rs::testAddOptions
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testArgumentsMustHaveDifferentNames	ported	crates/console/tests/input_definition.rs::testArgumentsMustHaveDifferentNames
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testArrayArgumentHasToBeLast	ported	crates/console/tests/input_definition.rs::testArrayArgumentHasToBeLast
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testConstructorArguments	ported	crates/console/tests/input_definition.rs::testConstructorArguments
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testConstructorOptions	ported	crates/console/tests/input_definition.rs::testConstructorOptions
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgument	ported	crates/console/tests/input_definition.rs::testGetArgument
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgumentCount	ported	crates/console/tests/input_definition.rs::testGetArgumentCount
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgumentDefaults	ported	crates/console/tests/input_definition.rs::testGetArgumentDefaults
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetArgumentRequiredCount	ported	crates/console/tests/input_definition.rs::testGetArgumentRequiredCount
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetInvalidArgument	ported	crates/console/tests/input_definition.rs::testGetInvalidArgument
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetInvalidOption	ported	crates/console/tests/input_definition.rs::testGetInvalidOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOption	ported	crates/console/tests/input_definition.rs::testGetOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionDefaults	ported	crates/console/tests/input_definition.rs::testGetOptionDefaults
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionForInvalidShortcut	ported	crates/console/tests/input_definition.rs::testGetOptionForInvalidShortcut
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionForMultiShortcut	ported	crates/console/tests/input_definition.rs::testGetOptionForMultiShortcut
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetOptionForShortcut	ported	crates/console/tests/input_definition.rs::testGetOptionForShortcut
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetShortSynopsis	ported	crates/console/tests/input_definition.rs::testGetShortSynopsis
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testGetSynopsis	ported	crates/console/tests/input_definition.rs::testGetSynopsis
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testHasArgument	ported	crates/console/tests/input_definition.rs::testHasArgument
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testHasOption	ported	crates/console/tests/input_definition.rs::testHasOption
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testHasShortcut	ported	crates/console/tests/input_definition.rs::testHasShortcut
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testRequiredArgumentCannotFollowAnOptionalOne	ported	crates/console/tests/input_definition.rs::testRequiredArgumentCannotFollowAnOptionalOne
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testSetArguments	ported	crates/console/tests/input_definition.rs::testSetArguments
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testSetOptions	ported	crates/console/tests/input_definition.rs::testSetOptions
+Tests/Input/InputDefinitionTest.php	InputDefinitionTest::testSetOptionsClearsOptions	ported	crates/console/tests/input_definition.rs::testSetOptionsClearsOptions
+Tests/Input/InputOptionTest.php	InputOptionTest::testArrayModeWithoutValue	ported	crates/console/tests/input_argument_option.rs::testArrayModeWithoutValue
+Tests/Input/InputOptionTest.php	InputOptionTest::testBooleanWithOptional	ported	crates/console/tests/input_argument_option.rs::testBooleanWithOptional
+Tests/Input/InputOptionTest.php	InputOptionTest::testBooleanWithRequired	ported	crates/console/tests/input_argument_option.rs::testBooleanWithRequired
+Tests/Input/InputOptionTest.php	InputOptionTest::testCombiningInvalidModesIsDeprecated	ported	crates/console/tests/input_argument_option.rs::testCombiningInvalidModesIsDeprecated
+Tests/Input/InputOptionTest.php	InputOptionTest::testCompleteArray	ported	crates/console/tests/input_argument_option.rs::testCompleteArray_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testCompleteClosure	ported	crates/console/tests/input_argument_option.rs::testCompleteClosure_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testCompleteClosureReturnIncorrectType	ported	crates/console/tests/input_argument_option.rs::testCompleteClosureReturnIncorrectType_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testConstructor	ported	crates/console/tests/input_argument_option.rs::testConstructor_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testDefaultValueWithIsArrayMode	ported	crates/console/tests/input_argument_option.rs::testDefaultValueWithIsArrayMode
+Tests/Input/InputOptionTest.php	InputOptionTest::testDefaultValueWithNegatableMode	ported	crates/console/tests/input_argument_option.rs::testDefaultValueWithNegatableMode
+Tests/Input/InputOptionTest.php	InputOptionTest::testDefaultValueWithValueNoneMode	ported	crates/console/tests/input_argument_option.rs::testDefaultValueWithValueNoneMode
+Tests/Input/InputOptionTest.php	InputOptionTest::testDoubleDashNameIsInvalid	ported	crates/console/tests/input_argument_option.rs::testDoubleDashNameIsInvalid
+Tests/Input/InputOptionTest.php	InputOptionTest::testEmptyNameIsInvalid	ported	crates/console/tests/input_argument_option.rs::testEmptyNameIsInvalid
+Tests/Input/InputOptionTest.php	InputOptionTest::testEquals	ported	crates/console/tests/input_argument_option.rs::testEquals
+Tests/Input/InputOptionTest.php	InputOptionTest::testGetDefault	ported	crates/console/tests/input_argument_option.rs::testGetDefault_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testGetDescription	ported	crates/console/tests/input_argument_option.rs::testGetDescription_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testInvalidModes	ported	crates/console/tests/input_argument_option.rs::testInvalidModes_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testIsArray	ported	crates/console/tests/input_argument_option.rs::testIsArray_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testModes	ported	crates/console/tests/input_argument_option.rs::testModes_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testSetDefault	ported	crates/console/tests/input_argument_option.rs::testSetDefault_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testSetDefaultWithObject	ported	crates/console/tests/input_argument_option.rs::testSetDefaultWithObject_InputOption
+Tests/Input/InputOptionTest.php	InputOptionTest::testShortcut	ported	crates/console/tests/input_argument_option.rs::testShortcut
+Tests/Input/InputOptionTest.php	InputOptionTest::testSingleDashOptionIsInvalid	ported	crates/console/tests/input_argument_option.rs::testSingleDashOptionIsInvalid
+Tests/Input/InputOptionTest.php	InputOptionTest::testSuggestedValuesErrorIfNoValue	ported	crates/console/tests/input_argument_option.rs::testSuggestedValuesErrorIfNoValue
+Tests/Input/InputTest.php	InputTest::testArguments	ported	crates/console/tests/input_array.rs::testArguments
+Tests/Input/InputTest.php	InputTest::testConstructor	ported	crates/console/tests/input_array.rs::testConstructor
+Tests/Input/InputTest.php	InputTest::testGetInvalidArgument	ported	crates/console/tests/input_array.rs::testGetInvalidArgument
+Tests/Input/InputTest.php	InputTest::testGetInvalidOption	ported	crates/console/tests/input_array.rs::testGetInvalidOption
+Tests/Input/InputTest.php	InputTest::testOptions	ported	crates/console/tests/input_array.rs::testOptions
+Tests/Input/InputTest.php	InputTest::testSetGetInteractive	ported	crates/console/tests/input_array.rs::testSetGetInteractive
 Tests/Input/InputTest.php	InputTest::testSetGetStream	pending	
-Tests/Input/InputTest.php	InputTest::testSetInvalidArgument	pending	
-Tests/Input/InputTest.php	InputTest::testSetInvalidOption	pending	
-Tests/Input/InputTest.php	InputTest::testValidate	pending	
-Tests/Input/InputTest.php	InputTest::testValidateWithMissingArguments	pending	
-Tests/Input/InputTest.php	InputTest::testValidateWithMissingRequiredArguments	pending	
+Tests/Input/InputTest.php	InputTest::testSetInvalidArgument	ported	crates/console/tests/input_array.rs::testSetInvalidArgument
+Tests/Input/InputTest.php	InputTest::testSetInvalidOption	ported	crates/console/tests/input_array.rs::testSetInvalidOption
+Tests/Input/InputTest.php	InputTest::testValidate	ported	crates/console/tests/input_array.rs::testValidate
+Tests/Input/InputTest.php	InputTest::testValidateWithMissingArguments	ported	crates/console/tests/input_array.rs::testValidateWithMissingArguments
+Tests/Input/InputTest.php	InputTest::testValidateWithMissingRequiredArguments	ported	crates/console/tests/input_array.rs::testValidateWithMissingRequiredArguments
 Tests/Input/StringInputTest.php	StringInputTest::testInputOptionWithGivenString	pending	
 Tests/Input/StringInputTest.php	StringInputTest::testToString	pending	
 Tests/Input/StringInputTest.php	StringInputTest::testTokenize	pending	

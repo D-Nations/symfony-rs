@@ -6,10 +6,12 @@
 #![forbid(unsafe_code)]
 
 pub mod color;
+pub mod completion;
 pub mod env;
 pub mod exception;
 pub mod formatter;
 pub mod helper;
+pub mod input;
 pub mod output;
 pub mod php;
 pub mod terminal;
