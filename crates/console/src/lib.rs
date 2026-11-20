@@ -11,6 +11,7 @@ pub mod exception;
 pub mod formatter;
 pub mod helper;
 pub mod output;
+pub mod php;
 pub mod terminal;
 
 pub use exception::{ConsoleError, Result};

@@ -11,6 +11,7 @@ endorsed by Symfony. The rest of Console is M7 work; its manifest rows stay
 | Style tags (`<info>`, inline `fg`/`bg`/`href`/`options`, `</>`), escaping, nesting, decoration on and off, wrapping to a width by graphemes | `Formatter/OutputFormatter.php` | OutputFormatterTest (22 of 22) |
 | Styles: colors, bright colors, hex colors by color mode, options, hyperlinks (not on JetBrains JediTerm, old Konsole or IDEA) | `Formatter/OutputFormatterStyle.php`, `Color.php`, `Output/AnsiColorMode.php` | OutputFormatterStyleTest (5 of 5) |
 | Style stack: push, pop, pop to a matching style, nesting errors | `Formatter/OutputFormatterStyleStack.php` | OutputFormatterStyleStackTest (5 of 5) |
+| Output: verbosity levels and per-message verbosity, `OUTPUT_NORMAL` / `RAW` / `PLAIN` (PHP's `strip_tags()` written from the manual), decoration, buffered and stream outputs, color support detection (`NO_COLOR`, `FORCE_COLOR`, TTY, `TERM`) | `Output/Output.php`, `Output/StreamOutput.php`, `Output/BufferedOutput.php` | OutputTest (11 of 11), StreamOutputTest (4 of 6, 2 `n/a`); `strip_tags()` on 6,137 calls recorded from PHP |
 | Color mode from `COLORTERM` / `TERM`; width and height from `COLUMNS` / `LINES`, else `stty -a` | `Terminal.php` | Formatter tests; `stty` parsing unit test |
 | `Helper::width()`, `length()`, `substr()`, `removeDecoration()` | `Helper/Helper.php` | Through the formatter and style tests |
 

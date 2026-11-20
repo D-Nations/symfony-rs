@@ -965,23 +965,23 @@ Tests/Output/NullOutputTest.php	NullOutputTest::testSetDecorated	pending
 Tests/Output/NullOutputTest.php	NullOutputTest::testSetFormatter	pending	
 Tests/Output/NullOutputTest.php	NullOutputTest::testSetVerbosity	pending	
 Tests/Output/NullOutputTest.php	NullOutputTest::testVerbosity	pending	
-Tests/Output/OutputTest.php	OutputTest::testConstructor	pending	
-Tests/Output/OutputTest.php	OutputTest::testSetGetVerbosity	pending	
-Tests/Output/OutputTest.php	OutputTest::testSetIsDecorated	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteAnArrayOfMessages	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteAnIterableOfMessages	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteDecoratedMessage	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteRawMessage	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteWithDecorationTurnedOff	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteWithInvalidStyle	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteWithVerbosityOption	pending	
-Tests/Output/OutputTest.php	OutputTest::testWriteWithVerbosityQuiet	pending	
-Tests/Output/StreamOutputTest.php	StreamOutputTest::testConstructor	pending	
-Tests/Output/StreamOutputTest.php	StreamOutputTest::testDoWrite	pending	
-Tests/Output/StreamOutputTest.php	StreamOutputTest::testDoWriteOnFailure	pending	
-Tests/Output/StreamOutputTest.php	StreamOutputTest::testGetStream	pending	
-Tests/Output/StreamOutputTest.php	StreamOutputTest::testRawOutputPreservesNewlinesInContent	pending	
-Tests/Output/StreamOutputTest.php	StreamOutputTest::testStreamIsRequired	pending	
+Tests/Output/OutputTest.php	OutputTest::testConstructor	ported	crates/console/tests/output.rs::testConstructor
+Tests/Output/OutputTest.php	OutputTest::testSetGetVerbosity	ported	crates/console/tests/output.rs::testSetGetVerbosity
+Tests/Output/OutputTest.php	OutputTest::testSetIsDecorated	ported	crates/console/tests/output.rs::testSetIsDecorated
+Tests/Output/OutputTest.php	OutputTest::testWriteAnArrayOfMessages	ported	crates/console/tests/output.rs::testWriteAnArrayOfMessages
+Tests/Output/OutputTest.php	OutputTest::testWriteAnIterableOfMessages	ported	crates/console/tests/output.rs::testWriteAnIterableOfMessages
+Tests/Output/OutputTest.php	OutputTest::testWriteDecoratedMessage	ported	crates/console/tests/output.rs::testWriteDecoratedMessage
+Tests/Output/OutputTest.php	OutputTest::testWriteRawMessage	ported	crates/console/tests/output.rs::testWriteRawMessage
+Tests/Output/OutputTest.php	OutputTest::testWriteWithDecorationTurnedOff	ported	crates/console/tests/output.rs::testWriteWithDecorationTurnedOff
+Tests/Output/OutputTest.php	OutputTest::testWriteWithInvalidStyle	ported	crates/console/tests/output.rs::testWriteWithInvalidStyle
+Tests/Output/OutputTest.php	OutputTest::testWriteWithVerbosityOption	ported	crates/console/tests/output.rs::testWriteWithVerbosityOption
+Tests/Output/OutputTest.php	OutputTest::testWriteWithVerbosityQuiet	ported	crates/console/tests/output.rs::testWriteWithVerbosityQuiet
+Tests/Output/StreamOutputTest.php	StreamOutputTest::testConstructor	ported	crates/console/tests/output.rs::testConstructor_StreamOutput
+Tests/Output/StreamOutputTest.php	StreamOutputTest::testDoWrite	ported	crates/console/tests/output.rs::testDoWrite
+Tests/Output/StreamOutputTest.php	StreamOutputTest::testDoWriteOnFailure	ported	crates/console/tests/output.rs::testDoWriteOnFailure
+Tests/Output/StreamOutputTest.php	StreamOutputTest::testGetStream	ported	crates/console/tests/output.rs::testGetStream
+Tests/Output/StreamOutputTest.php	StreamOutputTest::testRawOutputPreservesNewlinesInContent	n/a: runs a PHP fixture script through symfony/process	
+Tests/Output/StreamOutputTest.php	StreamOutputTest::testStreamIsRequired	n/a: a non-stream argument is a type error at compile time in Rust	
 Tests/Question/ChoiceQuestionTest.php	ChoiceQuestionTest::testNonTrimmable	pending	
 Tests/Question/ChoiceQuestionTest.php	ChoiceQuestionTest::testSelectAssociativeChoices	pending	
 Tests/Question/ChoiceQuestionTest.php	ChoiceQuestionTest::testSelectUseCases	pending	
