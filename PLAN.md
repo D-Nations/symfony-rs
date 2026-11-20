@@ -683,11 +683,15 @@ Stack rows (searched November 19):
       log [docs/milestones/m1-d-request-rewrite.md](docs/milestones/m1-d-request-rewrite.md)),
       which was needed because `symfony-routing` links
       `symfony-http-foundation`. W1 recorded from the second app (40
-      responses, `scripts/record.sh second-app-w1`). Pending: the fixture
-      (pinned PHP app, recorded responses, hand-authored
-      generated-code-shaped Rust crate, a local Linux run from an empty
-      directory). The conversion gate stays open until symfony2rust emits
-      the fixture.
+      responses, `scripts/record.sh second-app-w1`). Fixture done, hand-authored
+      ([docs/milestones/m1-d-converter-fixture.md](docs/milestones/m1-d-converter-fixture.md)):
+      PHP app `oracle/apps/converter-fixture` (16 recorded responses),
+      Rust crate `fixtures/converter-app` matching all 16, a local Linux
+      run from an empty directory (`scripts/converter-fixture.sh`), contract
+      0.2, and `Exception::from_throwable` in `symfony-http-kernel` (demo
+      comparisons unchanged against a control). Its `runtime` module lists
+      the HttpFoundation/HttpKernel/FrameworkBundle gaps M2-A must close.
+      The conversion gate stays open until symfony2rust emits the fixture.
 
 ## Verification
 
