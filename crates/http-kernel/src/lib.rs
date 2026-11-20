@@ -26,15 +26,38 @@ pub struct Exception {
     pub status: StatusCode,
     pub headers: Box<HeaderMap>,
     pub detail: String,
+    /// The application's own error when it is not an HTTP exception, as
+    /// `ExceptionEvent::getThrowable()` returns it, for exception listeners
+    /// to downcast. `None` for an HTTP exception (`HttpExceptionInterface`),
+    /// which is `status`, `headers` and `detail` alone.
+    pub throwable: Option<Box<dyn std::error::Error + Send + Sync>>,
 }
 
 impl Exception {
+    /// An HTTP exception (`HttpException`): its status, message and headers.
     pub fn new(status: StatusCode, detail: impl Into<String>) -> Self {
         Self {
             status,
             headers: Box::default(),
             detail: detail.into(),
+            throwable: None,
         }
+    }
+
+    /// Any other exception: `HttpKernel::handleThrowable` answers 500 unless
+    /// a listener sets a response, and listeners can inspect the error.
+    pub fn from_throwable(throwable: impl std::error::Error + Send + Sync + 'static) -> Self {
+        Self {
+            status: StatusCode::INTERNAL_SERVER_ERROR,
+            headers: Box::default(),
+            detail: throwable.to_string(),
+            throwable: Some(Box::new(throwable)),
+        }
+    }
+
+    /// Whether this is an HTTP exception (`instanceof HttpExceptionInterface`).
+    pub fn is_http(&self) -> bool {
+        self.throwable.is_none()
     }
 }
 

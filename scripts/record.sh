@@ -3,6 +3,9 @@
 #
 #   scripts/record.sh routing      crates/routing/tests/data/matcher.json
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
+#   scripts/record.sh request-vars crates/http-foundation/tests/data/{query,cookie,content_type}_vectors.json
+#   scripts/record.sh second-app-w1 oracle/apps/easyadmin-demo/w1.json (second app, W1)
+#   scripts/record.sh converter-fixture oracle/apps/converter-fixture/responses.json (M1-D fixture)
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
@@ -39,6 +42,17 @@ routing() {
 }
 
 multipart() { python oracle/recorders/multipart.py; }
+
+request_vars() { python oracle/recorders/request_vars.py; }
+
+second_app_w1() {
+    [[ -d oracle/out/apps/easyadmin-demo/vendor ]] || scripts/second-app.sh install
+    # the recorder calls scripts/second-app.sh with this same bash
+    SECOND_APP_BASH=$(cygpath -w "$BASH" 2>/dev/null || printf '%s' "$BASH") \
+        python oracle/recorders/second_app_w1.py
+}
+
+converter_fixture() { python oracle/recorders/converter_fixture.py; }
 
 event_dispatcher() {
     local out=crates/event-dispatcher/tests/data/edges.txt tmp
@@ -177,6 +191,9 @@ finder() {
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
+    request-vars) request_vars ;;
+    second-app-w1) second_app_w1 ;;
+    converter-fixture) converter_fixture ;;
     event-dispatcher) event_dispatcher ;;
     stopwatch) stopwatch ;;
     php-value) php_value ;;
@@ -186,6 +203,6 @@ case "${1:-}" in
     css-selector) css_selector ;;
     options-resolver) options_resolver ;;
     finder) finder ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; css_selector; options_resolver; finder ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; css_selector; options_resolver; finder ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
 esac

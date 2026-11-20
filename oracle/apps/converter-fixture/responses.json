@@ -1,0 +1,631 @@
+{
+ "app": "oracle/apps/converter-fixture",
+ "packages": "symfony/demo's vendor/ (parity/packages.tsv)",
+ "php": "symfony-rs-oracle:8.4.27",
+ "env": {
+  "APP_ENV": "prod",
+  "APP_DEBUG": "0"
+ },
+ "server": "PHP built-in server (php -S), docroot public/",
+ "kind": "recorded from PHP",
+ "server_headers": [
+  "Host",
+  "Connection",
+  "X-Powered-By"
+ ],
+ "cases": [
+  {
+   "name": "greet",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 200,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "text: Hello, World!\nlength: 5\nratio: 0.41666666666667\ntags: converter, fixture\nvisits: 1\n"
+  },
+  {
+   "name": "greet-again",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 200,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "text: Hello, World!\nlength: 5\nratio: 0.41666666666667\ntags: converter, fixture\nvisits: 1\n"
+  },
+  {
+   "name": "greet-query",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world?punctuation=%3F",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 200,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "text: Hello, World?\nlength: 5\nratio: 0.41666666666667\ntags: converter, fixture\nvisits: 1\n"
+  },
+  {
+   "name": "greet-query-empty",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world?punctuation=",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 200,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "text: Hello, World\nlength: 5\nratio: 0.41666666666667\ntags: converter, fixture\nvisits: 1\n"
+  },
+  {
+   "name": "greet-quarter",
+   "request": {
+    "method": "GET",
+    "path": "/greet/abc",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 200,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "text: Hello, Abc!\nlength: 3\nratio: 0.25\ntags: converter, fixture\nvisits: 1\n"
+  },
+  {
+   "name": "greet-max-length",
+   "request": {
+    "method": "GET",
+    "path": "/greet/abcdefghijkl",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 200,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "text: Hello, Abcdefghijkl!\nlength: 12\nratio: 1\ntags: converter, fixture\nvisits: 1\n"
+  },
+  {
+   "name": "greet-head",
+   "request": {
+    "method": "HEAD",
+    "path": "/greet/world",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 200,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": ""
+  },
+  {
+   "name": "too-long",
+   "request": {
+    "method": "GET",
+    "path": "/greet/abcdefghijklm",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 422,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "error 422: Name \"abcdefghijklm\" is longer than 12 characters.\n"
+  },
+  {
+   "name": "requirement-uppercase",
+   "request": {
+    "method": "GET",
+    "path": "/greet/World",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 404,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "error 404: No route found for \"GET http://localhost/greet/World\"\n"
+  },
+  {
+   "name": "requirement-encoded",
+   "request": {
+    "method": "GET",
+    "path": "/greet/%C3%A9t%C3%A9",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 404,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "error 404: No route found for \"GET http://localhost/greet/%C3%A9t%C3%A9\"\n"
+  },
+  {
+   "name": "no-route-referer",
+   "request": {
+    "method": "GET",
+    "path": "/nope",
+    "headers": {
+     "Host": "localhost",
+     "Referer": "http://localhost/greet/world"
+    }
+   },
+   "status": 404,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "error 404: No route found for \"GET http://localhost/nope\" (from \"http://localhost/greet/world\")\n"
+  },
+  {
+   "name": "method-not-allowed",
+   "request": {
+    "method": "POST",
+    "path": "/greet/world",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 405,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Allow",
+     "GET"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "error 405: No route found for \"POST http://localhost/greet/world\": Method Not Allowed (Allow: GET)\n"
+  },
+  {
+   "name": "query-non-scalar",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world?punctuation[]=x",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 400,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Content-Type",
+     "text/plain; charset=UTF-8"
+    ],
+    [
+     "Cache-Control",
+     "no-cache, private"
+    ],
+    [
+     "Date",
+     "<date>"
+    ]
+   ],
+   "body": "error 400: Input value \"punctuation\" contains a non-scalar value.\n"
+  },
+  {
+   "name": "trailing-slash",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world/",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 301,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Date",
+     "<date>"
+    ],
+    [
+     "Location",
+     "http://localhost/greet/world"
+    ],
+    [
+     "Content-Type",
+     "text/html; charset=utf-8"
+    ]
+   ],
+   "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='http://localhost/greet/world'\" />\n\n        <title>Redirecting to http://localhost/greet/world</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"http://localhost/greet/world\">http://localhost/greet/world</a>.\n    </body>\n</html>"
+  },
+  {
+   "name": "trailing-slash-query",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world/?punctuation=%3F",
+    "headers": {
+     "Host": "localhost"
+    }
+   },
+   "status": 301,
+   "headers": [
+    [
+     "Host",
+     "localhost"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Date",
+     "<date>"
+    ],
+    [
+     "Location",
+     "http://localhost/greet/world?punctuation=%3F"
+    ],
+    [
+     "Content-Type",
+     "text/html; charset=utf-8"
+    ]
+   ],
+   "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='http://localhost/greet/world?punctuation=%3F'\" />\n\n        <title>Redirecting to http://localhost/greet/world?punctuation=%3F</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"http://localhost/greet/world?punctuation=%3F\">http://localhost/greet/world?punctuation=%3F</a>.\n    </body>\n</html>"
+  },
+  {
+   "name": "trailing-slash-port",
+   "request": {
+    "method": "GET",
+    "path": "/greet/world/",
+    "headers": {
+     "Host": "example.com:8080"
+    }
+   },
+   "status": 301,
+   "headers": [
+    [
+     "Host",
+     "example.com:8080"
+    ],
+    [
+     "Connection",
+     "close"
+    ],
+    [
+     "X-Powered-By",
+     "PHP/8.4.27"
+    ],
+    [
+     "Date",
+     "<date>"
+    ],
+    [
+     "Location",
+     "http://example.com:8080/greet/world"
+    ],
+    [
+     "Content-Type",
+     "text/html; charset=utf-8"
+    ]
+   ],
+   "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='http://example.com:8080/greet/world'\" />\n\n        <title>Redirecting to http://example.com:8080/greet/world</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"http://example.com:8080/greet/world\">http://example.com:8080/greet/world</a>.\n    </body>\n</html>"
+  }
+ ]
+}

@@ -20,15 +20,18 @@ pub const POST_MAX_SIZE: usize = 8 * 1024 * 1024;
 
 /// `Request::createFromGlobals()` form fields. POST retains fields read
 /// before a multipart warning; PUT, DELETE, PATCH and QUERY discard the
-/// whole result on a parser failure (`request_parse_body()`).
+/// whole result on a parser failure (`request_parse_body()`). Spaces and
+/// tabs around the content type are ignored, as the HTTP server in front
+/// of PHP drops them.
 pub fn form_fields(method: &str, content_type: &[u8], body: &[u8]) -> query::Query {
     let strict = match method {
         "POST" => false,
         "PUT" | "DELETE" | "PATCH" | "QUERY" => true,
         _ => return query::Query::default(),
     };
+    let content_type = trim_ows(content_type);
     match BodyFormat::of(content_type) {
-        Some(BodyFormat::UrlEncoded) => query::Query::parse(&String::from_utf8_lossy(body)),
+        Some(BodyFormat::UrlEncoded) => query::Query::parse_body(body),
         Some(BodyFormat::Multipart) => {
             let parsed = multipart::parse(content_type, body);
             if strict && parsed.failed {
@@ -41,6 +44,18 @@ pub fn form_fields(method: &str, content_type: &[u8], body: &[u8]) -> query::Que
     }
 }
 
+/// A header value without the spaces and tabs around it (HTTP's optional
+/// whitespace).
+pub fn trim_ows(value: &[u8]) -> &[u8] {
+    let ows = |b: &u8| matches!(b, b' ' | b'\t');
+    let start = value.iter().position(|b| !ows(b)).unwrap_or(value.len());
+    let end = value
+        .iter()
+        .rposition(|b| !ows(b))
+        .map_or(start, |end| end + 1);
+    &value[start..end]
+}
+
 /// The body formats PHP reads into form fields.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BodyFormat {
@@ -49,8 +64,10 @@ pub enum BodyFormat {
 }
 
 impl BodyFormat {
-    /// `sapi_read_post_data()`: the content type up to the first `;`, `,`
-    /// or space, in any case, must be one of the two exactly.
+    /// The content type up to the first `;`, `,` or space, in any case,
+    /// must be one of the two exactly (recorded:
+    /// `tests/data/content_type_vectors.json`, and the multipart vectors'
+    /// `not-multipart` and `boundary-param-*`).
     pub fn of(content_type: &[u8]) -> Option<Self> {
         let end = content_type
             .iter()

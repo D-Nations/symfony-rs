@@ -208,15 +208,17 @@ the stage order explicitly; they never justify silently dropping coverage.
   interface only. The conversion gate remains open until symfony2rust
   actually emits and builds the fixture without manual edits.
 - Record PHP responses and relevant side effects, build the Rust fixture,
-  and compare them. Repeat from an empty working directory in Linux CI.
+  and compare them. Repeat from an empty working directory on Linux, run
+  locally in a removed container (owner, November 20: no paid CI jobs).
   Extend this fixture at DI, Twig, Form/Security and Doctrine stages; do not
   wait until M8 to discover a converter/runtime mismatch.
 - Select and pin a second open-source Symfony app before broad M2 work.
   Check its licence and whether its dependencies fit the chosen Symfony
   version line. Record routes, package/API use, templates, configuration,
   persistence, queues and external integrations in
-  `docs/acceptance/second-app.md`. Selection is pending; neither the Fast
-  Track guestbook nor wallabag is adopted by this plan revision.
+  `docs/acceptance/second-app.md`. Recommended: the EasyAdmin demo
+  (decision 10; wallabag is on Symfony 5.4, and the Fast Track guestbook
+  was not adopted).
 - Rank component work by the demo plus that inventory: required for the
   next recorded workflow, required later, or not yet demanded. Capture a
   small initial workflow as an oracle, then add flows as providers arrive.
@@ -233,8 +235,10 @@ vectors, query/cookie tests and demo request comparisons; add vectors for
 uncovered behavior. Record the replacement sources and provenance review
 in the stage log. This gate precedes linking these request crates into the
 converter fixture and is required before M2-A acceptance or any runtime
-release. It is still pending; existing demo evidence is not a claim that
-the rewrite has happened.
+release. **Passed November 19** ([docs/milestones/m1-d-request-rewrite.md](docs/milestones/m1-d-request-rewrite.md)):
+the three modules are rewritten from the PHP manual and 274 multipart, 160
+query, 54 cookie and 12 content-type cases recorded from PHP 8.4.27; the
+demo's comparisons are identical to a control run on its pinned revision.
 
 ### XML acceptance gates (M1-C)
 
@@ -482,6 +486,31 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
    with its location. Needed at `XmlUtils` (Config stage 4); the parser
    comes first, validation after.
 
+10. **Second application (M1-D).** Recommended:
+    [EasyCorp/easyadmin-demo](https://github.com/EasyCorp/easyadmin-demo)
+    at `119c6df` (MIT, Symfony `^8.1`, PHP ≥ 8.4, SQLite). It was the only
+    maintained candidate already on the pinned 8.1 line
+    ([docs/acceptance/second-app.md](docs/acceptance/second-app.md) lists
+    the others). Two points are open for the owner:
+    - **Patch level.** Its lock has v8.1.11 (contracts v3.8.1) for 38 of
+      the 60 packages pinned here, which come from symfony/demo at
+      v8.1.10. Recommended: record this app with its own lock, naming the
+      lock in each comparison, and keep the shared pins at the demo's
+      until a deliberate version move.
+    - **Production boot.** Its `when@prod` Doctrine config sets two options
+      DoctrineBundle 3 removed, so `APP_ENV=prod` fails in Config's
+      ArrayNode. Recommended: run the oracle copy (under `oracle/out/`,
+      never `upstream/`) with only those two lines removed, keeping the
+      patch in the repository and the reason in each recording, and offer
+      the fix upstream once the owner agrees. Alternatives: record `dev`
+      (profiler headers and toolbar) or `test` (mock sessions), or wait
+      for an upstream fix.
+
+    **Owner, November 19:** both recommendations accepted. The EasyAdmin
+    demo is the second app; it is recorded with its own lock; the oracle
+    copy applies `oracle/apps/easyadmin-demo/prod-boot.patch` (the two
+    Doctrine lines) and nothing else.
+
 12. **`callable` allowed type (OptionsResolver).** PHP's `is_callable()`
     accepts function-name strings (`'strlen'`) and `[object, 'method']`
     arrays; `php-value` has no function or method table, so
@@ -586,6 +615,8 @@ Stack rows (searched November 19):
 | Config | No Rust port of Symfony Config found. Serde-struct config crates: [schematic](https://docs.rs/schematic) (per-field merge strategies, garde validation; the closest), [clapfig](https://docs.rs/crate/clapfig/latest) (layered files/env/CLI, post-merge hook), [confique](https://awesome.ecosyste.ms/projects/github.com%2Flukaskalbertodt%2Fconfique) / [einstellung](https://docs.rs/crate/einstellung/0.1.6) (derive-time defaults and validators), [rust-config-tree](https://docs.rs/crate/rust-config-tree/0.2.0) (include trees on confique + Figment), config-rs / figment (untyped layering) | Port on `php-value`, no dependency | All of them fix the schema as a Rust type. Symfony's is a node tree built in code by bundles (prototypes, `ExprBuilder` if/then rules, normalization keys, `canBeEnabled`, deep merge vs `performNoDeepMerging`, deprecations), with its own error paths and messages |
 | XML for `XmlUtils` (owner, November 19; decision 9) | [roxmltree](https://docs.rs/roxmltree) / [quick-xml](https://docs.rs/quick-xml) (parsers, no validation); libxml2 bindings (C, FFI, the real libxml but `unsafe` underneath); pure-Rust XSD: [uppsala](https://docs.rs/crate/uppsala/0.4.0) (DOM, XPath, XSD 1.1), [xsd-schema](https://docs.rs/crate/xsd-schema/0.1.0), [xmlschema](https://docs.rs/xmlschema), [fastxml](https://docs.rs/crate/fastxml/0.1.0) | Hand-written `php-dom` crate, no dependency | None reproduces libxml's error messages, levels and positions, which `XmlUtils` puts into its exception texts; FFI conflicts with no-`unsafe`; scoping validation to Symfony's schemas keeps the surface small |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
+| Converter runtime contract (M1-D) | [PeachPie](https://github.com/peachpiecompiler/peachpie) (dynamic `PhpValue` everywhere, per-request `Context`), [KPHP](https://vkcom.github.io/kphp/) (inferred types, `class_instance<T>`, `mixed` only where dynamic), Symfony's `PhpDumper` and [Quarkus ArC](https://quarkus.io/guides/cdi-reference) (container compiled at build time), DI crates [shaku](https://docs.rs/crate/shaku), [fundle](https://docs.rs/crate/fundle/0.3.5/source/README.md), [injectable-rs](https://docs.rs/injectable-rs) | Typed code with `php-value` only where PHP is dynamic; the compiled container emitted as Rust; no DI crate | Types keep speed and reviewability; the converter already has Symfony's full service graph, so a generic container would duplicate it; PHP-FPM's per-request isolation decides which services may be shared ([docs/converter-contract.md](docs/converter-contract.md)) |
+| PHP request parsing (`query`, `cookies`, `multipart`; M1-D provenance gate) | [serde_qs](https://github.com/nicklaswj/serde_qs) (Rack/qs brackets, repeated keys collected into a `Vec`), [serde-querystring](https://docs.rs/serde-querystring) ("brackets like PHP", no name rewriting or limits), `form_urlencoded` (pairs only), [multer](https://crates.io/crates/multer) (strict RFC 7578 multipart) | Rewritten here from the PHP manual and recorded PHP answers, no dependency | None has PHP's name rewriting (`.`/space/unclosed `[` to `_`), its integer-key and next-index rules, its separate query/body/cookie limits, cookie first-wins, or its lenient multipart reading (`--boundary--` not ending the body, partial-line delimiters); php-src is excluded by decision 8 ([docs/milestones/m1-d-request-rewrite.md](docs/milestones/m1-d-request-rewrite.md)) |
 | CssSelector (searched November 20) | No Rust port of Symfony CssSelector or Python cssselect. [css-to-xpath](https://docs.rs/css-to-xpath) (Servo's `selectors`/`cssparser`, its own XPath shapes, Generic/Html/Xhtml modes, no nested `:has()`); [selectors](https://docs.rs/selectors) / [scraper](https://docs.rs/scraper) (match against a DOM, no XPath); scrapling's translator (cssselect-like, tied to its crate); cssifier / xcss (XPath to CSS, the other direction) | Port on `php-value` and `regex` (bytes, `(?-u)`), no new dependency | None produces Symfony's XPath strings, node string forms, specificity, `ParseException` texts with token positions, PHP truthiness (`"0"`), byte-wise patterns or the LRU cache |
 | OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
 | Finder (searched November 20) | No Rust port of Symfony Finder. Walkers: [walkdir](https://docs.rs/walkdir) (depth-first, sorting, symlink loops), [ignore](https://docs.rs/ignore) (ripgrep's walker with its own gitignore rules and parallelism), [jwalk](https://docs.rs/jwalk); globs: [globset](https://docs.rs/globset), [glob](https://docs.rs/glob), [wax](https://docs.rs/wax). Regex for the PCRE patterns Finder builds and accepts (`Glob`/`Gitignore` emit lookaround, possessive quantifiers, `$f`): `regex` (no lookaround), [fancy-regex](https://docs.rs/fancy-regex) 0.20 (backtracking, lookaround, atomic and possessive, a bytes mode with ASCII classes), [pcre2](https://docs.rs/pcre2) (FFI, excluded by decision 5) | Port, walking with `std::fs`; `fancy-regex` under a PHP-pattern translator (`crates/finder/src/pcre.rs`) | Finder's order of filters and stat calls (pinned by upstream's stream-wrapper log tests), stream wrappers, `SplFileInfo` relative paths, its own gitignore regexes and Glob's regex text are its behaviour, so no walker or glob crate reproduces them. `fancy-regex` is the regex engine decision 5 names for lookaround; the translator keeps PCRE's meaning (bytes without `/u`, `$` before a final newline, `/x`, `/U`, `/n`, literal `{`) and refuses what it does not translate; checked on 137 patterns x 62 subjects recorded from PHP |
@@ -661,6 +692,27 @@ Stack rows (searched November 19):
       need Config's loaders; M1-C), and loaders, resources and `XmlUtils`
       (Filesystem, Finder, `php-dom`, decision 9; M1-C). Their 167 rows
       stay `pending`.
+- [ ] M1-D. Done: provisional converter contract 0.1
+      ([docs/converter-contract.md](docs/converter-contract.md)), with
+      prior art compared (stack row above); the second app recommended
+      (decision 10, EasyAdmin demo pinned in `upstream.tsv`) and
+      inventoried in `prod` with the two-line Doctrine overlay
+      ([docs/acceptance/second-app.md](docs/acceptance/second-app.md):
+      142 routes, 872 services, ranked component work, first workflow W1).
+      Decision 10 accepted by the owner. The request provenance gate
+      passed (rewrite of `query.rs`, `cookies.rs`, `multipart.rs`; stage
+      log [docs/milestones/m1-d-request-rewrite.md](docs/milestones/m1-d-request-rewrite.md)),
+      which was needed because `symfony-routing` links
+      `symfony-http-foundation`. W1 recorded from the second app (40
+      responses, `scripts/record.sh second-app-w1`). Fixture done, hand-authored
+      ([docs/milestones/m1-d-converter-fixture.md](docs/milestones/m1-d-converter-fixture.md)):
+      PHP app `oracle/apps/converter-fixture` (16 recorded responses),
+      Rust crate `fixtures/converter-app` matching all 16, a local Linux
+      run from an empty directory (`scripts/converter-fixture.sh`), contract
+      0.2, and `Exception::from_throwable` in `symfony-http-kernel` (demo
+      comparisons unchanged against a control). Its `runtime` module lists
+      the HttpFoundation/HttpKernel/FrameworkBundle gaps M2-A must close.
+      The conversion gate stays open until symfony2rust emits the fixture.
 
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath

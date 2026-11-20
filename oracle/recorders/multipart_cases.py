@@ -116,5 +116,79 @@ def extra_cases() -> list[tuple[str, str, bytes]]:
     return found
 
 
+def rewrite_cases() -> list[tuple[str, str, bytes]]:
+    """Cases added for the rewrite without php-src (PLAN.md decision 8):
+    behaviour the earlier cases leave open."""
+    found = []
+
+    def add(name: str, body: str | bytes, content_type: str = CT) -> None:
+        found.append((name, content_type, body if isinstance(body, bytes) else body.encode("latin-1")))
+
+    end = END
+    # What may follow a delimiter on its line, inside and after a value.
+    add("delimiter-then-text", part("a", f"x\r\n--{B}yz\r\nmore") + part("b", "2") + end)
+    add("delimiter-then-space", part("a", "1")[:-2] + f"\r\n--{B}  \r\nContent-Disposition: form-data; name=\"b\"\r\n\r\n2\r\n" + end)
+    add("delimiter-then-tab", part("a", "1") + f"--{B}\t\r\nContent-Disposition: form-data; name=\"b\"\r\n\r\n2\r\n" + end)
+    add("close-then-parts", part("a", "1") + f"--{B}--\r\n" + part("b", "2") + end)
+    add("close-then-text", part("a", "1") + f"--{B}--junk\r\n" + part("b", "2") + end)
+    add("dashes-in-value", part("a", f"--{B[:-1]}\r\n--x") + part("b", "2") + end)
+    add("delimiter-without-newline-before", part("a", f"x--{B}\r\ny") + end)
+    add("delimiter-after-cr-only", part("a", f"x\r--{B}\r\ny") + end)
+    # The first delimiter.
+    add("preamble-delimiter-prefix", f"--{B}x\r\n" + part("a", "1") + end)
+    add("preamble-delimiter-close", f"--{B}--\r\n" + part("a", "1") + end)
+    add("leading-crlf", "\r\n" + part("a", "1") + end)
+    add("first-delimiter-with-space", f"--{B} \r\n--{B}\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n1\r\n" + end)
+    # Headers.
+    add("header-without-colon", f"--{B}\r\nnot a header\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n1\r\n" + end)
+    add("header-no-space", f"--{B}\r\ncontent-disposition:form-data;name=a\r\n\r\n1\r\n" + end)
+    add("header-tab-continuation", f"--{B}\r\nContent-Disposition: form-data;\r\n\tname=\"a\"\r\n\r\n1\r\n" + end)
+    add("folded-name", f"--{B}\r\nContent-Disposition: form-data; name=\"a\r\n b\"\r\n\r\n1\r\n" + end)
+    add("folded-unquoted-name", f"--{B}\r\nContent-Disposition: form-data; name=a\r\n b\r\n\r\n1\r\n" + end)
+    add("disposition-not-form-data", f"--{B}\r\nContent-Disposition: attachment; name=\"a\"\r\n\r\n1\r\n" + end)
+    add("disposition-only-value", f"--{B}\r\nContent-Disposition: name=\"a\"\r\n\r\n1\r\n" + end)
+    add("disposition-space-before-colon", f"--{B}\r\nContent-Disposition : form-data; name=\"a\"\r\n\r\n1\r\n" + end)
+    add("eof-in-headers", f"--{B}\r\nContent-Disposition: form-data; name=\"a\"\r\n")
+    add("eof-after-headers", f"--{B}\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n")
+    # Parameters.
+    add("param-uppercase-name", f"--{B}\r\nContent-Disposition: form-data; NaMe=\"a\"\r\n\r\n1\r\n" + end)
+    add("param-name-star", f"--{B}\r\nContent-Disposition: form-data; name*=\"a\"; name=\"b\"\r\n\r\n1\r\n" + end)
+    add("param-unclosed-quote", f"--{B}\r\nContent-Disposition: form-data; name=\"abc\r\n\r\n1\r\n" + end)
+    add("param-empty-unquoted", f"--{B}\r\nContent-Disposition: form-data; name=; x=1\r\n\r\n1\r\n" + part("b", "2") + end)
+    add("param-unquoted-semicolon", f"--{B}\r\nContent-Disposition: form-data; name=a;b\r\n\r\n1\r\n" + end)
+    add("param-unquoted-tab", f"--{B}\r\nContent-Disposition: form-data; name=a\tb\r\n\r\n1\r\n" + end)
+    add("param-quote-inside-unquoted", f"--{B}\r\nContent-Disposition: form-data; name=a\"b\"c\r\n\r\n1\r\n" + end)
+    add("param-mixed-quotes", f"--{B}\r\nContent-Disposition: form-data; name=\"a'b\"\r\n\r\n1\r\n" + end)
+    add("param-escape-other", f"--{B}\r\nContent-Disposition: form-data; name=\"a\\nb\"\r\n\r\n1\r\n" + end)
+    add("param-text-after-quote", f"--{B}\r\nContent-Disposition: form-data; name=\"a\"b; x=1\r\n\r\n1\r\n" + end)
+    add("param-leading-tab", f"--{B}\r\nContent-Disposition: form-data;\tname=\"a\"\r\n\r\n1\r\n" + end)
+    add("param-no-semicolon", f"--{B}\r\nContent-Disposition: form-data name=\"a\"\r\n\r\n1\r\n" + end)
+    add("filename-then-name", f"--{B}\r\nContent-Disposition: form-data; filename=\"f\"; name=\"a\"\r\n\r\nd\r\n" + part("b", "2") + end)
+    add("filename-uppercase", f"--{B}\r\nContent-Disposition: form-data; name=\"a\"; FILENAME=\"f\"\r\n\r\nd\r\n" + part("b", "2") + end)
+    add("filename-star", f"--{B}\r\nContent-Disposition: form-data; name=\"a\"; filename*=UTF-8''f\r\n\r\nd\r\n" + part("b", "2") + end)
+    # End of input inside a value.
+    add("eof-value-cr", part("a", "1") + f"--{B}\r\nContent-Disposition: form-data; name=\"b\"\r\n\r\nv\r")
+    add("eof-value-two-lf", part("a", "1") + f"--{B}\r\nContent-Disposition: form-data; name=\"b\"\r\n\r\nv\n\n")
+    add("eof-value-lfcr", part("a", "1") + f"--{B}\r\nContent-Disposition: form-data; name=\"b\"\r\n\r\nv\n\r")
+    # The boundary parameter.
+    for i, content_type in enumerate([
+        f"multipart/form-data;boundary={B}", f"multipart/form-data; boundary = {B}",
+        f"multipart/form-data; boundary={B} x", f"multipart/form-data; xboundary={B}",
+        f"multipart/form-data; charset=x; boundary={B}", f"multipart/form-data; boundary={B}; boundary=other",
+        "multipart/form-data; boundary=", "multipart/form-data; boundary=\"\"",
+        f"multipart/form-data; boundary=\"{B}\"x", f"multipart/form-data; boundary={B}\t",
+        f"multipart/form-data, boundary={B}", f"multipart/form-data boundary={B}",
+        f" multipart/form-data; boundary={B}", f"multipart/form-data ; boundary={B}",
+    ]):
+        add(f"boundary-param-{i}", part("a", "1") + end, content_type)
+    # Limits: parts (max_multipart_body_parts), files, empty file fields.
+    add("parts-1020-no-disposition", f"--{B}\r\nX: y\r\n\r\nz\r\n" * 1019 + part("a", "1") + end)
+    add("parts-1021-no-disposition", f"--{B}\r\nX: y\r\n\r\nz\r\n" * 1020 + part("a", "1") + end)
+    add("files-20-then-field", "".join(part(f"f{i}", "d", f'; filename="{i}.txt"') for i in range(20)) + part("a", "1") + end)
+    add("files-21-empty-names", "".join(part(f"f{i}", "", '; filename=""') for i in range(21)) + part("a", "1") + end)
+    add("vars-1000-empty-names", "".join(part("", "x") for _ in range(10)) + "".join(part(f"v{i}", "x") for i in range(995)) + part("last", "1") + end)
+    return found
+
+
 def all_cases() -> list[tuple[str, str, bytes]]:
-    return cases() + extra_cases()
+    return cases() + extra_cases() + rewrite_cases()

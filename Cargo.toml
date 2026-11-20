@@ -16,5 +16,6 @@ members = [
     "crates/options-resolver",
     "crates/finder",
     "examples/request-lab",
+    "fixtures/converter-app",
 ]
 resolver = "3"
