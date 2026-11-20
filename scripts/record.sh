@@ -10,6 +10,7 @@
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
+#   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -143,6 +144,19 @@ options_resolver() {
     echo "OptionsResolver edge cases written to $out"
 }
 
+finder() {
+    local name out tmp
+    mkdir -p oracle/out crates/finder/tests/data
+    for name in providers vectors; do
+        out=crates/finder/tests/data/$([[ $name == vectors ]] && echo php || echo providers).json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/finder_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+        mv "$tmp" "$out"
+        echo "Finder $name written to $out"
+    done
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -153,6 +167,7 @@ case "${1:-}" in
     dotenv) dotenv ;;
     css-selector) css_selector ;;
     options-resolver) options_resolver ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; css_selector; options_resolver ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|css-selector|options-resolver|all" >&2; exit 2 ;;
+    finder) finder ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; css_selector; options_resolver; finder ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
 esac
