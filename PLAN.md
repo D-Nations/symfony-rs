@@ -471,6 +471,12 @@ Stack rows (searched November 19):
       a value ending in `$(`; the port fails instead (crate README,
       "Differences"). Pending: the two commands (19 tests) after Console.
 
+- [x] Finder (`symfony-finder`, pilot November 20): every PHP file;
+      139 of 143 upstream tests, 4 `n/a` with reasons; in
+      `parity/done.txt`. PHP patterns run on `fancy-regex` through a
+      PCRE translator checked on recorded `preg_match` answers; the
+      date grammar is a subset (decision 12). No advisories listed for
+      symfony/finder.
 ## Verification
 
 - Per component: manifest has no `pending` rows (CI-enforced); upstream tests
