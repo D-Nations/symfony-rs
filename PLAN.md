@@ -208,7 +208,8 @@ the stage order explicitly; they never justify silently dropping coverage.
   interface only. The conversion gate remains open until symfony2rust
   actually emits and builds the fixture without manual edits.
 - Record PHP responses and relevant side effects, build the Rust fixture,
-  and compare them. Repeat from an empty working directory in Linux CI.
+  and compare them. Repeat from an empty working directory on Linux, run
+  locally in a removed container (owner, November 20: no paid CI jobs).
   Extend this fixture at DI, Twig, Form/Security and Doctrine stages; do not
   wait until M8 to discover a converter/runtime mismatch.
 - Select and pin a second open-source Symfony app before broad M2 work.
@@ -681,10 +682,12 @@ Stack rows (searched November 19):
       passed (rewrite of `query.rs`, `cookies.rs`, `multipart.rs`; stage
       log [docs/milestones/m1-d-request-rewrite.md](docs/milestones/m1-d-request-rewrite.md)),
       which was needed because `symfony-routing` links
-      `symfony-http-foundation`. Pending: recording W1 from the second app,
-      then the fixture (pinned PHP app, recorded responses, hand-authored
-      generated-code-shaped Rust crate, Linux CI from an empty directory). The conversion gate stays open
-      until symfony2rust emits the fixture.
+      `symfony-http-foundation`. W1 recorded from the second app (40
+      responses, `scripts/record.sh second-app-w1`). Pending: the fixture
+      (pinned PHP app, recorded responses, hand-authored
+      generated-code-shaped Rust crate, a local Linux run from an empty
+      directory). The conversion gate stays open until symfony2rust emits
+      the fixture.
 
 ## Verification
 
