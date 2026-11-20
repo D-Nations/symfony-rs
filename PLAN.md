@@ -510,6 +510,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     demo is the second app; it is recorded with its own lock; the oracle
     copy applies `oracle/apps/easyadmin-demo/prod-boot.patch` (the two
     Doctrine lines) and nothing else.
+
 12. **`callable` allowed type (OptionsResolver).** PHP's `is_callable()`
     accepts function-name strings (`'strlen'`) and `[object, 'method']`
     arrays; `php-value` has no function or method table, so
