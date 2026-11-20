@@ -1,0 +1,228 @@
+//! Port of Symfony\Component\Config\Definition\Exception: Exception,
+//! InvalidConfigurationException (path and hints) and its subclasses,
+//! UnsetKeyException and InvalidDefinitionException; and
+//! Symfony\Component\Config\Exception\LogicException.
+//!
+//! PHP's exceptions form a class hierarchy that callers test with
+//! `instanceof`; here one [`Error`] carries its [`Class`], and the
+//! `is_*` methods answer those tests. The built-in classes the Definition
+//! code throws (`\InvalidArgumentException`, `\RuntimeException`,
+//! `\TypeError`, `\Error`) and the exceptions a user closure throws are
+//! classes too, so `BaseNode::finalize()` can tell them apart as upstream
+//! does.
+//!
+//! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
+//!
+//! Upstream: symfony/config Definition/Exception/Exception.php Definition/Exception/InvalidConfigurationException.php Definition/Exception/InvalidTypeException.php Definition/Exception/DuplicateKeyException.php Definition/Exception/ForbiddenOverwriteException.php Definition/Exception/UnsetKeyException.php Definition/Exception/InvalidDefinitionException.php Exception/LogicException.php
+
+use std::fmt;
+
+use php_value::PhpString;
+
+/// The class of an [`Error`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Class {
+    /// `Definition\Exception\Exception` (extends `\RuntimeException`).
+    Exception,
+    InvalidConfiguration,
+    InvalidType,
+    DuplicateKey,
+    ForbiddenOverwrite,
+    UnsetKey,
+    InvalidDefinition,
+    /// `Symfony\Component\Config\Exception\LogicException`.
+    Logic,
+    /// `\InvalidArgumentException`.
+    InvalidArgument,
+    /// `\RuntimeException`.
+    Runtime,
+    /// `\TypeError`, an `\Error`: what PHP throws for a value of the wrong
+    /// type where upstream relies on a typed signature.
+    TypeError,
+    /// `\Error`: what PHP throws for a call to a method the class does not
+    /// have, or an uninitialized typed property.
+    Error,
+    /// Any other class, as a closure throws it; `exception` tells an
+    /// `\Exception` from an `\Error`.
+    Other {
+        class: String,
+        exception: bool,
+    },
+}
+
+impl Class {
+    /// The class name, as `$e::class` gives it.
+    pub fn name(&self) -> &str {
+        match self {
+            Self::Exception => "Symfony\\Component\\Config\\Definition\\Exception\\Exception",
+            Self::InvalidConfiguration => {
+                "Symfony\\Component\\Config\\Definition\\Exception\\InvalidConfigurationException"
+            }
+            Self::InvalidType => {
+                "Symfony\\Component\\Config\\Definition\\Exception\\InvalidTypeException"
+            }
+            Self::DuplicateKey => {
+                "Symfony\\Component\\Config\\Definition\\Exception\\DuplicateKeyException"
+            }
+            Self::ForbiddenOverwrite => {
+                "Symfony\\Component\\Config\\Definition\\Exception\\ForbiddenOverwriteException"
+            }
+            Self::UnsetKey => {
+                "Symfony\\Component\\Config\\Definition\\Exception\\UnsetKeyException"
+            }
+            Self::InvalidDefinition => {
+                "Symfony\\Component\\Config\\Definition\\Exception\\InvalidDefinitionException"
+            }
+            Self::Logic => "Symfony\\Component\\Config\\Exception\\LogicException",
+            Self::InvalidArgument => "InvalidArgumentException",
+            Self::Runtime => "RuntimeException",
+            Self::TypeError => "TypeError",
+            Self::Error => "Error",
+            Self::Other { class, .. } => class,
+        }
+    }
+
+    /// `instanceof Definition\Exception\Exception`.
+    pub fn is_definition_exception(&self) -> bool {
+        matches!(
+            self,
+            Self::Exception
+                | Self::InvalidConfiguration
+                | Self::InvalidType
+                | Self::DuplicateKey
+                | Self::ForbiddenOverwrite
+                | Self::UnsetKey
+                | Self::InvalidDefinition
+        )
+    }
+
+    /// `instanceof InvalidConfigurationException`.
+    pub fn is_invalid_configuration(&self) -> bool {
+        matches!(
+            self,
+            Self::InvalidConfiguration
+                | Self::InvalidType
+                | Self::DuplicateKey
+                | Self::ForbiddenOverwrite
+        )
+    }
+
+    /// `instanceof \RuntimeException`.
+    pub fn is_runtime(&self) -> bool {
+        self.is_definition_exception() || matches!(self, Self::Runtime)
+    }
+
+    /// `instanceof \LogicException` (of the classes known here).
+    pub fn is_logic(&self) -> bool {
+        matches!(self, Self::Logic | Self::InvalidArgument)
+    }
+
+    /// `$this instanceof $class`, for the classes of this module.
+    pub fn is_a(&self, class: &Class) -> bool {
+        match class {
+            Self::Exception => self.is_definition_exception(),
+            Self::InvalidConfiguration => self.is_invalid_configuration(),
+            Self::Runtime => self.is_runtime(),
+            Self::Error => matches!(self, Self::Error | Self::TypeError),
+            Self::Other { class, .. } => self.name() == class,
+            other => self == other,
+        }
+    }
+
+    /// `instanceof \Exception`, as opposed to an `\Error`.
+    pub fn is_exception(&self) -> bool {
+        match self {
+            Self::TypeError | Self::Error => false,
+            Self::Other { exception, .. } => *exception,
+            _ => true,
+        }
+    }
+}
+
+/// A thrown exception or error.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Error {
+    class: Class,
+    message: Vec<u8>,
+    code: i64,
+    previous: Option<Box<Error>>,
+    /// InvalidConfigurationException's path.
+    path: Option<PhpString>,
+    contains_hints: bool,
+}
+
+impl Error {
+    pub fn new(class: Class, message: impl Into<Vec<u8>>) -> Self {
+        Self {
+            class,
+            message: message.into(),
+            code: 0,
+            previous: None,
+            path: None,
+            contains_hints: false,
+        }
+    }
+
+    /// `new $class($message, $code, $previous)`.
+    pub fn with_previous(
+        class: Class,
+        message: impl Into<Vec<u8>>,
+        code: i64,
+        previous: Error,
+    ) -> Self {
+        Self {
+            code,
+            previous: Some(Box::new(previous)),
+            ..Self::new(class, message)
+        }
+    }
+
+    pub fn class(&self) -> &Class {
+        &self.class
+    }
+
+    pub fn get_message(&self) -> &[u8] {
+        &self.message
+    }
+
+    pub fn get_code(&self) -> i64 {
+        self.code
+    }
+
+    pub fn get_previous(&self) -> Option<&Error> {
+        self.previous.as_deref()
+    }
+
+    pub fn set_path(&mut self, path: PhpString) {
+        self.path = Some(path);
+    }
+
+    pub fn get_path(&self) -> Option<&PhpString> {
+        self.path.as_ref()
+    }
+
+    /// Appends "\nHint: " and the hint, or ", " and the hint after the
+    /// first one.
+    pub fn add_hint(&mut self, hint: &[u8]) {
+        if !self.contains_hints {
+            self.message.extend_from_slice(b"\nHint: ");
+            self.contains_hints = true;
+        } else {
+            self.message.extend_from_slice(b", ");
+        }
+        self.message.extend_from_slice(hint);
+    }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}: {}",
+            self.class.name(),
+            String::from_utf8_lossy(&self.message)
+        )
+    }
+}
+
+impl std::error::Error for Error {}

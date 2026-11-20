@@ -481,6 +481,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-config"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "serde_json",
+ "symfony-deprecation-contracts",
+]
+
+[[package]]
 name = "symfony-css-selector"
 version = "0.1.0"
 dependencies = [

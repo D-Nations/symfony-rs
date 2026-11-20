@@ -8,6 +8,7 @@
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
+#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
@@ -117,6 +118,22 @@ dotenv() {
     echo "Dotenv parse vectors written to $out"
 }
 
+config() {
+    local out=crates/config/tests/data/definition.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_definition.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config Definition vectors written to $out"
+    out=crates/config/tests/data/builder.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_builder.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config Builder vectors written to $out"
+}
+
 css_selector() {
     local out=crates/css-selector/tests/data/php.json tmp
     mkdir -p oracle/out "$(dirname "$out")"
@@ -165,9 +182,10 @@ case "${1:-}" in
     php-value) php_value ;;
     yaml) yaml ;;
     dotenv) dotenv ;;
+    config) config ;;
     css-selector) css_selector ;;
     options-resolver) options_resolver ;;
     finder) finder ;;
-    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; css_selector; options_resolver; finder ;;
-    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
+    all) routing; multipart; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; css_selector; options_resolver; finder ;;
+    *) echo "usage: scripts/record.sh routing|multipart|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
 esac
