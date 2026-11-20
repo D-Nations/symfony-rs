@@ -480,38 +480,38 @@ Tests/Formatter/NullOutputFormatterTest.php	NullOutputFormatterTest::testHasStyl
 Tests/Formatter/NullOutputFormatterTest.php	NullOutputFormatterTest::testIsDecorated	pending	
 Tests/Formatter/NullOutputFormatterTest.php	NullOutputFormatterTest::testSetDecorated	pending	
 Tests/Formatter/NullOutputFormatterTest.php	NullOutputFormatterTest::testSetStyle	pending	
-Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testInvalidPop	pending	
-Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPop	pending	
-Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPopEmpty	pending	
-Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPopNotLast	pending	
-Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPush	pending	
-Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testBackground	pending	
-Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testConstructor	pending	
-Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testForeground	pending	
-Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testHref	pending	
-Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testOptions	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testAdjacentStyles	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testBundledStyles	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testContentWithLineBreaks	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testDeepNestedStyles	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testEmptyTag	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatAndWrap	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatKeepsMultiByteContentUnchanged	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatLongString	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatRestoresEscapedText	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatToStringObject	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatterHasStyles	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testInlineStyle	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testInlineStyleOptions	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testLGCharEscaping	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNestedStyles	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNewStyle	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNonStyleTag	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNotDecoratedFormatterOnIDEALikeEnvironment	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNotDecoratedFormatterOnJediTermEmulator	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testRedefineStyle	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testStyleEscaping	pending	
-Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testStyleMatchingNotGreedy	pending	
+Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testInvalidPop	ported	crates/console/tests/formatter.rs::testInvalidPop
+Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPop	ported	crates/console/tests/formatter.rs::testPop
+Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPopEmpty	ported	crates/console/tests/formatter.rs::testPopEmpty
+Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPopNotLast	ported	crates/console/tests/formatter.rs::testPopNotLast
+Tests/Formatter/OutputFormatterStyleStackTest.php	OutputFormatterStyleStackTest::testPush	ported	crates/console/tests/formatter.rs::testPush
+Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testBackground	ported	crates/console/tests/formatter.rs::testBackground
+Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testConstructor	ported	crates/console/tests/formatter.rs::testConstructor
+Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testForeground	ported	crates/console/tests/formatter.rs::testForeground
+Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testHref	ported	crates/console/tests/formatter.rs::testHref
+Tests/Formatter/OutputFormatterStyleTest.php	OutputFormatterStyleTest::testOptions	ported	crates/console/tests/formatter.rs::testOptions
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testAdjacentStyles	ported	crates/console/tests/formatter.rs::testAdjacentStyles
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testBundledStyles	ported	crates/console/tests/formatter.rs::testBundledStyles
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testContentWithLineBreaks	ported	crates/console/tests/formatter.rs::testContentWithLineBreaks
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testDeepNestedStyles	ported	crates/console/tests/formatter.rs::testDeepNestedStyles
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testEmptyTag	ported	crates/console/tests/formatter.rs::testEmptyTag
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatAndWrap	ported	crates/console/tests/formatter.rs::testFormatAndWrap
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatKeepsMultiByteContentUnchanged	ported	crates/console/tests/formatter.rs::testFormatKeepsMultiByteContentUnchanged
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatLongString	ported	crates/console/tests/formatter.rs::testFormatLongString
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatRestoresEscapedText	ported	crates/console/tests/formatter.rs::testFormatRestoresEscapedText
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatToStringObject	ported	crates/console/tests/formatter.rs::testFormatToStringObject
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testFormatterHasStyles	ported	crates/console/tests/formatter.rs::testFormatterHasStyles
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testInlineStyle	ported	crates/console/tests/formatter.rs::testInlineStyle
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testInlineStyleOptions	ported	crates/console/tests/formatter.rs::testInlineStyleOptions
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testLGCharEscaping	ported	crates/console/tests/formatter.rs::testLGCharEscaping
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNestedStyles	ported	crates/console/tests/formatter.rs::testNestedStyles
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNewStyle	ported	crates/console/tests/formatter.rs::testNewStyle
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNonStyleTag	ported	crates/console/tests/formatter.rs::testNonStyleTag
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNotDecoratedFormatterOnIDEALikeEnvironment	ported	crates/console/tests/formatter.rs::testNotDecoratedFormatterOnIDEALikeEnvironment
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testNotDecoratedFormatterOnJediTermEmulator	ported	crates/console/tests/formatter.rs::testNotDecoratedFormatterOnJediTermEmulator
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testRedefineStyle	ported	crates/console/tests/formatter.rs::testRedefineStyle
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testStyleEscaping	ported	crates/console/tests/formatter.rs::testStyleEscaping
+Tests/Formatter/OutputFormatterTest.php	OutputFormatterTest::testStyleMatchingNotGreedy	ported	crates/console/tests/formatter.rs::testStyleMatchingNotGreedy
 Tests/Helper/DescriptorHelperTest.php	DescriptorHelperTest::testGetFormats	pending	
 Tests/Helper/DumperNativeFallbackTest.php	DumperNativeFallbackTest::testInvoke	pending	
 Tests/Helper/DumperTest.php	DumperTest::testInvoke	pending	

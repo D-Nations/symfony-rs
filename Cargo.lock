@@ -477,6 +477,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-console"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "serde_json",
+ "symfony-string",
+]
+
+[[package]]
 name = "symfony-deprecation-contracts"
 version = "0.1.0"
 
