@@ -499,6 +499,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-options-resolver"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "serde_json",
+ "symfony-deprecation-contracts",
+]
+
+[[package]]
 name = "symfony-routing"
 version = "0.1.0"
 dependencies = [

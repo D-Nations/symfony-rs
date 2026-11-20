@@ -11,6 +11,7 @@ members = [
     "crates/routing",
     "crates/http-kernel",
     "crates/deprecation-contracts",
+    "crates/options-resolver",
     "examples/request-lab",
 ]
 resolver = "3"
