@@ -1,0 +1,3648 @@
+[
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------------ ------ \n  Variable   Value   .env.local   .env  \n ---------- ------- ------------ ------ \n  FOO        baz     baz          bar   \n  TEST123    true    n/a          true  \n ---------- ------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------------ ------ \n  Variable   Value    .env.local   .env  \n ---------- -------- ------------ ------ \n  FOO        server   baz          bar   \n  TEST123             n/a          true  \n ---------- -------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------------ ------ \n  Variable   Value   .env.local   .env  \n ---------- ------- ------------ ------ \n  FOO        baz     baz          bar   \n ---------- ------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------------ ------ \n  Variable   Value    .env.local   .env  \n ---------- -------- ------------ ------ \n  FOO        server   baz          bar   \n ---------- -------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------------ ------ \n  Variable   Value   .env.local   .env  \n ---------- ------- ------------ ------ \n  FOO        baz     baz          bar   \n ---------- ------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------------ ------ \n  Variable   Value    .env.local   .env  \n ---------- -------- ------------ ------ \n  FOO        server   baz          bar   \n ---------- -------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ----------- ------ \n  Variable   Value   .env.test   .env  \n ---------- ------- ----------- ------ \n  FOO        bar     n/a         bar   \n  TEST123    false   false       true  \n ---------- ------- ----------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ----------- ------ \n  Variable   Value    .env.test   .env  \n ---------- -------- ----------- ------ \n  FOO        server   n/a         bar   \n  TEST123             false       true  \n ---------- -------- ----------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ----------- ------ \n  Variable   Value   .env.test   .env  \n ---------- ------- ----------- ------ \n  FOO        bar     n/a         bar   \n ---------- ------- ----------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ----------- ------ \n  Variable   Value    .env.test   .env  \n ---------- -------- ----------- ------ \n  FOO        server   n/a         bar   \n ---------- -------- ----------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ----------- ------ \n  Variable   Value   .env.test   .env  \n ---------- ------- ----------- ------ \n  FOO        bar     n/a         bar   \n ---------- ------- ----------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ----------- ------ \n  Variable   Value    .env.test   .env  \n ---------- -------- ----------- ------ \n  FOO        server   n/a         bar   \n ---------- -------- ----------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ✓ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ----------------- ------------ ------ \n  Variable   Value   .env.prod.local   .env.local   .env  \n ---------- ------- ----------------- ------------ ------ \n  FOO        baz     n/a               baz          bar   \n  HELLO      world   world             n/a          n/a   \n  TEST123    true    n/a               n/a          true  \n ---------- ------- ----------------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ----------------- ------------ ------ \n  Variable   Value    .env.prod.local   .env.local   .env  \n ---------- -------- ----------------- ------------ ------ \n  FOO        server   n/a               baz          bar   \n  HELLO               world             n/a          n/a   \n  TEST123             n/a               n/a          true  \n ---------- -------- ----------------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ----------------- ------------ ------ \n  Variable   Value   .env.prod.local   .env.local   .env  \n ---------- ------- ----------------- ------------ ------ \n  FOO        baz     n/a               baz          bar   \n ---------- ------- ----------------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ----------------- ------------ ------ \n  Variable   Value    .env.prod.local   .env.local   .env  \n ---------- -------- ----------------- ------------ ------ \n  FOO        server   n/a               baz          bar   \n ---------- -------- ----------------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ----------------- ------------ ------ \n  Variable   Value   .env.prod.local   .env.local   .env  \n ---------- ------- ----------------- ------------ ------ \n  FOO        baz     n/a               baz          bar   \n ---------- ------- ----------------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ----------------- ------------ ------ \n  Variable   Value    .env.prod.local   .env.local   .env  \n ---------- -------- ----------------- ------------ ------ \n  FOO        server   n/a               baz          bar   \n ---------- -------- ----------------- ------------ ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ✓ .env.prod.local\n * ⨯ .env.prod\n * ✓ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "plain",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- \n  Variable   Value   .env.local.php   .env.dist  \n ---------- ------- ---------------- ----------- \n  FOO        BaR     BaR              n/a        \n  TEST       1234    1234             0000       \n ---------- ------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- \n  Variable   Value    .env.local.php   .env.dist  \n ---------- -------- ---------------- ----------- \n  FOO        server   BaR              n/a        \n  TEST                1234             0000       \n ---------- -------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- \n  Variable   Value   .env.local.php   .env.dist  \n ---------- ------- ---------------- ----------- \n  FOO        BaR     BaR              n/a        \n ---------- ------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- \n  Variable   Value    .env.local.php   .env.dist  \n ---------- -------- ---------------- ----------- \n  FOO        server   BaR              n/a        \n ---------- -------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- \n  Variable   Value   .env.local.php   .env.dist  \n ---------- ------- ---------------- ----------- \n  FOO        BaR     BaR              n/a        \n ---------- ------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- \n  Variable   Value    .env.local.php   .env.dist  \n ---------- -------- ---------------- ----------- \n  FOO        server   BaR              n/a        \n ---------- -------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- \n  Variable   Value   .env.local.php   .env.dist  \n ---------- ------- ---------------- ----------- \n  FOO        BaR     BaR              n/a        \n  TEST       1234    1234             0000       \n ---------- ------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- \n  Variable   Value    .env.local.php   .env.dist  \n ---------- -------- ---------------- ----------- \n  FOO        server   BaR              n/a        \n  TEST                1234             0000       \n ---------- -------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- \n  Variable   Value   .env.local.php   .env.dist  \n ---------- ------- ---------------- ----------- \n  FOO        BaR     BaR              n/a        \n ---------- ------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- \n  Variable   Value    .env.local.php   .env.dist  \n ---------- -------- ---------------- ----------- \n  FOO        server   BaR              n/a        \n ---------- -------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- \n  Variable   Value   .env.local.php   .env.dist  \n ---------- ------- ---------------- ----------- \n  FOO        BaR     BaR              n/a        \n ---------- ------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- \n  Variable   Value    .env.local.php   .env.dist  \n ---------- -------- ---------------- ----------- \n  FOO        server   BaR              n/a        \n ---------- -------- ---------------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- ----------- \n  Variable   Value   .env.local.php   .env.prod   .env.dist  \n ---------- ------- ---------------- ----------- ----------- \n  FOO        BaR     BaR              BaR         n/a        \n  TEST       1234    1234             1234        0000       \n ---------- ------- ---------------- ----------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- ----------- \n  Variable   Value    .env.local.php   .env.prod   .env.dist  \n ---------- -------- ---------------- ----------- ----------- \n  FOO        server   BaR              BaR         n/a        \n  TEST                1234             1234        0000       \n ---------- -------- ---------------- ----------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- ----------- \n  Variable   Value   .env.local.php   .env.prod   .env.dist  \n ---------- ------- ---------------- ----------- ----------- \n  FOO        BaR     BaR              BaR         n/a        \n ---------- ------- ---------------- ----------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- ----------- \n  Variable   Value    .env.local.php   .env.prod   .env.dist  \n ---------- -------- ---------------- ----------- ----------- \n  FOO        server   BaR              BaR         n/a        \n ---------- -------- ---------------- ----------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- ------- ---------------- ----------- ----------- \n  Variable   Value   .env.local.php   .env.prod   .env.dist  \n ---------- ------- ---------------- ----------- ----------- \n  FOO        BaR     BaR              BaR         n/a        \n ---------- ------- ---------------- ----------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n ---------- -------- ---------------- ----------- ----------- \n  Variable   Value    .env.local.php   .env.prod   .env.dist  \n ---------- -------- ---------------- ----------- ----------- \n  FOO        server   BaR              BaR         n/a        \n ---------- -------- ---------------- ----------- ----------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] Due to existing dump file (.env.local.php) all other dotenv files are\n           skipped.                                                             \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ✓ .env.local.php\n * ⨯ .env.prod.local\n * ✓ .env.prod\n * ⨯ .env.local\n * ✓ .env.dist\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "dist",
+        "files": {
+            ".env.dist": "TEST=0000\n",
+            ".env.local.php": "<?php\nreturn [\n    'FOO' => 'BaR',\n    'TEST' => '1234',\n];\n",
+            ".env.prod": "FOO=BaR\nTEST=1234\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------- ------ \n  Variable   Value   .env  \n ---------- ------- ------ \n  FOO        BAR     BAR   \n ---------- ------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- -------- ------ \n  Variable   Value    .env  \n ---------- -------- ------ \n  FOO        server   BAR   \n ---------- -------- ------ \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\n [WARNING] The file .env.dist gets skipped due to the existence of .env.        \n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "both",
+        "files": {
+            ".env": "FOO=BAR\n",
+            ".env.dist": "FOO=BAZ\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- --------------------------------- ----------------------------------- ----------------------------------- \n  Variable   Value                             .env.dev                            .env                               \n ---------- --------------------------------- ----------------------------------- ----------------------------------- \n  EMPTY                                        n/a                                                                    \n  LONG       yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy   yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy...   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n  NEW        1                                 1                                   n/a                                \n  QUOTE      it's \\ here                       n/a                                 it's \\ here                        \n  TAGS       <info>tag</info>                  n/a                                 <info>tag</info>                   \n  UNI        été                               n/a                                 été                                \n  ZETA       1                                 n/a                                 1                                  \n  alpha      2                                 n/a                                 2                                  \n ---------- --------------------------------- ----------------------------------- ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- ----------------------------------- \n  Variable   Value                                      .env.dev                            .env                               \n ---------- ------------------------------------------ ----------------------------------- ----------------------------------- \n  EMPTY                                                 n/a                                                                    \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy...   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n  NEW                                                   1                                   n/a                                \n  QUOTE                                                 n/a                                 it's \\ here                        \n  TAGS                                                  n/a                                 <info>tag</info>                   \n  UNI                                                   n/a                                 été                                \n  ZETA                                                  n/a                                 1                                  \n  alpha                                                 n/a                                 2                                  \n ---------- ------------------------------------------ ----------------------------------- ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- --------------------------------- ----------------------------------- ----------------------------------- \n  Variable   Value                             .env.dev                            .env                               \n ---------- --------------------------------- ----------------------------------- ----------------------------------- \n  LONG       yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy   yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy...   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n ---------- --------------------------------- ----------------------------------- ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ✓ .env.dev\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- ----------------------------------- \n  Variable   Value                                      .env.dev                            .env                               \n ---------- ------------------------------------------ ----------------------------------- ----------------------------------- \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy...   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n ---------- ------------------------------------------ ----------------------------------- ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  EMPTY                                                                                    \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n  QUOTE      it's \\ here                                it's \\ here                        \n  TAGS       <info>tag</info>                           <info>tag</info>                   \n  UNI        été                                        été                                \n  ZETA       1                                          1                                  \n  alpha      2                                          2                                  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  EMPTY                                                                                    \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n  QUOTE                                                 it's \\ here                        \n  TAGS                                                  <info>tag</info>                   \n  UNI                                                   été                                \n  ZETA                                                  1                                  \n  alpha                                                 2                                  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "test",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  EMPTY                                                                                    \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n  QUOTE      it's \\ here                                it's \\ here                        \n  TAGS       <info>tag</info>                           <info>tag</info>                   \n  UNI        été                                        été                                \n  ZETA       1                                          1                                  \n  alpha      2                                          2                                  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  EMPTY                                                                                    \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n  QUOTE                                                 it's \\ here                        \n  TAGS                                                  <info>tag</info>                   \n  UNI                                                   été                                \n  ZETA                                                  1                                  \n  alpha                                                 2                                  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "boot",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ✓ .env\n\nVariables\n---------\n\n ---------- ------------------------------------------ ----------------------------------- \n  Variable   Value                                      .env                               \n ---------- ------------------------------------------ ----------------------------------- \n  LONG       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...  \n ---------- ------------------------------------------ ----------------------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "values",
+        "files": {
+            ".env": "LONG=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nTAGS=\"<info>tag</info>\"\nQUOTE=\"it's \\\\ here\"\nEMPTY=\nZETA=1\nalpha=2\nUNI=été\n",
+            ".env.dev": "LONG=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nNEW=1\n"
+        },
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": null,
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n ---------- ------- \n  Variable   Value  \n ---------- ------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "fo",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "x",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.dev.local\n * ⨯ .env.dev\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "dev",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": null,
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ⨯ .env\n\nVariables\n---------\n\n ---------- ------- \n  Variable   Value  \n ---------- ------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "fo",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "FOO",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "x",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "LONG",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.test.local\n * ⨯ .env.test\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "test",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": null,
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": null,
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n ---------- ------- \n  Variable   Value  \n ---------- ------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": null,
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "fo",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "fo",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"fo\".                            \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "fo",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"FOO\".                           \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "FOO",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "x",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "x",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"x\".                             \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "x",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "boot",
+        "throws": "Symfony\\Component\\Dotenv\\Exception\\PathException",
+        "message": "Unable to read the \"/tmp/dotenv-cases/none/.env\" environment file."
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "vars_only",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ .env.local.php\n * ⨯ .env.prod.local\n * ⨯ .env.prod\n * ⨯ .env.local\n * ⨯ .env\n\nVariables\n---------\n\n [WARNING] No variables match the given filter \"LONG\".                          \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "none",
+        "files": [],
+        "env": "prod",
+        "filter": "LONG",
+        "setup": "uninitialized",
+        "status": 1,
+        "display": "\nDotenv Variables & Files\n========================\n\n [ERROR] Dotenv component is not initialized.                                   \n\n"
+    },
+    {
+        "command": "debug:dotenv",
+        "project": "nested/inner",
+        "files": {
+            ".env": "FOO=bar\nTEST123=true\n",
+            ".env.local": "FOO=baz\n",
+            ".env.prod.local": "HELLO=world\n",
+            ".env.test": "TEST123=false\n"
+        },
+        "env": "prod",
+        "filter": null,
+        "setup": "custom_path",
+        "status": 0,
+        "display": "\nDotenv Variables & Files\n========================\n\nScanned Files (in descending priority)\n--------------------------------------\n\n * ⨯ nested/inner/.env.local.php\n * ✓ nested/inner/.env.prod.local\n * ⨯ nested/inner/.env.prod\n * ✓ nested/inner/.env.local\n * ✓ nested/inner/.env\n\nVariables\n---------\n\n ---------- ------- ------------------------------ ------------------------- ------------------- \n  Variable   Value   nested/inner/.env.prod.local   nested/inner/.env.local   nested/inner/.env  \n ---------- ------- ------------------------------ ------------------------- ------------------- \n  FOO        baz     n/a                            baz                       bar                \n  HELLO      world   world                          n/a                       n/a                \n  TEST123    true    n/a                            n/a                       true               \n ---------- ------- ------------------------------ ------------------------- ------------------- \n\n // Note that values might be different between web and CLI.                    \n\n"
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'APP_SECRET' => 'abc123',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'APP_SECRET' => 'abc123',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'APP_SECRET' => 'abc123',\n  'APP_LOCAL' => 'yes',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'APP_SECRET' => 'abc123',\n  'APP_LOCAL' => 'yes',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": [],
+        "default_env": null,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "Not enough arguments (missing: \"env\")."
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-basic",
+        "files": {
+            ".env": "APP_ENV=dev\nAPP_SECRET=abc123",
+            ".env.local": "APP_LOCAL=yes"
+        },
+        "input": [],
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'APP_SECRET' => 'abc123',\n  'APP_LOCAL' => 'yes',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'Q' => 'it\\'s',\n  'B' => 'back\\\\\\\\slash',\n  'EMPTY' => '',\n  'NUM' => '12',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'Q' => 'it\\'s',\n  'B' => 'back\\\\\\\\slash',\n  'EMPTY' => '',\n  'NUM' => '12',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'Q' => 'it\\'s',\n  'B' => 'back\\\\\\\\slash',\n  'EMPTY' => '',\n  'NUM' => '12',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'Q' => 'it\\'s',\n  'B' => 'back\\\\\\\\slash',\n  'EMPTY' => '',\n  'NUM' => '12',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": [],
+        "default_env": null,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "Not enough arguments (missing: \"env\")."
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-quotes",
+        "files": {
+            ".env": "APP_ENV=prod\nQ=\"it's\"\nB='back\\\\slash'\nEMPTY=\nNUM=12\n"
+        },
+        "input": [],
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'Q' => 'it\\'s',\n  'B' => 'back\\\\\\\\slash',\n  'EMPTY' => '',\n  'NUM' => '12',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'X' => '1',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'X' => '1',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'X' => '1',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'X' => '1',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": [],
+        "default_env": null,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "Not enough arguments (missing: \"env\")."
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-own_env",
+        "files": {
+            ".env": "APP_ENV=staging\nX=1\n",
+            ".env.staging": "X=2\n"
+        },
+        "input": [],
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'X' => '1',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'MY_ENV' => 'test',\n  'Y' => 'test',\n  'Z' => 'local',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'MY_ENV' => 'test',\n  'Y' => 'test',\n  'Z' => 'local',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'MY_ENV' => 'prod',\n  'Y' => '1',\n  'Z' => 'local',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'MY_ENV' => 'prod',\n  'Y' => '1',\n  'Z' => 'local',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'MY_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the test environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'MY_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": [],
+        "default_env": null,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "Not enough arguments (missing: \"env\")."
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-composer",
+        "files": {
+            ".env": "MY_ENV=dev\nY=1\n",
+            ".env.test": "Y=test\n",
+            ".env.local": "Z=local\n",
+            "composer.json": "{\"extra\":{\"runtime\":{\"env_var_name\":\"MY_ENV\",\"test_envs\":[]}}}"
+        },
+        "input": [],
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env files in .env.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'MY_ENV' => 'prod',\n  'Y' => '1',\n  'Z' => 'local',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env.path files in .env.path.local.php for the test environment.\n",
+        "dumped": [
+            ".env.path.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'APP_SECRET' => 'newpath123',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": {
+            "env": "test"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env.path files in .env.path.local.php for the test environment.\n",
+        "dumped": [
+            ".env.path.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n  'APP_SECRET' => 'newpath123',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env.path files in .env.path.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.path.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'APP_SECRET' => 'newpath123',\n  'LOCAL_PATH' => 'yes',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": {
+            "env": "prod"
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env.path files in .env.path.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.path.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'APP_SECRET' => 'newpath123',\n  'LOCAL_PATH' => 'yes',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": null,
+        "status": 0,
+        "display": "Successfully dumped .env.path files in .env.path.local.php for the test environment.\n",
+        "dumped": [
+            ".env.path.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": {
+            "env": "test",
+            "--empty": true
+        },
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env.path files in .env.path.local.php for the test environment.\n",
+        "dumped": [
+            ".env.path.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump test\"\n\nreturn array (\n  'APP_ENV' => 'test',\n);\n"
+        ]
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": [],
+        "default_env": null,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "Not enough arguments (missing: \"env\")."
+    },
+    {
+        "command": "dotenv:dump",
+        "project": "dump-dotenv_path",
+        "files": {
+            ".env.path": "APP_ENV=test\nAPP_SECRET=newpath123",
+            ".env.path.local": "LOCAL_PATH=yes",
+            "composer.json": "{\"extra\":{\"runtime\":{\"dotenv_path\":\".env.path\"}}}"
+        },
+        "input": [],
+        "default_env": "prod",
+        "status": 0,
+        "display": "Successfully dumped .env.path files in .env.path.local.php for the prod environment.\n",
+        "dumped": [
+            ".env.path.local.php",
+            "<?php\n\n// This file was generated by running \"php bin/console dotenv:dump prod\"\n\nreturn array (\n  'APP_ENV' => 'prod',\n  'APP_SECRET' => 'newpath123',\n  'LOCAL_PATH' => 'yes',\n);\n"
+        ]
+    }
+]

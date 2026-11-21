@@ -46,7 +46,20 @@ Vectors: `scripts/record.sh dotenv` records upstream's provider rows
 - testGetVariablesValueFromEnvFirst's command reads the variable with
   `printenv` instead of `php -r`: PHP is not installed on hosts here.
 
-## Not ported yet
+## The commands
 
-`Command/DebugCommand.php` and `Command/DotenvDumpCommand.php` with their
-tests (19): they wait for the Console port.
+`Command/DebugCommand.php` (`debug:dotenv`) and
+`Command/DotenvDumpCommand.php` (`dotenv:dump`), behind the `console`
+feature (symfony-console, and serde_json for composer.json), with
+DebugCommandTest (15 of 15), DotenvDumpCommandTest (4 of 4) and 266 runs
+recorded from PHP (`tests/data/commands.json`, the dumped files
+included). `$_SERVER` and `$_ENV` are the application's `Globals`, shared
+with the commands.
+
+- `.env.local.php` is read as dump-env's literal array, and the dump
+  writes `var_export()`'s form of the variables, which reads back the
+  same way. The file is written without `LOCK_EX`.
+- The `filter` argument's suggestion closure cannot reach the command's
+  helper set and cannot raise an error; it uses a FormatterHelper of its
+  own and suggests nothing when the files cannot be read. `complete()`,
+  which the completion tester calls, uses the command's own.

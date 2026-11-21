@@ -1,23 +1,23 @@
 # symfony/dotenv at 4ea87b35c75f7052309ec9735c0eb5c1fd7d2182: upstream test	method	status	rust test
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testCompletion	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testEmptyDotEnvVarsList	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testErrorOnUninitializedDotenv	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InDevEnv	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InDevEnvWithNameFilter	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InProdEnv	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InProdEnvWithMissingNameFilter	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InTestEnv	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2InProdEnv	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2InProdEnvWithNameFilterPrefix	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2WithCustomPath	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnEnvAndEnvDistFile	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnEnvAndEnvDistFileWithCustomPath	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnPhpEnvFile	pending	
-Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnPhpEnvFileWithCustomPath	pending	
-Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecute	pending	
-Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteEmpty	pending	
-Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteTestEnvs	pending	
-Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteWithRuntimeOptionsDotenvPath	pending	
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testCompletion	ported	crates/dotenv/tests/debug_command.rs::testCompletion
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testEmptyDotEnvVarsList	ported	crates/dotenv/tests/debug_command.rs::testEmptyDotEnvVarsList
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testErrorOnUninitializedDotenv	ported	crates/dotenv/tests/debug_command.rs::testErrorOnUninitializedDotenv
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InDevEnv	ported	crates/dotenv/tests/debug_command.rs::testScenario1InDevEnv
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InDevEnvWithNameFilter	ported	crates/dotenv/tests/debug_command.rs::testScenario1InDevEnvWithNameFilter
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InProdEnv	ported	crates/dotenv/tests/debug_command.rs::testScenario1InProdEnv
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InProdEnvWithMissingNameFilter	ported	crates/dotenv/tests/debug_command.rs::testScenario1InProdEnvWithMissingNameFilter
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario1InTestEnv	ported	crates/dotenv/tests/debug_command.rs::testScenario1InTestEnv
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2InProdEnv	ported	crates/dotenv/tests/debug_command.rs::testScenario2InProdEnv
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2InProdEnvWithNameFilterPrefix	ported	crates/dotenv/tests/debug_command.rs::testScenario2InProdEnvWithNameFilterPrefix
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testScenario2WithCustomPath	ported	crates/dotenv/tests/debug_command.rs::testScenario2WithCustomPath
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnEnvAndEnvDistFile	ported	crates/dotenv/tests/debug_command.rs::testWarningOnEnvAndEnvDistFile
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnEnvAndEnvDistFileWithCustomPath	ported	crates/dotenv/tests/debug_command.rs::testWarningOnEnvAndEnvDistFileWithCustomPath
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnPhpEnvFile	ported	crates/dotenv/tests/debug_command.rs::testWarningOnPhpEnvFile
+Tests/Command/DebugCommandTest.php	DebugCommandTest::testWarningOnPhpEnvFileWithCustomPath	ported	crates/dotenv/tests/debug_command.rs::testWarningOnPhpEnvFileWithCustomPath
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecute	ported	crates/dotenv/tests/dotenv_dump_command.rs::testExecute
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteEmpty	ported	crates/dotenv/tests/dotenv_dump_command.rs::testExecuteEmpty
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteTestEnvs	ported	crates/dotenv/tests/dotenv_dump_command.rs::testExecuteTestEnvs
+Tests/Command/DotenvDumpCommandTest.php	DotenvDumpCommandTest::testExecuteWithRuntimeOptionsDotenvPath	ported	crates/dotenv/tests/dotenv_dump_command.rs::testExecuteWithRuntimeOptionsDotenvPath
 Tests/DotenvTest.php	DotenvTest::testBootEnv	ported	crates/dotenv/tests/dotenv_test.rs::testBootEnv
 Tests/DotenvTest.php	DotenvTest::testDoNotUsePutenv	ported	crates/dotenv/tests/dotenv_test.rs::testDoNotUsePutenv
 Tests/DotenvTest.php	DotenvTest::testEnvVarIsNotOverridden	ported	crates/dotenv/tests/dotenv_test.rs::testEnvVarIsNotOverridden

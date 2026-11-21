@@ -6,9 +6,18 @@ license = "MIT"
 publish = false
 description = "Port of the symfony/dotenv component"
 
+[features]
+# The debug:dotenv and dotenv:dump commands (Command/*.php), on
+# symfony-console; serde_json reads composer.json's runtime options.
+console = ["dep:symfony-console", "dep:serde_json"]
+
 [dependencies]
 php-value = { path = "../php-value" }
+symfony-console = { path = "../console", optional = true }
+serde_json = { version = "1.0.154", optional = true }
 
 [dev-dependencies]
+# The tests cover the commands too.
+symfony-dotenv = { path = ".", features = ["console"] }
 php-value = { path = "../php-value", features = ["vectors"] }
 serde_json = "1.0.154"

@@ -633,6 +633,7 @@ Stack rows (searched November 19):
 | OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
 | Finder (searched November 20) | No Rust port of Symfony Finder. Walkers: [walkdir](https://docs.rs/walkdir) (depth-first, sorting, symlink loops), [ignore](https://docs.rs/ignore) (ripgrep's walker with its own gitignore rules and parallelism), [jwalk](https://docs.rs/jwalk); globs: [globset](https://docs.rs/globset), [glob](https://docs.rs/glob), [wax](https://docs.rs/wax). Regex for the PCRE patterns Finder builds and accepts (`Glob`/`Gitignore` emit lookaround, possessive quantifiers, `$f`): `regex` (no lookaround), [fancy-regex](https://docs.rs/fancy-regex) 0.20 (backtracking, lookaround, atomic and possessive, a bytes mode with ASCII classes), [pcre2](https://docs.rs/pcre2) (FFI, excluded by decision 5) | Port, walking with `std::fs`; `fancy-regex` under a PHP-pattern translator (`crates/finder/src/pcre.rs`) | Finder's order of filters and stat calls (pinned by upstream's stream-wrapper log tests), stream wrappers, `SplFileInfo` relative paths, its own gitignore regexes and Glob's regex text are its behaviour, so no walker or glob crate reproduces them. `fancy-regex` is the regex engine decision 5 names for lookaround; the translator keeps PCRE's meaning (bytes without `/u`, `$` before a final newline, `/x`, `/U`, `/n`, literal `{`) and refuses what it does not translate; checked on 137 patterns x 62 subjects recorded from PHP |
 | Console's OutputWrapper and Table cell patterns (November 21) | `regex` (no atomic groups or lookbehind; upstream's wrap pattern needs both), a hand-written wrapper (the demo's `wrap()`, its own rules), `fancy-regex` 0.20 (already Finder's engine, decision 5) | `fancy-regex`, upstream's pattern written for it; `preg_replace()`'s scan done by hand | The wrap pattern is upstream's text and stays comparable; checked on 2,500 recorded `wrap()` calls and SymfonyStyle's 27 fixtures. No new crate in the workspace |
+| composer.json for `dotenv:dump` and `debug:dotenv` (November 21) | A hand-written JSON reader in `php-value` (none exists; it would need PHP's `json_decode()` rules for depth, big integers and invalid UTF-8), `serde_json` (already in the lock as every crate's test dependency) | `serde_json`, optional, only with symfony-dotenv's `console` feature | The commands read `extra.runtime` from a file the project owns; integers that do not fit become floats as in PHP, invalid JSON is `null`. No new crate in the lock |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
@@ -662,23 +663,27 @@ Stack rows (searched November 19):
       shortest decimal form (3,270 differ, from 7e13) and php2rust's
       `php-rt` `round()` (14,571 differ, from 2.35: it implements the
       pre-8.4 15-digit pre-rounding, a php2rust bug to report).
-- [ ] Yaml (`symfony-yaml`, values in `php-value`). Ported: every file
-      but `Command/LintCommand.php` (after Console): 329 of 342 upstream
-      tests, 2 `n/a` with their reasons in the manifest, 11 pending
-      (LintCommandTest). ParserTest, DumperTest, YamlTest and
+- [x] Yaml (`symfony-yaml`, values in `php-value`). Ported: every file,
+      `Command/LintCommand.php` behind the `console` feature: 340 of 342
+      upstream tests, 2 `n/a` with their reasons in the manifest, plus
+      150 recorded `lint:yaml` runs; in `parity/done.txt`. The four
+      advisories the watch lists are `covered`, checked against the
+      releases before each fix ([m1-b-console.md](docs/milestones/m1-b-console.md)). ParserTest, DumperTest, YamlTest and
       YamlTestSuiteTest replay every call each upstream test makes to the
       parser and the dumper, recorded on the oracle while the upstream
       test runs and passes (`oracle/recorders/yaml_test_calls.php`);
       YamlTestSuiteTest runs on yaml-test-suite at the commit symfony/yaml
       pins (`upstream.tsv`), 200 cases, upstream's skip list.
-- [ ] Dotenv (`symfony-dotenv`): `Dotenv.php` and the exceptions, all 38
+- [x] Dotenv (`symfony-dotenv`): `Dotenv.php` and the exceptions, all 38
       DotenvTest tests (also run on Linux: the `$(...)` cases skip on
       Windows, as upstream's do) and 231 recorded `parse()` inputs. PHP's
       globals are a `Globals` value; `putenv()` is an overlay, since
       setting the process environment is `unsafe`. `.env.local.php` is
       read as dump-env's literal array, not run. Upstream loops forever on
       a value ending in `$(`; the port fails instead (crate README,
-      "Differences"). Pending: the two commands (19 tests) after Console.
+      "Differences"). Then the two commands behind the `console` feature:
+      DebugCommandTest and DotenvDumpCommandTest (19 of 19) and 266
+      recorded command runs; in `parity/done.txt`.
 
 - [ ] Config (`symfony-config`, values in `php-value`). Ported: the
       Definition nodes (`BaseNode.php` and the interfaces, VariableNode,
@@ -727,7 +732,7 @@ Stack rows (searched November 19):
       the HttpFoundation/HttpKernel/FrameworkBundle gaps M2-A must close.
       The conversion gate stays open until symfony2rust emits the fixture.
 
-- [ ] M1-B (`symfony-console`, the subset the Yaml and Dotenv commands
+- [x] M1-B (`symfony-console`, the subset the Yaml and Dotenv commands
       need). Done: the formatter, styles, Output, Input and completion
       input (PR #6); then Command, AsCommand, HelperSet, FormatterHelper,
       StringInput, NullOutput, Application's registry (`find()`,
@@ -747,8 +752,10 @@ Stack rows (searched November 19):
       OutputWrapperTest 1 of 4 (3 `n/a`: malformed UTF-8),
       GithubActionReporterTest, TableStyleTest, TableCellStyleTest; plus
       1,500 generated tables and 2,500 `wrap()` calls recorded from PHP.
-      Next: Yaml's LintCommand (11 tests) and Dotenv's two commands (19
-      tests).
+      Then Yaml's LintCommand and Dotenv's two commands with their 30
+      tests: the stage's exit evidence. Stage log:
+      [docs/milestones/m1-b-console.md](docs/milestones/m1-b-console.md).
+      The rest of Console stays M7 work.
 
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath

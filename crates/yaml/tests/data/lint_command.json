@@ -1,0 +1,1456 @@
+[
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/valid.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/valid.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/valid.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/valid.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/valid.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/valid.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/valid.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/valid.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/valid.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/empty.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/empty.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/empty.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/empty.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/empty.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/empty.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/empty.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/empty.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/empty.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/incorrect.yaml\",\n        \"line\": 3,\n        \"valid\": false,\n        \"message\": \"Unable to parse at line 3 (near \\\"bar\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/incorrect.yaml\",\n        \"line\": 3,\n        \"valid\": false,\n        \"message\": \"Unable to parse at line 3 (near \\\"bar\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/incorrect.yaml\",\n        \"line\": 3,\n        \"valid\": false,\n        \"message\": \"Unable to parse at line 3 (near \\\"bar\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/incorrect.yaml\",\n        \"line\": 3,\n        \"valid\": false,\n        \"message\": \"Unable to parse at line 3 (near \\\"bar\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n::error file=../../target/yl/incorrect.yaml,line=3,col=0::Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n::error file=../../target/yl/incorrect.yaml,line=3,col=0::Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n::error file=../../target/yl/incorrect.yaml,line=3,col=0::Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/incorrect.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n::error file=../../target/yl/incorrect.yaml,line=3,col=0::Unable to parse at line 3 (near \"bar\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/tabs.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"A YAML file cannot contain tabs as indentation at line 2 (near \\\"\\tbar: baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/tabs.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"A YAML file cannot contain tabs as indentation at line 2 (near \\\"\\tbar: baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/tabs.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"A YAML file cannot contain tabs as indentation at line 2 (near \\\"\\tbar: baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/tabs.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"A YAML file cannot contain tabs as indentation at line 2 (near \\\"\\tbar: baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n::error file=../../target/yl/tabs.yaml,line=2,col=0::A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n::error file=../../target/yl/tabs.yaml,line=2,col=0::A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n::error file=../../target/yl/tabs.yaml,line=2,col=0::A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/tabs.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n::error file=../../target/yl/tabs.yaml,line=2,col=0::A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/custom_tag.yaml\n  >> Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors. Use the         \n           --parse-tags option if you want parse custom tags.                   \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/custom_tag.yaml\n  >> Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors. Use the         \n           --parse-tags option if you want parse custom tags.                   \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/custom_tag.yaml                                       \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/custom_tag.yaml\",\n        \"line\": 1,\n        \"valid\": false,\n        \"message\": \"Tags support is not enabled. Enable the \\\"Yaml::PARSE_CUSTOM_TAGS\\\" flag to use \\\"!my_tag\\\" at line 1 (near \\\"foo: !my_tag {foo: bar}\\\"). Use the --parse-tags option if you want parse custom tags.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/custom_tag.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/custom_tag.yaml\",\n        \"line\": 1,\n        \"valid\": false,\n        \"message\": \"Tags support is not enabled. Enable the \\\"Yaml::PARSE_CUSTOM_TAGS\\\" flag to use \\\"!my_tag\\\" at line 1 (near \\\"foo: !my_tag {foo: bar}\\\"). Use the --parse-tags option if you want parse custom tags.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/custom_tag.yaml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/custom_tag.yaml\n  >> Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n::error file=../../target/yl/custom_tag.yaml,line=1,col=0::Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors. Use the         \n           --parse-tags option if you want parse custom tags.                   \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/custom_tag.yaml\n  >> Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n::error file=../../target/yl/custom_tag.yaml,line=1,col=0::Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors. Use the         \n           --parse-tags option if you want parse custom tags.                   \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/custom_tag.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/custom_tag.yaml                                       \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/duplicate_key.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Duplicate key \\\"foo\\\" detected at line 2 (near \\\"foo: 2\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/duplicate_key.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Duplicate key \\\"foo\\\" detected at line 2 (near \\\"foo: 2\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/duplicate_key.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Duplicate key \\\"foo\\\" detected at line 2 (near \\\"foo: 2\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/duplicate_key.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Duplicate key \\\"foo\\\" detected at line 2 (near \\\"foo: 2\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n::error file=../../target/yl/duplicate_key.yaml,line=2,col=0::Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n::error file=../../target/yl/duplicate_key.yaml,line=2,col=0::Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n::error file=../../target/yl/duplicate_key.yaml,line=2,col=0::Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/duplicate_key.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/duplicate_key.yaml\n  >> Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n::error file=../../target/yl/duplicate_key.yaml,line=2,col=0::Duplicate key \"foo\" detected at line 2 (near \"foo: 2\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unterminated.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unterminated.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unterminated.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unterminated.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unterminated.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unterminated.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unterminated.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unterminated.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unterminated.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unterminated.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unicode.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unicode.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unicode.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unicode.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unicode.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unicode.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unicode.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unicode.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unicode.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/unicode.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unknown_constant.yaml\",\n        \"line\": 1,\n        \"valid\": false,\n        \"message\": \"The constant \\\"NOT_A_CONSTANT\\\" is not defined at line 1 (near \\\"foo: !php/const NOT_A_CONSTANT\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unknown_constant.yaml\",\n        \"line\": 1,\n        \"valid\": false,\n        \"message\": \"The constant \\\"NOT_A_CONSTANT\\\" is not defined at line 1 (near \\\"foo: !php/const NOT_A_CONSTANT\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unknown_constant.yaml\",\n        \"line\": 1,\n        \"valid\": false,\n        \"message\": \"The constant \\\"NOT_A_CONSTANT\\\" is not defined at line 1 (near \\\"foo: !php/const NOT_A_CONSTANT\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/unknown_constant.yaml\",\n        \"line\": 1,\n        \"valid\": false,\n        \"message\": \"The constant \\\"NOT_A_CONSTANT\\\" is not defined at line 1 (near \\\"foo: !php/const NOT_A_CONSTANT\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n::error file=../../target/yl/unknown_constant.yaml,line=1,col=0::The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n::error file=../../target/yl/unknown_constant.yaml,line=1,col=0::The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n::error file=../../target/yl/unknown_constant.yaml,line=1,col=0::The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/unknown_constant.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/unknown_constant.yaml\n  >> The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n::error file=../../target/yl/unknown_constant.yaml,line=1,col=0::The constant \"NOT_A_CONSTANT\" is not defined at line 1 (near \"foo: !php/const NOT_A_CONSTANT\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/slash_path.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/slash_path.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/slash_path.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/slash_path.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"Malformed inline YAML string at line 2.\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/slash_path.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/slash_path.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/slash_path.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/slash_path.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/slash_path.yaml\n  >> Malformed inline YAML string at line 2.\n::error file=../../target/yl/slash_path.yaml,line=2,col=0::Malformed inline YAML string at line 2.\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "txt"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "txt",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/sequence_in_mapping.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"You cannot define a sequence item when in a mapping at line 2 (near \\\"- baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/sequence_in_mapping.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"You cannot define a sequence item when in a mapping at line 2 (near \\\"- baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/sequence_in_mapping.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"You cannot define a sequence item when in a mapping at line 2 (near \\\"- baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "json",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/sequence_in_mapping.yaml\",\n        \"line\": 2,\n        \"valid\": false,\n        \"message\": \"You cannot define a sequence item when in a mapping at line 2 (near \\\"- baz\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "github"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n::error file=../../target/yl/sequence_in_mapping.yaml,line=2,col=0::You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n::error file=../../target/yl/sequence_in_mapping.yaml,line=2,col=0::You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "github"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n::error file=../../target/yl/sequence_in_mapping.yaml,line=2,col=0::You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": "BASE/sequence_in_mapping.yaml",
+            "--format": "github",
+            "--parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/sequence_in_mapping.yaml\n  >> You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n::error file=../../target/yl/sequence_in_mapping.yaml,line=2,col=0::You cannot define a sequence item when in a mapping at line 2 (near \"- baz\").\n\n [WARNING] 0 YAML files have valid syntax and 1 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml",
+                "BASE/incorrect.yaml",
+                "BASE/tabs.yaml"
+            ]
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 1 YAML files have valid syntax and 2 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml",
+                "BASE/incorrect.yaml",
+                "BASE/tabs.yaml"
+            ]
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "\n // OK in ../../target/yl/valid.yaml                                            \n\n  ERROR  in ../../target/yl/incorrect.yaml\n  >> Unable to parse at line 3 (near \"bar\").\n  ERROR  in ../../target/yl/tabs.yaml\n  >> A YAML file cannot contain tabs as indentation at line 2 (near \"\tbar: baz\").\n\n [WARNING] 1 YAML files have valid syntax and 2 contain errors.                 \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml",
+                "BASE/incorrect.yaml"
+            ],
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/valid.yaml\",\n        \"valid\": true\n    },\n    {\n        \"file\": \"../../target/yl/incorrect.yaml\",\n        \"line\": 3,\n        \"valid\": false,\n        \"message\": \"Unable to parse at line 3 (near \\\"bar\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml",
+                "BASE/incorrect.yaml"
+            ],
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/valid.yaml\",\n        \"valid\": true\n    },\n    {\n        \"file\": \"../../target/yl/incorrect.yaml\",\n        \"line\": 3,\n        \"valid\": false,\n        \"message\": \"Unable to parse at line 3 (near \\\"bar\\\").\"\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml",
+                "BASE/incorrect.yaml"
+            ],
+            "--exclude": [
+                "BASE/incorrect.yaml"
+            ]
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml",
+                "BASE/incorrect.yaml"
+            ],
+            "--exclude": [
+                "BASE/incorrect.yaml"
+            ]
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/valid.yaml                                            \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/dir"
+            ]
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/dir"
+            ]
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "\n // OK in ../../target/yl/dir/only.yml                                          \n\n [OK] All 1 YAML files contain valid syntax.                                    \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/dir/"
+            ],
+            "--format": "json"
+        },
+        "verbosity": 32,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/dir/only.yml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/dir/"
+            ],
+            "--format": "json"
+        },
+        "verbosity": 64,
+        "status": 0,
+        "display": "[\n    {\n        \"file\": \"../../target/yl/dir/only.yml\",\n        \"valid\": true\n    }\n]\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/missing.yaml"
+            ]
+        },
+        "verbosity": 32,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "File or directory \"../../target/yl/missing.yaml\" is not readable."
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/missing.yaml"
+            ]
+        },
+        "verbosity": 64,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "File or directory \"../../target/yl/missing.yaml\" is not readable."
+    },
+    {
+        "input": {
+            "filename": []
+        },
+        "verbosity": 32,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "Please provide a filename or pipe file content to STDIN."
+    },
+    {
+        "input": {
+            "filename": []
+        },
+        "verbosity": 64,
+        "throws": "Symfony\\Component\\Console\\Exception\\RuntimeException",
+        "message": "Please provide a filename or pipe file content to STDIN."
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml"
+            ],
+            "--format": "xml"
+        },
+        "verbosity": 32,
+        "throws": "Symfony\\Component\\Console\\Exception\\InvalidArgumentException",
+        "message": "Supported formats are \"txt\", \"json\", \"github\"."
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/valid.yaml"
+            ],
+            "--format": "xml"
+        },
+        "verbosity": 64,
+        "throws": "Symfony\\Component\\Console\\Exception\\InvalidArgumentException",
+        "message": "Supported formats are \"txt\", \"json\", \"github\"."
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/custom_tag.yaml",
+                "BASE/valid.yaml"
+            ],
+            "--no-parse-tags": true
+        },
+        "verbosity": 32,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/custom_tag.yaml\n  >> Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n\n [WARNING] 1 YAML files have valid syntax and 1 contain errors. Use the         \n           --parse-tags option if you want parse custom tags.                   \n\n"
+    },
+    {
+        "input": {
+            "filename": [
+                "BASE/custom_tag.yaml",
+                "BASE/valid.yaml"
+            ],
+            "--no-parse-tags": true
+        },
+        "verbosity": 64,
+        "status": 1,
+        "display": "  ERROR  in ../../target/yl/custom_tag.yaml\n  >> Tags support is not enabled. Enable the \"Yaml::PARSE_CUSTOM_TAGS\" flag to use \"!my_tag\" at line 1 (near \"foo: !my_tag {foo: bar}\").\n\n // OK in ../../target/yl/valid.yaml                                            \n\n [WARNING] 1 YAML files have valid syntax and 1 contain errors. Use the         \n           --parse-tags option if you want parse custom tags.                   \n\n"
+    }
+]
