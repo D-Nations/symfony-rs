@@ -12,7 +12,7 @@
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
-#   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins}.json
+#   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,unicode_string_test}.json
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
@@ -164,6 +164,18 @@ console() {
     python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
     mv "$tmp" "$out"
     echo "Console built-in and find() vectors written to $out"
+    out=crates/console/tests/data/table_test.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/test_providers.php symfony/console Helper/TableTest > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Console TableTest providers written to $out"
+    out=crates/console/tests/data/table_vectors.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/console_table.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Console Table vectors written to $out"
 }
 
 string() {

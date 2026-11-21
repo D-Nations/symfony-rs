@@ -240,8 +240,8 @@ Tests/ArgumentResolver/ValueResolver/VariadicValueResolverTest.php	VariadicValue
 Tests/ArgumentResolver/ValueResolver/VariadicValueResolverTest.php	VariadicValueResolverTest::testResolveVariadicOption	pending	
 Tests/ArgumentResolver/ValueResolver/VariadicValueResolverTest.php	VariadicValueResolverTest::testThrowsWhenArgumentValueIsNotArray	pending	
 Tests/ArgumentResolver/ValueResolver/VariadicValueResolverTest.php	VariadicValueResolverTest::testThrowsWhenOptionValueIsNotArray	pending	
-Tests/CI/GithubActionReporterTest.php	GithubActionReporterTest::testAnnotationsFormat	pending	
-Tests/CI/GithubActionReporterTest.php	GithubActionReporterTest::testIsGithubActionEnvironment	pending	
+Tests/CI/GithubActionReporterTest.php	GithubActionReporterTest::testAnnotationsFormat	ported	crates/console/tests/github_action_reporter.rs::testAnnotationsFormat
+Tests/CI/GithubActionReporterTest.php	GithubActionReporterTest::testIsGithubActionEnvironment	ported	crates/console/tests/github_action_reporter.rs::testIsGithubActionEnvironment
 Tests/ColorTest.php	ColorTest::testAnsi4Colors	pending	
 Tests/ColorTest.php	ColorTest::testDegradedTrueColorsToAnsi4	pending	
 Tests/ColorTest.php	ColorTest::testDegradedTrueColorsToAnsi8	pending	
@@ -546,10 +546,10 @@ Tests/Helper/HelperSetTest.php	HelperSetTest::testIteration	ported	crates/consol
 Tests/Helper/HelperSetTest.php	HelperSetTest::testSet	ported	crates/console/tests/helper_set.rs::testSet
 Tests/Helper/HelperTest.php	HelperTest::testFormatTime	pending	
 Tests/Helper/HelperTest.php	HelperTest::testRemoveDecoration	pending	
-Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testBasicWrap	pending	
-Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testWrapBreaksMalformedUtf8LikeValidText	pending	
-Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testWrapDoesNotDropBytesOfMalformedUtf8	pending	
-Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testWrapKeepsMalformedUtf8	pending	
+Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testBasicWrap	ported	crates/console/tests/output_wrapper.rs::testBasicWrap
+Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testWrapBreaksMalformedUtf8LikeValidText	n/a: Console strings are UTF-8 here, so a malformed byte cannot reach it (PLAN.md decision 11)	
+Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testWrapDoesNotDropBytesOfMalformedUtf8	n/a: Console strings are UTF-8 here, so a malformed byte cannot reach it (PLAN.md decision 11)	
+Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testWrapKeepsMalformedUtf8	n/a: Console strings are UTF-8 here, so a malformed byte cannot reach it (PLAN.md decision 11)	
 Tests/Helper/ProcessHelperTest.php	ProcessHelperTest::testPassedCallbackIsExecuted	pending	
 Tests/Helper/ProcessHelperTest.php	ProcessHelperTest::testVariousProcessRuns	pending	
 Tests/Helper/ProgressBarTest.php	ProgressBarTest::testAddingInstancePlaceholderFormatter	pending	
@@ -698,44 +698,44 @@ Tests/Helper/SymfonyQuestionHelperTest.php	SymfonyQuestionHelperTest::testAskThr
 Tests/Helper/SymfonyQuestionHelperTest.php	SymfonyQuestionHelperTest::testChoiceQuestionCustomPrompt	pending	
 Tests/Helper/SymfonyQuestionHelperTest.php	SymfonyQuestionHelperTest::testChoiceQuestionPadding	pending	
 Tests/Helper/SymfonyQuestionHelperTest.php	SymfonyQuestionHelperTest::testLabelTrailingBackslash	pending	
-Tests/Helper/TableCellStyleTest.php	TableCellStyleTest::testCreateTableCellStyle	pending	
-Tests/Helper/TableStyleTest.php	TableStyleTest::testSetPadTypeWithInvalidType	pending	
-Tests/Helper/TableTest.php	TableTest::testAppendRowWithoutSectionOutput	pending	
-Tests/Helper/TableTest.php	TableTest::testBoxedStyleWithColspan	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnMaxWidths	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnMaxWidthsHeaders	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnMaxWidthsWithTrailingBackslash	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnMinWidthDoesNotInflateSiblingColumns	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnStyle	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnWidth	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnWidthComputedForASpanningRowIsNotReusedByTheNextOne	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnWidthIsKeptWhenARowSpansColumns	pending	
-Tests/Helper/TableTest.php	TableTest::testColumnWidths	pending	
-Tests/Helper/TableTest.php	TableTest::testGetStyleDefinition	pending	
-Tests/Helper/TableTest.php	TableTest::testGithubIssue52101HorizontalFalse	pending	
-Tests/Helper/TableTest.php	TableTest::testGithubIssue52101HorizontalTrue	pending	
-Tests/Helper/TableTest.php	TableTest::testGithubIssue60038WidthOfCellWithEmoji	pending	
-Tests/Helper/TableTest.php	TableTest::testIsNotDefinedStyleException	pending	
-Tests/Helper/TableTest.php	TableTest::testRender	pending	
-Tests/Helper/TableTest.php	TableTest::testRenderAddRows	pending	
-Tests/Helper/TableTest.php	TableTest::testRenderAddRowsOneByOne	pending	
-Tests/Helper/TableTest.php	TableTest::testRenderHorizontal	pending	
-Tests/Helper/TableTest.php	TableTest::testRenderMultiByte	pending	
-Tests/Helper/TableTest.php	TableTest::testRenderMultiCalls	pending	
-Tests/Helper/TableTest.php	TableTest::testRowSeparator	pending	
+Tests/Helper/TableCellStyleTest.php	TableCellStyleTest::testCreateTableCellStyle	ported	crates/console/tests/table.rs::testCreateTableCellStyle
+Tests/Helper/TableStyleTest.php	TableStyleTest::testSetPadTypeWithInvalidType	ported	crates/console/tests/table.rs::testSetPadTypeWithInvalidType
+Tests/Helper/TableTest.php	TableTest::testAppendRowWithoutSectionOutput	ported	crates/console/tests/table.rs::testAppendRowWithoutSectionOutput
+Tests/Helper/TableTest.php	TableTest::testBoxedStyleWithColspan	ported	crates/console/tests/table.rs::testBoxedStyleWithColspan
+Tests/Helper/TableTest.php	TableTest::testColumnMaxWidths	ported	crates/console/tests/table.rs::testColumnMaxWidths
+Tests/Helper/TableTest.php	TableTest::testColumnMaxWidthsHeaders	ported	crates/console/tests/table.rs::testColumnMaxWidthsHeaders
+Tests/Helper/TableTest.php	TableTest::testColumnMaxWidthsWithTrailingBackslash	ported	crates/console/tests/table.rs::testColumnMaxWidthsWithTrailingBackslash
+Tests/Helper/TableTest.php	TableTest::testColumnMinWidthDoesNotInflateSiblingColumns	ported	crates/console/tests/table.rs::testColumnMinWidthDoesNotInflateSiblingColumns
+Tests/Helper/TableTest.php	TableTest::testColumnStyle	ported	crates/console/tests/table.rs::testColumnStyle
+Tests/Helper/TableTest.php	TableTest::testColumnWidth	ported	crates/console/tests/table.rs::testColumnWidth
+Tests/Helper/TableTest.php	TableTest::testColumnWidthComputedForASpanningRowIsNotReusedByTheNextOne	ported	crates/console/tests/table.rs::testColumnWidthComputedForASpanningRowIsNotReusedByTheNextOne
+Tests/Helper/TableTest.php	TableTest::testColumnWidthIsKeptWhenARowSpansColumns	ported	crates/console/tests/table.rs::testColumnWidthIsKeptWhenARowSpansColumns
+Tests/Helper/TableTest.php	TableTest::testColumnWidths	ported	crates/console/tests/table.rs::testColumnWidths
+Tests/Helper/TableTest.php	TableTest::testGetStyleDefinition	ported	crates/console/tests/table.rs::testGetStyleDefinition
+Tests/Helper/TableTest.php	TableTest::testGithubIssue52101HorizontalFalse	ported	crates/console/tests/table.rs::testGithubIssue52101HorizontalFalse
+Tests/Helper/TableTest.php	TableTest::testGithubIssue52101HorizontalTrue	ported	crates/console/tests/table.rs::testGithubIssue52101HorizontalTrue
+Tests/Helper/TableTest.php	TableTest::testGithubIssue60038WidthOfCellWithEmoji	ported	crates/console/tests/table.rs::testGithubIssue60038WidthOfCellWithEmoji
+Tests/Helper/TableTest.php	TableTest::testIsNotDefinedStyleException	ported	crates/console/tests/table.rs::testIsNotDefinedStyleException
+Tests/Helper/TableTest.php	TableTest::testRender	ported	crates/console/tests/table.rs::testRender
+Tests/Helper/TableTest.php	TableTest::testRenderAddRows	ported	crates/console/tests/table.rs::testRenderAddRows
+Tests/Helper/TableTest.php	TableTest::testRenderAddRowsOneByOne	ported	crates/console/tests/table.rs::testRenderAddRowsOneByOne
+Tests/Helper/TableTest.php	TableTest::testRenderHorizontal	ported	crates/console/tests/table.rs::testRenderHorizontal
+Tests/Helper/TableTest.php	TableTest::testRenderMultiByte	ported	crates/console/tests/table.rs::testRenderMultiByte
+Tests/Helper/TableTest.php	TableTest::testRenderMultiCalls	ported	crates/console/tests/table.rs::testRenderMultiCalls
+Tests/Helper/TableTest.php	TableTest::testRowSeparator	ported	crates/console/tests/table.rs::testRowSeparator
 Tests/Helper/TableTest.php	TableTest::testSectionOutput	pending	
 Tests/Helper/TableTest.php	TableTest::testSectionOutputDoesntClearIfTableIsntRendered	pending	
 Tests/Helper/TableTest.php	TableTest::testSectionOutputHandlesZeroRowsAfterRender	pending	
 Tests/Helper/TableTest.php	TableTest::testSectionOutputWithoutDecoration	pending	
-Tests/Helper/TableTest.php	TableTest::testSetTitle	pending	
-Tests/Helper/TableTest.php	TableTest::testSetTitleWithoutHeaders	pending	
-Tests/Helper/TableTest.php	TableTest::testStyle	pending	
-Tests/Helper/TableTest.php	TableTest::testTableCellWithNumericFloatValue	pending	
-Tests/Helper/TableTest.php	TableTest::testTableCellWithNumericIntValue	pending	
-Tests/Helper/TableTest.php	TableTest::testThrowsWhenTheCellInAnArray	pending	
-Tests/Helper/TableTest.php	TableTest::testVerticalRender	pending	
-Tests/Helper/TableTest.php	TableTest::testWithColspanAndMaxWith	pending	
-Tests/Helper/TableTest.php	TableTest::testWithHyperlinkAndMaxWidth	pending	
+Tests/Helper/TableTest.php	TableTest::testSetTitle	ported	crates/console/tests/table.rs::testSetTitle
+Tests/Helper/TableTest.php	TableTest::testSetTitleWithoutHeaders	ported	crates/console/tests/table.rs::testSetTitleWithoutHeaders
+Tests/Helper/TableTest.php	TableTest::testStyle	ported	crates/console/tests/table.rs::testStyle
+Tests/Helper/TableTest.php	TableTest::testTableCellWithNumericFloatValue	ported	crates/console/tests/table.rs::testTableCellWithNumericFloatValue
+Tests/Helper/TableTest.php	TableTest::testTableCellWithNumericIntValue	ported	crates/console/tests/table.rs::testTableCellWithNumericIntValue
+Tests/Helper/TableTest.php	TableTest::testThrowsWhenTheCellInAnArray	ported	crates/console/tests/table.rs::testThrowsWhenTheCellInAnArray
+Tests/Helper/TableTest.php	TableTest::testVerticalRender	ported	crates/console/tests/table.rs::testVerticalRender
+Tests/Helper/TableTest.php	TableTest::testWithColspanAndMaxWith	ported	crates/console/tests/table.rs::testWithColspanAndMaxWith
+Tests/Helper/TableTest.php	TableTest::testWithHyperlinkAndMaxWidth	ported	crates/console/tests/table.rs::testWithHyperlinkAndMaxWidth
 Tests/Helper/TerminalInputHelperTest.php	TerminalInputHelperTest::testFinishFallsBackToSttySaneWhenInitialStateIsInvalid	pending	
 Tests/Helper/TreeHelperTest.php	TreeHelperTest::testCreateWithEmptyArray	pending	
 Tests/Helper/TreeHelperTest.php	TreeHelperTest::testCreateWithNestedArray	pending	
@@ -1034,26 +1034,26 @@ Tests/SignalRegistry/SignalRegistryTest.php	SignalRegistryTest::testTwoCallbacks
 Tests/SignalRegistry/SignalRegistryTest.php	SignalRegistryTest::testTwoSignalsSignalsAreHandled	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testAskAndClearExpectFullSectionCleared	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testAskQuestionInSectionMatchesNonSectionOutput	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testBlockWithWindowsLineEndings	pending	
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testBlockWithWindowsLineEndings	ported	crates/console/tests/symfony_style.rs::testBlockWithWindowsLineEndings
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testCreateTableWithConsoleOutput	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testCreateTableWithoutConsoleOutput	pending	
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testCreateTableWithoutConsoleOutput	ported	crates/console/tests/symfony_style.rs::testCreateTableWithoutConsoleOutput
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testCreateTree	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testCreateTreeWithArray	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testCreateTreeWithConsoleOutput	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testCreateTreeWithIterable	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testErrorWithMalformedUtf8	pending	
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testErrorWithMalformedUtf8	n/a: Console strings are UTF-8 here, so a malformed byte cannot reach it (PLAN.md decision 11)	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testGetErrorStyle	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testGetErrorStyleUsesTheCurrentOutputIfNoErrorOutputIsAvailable	pending	
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testGetErrorStyleUsesTheCurrentOutputIfNoErrorOutputIsAvailable	ported	crates/console/tests/symfony_style.rs::testGetErrorStyleUsesTheCurrentOutputIfNoErrorOutputIsAvailable
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testInteractiveOutputs	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testMemoryConsumption	pending	
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testMemoryConsumption	n/a: measures memory_get_usage(), which has no Rust equivalent	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testOutputProgressIterate	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testOutputs	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testProgressIterateWithCustomFormat	pending	
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testProgressStartWithCustomFormat	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testStyledBlockKeepsSpacePaddingWhenNotDecorated	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testStyledBlockUsesEchPaddingWhenDecorated	pending	
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testStyledBlockKeepsSpacePaddingWhenNotDecorated	ported	crates/console/tests/symfony_style.rs::testStyledBlockKeepsSpacePaddingWhenNotDecorated
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testStyledBlockUsesEchPaddingWhenDecorated	ported	crates/console/tests/symfony_style.rs::testStyledBlockUsesEchPaddingWhenDecorated
 Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testTree	pending	
-Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testUnstyledBlockKeepsSpacePaddingEvenWhenDecorated	pending	
+Tests/Style/SymfonyStyleTest.php	SymfonyStyleTest::testUnstyledBlockKeepsSpacePaddingEvenWhenDecorated	ported	crates/console/tests/symfony_style.rs::testUnstyledBlockKeepsSpacePaddingEvenWhenDecorated
 Tests/Terminal/Image/ITerm2ProtocolTest.php	ITerm2ProtocolTest::testDecodeDetectsGifFormat	pending	
 Tests/Terminal/Image/ITerm2ProtocolTest.php	ITerm2ProtocolTest::testDecodeDetectsJpegFormat	pending	
 Tests/Terminal/Image/ITerm2ProtocolTest.php	ITerm2ProtocolTest::testDecodeDetectsPngFormat	pending	

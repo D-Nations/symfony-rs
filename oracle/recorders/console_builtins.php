@@ -6,6 +6,7 @@
 // - stripcslashes() and StringInput's tokens on generated strings;
 // - levenshtein(), strnatcasecmp() and the default `<=>` of two strings
 //   (sort()), which Application::find() and findAlternatives() use;
+// - OutputWrapper::wrap() on generated text;
 // - Application::find() and findNamespace() on a fixed set of commands
 //   for generated names: the command found, or the exception's class,
 //   message and alternatives.
@@ -76,6 +77,21 @@ for ($n = 0; $n < 3000; ++$n) {
     $a = $random($alphabet, 0, 5);
     $b = $random($alphabet, 0, 5);
     $out['compare'][] = [$a, $b, $a <=> $b];
+}
+
+// OutputWrapper::wrap() on generated text: words, spaces, line breaks,
+// style tags, URLs and multi-byte characters, at small widths.
+$words = ['a', 'Lorem', 'ipsum', 'consectetur', 'Árvíztűrő', '表示する', '🎉', '<info>', '</info>', '<fg=red;bg=blue>', '</>', '<comment>x</comment>',
+    'https://example.com/a/long/path', 'http://x.y', '\\<escaped\\>', '<a\\>b>', 'x\\', '-'];
+$separators = [' ', ' ', ' ', '  ', "\n", "\r\n", "\t", ''];
+for ($n = 0; $n < 2500; ++$n) {
+    $text = '';
+    for ($i = 0, $count = mt_rand(0, 10); $i < $count; ++$i) {
+        $text .= $words[mt_rand(0, count($words) - 1)].$separators[mt_rand(0, count($separators) - 1)];
+    }
+    $width = mt_rand(-2, 24);
+    $cut = 0 === mt_rand(0, 2);
+    $out['wrap'][] = [$text, $width, $cut, (new Symfony\Component\Console\Helper\OutputWrapper($cut))->wrap($text, $width)];
 }
 
 // Application::find() on a fixed set of commands.

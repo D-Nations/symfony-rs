@@ -506,6 +506,7 @@ dependencies = [
 name = "symfony-console"
 version = "0.1.0"
 dependencies = [
+ "fancy-regex",
  "php-value",
  "serde_json",
  "symfony-deprecation-contracts",

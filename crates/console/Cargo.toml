@@ -10,6 +10,7 @@ description = "The parts of Symfony Console that the Yaml and Dotenv commands us
 php-value = { path = "../php-value" }
 symfony-string = { path = "../string" }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+fancy-regex = "0.20.2"
 
 [dev-dependencies]
 php-value = { path = "../php-value", features = ["vectors"] }

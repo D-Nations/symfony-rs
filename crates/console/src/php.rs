@@ -292,3 +292,121 @@ fn compare_left(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> Ordering {
         *j += 1;
     }
 }
+
+/// `sprintf($format, ...$args)` for the formats Table and SymfonyStyle
+/// use: `%s`, `%N$s` and `%%`. Another conversion is refused (PHP would
+/// format a number, or throw a ValueError for an unknown one).
+pub fn sprintf_s(format: &str, args: &[&str]) -> crate::exception::Result<String> {
+    let mut out = String::with_capacity(format.len() + args.iter().map(|a| a.len()).sum::<usize>());
+    let mut next = 0;
+    let mut rest = format;
+    while let Some(at) = rest.find('%') {
+        out.push_str(&rest[..at]);
+        let spec = &rest[at + 1..];
+        if let Some(after) = spec.strip_prefix('%') {
+            out.push('%');
+            rest = after;
+            continue;
+        }
+        let digits = spec.bytes().take_while(u8::is_ascii_digit).count();
+        let (index, conversion) = if digits > 0 && spec[digits..].starts_with('$') {
+            let n: usize = spec[..digits].parse().unwrap_or(0);
+            (n.checked_sub(1), &spec[digits + 1..])
+        } else {
+            let index = next;
+            next += 1;
+            (Some(index), spec)
+        };
+        let Some(after) = conversion.strip_prefix('s') else {
+            return Err(crate::exception::ConsoleError::Other {
+                class: "ValueError".to_owned(),
+                message: format!("Unsupported format in \"{format}\""),
+            });
+        };
+        match index.and_then(|i| args.get(i)) {
+            Some(arg) => out.push_str(arg),
+            None => {
+                return Err(crate::exception::ConsoleError::Other {
+                    class: "ArgumentCountError".to_owned(),
+                    message: format!(
+                        "{} arguments are required, {} given",
+                        args.len() + 2,
+                        args.len() + 1
+                    ),
+                });
+            }
+        }
+        rest = after;
+    }
+    out.push_str(rest);
+    Ok(out)
+}
+
+/// `str_pad($string, $length, $padString, $padType)`, on bytes: the pad
+/// string is repeated and cut to fill `$length` bytes. A cut multi-byte
+/// pad string is repaired lossily (PHP would keep the partial bytes).
+pub fn str_pad(
+    input: &str,
+    length: i64,
+    pad: &str,
+    pad_type: crate::helper::table_style::PadType,
+) -> String {
+    use crate::helper::table_style::PadType;
+    let missing = length - input.len() as i64;
+    if missing <= 0 || pad.is_empty() {
+        return input.to_owned();
+    }
+    let missing = missing as usize;
+    let (left, right) = match pad_type {
+        PadType::Left => (missing, 0),
+        PadType::Right => (0, missing),
+        PadType::Both => (missing / 2, missing - missing / 2),
+    };
+    let fill = |n: usize| -> Vec<u8> { pad.bytes().cycle().take(n).collect() };
+    let mut bytes = fill(left);
+    bytes.extend_from_slice(input.as_bytes());
+    bytes.extend(fill(right));
+    String::from_utf8(bytes).unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned())
+}
+
+/// `mb_substr($string, $start, $length)` on code points, for a start and
+/// length that are not negative.
+pub fn mb_substr(s: &str, start: usize, length: Option<usize>) -> String {
+    let chars = s.chars().skip(start);
+    match length {
+        Some(n) => chars.take(n).collect(),
+        None => chars.collect(),
+    }
+}
+
+/// `mb_str_split($string, $length)`: chunks of `$length` code points.
+pub fn mb_str_split(s: &str, length: usize) -> Vec<String> {
+    let chars: Vec<char> = s.chars().collect();
+    chars
+        .chunks(length.max(1))
+        .map(|c| c.iter().collect())
+        .collect()
+}
+
+/// `urlencode($string)`: letters, digits and `-_.` kept, a space as `+`,
+/// every other byte as `%XX` (upper case).
+pub fn urlencode(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for b in s.bytes() {
+        match b {
+            b'a'..=b'z' | b'A'..=b'Z' | b'0'..=b'9' | b'-' | b'_' | b'.' => out.push(b as char),
+            b' ' => out.push('+'),
+            _ => out.push_str(&format!("%{b:02X}")),
+        }
+    }
+    out
+}
+
+/// `http_build_query($pairs, '', $separator)` of string pairs.
+pub fn http_build_query(pairs: &[(&str, &str)], separator: &str) -> String {
+    pairs
+        .iter()
+        .map(|(k, v)| format!("{}={}", urlencode(k), urlencode(v)))
+        .collect::<Vec<_>>()
+        .join(separator)
+}
