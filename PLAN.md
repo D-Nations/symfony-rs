@@ -726,6 +726,21 @@ Stack rows (searched November 19):
       the HttpFoundation/HttpKernel/FrameworkBundle gaps M2-A must close.
       The conversion gate stays open until symfony2rust emits the fixture.
 
+- [ ] M1-B (`symfony-console`, the subset the Yaml and Dotenv commands
+      need). Done: the formatter, styles, Output, Input and completion
+      input (PR #6); then Command, AsCommand, HelperSet, FormatterHelper,
+      StringInput, NullOutput, Application's registry (`find()`,
+      namespaces, alternatives; `run()` is M7) and CommandTester /
+      CommandCompletionTester: CommandTest 40 of 43 (3 `n/a`: closure
+      `$this` binding), ApplicationTest 45 of 147, HelperSetTest,
+      FormatterHelperTest, StringInputTest, NullOutputTest, plus 17,805
+      recorded calls (`scripts/record.sh console`, `builtins.json`).
+      Recording found that natural order does not skip whitespace right
+      after a run of digits; symfony-finder had the same bug and is fixed
+      (its corpus extended; the old answers unchanged). Next: SymfonyStyle
+      and Table, GithubActionReporter, then Yaml's LintCommand (11 tests)
+      and Dotenv's two commands (19 tests).
+
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath
       with libxml; no XPath engine under decision 9) whose 191 rows'
