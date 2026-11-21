@@ -3,7 +3,7 @@
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
-//! Upstream: symfony/console Exception/ExceptionInterface.php Exception/InvalidArgumentException.php Exception/RuntimeException.php Exception/LogicException.php Exception/CommandNotFoundException.php Exception/InvalidOptionException.php
+//! Upstream: symfony/console Exception/ExceptionInterface.php Exception/InvalidArgumentException.php Exception/RuntimeException.php Exception/LogicException.php Exception/CommandNotFoundException.php Exception/NamespaceNotFoundException.php Exception/InvalidOptionException.php
 
 /// A console exception: its class and message.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -18,6 +18,8 @@ pub enum ConsoleError {
     Logic(String),
     /// `CommandNotFoundException`, with the alternatives it suggests.
     CommandNotFound(String, Vec<String>),
+    /// `NamespaceNotFoundException` (extends CommandNotFoundException).
+    NamespaceNotFound(String, Vec<String>),
     /// An error from the command's own code, already formatted by its
     /// class name.
     Other { class: String, message: String },
@@ -38,6 +40,9 @@ impl ConsoleError {
             Self::CommandNotFound(..) => {
                 "Symfony\\Component\\Console\\Exception\\CommandNotFoundException"
             }
+            Self::NamespaceNotFound(..) => {
+                "Symfony\\Component\\Console\\Exception\\NamespaceNotFoundException"
+            }
             Self::Other { class, .. } => class,
         }
     }
@@ -49,6 +54,7 @@ impl ConsoleError {
             | Self::Runtime(m)
             | Self::Logic(m)
             | Self::CommandNotFound(m, _)
+            | Self::NamespaceNotFound(m, _)
             | Self::Other { message: m, .. } => m,
         }
     }
@@ -57,13 +63,29 @@ impl ConsoleError {
     pub fn is_invalid_argument(&self) -> bool {
         matches!(
             self,
-            Self::InvalidArgument(_) | Self::InvalidOption(_) | Self::CommandNotFound(..)
+            Self::InvalidArgument(_)
+                | Self::InvalidOption(_)
+                | Self::CommandNotFound(..)
+                | Self::NamespaceNotFound(..)
         )
     }
 
     /// `instanceof \RuntimeException`.
     pub fn is_runtime(&self) -> bool {
         matches!(self, Self::Runtime(_))
+    }
+
+    /// `instanceof CommandNotFoundException`: its alternatives.
+    pub fn alternatives(&self) -> Option<&[String]> {
+        match self {
+            Self::CommandNotFound(_, a) | Self::NamespaceNotFound(_, a) => Some(a),
+            _ => None,
+        }
+    }
+
+    /// `instanceof ExceptionInterface`: one of Console's own exceptions.
+    pub fn is_console_exception(&self) -> bool {
+        !matches!(self, Self::Other { .. })
     }
 }
 

@@ -5,7 +5,10 @@
 
 #![forbid(unsafe_code)]
 
+pub mod application;
+pub mod attribute;
 pub mod color;
+pub mod command;
 pub mod completion;
 pub mod env;
 pub mod exception;
@@ -15,5 +18,6 @@ pub mod input;
 pub mod output;
 pub mod php;
 pub mod terminal;
+pub mod tester;
 
 pub use exception::{ConsoleError, Result};

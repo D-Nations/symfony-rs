@@ -1,13 +1,13 @@
 # symfony/console at 630e74196a2635ec0f06c12bd3fb47cfedf85157: upstream test	method	status	rust test
-Tests/ApplicationTest.php	ApplicationTest::testAddCommand	pending	
-Tests/ApplicationTest.php	ApplicationTest::testAddCommandThrowsExceptionOnInvalidCommand	pending	
+Tests/ApplicationTest.php	ApplicationTest::testAddCommand	ported	crates/console/tests/application.rs::testAddCommand
+Tests/ApplicationTest.php	ApplicationTest::testAddCommandThrowsExceptionOnInvalidCommand	ported	crates/console/tests/application.rs::testAddCommandThrowsExceptionOnInvalidCommand
 Tests/ApplicationTest.php	ApplicationTest::testAddCommandWithEmptyConstructor	pending	
-Tests/ApplicationTest.php	ApplicationTest::testAddCommandWithExtendedCommand	pending	
-Tests/ApplicationTest.php	ApplicationTest::testAddCommandWithInvokableCommand	pending	
+Tests/ApplicationTest.php	ApplicationTest::testAddCommandWithExtendedCommand	ported	crates/console/tests/application.rs::testAddCommandWithExtendedCommand
+Tests/ApplicationTest.php	ApplicationTest::testAddCommandWithInvokableCommand	ported	crates/console/tests/application.rs::testAddCommandWithInvokableCommand
 Tests/ApplicationTest.php	ApplicationTest::testAddCommandWithInvokableExtendedCommand	pending	
 Tests/ApplicationTest.php	ApplicationTest::testAddingAlreadySetDefinitionElementData	pending	
 Tests/ApplicationTest.php	ApplicationTest::testAddingOptionWithDuplicateShortcut	pending	
-Tests/ApplicationTest.php	ApplicationTest::testAddingSingleHelperSetOverwritesDefaultValues	pending	
+Tests/ApplicationTest.php	ApplicationTest::testAddingSingleHelperSetOverwritesDefaultValues	ported	crates/console/tests/application.rs::testAddingSingleHelperSetOverwritesDefaultValues
 Tests/ApplicationTest.php	ApplicationTest::testAlarmDispatchWithoutEventDispatcher	pending	
 Tests/ApplicationTest.php	ApplicationTest::testAlarmInterruptingTheAutoloadOfAClassNeededByALazyListener	pending	
 Tests/ApplicationTest.php	ApplicationTest::testAlarmSubscriber	pending	
@@ -16,15 +16,15 @@ Tests/ApplicationTest.php	ApplicationTest::testAlarmSubscriberNotCalledByDefault
 Tests/ApplicationTest.php	ApplicationTest::testAlarmSubscriberNotCalledForOtherSignals	pending	
 Tests/ApplicationTest.php	ApplicationTest::testAlarmableCommandHandlerCalledAfterEventListener	pending	
 Tests/ApplicationTest.php	ApplicationTest::testAlarmableCommandWithoutInterval	pending	
-Tests/ApplicationTest.php	ApplicationTest::testAll	pending	
+Tests/ApplicationTest.php	ApplicationTest::testAll	ported	crates/console/tests/application.rs::testAll
 Tests/ApplicationTest.php	ApplicationTest::testAllExcludesDisabledLazyCommand	pending	
 Tests/ApplicationTest.php	ApplicationTest::testAllWithCommandLoader	pending	
-Tests/ApplicationTest.php	ApplicationTest::testApplicationWithoutContainer	pending	
+Tests/ApplicationTest.php	ApplicationTest::testApplicationWithoutContainer	ported	crates/console/tests/application.rs::testApplicationWithoutContainer
 Tests/ApplicationTest.php	ApplicationTest::testAutoExitSetting	pending	
 Tests/ApplicationTest.php	ApplicationTest::testCanRunAlternativeCommandName	pending	
 Tests/ApplicationTest.php	ApplicationTest::testCommandNameMismatchWithCommandLoaderKeyThrows	pending	
 Tests/ApplicationTest.php	ApplicationTest::testConsoleErrorEventIsTriggeredOnCommandNotFound	pending	
-Tests/ApplicationTest.php	ApplicationTest::testConstructor	pending	
+Tests/ApplicationTest.php	ApplicationTest::testConstructor	ported	crates/console/tests/application.rs::testConstructor
 Tests/ApplicationTest.php	ApplicationTest::testContainerWiresCommandLoader	pending	
 Tests/ApplicationTest.php	ApplicationTest::testContainerWiresEagerCommands	pending	
 Tests/ApplicationTest.php	ApplicationTest::testContainerWiresEventDispatcher	pending	
@@ -33,48 +33,48 @@ Tests/ApplicationTest.php	ApplicationTest::testDontRunAlternativeCommandName	pen
 Tests/ApplicationTest.php	ApplicationTest::testDontRunAlternativeNamespaceName	pending	
 Tests/ApplicationTest.php	ApplicationTest::testErrorIsRethrownIfNotHandledByConsoleErrorEvent	pending	
 Tests/ApplicationTest.php	ApplicationTest::testErrorIsRethrownIfNotHandledByConsoleErrorEventWithCatchingEnabled	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFind	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeCommands	pending	
+Tests/ApplicationTest.php	ApplicationTest::testFind	ported	crates/console/tests/application.rs::testFind
+Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeCommands	ported	crates/console/tests/application.rs::testFindAlternativeCommands
 Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeCommandsWithAnAlias	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeExceptionMessageMultiple	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeExceptionMessageSingle	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeNamespace	pending	
+Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeExceptionMessageMultiple	ported	crates/console/tests/application.rs::testFindAlternativeExceptionMessageMultiple
+Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeExceptionMessageSingle	ported	crates/console/tests/application.rs::testFindAlternativeExceptionMessageSingle
+Tests/ApplicationTest.php	ApplicationTest::testFindAlternativeNamespace	ported	crates/console/tests/application.rs::testFindAlternativeNamespace
 Tests/ApplicationTest.php	ApplicationTest::testFindAlternativesDoesNotLoadSameNamespaceCommandsOnExactMatch	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAlternativesOutput	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousCommandsIfAllAlternativesAreHidden	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousCommandsSortedAlphabetically	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousHiddenCommands	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousNamespace	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousNamespaceSortedAlphabetically	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindCaseInsensitiveAsFallback	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindCaseInsensitiveSuggestions	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindCaseSensitiveFirst	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindCommandEqualNamespace	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindCommandWithAmbiguousNamespacesButUniqueName	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindCommandWithMissingNamespace	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindHiddenWithExactName	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindInvalidNamespace	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindNamespace	pending	
+Tests/ApplicationTest.php	ApplicationTest::testFindAlternativesOutput	ported	crates/console/tests/application.rs::testFindAlternativesOutput
+Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousCommandsIfAllAlternativesAreHidden	ported	crates/console/tests/application.rs::testFindAmbiguousCommandsIfAllAlternativesAreHidden
+Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousCommandsSortedAlphabetically	ported	crates/console/tests/application.rs::testFindAmbiguousCommandsSortedAlphabetically
+Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousHiddenCommands	ported	crates/console/tests/application.rs::testFindAmbiguousHiddenCommands
+Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousNamespace	ported	crates/console/tests/application.rs::testFindAmbiguousNamespace
+Tests/ApplicationTest.php	ApplicationTest::testFindAmbiguousNamespaceSortedAlphabetically	ported	crates/console/tests/application.rs::testFindAmbiguousNamespaceSortedAlphabetically
+Tests/ApplicationTest.php	ApplicationTest::testFindCaseInsensitiveAsFallback	ported	crates/console/tests/application.rs::testFindCaseInsensitiveAsFallback
+Tests/ApplicationTest.php	ApplicationTest::testFindCaseInsensitiveSuggestions	ported	crates/console/tests/application.rs::testFindCaseInsensitiveSuggestions
+Tests/ApplicationTest.php	ApplicationTest::testFindCaseSensitiveFirst	ported	crates/console/tests/application.rs::testFindCaseSensitiveFirst
+Tests/ApplicationTest.php	ApplicationTest::testFindCommandEqualNamespace	ported	crates/console/tests/application.rs::testFindCommandEqualNamespace
+Tests/ApplicationTest.php	ApplicationTest::testFindCommandWithAmbiguousNamespacesButUniqueName	ported	crates/console/tests/application.rs::testFindCommandWithAmbiguousNamespacesButUniqueName
+Tests/ApplicationTest.php	ApplicationTest::testFindCommandWithMissingNamespace	ported	crates/console/tests/application.rs::testFindCommandWithMissingNamespace
+Tests/ApplicationTest.php	ApplicationTest::testFindHiddenWithExactName	ported	crates/console/tests/application.rs::testFindHiddenWithExactName
+Tests/ApplicationTest.php	ApplicationTest::testFindInvalidNamespace	ported	crates/console/tests/application.rs::testFindInvalidNamespace
+Tests/ApplicationTest.php	ApplicationTest::testFindNamespace	ported	crates/console/tests/application.rs::testFindNamespace
 Tests/ApplicationTest.php	ApplicationTest::testFindNamespaceDoesNotFailOnDeepSimilarNamespaces	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindNamespaceWithSubnamespaces	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindNonAmbiguous	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindSingleWithAmbiguousAliases	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindUniqueNameButNamespaceName	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindWithAmbiguousAbbreviations	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindWithAmbiguousAbbreviationsFindsCommandIfAlternativesAreHidden	pending	
+Tests/ApplicationTest.php	ApplicationTest::testFindNamespaceWithSubnamespaces	ported	crates/console/tests/application.rs::testFindNamespaceWithSubnamespaces
+Tests/ApplicationTest.php	ApplicationTest::testFindNonAmbiguous	ported	crates/console/tests/application.rs::testFindNonAmbiguous
+Tests/ApplicationTest.php	ApplicationTest::testFindSingleWithAmbiguousAliases	ported	crates/console/tests/application.rs::testFindSingleWithAmbiguousAliases
+Tests/ApplicationTest.php	ApplicationTest::testFindUniqueNameButNamespaceName	ported	crates/console/tests/application.rs::testFindUniqueNameButNamespaceName
+Tests/ApplicationTest.php	ApplicationTest::testFindWithAmbiguousAbbreviations	ported	crates/console/tests/application.rs::testFindWithAmbiguousAbbreviations
+Tests/ApplicationTest.php	ApplicationTest::testFindWithAmbiguousAbbreviationsFindsCommandIfAlternativesAreHidden	ported	crates/console/tests/application.rs::testFindWithAmbiguousAbbreviationsFindsCommandIfAlternativesAreHidden
 Tests/ApplicationTest.php	ApplicationTest::testFindWithCommandLoader	pending	
-Tests/ApplicationTest.php	ApplicationTest::testFindWithDoubleColonInNameThrowsException	pending	
-Tests/ApplicationTest.php	ApplicationTest::testGetDefaultHelperSetReturnsDefaultValues	pending	
-Tests/ApplicationTest.php	ApplicationTest::testGetDefaultInputDefinitionReturnsDefaultValues	pending	
+Tests/ApplicationTest.php	ApplicationTest::testFindWithDoubleColonInNameThrowsException	ported	crates/console/tests/application.rs::testFindWithDoubleColonInNameThrowsException
+Tests/ApplicationTest.php	ApplicationTest::testGetDefaultHelperSetReturnsDefaultValues	ported	crates/console/tests/application.rs::testGetDefaultHelperSetReturnsDefaultValues
+Tests/ApplicationTest.php	ApplicationTest::testGetDefaultInputDefinitionReturnsDefaultValues	ported	crates/console/tests/application.rs::testGetDefaultInputDefinitionReturnsDefaultValues
 Tests/ApplicationTest.php	ApplicationTest::testGetDisabledLazyCommand	pending	
-Tests/ApplicationTest.php	ApplicationTest::testGetInvalidCommand	pending	
-Tests/ApplicationTest.php	ApplicationTest::testGetLongVersion	pending	
+Tests/ApplicationTest.php	ApplicationTest::testGetInvalidCommand	ported	crates/console/tests/application.rs::testGetInvalidCommand
+Tests/ApplicationTest.php	ApplicationTest::testGetLongVersion	ported	crates/console/tests/application.rs::testGetLongVersion
 Tests/ApplicationTest.php	ApplicationTest::testGetLongVersionWithContainer	pending	
-Tests/ApplicationTest.php	ApplicationTest::testGetNamespaces	pending	
+Tests/ApplicationTest.php	ApplicationTest::testGetNamespaces	ported	crates/console/tests/application.rs::testGetNamespaces
 Tests/ApplicationTest.php	ApplicationTest::testHasGet	pending	
 Tests/ApplicationTest.php	ApplicationTest::testHasGetWithCommandLoader	pending	
 Tests/ApplicationTest.php	ApplicationTest::testHasReturnsFalseForDisabledLazyCommand	pending	
-Tests/ApplicationTest.php	ApplicationTest::testHelp	pending	
+Tests/ApplicationTest.php	ApplicationTest::testHelp	ported	crates/console/tests/application.rs::testHelp
 Tests/ApplicationTest.php	ApplicationTest::testItRemovesArgumentsFromInputDefinitionOnSingleCommandApplication	pending	
 Tests/ApplicationTest.php	ApplicationTest::testNestedCommandsIsolateSignalHandlers	pending	
 Tests/ApplicationTest.php	ApplicationTest::testOriginalHandlerRestoredAfterPop	pending	
@@ -82,7 +82,7 @@ Tests/ApplicationTest.php	ApplicationTest::testOverwritingDefaultHelperSetOverwr
 Tests/ApplicationTest.php	ApplicationTest::testOverwritingDefaultInputDefinitionOverwritesDefaultValues	pending	
 Tests/ApplicationTest.php	ApplicationTest::testPsrContainerSkipsLazyCommands	pending	
 Tests/ApplicationTest.php	ApplicationTest::testPsrContainerWiresEagerCommands	pending	
-Tests/ApplicationTest.php	ApplicationTest::testRegister	pending	
+Tests/ApplicationTest.php	ApplicationTest::testRegister	ported	crates/console/tests/application.rs::testRegister
 Tests/ApplicationTest.php	ApplicationTest::testRegisterAmbiguous	pending	
 Tests/ApplicationTest.php	ApplicationTest::testRenderAnonymousException	pending	
 Tests/ApplicationTest.php	ApplicationTest::testRenderException	pending	
@@ -115,13 +115,13 @@ Tests/ApplicationTest.php	ApplicationTest::testRunWithFindError	pending
 Tests/ApplicationTest.php	ApplicationTest::testRunWithGlobalOptionAndNoCommand	pending	
 Tests/ApplicationTest.php	ApplicationTest::testSetCatchErrors	pending	
 Tests/ApplicationTest.php	ApplicationTest::testSetCatchExceptions	pending	
-Tests/ApplicationTest.php	ApplicationTest::testSetGetName	pending	
-Tests/ApplicationTest.php	ApplicationTest::testSetGetVersion	pending	
+Tests/ApplicationTest.php	ApplicationTest::testSetGetName	ported	crates/console/tests/application.rs::testSetGetName
+Tests/ApplicationTest.php	ApplicationTest::testSetGetVersion	ported	crates/console/tests/application.rs::testSetGetVersion
 Tests/ApplicationTest.php	ApplicationTest::testSetRunCustomDefaultCommand	pending	
 Tests/ApplicationTest.php	ApplicationTest::testSetRunCustomDefaultCommandWithOption	pending	
 Tests/ApplicationTest.php	ApplicationTest::testSetRunCustomSingleCommand	pending	
 Tests/ApplicationTest.php	ApplicationTest::testSetSignalsToDispatchEvent	pending	
-Tests/ApplicationTest.php	ApplicationTest::testSettingCustomInputDefinitionOverwritesDefaultValues	pending	
+Tests/ApplicationTest.php	ApplicationTest::testSettingCustomInputDefinitionOverwritesDefaultValues	ported	crates/console/tests/application.rs::testSettingCustomInputDefinitionOverwritesDefaultValues
 Tests/ApplicationTest.php	ApplicationTest::testShellVerbosityDoesNotLeakBetweenCommandExecutions	pending	
 Tests/ApplicationTest.php	ApplicationTest::testShellVerbosityIsRemovedAfterCommandExecutionWhenNotSetInitially	pending	
 Tests/ApplicationTest.php	ApplicationTest::testShellVerbosityIsRestoredAfterCommandExecutionWithInitialValue	pending	
@@ -246,49 +246,49 @@ Tests/ColorTest.php	ColorTest::testAnsi4Colors	pending
 Tests/ColorTest.php	ColorTest::testDegradedTrueColorsToAnsi4	pending	
 Tests/ColorTest.php	ColorTest::testDegradedTrueColorsToAnsi8	pending	
 Tests/ColorTest.php	ColorTest::testTrueColors	pending	
-Tests/Command/CommandTest.php	CommandTest::testAddArgument	pending	
-Tests/Command/CommandTest.php	CommandTest::testAddArgumentFull	pending	
-Tests/Command/CommandTest.php	CommandTest::testAddGetUsages	pending	
-Tests/Command/CommandTest.php	CommandTest::testAddOption	pending	
-Tests/Command/CommandTest.php	CommandTest::testAddOptionFull	pending	
-Tests/Command/CommandTest.php	CommandTest::testAliasesSetBeforeParentConstructorArePreserved	pending	
-Tests/Command/CommandTest.php	CommandTest::testCommandAttribute	pending	
-Tests/Command/CommandTest.php	CommandTest::testCommandNameCannotBeEmpty	pending	
-Tests/Command/CommandTest.php	CommandTest::testConstructor	pending	
-Tests/Command/CommandTest.php	CommandTest::testDefaultCommand	pending	
-Tests/Command/CommandTest.php	CommandTest::testExecuteMethodNeedsToBeOverridden	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetHelper	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetHelperWithoutHelperSet	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetNamespaceGetNameSetName	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetProcessedHelp	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetSetAliases	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetSetDescription	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetSetHelp	pending	
-Tests/Command/CommandTest.php	CommandTest::testGetSynopsis	pending	
-Tests/Command/CommandTest.php	CommandTest::testInvalidCommandNames	pending	
-Tests/Command/CommandTest.php	CommandTest::testInvokableCommand	pending	
-Tests/Command/CommandTest.php	CommandTest::testMergeApplicationDefinition	pending	
-Tests/Command/CommandTest.php	CommandTest::testMergeApplicationDefinitionWithoutArgsThenWithArgsAddsArgs	pending	
-Tests/Command/CommandTest.php	CommandTest::testMethodCommandNameIsPrefixedWithTheClassLevelName	pending	
-Tests/Command/CommandTest.php	CommandTest::testMethodCommandNameMustNotRepeatTheClassLevelName	pending	
-Tests/Command/CommandTest.php	CommandTest::testMethodCommandsOfAHiddenClassLevelNameAreHidden	pending	
-Tests/Command/CommandTest.php	CommandTest::testRunInteractive	pending	
-Tests/Command/CommandTest.php	CommandTest::testRunNonInteractive	pending	
-Tests/Command/CommandTest.php	CommandTest::testRunReturnsAlwaysInteger	pending	
-Tests/Command/CommandTest.php	CommandTest::testRunWithApplication	pending	
-Tests/Command/CommandTest.php	CommandTest::testRunWithInvalidOption	pending	
-Tests/Command/CommandTest.php	CommandTest::testRunWithProcessTitle	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetAliasesAndHiddenViaName	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetApplication	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetApplicationNull	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetCode	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetCodeBindToClosure	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetCodeWithNonClosureCallable	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetCodeWithStaticAnonymousFunction	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetCodeWithStaticClosure	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetGetDefinition	pending	
-Tests/Command/CommandTest.php	CommandTest::testSetHidden	pending	
-Tests/Command/CommandTest.php	CommandTest::testTheAttributeCannotBeOnBothTheClassAndItsInvokeMethod	pending	
+Tests/Command/CommandTest.php	CommandTest::testAddArgument	ported	crates/console/tests/command.rs::testAddArgument
+Tests/Command/CommandTest.php	CommandTest::testAddArgumentFull	ported	crates/console/tests/command.rs::testAddArgumentFull
+Tests/Command/CommandTest.php	CommandTest::testAddGetUsages	ported	crates/console/tests/command.rs::testAddGetUsages
+Tests/Command/CommandTest.php	CommandTest::testAddOption	ported	crates/console/tests/command.rs::testAddOption
+Tests/Command/CommandTest.php	CommandTest::testAddOptionFull	ported	crates/console/tests/command.rs::testAddOptionFull
+Tests/Command/CommandTest.php	CommandTest::testAliasesSetBeforeParentConstructorArePreserved	ported	crates/console/tests/command.rs::testAliasesSetBeforeParentConstructorArePreserved
+Tests/Command/CommandTest.php	CommandTest::testCommandAttribute	ported	crates/console/tests/command.rs::testCommandAttribute
+Tests/Command/CommandTest.php	CommandTest::testCommandNameCannotBeEmpty	ported	crates/console/tests/command.rs::testCommandNameCannotBeEmpty
+Tests/Command/CommandTest.php	CommandTest::testConstructor	ported	crates/console/tests/command.rs::testConstructor
+Tests/Command/CommandTest.php	CommandTest::testDefaultCommand	ported	crates/console/tests/command.rs::testDefaultCommand
+Tests/Command/CommandTest.php	CommandTest::testExecuteMethodNeedsToBeOverridden	ported	crates/console/tests/command.rs::testExecuteMethodNeedsToBeOverridden
+Tests/Command/CommandTest.php	CommandTest::testGetHelper	ported	crates/console/tests/command.rs::testGetHelper
+Tests/Command/CommandTest.php	CommandTest::testGetHelperWithoutHelperSet	ported	crates/console/tests/command.rs::testGetHelperWithoutHelperSet
+Tests/Command/CommandTest.php	CommandTest::testGetNamespaceGetNameSetName	ported	crates/console/tests/command.rs::testGetNamespaceGetNameSetName
+Tests/Command/CommandTest.php	CommandTest::testGetProcessedHelp	ported	crates/console/tests/command.rs::testGetProcessedHelp
+Tests/Command/CommandTest.php	CommandTest::testGetSetAliases	ported	crates/console/tests/command.rs::testGetSetAliases
+Tests/Command/CommandTest.php	CommandTest::testGetSetDescription	ported	crates/console/tests/command.rs::testGetSetDescription
+Tests/Command/CommandTest.php	CommandTest::testGetSetHelp	ported	crates/console/tests/command.rs::testGetSetHelp
+Tests/Command/CommandTest.php	CommandTest::testGetSynopsis	ported	crates/console/tests/command.rs::testGetSynopsis
+Tests/Command/CommandTest.php	CommandTest::testInvalidCommandNames	ported	crates/console/tests/command.rs::testInvalidCommandNames
+Tests/Command/CommandTest.php	CommandTest::testInvokableCommand	ported	crates/console/tests/command.rs::testInvokableCommand
+Tests/Command/CommandTest.php	CommandTest::testMergeApplicationDefinition	ported	crates/console/tests/command.rs::testMergeApplicationDefinition
+Tests/Command/CommandTest.php	CommandTest::testMergeApplicationDefinitionWithoutArgsThenWithArgsAddsArgs	ported	crates/console/tests/command.rs::testMergeApplicationDefinitionWithoutArgsThenWithArgsAddsArgs
+Tests/Command/CommandTest.php	CommandTest::testMethodCommandNameIsPrefixedWithTheClassLevelName	ported	crates/console/tests/command.rs::testMethodCommandNameIsPrefixedWithTheClassLevelName
+Tests/Command/CommandTest.php	CommandTest::testMethodCommandNameMustNotRepeatTheClassLevelName	ported	crates/console/tests/command.rs::testMethodCommandNameMustNotRepeatTheClassLevelName
+Tests/Command/CommandTest.php	CommandTest::testMethodCommandsOfAHiddenClassLevelNameAreHidden	ported	crates/console/tests/command.rs::testMethodCommandsOfAHiddenClassLevelNameAreHidden
+Tests/Command/CommandTest.php	CommandTest::testRunInteractive	ported	crates/console/tests/command.rs::testRunInteractive
+Tests/Command/CommandTest.php	CommandTest::testRunNonInteractive	ported	crates/console/tests/command.rs::testRunNonInteractive
+Tests/Command/CommandTest.php	CommandTest::testRunReturnsAlwaysInteger	ported	crates/console/tests/command.rs::testRunReturnsAlwaysInteger
+Tests/Command/CommandTest.php	CommandTest::testRunWithApplication	ported	crates/console/tests/command.rs::testRunWithApplication
+Tests/Command/CommandTest.php	CommandTest::testRunWithInvalidOption	ported	crates/console/tests/command.rs::testRunWithInvalidOption
+Tests/Command/CommandTest.php	CommandTest::testRunWithProcessTitle	ported	crates/console/tests/command.rs::testRunWithProcessTitle
+Tests/Command/CommandTest.php	CommandTest::testSetAliasesAndHiddenViaName	ported	crates/console/tests/command.rs::testSetAliasesAndHiddenViaName
+Tests/Command/CommandTest.php	CommandTest::testSetApplication	ported	crates/console/tests/command.rs::testSetApplication
+Tests/Command/CommandTest.php	CommandTest::testSetApplicationNull	ported	crates/console/tests/command.rs::testSetApplicationNull
+Tests/Command/CommandTest.php	CommandTest::testSetCode	ported	crates/console/tests/command.rs::testSetCode
+Tests/Command/CommandTest.php	CommandTest::testSetCodeBindToClosure	n/a: PHP binds an unbound closure to the command ($this); a Rust closure captures what it uses	
+Tests/Command/CommandTest.php	CommandTest::testSetCodeWithNonClosureCallable	ported	crates/console/tests/command.rs::testSetCodeWithNonClosureCallable
+Tests/Command/CommandTest.php	CommandTest::testSetCodeWithStaticAnonymousFunction	n/a: PHP binds an unbound closure to the command ($this); a Rust closure captures what it uses	
+Tests/Command/CommandTest.php	CommandTest::testSetCodeWithStaticClosure	n/a: PHP binds an unbound closure to the command ($this); a Rust closure captures what it uses	
+Tests/Command/CommandTest.php	CommandTest::testSetGetDefinition	ported	crates/console/tests/command.rs::testSetGetDefinition
+Tests/Command/CommandTest.php	CommandTest::testSetHidden	ported	crates/console/tests/command.rs::testSetHidden
+Tests/Command/CommandTest.php	CommandTest::testTheAttributeCannotBeOnBothTheClassAndItsInvokeMethod	ported	crates/console/tests/command.rs::testTheAttributeCannotBeOnBothTheClassAndItsInvokeMethod
 Tests/Command/CompleteCommandTest.php	CompleteCommandTest::testAdditionalShellSupport	pending	
 Tests/Command/CompleteCommandTest.php	CompleteCommandTest::testCompleteCommandInputDefinition	pending	
 Tests/Command/CompleteCommandTest.php	CompleteCommandTest::testCompleteCommandName	pending	
@@ -530,20 +530,20 @@ Tests/Helper/FileInputHelperTest.php	FileInputHelperTest::testReadWithPasteDetec
 Tests/Helper/FileInputHelperTest.php	FileInputHelperTest::testReadWithPasteDetectionReturnsPathFromLineInput	pending	
 Tests/Helper/FileInputHelperTest.php	FileInputHelperTest::testReadWithPasteDetectionReturnsPathWhenInputEndsWithoutNewline	pending	
 Tests/Helper/FileInputHelperTest.php	FileInputHelperTest::testReadWithPasteDetectionStopsAtNewlineBeforePasteStart	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlock	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlockLGEscaping	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlockWithDiacriticLetters	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlockWithDoubleWidthDiacriticLetters	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatSection	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingMessageWithCustomSuffix	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingWithLongerLengthThanMessageWithSuffix	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingWithNegativeLength	pending	
-Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingWithShorterLengthThanMessageWithSuffix	pending	
-Tests/Helper/HelperSetTest.php	HelperSetTest::testConstructor	pending	
-Tests/Helper/HelperSetTest.php	HelperSetTest::testGet	pending	
-Tests/Helper/HelperSetTest.php	HelperSetTest::testHas	pending	
-Tests/Helper/HelperSetTest.php	HelperSetTest::testIteration	pending	
-Tests/Helper/HelperSetTest.php	HelperSetTest::testSet	pending	
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlock	ported	crates/console/tests/helper_set.rs::testFormatBlock
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlockLGEscaping	ported	crates/console/tests/helper_set.rs::testFormatBlockLGEscaping
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlockWithDiacriticLetters	ported	crates/console/tests/helper_set.rs::testFormatBlockWithDiacriticLetters
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatBlockWithDoubleWidthDiacriticLetters	ported	crates/console/tests/helper_set.rs::testFormatBlockWithDoubleWidthDiacriticLetters
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testFormatSection	ported	crates/console/tests/helper_set.rs::testFormatSection
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingMessageWithCustomSuffix	ported	crates/console/tests/helper_set.rs::testTruncatingMessageWithCustomSuffix
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingWithLongerLengthThanMessageWithSuffix	ported	crates/console/tests/helper_set.rs::testTruncatingWithLongerLengthThanMessageWithSuffix
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingWithNegativeLength	ported	crates/console/tests/helper_set.rs::testTruncatingWithNegativeLength
+Tests/Helper/FormatterHelperTest.php	FormatterHelperTest::testTruncatingWithShorterLengthThanMessageWithSuffix	ported	crates/console/tests/helper_set.rs::testTruncatingWithShorterLengthThanMessageWithSuffix
+Tests/Helper/HelperSetTest.php	HelperSetTest::testConstructor	ported	crates/console/tests/helper_set.rs::testConstructor
+Tests/Helper/HelperSetTest.php	HelperSetTest::testGet	ported	crates/console/tests/helper_set.rs::testGet
+Tests/Helper/HelperSetTest.php	HelperSetTest::testHas	ported	crates/console/tests/helper_set.rs::testHas
+Tests/Helper/HelperSetTest.php	HelperSetTest::testIteration	ported	crates/console/tests/helper_set.rs::testIteration
+Tests/Helper/HelperSetTest.php	HelperSetTest::testSet	ported	crates/console/tests/helper_set.rs::testSet
 Tests/Helper/HelperTest.php	HelperTest::testFormatTime	pending	
 Tests/Helper/HelperTest.php	HelperTest::testRemoveDecoration	pending	
 Tests/Helper/OutputWrapperTest.php	OutputWrapperTest::testBasicWrap	pending	
@@ -906,9 +906,9 @@ Tests/Input/InputTest.php	InputTest::testSetInvalidOption	ported	crates/console/
 Tests/Input/InputTest.php	InputTest::testValidate	ported	crates/console/tests/input_array.rs::testValidate
 Tests/Input/InputTest.php	InputTest::testValidateWithMissingArguments	ported	crates/console/tests/input_array.rs::testValidateWithMissingArguments
 Tests/Input/InputTest.php	InputTest::testValidateWithMissingRequiredArguments	ported	crates/console/tests/input_array.rs::testValidateWithMissingRequiredArguments
-Tests/Input/StringInputTest.php	StringInputTest::testInputOptionWithGivenString	pending	
-Tests/Input/StringInputTest.php	StringInputTest::testToString	pending	
-Tests/Input/StringInputTest.php	StringInputTest::testTokenize	pending	
+Tests/Input/StringInputTest.php	StringInputTest::testInputOptionWithGivenString	ported	crates/console/tests/string_input.rs::testInputOptionWithGivenString
+Tests/Input/StringInputTest.php	StringInputTest::testToString	ported	crates/console/tests/string_input.rs::testToString
+Tests/Input/StringInputTest.php	StringInputTest::testTokenize	ported	crates/console/tests/string_input.rs::testTokenize
 Tests/Logger/ConsoleLoggerTest.php	ConsoleLoggerTest::testContextCanContainAnything	pending	
 Tests/Logger/ConsoleLoggerTest.php	ConsoleLoggerTest::testContextExceptionKeyCanBeExceptionOrOtherValues	pending	
 Tests/Logger/ConsoleLoggerTest.php	ConsoleLoggerTest::testContextReplacement	pending	
@@ -954,17 +954,17 @@ Tests/Output/ConsoleSectionOutputTest.php	ConsoleSectionOutputTest::testOverwrit
 Tests/Output/ConsoleSectionOutputTest.php	ConsoleSectionOutputTest::testOverwriteMultipleLines	pending	
 Tests/Output/ConsoleSectionOutputTest.php	ConsoleSectionOutputTest::testOverwriteWithMaxHeightOverflow	pending	
 Tests/Output/ConsoleSectionOutputTest.php	ConsoleSectionOutputTest::testWriteWithoutNewLine	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testConstructor	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testGetFormatter	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testIsDebug	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testIsQuiet	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testIsSilent	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testIsVerbose	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testIsVeryVerbose	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testSetDecorated	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testSetFormatter	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testSetVerbosity	pending	
-Tests/Output/NullOutputTest.php	NullOutputTest::testVerbosity	pending	
+Tests/Output/NullOutputTest.php	NullOutputTest::testConstructor	ported	crates/console/tests/string_input.rs::testConstructor
+Tests/Output/NullOutputTest.php	NullOutputTest::testGetFormatter	n/a: NullOutputFormatter is not ported; OutputInterface returns the concrete OutputFormatter (crate README)	
+Tests/Output/NullOutputTest.php	NullOutputTest::testIsDebug	ported	crates/console/tests/string_input.rs::testIsDebug
+Tests/Output/NullOutputTest.php	NullOutputTest::testIsQuiet	ported	crates/console/tests/string_input.rs::testIsQuiet
+Tests/Output/NullOutputTest.php	NullOutputTest::testIsSilent	ported	crates/console/tests/string_input.rs::testIsSilent
+Tests/Output/NullOutputTest.php	NullOutputTest::testIsVerbose	ported	crates/console/tests/string_input.rs::testIsVerbose
+Tests/Output/NullOutputTest.php	NullOutputTest::testIsVeryVerbose	ported	crates/console/tests/string_input.rs::testIsVeryVerbose
+Tests/Output/NullOutputTest.php	NullOutputTest::testSetDecorated	ported	crates/console/tests/string_input.rs::testSetDecorated
+Tests/Output/NullOutputTest.php	NullOutputTest::testSetFormatter	ported	crates/console/tests/string_input.rs::testSetFormatter
+Tests/Output/NullOutputTest.php	NullOutputTest::testSetVerbosity	ported	crates/console/tests/string_input.rs::testSetVerbosity
+Tests/Output/NullOutputTest.php	NullOutputTest::testVerbosity	ported	crates/console/tests/string_input.rs::testVerbosity
 Tests/Output/OutputTest.php	OutputTest::testConstructor	ported	crates/console/tests/output.rs::testConstructor
 Tests/Output/OutputTest.php	OutputTest::testSetGetVerbosity	ported	crates/console/tests/output.rs::testSetGetVerbosity
 Tests/Output/OutputTest.php	OutputTest::testSetIsDecorated	ported	crates/console/tests/output.rs::testSetIsDecorated
