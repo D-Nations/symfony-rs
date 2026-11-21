@@ -1,7 +1,8 @@
 //! Replays tests/data/builtins.json, recorded from PHP 8.4.27 with
 //! symfony/console v8.1.9 (`scripts/record.sh console`,
 //! oracle/recorders/console_builtins.php): `stripcslashes()`, StringInput's
-//! tokens, `levenshtein()`, `strnatcasecmp()`, `<=>` of two strings, and
+//! tokens, `levenshtein()`, `strnatcasecmp()`, `<=>` of two strings,
+//! OutputWrapper::wrap(), and
 //! Application::find() / findNamespace() on a fixed set of commands.
 //!
 //! Upstream: none
@@ -14,6 +15,7 @@ use symfony_console::{
     application::Application,
     command::command::Command,
     env::putenv,
+    helper::output_wrapper::OutputWrapper,
     input::string_input::{stripcslashes, tokenize},
     php::{compare_strings, levenshtein, strnatcasecmp},
 };
@@ -136,6 +138,34 @@ fn string_comparison_matches_php() -> Result<(), serde_json::Error> {
         })
         .collect();
     check("<=>", cases.len(), &failures);
+    Ok(())
+}
+
+#[test]
+fn wrap_matches_php() -> Result<(), Box<dyn std::error::Error>> {
+    let data = data()?;
+    let cases = rows(&data, "wrap");
+    let mut failures = Failures::new();
+    for c in cases {
+        let (text_in, width, cut) = (
+            text(&c[0]),
+            c[1].as_i64().unwrap_or(0),
+            c[2].as_bool().unwrap_or(false),
+        );
+        let ours = OutputWrapper::new(cut).wrap(
+            text_in, width, "
+",
+        )?;
+        if ours != text(&c[3]) {
+            failures.push(format!(
+                "wrap({text_in:?}, {width}, {cut}):
+  ours {ours:?}
+  PHP  {:?}",
+                text(&c[3])
+            ));
+        }
+    }
+    check("wrap", cases.len(), &failures);
     Ok(())
 }
 

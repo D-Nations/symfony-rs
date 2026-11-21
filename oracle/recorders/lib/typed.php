@@ -15,6 +15,9 @@ function typed_value(mixed $v): array
         $v instanceof \DateTimeInterface => ['datetime', $v->format('Y-m-d\TH:i:s.uP'), $v->getTimezone()->getName(), $v->format('U')],
         $v instanceof \ArrayObject => ['arrayobject', typed_pairs($v->getArrayCopy())],
         $v instanceof \Symfony\Component\Yaml\Tag\TaggedValue => ['tagged', $v->getTag(), typed_value($v->getValue())],
+        // symfony/console's table cells keep their options in private properties
+        $v instanceof \Symfony\Component\Console\Helper\TableCell => ['object', $v::class, typed_pairs(['value' => (string) $v, 'rowspan' => $v->getRowspan(), 'colspan' => $v->getColspan(), 'style' => $v->getStyle()])],
+        $v instanceof \Symfony\Component\Console\Helper\TableCellStyle => ['object', $v::class, typed_pairs($v->getOptions())],
         // symfony/string's objects keep their text in a protected property
         $v instanceof \Symfony\Component\String\AbstractString => ['object', $v::class, [[typed_value('string'), typed_value((string) $v)]]],
         \is_object($v) => ['object', $v::class, typed_pairs(get_object_vars($v))],

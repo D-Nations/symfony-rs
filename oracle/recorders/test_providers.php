@@ -28,7 +28,8 @@ require_once "$tests/$class.php";
 
 $namespace = null;
 foreach (get_declared_classes() as $declared) {
-    if (str_ends_with($declared, "\\Tests\\$class")) {
+    // a class in a subdirectory of Tests is given as a path (Helper/TableTest)
+    if (str_ends_with($declared, '\\Tests\\'.str_replace('/', '\\', $class))) {
         $namespace = $declared;
     }
 }
