@@ -61,7 +61,17 @@ fetches the whole suite where upstream's test looks for it.
   a `ParseException` with the `TypeError`'s message, without its
   "called in <file> on line N" suffix.
 
-## Not ported yet
+## The lint:yaml command
 
-`Command/LintCommand.php` and LintCommandTest (11 tests): they wait for
-the Console port.
+`Command/LintCommand.php`, behind the `console` feature (symfony-console),
+with LintCommandTest (11 of 11) and 150 runs recorded from PHP
+(`tests/data/lint_command.json`: every format and verbosity,
+`--parse-tags`, several files, `--exclude`, a directory, errors). The
+parser takes an `Environment`: the constants `!php/const` may name.
+
+- Upstream's error handler turns a deprecation raised while parsing into
+  a ParseException; symfony/yaml 8 raises none, so there is no handler.
+- A directory is listed in the order the system gives, as PHP's
+  `RecursiveDirectoryIterator` does, so the order of files can differ
+  between systems; `is_readable()` is whether the path opens for reading.
+- A file name that is not UTF-8 is shown lossily (PLAN.md decision 11).
