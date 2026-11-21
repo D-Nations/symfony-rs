@@ -1,7 +1,7 @@
 //! DebugCommandTest, with upstream's names and assertions. Each test has
 //! its own globals, as `#[RunInSeparateProcess]` gives upstream's (the
 //! others share one process; none depends on what an earlier one left).
-//! The scenarios are upstream's fixtures, copied to tests/Fixtures/Command.
+//! The scenarios are upstream's fixtures, copied to tests/fixtures/Command.
 //!
 //! Upstream: symfony/dotenv Tests/Command/DebugCommandTest.php
 #![allow(non_snake_case)]
@@ -28,7 +28,7 @@ type R = Result<(), ConsoleError>;
 /// `__DIR__.'/Fixtures'`.
 fn fixtures() -> String {
     format!(
-        "{}/tests/Fixtures/Command",
+        "{}/tests/fixtures/Command",
         env!("CARGO_MANIFEST_DIR").replace('\\', "/")
     )
 }
