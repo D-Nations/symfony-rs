@@ -3,3 +3,5 @@ symfony/stopwatch
 symfony/css-selector
 symfony/options-resolver
 symfony/finder
+symfony/yaml
+symfony/dotenv

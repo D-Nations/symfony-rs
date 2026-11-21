@@ -9,8 +9,8 @@
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
-#   scripts/record.sh yaml         crates/yaml/tests/data/*.json
-#   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json
+#   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
+#   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,unicode_string_test}.json
@@ -96,6 +96,12 @@ yaml() {
         mv "$tmp" "$out"
         echo "Yaml $name vectors written to $out"
     done
+    out=crates/yaml/tests/data/lint_command.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/yaml_lint.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Yaml lint:yaml outputs written to $out"
     for class in InlineTest; do
         name=$(echo "$class" | sed 's/Test$//' | tr '[:upper:]' '[:lower:]')
         out=crates/yaml/tests/data/${name}_test.json
@@ -132,6 +138,12 @@ dotenv() {
     python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
     mv "$tmp" "$out"
     echo "Dotenv parse vectors written to $out"
+    out=crates/dotenv/tests/data/commands.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/dotenv_commands.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Dotenv command outputs written to $out"
 }
 
 config() {

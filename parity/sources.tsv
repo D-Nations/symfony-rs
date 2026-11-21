@@ -250,12 +250,16 @@ crates/css-selector/tests/parser/whitespace_handler_test.rs	symfony/css-selector
 crates/css-selector/tests/parser/whitespace_handler_test.rs	symfony/css-selector	Tests/Parser/Handler/AbstractHandlerTestCase.php	08e2905152a39cf3fd1745d83f8c483e258887d9
 crates/css-selector/tests/xpath/translator_test.rs	symfony/css-selector	Tests/XPath/TranslatorTest.php	08e2905152a39cf3fd1745d83f8c483e258887d9
 crates/deprecation-contracts/src/lib.rs	symfony/deprecation-contracts	function.php	f3202fa1b5097b0af062dc978b32ecf63404e31d
+crates/dotenv/src/command/debug_command.rs	symfony/dotenv	Command/DebugCommand.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
+crates/dotenv/src/command/dotenv_dump_command.rs	symfony/dotenv	Command/DotenvDumpCommand.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/dotenv.rs	symfony/dotenv	Dotenv.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/exception.rs	symfony/dotenv	Exception/ExceptionInterface.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/exception.rs	symfony/dotenv	Exception/FormatException.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/exception.rs	symfony/dotenv	Exception/FormatExceptionContext.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/exception.rs	symfony/dotenv	Exception/PathException.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/exception.rs	symfony/dotenv	Exception/VariableCircularReferenceException.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
+crates/dotenv/tests/debug_command.rs	symfony/dotenv	Tests/Command/DebugCommandTest.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
+crates/dotenv/tests/dotenv_dump_command.rs	symfony/dotenv	Tests/Command/DotenvDumpCommandTest.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/tests/dotenv_test.rs	symfony/dotenv	Tests/DotenvTest.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/event-dispatcher-contracts/src/lib.rs	symfony/event-dispatcher-contracts	Event.php	c7de7a00ffb67842132da02ea92988a39ccd9f4e
 crates/event-dispatcher-contracts/src/lib.rs	symfony/event-dispatcher-contracts	EventDispatcherInterface.php	c7de7a00ffb67842132da02ea92988a39ccd9f4e
@@ -379,6 +383,7 @@ crates/string/src/unicode_string.rs	symfony/string	AbstractString.php	6c6110979c
 crates/string/tests/unicode_string_test.rs	symfony/string	Tests/UnicodeStringTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/tests/unicode_string_test.rs	symfony/string	Tests/AbstractUnicodeTestCase.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/tests/unicode_string_test.rs	symfony/string	Tests/AbstractAsciiTestCase.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/yaml/src/command/lint_command.rs	symfony/yaml	Command/LintCommand.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/dumper.rs	symfony/yaml	Dumper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/escaper.rs	symfony/yaml	Escaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/exception.rs	symfony/yaml	Exception/ParseException.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
@@ -393,6 +398,7 @@ crates/yaml/src/timestamp.rs	symfony/yaml	Inline.php	6107ee26a25215c3df3af0a3315
 crates/yaml/src/unescaper.rs	symfony/yaml	Unescaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/dumper_test.rs	symfony/yaml	Tests/DumperTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/inline_test.rs	symfony/yaml	Tests/InlineTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
+crates/yaml/tests/lint_command.rs	symfony/yaml	Tests/Command/LintCommandTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/parse_exception.rs	symfony/yaml	Tests/ParseExceptionTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/parser_test.rs	symfony/yaml	Tests/ParserTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/yaml_test.rs	symfony/yaml	Tests/YamlTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db

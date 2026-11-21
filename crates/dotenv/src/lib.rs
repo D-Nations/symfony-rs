@@ -7,6 +7,8 @@
 
 #![forbid(unsafe_code)]
 
+#[cfg(feature = "console")]
+pub mod command;
 pub mod dotenv;
 pub mod exception;
 pub mod globals;
