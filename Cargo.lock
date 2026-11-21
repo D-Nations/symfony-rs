@@ -532,6 +532,8 @@ version = "0.1.0"
 dependencies = [
  "php-value",
  "serde_json",
+ "symfony-console",
+ "symfony-dotenv",
 ]
 
 [[package]]
@@ -616,6 +618,8 @@ dependencies = [
  "php-value",
  "regex",
  "serde_json",
+ "symfony-console",
+ "symfony-yaml",
 ]
 
 [[package]]

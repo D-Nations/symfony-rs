@@ -1,15 +1,15 @@
 # symfony/yaml at 6107ee26a25215c3df3af0a3315e56bb4fd0b7db: upstream test	method	status	rust test
-Tests/Command/LintCommandTest.php	LintCommandTest::testComplete	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testConstantAsKey	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testCustomTags	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testCustomTagsError	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testLintAutodetectsGithubActionEnvironment	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testLintCorrectFile	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testLintCorrectFiles	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testLintFileNotReadable	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testLintIncorrectFile	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testLintIncorrectFileWithGithubFormat	pending	
-Tests/Command/LintCommandTest.php	LintCommandTest::testLintWithExclude	pending	
+Tests/Command/LintCommandTest.php	LintCommandTest::testComplete	ported	crates/yaml/tests/lint_command.rs::testComplete
+Tests/Command/LintCommandTest.php	LintCommandTest::testConstantAsKey	ported	crates/yaml/tests/lint_command.rs::testConstantAsKey
+Tests/Command/LintCommandTest.php	LintCommandTest::testCustomTags	ported	crates/yaml/tests/lint_command.rs::testCustomTags
+Tests/Command/LintCommandTest.php	LintCommandTest::testCustomTagsError	ported	crates/yaml/tests/lint_command.rs::testCustomTagsError
+Tests/Command/LintCommandTest.php	LintCommandTest::testLintAutodetectsGithubActionEnvironment	ported	crates/yaml/tests/lint_command.rs::testLintAutodetectsGithubActionEnvironment
+Tests/Command/LintCommandTest.php	LintCommandTest::testLintCorrectFile	ported	crates/yaml/tests/lint_command.rs::testLintCorrectFile
+Tests/Command/LintCommandTest.php	LintCommandTest::testLintCorrectFiles	ported	crates/yaml/tests/lint_command.rs::testLintCorrectFiles
+Tests/Command/LintCommandTest.php	LintCommandTest::testLintFileNotReadable	ported	crates/yaml/tests/lint_command.rs::testLintFileNotReadable
+Tests/Command/LintCommandTest.php	LintCommandTest::testLintIncorrectFile	ported	crates/yaml/tests/lint_command.rs::testLintIncorrectFile
+Tests/Command/LintCommandTest.php	LintCommandTest::testLintIncorrectFileWithGithubFormat	ported	crates/yaml/tests/lint_command.rs::testLintIncorrectFileWithGithubFormat
+Tests/Command/LintCommandTest.php	LintCommandTest::testLintWithExclude	ported	crates/yaml/tests/lint_command.rs::testLintWithExclude
 Tests/DumperTest.php	DumperTest::testBinaryDataIsDumpedBase64Encoded	ported	crates/yaml/tests/dumper_test.rs::testBinaryDataIsDumpedBase64Encoded
 Tests/DumperTest.php	DumperTest::testCanForceQuotesOnValues	ported	crates/yaml/tests/dumper_test.rs::testCanForceQuotesOnValues
 Tests/DumperTest.php	DumperTest::testCarriageReturnFollowedByNewlineIsMaintainedWhenDumpingAsMultiLineLiteralBlock	ported	crates/yaml/tests/dumper_test.rs::testCarriageReturnFollowedByNewlineIsMaintainedWhenDumpingAsMultiLineLiteralBlock
