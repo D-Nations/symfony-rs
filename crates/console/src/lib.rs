@@ -7,6 +7,7 @@
 
 pub mod application;
 pub mod attribute;
+pub mod ci;
 pub mod color;
 pub mod command;
 pub mod completion;
@@ -17,6 +18,7 @@ pub mod helper;
 pub mod input;
 pub mod output;
 pub mod php;
+pub mod style;
 pub mod terminal;
 pub mod tester;
 
