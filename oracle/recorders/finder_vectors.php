@@ -67,7 +67,9 @@ $enc = static fn ($v) => \is_string($v) ? ['s', $v] : (\is_int($v) ? ['i', $v] :
 $words = ['', ' ', 'a', 'A', 'b', 'B', 'a1', 'a2', 'a10', 'a01', 'a001', 'a1b', 'a 1', 'a  2', '0', '00', '01', '1',
     '10', '010', '1.5', '1.10', 'x0.5', 'x0.05', 'qux_0_1.php', 'qux_10_2.php', 'qux_2_0.php', 'qux_1000_1.php',
     'qux_1002_0.php', 'qux_12_0.php', 'foo bar', 'foo/bar.tmp', 'foo', 'Zephire.php', 'zebulon.php', 'img12', 'img10',
-    'IMG12', '  lead', 'lead', '0lead', '007', '7', 'a0', 'a00', 'a0b', '_', '[', 'é', 'É'];
+    'IMG12', '  lead', 'lead', '0lead', '007', '7', 'a0', 'a00', 'a0b', '_', '[', 'é', 'É',
+    // whitespace right after a run of digits is compared, not skipped
+    '2 B', '2-', '02-', '2 a', '2a', '2  x', '2 x', 'x2 B', 'x2-'];
 $nat = [];
 foreach ($words as $x) {
     foreach ($words as $y) {
