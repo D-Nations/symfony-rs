@@ -1,5 +1,10 @@
-//! PHP built-ins Console calls that no other crate has: `strip_tags()`
-//! (for `OUTPUT_PLAIN`).
+//! PHP built-ins Console calls: `strip_tags()` (for `OUTPUT_PLAIN`), and
+//! for Application's command lookup `levenshtein()`, `strnatcasecmp()`
+//! (`ksort()` with `SORT_NATURAL | SORT_FLAG_CASE`) and `sort()`'s default
+//! order of strings. They are written as symfony-config and
+//! symfony-finder write them (from the manual and recorded PHP answers),
+//! and checked here against `tests/data/builtins.json`, which found that
+//! natural order does not skip whitespace right after a run of digits.
 //!
 //! Written from the PHP manual (no php-src, PLAN.md decision 8) and checked
 //! against 6,137 recorded calls (`tests/data/strip_tags.json`,
@@ -118,4 +123,172 @@ fn find_after(b: &[u8], from: usize, end: &[u8]) -> usize {
         .windows(end.len())
         .position(|w| w == end)
         .map_or(b.len(), |p| from + p + end.len())
+}
+
+use std::cmp::Ordering;
+
+use php_value::numeric::{is_numeric, string_to_float, string_to_int};
+
+/// `levenshtein($a, $b)` with insertion, replacement and deletion costs 1,
+/// on bytes.
+pub fn levenshtein(a: &[u8], b: &[u8]) -> usize {
+    if a.is_empty() {
+        return b.len();
+    }
+    if b.is_empty() {
+        return a.len();
+    }
+    let mut previous: Vec<usize> = (0..=b.len()).collect();
+    let mut current = vec![0; b.len() + 1];
+    for (i, &ca) in a.iter().enumerate() {
+        current[0] = i + 1;
+        for (j, &cb) in b.iter().enumerate() {
+            let replace = previous[j] + usize::from(ca != cb);
+            let insert = current[j] + 1;
+            let delete = previous[j + 1] + 1;
+            current[j + 1] = replace.min(insert).min(delete);
+        }
+        std::mem::swap(&mut previous, &mut current);
+    }
+    previous[b.len()]
+}
+
+/// `$a <=> $b` for two strings, as `sort()` orders them by default (PHP
+/// 8): as numbers when both are numeric, else byte by byte.
+pub fn compare_strings(a: &[u8], b: &[u8]) -> Ordering {
+    if is_numeric(a) && is_numeric(b) {
+        let number = |s: &[u8]| {
+            let integer_form = !s.iter().any(|&c| matches!(c, b'.' | b'e' | b'E'));
+            let f = string_to_float(s);
+            if integer_form {
+                let i = string_to_int(s);
+                if (i != i64::MAX && i != i64::MIN) || (i as f64) == f {
+                    return (Some(i), f);
+                }
+            }
+            (None, f)
+        };
+        return match (number(a), number(b)) {
+            ((Some(x), _), (Some(y), _)) => x.cmp(&y),
+            ((_, x), (_, y)) => x.partial_cmp(&y).unwrap_or(Ordering::Less),
+        };
+    }
+    a.cmp(b)
+}
+
+/// `sort($strings)` with the default flags (stable, as PHP 8's is).
+pub fn sort_strings(strings: &mut [String]) {
+    strings.sort_by(|a, b| compare_strings(a.as_bytes(), b.as_bytes()));
+}
+
+/// The sign of `strnatcasecmp($a, $b)`.
+pub fn strnatcasecmp(a: &[u8], b: &[u8]) -> Ordering {
+    if a.is_empty() || b.is_empty() {
+        return a.len().cmp(&b.len());
+    }
+    let at = |s: &[u8], k: usize| s.get(k).copied().unwrap_or(0);
+    let (mut i, mut j) = (0usize, 0usize);
+    let mut leading = true;
+    let mut after_digits = false;
+    loop {
+        // leading zeros of the first number are not significant
+        if leading {
+            while at(a, i) == b'0' && i + 1 < a.len() && at(a, i + 1).is_ascii_digit() {
+                i += 1;
+            }
+            while at(b, j) == b'0' && j + 1 < b.len() && at(b, j + 1).is_ascii_digit() {
+                j += 1;
+            }
+            leading = false;
+        }
+        // Whitespace is skipped, except right after a run of digits
+        // (observed: "2 B" < "2-", but "a B" > "a-").
+        if !after_digits {
+            while is_c_space(at(a, i)) {
+                i += 1;
+            }
+            while is_c_space(at(b, j)) {
+                j += 1;
+            }
+        }
+        after_digits = false;
+        let (ca, cb) = (at(a, i), at(b, j));
+        if ca.is_ascii_digit() && cb.is_ascii_digit() {
+            let result = if ca == b'0' || cb == b'0' {
+                compare_left(a, &mut i, b, &mut j)
+            } else {
+                compare_right(a, &mut i, b, &mut j)
+            };
+            if result != Ordering::Equal {
+                return result;
+            }
+            match (i >= a.len(), j >= b.len()) {
+                (true, true) => return Ordering::Equal,
+                (true, false) => return Ordering::Less,
+                (false, true) => return Ordering::Greater,
+                _ => {
+                    after_digits = true;
+                    continue;
+                }
+            }
+        }
+        match ca.to_ascii_uppercase().cmp(&cb.to_ascii_uppercase()) {
+            Ordering::Equal => {}
+            o => return o,
+        }
+        i += 1;
+        j += 1;
+        match (i >= a.len(), j >= b.len()) {
+            (true, true) => return Ordering::Equal,
+            (true, false) => return Ordering::Less,
+            (false, true) => return Ordering::Greater,
+            _ => {}
+        }
+    }
+}
+
+fn is_c_space(c: u8) -> bool {
+    matches!(c, b' ' | 0x09 | 0x0a | 0x0b | 0x0c | 0x0d)
+}
+
+/// Digit runs aligned on the right: the longer run is larger; equal
+/// lengths are decided by the first differing digit.
+fn compare_right(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> Ordering {
+    let mut bias = Ordering::Equal;
+    loop {
+        let da = a.get(*i).is_some_and(u8::is_ascii_digit);
+        let db = b.get(*j).is_some_and(u8::is_ascii_digit);
+        match (da, db) {
+            (false, false) => return bias,
+            (false, true) => return Ordering::Less,
+            (true, false) => return Ordering::Greater,
+            (true, true) => {
+                if bias == Ordering::Equal {
+                    bias = a[*i].cmp(&b[*j]);
+                }
+            }
+        }
+        *i += 1;
+        *j += 1;
+    }
+}
+
+/// Digit runs aligned on the left (fractions): the first differing digit
+/// decides; a run that ends first is smaller.
+fn compare_left(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> Ordering {
+    loop {
+        let da = a.get(*i).is_some_and(u8::is_ascii_digit);
+        let db = b.get(*j).is_some_and(u8::is_ascii_digit);
+        match (da, db) {
+            (false, false) => return Ordering::Equal,
+            (false, true) => return Ordering::Less,
+            (true, false) => return Ordering::Greater,
+            (true, true) => match a[*i].cmp(&b[*j]) {
+                Ordering::Equal => {}
+                o => return o,
+            },
+        }
+        *i += 1;
+        *j += 1;
+    }
 }

@@ -133,13 +133,15 @@ fn is_c_space(c: u8) -> bool {
 
 /// Natural order: runs of digits compare as numbers ("2" < "10"), except
 /// that a run starting with "0" compares digit by digit as a fraction;
-/// whitespace is skipped and leading zeros at the very start are ignored.
+/// whitespace is skipped (but not right after a run of digits) and leading
+/// zeros at the very start are ignored.
 fn natural(a: &[u8], b: &[u8], fold: bool) -> Ordering {
     if a.is_empty() || b.is_empty() {
         return a.len().cmp(&b.len());
     }
     let (mut i, mut j) = (0usize, 0usize);
     let mut leading = true;
+    let mut after_digits = false;
     loop {
         let at = |s: &[u8], k: usize| s.get(k).copied().unwrap_or(0);
         // leading zeros of the first number are not significant
@@ -152,12 +154,17 @@ fn natural(a: &[u8], b: &[u8], fold: bool) -> Ordering {
             }
             leading = false;
         }
-        while is_c_space(at(a, i)) {
-            i += 1;
+        // Whitespace is skipped, except right after a run of digits
+        // (observed: "2 B" < "2-", but "a B" > "a-").
+        if !after_digits {
+            while is_c_space(at(a, i)) {
+                i += 1;
+            }
+            while is_c_space(at(b, j)) {
+                j += 1;
+            }
         }
-        while is_c_space(at(b, j)) {
-            j += 1;
-        }
+        after_digits = false;
         let (ca, cb) = (at(a, i), at(b, j));
         if ca.is_ascii_digit() && cb.is_ascii_digit() {
             let fractional = ca == b'0' || cb == b'0';
@@ -173,7 +180,10 @@ fn natural(a: &[u8], b: &[u8], fold: bool) -> Ordering {
                 (true, true) => return Ordering::Equal,
                 (true, false) => return Ordering::Less,
                 (false, true) => return Ordering::Greater,
-                _ => continue,
+                _ => {
+                    after_digits = true;
+                    continue;
+                }
             }
         }
         let (ca, cb) = if fold {

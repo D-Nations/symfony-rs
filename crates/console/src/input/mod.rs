@@ -16,6 +16,7 @@ pub mod input;
 pub mod input_argument;
 pub mod input_definition;
 pub mod input_option;
+pub mod string_input;
 
 /// A closure giving suggested values; it must return an array.
 pub type SuggestionClosure = Arc<dyn Fn(&CompletionInput) -> Value + Send + Sync>;

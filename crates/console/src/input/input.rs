@@ -67,6 +67,20 @@ impl Input {
         Self::argv(&argv, definition)
     }
 
+    /// `new ArgvInput([])` with `setTokens($tokens)` (StringInput).
+    pub(crate) fn from_tokens(tokens: Vec<String>) -> Self {
+        Self {
+            definition: InputDefinition::default(),
+            options: PhpArray::new(),
+            arguments: PhpArray::new(),
+            interactive: true,
+            source: Source::Argv {
+                tokens,
+                lenient: false,
+            },
+        }
+    }
+
     /// `CompletionInput`'s base: tokens as given, parse errors ignored.
     pub(crate) fn completion(tokens: Vec<String>) -> Self {
         Self {
