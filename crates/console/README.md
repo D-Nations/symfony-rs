@@ -19,6 +19,10 @@ endorsed by Symfony. The rest of Console is M7 work; its manifest rows stay
 | Helper sets and the formatter helper (`formatSection()`, `formatBlock()`, `truncate()`) | `Helper/HelperSet.php`, `Helper/HelperInterface.php`, `Helper/FormatterHelper.php` | HelperSetTest (5 of 5), FormatterHelperTest (9 of 9) |
 | StringInput's tokens; NullOutput | `Input/StringInput.php`, `Output/NullOutput.php` | StringInputTest (3 of 3), NullOutputTest (10 of 11, 1 `n/a`); 3,015 `stripcslashes()` calls and 4,000 tokenized strings recorded from PHP |
 | Application's registry: `addCommand()`, `register()`, `get()`, `has()`, `all()`, `find()` with abbreviations, case fallback, ambiguity and alternatives, `getNamespaces()`, `findNamespace()`, the default definition and helper set, the name and version, `setDefaultCommand()`, `complete()` | `Application.php` | ApplicationTest (45 of 147); 2,790 `find()` / `findNamespace()` calls and 8,000 `levenshtein()`, `strnatcasecmp()` and `<=>` calls recorded from PHP |
+| Wrapping text to a width without cutting style tags or (by default) URLs | `Helper/OutputWrapper.php` | OutputWrapperTest (1 of 4, 3 `n/a`); 2,500 `wrap()` calls recorded from PHP |
+| Tables: headers (one or several rows), rows, separators, TableCell colspan and rowspan, multi-line cells, cell styles and alignment, the seven styles and custom ones, column styles, minimum and maximum widths, header and footer titles, horizontal and vertical orientation | `Helper/Table.php`, `Helper/TableStyle.php`, `Helper/TableCell.php`, `Helper/TableCellStyle.php`, `Helper/TableSeparator.php`, `Helper/TableRows.php` | TableTest (32 of 36), TableStyleTest (1 of 1), TableCellStyleTest (1 of 1); 1,500 generated tables recorded from PHP |
+| SymfonyStyle: blocks (success, error, warning, note, info, caution, comment, custom), outline blocks, title, section, listing, text, table, horizontal table, definition list, new lines and the blank lines it puts between them | `Style/SymfonyStyle.php`, `Style/OutputStyle.php`, `Output/TrimmedBufferOutput.php` | SymfonyStyleTest (6 of 22, 2 `n/a`) and 27 of its 28 output fixtures |
+| GitHub Actions annotations | `CI/GithubActionReporter.php` | GithubActionReporterTest (2 of 2) |
 | CommandTester's `execute()` and display; CommandCompletionTester | `Tester/CommandTester.php`, `Tester/TesterTrait.php`, `Tester/CommandCompletionTester.php` | Through CommandTest |
 
 ## Rust shape
@@ -54,6 +58,10 @@ endorsed by Symfony. The rest of Console is M7 work; its manifest rows stay
   `_complete` and `completion` commands' work: they are registered with
   their names, definitions and help, but running one is refused, and their
   suggestion closures are not ported.
+- SymfonyStyle's questions, progress bars and trees, and ConsoleOutput's
+  sections (which `appendRow()` and SymfonyStyle's tables use when the
+  output has them) are M7 work; `appendRow()` refuses every output here.
+- Table's style registry (`setStyleDefinition()`) is per thread.
 - PHP binds an unbound closure given as code to the command (`$this`); a
   Rust closure captures what it uses instead (CommandTest's three binding
   tests are `n/a`).

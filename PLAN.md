@@ -632,6 +632,7 @@ Stack rows (searched November 19):
 | CssSelector (searched November 20) | No Rust port of Symfony CssSelector or Python cssselect. [css-to-xpath](https://docs.rs/css-to-xpath) (Servo's `selectors`/`cssparser`, its own XPath shapes, Generic/Html/Xhtml modes, no nested `:has()`); [selectors](https://docs.rs/selectors) / [scraper](https://docs.rs/scraper) (match against a DOM, no XPath); scrapling's translator (cssselect-like, tied to its crate); cssifier / xcss (XPath to CSS, the other direction) | Port on `php-value` and `regex` (bytes, `(?-u)`), no new dependency | None produces Symfony's XPath strings, node string forms, specificity, `ParseException` texts with token positions, PHP truthiness (`"0"`), byte-wise patterns or the LRU cache |
 | OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
 | Finder (searched November 20) | No Rust port of Symfony Finder. Walkers: [walkdir](https://docs.rs/walkdir) (depth-first, sorting, symlink loops), [ignore](https://docs.rs/ignore) (ripgrep's walker with its own gitignore rules and parallelism), [jwalk](https://docs.rs/jwalk); globs: [globset](https://docs.rs/globset), [glob](https://docs.rs/glob), [wax](https://docs.rs/wax). Regex for the PCRE patterns Finder builds and accepts (`Glob`/`Gitignore` emit lookaround, possessive quantifiers, `$f`): `regex` (no lookaround), [fancy-regex](https://docs.rs/fancy-regex) 0.20 (backtracking, lookaround, atomic and possessive, a bytes mode with ASCII classes), [pcre2](https://docs.rs/pcre2) (FFI, excluded by decision 5) | Port, walking with `std::fs`; `fancy-regex` under a PHP-pattern translator (`crates/finder/src/pcre.rs`) | Finder's order of filters and stat calls (pinned by upstream's stream-wrapper log tests), stream wrappers, `SplFileInfo` relative paths, its own gitignore regexes and Glob's regex text are its behaviour, so no walker or glob crate reproduces them. `fancy-regex` is the regex engine decision 5 names for lookaround; the translator keeps PCRE's meaning (bytes without `/u`, `$` before a final newline, `/x`, `/U`, `/n`, literal `{`) and refuses what it does not translate; checked on 137 patterns x 62 subjects recorded from PHP |
+| Console's OutputWrapper and Table cell patterns (November 21) | `regex` (no atomic groups or lookbehind; upstream's wrap pattern needs both), a hand-written wrapper (the demo's `wrap()`, its own rules), `fancy-regex` 0.20 (already Finder's engine, decision 5) | `fancy-regex`, upstream's pattern written for it; `preg_replace()`'s scan done by hand | The wrap pattern is upstream's text and stays comparable; checked on 2,500 recorded `wrap()` calls and SymfonyStyle's 27 fixtures. No new crate in the workspace |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
@@ -737,9 +738,17 @@ Stack rows (searched November 19):
       recorded calls (`scripts/record.sh console`, `builtins.json`).
       Recording found that natural order does not skip whitespace right
       after a run of digits; symfony-finder had the same bug and is fixed
-      (its corpus extended; the old answers unchanged). Next: SymfonyStyle
-      and Table, GithubActionReporter, then Yaml's LintCommand (11 tests)
-      and Dotenv's two commands (19 tests).
+      (its corpus extended; the old answers unchanged). Then OutputWrapper,
+      TableStyle, TableCell, TableCellStyle, TableSeparator, Table,
+      TrimmedBufferOutput, SymfonyStyle (no questions, progress bars or
+      trees: M7) and GithubActionReporter: TableTest 32 of 36 (4 pending:
+      section output), SymfonyStyleTest 6 of 22 (2 `n/a`; `testOutputs`
+      pending for command_7's questions, the other 27 fixtures pass),
+      OutputWrapperTest 1 of 4 (3 `n/a`: malformed UTF-8),
+      GithubActionReporterTest, TableStyleTest, TableCellStyleTest; plus
+      1,500 generated tables and 2,500 `wrap()` calls recorded from PHP.
+      Next: Yaml's LintCommand (11 tests) and Dotenv's two commands (19
+      tests).
 
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath
