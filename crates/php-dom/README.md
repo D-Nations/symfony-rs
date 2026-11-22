@@ -24,6 +24,7 @@ refused (`LoadError::Refused`, with a line and column).
 | `Schema::parse(bytes, resolver)` and `Schema::validate(&doc, file)` = `schemaValidateSource()` after XmlUtils's `loadXML()`: the result and `libxml_get_errors()` (level, code, message, file, line, column), in libxml's order, for the schema features listed in the X2 stage log (those of the XLIFF 1.2/2.0/2.2, `xml.xsd` and constraint-mapping schemas) | 1,321 of 1,325 recorded documents against 65 schemas, 922 errors; the other 4 refused |
 | Schema errors libxml reports for a malformed schema (not well-formed, not a schema, duplicate global element, unresolved type or element reference, unknown top-level element) | Recorded |
 | Imports read only through the caller's resolver; patterns matched in linear time | `imports_come_only_from_the_resolver`, `linear_on_nested_quantifiers` |
+| `libxml_use_internal_errors($use)`: sets the flag and returns the previous value (`None` reads it); per thread, starting `false`. Nothing here raises warnings or keeps a global error buffer, so the flag is what callers read back (XmlUtils, [m1-c-xml-x3.md](../../docs/milestones/m1-c-xml-x3.md)) | `returns_the_previous_value`; symfony-config's recorded `flags` |
 
 Refused (`LoadError::Refused`), where PHP would read a file or the network
 or use iconv: an external DTD subset or an external parameter entity
@@ -47,4 +48,5 @@ with a document type; `internalSubset`; DTD-defaulted attributes and
 namespace declarations; libxml's entity-amplification check (billion
 laughs fails here too, with different errors); `normalizeDocument()`
 (an identity on every recorded parse); `schemaValidate($path)` reading a
-file (the caller reads it); SimpleXML and XPath (gate X3).
+file (the caller reads it); SimpleXML and XPath (gate X3's loaders;
+XmlUtils itself needs neither).

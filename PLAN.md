@@ -738,12 +738,17 @@ Stack rows (searched November 19):
       plus 1,020 outputs recorded on 34 generated trees
       (`config_dumpers.php`), which also found that a node implementing
       only NodeInterface has no `getParent()` for XmlReferenceDumper (now
-      a `CustomNode` that does not extend BaseNode). Config stays partial:
-      deferred are `Definition/Loader`,
+      a `CustomNode` that does not extend BaseNode). Stage 4 (November
+      22, gate X3's first consumer): `Util/XmlUtils.php` and its two
+      exceptions on `php-dom`: XmlUtilsTest 7 of 7 (199 of 334), plus
+      3,045 `phpize()` values, 71 conversions and 120 `parse()` /
+      `loadFile()` outcomes recorded (`config_xml_utils.php`; stage log
+      [docs/milestones/m1-c-xml-x3.md](docs/milestones/m1-c-xml-x3.md)).
+      Config stays partial: deferred are `Definition/Loader`,
       `Definition/Configurator` and `Definition/Configuration.php` (they
-      need Config's loaders; M1-C), and loaders, resources and `XmlUtils`
-      (Filesystem, Finder, `php-dom`, decision 9; M1-C). Their 142 rows
-      stay `pending`.
+      need Config's loaders; M1-C), and loaders, resources, `ConfigCache`
+      and `FileLocator` (Filesystem, Finder; M1-C). Their 135 rows stay
+      `pending`.
 - [ ] M1-D. Done: provisional converter contract 0.1
       ([docs/converter-contract.md](docs/converter-contract.md)), with
       prior art compared (stack row above); the second app recommended
@@ -816,6 +821,17 @@ Stack rows (searched November 19):
       corpus; open: X3 (resolver mapping for XliffUtils and XmlValidator,
       `XmlUtils`, SimpleXML/XPath subset, the loaders); schema refusals
       surface as decision 14 (accepted) says for parse refusals.
+- [ ] M1-C, XML gate X3 (consumers). Done: `XmlUtils` (symfony-config,
+      stage 4 above): parse and schema refusals are XmlParsingExceptions
+      with the refusal's text (decision 14); schema imports resolve as
+      libxml resolves them for a schema read from memory (against the
+      working directory, `file:` URLs, `%XX` decoded, nothing else read).
+      Every recorded outcome matches except two imports libxml fails to
+      load, which php-dom refuses
+      ([docs/milestones/m1-c-xml-x3.md](docs/milestones/m1-c-xml-x3.md)).
+      X3 passed for XmlUtils; open: XliffFileLoader / XliffUtils (the
+      `xml.xsd` resolver mapping, the SimpleXML/XPath subset), QtFileLoader
+      (DOMXPath), Validator's XmlFileLoader (M5-A).
 
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath

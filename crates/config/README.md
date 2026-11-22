@@ -14,6 +14,7 @@ Potencier. Unofficial, not affiliated with or endorsed by Symfony.
 | ArrayNodeDefinition details: `canBeEnabled()` / `canBeDisabled()` (and their merges), `acceptAndWrap()`, the normalized types it declares, default children (counts, names, PHP's coercion of the argument), key attributes, `fixXmlConfig()`, `find()` with any path separator; ExprBuilder's `if*()` / `then*()` rules, with `thenInvalid()`'s `sprintf()` and `json_encode()` | `Definition/Builder/ArrayNodeDefinition.php`, `Definition/Builder/ExprBuilder.php` | recorded `types`, `default`, `process`, `then_invalid`, `find` cases |
 | Reference dumpers: YamlReferenceDumper (`dump()`, `dumpAtPath()` and its "Unable to find node" UnexpectedValueException, `dumpNode()`; defaults, examples and keys through symfony-yaml's `Inline::dump()`, behind the `yaml` feature) and XmlReferenceDumper (`dump()` / `dumpNode()` with or without a namespace; XML remappings, prototypes of every class and their placeholder values, attribute comments, `writeValue()`); a NodeInterface that does not extend BaseNode | `Definition/Dumper/YamlReferenceDumper.php`, `Definition/Dumper/XmlReferenceDumper.php` | YamlReferenceDumperTest, XmlReferenceDumperTest (7 of 7); recorded `yaml`, `yaml_at`, `xml`, `xml_ns` outputs |
 | `ArrayShapeGenerator::generate()`: PHPDoc shapes of every node class, quoted keys (`addslashes()`), optional keys and deep merging, normalized types (`array_unique()`, `sort()`), unsealed shapes, inline comments with deprecations, info and `json_encode()` defaults, `*/` escaped | `Definition/ArrayShapeGenerator.php` | ArrayShapeGeneratorTest (18 of 18); recorded `shape` outputs |
+| XmlUtils: `parse()` (`validateOnParse`, libxml's errors as `[LEVEL code] message (in file - line l, column c)`, document types refused, schema files with their imports resolved as libxml resolves them for a schema read from memory, validation callables: their result tested for truth, an `\Exception` as the previous exception, an `\Error` propagated), `loadFile()` (not a file, not readable, empty after `trim()`, InvalidXmlException rewrapped with the file name), `convertDomElementToArray()` (with and without the prefix check), `phpize()`; XmlParsingException and InvalidXmlException; `libxml_use_internal_errors()` set, restored and passed to callables as upstream does | `Util/XmlUtils.php`, `Util/Exception/XmlParsingException.php`, `Util/Exception/InvalidXmlException.php` | XmlUtilsTest (7 of 7); recorded `phpize` (3,045 values), `convert` (71 documents), `parse` and `load` (120 outcomes) |
 
 Vectors: `scripts/record.sh config` runs
 `oracle/recorders/config_definition.php`, `config_builder.php` and
@@ -22,6 +23,10 @@ Vectors: `scripts/record.sh config` runs
 `tests/data/dumpers.json`; `tests/recorded.rs`,
 `tests/recorded_builder.rs` and `tests/recorded_dumpers.rs` replay them.
 The dumper vectors are 1,020 outputs on 34 generated trees.
+`scripts/record.sh config-xml-utils` runs `config_xml_utils.php` and
+writes `tests/data/xml_utils.json`, which `tests/recorded_xml_utils.rs`
+replays (stage log
+[m1-c-xml-x3.md](../../docs/milestones/m1-c-xml-x3.md)).
 
 ## Rust shape
 
@@ -81,6 +86,14 @@ The dumper vectors are 1,020 outputs on 34 generated trees.
   `dumpAtPath()` on a tree already built, the steps after `buildTree()`.
   XmlReferenceDumper renames a prototype that is itself a
   PrototypedArrayNode, as upstream's `setName()` does.
+- XmlUtils works on `php_dom::Document`. `$schemaOrCallable` is
+  `Option<Validation>`: `Validation::Schema(path)` or
+  `Validation::Callable(f)`, where `f(&dom, internal_errors, &mut
+  errors)` returns a `Value` and pushes the libxml errors of what it
+  validates (libxml's buffer in PHP). A PHP string naming a function is
+  a callable there; here the caller picks the variant.
+  `XmlUtils::convert_dom_element_to_array()` returns `Result`, for PHP's
+  TypeError on a child that is not an element, text or comment.
 - The PHP built-ins (`levenshtein()`, the loose comparison and `sort()`,
   `strtr()`, `json_encode()`, `sprintf()`, `var_export()` of enum cases,
   `BackedEnum::from()`'s casts) are written from PHP's documentation and
@@ -120,9 +133,22 @@ The dumper vectors are 1,020 outputs on 34 generated trees.
   when a float precision above 53 is capped. A float `$children` with a
   fraction is truncated without PHP's `E_DEPRECATED`.
 
+- XmlUtils reports a document or schema `php-dom` refuses (it would
+  read a file or the network, or uses an encoding or schema construct
+  php-dom does not implement) as an XmlParsingException carrying the
+  refusal's text (PLAN.md decision 14). PHP parses it, or for an import
+  it cannot load, warns and skips the import. Recorded: an import of a
+  file outside the working directory, and a location with a raw space.
+- XmlUtils's TypeError for a processing instruction or entity reference
+  has no ", called in <file> on line <n>". Filesystem's IOException (an
+  unreadable file, a race after `is_readable()`) gives PHP's text for
+  "Permission denied" and "No such file or directory", Rust's for other
+  I/O errors.
+- Schema errors name the document as the working directory plus `/`, as
+  PHP does on Linux (recorded); PHP's form on Windows is not recorded.
+
 ## Not ported yet
 
 `Definition/Configuration.php`, `Definition/Loader`,
-`Definition/Configurator`, and the loaders, resources, `ConfigCache`,
-`FileLocator` and `Util/XmlUtils` (with `php-dom`, PLAN.md decision 9):
-142 upstream tests pending in `parity/symfony/config.tsv`.
+`Definition/Configurator`, and the loaders, resources, `ConfigCache` and
+`FileLocator`: 135 upstream tests pending in `parity/symfony/config.tsv`.
