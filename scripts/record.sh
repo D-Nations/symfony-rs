@@ -20,7 +20,6 @@
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
-#   scripts/record.sh http-foundation crates/http-foundation/tests/data/bags.json
 #   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils}.json
 #   scripts/record.sh all
 #
