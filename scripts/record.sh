@@ -11,7 +11,8 @@
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
-#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json
+#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json
+#   scripts/record.sh config-xml-utils crates/config/tests/data/xml_utils.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,builtins,case,inflector,lazy,*_test}.*
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
@@ -168,6 +169,17 @@ config() {
     python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
     mv "$tmp" "$out"
     echo "Config dumper vectors written to $out"
+    config_xml_utils
+}
+
+config_xml_utils() {
+    local out=crates/config/tests/data/xml_utils.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_xml_utils.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config XmlUtils vectors written to $out"
 }
 
 console() {
@@ -323,6 +335,7 @@ case "${1:-}" in
     yaml) yaml ;;
     dotenv) dotenv ;;
     config) config ;;
+    config-xml-utils) config_xml_utils ;;
     string) string ;;
     console) console ;;
     css-selector) css_selector ;;
@@ -331,5 +344,5 @@ case "${1:-}" in
     php-dom) php_dom ;;
     php-dom-schema) php_dom_schema ;;
     all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|all" >&2; exit 2 ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|all" >&2; exit 2 ;;
 esac
