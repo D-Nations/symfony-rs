@@ -9,8 +9,10 @@
 //! Upstream: symfony/string Inflector/InflectorInterface.php
 
 mod english;
+mod french;
 
 pub use english::EnglishInflector;
+pub use french::FrenchInflector;
 
 use crate::{exception::Result, preg::Regex};
 
