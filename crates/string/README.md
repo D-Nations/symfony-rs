@@ -15,7 +15,7 @@ Methods that throw in PHP return `Result<_, Error>`.
 
 | Contract | Source | Evidence |
 |---|---|---|
-| ByteString: every method on bytes; `toCodePointString()` / `toUnicodeString()` from UTF-8, Windows-1252 and windows-1250 | `ByteString.php`, `AbstractString.php` | ByteStringTest: 68 of 68 (`fromRandom()` with the caller's random bytes, below) |
+| ByteString: every method on bytes; `toCodePointString()` / `toUnicodeString()` from UTF-8, Windows-1252 and windows-1250 | `ByteString.php`, `AbstractString.php` | ByteStringTest: 68 of 68 (`fromRandom()` on the OS source, below) |
 | CodePointString: code points (`mb_*()`), NFC/NFD/NFKC/NFKD `normalize()`, `codePointsAt()` | `CodePointString.php`, `AbstractUnicodeString.php` | CodePointStringTest: 73 of 78 |
 | UnicodeString: NFC kept, grapheme clusters (`grapheme_*()`), the NFD state of `normalize()` | `UnicodeString.php`, `AbstractUnicodeString.php` | UnicodeStringTest: 75 of 81 (1 `n/a`) |
 | Case: `lower()`, `upper()`, `title()`, `camel()`, `snake()`, `kebab()`, `pascal()`, `folded()` (NFKC_CF and the compat-less fold), `ignoreCase()` searches | `AbstractUnicodeString.php`, `UnicodeString.php` | mbstring's mappings and ICU's NFKC_CF of every code point, recorded (`tests/data/case.tsv`, 11,881 code points), and the final sigma rule (`builtins.json`) |
@@ -63,10 +63,12 @@ symfony-finder) and `php-value` (what `match()` and `wrap()` return).
   `grapheme_strrpos()` of a needle of ignorable code points only fails on a
   haystack ending in a combining sequence (`known_difference` in
   `tests/builtins.rs`).
-- **`fromRandom()`** takes the random bytes from the caller (`random`),
-  where PHP's `Random\Randomizer` reads the operating system's CSPRNG: the
-  crate has no dependency that reaches it (PLAN.md, decision 15). Each
-  byte is still chosen uniformly from the alphabet.
+- **`fromRandom()`** reads the operating system's CSPRNG through
+  `getrandom`, as PHP's `Random\Randomizer` does (PLAN.md, decision 15).
+  If that source fails, the error carries `getrandom`'s text where PHP
+  throws `Random\RandomException`. `from_random_with()` takes the bytes
+  from the caller instead; each byte is still chosen uniformly from the
+  alphabet.
 - **Pattern errors.** `match()`, `replaceMatches()` and `split()` with
   flags compile patterns with php-pcre: a pattern PHP rejects is an
   `InvalidArgumentException` whose text is php-pcre's, not PCRE2's; a

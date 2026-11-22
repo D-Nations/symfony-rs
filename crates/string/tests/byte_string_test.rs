@@ -330,8 +330,8 @@ fn testToByteString() {
 
 use symfony_string::ByteString;
 
-/// A deterministic byte source for the tests (fromRandom() takes the
-/// caller's).
+/// A deterministic byte source for `from_random_with()` (`from_random()`
+/// reads the operating system).
 fn source() -> impl FnMut(&mut [u8]) {
     let mut state = 0x9E37_79B9_7F4A_7C15u64;
     move |buf: &mut [u8]| {
@@ -346,7 +346,7 @@ fn source() -> impl FnMut(&mut [u8]) {
 
 #[test]
 fn testFromRandom() {
-    let random = ByteString::from_random(32, None, &mut source()).unwrap();
+    let random = ByteString::from_random(32, None).unwrap();
     assert_eq!(32, random.length());
     let alphabet = ByteString::new("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
     for char in random.chunk(1).unwrap() {
@@ -356,16 +356,26 @@ fn testFromRandom() {
 
 #[test]
 fn testFromRandomWithSpecificChars() {
-    let random = ByteString::from_random(32, Some(b"abc"), &mut source()).unwrap();
+    let random = ByteString::from_random(32, Some(b"abc")).unwrap();
     assert_eq!(32, random.length());
     for char in random.chunk(1).unwrap() {
         assert!(ByteString::new("abc").index_of(&char, 0).is_some());
     }
 }
 
+/// Not upstream: `from_random_with()` draws only from the caller's source,
+/// so the same source gives the same string.
+#[test]
+fn from_random_with_uses_the_callers_source() {
+    let a = ByteString::from_random_with(32, Some(b"abc"), &mut source()).unwrap();
+    let b = ByteString::from_random_with(32, Some(b"abc"), &mut source()).unwrap();
+    assert_eq!(32, a.length());
+    assert_eq!(a.as_bytes(), b.as_bytes());
+}
+
 #[test]
 fn testFromRandoWithZeroLength() {
-    let e = ByteString::from_random(0, None, &mut source()).unwrap_err();
+    let e = ByteString::from_random(0, None).unwrap_err();
     assert!(e.is_invalid_argument());
     assert_eq!(
         "A strictly positive length is expected, \"0\" given.",
@@ -375,7 +385,7 @@ fn testFromRandoWithZeroLength() {
 
 #[test]
 fn testFromRandomThrowsForNegativeLength() {
-    let e = ByteString::from_random(-1, None, &mut source()).unwrap_err();
+    let e = ByteString::from_random(-1, None).unwrap_err();
     assert!(e.is_invalid_argument());
     assert_eq!(
         "A strictly positive length is expected, \"-1\" given.",
@@ -385,7 +395,7 @@ fn testFromRandomThrowsForNegativeLength() {
 
 #[test]
 fn testFromRandomAlphabetMin() {
-    let e = ByteString::from_random(32, Some(b"a"), &mut source()).unwrap_err();
+    let e = ByteString::from_random(32, Some(b"a")).unwrap_err();
     assert!(e.is_invalid_argument());
     assert_eq!(
         "The length of the alphabet must in the [2^1, 2^56] range.",

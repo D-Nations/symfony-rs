@@ -1,9 +1,9 @@
 //! Port of Symfony\Component\String\ByteString.php: a binary-safe string of
 //! bytes.
 //!
-//! `fromRandom()` takes its random bytes from the caller (`random`), where
-//! PHP's `Random\Randomizer` uses the operating system's CSPRNG: the crate
-//! has no dependency to reach it (README, "Differences").
+//! `fromRandom()` reads the operating system's CSPRNG through `getrandom`,
+//! as PHP's `Random\Randomizer` does (PLAN.md, decision 15);
+//! `from_random_with()` takes the bytes from the caller instead.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -38,10 +38,28 @@ impl ByteString {
         }
     }
 
-    /// `ByteString::fromRandom($length, $alphabet)`, `random` filling a
-    /// buffer with uniformly random bytes: each byte of the result is a
-    /// uniformly chosen byte of the alphabet.
-    pub fn from_random(
+    /// `ByteString::fromRandom($length, $alphabet)`: each byte of the
+    /// result is a uniformly chosen byte of the alphabet, drawn from the
+    /// operating system's CSPRNG. A failing source is `Error::Php` with
+    /// `getrandom`'s text, where PHP throws `Random\RandomException`.
+    pub fn from_random(length: i64, alphabet: Option<&[u8]>) -> Result<Self> {
+        let mut failure = None;
+        let result = Self::from_random_with(length, alphabet, &mut |buf| {
+            if failure.is_none()
+                && let Err(e) = getrandom::fill(buf)
+            {
+                failure = Some(e);
+            }
+        });
+        match failure {
+            Some(e) => Err(Error::Php(e.to_string())),
+            None => result,
+        }
+    }
+
+    /// `fromRandom()` with `random` filling a buffer with uniformly random
+    /// bytes in place of the operating system's source.
+    pub fn from_random_with(
         length: i64,
         alphabet: Option<&[u8]>,
         random: &mut dyn FnMut(&mut [u8]),

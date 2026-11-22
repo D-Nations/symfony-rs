@@ -32,7 +32,7 @@ passed through as it already was outside one.
 
 | Upstream test | Ported | Notes |
 |---|---|---|
-| ByteStringTest | 68 / 68 | fromRandom() with a caller's random source (decision 15) |
+| ByteStringTest | 68 / 68 | fromRandom() on the OS source through `getrandom` (decision 15, accepted) |
 | CodePointStringTest | 73 / 78 | 5 pending: `ascii()`, `locale*()` |
 | UnicodeStringTest | 75 / 81 | 5 pending as above; 1 `n/a`: PHP `unserialize()` gadget |
 | FunctionsTest | 3 / 3 | |
