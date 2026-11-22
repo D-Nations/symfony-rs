@@ -564,6 +564,17 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     application or converter runtime supplies its OS source. Alternative:
     add `getrandom` (a stack row then) so the port reads the OS itself.
 
+16. **HttpFoundation's v8.1.11 hardening (M2-A, November 22).** The pins
+    are the demo's lock (v8.1.10). v8.1.11 adds a `/D` anchor to
+    `HeaderUtils::makeDisposition()`'s ASCII check (at the pin a fallback
+    filename ending in a newline passes it) and `IpUtils::PRIVATE_RANGES` with
+    IPv4-mapped matching for `setTrustedProxies()`. Porting these files at
+    the pin would bring in the weaker behaviour. Recommended: leave
+    `makeDisposition()`, IpUtils and `setTrustedProxies()` unported until
+    the pins move to v8.1.11 (a version move, with the demo's comparisons),
+    then port the fixed code with its tests. Alternative: port them now at
+    the pin and pin the pre-fix behaviour with a test.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -866,6 +877,31 @@ Stack rows (searched November 19):
       `ascii()` and the `locale*()` methods (ICU transliterators, 10
       rows) and the Slugger (20, needs them). No advisories listed for
       symfony/string; `fromRandom()`'s randomness is decision 15.
+
+## M2 progress
+
+Stack rows (searched November 22):
+
+| Component | Options compared | Choice | Reason |
+|---|---|---|---|
+| PHP's `filter_var()` and `BackedEnum::from()` (ParameterBag, InputBag) | No Rust crate reproduces PHP's filter extension; validator crates ([validator](https://docs.rs/validator), [garde](https://docs.rs/garde)) check typed struct fields with their own rules and messages; php2rust's `php-rt` has no filter or enum support | Written in `php-value` from the PHP manual and recorded answers, no dependency | The bags' behaviour is PHP's: string conversion of scalars, `FILTER_NULL_ON_FAILURE`, array walking, `default`, hex/octal as unsigned 64-bit, coercive enum arguments and their messages. 22,932 `filter_var()` calls and 2,450 bag calls recorded from PHP 8.4.27 pin them |
+
+- [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
+      [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
+      `ParameterBag.php`, `InputBag.php`, the bag exceptions and
+      `HeaderUtils.php` without `makeDisposition()` and `parseQuery()`, on
+      `php-value`, which gains `filter_var()` (5 filters), `BackedEnum::from()`,
+      `Closure` and `\Stringable`. ParameterBagTest 39 of 41, InputBagTest 23
+      of 25 (4 `n/a`: PHP references), HeaderUtilsTest 6 of 13; plus
+      22,932 recorded `filter_var()` calls, 2,450 bag calls and 3,000
+      `split()` calls (`scripts/record.sh php-value`, `http-foundation`).
+      Recording found that `split()` mishandled whitespace separators and a
+      one-separator group whose first value unquotes to `''` (fixed; the
+      demo's Accept-Language path does not use either). Next: AcceptHeader
+      and AcceptHeaderItem as an API, HeaderBag, ServerBag,
+      ResponseHeaderBag, Cookie, FileBag (needs UploadedFile); IpUtils,
+      `makeDisposition()` and `setTrustedProxies()` wait for decision 16.
+
 ## Verification
 
 - Per complete package: manifest has no `pending` rows (CI-enforced);
