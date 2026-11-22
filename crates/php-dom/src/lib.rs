@@ -15,11 +15,13 @@ pub mod dom;
 mod dtd;
 mod encoding;
 pub mod error;
+pub mod libxml;
 mod parser;
 pub mod schema;
 mod uri;
 
 pub use dom::{Attribute, Document, NodeId, NodeType};
 pub use error::{ErrorLevel, LibxmlError, LoadError, Refusal, RefusalReason};
+pub use libxml::libxml_use_internal_errors;
 pub use parser::{LoadOptions, Loaded, load_xml};
 pub use schema::{Schema, SchemaError, SchemaValidation, schema_validate_source};

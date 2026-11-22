@@ -91,9 +91,7 @@ impl fmt::Display for LoadError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             LoadError::Empty => f.write_str(Self::EMPTY_MESSAGE),
-            LoadError::Refused(r) => {
-                write!(f, "{} (line {}, column {})", r.reason, r.line, r.column)
-            }
+            LoadError::Refused(r) => r.fmt(f),
         }
     }
 }
@@ -125,6 +123,16 @@ impl fmt::Display for RefusalReason {
                 )
             }
         }
+    }
+}
+
+impl fmt::Display for Refusal {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} (line {}, column {})",
+            self.reason, self.line, self.column
+        )
     }
 }
 
