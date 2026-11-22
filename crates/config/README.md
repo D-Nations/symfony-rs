@@ -12,12 +12,16 @@ Potencier. Unofficial, not affiliated with or endorsed by Symfony.
 | `Processor::process()`, `Processor::normalizeConfig()`, `Processor::processConfiguration()`; ConfigurationInterface | `Definition/Processor.php`, `Definition/ConfigurationInterface.php` | recorded `normalize_config` cases |
 | The tree builders: TreeBuilder (root type, custom NodeBuilder, built once, path separator), NodeBuilder (type mapping, `setNodeClass()`, subclasses overriding `getNodeClass()`, builders copied to child definitions, return-type checks), every node definition (Variable, Scalar, String, Boolean, Integer / Float with `min()` / `max()`, Enum with values or an enum class, Array with prototypes) and their `getNode()`; info, examples, `docUrl()`, defaults, required, deprecation, equivalent values, `cannotBeEmpty()`, `cannotBeOverwritten()`; every InvalidDefinitionException of concrete and prototype nodes | `Definition/Builder/*.php` (19 files) | ArrayNodeDefinitionTest, BooleanNodeDefinitionTest, EnumNodeDefinitionTest, ExprBuilderTest, NodeBuilderTest, NodeDefinitionTest, NumericNodeDefinitionTest, TreeBuilderTest (92 of 92); 4,624 recorded cases |
 | ArrayNodeDefinition details: `canBeEnabled()` / `canBeDisabled()` (and their merges), `acceptAndWrap()`, the normalized types it declares, default children (counts, names, PHP's coercion of the argument), key attributes, `fixXmlConfig()`, `find()` with any path separator; ExprBuilder's `if*()` / `then*()` rules, with `thenInvalid()`'s `sprintf()` and `json_encode()` | `Definition/Builder/ArrayNodeDefinition.php`, `Definition/Builder/ExprBuilder.php` | recorded `types`, `default`, `process`, `then_invalid`, `find` cases |
+| Reference dumpers: YamlReferenceDumper (`dump()`, `dumpAtPath()` and its "Unable to find node" UnexpectedValueException, `dumpNode()`; defaults, examples and keys through symfony-yaml's `Inline::dump()`, behind the `yaml` feature) and XmlReferenceDumper (`dump()` / `dumpNode()` with or without a namespace; XML remappings, prototypes of every class and their placeholder values, attribute comments, `writeValue()`); a NodeInterface that does not extend BaseNode | `Definition/Dumper/YamlReferenceDumper.php`, `Definition/Dumper/XmlReferenceDumper.php` | YamlReferenceDumperTest, XmlReferenceDumperTest (7 of 7); recorded `yaml`, `yaml_at`, `xml`, `xml_ns` outputs |
+| `ArrayShapeGenerator::generate()`: PHPDoc shapes of every node class, quoted keys (`addslashes()`), optional keys and deep merging, normalized types (`array_unique()`, `sort()`), unsealed shapes, inline comments with deprecations, info and `json_encode()` defaults, `*/` escaped | `Definition/ArrayShapeGenerator.php` | ArrayShapeGeneratorTest (18 of 18); recorded `shape` outputs |
 
 Vectors: `scripts/record.sh config` runs
-`oracle/recorders/config_definition.php` and `config_builder.php` on the
-pinned packages and writes `tests/data/definition.json` and
-`tests/data/builder.json`; `tests/recorded.rs` and
-`tests/recorded_builder.rs` replay them.
+`oracle/recorders/config_definition.php`, `config_builder.php` and
+`config_dumpers.php` on the pinned packages and writes
+`tests/data/definition.json`, `tests/data/builder.json` and
+`tests/data/dumpers.json`; `tests/recorded.rs`,
+`tests/recorded_builder.rs` and `tests/recorded_dumpers.rs` replay them.
+The dumper vectors are 1,020 outputs on 34 generated trees.
 
 ## Rust shape
 
@@ -66,6 +70,17 @@ pinned packages and writes `tests/data/definition.json` and
   `composer::set_installed_versions()`, which the application calls at
   start-up (process-wide, as Composer's data is). An unknown package is
   Composer's OutOfBoundsException.
+- A [`CustomNode`] whose `extends_base_node()` is false stands for a
+  class that implements NodeInterface without extending BaseNode:
+  `is_base_node()` (`instanceof BaseNode`) is false, `getNode()` does not
+  set its attributes, the dumpers skip BaseNode's methods on it, and
+  calling one that NodeInterface lacks fails as PHP does
+  (XmlReferenceDumper's `getParent()`, ArrayShapeGenerator's `BaseNode`
+  parameters).
+- The dumpers return the reference as bytes. `dump_node_at_path()` is
+  `dumpAtPath()` on a tree already built, the steps after `buildTree()`.
+  XmlReferenceDumper renames a prototype that is itself a
+  PrototypedArrayNode, as upstream's `setName()` does.
 - The PHP built-ins (`levenshtein()`, the loose comparison and `sort()`,
   `strtr()`, `json_encode()`, `sprintf()`, `var_export()` of enum cases,
   `BackedEnum::from()`'s casts) are written from PHP's documentation and
@@ -96,6 +111,10 @@ pinned packages and writes `tests/data/definition.json` and
   normalized types. The port does not warn and leaves the null out.
 - `TreeBuilder<C>` checks the root's class when it is created; PHP fails
   later, at the first method the root does not have.
+- Where the dumpers print an array as "Array" (`(string)`, `implode()`,
+  concatenation), PHP also raises its "Array to string conversion"
+  warning; the port does not. ArrayShapeGenerator's TypeError for a node
+  that is not a BaseNode has no ", called in <file> on line <n>".
 - `sprintf()` (in `thenInvalid()`) refuses `g`, `G`, `h`, `H` and `*`
   widths with an `\Error` naming them, and does not raise PHP's notice
   when a float precision above 53 is capped. A float `$children` with a
@@ -103,7 +122,7 @@ pinned packages and writes `tests/data/definition.json` and
 
 ## Not ported yet
 
-`Definition/Configuration.php`, the reference dumpers, `ArrayShapeGenerator`, `Definition/Loader`,
+`Definition/Configuration.php`, `Definition/Loader`,
 `Definition/Configurator`, and the loaders, resources, `ConfigCache`,
 `FileLocator` and `Util/XmlUtils` (with `php-dom`, PLAN.md decision 9):
-167 upstream tests pending in `parity/symfony/config.tsv`.
+142 upstream tests pending in `parity/symfony/config.tsv`.

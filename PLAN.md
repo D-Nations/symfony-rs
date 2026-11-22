@@ -633,6 +633,7 @@ Stack rows (searched November 19):
 | OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
 | Finder (searched November 20) | No Rust port of Symfony Finder. Walkers: [walkdir](https://docs.rs/walkdir) (depth-first, sorting, symlink loops), [ignore](https://docs.rs/ignore) (ripgrep's walker with its own gitignore rules and parallelism), [jwalk](https://docs.rs/jwalk); globs: [globset](https://docs.rs/globset), [glob](https://docs.rs/glob), [wax](https://docs.rs/wax). Regex for the PCRE patterns Finder builds and accepts (`Glob`/`Gitignore` emit lookaround, possessive quantifiers, `$f`): `regex` (no lookaround), [fancy-regex](https://docs.rs/fancy-regex) 0.20 (backtracking, lookaround, atomic and possessive, a bytes mode with ASCII classes), [pcre2](https://docs.rs/pcre2) (FFI, excluded by decision 5) | Port, walking with `std::fs`; `fancy-regex` under a PHP-pattern translator (`crates/finder/src/pcre.rs`) | Finder's order of filters and stat calls (pinned by upstream's stream-wrapper log tests), stream wrappers, `SplFileInfo` relative paths, its own gitignore regexes and Glob's regex text are its behaviour, so no walker or glob crate reproduces them. `fancy-regex` is the regex engine decision 5 names for lookaround; the translator keeps PCRE's meaning (bytes without `/u`, `$` before a final newline, `/x`, `/U`, `/n`, literal `{`) and refuses what it does not translate; checked on 137 patterns x 62 subjects recorded from PHP |
 | Console's OutputWrapper and Table cell patterns (November 21) | `regex` (no atomic groups or lookbehind; upstream's wrap pattern needs both), a hand-written wrapper (the demo's `wrap()`, its own rules), `fancy-regex` 0.20 (already Finder's engine, decision 5) | `fancy-regex`, upstream's pattern written for it; `preg_replace()`'s scan done by hand | The wrap pattern is upstream's text and stays comparable; checked on 2,500 recorded `wrap()` calls and SymfonyStyle's 27 fixtures. No new crate in the workspace |
+| Config's YamlReferenceDumper values (`Inline::dump()`; November 22) | symfony-yaml (this workspace's port of symfony/yaml, upstream's own dependency for this class), a second inline dumper written into symfony-config | symfony-yaml, optional, behind symfony-config's `yaml` feature | Upstream calls symfony/yaml's `Inline::dump()`; symfony-yaml reproduces it on its recorded vectors, and a copy would drift from it. No new crate in the lock |
 | composer.json for `dotenv:dump` and `debug:dotenv` (November 21) | A hand-written JSON reader in `php-value` (none exists; it would need PHP's `json_decode()` rules for depth, big integers and invalid UTF-8), `serde_json` (already in the lock as every crate's test dependency) | `serde_json`, optional, only with symfony-dotenv's `console` feature | The commands read `extra.runtime` from a file the project owns; integers that do not fit become floats as in PHP, invalid JSON is `null`. No new crate in the lock |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
@@ -703,12 +704,19 @@ Stack rows (searched November 19):
       not cast to a string (fixed in PrototypedArrayNode too).
       `docUrl()` reads Composer's versions from a registry the application
       fills. This completes M1-A's Config Definition/Builder step; next
-      is M1-D (scheduling adjustment below). Config stays partial:
-      deferred are the reference dumpers and `ArrayShapeGenerator` (no new
-      prerequisite; before M1-C, which needs them), `Definition/Loader`,
+      is M1-D (scheduling adjustment below). Stage 3 (November 22):
+      `Definition/Dumper/YamlReferenceDumper.php` (behind the `yaml`
+      feature, on symfony-yaml's `Inline::dump()`; stack row above),
+      `Definition/Dumper/XmlReferenceDumper.php` and
+      `Definition/ArrayShapeGenerator.php`: 25 more tests (192 of 334),
+      plus 1,020 outputs recorded on 34 generated trees
+      (`config_dumpers.php`), which also found that a node implementing
+      only NodeInterface has no `getParent()` for XmlReferenceDumper (now
+      a `CustomNode` that does not extend BaseNode). Config stays partial:
+      deferred are `Definition/Loader`,
       `Definition/Configurator` and `Definition/Configuration.php` (they
       need Config's loaders; M1-C), and loaders, resources and `XmlUtils`
-      (Filesystem, Finder, `php-dom`, decision 9; M1-C). Their 167 rows
+      (Filesystem, Finder, `php-dom`, decision 9; M1-C). Their 142 rows
       stay `pending`.
 - [ ] M1-D. Done: provisional converter contract 0.1
       ([docs/converter-contract.md](docs/converter-contract.md)), with
