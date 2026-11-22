@@ -11,7 +11,7 @@
 #   scripts/record.sh php-value    crates/php-value/tests/data/php.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
-#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json
+#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,unicode_string_test}.json
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
@@ -160,6 +160,12 @@ config() {
     python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
     mv "$tmp" "$out"
     echo "Config Builder vectors written to $out"
+    out=crates/config/tests/data/dumpers.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_dumpers.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config dumper vectors written to $out"
 }
 
 console() {
