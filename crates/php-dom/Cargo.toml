@@ -1,0 +1,13 @@
+[package]
+name = "php-dom"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "The subset of PHP's DOM extension Symfony's XML loaders use, with libxml's parse diagnostics, written from PHP's observed behaviour"
+
+[dependencies]
+
+[dev-dependencies]
+php-value = { path = "../php-value" }
+serde_json = "1.0.154"
