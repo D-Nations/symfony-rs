@@ -1,4 +1,4 @@
-# symfony/http-foundation at 79325f87c3a2acc7564ddce9f457046e980e7255: upstream test	method	status	rust test
+# symfony/http-foundation at 30fa3efe6e736b0d06f5331cc6abe813582c0a26: upstream test	method	status	rust test
 Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testAttribute	pending	
 Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testFromString	pending	
 Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testQuality	pending	
@@ -32,7 +32,9 @@ Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testRequestsWithoutEtag
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testSetChunkSizeTooSmall	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testSetContent	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testSetContentDispositionGeneratesSafeFallbackFilename	pending	
+Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testSetContentDispositionGeneratesSafeFallbackFilenameForTrailingNewline	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testSetContentDispositionGeneratesSafeFallbackFilenameForWronglyEncodedFilename	pending	
+Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testSetContentDispositionRejectsTrailingNewlineInFallback	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testShouldDeleteFileAfterSend	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testStream	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testSupportedXSendfileTypes	pending	
@@ -217,9 +219,12 @@ Tests/IpUtilsTest.php	IpUtilsTest::testCacheSizeLimit	pending
 Tests/IpUtilsTest.php	IpUtilsTest::testInvalidIpAddressesDoNotMatch	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testIp4SubnetMaskZero	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testIpv4	pending	
+Tests/IpUtilsTest.php	IpUtilsTest::testIpv4MappedAddressesAreCheckedAsTheIpv4HostTheyEmbed	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testIpv6	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testIsPrivateIp	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testIsPrivateIpThrowsOnNonCanonicalIp	pending	
+Tests/IpUtilsTest.php	IpUtilsTest::testPrivateRangesAreASubsetOfPrivateSubnets	pending	
+Tests/IpUtilsTest.php	IpUtilsTest::testPrivateRangesDoNotCoverAddressesARemoteClientCanPresent	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testSeparateCachesPerProtocol	pending	
 Tests/JsonResponseTest.php	JsonResponseTest::testConstructorAddsContentTypeHeader	pending	
 Tests/JsonResponseTest.php	JsonResponseTest::testConstructorEmptyCreatesJsonObject	pending	
@@ -341,6 +346,8 @@ Tests/RequestTest.php	RequestTest::testGetAcceptableContentTypes	pending
 Tests/RequestTest.php	RequestTest::testGetAcceptableContentTypesRfc9110	pending	
 Tests/RequestTest.php	RequestTest::testGetBasePath	pending	
 Tests/RequestTest.php	RequestTest::testGetBaseUrl	pending	
+Tests/RequestTest.php	RequestTest::testGetBaseUrlDoesNotStartWithTwoSlashes	pending	
+Tests/RequestTest.php	RequestTest::testGetBaseUrlDoesNotStartWithTwoSlashesWhenTheScriptNameIsTheRequestPath	pending	
 Tests/RequestTest.php	RequestTest::testGetCharsets	pending	
 Tests/RequestTest.php	RequestTest::testGetClientIp	pending	
 Tests/RequestTest.php	RequestTest::testGetClientIps	pending	
@@ -410,6 +417,7 @@ Tests/RequestTest.php	RequestTest::testNonstandardRequests	pending
 Tests/RequestTest.php	RequestTest::testOverrideGlobals	pending	
 Tests/RequestTest.php	RequestTest::testPreferSafeContent	pending	
 Tests/RequestTest.php	RequestTest::testPreferredLanguageWithLocales	pending	
+Tests/RequestTest.php	RequestTest::testPrivateRangesDoNotTrustAddressesEmbeddingARemoteIpv4	pending	
 Tests/RequestTest.php	RequestTest::testProtocolVersion	pending	
 Tests/RequestTest.php	RequestTest::testReservedFlags	pending	
 Tests/RequestTest.php	RequestTest::testSetDefaultLocale	pending	
@@ -772,8 +780,10 @@ Tests/Session/Storage/Handler/RelaySessionHandlerTest.php	RelaySessionHandlerTes
 Tests/Session/Storage/Handler/RelaySessionHandlerTest.php	RelaySessionHandlerTest::testUseTtlOption	pending	
 Tests/Session/Storage/Handler/RelaySessionHandlerTest.php	RelaySessionHandlerTest::testWriteSession	pending	
 Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactoryTest::testCreateFileHandler	pending	
+Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactoryTest::testCreateHandlerWithUnsupportedDsnDoesNotLeakCredentials	pending	
 Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactoryTest::testCreateRedisHandlerFromConnectionObject	pending	
 Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactoryTest::testCreateRedisHandlerFromDsn	pending	
+Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactoryTest::testCredentialsAreNotExposedInTrace	pending	
 Tests/Session/Storage/Handler/SessionIdInterfaceTest.php	SessionIdInterfaceTest::testHandlersCreateSessionIds	pending	
 Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testCloseSession	pending	
 Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testDestroy	pending	
@@ -939,8 +949,12 @@ Tests/UriSignerTest.php	UriSignerTest::testVerifyExpiredUri	pending
 Tests/UriSignerTest.php	UriSignerTest::testVerifyUnSignedUri	pending	
 Tests/UriSignerTest.php	UriSignerTest::testVerifyUnverifiedUri	pending	
 Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrl	pending	
+Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWhenRequestingTheScriptName	pending	
+Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWithQueryAndScriptFileName	pending	
 Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWithRequestContext	pending	
+Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWithRequestContextAndBaseUrl	pending	
 Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWithRequestContextAwareInterface	pending	
 Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWithScriptFileName	pending	
+Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWithTrustedPrefix	pending	
 Tests/UrlHelperTest.php	UrlHelperTest::testGenerateAbsoluteUrlWithoutRequestAndRequestContext	pending	
 Tests/UrlHelperTest.php	UrlHelperTest::testGenerateRelativePath	pending	
