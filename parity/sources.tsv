@@ -44,6 +44,9 @@ crates/config/src/definition/prototyped_array_node.rs	symfony/config	Definition/
 crates/config/src/definition/scalar_node.rs	symfony/config	Definition/ScalarNode.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/definition/string_node.rs	symfony/config	Definition/StringNode.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/definition/variable_node.rs	symfony/config	Definition/VariableNode.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/util/exception.rs	symfony/config	Util/Exception/XmlParsingException.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/util/exception.rs	symfony/config	Util/Exception/InvalidXmlException.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/util/xml_utils.rs	symfony/config	Util/XmlUtils.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/array_node_definition_test.rs	symfony/config	Tests/Definition/Builder/ArrayNodeDefinitionTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/array_node_test.rs	symfony/config	Tests/Definition/ArrayNodeTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/array_shape_generator_test.rs	symfony/config	Tests/Definition/ArrayShapeGeneratorTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
@@ -75,6 +78,7 @@ crates/config/tests/scalar_node_test.rs	symfony/config	Tests/Definition/ScalarNo
 crates/config/tests/string_node_test.rs	symfony/config	Tests/Definition/StringNodeTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/tree_builder_test.rs	symfony/config	Tests/Definition/Builder/TreeBuilderTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/xml_reference_dumper_test.rs	symfony/config	Tests/Definition/Dumper/XmlReferenceDumperTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/tests/xml_utils_test.rs	symfony/config	Tests/Util/XmlUtilsTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/yaml_reference_dumper_test.rs	symfony/config	Tests/Definition/Dumper/YamlReferenceDumperTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/console/src/application.rs	symfony/console	Application.php	630e74196a2635ec0f06c12bd3fb47cfedf85157
 crates/console/src/attribute/as_command.rs	symfony/console	Attribute/AsCommand.php	630e74196a2635ec0f06c12bd3fb47cfedf85157

@@ -10,5 +10,7 @@
 pub mod composer;
 pub mod definition;
 pub mod php;
+pub mod util;
 
 pub use definition::{Class, ConfigurationInterface, Error, Node, Processor};
+pub use util::XmlUtils;

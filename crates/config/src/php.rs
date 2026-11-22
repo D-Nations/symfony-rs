@@ -11,7 +11,13 @@
 //!   bools except `null` against a string, which compares `""`);
 //! - `strtr($string, $pairs)`;
 //! - `json_encode()` of scalars and of the empty values VariableNode
-//!   reports, and `var_export()` of enum cases.
+//!   reports, and `var_export()` of enum cases;
+//! - for `XmlUtils::phpize()` and `loadFile()` (checked against
+//!   tests/data/xml_utils.json, `scripts/record.sh config-xml-utils`):
+//!   `trim()` with its default characters, `ctype_digit()`,
+//!   `intval($string, 8)` (a C `strtol()`: leading octal digits, saturating),
+//!   `decoct()` of a non-negative int, and `bindec()` (characters other than
+//!   `0` and `1` skipped, continuing in float once the int overflows).
 //!
 //! Upstream: none
 
@@ -672,4 +678,67 @@ pub fn sprintf(format: &[u8], args: &[Value]) -> Result<Vec<u8>, crate::Error> {
         }
     }
     Ok(out)
+}
+
+/// `trim($string)`: strips `" \t\n\r\0\x0B"` from both ends.
+pub fn trim(s: &[u8]) -> &[u8] {
+    let strip = |b: &u8| matches!(b, b' ' | b'\t' | b'\n' | b'\r' | 0 | 0x0B);
+    let start = s.iter().position(|b| !strip(b)).unwrap_or(s.len());
+    let end = s.iter().rposition(|b| !strip(b)).map_or(start, |i| i + 1);
+    &s[start..end]
+}
+
+/// `ctype_digit($string)`: non-empty and only ASCII digits.
+pub fn ctype_digit(s: &[u8]) -> bool {
+    !s.is_empty() && s.iter().all(u8::is_ascii_digit)
+}
+
+/// `intval($string, 8)` of a string of an optional `-` and digits: the
+/// leading octal digits, saturating at the int limits.
+pub fn intval_octal(s: &[u8]) -> i64 {
+    let (negative, digits) = match s.first() {
+        Some(b'-') => (true, &s[1..]),
+        _ => (false, s),
+    };
+    let mut value: i64 = 0;
+    for &b in digits.iter().take_while(|b| (b'0'..=b'7').contains(b)) {
+        let digit = i64::from(b - b'0');
+        let next = value.checked_mul(8).and_then(|v| {
+            if negative {
+                v.checked_sub(digit)
+            } else {
+                v.checked_add(digit)
+            }
+        });
+        match next {
+            Some(v) => value = v,
+            None => return if negative { i64::MIN } else { i64::MAX },
+        }
+    }
+    value
+}
+
+/// `decoct($int)` of a non-negative int.
+pub fn decoct(value: i64) -> String {
+    format!("{value:o}")
+}
+
+/// `bindec($string)`.
+pub fn bindec(s: &[u8]) -> php_value::Number {
+    let mut int: i64 = 0;
+    let mut float: Option<f64> = None;
+    for &b in s.iter().filter(|b| matches!(b, b'0' | b'1')) {
+        let digit = i64::from(b - b'0');
+        match float {
+            Some(f) => float = Some(f * 2.0 + digit as f64),
+            None => match int.checked_mul(2).and_then(|v| v.checked_add(digit)) {
+                Some(v) => int = v,
+                None => float = Some(int as f64 * 2.0 + digit as f64),
+            },
+        }
+    }
+    match float {
+        Some(f) => php_value::Number::Float(f),
+        None => php_value::Number::Int(int),
+    }
 }
