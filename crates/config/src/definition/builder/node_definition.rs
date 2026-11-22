@@ -716,7 +716,9 @@ impl Def {
         }
 
         let node = self.create_node()?;
-        node.set_attributes(self.read(|s| s.attributes.clone()));
+        if node.is_base_node() {
+            node.set_attributes(self.read(|s| s.attributes.clone()));
+        }
         Ok(node)
     }
 

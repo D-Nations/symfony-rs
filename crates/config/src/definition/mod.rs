@@ -11,10 +11,12 @@
 )]
 
 pub mod array_node;
+pub mod array_shape_generator;
 pub mod base_node;
 pub mod boolean_node;
 pub mod builder;
 pub mod configuration_interface;
+pub mod dumper;
 pub mod enum_node;
 pub mod exception;
 pub mod float_node;
@@ -27,6 +29,7 @@ pub mod string_node;
 pub mod variable_node;
 
 pub use array_node::ArrayNode;
+pub use array_shape_generator::ArrayShapeGenerator;
 pub use base_node::{
     Closure, CustomNode, DEFAULT_DEPRECATION_MESSAGE, DEFAULT_PATH_SEPARATOR, Deprecation, Node,
     reset_placeholders, set_placeholder, set_placeholder_unique_prefix,

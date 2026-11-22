@@ -6,10 +6,19 @@ license = "MIT"
 publish = false
 description = "Port of the symfony/config component"
 
+[features]
+# Definition/Dumper/YamlReferenceDumper.php, which writes values with
+# symfony/yaml's Inline::dump() (upstream's require-dev).
+yaml = ["dep:symfony-yaml"]
+
 [dependencies]
 php-value = { path = "../php-value" }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+symfony-yaml = { path = "../yaml", optional = true }
 
 [dev-dependencies]
+# The tests cover YamlReferenceDumper too.
+symfony-config = { path = ".", features = ["yaml"] }
+symfony-yaml = { path = "../yaml" }
 php-value = { path = "../php-value", features = ["vectors"] }
 serde_json = "1.0.154"

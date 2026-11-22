@@ -5,6 +5,7 @@
 #![allow(dead_code)]
 
 pub mod builder;
+pub mod configuration;
 
 use php_value::{Value, constants::Registry, object::EnumCase};
 use symfony_config::{Class, Error};

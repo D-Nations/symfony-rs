@@ -151,6 +151,11 @@ pub trait CustomNode: Send + Sync {
     fn is_prototype_node(&self) -> bool {
         false
     }
+    /// Whether the class extends BaseNode; false for a class that only
+    /// implements NodeInterface, whose BaseNode methods callers skip.
+    fn extends_base_node(&self) -> bool {
+        true
+    }
 }
 
 #[derive(Default)]
@@ -340,12 +345,23 @@ impl Node {
             Kind::Custom(c) => classes.push(c.class().to_owned()),
             kind => classes.extend(kind_ancestors(kind).iter().map(|c| (*c).to_owned())),
         }
-        classes.push(BASE_NODE.to_owned());
+        if self.is_base_node() {
+            classes.push(BASE_NODE.to_owned());
+        }
         classes.push(NODE_INTERFACE.to_owned());
         if self.is_prototype_node() {
             classes.push(PROTOTYPE_NODE_INTERFACE.to_owned());
         }
         classes.iter().any(|c| php::class_name_key(c) == wanted)
+    }
+
+    /// `instanceof BaseNode`: every class but a [`CustomNode`] that only
+    /// implements NodeInterface.
+    pub fn is_base_node(&self) -> bool {
+        match self.kind() {
+            Kind::Custom(c) => c.extends_base_node(),
+            _ => true,
+        }
     }
 
     /// `instanceof ArrayNode` (ArrayNode and PrototypedArrayNode).
