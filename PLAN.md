@@ -814,7 +814,8 @@ Stack rows (searched November 19):
       bounds). Imports come only from the caller's resolver; anything
       outside the feature set is refused with its line. X2 passed for that
       corpus; open: X3 (resolver mapping for XliffUtils and XmlValidator,
-      `XmlUtils`, SimpleXML/XPath subset, the loaders) and decision 14.
+      `XmlUtils`, SimpleXML/XPath subset, the loaders); schema refusals
+      surface as decision 14 (accepted) says for parse refusals.
 
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath

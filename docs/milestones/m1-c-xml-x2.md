@@ -117,4 +117,4 @@ Open for X3:
 - the resolver mapping for XliffUtils (`file://…/xml.xsd`) and for XmlValidator's file paths;
 - `XmlUtils` itself;
 - the SimpleXML/XPath subset;
-- decision 14 (how refusals surface).
+- reporting a schema refusal as decision 14 (accepted) does for parse refusals: an `XmlParsingException` carrying the refusal's text.
