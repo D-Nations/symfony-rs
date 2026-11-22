@@ -8,7 +8,7 @@ description = "Port of the symfony/finder component"
 
 [dependencies]
 php-value = { path = "../php-value" }
-fancy-regex = "0.20.2"
+php-pcre = { path = "../php-pcre" }
 
 [dev-dependencies]
 php-value = { path = "../php-value", features = ["vectors"] }

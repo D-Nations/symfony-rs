@@ -328,6 +328,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "php-pcre"
+version = "0.1.0"
+dependencies = [
+ "fancy-regex",
+]
+
+[[package]]
 name = "php-value"
 version = "0.1.0"
 dependencies = [
@@ -564,7 +571,7 @@ version = "0.1.0"
 name = "symfony-finder"
 version = "0.1.0"
 dependencies = [
- "fancy-regex",
+ "php-pcre",
  "php-value",
  "serde_json",
 ]

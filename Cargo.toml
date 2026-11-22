@@ -18,6 +18,7 @@ members = [
     "crates/options-resolver",
     "crates/finder",
     "crates/php-dom",
+    "crates/php-pcre",
     "examples/request-lab",
     "fixtures/converter-app",
 ]

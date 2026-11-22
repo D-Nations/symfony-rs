@@ -18,7 +18,7 @@ pub mod fs;
 mod gitignore;
 mod glob;
 pub mod iterator;
-pub mod pcre;
+pub use php_pcre as pcre;
 pub mod php;
 mod spl_file_info;
 

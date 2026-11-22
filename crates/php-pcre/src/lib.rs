@@ -1,6 +1,6 @@
-//! PHP's `preg_*` patterns (delimiter, PCRE2 body, modifiers) for
-//! symfony/finder, translated into `fancy-regex` syntax (PLAN.md decision
-//! 5 and the Finder stack row). Written from PHP's and PCRE2's
+//! PHP's `preg_*` patterns (delimiter, PCRE2 body, modifiers), translated
+//! into `fancy-regex` syntax for symfony/finder and symfony/string (PLAN.md
+//! decision 5 and the Finder stack row). Written from PHP's and PCRE2's
 //! documentation and checked against PHP 8.4.27 (tests/data/pcre.json);
 //! no PHP or PCRE source is used.
 //!
