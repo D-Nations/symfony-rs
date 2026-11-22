@@ -17,6 +17,7 @@
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
+#   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -255,6 +256,16 @@ finder() {
     done
 }
 
+php_dom() {
+    local out=crates/php-dom/tests/data/parse.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_dom_parse.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "DOMDocument::loadXML() answers written to $out"
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -272,6 +283,7 @@ case "${1:-}" in
     css-selector) css_selector ;;
     options-resolver) options_resolver ;;
     finder) finder ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|string|console|css-selector|options-resolver|finder|all" >&2; exit 2 ;;
+    php-dom) php_dom ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|string|console|css-selector|options-resolver|finder|php-dom|all" >&2; exit 2 ;;
 esac
