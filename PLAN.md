@@ -539,7 +539,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     weekday names, time zones, ordinals) into `php-value` now, where
     DI's `%env()%` and Twig's `date()` will need it later.
 
-14. **XML refusals and the missing XML loaders (M1-C, November 22).**
+14. **XML refusals and the missing XML loaders (M1-C, November 22; accepted).**
     `php-dom` refuses, with a location, what libxml would read from a file
     or the network when `validateOnParse` is set (external DTD subset,
     external parameter entity, external entity referenced in content) and
@@ -552,7 +552,9 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     symfony/dependency-injection and symfony/routing have no XML loaders,
     so decision 9's "DI and Routing XML loaders" no longer apply; X2's
     schema inventory is XLIFF 1.2/2.0/2.2 and Validator's
-    constraint-mapping schema.
+    constraint-mapping schema. **Accepted by the owner, November 22**:
+    X3's `XmlUtils` reports a refusal as `XmlParsingException` carrying
+    the refusal's text, listed as a difference in the crate README.
 
 ## M0 progress
 
