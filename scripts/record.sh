@@ -13,7 +13,7 @@
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
-#   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,builtins,case,*_string_test}.*
+#   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,builtins,case,inflector,lazy,*_test}.*
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
@@ -231,6 +231,23 @@ string() {
         python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
         mv "$tmp" "$out"
         echo "String $class providers written to $out"
+    done
+    for class in EnglishInflectorTest FrenchInflectorTest SpanishInflectorTest; do
+        file=$(printf '%s' "$class" | sed 's/\([a-z]\)\([A-Z]\)/\1_\2/g' | tr 'A-Z' 'a-z')
+        out=crates/string/tests/data/$file.json
+        tmp=$(mktemp -p oracle/out)
+        oracle oracle/recorders/test_providers.php symfony/string "Inflector/$class" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+        mv "$tmp" "$out"
+        echo "String $class providers written to $out"
+    done
+    for name in inflector lazy; do
+        out=crates/string/tests/data/$name.json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/string_$name.php" > "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+        mv "$tmp" "$out"
+        echo "String $name vectors written to $out"
     done
 }
 

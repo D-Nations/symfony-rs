@@ -10,9 +10,11 @@ Ported, one PHP file per Rust module: `AbstractString.php` and
 `TruncateMode.php` (`abstract_string.rs`, the trait), `ByteString.php`,
 `AbstractUnicodeString.php`, `CodePointString.php`, `UnicodeString.php`
 (rewritten from Console's subset, its API kept), the three exceptions,
-`Resources/functions.php` (`lib.rs`). Not this stage: `ascii()` and the
-`locale*()` methods (ICU transliterators), the Slugger that needs them,
-`LazyString.php`, the inflectors.
+`Resources/functions.php` (`lib.rs`). Second step, after PR #13:
+`LazyString.php` (`lazy_string.rs`), `Inflector/InflectorInterface.php`
+(`inflector/mod.rs`), `EnglishInflector.php`, `FrenchInflector.php` and
+`SpanishInflector.php`. Not this stage: `ascii()` and the `locale*()`
+methods (ICU transliterators) and the Slugger that needs them.
 
 Prior art (searched again): no Rust port of symfony/string; the stack row
 for case mappings and patterns (PLAN.md) records the options compared.
@@ -34,6 +36,13 @@ passed through as it already was outside one.
 | CodePointStringTest | 73 / 78 | 5 pending: `ascii()`, `locale*()` |
 | UnicodeStringTest | 75 / 81 | 5 pending as above; 1 `n/a`: PHP `unserialize()` gadget |
 | FunctionsTest | 3 / 3 | |
+| LazyStringTest | 7 / 7 | callables given with their `getPrettyName()` name |
+| EnglishInflectorTest | 4 / 4 | |
+| FrenchInflectorTest | 2 / 2 | each row also with `ucfirst()` |
+| SpanishInflectorTest | 3 / 3 | |
+
+Total 235 of 266: 1 `n/a`, 30 pending (ICU transliterators and the
+Slugger).
 
 Every data provider is replayed from the oracle
 (`oracle/recorders/test_providers.php`); the two `replaceMatches()`
@@ -54,6 +63,18 @@ Recorded for what the tests leave open (`scripts/record.sh string`):
   Windows-1252 (mbstring) and windows-1250 (`iconv()`, which mbstring
   lacks) code pages.
 
+- `string_inflector.php`: a corpus of 10,629 words (upstream's provider
+  words and the inflectors' own table entries, read by reflection, each
+  with case variants, prefixes, a trailing newline, `é` and bytes that are
+  not UTF-8) through `singularize()` and `pluralize()` of each inflector:
+  63,774 answers, all equal. Breaking the English vowel set on purpose
+  makes 521 words differ, so the replay compares.
+- `string_lazy.php`: 100 LazyString cases (each kind of return value,
+  callable names in the TypeError, retries and memoization, the
+  `fromCallable()` array check, `fromStringable()`, `resolve()`,
+  `isStringable()`, `json_encode()`, `serialize()`): 97 replayed and
+  equal, 3 listed as not expressible in the typed API.
+
 ## Findings
 
 - `grapheme_strpos()` is ICU's collation-based search: it matches
@@ -69,6 +90,19 @@ Recorded for what the tests leave open (`scripts/record.sh string`):
 - `str_pad()` with an empty pad returns the string when no padding is
   needed; it only throws when it would pad.
 - `grapheme_extract()` of `''` is `false`, not `''`.
+- LazyString's coercion is that of a `string` return type without
+  `strict_types`: `0.1 + 0.2` becomes `"0.3"` (`precision = 14`, as
+  `(string)` gives it), null `""`, a Stringable its text; an array, a
+  plain object or an enum is the TypeError naming its type. After that
+  TypeError the callback is not called again; the next cast fails the
+  same way. A callback that throws is called again, and a lazy-callable's
+  object, once made, is kept.
+- `fromCallable()` accepts any array of more than two items and fails
+  only when cast ("Value of type int is not callable").
+- The French and Spanish patterns have no `/u`: `/i` folds ASCII only, so
+  `ÉMAUX` singularizes to `ÉMal` (the `ém` alternative misses `ÉM`; the
+  `-al` rule's `m` matches), and `$` also matches before a final newline
+  (`cheval` + newline pluralizes to `chevaux` + newline).
 
 ## Checks
 

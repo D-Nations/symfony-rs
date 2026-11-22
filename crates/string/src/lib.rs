@@ -1,6 +1,7 @@
 //! Port of symfony/string: ByteString, CodePointString and UnicodeString
 //! with the AbstractString and AbstractUnicodeString behaviour they share,
-//! the PHP functions they call, and the `u()`, `b()` and `s()` helpers.
+//! the PHP functions they call, the `u()`, `b()` and `s()` helpers,
+//! LazyString, and the English, French and Spanish inflectors.
 //!
 //! Upstream: symfony/string Resources/functions.php
 
@@ -14,7 +15,9 @@ pub mod byte_string;
 mod case_tables;
 pub mod code_point_string;
 pub mod exception;
+pub mod inflector;
 pub mod intl;
+pub mod lazy_string;
 pub mod mb;
 pub mod php;
 pub mod preg;
@@ -25,6 +28,8 @@ pub use abstract_string::{AbstractString, Needle, Replacement, TruncateMode, Wra
 pub use byte_string::ByteString;
 pub use code_point_string::CodePointString;
 pub use exception::{Error, InvalidArgumentException, RuntimeException};
+pub use inflector::{EnglishInflector, FrenchInflector, Inflector, SpanishInflector};
+pub use lazy_string::LazyString;
 pub use unicode_string::UnicodeString;
 
 /// `u($string)`.
