@@ -148,22 +148,22 @@ Tests/CodePointStringTest.php	CodePointStringTest::testWrap	ported	crates/string
 Tests/FunctionsTest.php	FunctionsTest::testB	ported	crates/string/tests/functions_test.rs::testB
 Tests/FunctionsTest.php	FunctionsTest::testS	ported	crates/string/tests/functions_test.rs::testS
 Tests/FunctionsTest.php	FunctionsTest::testU	ported	crates/string/tests/functions_test.rs::testU
-Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testPluralize	pending	
-Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testPluralizeEmptyString	pending	
-Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testSingularize	pending	
-Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testSingularizeEmptyString	pending	
-Tests/Inflector/FrenchInflectorTest.php	FrenchInflectorTest::testPluralize	pending	
-Tests/Inflector/FrenchInflectorTest.php	FrenchInflectorTest::testSingularize	pending	
-Tests/Inflector/SpanishInflectorTest.php	SpanishInflectorTest::testPluralize	pending	
-Tests/Inflector/SpanishInflectorTest.php	SpanishInflectorTest::testSingularize	pending	
-Tests/Inflector/SpanishInflectorTest.php	SpanishInflectorTest::testUninflected	pending	
-Tests/LazyStringTest.php	LazyStringTest::testFromStringable	pending	
-Tests/LazyStringTest.php	LazyStringTest::testIsNotStringable	pending	
-Tests/LazyStringTest.php	LazyStringTest::testIsStringable	pending	
-Tests/LazyStringTest.php	LazyStringTest::testLazyCallable	pending	
-Tests/LazyStringTest.php	LazyStringTest::testLazyString	pending	
-Tests/LazyStringTest.php	LazyStringTest::testResolve	pending	
-Tests/LazyStringTest.php	LazyStringTest::testReturnTypeError	pending	
+Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testPluralize	ported	crates/string/tests/english_inflector_test.rs::testPluralize
+Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testPluralizeEmptyString	ported	crates/string/tests/english_inflector_test.rs::testPluralizeEmptyString
+Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testSingularize	ported	crates/string/tests/english_inflector_test.rs::testSingularize
+Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testSingularizeEmptyString	ported	crates/string/tests/english_inflector_test.rs::testSingularizeEmptyString
+Tests/Inflector/FrenchInflectorTest.php	FrenchInflectorTest::testPluralize	ported	crates/string/tests/french_inflector_test.rs::testPluralize
+Tests/Inflector/FrenchInflectorTest.php	FrenchInflectorTest::testSingularize	ported	crates/string/tests/french_inflector_test.rs::testSingularize
+Tests/Inflector/SpanishInflectorTest.php	SpanishInflectorTest::testPluralize	ported	crates/string/tests/spanish_inflector_test.rs::testPluralize
+Tests/Inflector/SpanishInflectorTest.php	SpanishInflectorTest::testSingularize	ported	crates/string/tests/spanish_inflector_test.rs::testSingularize
+Tests/Inflector/SpanishInflectorTest.php	SpanishInflectorTest::testUninflected	ported	crates/string/tests/spanish_inflector_test.rs::testUninflected
+Tests/LazyStringTest.php	LazyStringTest::testFromStringable	ported	crates/string/tests/lazy_string_test.rs::testFromStringable
+Tests/LazyStringTest.php	LazyStringTest::testIsNotStringable	ported	crates/string/tests/lazy_string_test.rs::testIsNotStringable
+Tests/LazyStringTest.php	LazyStringTest::testIsStringable	ported	crates/string/tests/lazy_string_test.rs::testIsStringable
+Tests/LazyStringTest.php	LazyStringTest::testLazyCallable	ported	crates/string/tests/lazy_string_test.rs::testLazyCallable
+Tests/LazyStringTest.php	LazyStringTest::testLazyString	ported	crates/string/tests/lazy_string_test.rs::testLazyString
+Tests/LazyStringTest.php	LazyStringTest::testResolve	ported	crates/string/tests/lazy_string_test.rs::testResolve
+Tests/LazyStringTest.php	LazyStringTest::testReturnTypeError	ported	crates/string/tests/lazy_string_test.rs::testReturnTypeError
 Tests/Slugger/AsciiSluggerTest.php	AsciiSluggerTest::testGetLocaleDefaultsToEmptyString	pending	
 Tests/Slugger/AsciiSluggerTest.php	AsciiSluggerTest::testHyphenatedArabicLocaleUsesParentSymbolsMap	pending	
 Tests/Slugger/AsciiSluggerTest.php	AsciiSluggerTest::testHyphenatedLocaleUsesParentEmojiTransliterator	pending	

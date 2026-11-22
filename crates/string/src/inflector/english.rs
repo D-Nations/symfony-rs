@@ -387,11 +387,7 @@ fn inflect(word: &[u8], map: &[Map]) -> Option<Vec<Vec<u8>>> {
 }
 
 fn is_uninflected(word: &[u8]) -> bool {
-    let lower_rev: Vec<u8> = word
-        .iter()
-        .rev()
-        .map(u8::to_ascii_lowercase)
-        .collect();
+    let lower_rev: Vec<u8> = word.iter().rev().map(u8::to_ascii_lowercase).collect();
     UNINFLECTED.contains(&lower_rev.as_slice())
 }
 

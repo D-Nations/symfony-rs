@@ -39,7 +39,10 @@ const PLURALIZE_REGEXP: &[(&str, &str)] = &[
     ),
     ("/al$/i", "\\1aux"),
     // Aspirail, bail, corail, émail, fermail, soupirail, travail, vantail et vitrail font leur pluriel en -aux
-    ("/^(aspir|b|cor|ém|ferm|soupir|trav|vant|vitr)ail$/i", "\\1aux"),
+    (
+        "/^(aspir|b|cor|ém|ferm|soupir|trav|vant|vitr)ail$/i",
+        "\\1aux",
+    ),
     // Bijou, caillou, chou, genou, hibou, joujou et pou qui prennent un x au pluriel
     ("/^(bij|caill|ch|gen|hib|jouj|p)ou$/i", "\\1oux"),
     // Invariable words
@@ -52,7 +55,10 @@ const PLURALIZE_REGEXP: &[(&str, &str)] = &[
 /// The rules for singularize, in order.
 const SINGULARIZE_REGEXP: &[(&str, &str)] = &[
     // Aspirail, bail, corail, émail, fermail, soupirail, travail, vantail et vitrail font leur pluriel en -aux
-    ("/((aspir|b|cor|ém|ferm|soupir|trav|vant|vitr))aux$/i", "\\1ail"),
+    (
+        "/((aspir|b|cor|ém|ferm|soupir|trav|vant|vitr))aux$/i",
+        "\\1ail",
+    ),
     // Words finishing with "eau" are pluralized with a "x"
     // Les mots finissant par "eau" prennent tous un "x" au pluriel
     ("/(eau)x$/i", "\\1"),

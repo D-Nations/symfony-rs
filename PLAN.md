@@ -840,13 +840,15 @@ Stack rows (searched November 19):
       UnicodeString, AbstractString (with TruncateMode), AbstractUnicodeString,
       the exceptions and `u()` / `b()` / `s()`: ByteStringTest 68 of 68,
       CodePointStringTest 73 of 78, UnicodeStringTest 75 of 81 (1 `n/a`),
-      FunctionsTest 3 of 3 (219 of 266), every provider replayed from the
-      oracle, plus 59,808 recorded positions and 4,208 calls of the PHP
-      functions they use, and mbstring's and ICU's mappings of every code
-      point ([m1-string.md](docs/milestones/m1-string.md)). Console keeps
-      passing on the new API. Pending: `ascii()` and the `locale*()` methods
-      (ICU transliterators, 10 rows), the Slugger (20, needs them),
-      LazyString (7) and the inflectors (9). No advisories listed for
+      FunctionsTest 3 of 3, every provider replayed from the oracle, plus
+      59,808 recorded positions and 4,208 calls of the PHP functions they
+      use, and mbstring's and ICU's mappings of every code point
+      ([m1-string.md](docs/milestones/m1-string.md)). Console keeps
+      passing on the new API. Then LazyString (LazyStringTest 7 of 7, 100
+      recorded cases) and the English, French and Spanish inflectors (9
+      of 9, 10,629 recorded words through each): 235 of 266. Pending:
+      `ascii()` and the `locale*()` methods (ICU transliterators, 10
+      rows) and the Slugger (20, needs them). No advisories listed for
       symfony/string; `fromRandom()`'s randomness is decision 15.
 ## Verification
 

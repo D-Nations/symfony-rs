@@ -25,7 +25,9 @@ fn testSingularize() {
     for (name, args) in provider(PROVIDERS, "testSingularize") {
         assert_eq!(
             forms(&args[1]),
-            SpanishInflector::new().singularize(&args[0].bytes()).unwrap(),
+            SpanishInflector::new()
+                .singularize(&args[0].bytes())
+                .unwrap(),
             "row {name}"
         );
     }

@@ -33,7 +33,9 @@ fn testSingularize() {
         // test casing: if the first letter was uppercase, it should remain so
         assert_eq!(
             vec![ucfirst(&singular)],
-            FrenchInflector::new().singularize(&ucfirst(&plural)).unwrap(),
+            FrenchInflector::new()
+                .singularize(&ucfirst(&plural))
+                .unwrap(),
             "row {name}, ucfirst"
         );
     }
@@ -51,7 +53,9 @@ fn testPluralize() {
         // test casing: if the first letter was uppercase, it should remain so
         assert_eq!(
             vec![ucfirst(&plural)],
-            FrenchInflector::new().pluralize(&ucfirst(&singular)).unwrap(),
+            FrenchInflector::new()
+                .pluralize(&ucfirst(&singular))
+                .unwrap(),
             "row {name}, ucfirst"
         );
     }

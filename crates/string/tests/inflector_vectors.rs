@@ -28,7 +28,9 @@ fn replay(name: &str, inflector: &dyn Inflector) {
     let mut differ = Vec::new();
     for row in rows {
         let word = bytes(&row[0]);
-        let singular = inflector.singularize(&word).unwrap_or_else(|e| panic!("{e}"));
+        let singular = inflector
+            .singularize(&word)
+            .unwrap_or_else(|e| panic!("{e}"));
         let plural = inflector.pluralize(&word).unwrap_or_else(|e| panic!("{e}"));
         if singular != forms(&row[1]) || plural != forms(&row[2]) {
             differ.push(String::from_utf8_lossy(&word).into_owned());

@@ -391,6 +391,11 @@ crates/string/src/code_point_string.rs	symfony/string	CodePointString.php	6c6110
 crates/string/src/exception.rs	symfony/string	Exception/InvalidArgumentException.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/src/exception.rs	symfony/string	Exception/RuntimeException.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/src/exception.rs	symfony/string	Exception/ExceptionInterface.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/src/inflector/english.rs	symfony/string	Inflector/EnglishInflector.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/src/inflector/french.rs	symfony/string	Inflector/FrenchInflector.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/src/inflector/mod.rs	symfony/string	Inflector/InflectorInterface.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/src/inflector/spanish.rs	symfony/string	Inflector/SpanishInflector.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/src/lazy_string.rs	symfony/string	LazyString.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/src/lib.rs	symfony/string	Resources/functions.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/src/tables.rs	symfony/string	Resources/data/wcswidth_table_wide.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/src/tables.rs	symfony/string	Resources/data/wcswidth_table_zero.php	6c6110979c0150393bbb336170e286d51ab4d76c
@@ -399,7 +404,11 @@ crates/string/tests/byte_string_test.rs	symfony/string	Tests/ByteStringTest.php	
 crates/string/tests/code_point_string_test.rs	symfony/string	Tests/CodePointStringTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/tests/common/mod.rs	symfony/string	Tests/AbstractAsciiTestCase.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/tests/common/mod.rs	symfony/string	Tests/AbstractUnicodeTestCase.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/tests/english_inflector_test.rs	symfony/string	Tests/Inflector/EnglishInflectorTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/tests/french_inflector_test.rs	symfony/string	Tests/Inflector/FrenchInflectorTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/tests/functions_test.rs	symfony/string	Tests/FunctionsTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/tests/lazy_string_test.rs	symfony/string	Tests/LazyStringTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
+crates/string/tests/spanish_inflector_test.rs	symfony/string	Tests/Inflector/SpanishInflectorTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/string/tests/unicode_string_test.rs	symfony/string	Tests/UnicodeStringTest.php	6c6110979c0150393bbb336170e286d51ab4d76c
 crates/yaml/src/command/lint_command.rs	symfony/yaml	Command/LintCommand.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/dumper.rs	symfony/yaml	Dumper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
