@@ -150,6 +150,11 @@ impl Pcre {
         })
     }
 
+    /// The number of groups, the whole match included.
+    pub fn group_count(&self) -> usize {
+        self.regex.captures_len()
+    }
+
     /// The `fancy-regex` pattern this was translated to.
     pub fn translated(&self) -> &str {
         &self.translated
@@ -1304,7 +1309,23 @@ impl Translator<'_> {
             b'b' => Ok(Some(ClassItem::Char(0x08))),
             b'E' => Ok(None),
             b'Q' => unsupported("\\Q inside a character class"),
-            b'p' | b'P' => unsupported("\\p inside a character class"),
+            b'p' | b'P' => {
+                // a Unicode property, passed through as outside a class
+                if !self.utf8 {
+                    return unsupported("\\p without /u");
+                }
+                let start = self.pos;
+                if self.peek() == Some(b'{') {
+                    let Some(close) = self.p[self.pos..].iter().position(|&c| c == b'}') else {
+                        return compile_err("malformed \\P or \\p sequence");
+                    };
+                    self.pos += close + 1;
+                } else {
+                    self.pos += 1;
+                }
+                let prop = String::from_utf8_lossy(&self.p[start..self.pos.min(self.p.len())]);
+                Ok(Some(ClassItem::Raw(format!("\\{}{}", e as char, prop))))
+            }
             b'N' | b'R' | b'X' | b'B' | b'A' | b'z' | b'Z' | b'G' | b'K' | b'C' | b'g' | b'k' => {
                 compile_err("escape sequence is invalid in character class")
             }
