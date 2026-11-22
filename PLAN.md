@@ -539,6 +539,21 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     weekday names, time zones, ordinals) into `php-value` now, where
     DI's `%env()%` and Twig's `date()` will need it later.
 
+14. **XML refusals and the missing XML loaders (M1-C, November 22).**
+    `php-dom` refuses, with a location, what libxml would read from a file
+    or the network when `validateOnParse` is set (external DTD subset,
+    external parameter entity, external entity referenced in content) and
+    encodings PHP decodes through iconv. Every refused document has a
+    document type or an unusual encoding: PHP's `XmlUtils::parse()` then
+    throws "Document types are not allowed." or a parse error (after
+    reading the file). Recommended for X3: `XmlUtils` turns a refusal
+    into `XmlParsingException` with the refusal's text, a stated
+    difference, rather than reading files. Also: at this pin
+    symfony/dependency-injection and symfony/routing have no XML loaders,
+    so decision 9's "DI and Routing XML loaders" no longer apply; X2's
+    schema inventory is XLIFF 1.2/2.0/2.2 and Validator's
+    constraint-mapping schema.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -623,7 +638,7 @@ Stack rows (searched November 19):
 | Regex for ported PCRE patterns (owner, November 19) | `regex` 1.13 (RE2-style, linear time, no backtracking) vs hand-written matchers vs `fancy-regex` (lookaround, backtracking) | `regex`; patterns without its features (Yaml's `(?<!:):(?!:)` delimiter) matched by hand | Upstream patterns translate one for one and stay comparable; linear time rules out ReDoS; possessive quantifiers become greedy where the following class excludes what they consume |
 | Dotenv | [dotenvy](https://crates.io/crates/dotenvy), [dotenvs](https://docs.rs/crate/dotenvs/0.2.1/source/README.md) (`${VAR:-default}`), [zenv](https://github.com/numToStr/zenv) (expansion only in double quotes), [dotenvx](https://docs.rs/crate/dotenvx/0.1.0) (encryption, shell commands): other parsers and expansion rules | Port on `php-value`, no dependency | None has Symfony's syntax errors, `.env.local` / `.env.$env` layering, `SYMFONY_DOTENV_VARS`, deferred cross-file resolution or `$_ENV` / `$_SERVER` / `getenv()` precedence |
 | Config | No Rust port of Symfony Config found. Serde-struct config crates: [schematic](https://docs.rs/schematic) (per-field merge strategies, garde validation; the closest), [clapfig](https://docs.rs/crate/clapfig/latest) (layered files/env/CLI, post-merge hook), [confique](https://awesome.ecosyste.ms/projects/github.com%2Flukaskalbertodt%2Fconfique) / [einstellung](https://docs.rs/crate/einstellung/0.1.6) (derive-time defaults and validators), [rust-config-tree](https://docs.rs/crate/rust-config-tree/0.2.0) (include trees on confique + Figment), config-rs / figment (untyped layering) | Port on `php-value`, no dependency | All of them fix the schema as a Rust type. Symfony's is a node tree built in code by bundles (prototypes, `ExprBuilder` if/then rules, normalization keys, `canBeEnabled`, deep merge vs `performNoDeepMerging`, deprecations), with its own error paths and messages |
-| XML for `XmlUtils` (owner, November 19; decision 9) | [roxmltree](https://docs.rs/roxmltree) / [quick-xml](https://docs.rs/quick-xml) (parsers, no validation); libxml2 bindings (C, FFI, the real libxml but `unsafe` underneath); pure-Rust XSD: [uppsala](https://docs.rs/crate/uppsala/0.4.0) (DOM, XPath, XSD 1.1), [xsd-schema](https://docs.rs/crate/xsd-schema/0.1.0), [xmlschema](https://docs.rs/xmlschema), [fastxml](https://docs.rs/crate/fastxml/0.1.0) | Hand-written `php-dom` crate, no dependency | None reproduces libxml's error messages, levels and positions, which `XmlUtils` puts into its exception texts; FFI conflicts with no-`unsafe`; scoping validation to Symfony's schemas keeps the surface small |
+| XML for `XmlUtils` (owner, November 19; decision 9; searched again November 22) | [roxmltree](https://docs.rs/roxmltree) / [quick-xml](https://docs.rs/quick-xml) (parsers, no validation); libxml2 bindings (C, FFI, the real libxml but `unsafe` underneath); [exml](https://docs.rs/crate/exml/latest) (libxml2 2.11.8 translated from C to Rust, parts still `unsafe`), [xmloxide](https://docs.rs/crate/xmloxide/latest) (pure Rust reimplementation of libxml2), [oxml](https://docs.rs/crate/oxml/latest) (parser, tree, XPath, entity budgets), [xot](https://docs.rs/crate/xot/latest) (tree, no DTD, UTF-8 only); pure-Rust XSD: [uppsala](https://docs.rs/crate/uppsala/0.4.0) (DOM, XPath, XSD 1.1), [xsd-schema](https://docs.rs/crate/xsd-schema/0.1.0), [xmlschema](https://docs.rs/xmlschema), [fastxml](https://docs.rs/crate/fastxml/0.1.0) | Hand-written `php-dom` crate, no dependency | None reproduces libxml 2.9.14's error messages, levels, positions and recovery, which `XmlUtils` puts into its exception texts (exml follows 2.11.8, whose messages and recovery differ; 457 of 472 recorded documents match `php-dom`, the rest refused or listed, [docs/milestones/m1-c-xml-x1.md](docs/milestones/m1-c-xml-x1.md)); FFI and translated `unsafe` conflict with no-`unsafe`; scoping validation to Symfony's schemas keeps the surface small |
 | EventDispatcher + contracts | [mod-events](https://docs.rs/crate/mod-events/latest) (typed per-event-type bus, priorities, no names, no propagation stop, failures collected rather than raised); [event_dispatcher 0.0.2](https://docs.rs/event_dispatcher/) (stoppable trait, unbuilt docs, abandoned); Serenade's events (conceptual only); evee (a Python port, design reference) | Port, no dependency | None reproduces named events, listener identity (`===` / closure `==`), lazy listeners or the observable ordering rules |
 | Converter runtime contract (M1-D) | [PeachPie](https://github.com/peachpiecompiler/peachpie) (dynamic `PhpValue` everywhere, per-request `Context`), [KPHP](https://vkcom.github.io/kphp/) (inferred types, `class_instance<T>`, `mixed` only where dynamic), Symfony's `PhpDumper` and [Quarkus ArC](https://quarkus.io/guides/cdi-reference) (container compiled at build time), DI crates [shaku](https://docs.rs/crate/shaku), [fundle](https://docs.rs/crate/fundle/0.3.5/source/README.md), [injectable-rs](https://docs.rs/injectable-rs) | Typed code with `php-value` only where PHP is dynamic; the compiled container emitted as Rust; no DI crate | Types keep speed and reviewability; the converter already has Symfony's full service graph, so a generic container would duplicate it; PHP-FPM's per-request isolation decides which services may be shared ([docs/converter-contract.md](docs/converter-contract.md)) |
 | PHP request parsing (`query`, `cookies`, `multipart`; M1-D provenance gate) | [serde_qs](https://github.com/nicklaswj/serde_qs) (Rack/qs brackets, repeated keys collected into a `Vec`), [serde-querystring](https://docs.rs/serde-querystring) ("brackets like PHP", no name rewriting or limits), `form_urlencoded` (pairs only), [multer](https://crates.io/crates/multer) (strict RFC 7578 multipart) | Rewritten here from the PHP manual and recorded PHP answers, no dependency | None has PHP's name rewriting (`.`/space/unclosed `[` to `_`), its integer-key and next-index rules, its separate query/body/cookie limits, cookie first-wins, or its lenient multipart reading (`--boundary--` not ending the body, partial-line delimiters); php-src is excluded by decision 8 ([docs/milestones/m1-d-request-rewrite.md](docs/milestones/m1-d-request-rewrite.md)) |
@@ -764,6 +779,18 @@ Stack rows (searched November 19):
       tests: the stage's exit evidence. Stage log:
       [docs/milestones/m1-b-console.md](docs/milestones/m1-b-console.md).
       The rest of Console stays M7 work.
+
+- [ ] M1-C, XML gate X1 (`php-dom`, decision 9): the parser and the
+      read-only DOM the consumers need (inventory and recording in
+      [docs/milestones/m1-c-xml-x1.md](docs/milestones/m1-c-xml-x1.md)).
+      `loadXML()` with and without `validateOnParse`: 457 of 472 recorded
+      documents give PHP's answer in both modes (load result, every
+      libxml error with its level, code, message, line and column, and
+      the tree), on 1,346 recorded errors; the other 15 are refused (file,
+      network, iconv) or listed (billion laughs' error count). Nothing is
+      fetched. X1 passed for that corpus; open: decision 14, X2 (XSD) and
+      X3 (`XmlUtils`, SimpleXML/XPath subset, the XLIFF, Qt and Validator
+      loaders).
 
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath
