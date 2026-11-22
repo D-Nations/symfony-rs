@@ -82,6 +82,38 @@ pub fn is_numeric(s: &[u8]) -> bool {
     }
 }
 
+/// The number a numeric string (`is_numeric()`) holds: an int when it is
+/// written as one and fits, else a float; `None` for any other string.
+pub fn numeric_value(s: &[u8]) -> Option<Number> {
+    let (start, end, integer) = numeric_prefix(s)?;
+    if !s[end..].iter().all(|&b| is_space(b)) {
+        return None;
+    }
+    let number = &s[start..end];
+    if integer && let Some(int) = checked_int(number) {
+        return Some(Number::Int(int));
+    }
+    Some(Number::Float(parse_float(number)))
+}
+
+/// An optionally signed run of digits as an int, `None` when it overflows.
+fn checked_int(number: &[u8]) -> Option<i64> {
+    let (negative, digits) = match number.first() {
+        Some(b'-') => (true, &number[1..]),
+        Some(b'+') => (false, &number[1..]),
+        _ => (false, number),
+    };
+    digits.iter().try_fold(0i64, |value, &d| {
+        let d = i64::from(d - b'0');
+        let value = value.checked_mul(10)?;
+        if negative {
+            value.checked_sub(d)
+        } else {
+            value.checked_add(d)
+        }
+    })
+}
+
 fn parse_float(digits: &[u8]) -> f64 {
     // The prefix is ASCII digits, sign, point and exponent, which Rust
     // parses as the same decimal number.

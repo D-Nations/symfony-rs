@@ -168,7 +168,7 @@ Tests/HeaderBagTest.php	HeaderBagTest::testReplace	pending
 Tests/HeaderBagTest.php	HeaderBagTest::testSetAssociativeArray	pending	
 Tests/HeaderBagTest.php	HeaderBagTest::testToStringNotNull	pending	
 Tests/HeaderBagTest.php	HeaderBagTest::testToStringNull	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testCombine	pending	
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testCombine	ported	crates/http-foundation/tests/header_utils_test.rs::testCombine
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDisposition	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionFail	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionInvalidDisposition	pending	
@@ -176,36 +176,36 @@ Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseCookie	pending
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQuery	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryIgnoreBrackets	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testQuote	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplit	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators	ported	crates/http-foundation/src/accept_language.rs::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testToString	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testUnquote	pending	
-Tests/InputBagTest.php	InputBagTest::testAdd	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterArray	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterArrayWithCycle	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterArrayWithInvalidValue	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterArrayWithNullOnFailure	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterArrayWithSharedScalarReference	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterArrayWithValidValue	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterArrayWithoutArrayFlag	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterCallback	pending	
-Tests/InputBagTest.php	InputBagTest::testFilterClosure	pending	
-Tests/InputBagTest.php	InputBagTest::testGet	pending	
-Tests/InputBagTest.php	InputBagTest::testGetAlnumExceptionWithArray	pending	
-Tests/InputBagTest.php	InputBagTest::testGetAlphaExceptionWithArray	pending	
-Tests/InputBagTest.php	InputBagTest::testGetBooleanError	pending	
-Tests/InputBagTest.php	InputBagTest::testGetDigitsExceptionWithArray	pending	
-Tests/InputBagTest.php	InputBagTest::testGetDoesNotUseDeepByDefault	pending	
-Tests/InputBagTest.php	InputBagTest::testGetEnum	pending	
-Tests/InputBagTest.php	InputBagTest::testGetEnumThrowsExceptionWithInvalidValue	pending	
-Tests/InputBagTest.php	InputBagTest::testGetIntError	pending	
-Tests/InputBagTest.php	InputBagTest::testGetString	pending	
-Tests/InputBagTest.php	InputBagTest::testGetStringExceptionWithArray	pending	
-Tests/InputBagTest.php	InputBagTest::testGetWithNonStringDefaultValue	pending	
-Tests/InputBagTest.php	InputBagTest::testGettingANonStringValue	pending	
-Tests/InputBagTest.php	InputBagTest::testReplace	pending	
-Tests/InputBagTest.php	InputBagTest::testSetWithNonScalarOrArray	pending	
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testQuote	ported	crates/http-foundation/tests/header_utils_test.rs::testQuote
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplit	ported	crates/http-foundation/tests/header_utils_test.rs::testSplit
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators	ported	crates/http-foundation/tests/header_utils_test.rs::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testToString	ported	crates/http-foundation/tests/header_utils_test.rs::testToString
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testUnquote	ported	crates/http-foundation/tests/header_utils_test.rs::testUnquote
+Tests/InputBagTest.php	InputBagTest::testAdd	ported	crates/http-foundation/tests/input_bag_test.rs::testAdd
+Tests/InputBagTest.php	InputBagTest::testFilterArray	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterArray
+Tests/InputBagTest.php	InputBagTest::testFilterArrayWithCycle	n/a: builds a PHP reference (&$value) into the array; php-value arrays are plain values and cannot hold references or cycles (PLAN.md decision 3)	
+Tests/InputBagTest.php	InputBagTest::testFilterArrayWithInvalidValue	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterArrayWithInvalidValue
+Tests/InputBagTest.php	InputBagTest::testFilterArrayWithNullOnFailure	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterArrayWithNullOnFailure
+Tests/InputBagTest.php	InputBagTest::testFilterArrayWithSharedScalarReference	n/a: builds a PHP reference (&$value) into the array; php-value arrays are plain values and cannot hold references or cycles (PLAN.md decision 3)	
+Tests/InputBagTest.php	InputBagTest::testFilterArrayWithValidValue	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterArrayWithValidValue
+Tests/InputBagTest.php	InputBagTest::testFilterArrayWithoutArrayFlag	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterArrayWithoutArrayFlag
+Tests/InputBagTest.php	InputBagTest::testFilterCallback	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterCallback
+Tests/InputBagTest.php	InputBagTest::testFilterClosure	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterClosure
+Tests/InputBagTest.php	InputBagTest::testGet	ported	crates/http-foundation/tests/input_bag_test.rs::testGet
+Tests/InputBagTest.php	InputBagTest::testGetAlnumExceptionWithArray	ported	crates/http-foundation/tests/input_bag_test.rs::testGetAlnumExceptionWithArray
+Tests/InputBagTest.php	InputBagTest::testGetAlphaExceptionWithArray	ported	crates/http-foundation/tests/input_bag_test.rs::testGetAlphaExceptionWithArray
+Tests/InputBagTest.php	InputBagTest::testGetBooleanError	ported	crates/http-foundation/tests/input_bag_test.rs::testGetBooleanError
+Tests/InputBagTest.php	InputBagTest::testGetDigitsExceptionWithArray	ported	crates/http-foundation/tests/input_bag_test.rs::testGetDigitsExceptionWithArray
+Tests/InputBagTest.php	InputBagTest::testGetDoesNotUseDeepByDefault	ported	crates/http-foundation/tests/input_bag_test.rs::testGetDoesNotUseDeepByDefault
+Tests/InputBagTest.php	InputBagTest::testGetEnum	ported	crates/http-foundation/tests/input_bag_test.rs::testGetEnum
+Tests/InputBagTest.php	InputBagTest::testGetEnumThrowsExceptionWithInvalidValue	ported	crates/http-foundation/tests/input_bag_test.rs::testGetEnumThrowsExceptionWithInvalidValue
+Tests/InputBagTest.php	InputBagTest::testGetIntError	ported	crates/http-foundation/tests/input_bag_test.rs::testGetIntError
+Tests/InputBagTest.php	InputBagTest::testGetString	ported	crates/http-foundation/tests/input_bag_test.rs::testGetString
+Tests/InputBagTest.php	InputBagTest::testGetStringExceptionWithArray	ported	crates/http-foundation/tests/input_bag_test.rs::testGetStringExceptionWithArray
+Tests/InputBagTest.php	InputBagTest::testGetWithNonStringDefaultValue	ported	crates/http-foundation/tests/input_bag_test.rs::testGetWithNonStringDefaultValue
+Tests/InputBagTest.php	InputBagTest::testGettingANonStringValue	ported	crates/http-foundation/tests/input_bag_test.rs::testGettingANonStringValue
+Tests/InputBagTest.php	InputBagTest::testReplace	ported	crates/http-foundation/tests/input_bag_test.rs::testReplace
+Tests/InputBagTest.php	InputBagTest::testSetWithNonScalarOrArray	ported	crates/http-foundation/tests/input_bag_test.rs::testSetWithNonScalarOrArray
 Tests/IpUtilsTest.php	IpUtilsTest::testAnIpv6WithOptionDisabledIpv6	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testAnonymize	pending	
 Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV4WithNegativeBytes	pending	
@@ -243,47 +243,47 @@ Tests/JsonResponseTest.php	JsonResponseTest::testSetContentJsonSerializeError	pe
 Tests/JsonResponseTest.php	JsonResponseTest::testSetDataWithNull	pending	
 Tests/JsonResponseTest.php	JsonResponseTest::testSetEncodingOptions	pending	
 Tests/JsonResponseTest.php	JsonResponseTest::testSetJson	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testAdd	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testAll	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testAllThrowsForNonArrayValues	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testAllWithInputKey	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testConstructor	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testCount	pending	
+Tests/ParameterBagTest.php	ParameterBagTest::testAdd	ported	crates/http-foundation/tests/parameter_bag_test.rs::testAdd
+Tests/ParameterBagTest.php	ParameterBagTest::testAll	ported	crates/http-foundation/tests/parameter_bag_test.rs::testAll
+Tests/ParameterBagTest.php	ParameterBagTest::testAllThrowsForNonArrayValues	ported	crates/http-foundation/tests/parameter_bag_test.rs::testAllThrowsForNonArrayValues
+Tests/ParameterBagTest.php	ParameterBagTest::testAllWithInputKey	ported	crates/http-foundation/tests/parameter_bag_test.rs::testAllWithInputKey
+Tests/ParameterBagTest.php	ParameterBagTest::testConstructor	ported	crates/http-foundation/tests/parameter_bag_test.rs::testConstructor
+Tests/ParameterBagTest.php	ParameterBagTest::testCount	ported	crates/http-foundation/tests/parameter_bag_test.rs::testCount
 Tests/ParameterBagTest.php	ParameterBagTest::testFilter	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithCycle	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithInvalidValue	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithInvalidValueWithoutFlags	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithNullOnFailure	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithSharedScalarReference	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithValidValue	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterCallback	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testFilterClosure	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGet	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetAlnum	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetAlnumExceptionWithArray	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetAlpha	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetAlphaExceptionWithArray	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetBoolean	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetBooleanExceptionWithInvalid	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetDigits	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetDigitsExceptionWithArray	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetDoesNotUseDeepByDefault	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetEnum	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetEnumReturnsDefaultWhenStoredValueIsNull	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetEnumThrowsExceptionWithInvalidValueType	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetEnumThrowsExceptionWithNotBackingValue	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetInt	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetIntExceptionWithArray	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetIntExceptionWithInvalid	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetIterator	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetString	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetStringExceptionWithArray	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testGetStringExceptionWithObject	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testHas	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testKeys	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testRemove	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testReplace	pending	
-Tests/ParameterBagTest.php	ParameterBagTest::testSet	pending	
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithCycle	n/a: builds a PHP reference (&$value) into the array; php-value arrays are plain values and cannot hold references or cycles (PLAN.md decision 3)	
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithInvalidValue	ported	crates/http-foundation/tests/parameter_bag_test.rs::testFilterArrayWithInvalidValue
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithInvalidValueWithoutFlags	ported	crates/http-foundation/tests/parameter_bag_test.rs::testFilterArrayWithInvalidValueWithoutFlags
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithNullOnFailure	ported	crates/http-foundation/tests/parameter_bag_test.rs::testFilterArrayWithNullOnFailure
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithSharedScalarReference	n/a: builds a PHP reference (&$value) into the array; php-value arrays are plain values and cannot hold references or cycles (PLAN.md decision 3)	
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterArrayWithValidValue	ported	crates/http-foundation/tests/parameter_bag_test.rs::testFilterArrayWithValidValue
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterCallback	ported	crates/http-foundation/tests/parameter_bag_test.rs::testFilterCallback
+Tests/ParameterBagTest.php	ParameterBagTest::testFilterClosure	ported	crates/http-foundation/tests/parameter_bag_test.rs::testFilterClosure
+Tests/ParameterBagTest.php	ParameterBagTest::testGet	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGet
+Tests/ParameterBagTest.php	ParameterBagTest::testGetAlnum	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetAlnum
+Tests/ParameterBagTest.php	ParameterBagTest::testGetAlnumExceptionWithArray	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetAlnumExceptionWithArray
+Tests/ParameterBagTest.php	ParameterBagTest::testGetAlpha	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetAlpha
+Tests/ParameterBagTest.php	ParameterBagTest::testGetAlphaExceptionWithArray	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetAlphaExceptionWithArray
+Tests/ParameterBagTest.php	ParameterBagTest::testGetBoolean	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetBoolean
+Tests/ParameterBagTest.php	ParameterBagTest::testGetBooleanExceptionWithInvalid	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetBooleanExceptionWithInvalid
+Tests/ParameterBagTest.php	ParameterBagTest::testGetDigits	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetDigits
+Tests/ParameterBagTest.php	ParameterBagTest::testGetDigitsExceptionWithArray	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetDigitsExceptionWithArray
+Tests/ParameterBagTest.php	ParameterBagTest::testGetDoesNotUseDeepByDefault	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetDoesNotUseDeepByDefault
+Tests/ParameterBagTest.php	ParameterBagTest::testGetEnum	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetEnum
+Tests/ParameterBagTest.php	ParameterBagTest::testGetEnumReturnsDefaultWhenStoredValueIsNull	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetEnumReturnsDefaultWhenStoredValueIsNull
+Tests/ParameterBagTest.php	ParameterBagTest::testGetEnumThrowsExceptionWithInvalidValueType	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetEnumThrowsExceptionWithInvalidValueType
+Tests/ParameterBagTest.php	ParameterBagTest::testGetEnumThrowsExceptionWithNotBackingValue	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetEnumThrowsExceptionWithNotBackingValue
+Tests/ParameterBagTest.php	ParameterBagTest::testGetInt	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetInt
+Tests/ParameterBagTest.php	ParameterBagTest::testGetIntExceptionWithArray	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetIntExceptionWithArray
+Tests/ParameterBagTest.php	ParameterBagTest::testGetIntExceptionWithInvalid	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetIntExceptionWithInvalid
+Tests/ParameterBagTest.php	ParameterBagTest::testGetIterator	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetIterator
+Tests/ParameterBagTest.php	ParameterBagTest::testGetString	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetString
+Tests/ParameterBagTest.php	ParameterBagTest::testGetStringExceptionWithArray	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetStringExceptionWithArray
+Tests/ParameterBagTest.php	ParameterBagTest::testGetStringExceptionWithObject	ported	crates/http-foundation/tests/parameter_bag_test.rs::testGetStringExceptionWithObject
+Tests/ParameterBagTest.php	ParameterBagTest::testHas	ported	crates/http-foundation/tests/parameter_bag_test.rs::testHas
+Tests/ParameterBagTest.php	ParameterBagTest::testKeys	ported	crates/http-foundation/tests/parameter_bag_test.rs::testKeys
+Tests/ParameterBagTest.php	ParameterBagTest::testRemove	ported	crates/http-foundation/tests/parameter_bag_test.rs::testRemove
+Tests/ParameterBagTest.php	ParameterBagTest::testReplace	ported	crates/http-foundation/tests/parameter_bag_test.rs::testReplace
+Tests/ParameterBagTest.php	ParameterBagTest::testSet	ported	crates/http-foundation/tests/parameter_bag_test.rs::testSet
 Tests/RateLimiter/AbstractRequestRateLimiterTest.php	AbstractRequestRateLimiterTest::testConsume	pending	
 Tests/RateLimiter/AbstractRequestRateLimiterTest.php	AbstractRequestRateLimiterTest::testConsumeWithoutLimiterAddsSpecialNoLimiter	pending	
 Tests/RateLimiter/AbstractRequestRateLimiterTest.php	AbstractRequestRateLimiterTest::testResetLimiters	pending	

@@ -10,7 +10,11 @@
 
 pub mod accept_language;
 pub mod cookies;
+pub mod exception;
+pub mod header_utils;
+pub mod input_bag;
 pub mod multipart;
+pub mod parameter_bag;
 pub mod query;
 pub mod scheme;
 

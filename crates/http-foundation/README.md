@@ -14,13 +14,17 @@ complete port of Symfony HttpFoundation.
 | `cookies` | PHP's `$_COOKIE`, recorded | 54 PHP-recorded Cookie headers (`tests/data/cookie_vectors.json`); cookie test; request-lab HTTP test | Arrays (`a[b]=1`) are kept and reachable through `all()`; `get()` returns strings only. Not a Symfony Cookie/ResponseHeaderBag API |
 | `multipart` | PHP's `multipart/form-data` reading for `$_POST` and `request_parse_body()`, recorded | 274 PHP-recorded bodies (137 as POST and as PUT, `tests/data/multipart_vectors.json`) plus parser tests | Text fields only; file parts are read and discarded; fixed PHP upload limits (`max_input_vars` 1000, `max_file_uploads` 20) |
 | `form_fields` | Symfony `Request::createFromGlobals()` method/format selection | 12 PHP-recorded content types (`tests/data/content_type_vectors.json`); demo write tests; request-lab HTTP tests; multipart comparison | URL-encoded and multipart bodies; no JSON payload API |
-| `accept_language` | Symfony `Request`, `AcceptHeader`, `AcceptHeaderItem`, `HeaderUtils` | Original 77-header test retained in the demo integration suite; float parsing test here | Caller supplies supported locale strings; no demo locale enum dependency |
+| `accept_language` | Symfony `Request`, `AcceptHeader`, `AcceptHeaderItem`, on `header_utils`'s tokenizer | Original 77-header test retained in the demo integration suite; float parsing test here | Caller supplies supported locale strings; no demo locale enum dependency |
+| `parameter_bag` | Symfony `ParameterBag` on `php-value`: every method; `filter()` on php-value's `filter_var()`; `getEnum()` resolves the enum in a php-value `Registry` | ParameterBagTest 39 of 41 (2 `n/a`: PHP references; `testFilter` pending: `FILTER_VALIDATE_EMAIL`/`URL`); 2,450 recorded calls shared with `input_bag` (`tests/data/bags.json`) | Filters php-value does not reproduce are refused (`Class::NotPorted`); PHP's `E_DEPRECATED` for a truncated enum float is not raised |
+| `input_bag` | Symfony `InputBag`: scalar-only getters throwing `BadRequestException`, checked `set`/`add`/`replace`, `\Stringable` returned as its string | InputBagTest 23 of 25 (2 `n/a`: PHP references); the recorded calls | As `parameter_bag` |
+| `exception` | `BadRequestException`, `UnexpectedValueException`, and the PHP exceptions the bags throw, with `instanceof` (`Error::is_a`) | The bag tests' `expectException` checks | One error type; messages are upstream's, as bytes |
+| `header_utils` | Symfony `HeaderUtils`: `split()` (one linear pass), `combine()`, `toString()`, `quote()`, `unquote()` | HeaderUtilsTest 6 of 13, including GHSA-r925-mgvr-h9cc's test; 3,000 recorded `split()` calls and 633 `quote()`/`unquote()` strings (`tests/data/header_utils.json`) | No `makeDisposition()` (waits for the v8.1.11 version move, PLAN.md decision 16) or `parseQuery()`; `toString()` refuses null, array and object values (PHP's TypeError) |
 | `scheme` | Symfony `Request` trusted HTTPS proxy subset | Demo proxy/security regression tests, request-lab untrusted-header test | Axum adapter; exact trusted peer IPs and one `X-Forwarded-Proto` value only |
 
 HTTP adapters bound body reads using `POST_MAX_SIZE` (8 MiB), and supply an
 empty body after a read failure. No socket I/O or body buffering is done by
-the parsers. The only runtime dependency is the already-used Axum, for
-`scheme`'s request-parts adapter. JSON, serde and base64 are test dependencies.
+the parsers. The runtime dependencies are the already-used Axum, for
+`scheme`'s request-parts adapter, and the workspace's `php-value`. JSON, serde and base64 are test dependencies.
 
 Run this crate independently with:
 
@@ -32,7 +36,10 @@ symfony-demo-rs's `src/request/mod.rs` re-exports this API. The second consumer 
 [`request-lab`](../../examples/request-lab/README.md); it has no dependency on
 the demo crate, its database, templates, translations or built assets.
 
-The vectors are recorded in the oracle image: `scripts/record.sh multipart`
+The bag and HeaderUtils vectors are recorded by `scripts/record.sh
+http-foundation` (`oracle/recorders/http_foundation_*.php`).
+
+The request vectors are recorded in the oracle image: `scripts/record.sh multipart`
 (`oracle/recorders/multipart*.py`) and `scripts/record.sh request-vars`
 (`oracle/recorders/request_vars*`). The first 156 multipart bodies are the
 ones moved from symfony-demo-rs; the rest were added for the rewrite.
@@ -58,8 +65,9 @@ where the earlier, php-src-derived code did not:
 
 ## Not implemented
 
-Not implemented: general Request/Response objects, HeaderBag and ParameterBag
-APIs, uploaded-file handling, JSON payload access, sessions, response cache
+Not implemented: general Request/Response objects, HeaderBag, ServerBag,
+FileBag, ResponseHeaderBag, Cookie, AcceptHeader as an API, IpUtils,
+uploaded-file handling, JSON payload access, sessions, response cache
 negotiation, streamed/binary responses, general proxy handling, routing,
 HttpKernel events, a service container or bundle configuration. The next
 milestone should choose a small additional compatibility contract and port

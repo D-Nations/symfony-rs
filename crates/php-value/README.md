@@ -14,6 +14,9 @@ behaviour and checked against vectors recorded in the oracle container
 | `(int)`, `(float)` of strings (longest numeric prefix, whitespace, saturation, INF → 0) and `is_numeric()` | 55 vectors |
 | `(string)` of floats (`precision = 14`), `var_export()` and `json_encode()` of floats (shortest digits) | 338 vectors |
 | `hexdec()`, `octdec()`: invalid characters skipped, float after overflow | 19 vectors |
+| `filter::filter_var()` for `FILTER_UNSAFE_RAW` (with `FILTER_FLAG_STRIP_LOW`), `FILTER_VALIDATE_INT` (hex, octal, `min_range`/`max_range`), `FILTER_VALIDATE_BOOL`, `FILTER_SANITIZE_NUMBER_INT` and `FILTER_CALLBACK`; `FILTER_REQUIRE_SCALAR`, `FILTER_REQUIRE_ARRAY`, `FILTER_FORCE_ARRAY`, `FILTER_NULL_ON_FAILURE`, `default`; the extension's constants. Any other filter, flag or option is refused (`Unsupported`) | 22,932 recorded calls (`tests/data/filter.json`, oracle/recorders/filter_var.php) and the constants' values |
+| `object::backed_enum_from()`: `BackedEnum::from()` in coercive mode (int- and string-backed), its `TypeError`/`ValueError` messages; the `E_DEPRECATED` for a truncated float is not reproduced | symfony-http-foundation's 2,450 recorded bag calls |
+| `object::Closure` (a `\Closure` over a Rust function), `StringableObject`, `PhpObject::to_php_string()` (`\Stringable`), `numeric::numeric_value()` | Unit use in dependants |
 
 Arrays have value semantics: a clone shares storage until one side is
 written (`Arc::make_mut`). Removing a key is O(n). Objects are handles
