@@ -10,7 +10,9 @@
 
 pub mod array;
 pub mod base64;
+pub mod clock;
 pub mod constants;
+pub mod dateparse;
 pub mod datetime;
 pub mod filter;
 pub mod json;
@@ -19,6 +21,7 @@ pub mod object;
 pub mod pcre;
 pub mod serialize;
 pub mod string;
+pub mod url;
 pub mod value;
 #[cfg(feature = "vectors")]
 pub mod vectors;

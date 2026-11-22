@@ -20,7 +20,7 @@
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
-#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils}.json
+#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils}.json, crates/php-value/tests/data/dates.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -341,6 +341,12 @@ http_foundation() {
         mv "$tmp" "$out"
         echo "HttpFoundation $name vectors written to $out"
     done
+    out=crates/php-value/tests/data/dates.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/http_foundation_dates.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Date vectors written to $out"
 }
 
 case "${1:-}" in

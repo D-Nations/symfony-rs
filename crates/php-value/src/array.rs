@@ -286,6 +286,38 @@ impl PhpArray {
         let i = *self.0.index.get(key)?;
         Some(&mut self.data().entries[i].1)
     }
+
+    /// `ksort($array)` (`SORT_REGULAR`): keys in [`compare_keys`] order,
+    /// equal keys keeping their order (PHP's sort is stable since 8.0).
+    pub fn ksort(&mut self) {
+        let data = self.data();
+        data.entries.sort_by(|(a, _), (b, _)| compare_keys(a, b));
+        for (position, (key, _)) in data.entries.iter().enumerate() {
+            data.index.insert(key.clone(), position);
+        }
+    }
+}
+
+/// PHP 8's `<=>` on two array keys, as `ksort()` compares them: ints by
+/// value; two strings that are both numeric (`is_numeric()`) by value,
+/// otherwise byte by byte; an int and a numeric string by value, an int
+/// and a non-numeric string as the int's decimal text against the string
+/// (PHP manual, "Comparison Operators").
+pub fn compare_keys(a: &Key, b: &Key) -> std::cmp::Ordering {
+    use crate::numeric::numeric_value;
+    let number = |s: &PhpString| numeric_value(s.as_bytes()).map(crate::numeric::Number::as_f64);
+    match (a, b) {
+        (Key::Int(a), Key::Int(b)) => a.cmp(b),
+        (Key::Str(a), Key::Str(b)) => match (number(a), number(b)) {
+            (Some(x), Some(y)) => x.total_cmp(&y),
+            _ => a.as_bytes().cmp(b.as_bytes()),
+        },
+        (Key::Int(i), Key::Str(s)) => match number(s) {
+            Some(y) => (*i as f64).total_cmp(&y),
+            None => i.to_string().as_bytes().cmp(s.as_bytes()),
+        },
+        (Key::Str(_), Key::Int(_)) => compare_keys(b, a).reverse(),
+    }
 }
 
 impl<K: Into<Key>> FromIterator<(K, Value)> for PhpArray {
