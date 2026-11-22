@@ -1399,6 +1399,7 @@ impl Parser {
                     prefix: el_prefix,
                     namespace_uri: nsname.clone(),
                     attributes,
+                    namespaces: self.ns[ns_start..].to_vec(),
                 };
                 node = Some(self.doc.append(parent, Kind::Element(el), self.input.line));
             }

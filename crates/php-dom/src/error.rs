@@ -76,6 +76,15 @@ pub enum RefusalReason {
     Encoding { name: String },
     /// A byte sequence that is not valid in the document's UTF-16.
     InvalidUtf16 { offset: usize },
+    /// A schema construct outside the set this crate validates (stage
+    /// log docs/milestones/m1-c-xml-x2.md); `line` is in the schema.
+    UnsupportedSchema { what: String },
+    /// An `<xs:import>` whose document the resolver did not supply (libxml
+    /// would read it from a file or the network).
+    UnresolvedImport { location: String },
+    /// An instance construct the validator does not model (`xsi:type`,
+    /// entity references); `line` is in the document.
+    UnsupportedInstance { what: String },
 }
 
 impl fmt::Display for LoadError {
@@ -103,6 +112,18 @@ impl fmt::Display for RefusalReason {
             }
             RefusalReason::Encoding { name } => write!(f, "encoding \"{name}\" is not supported"),
             RefusalReason::InvalidUtf16 { offset } => write!(f, "invalid UTF-16 at byte {offset}"),
+            RefusalReason::UnsupportedSchema { what } => {
+                write!(f, "schema construct not supported: {what}")
+            }
+            RefusalReason::UnresolvedImport { location } => {
+                write!(f, "imported schema \"{location}\" is not loaded")
+            }
+            RefusalReason::UnsupportedInstance { what } => {
+                write!(
+                    f,
+                    "document construct not supported by schema validation: {what}"
+                )
+            }
         }
     }
 }
