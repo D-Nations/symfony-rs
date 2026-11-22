@@ -4,7 +4,7 @@
 //! `RedirectToPreferredLocaleSubscriber` relies on:
 //! `Request::getPreferredLanguage()` and `getLanguages()`, and the header
 //! parsing beneath them (`AcceptHeader`, `AcceptHeaderItem`,
-//! `HeaderUtils::split()`).
+//! `HeaderUtils::split()`, from `header_utils`).
 //!
 //! Symfony's rules are kept, including the surprising ones, each recorded
 //! from the original for 77 headers (`data/http/accept_language.php`):
@@ -19,113 +19,9 @@
 //! The header is read as bytes: a byte that is not ASCII never matches a
 //! locale code, so no text decoding is needed.
 //!
-//! Upstream: symfony/http-foundation Request.php AcceptHeader.php AcceptHeaderItem.php HeaderUtils.php Tests/HeaderUtilsTest.php
+//! Upstream: symfony/http-foundation Request.php AcceptHeader.php AcceptHeaderItem.php HeaderUtils.php
 
-/// The characters PHP's `trim()` removes by default.
-const PHP_TRIM: &[u8] = b" \t\n\r\0\x0B";
-
-/// PCRE's `\s` without the `u` flag.
-const fn is_space(byte: u8) -> bool {
-    matches!(byte, b' ' | b'\t' | b'\n' | b'\x0B' | b'\x0C' | b'\r')
-}
-
-/// One match of `HeaderUtils::split()`'s pattern: a value run, or a
-/// separator with the whitespace around it.
-#[derive(Debug, Clone, PartialEq, Eq)]
-enum Token {
-    Value(Vec<u8>),
-    Separator(u8, Vec<u8>),
-}
-
-/// The matches of `HeaderUtils::split()`'s pattern over the trimmed
-/// header, in order (`preg_match_all`).
-fn tokenize(header: &[u8], separators: &[u8]) -> Vec<Token> {
-    let start = header
-        .iter()
-        .position(|byte| !PHP_TRIM.contains(byte))
-        .unwrap_or(header.len());
-    let end = header
-        .iter()
-        .rposition(|byte| !PHP_TRIM.contains(byte))
-        .map_or(start, |last| last + 1);
-    let text = &header[start..end];
-    let is_separator = |byte: u8| separators.contains(&byte);
-
-    let mut tokens = Vec::new();
-    let mut i = 0;
-    while i < text.len() {
-        // A separator, with the whitespace before and after it.
-        let after_space = text[i..]
-            .iter()
-            .position(|byte| !is_space(*byte))
-            .map_or(text.len(), |offset| i + offset);
-        if after_space < text.len() && is_separator(text[after_space]) {
-            let mut end = after_space + 1;
-            while end < text.len() && is_space(text[end]) {
-                end += 1;
-            }
-            tokens.push(Token::Separator(text[after_space], text[i..end].to_vec()));
-            i = end;
-            continue;
-        }
-        // A value never starts with whitespace: skip to the next position.
-        if is_space(text[i]) {
-            i += 1;
-            continue;
-        }
-        let begin = i;
-        while i < text.len() {
-            let byte = text[i];
-            if byte == b'"' {
-                // A quoted string, possibly unterminated.
-                i += 1;
-                while i < text.len() && text[i] != b'"' {
-                    i += if text[i] == b'\\' && i + 1 < text.len() {
-                        2
-                    } else {
-                        1
-                    };
-                }
-                i = (i + 1).min(text.len());
-            } else if is_space(byte) {
-                // Whitespace belongs to the value only when more of the
-                // value follows it.
-                let run_end = text[i..]
-                    .iter()
-                    .position(|byte| !is_space(*byte))
-                    .map_or(text.len(), |offset| i + offset);
-                if run_end == text.len() || is_separator(text[run_end]) {
-                    break;
-                }
-                i = run_end;
-            } else if is_separator(byte) {
-                break;
-            } else {
-                i += 1;
-            }
-        }
-        tokens.push(Token::Value(text[begin..i].to_vec()));
-    }
-    tokens
-}
-
-/// `HeaderUtils::unquote()`: drops quotes, and keeps the character after
-/// each backslash.
-fn unquote(text: &[u8]) -> Vec<u8> {
-    let mut out = Vec::with_capacity(text.len());
-    let mut bytes = text.iter();
-    while let Some(byte) = bytes.next() {
-        match byte {
-            b'\\' => match bytes.next() {
-                Some(next) => out.push(*next),
-                None => out.push(b'\\'),
-            },
-            b'"' => {}
-            other => out.push(*other),
-        }
-    }
-    out
-}
+use crate::header_utils::{Token, tokenize, unquote_bytes as unquote};
 
 /// The tokens between occurrences of `separator`, skipping empty groups.
 fn groups(tokens: &[Token], separator: u8) -> Vec<&[Token]> {
@@ -382,62 +278,6 @@ pub fn preferred_language<'a>(header: Option<&[u8]>, locales: &[&'a str]) -> Opt
 mod tests {
 
     use super::*;
-
-    /// `HeaderUtils::split($header, $separators)` for separator lists that
-    /// end in `=`, as this module composes it (`tokenize`, then `groups`
-    /// per level, then `name_and_value`), written like the PHPUnit
-    /// assertions' arrays: `[["x", "1"], ["y", "2"]]`.
-    fn split(header: &str, separators: &str) -> String {
-        fn level(tokens: &[Token], separators: &[u8]) -> String {
-            match separators {
-                [b'='] => {
-                    let (name, value) = name_and_value(tokens);
-                    let quote = |text: &[u8]| format!("{:?}", String::from_utf8_lossy(text));
-                    match value {
-                        Some(value) => format!("[{}, {}]", quote(&name), quote(&value)),
-                        None => format!("[{}]", quote(&name)),
-                    }
-                }
-                [first, rest @ ..] => {
-                    let parts: Vec<String> = groups(tokens, *first)
-                        .into_iter()
-                        .map(|group| level(group, rest))
-                        .collect();
-                    format!("[{}]", parts.join(", "))
-                }
-                [] => String::new(),
-            }
-        }
-        let separators = separators.as_bytes();
-        assert_eq!(separators.last(), Some(&b'='), "helper covers `...=` only");
-        level(&tokenize(header.as_bytes(), separators), separators)
-    }
-
-    /// GHSA-r925-mgvr-h9cc (CVE-2026-108082), fixed upstream in 8.1.7: a
-    /// run of whitespace before a separator made PCRE backtrack. The port
-    /// scans each byte a bounded number of times; this pins the fixed
-    /// results. Upstream: Tests/HeaderUtilsTest.php at the pinned commit.
-    #[test]
-    #[allow(non_snake_case)]
-    fn testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators() {
-        let spaces = " ".repeat(25);
-        assert_eq!(split(&format!("a{spaces},b"), ",="), r#"[["a"], ["b"]]"#);
-        assert_eq!(
-            split(&format!("a{spaces},b"), ",;="),
-            r#"[[["a"]], [["b"]]]"#
-        );
-        assert_eq!(
-            split(&format!("x=1{spaces};y=2"), ";="),
-            r#"[["x", "1"], ["y", "2"]]"#
-        );
-
-        let header = format!("a{spaces},").repeat(200);
-        let tokens = tokenize(header.as_bytes(), b",=");
-        assert_eq!(groups(&tokens, b',').len(), 200);
-
-        // whitespace inside a value is still part of it
-        assert_eq!(split("a b  c", ",="), r#"[["a b  c"]]"#);
-    }
 
     #[test]
     fn php_float_casts() {

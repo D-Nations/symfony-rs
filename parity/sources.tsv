@@ -341,15 +341,16 @@ crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Request.ph
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeader.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	AcceptHeaderItem.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	HeaderUtils.php	79325f87c3a2acc7564ddce9f457046e980e7255
-crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Tests/HeaderUtilsTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/exception.rs	symfony/http-foundation	Exception/BadRequestException.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/exception.rs	symfony/http-foundation	Exception/UnexpectedValueException.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/exception.rs	symfony/http-foundation	Exception/RequestExceptionInterface.php	79325f87c3a2acc7564ddce9f457046e980e7255
+crates/http-foundation/src/header_utils.rs	symfony/http-foundation	HeaderUtils.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/input_bag.rs	symfony/http-foundation	InputBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/lib.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/parameter_bag.rs	symfony/http-foundation	ParameterBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/query.rs	symfony/http-foundation	InputBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/scheme.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
+crates/http-foundation/tests/header_utils_test.rs	symfony/http-foundation	Tests/HeaderUtilsTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/tests/input_bag_test.rs	symfony/http-foundation	Tests/InputBagTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/tests/parameter_bag_test.rs	symfony/http-foundation	Tests/ParameterBagTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-kernel/src/lib.rs	symfony/http-kernel	HttpKernel.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1

@@ -21,6 +21,7 @@
 #   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
 #   scripts/record.sh http-foundation crates/http-foundation/tests/data/bags.json
+#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils}.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -333,11 +334,11 @@ php_dom_schema() {
 http_foundation() {
     local name out tmp
     mkdir -p oracle/out crates/http-foundation/tests/data
-    for name in bags; do
+    for name in bags header_utils; do
         out=crates/http-foundation/tests/data/$name.json
         tmp=$(mktemp -p oracle/out)
         oracle "oracle/recorders/http_foundation_$name.php" > "$tmp"
-        python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "cases")' "$tmp"
+        python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
         mv "$tmp" "$out"
         echo "HttpFoundation $name vectors written to $out"
     done

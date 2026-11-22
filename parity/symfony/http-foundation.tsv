@@ -168,7 +168,7 @@ Tests/HeaderBagTest.php	HeaderBagTest::testReplace	pending
 Tests/HeaderBagTest.php	HeaderBagTest::testSetAssociativeArray	pending	
 Tests/HeaderBagTest.php	HeaderBagTest::testToStringNotNull	pending	
 Tests/HeaderBagTest.php	HeaderBagTest::testToStringNull	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testCombine	pending	
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testCombine	ported	crates/http-foundation/tests/header_utils_test.rs::testCombine
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDisposition	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionFail	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionInvalidDisposition	pending	
@@ -176,11 +176,11 @@ Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseCookie	pending
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQuery	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryIgnoreBrackets	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testQuote	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplit	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators	ported	crates/http-foundation/src/accept_language.rs::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testToString	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testUnquote	pending	
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testQuote	ported	crates/http-foundation/tests/header_utils_test.rs::testQuote
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplit	ported	crates/http-foundation/tests/header_utils_test.rs::testSplit
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators	ported	crates/http-foundation/tests/header_utils_test.rs::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testToString	ported	crates/http-foundation/tests/header_utils_test.rs::testToString
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testUnquote	ported	crates/http-foundation/tests/header_utils_test.rs::testUnquote
 Tests/InputBagTest.php	InputBagTest::testAdd	ported	crates/http-foundation/tests/input_bag_test.rs::testAdd
 Tests/InputBagTest.php	InputBagTest::testFilterArray	ported	crates/http-foundation/tests/input_bag_test.rs::testFilterArray
 Tests/InputBagTest.php	InputBagTest::testFilterArrayWithCycle	n/a: builds a PHP reference (&$value) into the array; php-value arrays are plain values and cannot hold references or cycles (PLAN.md decision 3)	
