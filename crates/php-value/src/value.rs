@@ -20,6 +20,12 @@ pub trait PhpObject: Any + Send + Sync + fmt::Debug {
     /// The properties in declaration order, as `(array) $object` and
     /// `get_object_vars()` list them for public properties.
     fn properties(&self) -> PhpArray;
+
+    /// `(string) $object` for a class that implements `\Stringable`
+    /// (`__toString()`); `None` for any other class.
+    fn to_php_string(&self) -> Option<PhpString> {
+        None
+    }
 }
 
 impl dyn PhpObject {
@@ -118,6 +124,24 @@ impl Value {
             Self::String(s) => s.clone(),
             Self::Array(_) | Self::Object(_) => return None,
         })
+    }
+
+    /// `is_scalar($value) || $value instanceof \Stringable`.
+    pub fn is_scalar_or_stringable(&self) -> bool {
+        match self {
+            Self::Bool(_) | Self::Int(_) | Self::Float(_) | Self::String(_) => true,
+            Self::Object(o) => o.to_php_string().is_some(),
+            Self::Null | Self::Array(_) => false,
+        }
+    }
+
+    /// `(string) $value` for scalars, null and `\Stringable` objects;
+    /// `None` for arrays and other objects.
+    pub fn to_php_string_or_stringable(&self) -> Option<PhpString> {
+        match self {
+            Self::Object(o) => o.to_php_string(),
+            other => other.to_php_string(),
+        }
     }
 }
 

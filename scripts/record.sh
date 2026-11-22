@@ -8,7 +8,7 @@
 #   scripts/record.sh converter-fixture oracle/apps/converter-fixture/responses.json (M1-D fixture)
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
-#   scripts/record.sh php-value    crates/php-value/tests/data/php.json
+#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter}.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json
@@ -20,6 +20,7 @@
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
+#   scripts/record.sh http-foundation crates/http-foundation/tests/data/bags.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -86,6 +87,12 @@ php_value() {
     python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
     mv "$tmp" "$out"
     echo "PHP value vectors written to $out"
+    out=crates/php-value/tests/data/filter.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/filter_var.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["cases"]), "filter_var() cases")' "$tmp"
+    mv "$tmp" "$out"
+    echo "filter_var() vectors written to $out"
 }
 
 yaml() {
@@ -323,6 +330,19 @@ php_dom_schema() {
     echo "DOMDocument::schemaValidateSource() answers written to $out"
 }
 
+http_foundation() {
+    local name out tmp
+    mkdir -p oracle/out crates/http-foundation/tests/data
+    for name in bags; do
+        out=crates/http-foundation/tests/data/$name.json
+        tmp=$(mktemp -p oracle/out)
+        oracle "oracle/recorders/http_foundation_$name.php" > "$tmp"
+        python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "cases")' "$tmp"
+        mv "$tmp" "$out"
+        echo "HttpFoundation $name vectors written to $out"
+    done
+}
+
 case "${1:-}" in
     routing) routing ;;
     multipart) multipart ;;
@@ -343,6 +363,7 @@ case "${1:-}" in
     finder) finder ;;
     php-dom) php_dom ;;
     php-dom-schema) php_dom_schema ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|all" >&2; exit 2 ;;
+    http-foundation) http_foundation ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|all" >&2; exit 2 ;;
 esac

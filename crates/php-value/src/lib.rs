@@ -12,6 +12,7 @@ pub mod array;
 pub mod base64;
 pub mod constants;
 pub mod datetime;
+pub mod filter;
 pub mod json;
 pub mod numeric;
 pub mod object;

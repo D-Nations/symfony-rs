@@ -1,5 +1,6 @@
-//! Built-in PHP object kinds: `stdClass` and enum cases, and the
-//! `(array)` / `(object)` casts between arrays and `stdClass`.
+//! Built-in PHP object kinds: `stdClass`, enum cases, `\Closure` and
+//! `\Stringable` objects, and the `(array)` / `(object)` casts between
+//! arrays and `stdClass`.
 //!
 //! Upstream: none
 
@@ -7,6 +8,7 @@ use std::sync::Arc;
 
 use crate::{
     array::PhpArray,
+    string::PhpString,
     value::{Object, PhpObject, Value},
 };
 
@@ -155,4 +157,200 @@ pub fn to_array(value: &Value) -> PhpArray {
         Value::Null => PhpArray::new(),
         scalar => PhpArray::list([scalar.clone()]),
     }
+}
+
+/// An object of a class implementing `\Stringable`: its class name and
+/// what `__toString()` returns. It has no public properties.
+#[derive(Debug, Clone, PartialEq)]
+pub struct StringableObject {
+    class: String,
+    text: PhpString,
+}
+
+impl StringableObject {
+    pub fn new(class: impl Into<String>, text: impl Into<PhpString>) -> Self {
+        Self {
+            class: class.into(),
+            text: text.into(),
+        }
+    }
+
+    /// The object as a value.
+    pub fn object(class: impl Into<String>, text: impl Into<PhpString>) -> Value {
+        Value::Object(Arc::new(Self::new(class, text)))
+    }
+}
+
+impl PhpObject for StringableObject {
+    fn class(&self) -> &str {
+        &self.class
+    }
+
+    fn properties(&self) -> PhpArray {
+        PhpArray::new()
+    }
+
+    fn to_php_string(&self) -> Option<PhpString> {
+        Some(self.text.clone())
+    }
+}
+
+/// The function a [`Closure`] runs: its arguments, its return value.
+pub type ClosureFn = dyn Fn(&[Value]) -> Value + Send + Sync;
+
+/// A `\Closure`: a Rust function taking PHP values. Cloning the value
+/// gives the same closure, as PHP's objects are handles.
+#[derive(Clone)]
+pub struct Closure(Arc<ClosureFn>);
+
+impl Closure {
+    pub const CLASS: &'static str = "Closure";
+
+    pub fn new(f: impl Fn(&[Value]) -> Value + Send + Sync + 'static) -> Self {
+        Self(Arc::new(f))
+    }
+
+    /// The closure as a value.
+    pub fn object(f: impl Fn(&[Value]) -> Value + Send + Sync + 'static) -> Value {
+        Value::Object(Arc::new(Self::new(f)))
+    }
+
+    /// `$closure(...$arguments)`.
+    pub fn call(&self, arguments: &[Value]) -> Value {
+        (self.0)(arguments)
+    }
+}
+
+impl std::fmt::Debug for Closure {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Closure")
+    }
+}
+
+impl PhpObject for Closure {
+    fn class(&self) -> &str {
+        Self::CLASS
+    }
+
+    fn properties(&self) -> PhpArray {
+        PhpArray::new()
+    }
+}
+
+/// Why `BackedEnum::from()` threw.
+#[derive(Debug, Clone, PartialEq)]
+pub enum EnumFromError {
+    /// A `\TypeError`: the argument does not coerce to the backing type.
+    TypeError(String),
+    /// A `\ValueError`: no case has that backing value. The message holds
+    /// the value's bytes.
+    ValueError(PhpString),
+}
+
+impl EnumFromError {
+    pub fn class(&self) -> &'static str {
+        match self {
+            Self::TypeError(_) => "TypeError",
+            Self::ValueError(_) => "ValueError",
+        }
+    }
+
+    pub fn message(&self) -> PhpString {
+        match self {
+            Self::TypeError(message) => PhpString::from(message.as_str()),
+            Self::ValueError(message) => message.clone(),
+        }
+    }
+}
+
+/// `$class::from($value)` for a backed enum whose `cases` are given, called
+/// from code without `strict_types` (PHP's coercive mode), as recorded
+/// (crates/http-foundation/tests/data/bags.json). An int-backed enum takes
+/// an int, a bool, a float that fits in an int, or a numeric string with
+/// the same rules; a fraction is dropped (PHP's `E_DEPRECATED` "Implicit
+/// conversion ... loses precision" is not reproduced). A string-backed
+/// enum takes `string|int`: an int, a bool or a float that fits in an int
+/// (truncated) as the int's decimal digits, any other float as PHP prints
+/// it (`"1.0E+20"`, `"NAN"`), a `\Stringable` as its string. `None` when
+/// the cases are not a backed enum's.
+pub fn backed_enum_from(
+    class: &str,
+    cases: &[Object],
+    value: &Value,
+) -> Option<Result<Object, EnumFromError>> {
+    use crate::numeric::{Number, float_to_string, numeric_value};
+
+    let backing = |c: &Object| {
+        c.downcast_ref::<EnumCase>()
+            .and_then(EnumCase::value)
+            .cloned()
+    };
+    let int_backed = match cases.iter().find_map(backing)? {
+        Value::Int(_) => true,
+        Value::String(_) => false,
+        _ => return None,
+    };
+    let type_error = |given: &Value| {
+        let wanted = if int_backed { "int" } else { "string|int" };
+        Err(EnumFromError::TypeError(format!(
+            "{class}::from(): Argument #1 ($value) must be of type {wanted}, {} given",
+            given.debug_type()
+        )))
+    };
+    // A float that fits in an int (in [-2^63, 2^63)), truncated.
+    let float_int = |f: f64| {
+        (-9.223_372_036_854_776e18..9.223_372_036_854_776e18)
+            .contains(&f)
+            .then_some(f as i64)
+    };
+    let wanted = if int_backed {
+        let int = match value {
+            Value::Int(i) => Some(*i),
+            Value::Bool(b) => Some(i64::from(*b)),
+            Value::Float(f) => float_int(*f),
+            Value::String(s) => match numeric_value(s.as_bytes()) {
+                Some(Number::Int(i)) => Some(i),
+                Some(Number::Float(f)) => float_int(f),
+                None => None,
+            },
+            _ => None,
+        };
+        match int {
+            Some(i) => Value::Int(i),
+            None => return Some(type_error(value)),
+        }
+    } else {
+        let text = match value {
+            Value::String(s) => s.clone(),
+            Value::Int(i) => PhpString::from(i.to_string()),
+            Value::Bool(b) => PhpString::from(if *b { "1" } else { "0" }),
+            Value::Float(f) => match float_int(*f) {
+                Some(i) => PhpString::from(i.to_string()),
+                None => PhpString::from(float_to_string(*f)),
+            },
+            Value::Object(o) => match o.to_php_string() {
+                Some(text) => text,
+                None => return Some(type_error(value)),
+            },
+            _ => return Some(type_error(value)),
+        };
+        Value::String(text)
+    };
+    let found = cases
+        .iter()
+        .find(|c| backing(c).is_some_and(|v| v.identical(&wanted)));
+    Some(match found {
+        Some(case) => Ok(case.clone()),
+        None => {
+            let mut message = match &wanted {
+                Value::Int(i) => i.to_string().into_bytes(),
+                Value::String(s) => [b"\"".as_slice(), s.as_bytes(), b"\""].concat(),
+                _ => Vec::new(),
+            };
+            message.extend_from_slice(
+                format!(" is not a valid backing value for enum {class}").as_bytes(),
+            );
+            Err(EnumFromError::ValueError(PhpString::from(message)))
+        }
+    })
 }
