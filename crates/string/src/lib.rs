@@ -27,7 +27,7 @@ pub use abstract_string::{AbstractString, Needle, Replacement, TruncateMode, Wra
 pub use byte_string::ByteString;
 pub use code_point_string::CodePointString;
 pub use exception::{Error, InvalidArgumentException, RuntimeException};
-pub use inflector::{EnglishInflector, FrenchInflector, Inflector};
+pub use inflector::{EnglishInflector, FrenchInflector, Inflector, SpanishInflector};
 pub use unicode_string::UnicodeString;
 
 /// `u($string)`.

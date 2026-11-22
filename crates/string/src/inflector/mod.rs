@@ -10,9 +10,11 @@
 
 mod english;
 mod french;
+mod spanish;
 
 pub use english::EnglishInflector;
 pub use french::FrenchInflector;
+pub use spanish::SpanishInflector;
 
 use crate::{exception::Result, preg::Regex};
 
