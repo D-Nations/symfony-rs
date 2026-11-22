@@ -16,6 +16,7 @@ pub mod base_node;
 pub mod boolean_node;
 pub mod builder;
 pub mod configuration_interface;
+pub mod dumper;
 pub mod enum_node;
 pub mod exception;
 pub mod float_node;
