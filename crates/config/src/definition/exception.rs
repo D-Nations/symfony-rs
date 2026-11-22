@@ -36,6 +36,8 @@ pub enum Class {
     InvalidArgument,
     /// `\RuntimeException`.
     Runtime,
+    /// `\UnexpectedValueException` (extends `\RuntimeException`).
+    UnexpectedValue,
     /// `\TypeError`, an `\Error`: what PHP throws for a value of the wrong
     /// type where upstream relies on a typed signature.
     TypeError,
@@ -76,6 +78,7 @@ impl Class {
             Self::Logic => "Symfony\\Component\\Config\\Exception\\LogicException",
             Self::InvalidArgument => "InvalidArgumentException",
             Self::Runtime => "RuntimeException",
+            Self::UnexpectedValue => "UnexpectedValueException",
             Self::TypeError => "TypeError",
             Self::Error => "Error",
             Self::Other { class, .. } => class,
@@ -109,7 +112,7 @@ impl Class {
 
     /// `instanceof \RuntimeException`.
     pub fn is_runtime(&self) -> bool {
-        self.is_definition_exception() || matches!(self, Self::Runtime)
+        self.is_definition_exception() || matches!(self, Self::Runtime | Self::UnexpectedValue)
     }
 
     /// `instanceof \LogicException` (of the classes known here).
