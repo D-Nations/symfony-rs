@@ -332,7 +332,17 @@ pub fn class_name_key(class: &str) -> String {
 /// another array or an object's properties a JSON object, and a backed
 /// enum case its value.
 pub fn json_encode(value: &Value) -> Option<Vec<u8>> {
-    let flags = JsonFlags::default();
+    json_encode_with(value, JsonFlags::default(), false)
+}
+
+/// `json_encode($value, $flags)` with `JSON_UNESCAPED_SLASHES` /
+/// `JSON_UNESCAPED_UNICODE` (`flags`) and `JSON_PRESERVE_ZERO_FRACTION`
+/// (`preserve_zero_fraction`); otherwise as [`json_encode`].
+pub fn json_encode_with(
+    value: &Value,
+    flags: JsonFlags,
+    preserve_zero_fraction: bool,
+) -> Option<Vec<u8>> {
     let mut out = Vec::new();
     let pairs = |out: &mut Vec<u8>, array: &PhpArray| -> Option<()> {
         out.push(b'{');
@@ -342,7 +352,7 @@ pub fn json_encode(value: &Value) -> Option<Vec<u8>> {
             }
             out.extend_from_slice(encode_string(&key_bytes(k), flags)?.as_bytes());
             out.push(b':');
-            out.extend_from_slice(&json_encode(v)?);
+            out.extend_from_slice(&json_encode_with(v, flags, preserve_zero_fraction)?);
         }
         out.push(b'}');
         Some(())
@@ -354,18 +364,38 @@ pub fn json_encode(value: &Value) -> Option<Vec<u8>> {
                 if i > 0 {
                     out.push(b',');
                 }
-                out.extend_from_slice(&json_encode(v)?);
+                out.extend_from_slice(&json_encode_with(v, flags, preserve_zero_fraction)?);
             }
             out.push(b']');
         }
         Value::Array(array) if !array.is_empty() => pairs(&mut out, array)?,
         Value::Object(object) => match object.downcast_ref::<EnumCase>() {
-            Some(case) => return case.value().and_then(json_encode),
+            Some(case) => {
+                return case
+                    .value()
+                    .and_then(|v| json_encode_with(v, flags, preserve_zero_fraction));
+            }
             None => pairs(&mut out, &object.properties())?,
         },
-        scalar => return json_encode_scalar(scalar, flags, false),
+        scalar => return json_encode_scalar(scalar, flags, preserve_zero_fraction),
     }
     Some(out)
+}
+
+/// `(string) $value` as concatenation and `implode()` do it: an array
+/// gives "Array" (PHP also warns), an object PHP's `\Error`; no object
+/// here is Stringable.
+pub fn string_value(value: &Value) -> Result<Vec<u8>, crate::Error> {
+    match value {
+        Value::Object(o) => Err(crate::Error::new(
+            crate::Class::Error,
+            format!(
+                "Object of class {} could not be converted to string",
+                o.class()
+            ),
+        )),
+        other => Ok(to_bytes(other)),
+    }
 }
 
 fn format_error(class: &str, message: impl Into<Vec<u8>>) -> crate::Error {
