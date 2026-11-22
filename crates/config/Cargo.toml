@@ -12,6 +12,7 @@ description = "Port of the symfony/config component"
 yaml = ["dep:symfony-yaml"]
 
 [dependencies]
+php-dom = { path = "../php-dom" }
 php-value = { path = "../php-value" }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 symfony-yaml = { path = "../yaml", optional = true }

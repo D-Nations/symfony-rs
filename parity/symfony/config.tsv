@@ -326,10 +326,10 @@ Tests/ResourceCheckerConfigCacheTest.php	ResourceCheckerConfigCacheTest::testGet
 Tests/ResourceCheckerConfigCacheTest.php	ResourceCheckerConfigCacheTest::testIsFreshWithchecker	pending	
 Tests/ResourceCheckerConfigCacheTest.php	ResourceCheckerConfigCacheTest::testIsNotFreshWithchecker	pending	
 Tests/ResourceCheckerConfigCacheTest.php	ResourceCheckerConfigCacheTest::testResourcesWithoutcheckersAreIgnoredAndConsideredFresh	pending	
-Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testConvertDomToArray	pending	
-Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadEmptyXmlFile	pending	
-Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadFile	pending	
-Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadFileWithInternalErrorsEnabled	pending	
-Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadWrongEmptyXMLWithErrorHandler	pending	
-Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testParseWithInvalidValidatorCallable	pending	
-Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testPhpize	pending	
+Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testConvertDomToArray	ported	crates/config/tests/xml_utils_test.rs::testConvertDomToArray
+Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadEmptyXmlFile	ported	crates/config/tests/xml_utils_test.rs::testLoadEmptyXmlFile
+Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadFile	ported	crates/config/tests/xml_utils_test.rs::testLoadFile
+Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadFileWithInternalErrorsEnabled	ported	crates/config/tests/xml_utils_test.rs::testLoadFileWithInternalErrorsEnabled
+Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testLoadWrongEmptyXMLWithErrorHandler	ported	crates/config/tests/xml_utils_test.rs::testLoadWrongEmptyXMLWithErrorHandler
+Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testParseWithInvalidValidatorCallable	ported	crates/config/tests/xml_utils_test.rs::testParseWithInvalidValidatorCallable
+Tests/Util/XmlUtilsTest.php	XmlUtilsTest::testPhpize	ported	crates/config/tests/xml_utils_test.rs::testPhpize

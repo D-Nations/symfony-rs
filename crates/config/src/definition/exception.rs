@@ -34,6 +34,11 @@ pub enum Class {
     Logic,
     /// `\InvalidArgumentException`.
     InvalidArgument,
+    /// `Util\Exception\XmlParsingException` (extends
+    /// `\InvalidArgumentException`; see [`crate::util::exception`]).
+    XmlParsing,
+    /// `Util\Exception\InvalidXmlException` (extends XmlParsingException).
+    InvalidXml,
     /// `\RuntimeException`.
     Runtime,
     /// `\UnexpectedValueException` (extends `\RuntimeException`).
@@ -77,6 +82,8 @@ impl Class {
             }
             Self::Logic => "Symfony\\Component\\Config\\Exception\\LogicException",
             Self::InvalidArgument => "InvalidArgumentException",
+            Self::XmlParsing => "Symfony\\Component\\Config\\Util\\Exception\\XmlParsingException",
+            Self::InvalidXml => "Symfony\\Component\\Config\\Util\\Exception\\InvalidXmlException",
             Self::Runtime => "RuntimeException",
             Self::UnexpectedValue => "UnexpectedValueException",
             Self::TypeError => "TypeError",
@@ -117,7 +124,17 @@ impl Class {
 
     /// `instanceof \LogicException` (of the classes known here).
     pub fn is_logic(&self) -> bool {
-        matches!(self, Self::Logic | Self::InvalidArgument)
+        matches!(self, Self::Logic) || self.is_invalid_argument()
+    }
+
+    /// `instanceof \InvalidArgumentException`.
+    pub fn is_invalid_argument(&self) -> bool {
+        matches!(self, Self::InvalidArgument) || self.is_xml_parsing()
+    }
+
+    /// `instanceof XmlParsingException`.
+    pub fn is_xml_parsing(&self) -> bool {
+        matches!(self, Self::XmlParsing | Self::InvalidXml)
     }
 
     /// `$this instanceof $class`, for the classes of this module.
@@ -126,6 +143,8 @@ impl Class {
             Self::Exception => self.is_definition_exception(),
             Self::InvalidConfiguration => self.is_invalid_configuration(),
             Self::Runtime => self.is_runtime(),
+            Self::InvalidArgument => self.is_invalid_argument(),
+            Self::XmlParsing => self.is_xml_parsing(),
             Self::Error => matches!(self, Self::Error | Self::TypeError),
             Self::Other { class, .. } => self.name() == class,
             other => self == other,
