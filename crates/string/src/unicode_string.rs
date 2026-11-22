@@ -1,50 +1,68 @@
-//! Port of Symfony\Component\String\UnicodeString.php, with the methods it
-//! inherits from AbstractUnicodeString.php and AbstractString.php that
-//! symfony/console uses: construction (NFC), `length()`, `slice()`,
-//! `chunk()`, `split()` without flags, `wordwrap()` and `width()`.
+//! Port of Symfony\Component\String\UnicodeString.php: a string of Unicode
+//! grapheme clusters encoded as UTF-8, kept in NFC.
 //!
-//! Graphemes follow ICU's rules (`grapheme_strlen()`, `grapheme_substr()`)
-//! through `unicode-segmentation`, and NFC comes from
-//! `unicode-normalization`; both match the oracle's ICU 72.1 on every
-//! recorded case (`tests/unicode.rs`). Differences, all pinned by tests:
+//! Graphemes follow ICU's rules (`grapheme_*()`) through
+//! `unicode-segmentation`, and NFC comes from `unicode-normalization`; both
+//! match the oracle's ICU 72.1 on every recorded case (`tests/unicode.rs`).
 //! `chunk()` uses PCRE2's `\X` in PHP, which splits 218 of the 4,105
 //! recorded sequences differently (a lone regional indicator before an
 //! extending mark, Indic conjuncts, Prepend before an emoji); and code
 //! points assigned after Unicode 15.0 are classified by the crates' newer
 //! data (README, "Differences").
 //!
+//! `ignoreCase` is `null` after `normalize()` to NFD or NFKD; the next
+//! `clone` brings the string back to NFC (`__clone()`).
+//!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
-//! Upstream: symfony/string UnicodeString.php AbstractUnicodeString.php AbstractString.php
+//! Upstream: symfony/string UnicodeString.php
 
-use unicode_normalization::{UnicodeNormalization, is_nfc};
+use php_value::Value;
+use unicode_normalization::is_nfc;
 use unicode_segmentation::UnicodeSegmentation;
 
-use crate::{InvalidArgumentException, php, tables};
+use crate::abstract_string::{self as base, AbstractString, Needle, Replacement};
+use crate::abstract_unicode_string::{self as au, utf8};
+use crate::code_point_string::{base_trim_prefix, base_trim_suffix};
+use crate::exception::{Error, Result};
+use crate::intl::{self, Form};
+use crate::{mb, php};
+
+const I32_MIN: i64 = -2147483648;
+const I32_MAX: i64 = 2147483647;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct UnicodeString {
     string: String,
+    /// `$ignoreCase`: `None` is PHP's `null` (after NFD or NFKD).
+    ignore_case: Option<bool>,
+}
+
+fn nfc(s: &str) -> String {
+    if s.is_empty() || is_nfc(s) {
+        s.to_owned()
+    } else {
+        intl::normalize(s, Form::Nfc)
+    }
 }
 
 impl UnicodeString {
     /// `new UnicodeString($string)`: normalized to NFC.
     pub fn new(string: &str) -> Self {
-        if string.is_empty() || is_nfc(string) {
-            return Self {
-                string: string.to_owned(),
-            };
-        }
         Self {
-            string: string.nfc().collect(),
+            string: nfc(string),
+            ignore_case: Some(false),
         }
     }
 
     /// `new UnicodeString($bytes)`: invalid UTF-8 throws.
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, InvalidArgumentException> {
-        std::str::from_utf8(bytes)
-            .map(Self::new)
-            .map_err(|_| InvalidArgumentException("Invalid UTF-8 string.".to_owned()))
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        Ok(Self::new(utf8(bytes)?))
+    }
+
+    /// `UnicodeString::fromCodePoints(...$codes)`.
+    pub fn from_code_points(codes: &[i64]) -> Result<Self> {
+        au::from_code_points(codes)
     }
 
     pub fn as_str(&self) -> &str {
@@ -55,170 +73,433 @@ impl UnicodeString {
         self.string
     }
 
-    fn with(&self, string: String) -> Self {
-        // A clone of $this with another string: no new normalization.
-        Self { string }
-    }
-
-    /// `length()`: `grapheme_strlen()`.
-    pub fn length(&self) -> usize {
-        self.string.graphemes(true).count()
-    }
-
-    /// `slice($start, $length)`: `grapheme_substr()`. A negative start
-    /// counts from the end; a negative length leaves that many graphemes
-    /// off the end; out of range gives `''`.
-    pub fn slice(&self, start: i64, length: Option<i64>) -> Self {
-        let boundaries: Vec<usize> = self
-            .string
-            .grapheme_indices(true)
-            .map(|(at, _)| at)
-            .chain(std::iter::once(self.string.len()))
-            .collect();
-        let count = (boundaries.len() - 1) as i64;
-        let from = if start < 0 {
-            (count + start).max(0)
+    /// The form needles are brought to: NFD after `normalize()` to a
+    /// decomposed form, NFC otherwise.
+    fn form(&self) -> Form {
+        if self.ignore_case.is_none() {
+            Form::Nfd
         } else {
-            start
-        };
-        if from > count {
-            return self.with(String::new());
+            Form::Nfc
         }
-        let to = match length {
-            None => count,
-            Some(length) if length < 0 => count + length,
-            Some(length) => from.saturating_add(length).min(count),
-        };
-        if to <= from {
-            return self.with(String::new());
-        }
-        let (from, to) = (boundaries[from as usize], boundaries[to as usize]);
-        self.with(self.string[from..to].to_owned())
     }
 
-    /// `chunk($length)`: runs of `$length` graphemes, the last one shorter.
-    pub fn chunk(&self, length: usize) -> Result<Vec<Self>, InvalidArgumentException> {
+    fn ci(&self) -> bool {
+        self.ignore_case == Some(true)
+    }
+
+    /// A needle in [`Self::form`], `None` where PHP's normalizer fails.
+    fn needle(&self, needle: &[u8]) -> Option<String> {
+        let needle = std::str::from_utf8(needle).ok()?;
+        Some(intl::normalized(needle, self.form()))
+    }
+
+    /// `$str->string = $string` followed by NFC unless already normalized;
+    /// invalid UTF-8 throws.
+    fn renormalized(&self, string: &[u8]) -> Result<Self> {
+        Ok(self.with_string(nfc(utf8(string)?).into_bytes()))
+    }
+
+    /// `codePointsAt($offset)`.
+    pub fn code_points_at(&self, offset: i64) -> Vec<u32> {
+        au::code_points_at(self, offset)
+    }
+
+    /// `folded($compat)`.
+    pub fn folded_compat(&self, compat: bool) -> Self {
+        au::folded(self, compat)
+    }
+
+    /// `normalize($form)`, `$form` a `Normalizer` constant.
+    pub fn normalize(&self, form: i64) -> Result<Self> {
+        let mut str = self.cloned();
+        match Form::from_php(form) {
+            Some(f @ (Form::Nfc | Form::Nfkc)) => {
+                str.string = intl::normalized(&str.string, f);
+            }
+            Some(f @ (Form::Nfd | Form::Nfkd)) => {
+                if !intl::is_normalized(&str.string, f) {
+                    str.string = intl::normalize(&str.string, f);
+                    str.ignore_case = None;
+                }
+            }
+            _ => return Err(Error::invalid("Unsupported normalization form.")),
+        }
+        Ok(str)
+    }
+
+    /// `ascii($rules)`: needs ICU's transliterators; refused.
+    pub fn ascii(&self) -> Result<Self> {
+        Err(Error::Unsupported(
+            "ascii() needs ICU transliterators".into(),
+        ))
+    }
+
+    /// `search($haystack, $needle, &$length)`: the byte offset and length of
+    /// the first occurrence, as grapheme_strpos() finds it, corrected where
+    /// its match differs from the needle.
+    fn search(&self, haystack: &str, needle: &str) -> Option<(usize, usize)> {
+        let ci = self.ci();
+        let i = intl::strpos(haystack, needle, 0, ci)?;
+        let offset = intl::substr(haystack, 0, Some(i as i64)).len();
+        let length = needle.len();
+        let bytes = haystack.as_bytes();
+        let matched = php::substr(bytes, offset as i64, Some(length as i64));
+        if !ci {
+            if needle.as_bytes() == matched {
+                return Some((offset, length));
+            }
+            let previous = if i > 0 {
+                intl::substr(haystack, 0, Some(i as i64 - 1)).len()
+            } else {
+                0
+            };
+            let from = (offset as i64 + 1 - length as i64)
+                .min(previous as i64 + 1)
+                .max(0);
+            return php::strpos(bytes, needle.as_bytes(), from, false).map(|at| (at, length));
+        }
+        let same = php::strcasecmp_eq(needle.as_bytes(), matched)
+            || std::str::from_utf8(matched).is_ok_and(|m| {
+                mb::fold_simple(needle) == mb::fold_simple(m)
+                    || (intl::strpos(needle, m, 0, true) == Some(0)
+                        && intl::strpos(m, needle, 0, true) == Some(0))
+            });
+        if same {
+            return Some((offset, length));
+        }
+        let previous = if i > 0 {
+            mb::strlen(intl::substr(haystack, 0, Some(i as i64 - 1)))
+        } else {
+            0
+        };
+        let i = mb::strlen(std::str::from_utf8(&bytes[..offset]).unwrap_or_default());
+        let from = (i as i64 + 1 - mb::strlen(needle) as i64)
+            .min(previous as i64 + 1)
+            .max(0);
+        let j = mb::strpos(haystack, needle, from, true)?;
+        let length = mb::substr(haystack, j as i64, Some(mb::strlen(needle) as i64)).len();
+        Some((mb::substr(haystack, 0, Some(j as i64)).len(), length))
+    }
+
+    /// `grapheme_extract($this->string, $size, GRAPHEME_EXTR_MAXBYTES,
+    /// $start)`, `''` for `false`.
+    fn extract(&self, size: usize, start: i64) -> &str {
+        intl::extract_maxbytes(&self.string, size, start).unwrap_or_default()
+    }
+}
+
+impl AbstractString for UnicodeString {
+    const UNICODE: bool = true;
+    const SPLIT_LIMIT: i64 = I32_MAX;
+
+    fn create(string: &[u8]) -> Result<Self> {
+        Self::from_bytes(string)
+    }
+
+    fn as_bytes(&self) -> &[u8] {
+        self.string.as_bytes()
+    }
+
+    fn with_string(&self, string: Vec<u8>) -> Self {
+        Self {
+            string: String::from_utf8(string)
+                .unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned()),
+            ignore_case: Some(false),
+        }
+    }
+
+    fn cloned(&self) -> Self {
+        Self {
+            string: if self.ignore_case.is_none() {
+                nfc(&self.string)
+            } else {
+                self.string.clone()
+            },
+            ignore_case: Some(false),
+        }
+    }
+
+    fn ignoring_case(&self) -> bool {
+        self.ci()
+    }
+
+    fn ignore_case(&self) -> Self {
+        let mut str = self.cloned();
+        str.ignore_case = Some(true);
+        str
+    }
+
+    fn append(&self, suffix: &[&[u8]]) -> Result<Self> {
+        self.renormalized(&[self.string.as_bytes(), &suffix.concat()].concat())
+    }
+
+    fn prepend(&self, prefix: &[&[u8]]) -> Result<Self> {
+        self.renormalized(&[prefix.concat().as_slice(), self.string.as_bytes()].concat())
+    }
+
+    fn camel(&self) -> Result<Self> {
+        au::camel(self)
+    }
+
+    fn chunk(&self, length: i64) -> Result<Vec<Self>> {
         if length < 1 {
-            return Err(InvalidArgumentException(
-                "The chunk length must be greater than zero.".to_owned(),
+            return Err(Error::invalid(
+                "The chunk length must be greater than zero.",
             ));
         }
         if self.string.is_empty() {
             return Ok(Vec::new());
         }
-        if self.string.len() <= length {
-            return Ok(vec![self.clone()]);
+        if self.string.len() as i64 <= length {
+            return Ok(vec![self.cloned()]);
         }
         let graphemes = pcre_graphemes(&self.string);
         Ok(graphemes
-            .chunks(length)
-            .map(|chunk| self.with(chunk.concat()))
+            .chunks(length as usize)
+            .map(|chunk| self.with_string(chunk.concat().into_bytes()))
             .collect())
     }
 
-    /// `split($delimiter)` (no limit, no flags): pieces between matches of
-    /// the NFC delimiter that start and end on grapheme boundaries, as
-    /// `grapheme_strpos()` finds them.
-    pub fn split(&self, delimiter: &str) -> Result<Vec<Self>, InvalidArgumentException> {
-        if delimiter.is_empty() {
-            return Err(InvalidArgumentException(
-                "Split delimiter is empty.".to_owned(),
+    fn ends_with_str(&self, suffix: &[u8]) -> bool {
+        let Some(suffix) = self.needle(suffix) else {
+            return false;
+        };
+        if suffix.is_empty() {
+            return false;
+        }
+        let start = self.string.len() as i64 - suffix.len() as i64;
+        let grapheme = self.extract(suffix.len(), start);
+        if self.ci() {
+            return mb::strpos(grapheme, &suffix, 0, true) == Some(0);
+        }
+        suffix == grapheme
+    }
+
+    fn equals_to_str(&self, string: &[u8]) -> bool {
+        let Some(string) = self.needle(string) else {
+            return false;
+        };
+        if !string.is_empty() && self.ci() {
+            return string.len() == self.string.len()
+                && mb::strpos(&self.string, &string, 0, true) == Some(0);
+        }
+        string == self.string
+    }
+
+    fn folded(&self) -> Self {
+        au::folded(self, true)
+    }
+
+    fn index_of_str(&self, needle: &[u8], offset: i64) -> Option<usize> {
+        let needle = self.needle(needle)?;
+        if needle.is_empty() {
+            return None;
+        }
+        intl::strpos(&self.string, &needle, offset, self.ci())
+    }
+
+    fn index_of_last_str(&self, needle: &[u8], offset: i64) -> Option<usize> {
+        let needle = self.needle(needle)?;
+        if needle.is_empty() {
+            return None;
+        }
+        let mut string: &str = &self.string;
+        let mut offset = offset;
+        if offset < 0 {
+            // workaround https://bugs.php.net/74264
+            offset += intl::strlen(&needle) as i64;
+            if offset < 0 {
+                string = intl::substr(string, 0, Some(offset.max(I32_MIN)));
+            }
+            offset = 0;
+        }
+        intl::strrpos(string, &needle, offset, self.ci())
+    }
+
+    fn join(&self, strings: &[&[u8]], last_glue: Option<&[u8]>) -> Result<Self> {
+        let str = au::join(self, strings, last_glue)?;
+        Ok(self.with_string(nfc(&str.string).into_bytes()))
+    }
+
+    fn length(&self) -> usize {
+        intl::strlen(&self.string)
+    }
+
+    fn lower(&self) -> Self {
+        au::lower(self)
+    }
+
+    fn matches(&self, regexp: &[u8], flags: i64, offset: i64) -> Result<Value> {
+        base::match_regex(self, regexp, flags, offset)
+    }
+
+    fn pad_both(&self, length: i64, pad: &[u8]) -> Result<Self> {
+        au::pad(self, length, pad, php::PadType::Both)
+    }
+
+    fn pad_end(&self, length: i64, pad: &[u8]) -> Result<Self> {
+        au::pad(self, length, pad, php::PadType::Right)
+    }
+
+    fn pad_start(&self, length: i64, pad: &[u8]) -> Result<Self> {
+        au::pad(self, length, pad, php::PadType::Left)
+    }
+
+    fn replace(&self, from: &[u8], to: &[u8]) -> Result<Self> {
+        let Some(from) = std::str::from_utf8(from).ok().map(nfc) else {
+            return Ok(self.cloned());
+        };
+        if from.is_empty() {
+            return Ok(self.cloned());
+        }
+        let mut tail: &str = &self.string;
+        let mut result = Vec::new();
+        while !tail.is_empty() {
+            let Some((i, length)) = self.search(tail, &from) else {
+                break;
+            };
+            result.extend_from_slice(&tail.as_bytes()[..i]);
+            result.extend_from_slice(to);
+            tail = tail.get(i + length..).unwrap_or_default();
+        }
+        result.extend_from_slice(tail.as_bytes());
+        self.renormalized(&result)
+    }
+
+    fn replace_matches(&self, from_regexp: &[u8], to: Replacement<'_>) -> Result<Self> {
+        if let Replacement::Text(t) = &to {
+            au::check_replacement(t)?;
+        }
+        let out = base::replace_regex(self.string.as_bytes(), from_regexp, self.ci(), true, to)?;
+        self.renormalized(&out)
+    }
+
+    fn reverse(&self) -> Self {
+        au::reverse(self)
+    }
+
+    fn slice(&self, start: i64, length: Option<i64>) -> Self {
+        // grapheme_substr() accepts only 32-bit offsets and lengths
+        let start = start.clamp(I32_MIN, I32_MAX);
+        let length = length.unwrap_or(I32_MAX).clamp(I32_MIN, I32_MAX);
+        self.with_string(
+            intl::substr(&self.string, start, Some(length))
+                .as_bytes()
+                .to_vec(),
+        )
+    }
+
+    fn snake(&self) -> Result<Self> {
+        au::snake(self)
+    }
+
+    fn splice(&self, replacement: &[u8], start: i64, length: Option<i64>) -> Result<Self> {
+        let start = if start != 0 {
+            intl::substr(&self.string, 0, Some(start.clamp(I32_MIN, I32_MAX))).len() as i64
+        } else {
+            0
+        };
+        let length = match length {
+            Some(l) if l != 0 => {
+                let rest = self.string.get(start as usize..).unwrap_or_default();
+                Some(intl::substr(rest, 0, Some(l.clamp(I32_MIN, I32_MAX))).len() as i64)
+            }
+            other => other,
+        };
+        let out = php::substr_replace(
+            self.string.as_bytes(),
+            replacement,
+            start,
+            Some(length.unwrap_or(I32_MAX)),
+        );
+        self.renormalized(&out)
+    }
+
+    fn split_str(&self, delimiter: &[u8], limit: i64) -> Result<Vec<Self>> {
+        let Ok(delimiter) = std::str::from_utf8(delimiter).map(nfc) else {
+            return Err(Error::invalid(
+                "Split delimiter is not a valid UTF-8 string.",
             ));
-        }
-        let delimiter: String = delimiter.nfc().collect();
+        };
+        let mut tail: &str = &self.string;
         let mut chunks = Vec::new();
-        let mut tail = self.string.as_str();
-        while let Some(at) = grapheme_find(tail, &delimiter) {
-            chunks.push(self.with(tail[..at].to_owned()));
-            tail = &tail[at + delimiter.len()..];
+        let mut limit = limit;
+        while limit > 1 {
+            let Some((i, length)) = self.search(tail, &delimiter) else {
+                break;
+            };
+            chunks.push(self.with_string(tail.as_bytes()[..i].to_vec()));
+            tail = tail.get(i + length..).unwrap_or_default();
+            limit -= 1;
         }
-        chunks.push(self.with(tail.to_owned()));
+        chunks.push(self.with_string(tail.as_bytes().to_vec()));
         Ok(chunks)
     }
 
-    /// `wordwrap($width, $break, $cut)`: PHP's `wordwrap()` run on a mask of
-    /// the graphemes, so a grapheme is never split.
-    pub fn wordwrap(
-        &self,
-        width: usize,
-        brk: &str,
-        cut: bool,
-    ) -> Result<Self, InvalidArgumentException> {
-        let lines = if brk.is_empty() {
-            vec![self.clone()]
-        } else {
-            self.split(brk)?
+    fn starts_with_str(&self, prefix: &[u8]) -> bool {
+        let Some(prefix) = self.needle(prefix) else {
+            return false;
         };
-        if lines.len() == 1 && lines[0].string.is_empty() {
-            return Ok(lines[0].clone());
+        if prefix.is_empty() {
+            return false;
         }
-        let mut chars: Vec<String> = Vec::new();
-        let mut mask = Vec::new();
-        for (index, line) in lines.iter().enumerate() {
-            if index > 0 {
-                chars.push(brk.to_owned());
-                mask.push(b'#');
-            }
-            for grapheme in pcre_graphemes(&line.string) {
-                chars.push(grapheme.to_owned());
-                mask.push(if grapheme == " " { b' ' } else { b'?' });
-            }
+        let grapheme = self.extract(prefix.len(), 0);
+        if self.ci() {
+            return mb::strpos(grapheme, &prefix, 0, true) == Some(0);
         }
-        // wordwrap() does not recognize a break at the very end of its
-        // input and counts it as part of the last line.
-        let kept = mask.len() - mask.iter().rev().take_while(|&&b| b == b'#').count();
-        let mut wrapped = php::wordwrap(&mask[..kept], width, b'#', cut);
-        wrapped.extend_from_slice(&mask[kept..]);
-
-        let mut string = String::new();
-        let mut j = 0;
-        let mut i: isize = -1;
-        for (b, _) in wrapped.iter().enumerate().filter(|(_, c)| **c == b'#') {
-            i += 1;
-            while (i as usize) < b {
-                if let Some(c) = chars.get(j) {
-                    string.push_str(c);
-                }
-                j += 1;
-                i += 1;
-            }
-            if chars.get(j).is_some_and(|c| c == brk || c == " ") {
-                j += 1;
-            }
-            string.push_str(brk);
-        }
-        for c in chars.iter().skip(j) {
-            string.push_str(c);
-        }
-        Ok(self.with(string))
+        prefix == grapheme
     }
 
-    /// `width($ignoreAnsiDecoration)`: the widest line, in terminal columns.
-    pub fn width(&self, ignore_ansi_decoration: bool) -> usize {
-        let mut s = self.string.clone();
-        if ignore_ansi_decoration && s.contains('\x07') {
-            s = remove_bel_osc(&s);
+    fn title(&self, all_words: bool) -> Result<Self> {
+        au::title(self, all_words)
+    }
+
+    fn trim(&self, chars: Option<&[u8]>) -> Result<Self> {
+        au::trim(self, chars, true, true)
+    }
+
+    fn trim_end(&self, chars: Option<&[u8]>) -> Result<Self> {
+        au::trim(self, chars, false, true)
+    }
+
+    fn trim_start(&self, chars: Option<&[u8]>) -> Result<Self> {
+        au::trim(self, chars, true, false)
+    }
+
+    fn trim_prefix(&self, prefix: impl Into<Needle>) -> Result<Self> {
+        let prefix = match prefix.into() {
+            Needle::One(p) => Needle::One(match std::str::from_utf8(&p) {
+                Ok(s) => nfc(s).into_bytes(),
+                Err(_) => p,
+            }),
+            many => many,
+        };
+        if !self.ci() {
+            return base_trim_prefix(self, prefix);
         }
-        s.retain(|c| !matches!(c, '\x00' | '\x05' | '\x07'));
-        if s.contains('\r') {
-            s = s.replace("\r\n", "\n").replace('\r', "\n");
+        au::trim_affix_ignore_case(self, prefix, false)
+    }
+
+    fn trim_suffix(&self, suffix: impl Into<Needle>) -> Result<Self> {
+        let suffix = match suffix.into() {
+            Needle::One(x) => Needle::One(match std::str::from_utf8(&x) {
+                Ok(s) => nfc(s).into_bytes(),
+                Err(_) => x,
+            }),
+            many => many,
+        };
+        if !self.ci() {
+            return base_trim_suffix(self, suffix);
         }
-        if !ignore_ansi_decoration {
-            s.retain(|c| !is_cc(c));
-        }
-        let mut width = 0;
-        for line in s.split('\n') {
-            let line = if ignore_ansi_decoration {
-                remove_ansi(line)
-            } else {
-                line.to_owned()
-            };
-            let line_width = wcswidth(&line);
-            if line_width > width as i64 {
-                width = line_width as usize;
-            }
-        }
-        width
+        au::trim_affix_ignore_case(self, suffix, true)
+    }
+
+    fn upper(&self) -> Self {
+        au::upper(self)
+    }
+
+    fn width(&self, ignore_ansi_decoration: bool) -> usize {
+        au::width(&self.string, ignore_ansi_decoration)
     }
 }
 
@@ -226,19 +507,6 @@ impl std::fmt::Display for UnicodeString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(&self.string)
     }
-}
-
-/// The first match of `needle` in `haystack` that starts and ends on a
-/// grapheme boundary of `haystack`.
-fn grapheme_find(haystack: &str, needle: &str) -> Option<usize> {
-    let boundaries: Vec<usize> = haystack
-        .grapheme_indices(true)
-        .map(|(at, _)| at)
-        .chain(std::iter::once(haystack.len()))
-        .collect();
-    boundaries.iter().copied().find(|&at| {
-        haystack[at..].starts_with(needle) && boundaries.binary_search(&(at + needle.len())).is_ok()
-    })
 }
 
 /// Extended grapheme clusters as PCRE2 10.44's `\X` finds them, which
@@ -290,7 +558,7 @@ fn pcre_breaks_between(p: char, c: char) -> bool {
     if is_regional_indicator(p) {
         return !is_regional_indicator(c);
     }
-    let pictographic = in_table(tables::EXTPICT, c as u32);
+    let pictographic = crate::abstract_unicode_string::in_table(crate::tables::EXTPICT, c as u32);
     if is_prepend(p) && pictographic {
         return true;
     }
@@ -298,189 +566,4 @@ fn pcre_breaks_between(p: char, c: char) -> bool {
     // character that does not extend, is not an emoji after ZWJ (GB11) and
     // not a regional indicator was joined by GB9c alone.
     extends(p) && !extends(c) && !(p == '\u{200D}' && pictographic) && !is_regional_indicator(c)
-}
-
-/// `\p{Cc}` or DEL: C0 and C1 controls.
-fn is_cc(c: char) -> bool {
-    matches!(c, '\u{0}'..='\u{1F}' | '\u{7F}'..='\u{9F}')
-}
-
-/// `preg_replace('/\x1B\][^\x07\x1B\n\r]*+\x07/', '', $s)`.
-fn remove_bel_osc(s: &str) -> String {
-    let mut out = String::with_capacity(s.len());
-    let mut rest = s;
-    while let Some(at) = rest.find("\x1B]") {
-        let body = &rest[at + 2..];
-        let end = body
-            .find(['\x07', '\x1B', '\n', '\r'])
-            .filter(|&e| body[e..].starts_with('\x07'));
-        match end {
-            Some(e) => {
-                out.push_str(&rest[..at]);
-                rest = &body[e + 1..];
-            }
-            None => {
-                out.push_str(&rest[..at + 2]);
-                rest = body;
-            }
-        }
-    }
-    out.push_str(rest);
-    out
-}
-
-/// The per-line `preg_replace()` of `width()`: escape sequences (CSI; DCS,
-/// OSC, SOS, PM and APC up to ST; any other ESC with its intermediate and
-/// final bytes) and runs of control characters.
-fn remove_ansi(line: &str) -> String {
-    let bytes = line.as_bytes();
-    let mut out = String::with_capacity(line.len());
-    let mut at = 0;
-    let in_range = |b: u8, lo: u8, hi: u8| (lo..=hi).contains(&b);
-    while at < bytes.len() {
-        if bytes[at] == 0x1B {
-            let next = at + 1;
-            // \[ [\x30-\x3F]*+ [\x20-\x2F]*+ [\x40-\x7E]
-            if bytes.get(next) == Some(&b'[') {
-                let mut k = next + 1;
-                while bytes.get(k).is_some_and(|&b| in_range(b, 0x30, 0x3F)) {
-                    k += 1;
-                }
-                while bytes.get(k).is_some_and(|&b| in_range(b, 0x20, 0x2F)) {
-                    k += 1;
-                }
-                if bytes.get(k).is_some_and(|&b| in_range(b, 0x40, 0x7E)) {
-                    at = k + 1;
-                    continue;
-                }
-            }
-            // [P\]X^_] .*? \x1B\\
-            if bytes.get(next).is_some_and(|b| b"P]X^_".contains(b))
-                && let Some(end) = line[next + 1..].find("\x1B\\")
-            {
-                at = next + 1 + end + 2;
-                continue;
-            }
-            // [\x20-\x2F]*+ [\x30-\x7E]?
-            let mut k = next;
-            while bytes.get(k).is_some_and(|&b| in_range(b, 0x20, 0x2F)) {
-                k += 1;
-            }
-            if bytes.get(k).is_some_and(|&b| in_range(b, 0x30, 0x7E)) {
-                k += 1;
-            }
-            at = k;
-            continue;
-        }
-        let c = line[at..].chars().next().unwrap_or('\0');
-        if !is_cc(c) {
-            out.push(c);
-        }
-        at += c.len_utf8();
-    }
-    out
-}
-
-/// `EMOJI_REGEX` (PCRE2 10.40 and later): `[\p{ExtPict}\x{1F1E6}-\x{1F1FF}#*0-9]`.
-fn is_emoji(c: char) -> bool {
-    let cp = c as u32;
-    matches!(c, '#' | '*' | '0'..='9')
-        || (0x1F1E6..=0x1F1FF).contains(&cp)
-        || in_table(tables::EXTPICT, cp)
-}
-
-fn in_table(table: &[(u32, u32)], cp: u32) -> bool {
-    table
-        .binary_search_by(|&(lo, hi)| {
-            if hi < cp {
-                std::cmp::Ordering::Less
-            } else if lo > cp {
-                std::cmp::Ordering::Greater
-            } else {
-                std::cmp::Ordering::Equal
-            }
-        })
-        .is_ok()
-}
-
-/// `wcswidth()`: -1 if a control character remains.
-fn wcswidth(string: &str) -> i64 {
-    let mut width = 0i64;
-    let mut last_char: Option<char> = None;
-    let mut last_width = 0;
-    let mut joined = false;
-    // A character after which ZWJ, VS16 or a skin tone joins: non-ASCII
-    // (`1 < strlen($lastChar)`) and an emoji.
-    let joinable = |c: Option<char>| c.is_some_and(|c| !c.is_ascii() && is_emoji(c));
-    for c in string.chars() {
-        if joined {
-            joined = false;
-            if !c.is_ascii() && is_emoji(c) {
-                continue;
-            }
-        }
-        let cp = c as u32;
-        if (0x20..0x7F).contains(&cp) {
-            width += 1;
-            last_char = Some(c);
-            last_width = 1;
-            continue;
-        }
-        if cp == 0
-            || cp == 0x034F
-            || cp == 0x061C
-            || (0x1160..=0x11FF).contains(&cp)
-            || cp == 0x180E
-            || (0x200B..=0x200F).contains(&cp)
-            || cp == 0x2028
-            || cp == 0x2029
-            || (0x202A..=0x202E).contains(&cp)
-            || (0x2060..=0x206F).contains(&cp)
-            || (0xD7B0..=0xD7FF).contains(&cp)
-            || cp == 0xFEFF
-            || (0xFFF0..=0xFFFB).contains(&cp)
-        {
-            joined = cp == 0x200D && joinable(last_char);
-            continue;
-        }
-        if cp < 0xA0 {
-            return -1;
-        }
-        if cp == 0xFE0F {
-            if last_char.is_some_and(is_emoji) && last_width == 1 {
-                width += 1;
-                last_width = 2;
-            }
-            continue;
-        }
-        if cp > 0xFFFF {
-            if (0x13430..=0x1343F).contains(&cp)
-                || (0x1BCA0..=0x1BCA3).contains(&cp)
-                || (0x1D173..=0x1D17A).contains(&cp)
-                || (0xE0000..=0xE0FFF).contains(&cp)
-            {
-                continue;
-            }
-            if (0x1F3FB..=0x1F3FF).contains(&cp) && joinable(last_char) {
-                if last_width == 1 {
-                    width += 1;
-                    last_width = 2;
-                }
-                continue;
-            }
-        }
-        if in_table(tables::ZERO, cp) {
-            continue;
-        }
-        if in_table(tables::WIDE, cp) {
-            width += 2;
-            last_char = Some(c);
-            last_width = 2;
-            continue;
-        }
-        width += 1;
-        last_char = Some(c);
-        last_width = 1;
-    }
-    width
 }

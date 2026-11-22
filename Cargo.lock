@@ -622,6 +622,7 @@ dependencies = [
 name = "symfony-string"
 version = "0.1.0"
 dependencies = [
+ "php-pcre",
  "php-value",
  "serde_json",
  "unicode-normalization",
