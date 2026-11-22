@@ -8,8 +8,10 @@ description = "A tested subset of Symfony HttpFoundation and PHP request semanti
 
 [dependencies]
 axum = "0.8.9"
+php-value = { path = "../php-value" }
 
 [dev-dependencies]
+php-value = { path = "../php-value", features = ["vectors"] }
 base64 = "0.23.1"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.154", features = ["preserve_order", "unbounded_depth"] }
