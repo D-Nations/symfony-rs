@@ -9,7 +9,7 @@
 //!
 //! Upstream: symfony/console Formatter/OutputFormatter.php Formatter/OutputFormatterInterface.php Formatter/WrappableOutputFormatterInterface.php
 
-use symfony_string::UnicodeString;
+use symfony_string::{AbstractString, UnicodeString};
 
 use super::{
     output_formatter_style::OutputFormatterStyle,
@@ -274,7 +274,7 @@ impl OutputFormatter {
 /// `b($text)->toUnicodeString()->wordwrap($width, "\n", true)`.
 fn add_line_breaks(text: &str, width: usize) -> String {
     UnicodeString::new(text)
-        .wordwrap(width, "\n", true)
+        .wordwrap(i64::try_from(width).unwrap_or(i64::MAX), "\n", true)
         .map(UnicodeString::into_string)
         .unwrap_or_else(|_| text.to_owned())
 }

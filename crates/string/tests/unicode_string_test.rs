@@ -1,141 +1,447 @@
-//! UnicodeStringTest's tests of the methods ported here (`testLength`,
-//! `testSlice`, `testChunk`, `testWidth`, `testWordwrap`, inherited from
-//! AbstractAsciiTestCase), on upstream's own provider rows as the oracle
-//! returns them (tests/data/unicode_string_test.json, `scripts/record.sh
-//! string`). Names and assertions are upstream's.
+//! Port of symfony/string's UnicodeStringTest: AbstractAsciiTestCase's and
+//! AbstractUnicodeTestCase's tests on UnicodeString with
+//! UnicodeStringTest's providers (tests/data/unicode_string_test.json),
+//! and UnicodeStringTest's own tests.
 //!
-//! Upstream: symfony/string Tests/UnicodeStringTest.php Tests/AbstractUnicodeTestCase.php Tests/AbstractAsciiTestCase.php
+//! Upstream: symfony/string Tests/UnicodeStringTest.php
 #![allow(non_snake_case)]
 
-use php_value::{Value, vectors::decode};
-use serde_json::Value as Json;
-use symfony_string::UnicodeString;
+mod common;
 
-fn provider(test: &str) -> Vec<(String, Vec<Value>)> {
-    let json: Json = serde_json::from_str(include_str!("data/unicode_string_test.json"))
-        .unwrap_or_else(|e| panic!("unicode_string_test.json: {e}"));
-    json[test]["rows"]
-        .as_array()
-        .unwrap_or_else(|| panic!("no provider for {test}"))
-        .iter()
-        .map(|row| {
-            let name = row[0].as_str().unwrap_or_default().to_owned();
-            let args = row[1]
-                .as_array()
-                .unwrap_or_else(|| panic!("{test}: arguments"))
-                .iter()
-                .map(|a| decode(a).unwrap_or_else(|e| panic!("{test}: {e:?}")))
-                .collect();
-            (name, args)
-        })
-        .collect()
-}
+ascii_tests!(
+    symfony_string::UnicodeString,
+    include_str!("data/unicode_string_test.json"),
+    normalize: |s: &S, form: i64| -> S { common::UnicodeMethods::normalize_form(s, form) }
+);
+unicode_tests!();
 
-/// A string, or a symfony/string object's text (recorded as its `string`
-/// property).
-fn text(value: &Value) -> String {
-    if let Some(object) = value.as_object() {
-        let property = object
-            .properties()
-            .get(&"string".into())
-            .cloned()
-            .unwrap_or_default();
-        return text(&property);
-    }
-    let bytes = value
-        .as_string()
-        .unwrap_or_else(|| panic!("not a string: {value:?}"));
-    String::from_utf8(bytes.to_vec()).unwrap_or_else(|e| panic!("not UTF-8: {e}"))
-}
-
-fn int(value: &Value) -> i64 {
-    match value {
-        Value::Int(i) => *i,
-        other => panic!("not an int: {other:?}"),
-    }
-}
-
-/// `static::createFromString($string)`.
-fn create(value: &Value) -> UnicodeString {
-    UnicodeString::new(&text(value))
+#[test]
+fn testCreateFromString() {
+    run_testCreateFromString();
 }
 
 #[test]
-fn testLength() {
-    let rows = provider("testLength");
-    assert_eq!(rows.len(), 10);
-    for (name, args) in rows {
-        // Upstream skips this row where grapheme_strlen('च्छे') is not 2
-        // (ICU-21661); unicode-segmentation joins Indic conjuncts (GB9c).
-        if UnicodeString::new("च्छे").length() != 2 && text(&args[1]) == "अनुच्छेद"
-        {
-            continue;
-        }
-        assert_eq!(create(&args[1]).length() as i64, int(&args[0]), "{name}");
-    }
+fn testCreateFromEmptyString() {
+    run_testCreateFromEmptyString();
 }
 
 #[test]
-fn testSlice() {
-    let rows = provider("testSlice");
-    assert_eq!(rows.len(), 25);
-    for (name, args) in rows {
-        let length = match args.get(3) {
-            None | Some(Value::Null) => None,
-            Some(v) => Some(int(v)),
-        };
-        assert_eq!(
-            create(&args[0]),
-            create(&args[1]).slice(int(&args[2]), length),
-            "{name}"
-        );
-    }
+fn testBytesAt() {
+    run_testBytesAt();
 }
 
 #[test]
-fn testChunk() {
-    let rows = provider("testChunk");
-    assert_eq!(rows.len(), 10);
-    for (name, args) in rows {
-        let expected: Vec<UnicodeString> = args[1]
-            .as_array()
-            .unwrap_or_else(|| panic!("{name}: chunks"))
-            .values()
-            .map(create)
-            .collect();
-        let length = usize::try_from(int(&args[2])).unwrap_or_else(|e| panic!("{e}"));
-        let actual = create(&args[0])
-            .chunk(length)
-            .unwrap_or_else(|e| panic!("{name}: {e}"));
-        assert_eq!(expected, actual, "{name}");
-    }
+fn testContainsAny() {
+    run_testContainsAny();
 }
 
 #[test]
-fn testWidth() {
-    let rows = provider("testWidth");
-    assert_eq!(rows.len(), 57);
-    for (name, args) in rows {
-        let ignore = !matches!(args.get(2), Some(Value::Bool(false)));
-        assert_eq!(
-            create(&args[1]).width(ignore) as i64,
-            int(&args[0]),
-            "{name}: {:?}",
-            text(&args[1])
-        );
-    }
+fn testContainsAnyIgnoreCase() {
+    run_testContainsAnyIgnoreCase();
+}
+
+#[test]
+fn testUnwrap() {
+    run_testUnwrap();
 }
 
 #[test]
 fn testWordwrap() {
-    let rows = provider("testWordwrap");
-    assert_eq!(rows.len(), 9);
-    for (name, args) in rows {
-        let cut = matches!(args.get(4), Some(Value::Bool(true)));
-        let width = usize::try_from(int(&args[2])).unwrap_or_else(|e| panic!("{e}"));
-        let actual = create(&args[1])
-            .wordwrap(width, &text(&args[3]), cut)
-            .unwrap_or_else(|e| panic!("{name}: {e}"));
-        assert_eq!(create(&args[0]), actual, "{name}");
-    }
+    run_testWordwrap();
+}
+
+#[test]
+fn testWrap() {
+    run_testWrap();
+}
+
+#[test]
+fn testLength() {
+    run_testLength();
+}
+
+#[test]
+fn testIndexOf() {
+    run_testIndexOf();
+}
+
+#[test]
+fn testIndexOfIgnoreCase() {
+    run_testIndexOfIgnoreCase();
+}
+
+#[test]
+fn testIndexOfLast() {
+    run_testIndexOfLast();
+}
+
+#[test]
+fn testIndexOfLastIgnoreCase() {
+    run_testIndexOfLastIgnoreCase();
+}
+
+#[test]
+fn testSplit() {
+    run_testSplit();
+}
+
+#[test]
+fn testInvalidChunkLength() {
+    run_testInvalidChunkLength();
+}
+
+#[test]
+fn testChunk() {
+    run_testChunk();
+}
+
+#[test]
+fn testLower() {
+    run_testLower();
+}
+
+#[test]
+fn testUpper() {
+    run_testUpper();
+}
+
+#[test]
+fn testTitle() {
+    run_testTitle();
+}
+
+#[test]
+fn testSlice() {
+    run_testSlice();
+}
+
+#[test]
+fn testSplice() {
+    run_testSplice();
+}
+
+#[test]
+fn testAppend() {
+    run_testAppend();
+}
+
+#[test]
+fn testPrepend() {
+    run_testPrepend();
+}
+
+#[test]
+fn testTrim() {
+    run_testTrim();
+}
+
+#[test]
+fn testTrimPrefix() {
+    run_testTrimPrefix();
+}
+
+#[test]
+fn testTrimStart() {
+    run_testTrimStart();
+}
+
+#[test]
+fn testTrimSuffix() {
+    run_testTrimSuffix();
+}
+
+#[test]
+fn testTrimEnd() {
+    run_testTrimEnd();
+}
+
+#[test]
+fn testBeforeAfter() {
+    run_testBeforeAfter();
+}
+
+#[test]
+fn testBeforeAfterIgnoreCase() {
+    run_testBeforeAfterIgnoreCase();
+}
+
+#[test]
+fn testBeforeAfterLast() {
+    run_testBeforeAfterLast();
+}
+
+#[test]
+fn testBeforeAfterLastIgnoreCase() {
+    run_testBeforeAfterLastIgnoreCase();
+}
+
+#[test]
+fn testFolded() {
+    run_testFolded();
+}
+
+#[test]
+fn testReplace() {
+    run_testReplace();
+}
+
+#[test]
+fn testReplaceMatches() {
+    run_testReplaceMatches();
+}
+
+#[test]
+fn testReplaceIgnoreCase() {
+    run_testReplaceIgnoreCase();
+}
+
+#[test]
+fn testCamel() {
+    run_testCamel();
+}
+
+#[test]
+fn testSnake() {
+    run_testSnake();
+}
+
+#[test]
+fn testKebab() {
+    run_testKebab();
+}
+
+#[test]
+fn testPascal() {
+    run_testPascal();
+}
+
+#[test]
+fn testStartsWith() {
+    run_testStartsWith();
+}
+
+#[test]
+fn testStartsWithIgnoreCase() {
+    run_testStartsWithIgnoreCase();
+}
+
+#[test]
+fn testEndsWith() {
+    run_testEndsWith();
+}
+
+#[test]
+fn testEndsWithIgnoreCase() {
+    run_testEndsWithIgnoreCase();
+}
+
+#[test]
+fn testEnsureStart() {
+    run_testEnsureStart();
+}
+
+#[test]
+fn testEnsureStartIgnoreCase() {
+    run_testEnsureStartIgnoreCase();
+}
+
+#[test]
+fn testEnsureEnd() {
+    run_testEnsureEnd();
+}
+
+#[test]
+fn testEnsureEndIgnoreCase() {
+    run_testEnsureEndIgnoreCase();
+}
+
+#[test]
+fn testCollapseWhitespace() {
+    run_testCollapseWhitespace();
+}
+
+#[test]
+fn testEqualsTo() {
+    run_testEqualsTo();
+}
+
+#[test]
+fn testEqualsToIgnoreCase() {
+    run_testEqualsToIgnoreCase();
+}
+
+#[test]
+fn testIsEmpty() {
+    run_testIsEmpty();
+}
+
+#[test]
+fn testJoin() {
+    run_testJoin();
+}
+
+#[test]
+fn testJoinWithLastGlue() {
+    run_testJoinWithLastGlue();
+}
+
+#[test]
+fn testRepeat() {
+    run_testRepeat();
+}
+
+#[test]
+fn testPadBoth() {
+    run_testPadBoth();
+}
+
+#[test]
+fn testPadEnd() {
+    run_testPadEnd();
+}
+
+#[test]
+fn testPadStart() {
+    run_testPadStart();
+}
+
+#[test]
+fn testTruncate() {
+    run_testTruncate();
+}
+
+#[test]
+fn testToString() {
+    run_testToString();
+}
+
+#[test]
+fn testReverse() {
+    run_testReverse();
+}
+
+#[test]
+fn testWidth() {
+    run_testWidth();
+}
+
+#[test]
+fn testToByteString() {
+    run_testToByteString();
+}
+
+#[test]
+fn testCreateFromStringWithInvalidUtf8Input() {
+    run_testCreateFromStringWithInvalidUtf8Input();
+}
+
+#[test]
+fn testCodePointsAt() {
+    run_testCodePointsAt();
+}
+
+#[test]
+fn testTrimWithInvalidUtf8CharList() {
+    run_testTrimWithInvalidUtf8CharList();
+}
+
+#[test]
+fn testTrimStartWithInvalidUtf8CharList() {
+    run_testTrimStartWithInvalidUtf8CharList();
+}
+
+#[test]
+fn testTrimEndWithInvalidUtf8CharList() {
+    run_testTrimEndWithInvalidUtf8CharList();
+}
+
+#[test]
+fn testAppendInvalidUtf8String() {
+    run_testAppendInvalidUtf8String();
+}
+
+#[test]
+fn testPrependInvalidUtf8String() {
+    run_testPrependInvalidUtf8String();
+}
+
+#[test]
+fn testReplaceWithInvalidUtf8Pattern() {
+    run_testReplaceWithInvalidUtf8Pattern();
+}
+
+#[test]
+fn testReplaceWithInvalidUtf8PatternReplacement() {
+    run_testReplaceWithInvalidUtf8PatternReplacement();
+}
+
+#[test]
+fn testSpliceMultibyte() {
+    run_testSpliceMultibyte();
+}
+
+use symfony_string::UnicodeString;
+
+#[test]
+fn testTrimPrefixNormalization() {
+    // "é" in NFC (\xC3\xA9) vs NFD (\x65\xCC\x81); the provider's
+    // UnicodeString, array and Stringable rows are the same prefix
+    let (nfc, nfd) = ("\u{E9}", "e\u{301}");
+    let str = UnicodeString::new(&format!("{nfc}abc"));
+    assert_eq!(
+        b"abc",
+        str.trim_prefix(nfd).unwrap().as_bytes(),
+        "nfc_string_nfd_prefix"
+    );
+    let str = UnicodeString::new(&format!("{nfd}abc"));
+    assert_eq!(
+        b"abc",
+        str.trim_prefix(nfc).unwrap().as_bytes(),
+        "nfd_string_nfc_prefix"
+    );
+    let str = UnicodeString::new(&format!("{nfc}abc"));
+    assert_eq!(
+        b"abc",
+        str.trim_prefix(&UnicodeString::new(nfd))
+            .unwrap()
+            .as_bytes(),
+        "abstract_string"
+    );
+    assert_eq!(b"abc", str.trim_prefix([nfd]).unwrap().as_bytes(), "array");
+    assert_eq!(
+        b"abc",
+        str.trim_prefix(nfd.to_owned()).unwrap().as_bytes(),
+        "stringable"
+    );
+}
+
+#[test]
+fn testTrimSuffixNormalization() {
+    let (nfc, nfd) = ("\u{E9}", "e\u{301}");
+    let str = UnicodeString::new(&format!("abc{nfd}"));
+    assert_eq!(
+        b"abc",
+        str.trim_suffix(nfd).unwrap().as_bytes(),
+        "nfc_string_nfd_prefix"
+    );
+    let str = UnicodeString::new(&format!("abc{nfc}"));
+    assert_eq!(
+        b"abc",
+        str.trim_suffix(nfc).unwrap().as_bytes(),
+        "nfd_string_nfc_prefix"
+    );
+    let str = UnicodeString::new(&format!("abc{nfd}"));
+    assert_eq!(
+        b"abc",
+        str.trim_suffix(&UnicodeString::new(nfd))
+            .unwrap()
+            .as_bytes(),
+        "abstract_string"
+    );
+    assert_eq!(b"abc", str.trim_suffix([nfd]).unwrap().as_bytes(), "array");
+    assert_eq!(
+        b"abc",
+        str.trim_suffix(nfd.to_owned()).unwrap().as_bytes(),
+        "stringable"
+    );
 }

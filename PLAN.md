@@ -556,6 +556,14 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     X3's `XmlUtils` reports a refusal as `XmlParsingException` carrying
     the refusal's text, listed as a difference in the crate README.
 
+15. **`ByteString::fromRandom()`'s randomness (String).** PHP's
+    `Random\Randomizer` reads the operating system's CSPRNG; std has no
+    such API and no crate in the lock reaches it. Recommended: the caller
+    passes the random bytes (`from_random(length, alphabet, random)`),
+    each output byte still chosen uniformly from the alphabet, and the
+    application or converter runtime supplies its OS source. Alternative:
+    add `getrandom` (a stack row then) so the port reads the OS itself.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -646,6 +654,7 @@ Stack rows (searched November 19):
 | PHP request parsing (`query`, `cookies`, `multipart`; M1-D provenance gate) | [serde_qs](https://github.com/nicklaswj/serde_qs) (Rack/qs brackets, repeated keys collected into a `Vec`), [serde-querystring](https://docs.rs/serde-querystring) ("brackets like PHP", no name rewriting or limits), `form_urlencoded` (pairs only), [multer](https://crates.io/crates/multer) (strict RFC 7578 multipart) | Rewritten here from the PHP manual and recorded PHP answers, no dependency | None has PHP's name rewriting (`.`/space/unclosed `[` to `_`), its integer-key and next-index rules, its separate query/body/cookie limits, cookie first-wins, or its lenient multipart reading (`--boundary--` not ending the body, partial-line delimiters); php-src is excluded by decision 8 ([docs/milestones/m1-d-request-rewrite.md](docs/milestones/m1-d-request-rewrite.md)) |
 | Console (M1-B subset; searched November 20) | No Rust port of Symfony Console (searches find only the PHP original and Node ports such as [symfony-style-console](https://www.npmjs.org/package/symfony-style-console)); [clap](https://docs.rs/clap) (its own argv grammar, errors and help), [clap_complete](https://docs.rs/clap_complete) (its own completion protocol), [comfy-table](https://github.com/Nukesor/comfy-table) / tabled (their own layout and wrapping); symfony-demo-rs's `src/console` (a partial port arranged around the demo's commands) | Port on `php-value`, no dependency; move the demo's measured width table in | None reproduces Symfony's ArrayInput/ArgvInput binding and messages, SymfonyStyle's blocks and spacing, Table's layout, or `_complete`'s input model. Process: none of the three commands M1-B needs (Yaml `lint:yaml`, Dotenv `debug:dotenv` and `dotenv:dump`) uses symfony/process, so M1-B ports no Process behaviour |
 | String's Unicode layer for Console (owner, November 20) | [unicode-normalization](https://docs.rs/unicode-normalization) + [unicode-segmentation](https://docs.rs/unicode-segmentation) (unicode-rs, no dependencies; the demo already uses unicode-segmentation) vs tables extracted from the oracle's ICU and PCRE2 with hand-written UAX #29 and NFC | The two crates, checked against the oracle | They match ICU 72.1 on all 13,233 NFC cases and 4,105 grapheme sequences; PCRE2's `\X` (used by `chunk()`) is reproduced by splitting their clusters where PCRE2 does, matching all 4,105. Remaining differences come from their newer Unicode data (95 code points assigned after 15.0, and Indic conjuncts in `length()`), listed in crates/string/README.md |
+| String's case mappings, NFKC_CF and patterns (November 22) | Rust's `char::to_lowercase()` / `to_uppercase()` (its own Unicode version, no title case or folding), [unicase](https://docs.rs/unicase) / [caseless](https://docs.rs/caseless) (folding only), [icu_casemap](https://docs.rs/icu_casemap) + icu_normalizer (ICU4X: complete, but a large dependency tree and newer data than the oracle's ICU 72.1), tables recorded from the oracle; for `match()`, `replaceMatches()` and flagged `split()`: Finder's PCRE translator | Tables of mbstring's lower, upper, title and fold mappings, ICU's NFKC_CF and the final sigma properties, recorded per code point (`scripts/gen-string-tables.py`); Finder's `pcre.rs` moved into a `php-pcre` crate both use | The tables are PHP's own answers for every code point (11,881 differ from identity), so case results cannot drift with a crate's Unicode version; no new crate in the lock. symfony-finder re-exports php-pcre unchanged; `\p{..}` inside a class is now translated as outside one |
 | CssSelector (searched November 20) | No Rust port of Symfony CssSelector or Python cssselect. [css-to-xpath](https://docs.rs/css-to-xpath) (Servo's `selectors`/`cssparser`, its own XPath shapes, Generic/Html/Xhtml modes, no nested `:has()`); [selectors](https://docs.rs/selectors) / [scraper](https://docs.rs/scraper) (match against a DOM, no XPath); scrapling's translator (cssselect-like, tied to its crate); cssifier / xcss (XPath to CSS, the other direction) | Port on `php-value` and `regex` (bytes, `(?-u)`), no new dependency | None produces Symfony's XPath strings, node string forms, specificity, `ParseException` texts with token positions, PHP truthiness (`"0"`), byte-wise patterns or the LRU cache |
 | OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
 | Finder (searched November 20) | No Rust port of Symfony Finder. Walkers: [walkdir](https://docs.rs/walkdir) (depth-first, sorting, symlink loops), [ignore](https://docs.rs/ignore) (ripgrep's walker with its own gitignore rules and parallelism), [jwalk](https://docs.rs/jwalk); globs: [globset](https://docs.rs/globset), [glob](https://docs.rs/glob), [wax](https://docs.rs/wax). Regex for the PCRE patterns Finder builds and accepts (`Glob`/`Gitignore` emit lookaround, possessive quantifiers, `$f`): `regex` (no lookaround), [fancy-regex](https://docs.rs/fancy-regex) 0.20 (backtracking, lookaround, atomic and possessive, a bytes mode with ASCII classes), [pcre2](https://docs.rs/pcre2) (FFI, excluded by decision 5) | Port, walking with `std::fs`; `fancy-regex` under a PHP-pattern translator (`crates/finder/src/pcre.rs`) | Finder's order of filters and stat calls (pinned by upstream's stream-wrapper log tests), stream wrappers, `SplFileInfo` relative paths, its own gitignore regexes and Glob's regex text are its behaviour, so no walker or glob crate reproduces them. `fancy-regex` is the regex engine decision 5 names for lookaround; the translator keeps PCRE's meaning (bytes without `/u`, `$` before a final newline, `/x`, `/U`, `/n`, literal `{`) and refuses what it does not translate; checked on 137 patterns x 62 subjects recorded from PHP |
@@ -813,6 +822,18 @@ Stack rows (searched November 19):
       PCRE translator checked on recorded `preg_match` answers; the
       date grammar is a subset (decision 13). No advisories listed for
       symfony/finder.
+- [ ] String (`symfony-string`). Done: ByteString, CodePointString,
+      UnicodeString, AbstractString (with TruncateMode), AbstractUnicodeString,
+      the exceptions and `u()` / `b()` / `s()`: ByteStringTest 68 of 68,
+      CodePointStringTest 73 of 78, UnicodeStringTest 75 of 81 (1 `n/a`),
+      FunctionsTest 3 of 3 (219 of 266), every provider replayed from the
+      oracle, plus 59,808 recorded positions and 4,208 calls of the PHP
+      functions they use, and mbstring's and ICU's mappings of every code
+      point ([m1-string.md](docs/milestones/m1-string.md)). Console keeps
+      passing on the new API. Pending: `ascii()` and the `locale*()` methods
+      (ICU transliterators, 10 rows), the Slugger (20, needs them),
+      LazyString (7) and the inflectors (9). No advisories listed for
+      symfony/string; `fromRandom()`'s randomness is decision 15.
 ## Verification
 
 - Per complete package: manifest has no `pending` rows (CI-enforced);

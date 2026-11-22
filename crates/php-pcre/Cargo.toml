@@ -1,0 +1,10 @@
+[package]
+name = "php-pcre"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "PHP's preg_* patterns translated to fancy-regex, written from PHP's and PCRE2's documentation"
+
+[dependencies]
+fancy-regex = "0.20.2"

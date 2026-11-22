@@ -6,7 +6,7 @@
 //!
 //! Upstream: symfony/console Helper/Helper.php
 
-use symfony_string::UnicodeString;
+use symfony_string::{AbstractString, UnicodeString};
 
 use crate::{exception::Result, formatter::output_formatter::OutputFormatter};
 

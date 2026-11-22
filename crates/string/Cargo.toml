@@ -4,11 +4,13 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 publish = false
-description = "The parts of Symfony String that Console needs: UnicodeString's graphemes, width and wordwrap"
+description = "Port of the symfony/string component"
 
 [dependencies]
 unicode-normalization = "0.1"
 unicode-segmentation = "1.12"
+php-pcre = { path = "../php-pcre" }
+php-value = { path = "../php-value" }
 
 [dev-dependencies]
 php-value = { path = "../php-value", features = ["vectors"] }
