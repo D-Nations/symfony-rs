@@ -61,6 +61,9 @@ pub(crate) struct Element {
     pub(crate) prefix: Option<String>,
     pub(crate) namespace_uri: Option<String>,
     pub(crate) attributes: Vec<Attribute>,
+    /// The namespace declarations on this element (prefix, URI), in
+    /// document order; `None` is the default namespace.
+    pub(crate) namespaces: Vec<(Option<String>, String)>,
 }
 
 #[derive(Clone, Debug)]
@@ -338,6 +341,29 @@ impl Document {
     /// `$element->hasAttribute($name)`.
     pub fn has_attribute(&self, id: NodeId, name: &str) -> bool {
         self.attributes(id).iter().any(|a| a.name == name)
+    }
+
+    /// `$node->lookupNamespaceURI($prefix)`: the namespace bound to
+    /// `prefix` (`None`: the default namespace) where the element `id` is,
+    /// from its own and its ancestors' declarations. `xml` is always bound.
+    pub fn lookup_namespace_uri(&self, id: NodeId, prefix: Option<&str>) -> Option<&str> {
+        if prefix == Some("xml") {
+            return Some("http://www.w3.org/XML/1998/namespace");
+        }
+        let mut at = Some(id);
+        while let Some(n) = at {
+            if let Kind::Element(e) = &self.nodes[n.0].kind
+                && let Some((_, uri)) = e
+                    .namespaces
+                    .iter()
+                    .rev()
+                    .find(|(p, _)| p.as_deref() == prefix)
+            {
+                return (!uri.is_empty()).then_some(uri.as_str());
+            }
+            at = self.parent(n);
+        }
+        None
     }
 
     /// `$node->getLineNo()`: the line where libxml created the node.

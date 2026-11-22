@@ -1,6 +1,7 @@
 //! The subset of PHP's DOM extension that Symfony's XML consumers use
-//! (`DOMDocument::loadXML()` and the read-only node API), with the
-//! diagnostics libxml reports while parsing. Written from PHP 8.4.27's
+//! (`DOMDocument::loadXML()`, the read-only node API and
+//! `schemaValidateSource()`), with the diagnostics libxml reports while
+//! parsing and validating. Written from PHP 8.4.27's
 //! observed behaviour on libxml 2.9.14 (`scripts/record.sh php-dom`), the
 //! XML 1.0 and Namespaces specifications; no PHP or libxml source is used
 //! (PLAN.md decisions 8 and 9). See README.md for the contract.
@@ -15,8 +16,10 @@ mod dtd;
 mod encoding;
 pub mod error;
 mod parser;
+pub mod schema;
 mod uri;
 
 pub use dom::{Attribute, Document, NodeId, NodeType};
 pub use error::{ErrorLevel, LibxmlError, LoadError, Refusal, RefusalReason};
 pub use parser::{LoadOptions, Loaded, load_xml};
+pub use schema::{Schema, SchemaError, SchemaValidation, schema_validate_source};
