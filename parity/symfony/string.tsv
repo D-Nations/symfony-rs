@@ -1,153 +1,153 @@
 # symfony/string at 6c6110979c0150393bbb336170e286d51ab4d76c: upstream test	method	status	rust test
-Tests/ByteStringTest.php	ByteStringTest::testAppend	pending	
-Tests/ByteStringTest.php	ByteStringTest::testBeforeAfter	pending	
-Tests/ByteStringTest.php	ByteStringTest::testBeforeAfterIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testBeforeAfterLast	pending	
-Tests/ByteStringTest.php	ByteStringTest::testBeforeAfterLastIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testBytesAt	pending	
-Tests/ByteStringTest.php	ByteStringTest::testCamel	pending	
-Tests/ByteStringTest.php	ByteStringTest::testChunk	pending	
-Tests/ByteStringTest.php	ByteStringTest::testCollapseWhitespace	pending	
-Tests/ByteStringTest.php	ByteStringTest::testContainsAny	pending	
-Tests/ByteStringTest.php	ByteStringTest::testContainsAnyIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testCreateFromEmptyString	pending	
-Tests/ByteStringTest.php	ByteStringTest::testCreateFromString	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEndsWith	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEndsWithIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEnsureEnd	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEnsureEndIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEnsureStart	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEnsureStartIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEqualsTo	pending	
-Tests/ByteStringTest.php	ByteStringTest::testEqualsToIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testFolded	pending	
-Tests/ByteStringTest.php	ByteStringTest::testFromRandoWithZeroLength	pending	
-Tests/ByteStringTest.php	ByteStringTest::testFromRandom	pending	
-Tests/ByteStringTest.php	ByteStringTest::testFromRandomAlphabetMin	pending	
-Tests/ByteStringTest.php	ByteStringTest::testFromRandomThrowsForNegativeLength	pending	
-Tests/ByteStringTest.php	ByteStringTest::testFromRandomWithSpecificChars	pending	
-Tests/ByteStringTest.php	ByteStringTest::testIndexOf	pending	
-Tests/ByteStringTest.php	ByteStringTest::testIndexOfIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testIndexOfLast	pending	
-Tests/ByteStringTest.php	ByteStringTest::testIndexOfLastIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testInvalidChunkLength	pending	
-Tests/ByteStringTest.php	ByteStringTest::testIsEmpty	pending	
-Tests/ByteStringTest.php	ByteStringTest::testJoin	pending	
-Tests/ByteStringTest.php	ByteStringTest::testJoinWithLastGlue	pending	
-Tests/ByteStringTest.php	ByteStringTest::testKebab	pending	
-Tests/ByteStringTest.php	ByteStringTest::testLength	pending	
-Tests/ByteStringTest.php	ByteStringTest::testLower	pending	
-Tests/ByteStringTest.php	ByteStringTest::testPadBoth	pending	
-Tests/ByteStringTest.php	ByteStringTest::testPadEnd	pending	
-Tests/ByteStringTest.php	ByteStringTest::testPadStart	pending	
-Tests/ByteStringTest.php	ByteStringTest::testPascal	pending	
-Tests/ByteStringTest.php	ByteStringTest::testPrepend	pending	
-Tests/ByteStringTest.php	ByteStringTest::testRepeat	pending	
-Tests/ByteStringTest.php	ByteStringTest::testReplace	pending	
-Tests/ByteStringTest.php	ByteStringTest::testReplaceIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testReplaceMatches	pending	
-Tests/ByteStringTest.php	ByteStringTest::testReverse	pending	
-Tests/ByteStringTest.php	ByteStringTest::testSlice	pending	
-Tests/ByteStringTest.php	ByteStringTest::testSnake	pending	
-Tests/ByteStringTest.php	ByteStringTest::testSplice	pending	
-Tests/ByteStringTest.php	ByteStringTest::testSplit	pending	
-Tests/ByteStringTest.php	ByteStringTest::testStartsWith	pending	
-Tests/ByteStringTest.php	ByteStringTest::testStartsWithIgnoreCase	pending	
-Tests/ByteStringTest.php	ByteStringTest::testTitle	pending	
-Tests/ByteStringTest.php	ByteStringTest::testToByteString	pending	
-Tests/ByteStringTest.php	ByteStringTest::testToString	pending	
-Tests/ByteStringTest.php	ByteStringTest::testTrim	pending	
-Tests/ByteStringTest.php	ByteStringTest::testTrimEnd	pending	
-Tests/ByteStringTest.php	ByteStringTest::testTrimPrefix	pending	
-Tests/ByteStringTest.php	ByteStringTest::testTrimStart	pending	
-Tests/ByteStringTest.php	ByteStringTest::testTrimSuffix	pending	
-Tests/ByteStringTest.php	ByteStringTest::testTruncate	pending	
-Tests/ByteStringTest.php	ByteStringTest::testUnwrap	pending	
-Tests/ByteStringTest.php	ByteStringTest::testUpper	pending	
-Tests/ByteStringTest.php	ByteStringTest::testWidth	pending	
-Tests/ByteStringTest.php	ByteStringTest::testWordwrap	pending	
-Tests/ByteStringTest.php	ByteStringTest::testWrap	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testAppend	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testAppendInvalidUtf8String	pending	
+Tests/ByteStringTest.php	ByteStringTest::testAppend	ported	crates/string/tests/byte_string_test.rs::testAppend
+Tests/ByteStringTest.php	ByteStringTest::testBeforeAfter	ported	crates/string/tests/byte_string_test.rs::testBeforeAfter
+Tests/ByteStringTest.php	ByteStringTest::testBeforeAfterIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testBeforeAfterIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testBeforeAfterLast	ported	crates/string/tests/byte_string_test.rs::testBeforeAfterLast
+Tests/ByteStringTest.php	ByteStringTest::testBeforeAfterLastIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testBeforeAfterLastIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testBytesAt	ported	crates/string/tests/byte_string_test.rs::testBytesAt
+Tests/ByteStringTest.php	ByteStringTest::testCamel	ported	crates/string/tests/byte_string_test.rs::testCamel
+Tests/ByteStringTest.php	ByteStringTest::testChunk	ported	crates/string/tests/byte_string_test.rs::testChunk
+Tests/ByteStringTest.php	ByteStringTest::testCollapseWhitespace	ported	crates/string/tests/byte_string_test.rs::testCollapseWhitespace
+Tests/ByteStringTest.php	ByteStringTest::testContainsAny	ported	crates/string/tests/byte_string_test.rs::testContainsAny
+Tests/ByteStringTest.php	ByteStringTest::testContainsAnyIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testContainsAnyIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testCreateFromEmptyString	ported	crates/string/tests/byte_string_test.rs::testCreateFromEmptyString
+Tests/ByteStringTest.php	ByteStringTest::testCreateFromString	ported	crates/string/tests/byte_string_test.rs::testCreateFromString
+Tests/ByteStringTest.php	ByteStringTest::testEndsWith	ported	crates/string/tests/byte_string_test.rs::testEndsWith
+Tests/ByteStringTest.php	ByteStringTest::testEndsWithIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testEndsWithIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testEnsureEnd	ported	crates/string/tests/byte_string_test.rs::testEnsureEnd
+Tests/ByteStringTest.php	ByteStringTest::testEnsureEndIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testEnsureEndIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testEnsureStart	ported	crates/string/tests/byte_string_test.rs::testEnsureStart
+Tests/ByteStringTest.php	ByteStringTest::testEnsureStartIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testEnsureStartIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testEqualsTo	ported	crates/string/tests/byte_string_test.rs::testEqualsTo
+Tests/ByteStringTest.php	ByteStringTest::testEqualsToIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testEqualsToIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testFolded	ported	crates/string/tests/byte_string_test.rs::testFolded
+Tests/ByteStringTest.php	ByteStringTest::testFromRandoWithZeroLength	ported	crates/string/tests/byte_string_test.rs::testFromRandoWithZeroLength
+Tests/ByteStringTest.php	ByteStringTest::testFromRandom	ported	crates/string/tests/byte_string_test.rs::testFromRandom
+Tests/ByteStringTest.php	ByteStringTest::testFromRandomAlphabetMin	ported	crates/string/tests/byte_string_test.rs::testFromRandomAlphabetMin
+Tests/ByteStringTest.php	ByteStringTest::testFromRandomThrowsForNegativeLength	ported	crates/string/tests/byte_string_test.rs::testFromRandomThrowsForNegativeLength
+Tests/ByteStringTest.php	ByteStringTest::testFromRandomWithSpecificChars	ported	crates/string/tests/byte_string_test.rs::testFromRandomWithSpecificChars
+Tests/ByteStringTest.php	ByteStringTest::testIndexOf	ported	crates/string/tests/byte_string_test.rs::testIndexOf
+Tests/ByteStringTest.php	ByteStringTest::testIndexOfIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testIndexOfIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testIndexOfLast	ported	crates/string/tests/byte_string_test.rs::testIndexOfLast
+Tests/ByteStringTest.php	ByteStringTest::testIndexOfLastIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testIndexOfLastIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testInvalidChunkLength	ported	crates/string/tests/byte_string_test.rs::testInvalidChunkLength
+Tests/ByteStringTest.php	ByteStringTest::testIsEmpty	ported	crates/string/tests/byte_string_test.rs::testIsEmpty
+Tests/ByteStringTest.php	ByteStringTest::testJoin	ported	crates/string/tests/byte_string_test.rs::testJoin
+Tests/ByteStringTest.php	ByteStringTest::testJoinWithLastGlue	ported	crates/string/tests/byte_string_test.rs::testJoinWithLastGlue
+Tests/ByteStringTest.php	ByteStringTest::testKebab	ported	crates/string/tests/byte_string_test.rs::testKebab
+Tests/ByteStringTest.php	ByteStringTest::testLength	ported	crates/string/tests/byte_string_test.rs::testLength
+Tests/ByteStringTest.php	ByteStringTest::testLower	ported	crates/string/tests/byte_string_test.rs::testLower
+Tests/ByteStringTest.php	ByteStringTest::testPadBoth	ported	crates/string/tests/byte_string_test.rs::testPadBoth
+Tests/ByteStringTest.php	ByteStringTest::testPadEnd	ported	crates/string/tests/byte_string_test.rs::testPadEnd
+Tests/ByteStringTest.php	ByteStringTest::testPadStart	ported	crates/string/tests/byte_string_test.rs::testPadStart
+Tests/ByteStringTest.php	ByteStringTest::testPascal	ported	crates/string/tests/byte_string_test.rs::testPascal
+Tests/ByteStringTest.php	ByteStringTest::testPrepend	ported	crates/string/tests/byte_string_test.rs::testPrepend
+Tests/ByteStringTest.php	ByteStringTest::testRepeat	ported	crates/string/tests/byte_string_test.rs::testRepeat
+Tests/ByteStringTest.php	ByteStringTest::testReplace	ported	crates/string/tests/byte_string_test.rs::testReplace
+Tests/ByteStringTest.php	ByteStringTest::testReplaceIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testReplaceIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testReplaceMatches	ported	crates/string/tests/byte_string_test.rs::testReplaceMatches
+Tests/ByteStringTest.php	ByteStringTest::testReverse	ported	crates/string/tests/byte_string_test.rs::testReverse
+Tests/ByteStringTest.php	ByteStringTest::testSlice	ported	crates/string/tests/byte_string_test.rs::testSlice
+Tests/ByteStringTest.php	ByteStringTest::testSnake	ported	crates/string/tests/byte_string_test.rs::testSnake
+Tests/ByteStringTest.php	ByteStringTest::testSplice	ported	crates/string/tests/byte_string_test.rs::testSplice
+Tests/ByteStringTest.php	ByteStringTest::testSplit	ported	crates/string/tests/byte_string_test.rs::testSplit
+Tests/ByteStringTest.php	ByteStringTest::testStartsWith	ported	crates/string/tests/byte_string_test.rs::testStartsWith
+Tests/ByteStringTest.php	ByteStringTest::testStartsWithIgnoreCase	ported	crates/string/tests/byte_string_test.rs::testStartsWithIgnoreCase
+Tests/ByteStringTest.php	ByteStringTest::testTitle	ported	crates/string/tests/byte_string_test.rs::testTitle
+Tests/ByteStringTest.php	ByteStringTest::testToByteString	ported	crates/string/tests/byte_string_test.rs::testToByteString
+Tests/ByteStringTest.php	ByteStringTest::testToString	ported	crates/string/tests/byte_string_test.rs::testToString
+Tests/ByteStringTest.php	ByteStringTest::testTrim	ported	crates/string/tests/byte_string_test.rs::testTrim
+Tests/ByteStringTest.php	ByteStringTest::testTrimEnd	ported	crates/string/tests/byte_string_test.rs::testTrimEnd
+Tests/ByteStringTest.php	ByteStringTest::testTrimPrefix	ported	crates/string/tests/byte_string_test.rs::testTrimPrefix
+Tests/ByteStringTest.php	ByteStringTest::testTrimStart	ported	crates/string/tests/byte_string_test.rs::testTrimStart
+Tests/ByteStringTest.php	ByteStringTest::testTrimSuffix	ported	crates/string/tests/byte_string_test.rs::testTrimSuffix
+Tests/ByteStringTest.php	ByteStringTest::testTruncate	ported	crates/string/tests/byte_string_test.rs::testTruncate
+Tests/ByteStringTest.php	ByteStringTest::testUnwrap	ported	crates/string/tests/byte_string_test.rs::testUnwrap
+Tests/ByteStringTest.php	ByteStringTest::testUpper	ported	crates/string/tests/byte_string_test.rs::testUpper
+Tests/ByteStringTest.php	ByteStringTest::testWidth	ported	crates/string/tests/byte_string_test.rs::testWidth
+Tests/ByteStringTest.php	ByteStringTest::testWordwrap	ported	crates/string/tests/byte_string_test.rs::testWordwrap
+Tests/ByteStringTest.php	ByteStringTest::testWrap	ported	crates/string/tests/byte_string_test.rs::testWrap
+Tests/CodePointStringTest.php	CodePointStringTest::testAppend	ported	crates/string/tests/code_point_string_test.rs::testAppend
+Tests/CodePointStringTest.php	CodePointStringTest::testAppendInvalidUtf8String	ported	crates/string/tests/code_point_string_test.rs::testAppendInvalidUtf8String
 Tests/CodePointStringTest.php	CodePointStringTest::testAscii	pending	
 Tests/CodePointStringTest.php	CodePointStringTest::testAsciiClosureRule	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfter	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfterIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfterLast	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfterLastIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testBytesAt	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testCamel	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testChunk	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testCodePointsAt	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testCollapseWhitespace	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testContainsAny	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testContainsAnyIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testCreateFromEmptyString	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testCreateFromString	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testCreateFromStringWithInvalidUtf8Input	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEndsWith	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEndsWithIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEnsureEnd	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEnsureEndIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEnsureStart	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEnsureStartIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEqualsTo	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testEqualsToIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testFolded	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testIndexOf	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testIndexOfIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testIndexOfLast	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testIndexOfLastIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testInvalidChunkLength	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testIsEmpty	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testJoin	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testJoinWithLastGlue	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testKebab	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testLength	pending	
+Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfter	ported	crates/string/tests/code_point_string_test.rs::testBeforeAfter
+Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfterIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testBeforeAfterIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfterLast	ported	crates/string/tests/code_point_string_test.rs::testBeforeAfterLast
+Tests/CodePointStringTest.php	CodePointStringTest::testBeforeAfterLastIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testBeforeAfterLastIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testBytesAt	ported	crates/string/tests/code_point_string_test.rs::testBytesAt
+Tests/CodePointStringTest.php	CodePointStringTest::testCamel	ported	crates/string/tests/code_point_string_test.rs::testCamel
+Tests/CodePointStringTest.php	CodePointStringTest::testChunk	ported	crates/string/tests/code_point_string_test.rs::testChunk
+Tests/CodePointStringTest.php	CodePointStringTest::testCodePointsAt	ported	crates/string/tests/code_point_string_test.rs::testCodePointsAt
+Tests/CodePointStringTest.php	CodePointStringTest::testCollapseWhitespace	ported	crates/string/tests/code_point_string_test.rs::testCollapseWhitespace
+Tests/CodePointStringTest.php	CodePointStringTest::testContainsAny	ported	crates/string/tests/code_point_string_test.rs::testContainsAny
+Tests/CodePointStringTest.php	CodePointStringTest::testContainsAnyIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testContainsAnyIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testCreateFromEmptyString	ported	crates/string/tests/code_point_string_test.rs::testCreateFromEmptyString
+Tests/CodePointStringTest.php	CodePointStringTest::testCreateFromString	ported	crates/string/tests/code_point_string_test.rs::testCreateFromString
+Tests/CodePointStringTest.php	CodePointStringTest::testCreateFromStringWithInvalidUtf8Input	ported	crates/string/tests/code_point_string_test.rs::testCreateFromStringWithInvalidUtf8Input
+Tests/CodePointStringTest.php	CodePointStringTest::testEndsWith	ported	crates/string/tests/code_point_string_test.rs::testEndsWith
+Tests/CodePointStringTest.php	CodePointStringTest::testEndsWithIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testEndsWithIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testEnsureEnd	ported	crates/string/tests/code_point_string_test.rs::testEnsureEnd
+Tests/CodePointStringTest.php	CodePointStringTest::testEnsureEndIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testEnsureEndIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testEnsureStart	ported	crates/string/tests/code_point_string_test.rs::testEnsureStart
+Tests/CodePointStringTest.php	CodePointStringTest::testEnsureStartIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testEnsureStartIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testEqualsTo	ported	crates/string/tests/code_point_string_test.rs::testEqualsTo
+Tests/CodePointStringTest.php	CodePointStringTest::testEqualsToIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testEqualsToIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testFolded	ported	crates/string/tests/code_point_string_test.rs::testFolded
+Tests/CodePointStringTest.php	CodePointStringTest::testIndexOf	ported	crates/string/tests/code_point_string_test.rs::testIndexOf
+Tests/CodePointStringTest.php	CodePointStringTest::testIndexOfIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testIndexOfIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testIndexOfLast	ported	crates/string/tests/code_point_string_test.rs::testIndexOfLast
+Tests/CodePointStringTest.php	CodePointStringTest::testIndexOfLastIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testIndexOfLastIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testInvalidChunkLength	ported	crates/string/tests/code_point_string_test.rs::testInvalidChunkLength
+Tests/CodePointStringTest.php	CodePointStringTest::testIsEmpty	ported	crates/string/tests/code_point_string_test.rs::testIsEmpty
+Tests/CodePointStringTest.php	CodePointStringTest::testJoin	ported	crates/string/tests/code_point_string_test.rs::testJoin
+Tests/CodePointStringTest.php	CodePointStringTest::testJoinWithLastGlue	ported	crates/string/tests/code_point_string_test.rs::testJoinWithLastGlue
+Tests/CodePointStringTest.php	CodePointStringTest::testKebab	ported	crates/string/tests/code_point_string_test.rs::testKebab
+Tests/CodePointStringTest.php	CodePointStringTest::testLength	ported	crates/string/tests/code_point_string_test.rs::testLength
 Tests/CodePointStringTest.php	CodePointStringTest::testLocaleLower	pending	
 Tests/CodePointStringTest.php	CodePointStringTest::testLocaleTitle	pending	
 Tests/CodePointStringTest.php	CodePointStringTest::testLocaleUpper	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testLower	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testPadBoth	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testPadEnd	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testPadStart	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testPascal	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testPrepend	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testPrependInvalidUtf8String	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testRepeat	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testReplace	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testReplaceIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testReplaceMatches	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testReplaceWithInvalidUtf8Pattern	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testReplaceWithInvalidUtf8PatternReplacement	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testReverse	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testSlice	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testSnake	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testSplice	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testSpliceMultibyte	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testSplit	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testStartsWith	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testStartsWithIgnoreCase	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTitle	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testToByteString	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testToString	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrim	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrimEnd	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrimEndWithInvalidUtf8CharList	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrimPrefix	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrimStart	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrimStartWithInvalidUtf8CharList	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrimSuffix	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTrimWithInvalidUtf8CharList	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testTruncate	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testUnwrap	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testUpper	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testWidth	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testWordwrap	pending	
-Tests/CodePointStringTest.php	CodePointStringTest::testWrap	pending	
-Tests/FunctionsTest.php	FunctionsTest::testB	pending	
-Tests/FunctionsTest.php	FunctionsTest::testS	pending	
-Tests/FunctionsTest.php	FunctionsTest::testU	pending	
+Tests/CodePointStringTest.php	CodePointStringTest::testLower	ported	crates/string/tests/code_point_string_test.rs::testLower
+Tests/CodePointStringTest.php	CodePointStringTest::testPadBoth	ported	crates/string/tests/code_point_string_test.rs::testPadBoth
+Tests/CodePointStringTest.php	CodePointStringTest::testPadEnd	ported	crates/string/tests/code_point_string_test.rs::testPadEnd
+Tests/CodePointStringTest.php	CodePointStringTest::testPadStart	ported	crates/string/tests/code_point_string_test.rs::testPadStart
+Tests/CodePointStringTest.php	CodePointStringTest::testPascal	ported	crates/string/tests/code_point_string_test.rs::testPascal
+Tests/CodePointStringTest.php	CodePointStringTest::testPrepend	ported	crates/string/tests/code_point_string_test.rs::testPrepend
+Tests/CodePointStringTest.php	CodePointStringTest::testPrependInvalidUtf8String	ported	crates/string/tests/code_point_string_test.rs::testPrependInvalidUtf8String
+Tests/CodePointStringTest.php	CodePointStringTest::testRepeat	ported	crates/string/tests/code_point_string_test.rs::testRepeat
+Tests/CodePointStringTest.php	CodePointStringTest::testReplace	ported	crates/string/tests/code_point_string_test.rs::testReplace
+Tests/CodePointStringTest.php	CodePointStringTest::testReplaceIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testReplaceIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testReplaceMatches	ported	crates/string/tests/code_point_string_test.rs::testReplaceMatches
+Tests/CodePointStringTest.php	CodePointStringTest::testReplaceWithInvalidUtf8Pattern	ported	crates/string/tests/code_point_string_test.rs::testReplaceWithInvalidUtf8Pattern
+Tests/CodePointStringTest.php	CodePointStringTest::testReplaceWithInvalidUtf8PatternReplacement	ported	crates/string/tests/code_point_string_test.rs::testReplaceWithInvalidUtf8PatternReplacement
+Tests/CodePointStringTest.php	CodePointStringTest::testReverse	ported	crates/string/tests/code_point_string_test.rs::testReverse
+Tests/CodePointStringTest.php	CodePointStringTest::testSlice	ported	crates/string/tests/code_point_string_test.rs::testSlice
+Tests/CodePointStringTest.php	CodePointStringTest::testSnake	ported	crates/string/tests/code_point_string_test.rs::testSnake
+Tests/CodePointStringTest.php	CodePointStringTest::testSplice	ported	crates/string/tests/code_point_string_test.rs::testSplice
+Tests/CodePointStringTest.php	CodePointStringTest::testSpliceMultibyte	ported	crates/string/tests/code_point_string_test.rs::testSpliceMultibyte
+Tests/CodePointStringTest.php	CodePointStringTest::testSplit	ported	crates/string/tests/code_point_string_test.rs::testSplit
+Tests/CodePointStringTest.php	CodePointStringTest::testStartsWith	ported	crates/string/tests/code_point_string_test.rs::testStartsWith
+Tests/CodePointStringTest.php	CodePointStringTest::testStartsWithIgnoreCase	ported	crates/string/tests/code_point_string_test.rs::testStartsWithIgnoreCase
+Tests/CodePointStringTest.php	CodePointStringTest::testTitle	ported	crates/string/tests/code_point_string_test.rs::testTitle
+Tests/CodePointStringTest.php	CodePointStringTest::testToByteString	ported	crates/string/tests/code_point_string_test.rs::testToByteString
+Tests/CodePointStringTest.php	CodePointStringTest::testToString	ported	crates/string/tests/code_point_string_test.rs::testToString
+Tests/CodePointStringTest.php	CodePointStringTest::testTrim	ported	crates/string/tests/code_point_string_test.rs::testTrim
+Tests/CodePointStringTest.php	CodePointStringTest::testTrimEnd	ported	crates/string/tests/code_point_string_test.rs::testTrimEnd
+Tests/CodePointStringTest.php	CodePointStringTest::testTrimEndWithInvalidUtf8CharList	ported	crates/string/tests/code_point_string_test.rs::testTrimEndWithInvalidUtf8CharList
+Tests/CodePointStringTest.php	CodePointStringTest::testTrimPrefix	ported	crates/string/tests/code_point_string_test.rs::testTrimPrefix
+Tests/CodePointStringTest.php	CodePointStringTest::testTrimStart	ported	crates/string/tests/code_point_string_test.rs::testTrimStart
+Tests/CodePointStringTest.php	CodePointStringTest::testTrimStartWithInvalidUtf8CharList	ported	crates/string/tests/code_point_string_test.rs::testTrimStartWithInvalidUtf8CharList
+Tests/CodePointStringTest.php	CodePointStringTest::testTrimSuffix	ported	crates/string/tests/code_point_string_test.rs::testTrimSuffix
+Tests/CodePointStringTest.php	CodePointStringTest::testTrimWithInvalidUtf8CharList	ported	crates/string/tests/code_point_string_test.rs::testTrimWithInvalidUtf8CharList
+Tests/CodePointStringTest.php	CodePointStringTest::testTruncate	ported	crates/string/tests/code_point_string_test.rs::testTruncate
+Tests/CodePointStringTest.php	CodePointStringTest::testUnwrap	ported	crates/string/tests/code_point_string_test.rs::testUnwrap
+Tests/CodePointStringTest.php	CodePointStringTest::testUpper	ported	crates/string/tests/code_point_string_test.rs::testUpper
+Tests/CodePointStringTest.php	CodePointStringTest::testWidth	ported	crates/string/tests/code_point_string_test.rs::testWidth
+Tests/CodePointStringTest.php	CodePointStringTest::testWordwrap	ported	crates/string/tests/code_point_string_test.rs::testWordwrap
+Tests/CodePointStringTest.php	CodePointStringTest::testWrap	ported	crates/string/tests/code_point_string_test.rs::testWrap
+Tests/FunctionsTest.php	FunctionsTest::testB	ported	crates/string/tests/functions_test.rs::testB
+Tests/FunctionsTest.php	FunctionsTest::testS	ported	crates/string/tests/functions_test.rs::testS
+Tests/FunctionsTest.php	FunctionsTest::testU	ported	crates/string/tests/functions_test.rs::testU
 Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testPluralize	pending	
 Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testPluralizeEmptyString	pending	
 Tests/Inflector/EnglishInflectorTest.php	EnglishInflectorTest::testSingularize	pending	
@@ -184,84 +184,84 @@ Tests/SluggerTest.php	SluggerTest::testSlugCharReplacementParentLocaleConstruct	
 Tests/SluggerTest.php	SluggerTest::testSlugCharReplacementParentLocaleConstructWithoutSymbolsMap	pending	
 Tests/SluggerTest.php	SluggerTest::testSlugCharReplacementParentLocaleMethod	pending	
 Tests/SluggerTest.php	SluggerTest::testSlugClosure	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testAppend	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testAppendInvalidUtf8String	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testAppend	ported	crates/string/tests/unicode_string_test.rs::testAppend
+Tests/UnicodeStringTest.php	UnicodeStringTest::testAppendInvalidUtf8String	ported	crates/string/tests/unicode_string_test.rs::testAppendInvalidUtf8String
 Tests/UnicodeStringTest.php	UnicodeStringTest::testAscii	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testAsciiClosureRule	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfter	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterLast	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterLastIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testBytesAt	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testCamel	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfter	ported	crates/string/tests/unicode_string_test.rs::testBeforeAfter
+Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testBeforeAfterIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterLast	ported	crates/string/tests/unicode_string_test.rs::testBeforeAfterLast
+Tests/UnicodeStringTest.php	UnicodeStringTest::testBeforeAfterLastIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testBeforeAfterLastIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testBytesAt	ported	crates/string/tests/unicode_string_test.rs::testBytesAt
+Tests/UnicodeStringTest.php	UnicodeStringTest::testCamel	ported	crates/string/tests/unicode_string_test.rs::testCamel
 Tests/UnicodeStringTest.php	UnicodeStringTest::testChunk	ported	crates/string/tests/unicode_string_test.rs::testChunk
-Tests/UnicodeStringTest.php	UnicodeStringTest::testCodePointsAt	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testCollapseWhitespace	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testContainsAny	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testContainsAnyIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testCreateFromEmptyString	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testCreateFromString	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testCreateFromStringWithInvalidUtf8Input	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEndsWith	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEndsWithIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureEnd	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureEndIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureStart	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureStartIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEqualsTo	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testEqualsToIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testFolded	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOf	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOfIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOfLast	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOfLastIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testInvalidChunkLength	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testIsEmpty	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testJoin	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testJoinWithLastGlue	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testKebab	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testCodePointsAt	ported	crates/string/tests/unicode_string_test.rs::testCodePointsAt
+Tests/UnicodeStringTest.php	UnicodeStringTest::testCollapseWhitespace	ported	crates/string/tests/unicode_string_test.rs::testCollapseWhitespace
+Tests/UnicodeStringTest.php	UnicodeStringTest::testContainsAny	ported	crates/string/tests/unicode_string_test.rs::testContainsAny
+Tests/UnicodeStringTest.php	UnicodeStringTest::testContainsAnyIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testContainsAnyIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testCreateFromEmptyString	ported	crates/string/tests/unicode_string_test.rs::testCreateFromEmptyString
+Tests/UnicodeStringTest.php	UnicodeStringTest::testCreateFromString	ported	crates/string/tests/unicode_string_test.rs::testCreateFromString
+Tests/UnicodeStringTest.php	UnicodeStringTest::testCreateFromStringWithInvalidUtf8Input	ported	crates/string/tests/unicode_string_test.rs::testCreateFromStringWithInvalidUtf8Input
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEndsWith	ported	crates/string/tests/unicode_string_test.rs::testEndsWith
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEndsWithIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testEndsWithIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureEnd	ported	crates/string/tests/unicode_string_test.rs::testEnsureEnd
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureEndIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testEnsureEndIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureStart	ported	crates/string/tests/unicode_string_test.rs::testEnsureStart
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEnsureStartIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testEnsureStartIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEqualsTo	ported	crates/string/tests/unicode_string_test.rs::testEqualsTo
+Tests/UnicodeStringTest.php	UnicodeStringTest::testEqualsToIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testEqualsToIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testFolded	ported	crates/string/tests/unicode_string_test.rs::testFolded
+Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOf	ported	crates/string/tests/unicode_string_test.rs::testIndexOf
+Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOfIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testIndexOfIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOfLast	ported	crates/string/tests/unicode_string_test.rs::testIndexOfLast
+Tests/UnicodeStringTest.php	UnicodeStringTest::testIndexOfLastIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testIndexOfLastIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testInvalidChunkLength	ported	crates/string/tests/unicode_string_test.rs::testInvalidChunkLength
+Tests/UnicodeStringTest.php	UnicodeStringTest::testIsEmpty	ported	crates/string/tests/unicode_string_test.rs::testIsEmpty
+Tests/UnicodeStringTest.php	UnicodeStringTest::testJoin	ported	crates/string/tests/unicode_string_test.rs::testJoin
+Tests/UnicodeStringTest.php	UnicodeStringTest::testJoinWithLastGlue	ported	crates/string/tests/unicode_string_test.rs::testJoinWithLastGlue
+Tests/UnicodeStringTest.php	UnicodeStringTest::testKebab	ported	crates/string/tests/unicode_string_test.rs::testKebab
 Tests/UnicodeStringTest.php	UnicodeStringTest::testLength	ported	crates/string/tests/unicode_string_test.rs::testLength
 Tests/UnicodeStringTest.php	UnicodeStringTest::testLocaleLower	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testLocaleTitle	pending	
 Tests/UnicodeStringTest.php	UnicodeStringTest::testLocaleUpper	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testLower	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testPadBoth	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testPadEnd	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testPadStart	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testPascal	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testPrepend	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testPrependInvalidUtf8String	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testRepeat	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testReplace	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceMatches	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceWithInvalidUtf8Pattern	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceWithInvalidUtf8PatternReplacement	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testReverse	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testLower	ported	crates/string/tests/unicode_string_test.rs::testLower
+Tests/UnicodeStringTest.php	UnicodeStringTest::testPadBoth	ported	crates/string/tests/unicode_string_test.rs::testPadBoth
+Tests/UnicodeStringTest.php	UnicodeStringTest::testPadEnd	ported	crates/string/tests/unicode_string_test.rs::testPadEnd
+Tests/UnicodeStringTest.php	UnicodeStringTest::testPadStart	ported	crates/string/tests/unicode_string_test.rs::testPadStart
+Tests/UnicodeStringTest.php	UnicodeStringTest::testPascal	ported	crates/string/tests/unicode_string_test.rs::testPascal
+Tests/UnicodeStringTest.php	UnicodeStringTest::testPrepend	ported	crates/string/tests/unicode_string_test.rs::testPrepend
+Tests/UnicodeStringTest.php	UnicodeStringTest::testPrependInvalidUtf8String	ported	crates/string/tests/unicode_string_test.rs::testPrependInvalidUtf8String
+Tests/UnicodeStringTest.php	UnicodeStringTest::testRepeat	ported	crates/string/tests/unicode_string_test.rs::testRepeat
+Tests/UnicodeStringTest.php	UnicodeStringTest::testReplace	ported	crates/string/tests/unicode_string_test.rs::testReplace
+Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testReplaceIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceMatches	ported	crates/string/tests/unicode_string_test.rs::testReplaceMatches
+Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceWithInvalidUtf8Pattern	ported	crates/string/tests/unicode_string_test.rs::testReplaceWithInvalidUtf8Pattern
+Tests/UnicodeStringTest.php	UnicodeStringTest::testReplaceWithInvalidUtf8PatternReplacement	ported	crates/string/tests/unicode_string_test.rs::testReplaceWithInvalidUtf8PatternReplacement
+Tests/UnicodeStringTest.php	UnicodeStringTest::testReverse	ported	crates/string/tests/unicode_string_test.rs::testReverse
 Tests/UnicodeStringTest.php	UnicodeStringTest::testSlice	ported	crates/string/tests/unicode_string_test.rs::testSlice
-Tests/UnicodeStringTest.php	UnicodeStringTest::testSnake	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testSplice	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testSpliceMultibyte	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testSplit	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testStartsWith	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testStartsWithIgnoreCase	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTitle	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testToByteString	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testToString	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrim	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimEnd	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimEndWithInvalidUtf8CharList	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimPrefix	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimPrefixNormalization	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimStart	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimStartWithInvalidUtf8CharList	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimSuffix	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimSuffixNormalization	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimWithInvalidUtf8CharList	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testTruncate	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testUnserializeRejectsObjectInTypedStringProperty	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testUnwrap	pending	
-Tests/UnicodeStringTest.php	UnicodeStringTest::testUpper	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testSnake	ported	crates/string/tests/unicode_string_test.rs::testSnake
+Tests/UnicodeStringTest.php	UnicodeStringTest::testSplice	ported	crates/string/tests/unicode_string_test.rs::testSplice
+Tests/UnicodeStringTest.php	UnicodeStringTest::testSpliceMultibyte	ported	crates/string/tests/unicode_string_test.rs::testSpliceMultibyte
+Tests/UnicodeStringTest.php	UnicodeStringTest::testSplit	ported	crates/string/tests/unicode_string_test.rs::testSplit
+Tests/UnicodeStringTest.php	UnicodeStringTest::testStartsWith	ported	crates/string/tests/unicode_string_test.rs::testStartsWith
+Tests/UnicodeStringTest.php	UnicodeStringTest::testStartsWithIgnoreCase	ported	crates/string/tests/unicode_string_test.rs::testStartsWithIgnoreCase
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTitle	ported	crates/string/tests/unicode_string_test.rs::testTitle
+Tests/UnicodeStringTest.php	UnicodeStringTest::testToByteString	ported	crates/string/tests/unicode_string_test.rs::testToByteString
+Tests/UnicodeStringTest.php	UnicodeStringTest::testToString	ported	crates/string/tests/unicode_string_test.rs::testToString
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrim	ported	crates/string/tests/unicode_string_test.rs::testTrim
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimEnd	ported	crates/string/tests/unicode_string_test.rs::testTrimEnd
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimEndWithInvalidUtf8CharList	ported	crates/string/tests/unicode_string_test.rs::testTrimEndWithInvalidUtf8CharList
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimPrefix	ported	crates/string/tests/unicode_string_test.rs::testTrimPrefix
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimPrefixNormalization	ported	crates/string/tests/unicode_string_test.rs::testTrimPrefixNormalization
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimStart	ported	crates/string/tests/unicode_string_test.rs::testTrimStart
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimStartWithInvalidUtf8CharList	ported	crates/string/tests/unicode_string_test.rs::testTrimStartWithInvalidUtf8CharList
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimSuffix	ported	crates/string/tests/unicode_string_test.rs::testTrimSuffix
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimSuffixNormalization	ported	crates/string/tests/unicode_string_test.rs::testTrimSuffixNormalization
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTrimWithInvalidUtf8CharList	ported	crates/string/tests/unicode_string_test.rs::testTrimWithInvalidUtf8CharList
+Tests/UnicodeStringTest.php	UnicodeStringTest::testTruncate	ported	crates/string/tests/unicode_string_test.rs::testTruncate
+Tests/UnicodeStringTest.php	UnicodeStringTest::testUnserializeRejectsObjectInTypedStringProperty	n/a: tests PHP's unserialize() of a payload naming a gadget class; the port has no unserialize() of objects	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testUnwrap	ported	crates/string/tests/unicode_string_test.rs::testUnwrap
+Tests/UnicodeStringTest.php	UnicodeStringTest::testUpper	ported	crates/string/tests/unicode_string_test.rs::testUpper
 Tests/UnicodeStringTest.php	UnicodeStringTest::testWidth	ported	crates/string/tests/unicode_string_test.rs::testWidth
 Tests/UnicodeStringTest.php	UnicodeStringTest::testWordwrap	ported	crates/string/tests/unicode_string_test.rs::testWordwrap
-Tests/UnicodeStringTest.php	UnicodeStringTest::testWrap	pending	
+Tests/UnicodeStringTest.php	UnicodeStringTest::testWrap	ported	crates/string/tests/unicode_string_test.rs::testWrap

@@ -61,7 +61,7 @@ symfony-finder) and `php-value` (what `match()` and `wrap()` return).
   `tests/builtins.rs`).
 - **`fromRandom()`** takes the random bytes from the caller (`random`),
   where PHP's `Random\Randomizer` reads the operating system's CSPRNG: the
-  crate has no dependency that reaches it (PLAN.md, decision 14). Each
+  crate has no dependency that reaches it (PLAN.md, decision 15). Each
   byte is still chosen uniformly from the alphabet.
 - **Pattern errors.** `match()`, `replaceMatches()` and `split()` with
   flags compile patterns with php-pcre: a pattern PHP rejects is an
