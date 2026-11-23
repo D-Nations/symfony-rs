@@ -9,8 +9,13 @@
 
 pub mod composer;
 pub mod definition;
+pub mod exception;
+pub mod file_locator;
+pub mod loader;
 pub mod php;
+pub mod resource;
 pub mod util;
 
 pub use definition::{Class, ConfigurationInterface, Error, Node, Processor};
+pub use file_locator::{FileLocator, FileLocatorInterface, Located};
 pub use util::XmlUtils;
