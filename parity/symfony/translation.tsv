@@ -192,11 +192,11 @@ Tests/Loader/PoFileLoaderTest.php	PoFileLoaderTest::testLoadPlurals	pending
 Tests/Loader/PoFileLoaderTest.php	PoFileLoaderTest::testMissingPlurals	pending	
 Tests/Loader/PoFileLoaderTest.php	PoFileLoaderTest::testSkipFuzzyTranslations	pending	
 Tests/Loader/PoFileLoaderTest.php	PoFileLoaderTest::testSkipFuzzyTranslationsWithoutBlankLines	pending	
-Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoad	pending	
-Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadEmptyResource	pending	
-Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadInvalidResource	pending	
-Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadNonExistingResource	pending	
-Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadNonLocalResource	pending	
+Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoad	ported	crates/translation/tests/qt_file_loader_test.rs::testLoad
+Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadEmptyResource	ported	crates/translation/tests/qt_file_loader_test.rs::testLoadEmptyResource
+Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadInvalidResource	ported	crates/translation/tests/qt_file_loader_test.rs::testLoadInvalidResource
+Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadNonExistingResource	ported	crates/translation/tests/qt_file_loader_test.rs::testLoadNonExistingResource
+Tests/Loader/QtFileLoaderTest.php	QtFileLoaderTest::testLoadNonLocalResource	ported	crates/translation/tests/qt_file_loader_test.rs::testLoadNonLocalResource
 Tests/Loader/XliffFileLoaderTest.php	XliffFileLoaderTest::testDocTypeIsNotAllowed	ported	crates/translation/tests/xliff_file_loader_test.rs::testDocTypeIsNotAllowed
 Tests/Loader/XliffFileLoaderTest.php	XliffFileLoaderTest::testEncoding	ported	crates/translation/tests/xliff_file_loader_test.rs::testEncoding
 Tests/Loader/XliffFileLoaderTest.php	XliffFileLoaderTest::testExtractPgsSegmentPreservesInlineElements	ported	crates/translation/tests/xliff_file_loader_test.rs::testExtractPgsSegmentPreservesInlineElements

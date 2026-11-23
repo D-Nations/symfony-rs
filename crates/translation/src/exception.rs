@@ -32,6 +32,8 @@ pub enum Class {
     ValueError,
     /// `\TypeError`, an `\Error`.
     TypeError,
+    /// `\Error` itself (a method called on `null`).
+    PhpError,
     /// A resource this port refuses instead of reading it the way PHP
     /// would (a `phar://` archive): no PHP class, stated in README.md.
     Refused,
@@ -57,6 +59,7 @@ impl Class {
             Self::Runtime => "Symfony\\Component\\Translation\\Exception\\RuntimeException",
             Self::ValueError => "ValueError",
             Self::TypeError => "TypeError",
+            Self::PhpError => "Error",
             Self::Refused => "(refused)",
             Self::Config(e) => e.class().name(),
         }

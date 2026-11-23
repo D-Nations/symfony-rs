@@ -30,7 +30,6 @@
 //!
 //! Upstream: symfony/translation Loader/XliffFileLoader.php Loader/LoaderInterface.php
 
-use std::path::PathBuf;
 use std::rc::Rc;
 
 use php_dom::{Document, NodeId, NodeType};
@@ -44,6 +43,8 @@ use symfony_config::resource::FileResource;
 use crate::exception::{Class, Error, Previous};
 use crate::message_catalogue::{INTL_DOMAIN_SUFFIX, MessageCatalogue};
 use crate::util::xliff_utils::XliffUtils;
+
+use super::local::{Location, locate, quoted};
 
 const XLIFF_12_NS: &str = "urn:oasis:names:tc:xliff:document:1.2";
 const XLIFF_20_NS: &str = "urn:oasis:names:tc:xliff:document:2.0";
@@ -64,79 +65,6 @@ pub trait LoaderInterface {
 /// `XliffFileLoader`.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct XliffFileLoader;
-
-/// What a resource string that is not XML stands for.
-enum Location {
-    /// `stream_is_local()` is false.
-    Remote,
-    /// A wrapper whose files never exist for `file_exists()`.
-    Absent,
-    Phar,
-    Path(PathBuf),
-}
-
-fn bytes_to_path(bytes: &[u8]) -> PathBuf {
-    #[cfg(unix)]
-    {
-        use std::os::unix::ffi::OsStrExt;
-        PathBuf::from(std::ffi::OsStr::from_bytes(bytes))
-    }
-    #[cfg(not(unix))]
-    {
-        PathBuf::from(String::from_utf8_lossy(bytes).into_owned())
-    }
-}
-
-/// The scheme of `scheme://…` (letters, digits, `+`, `-`, `.`), lowercased.
-fn scheme(resource: &[u8]) -> Option<(String, &[u8])> {
-    let end = resource
-        .iter()
-        .position(|&b| !(b.is_ascii_alphanumeric() || matches!(b, b'+' | b'-' | b'.')))?;
-    if end == 0 {
-        return None;
-    }
-    let rest = resource[end..].strip_prefix(b"://")?;
-    Some((
-        String::from_utf8_lossy(&resource[..end]).to_ascii_lowercase(),
-        rest,
-    ))
-}
-
-fn locate(resource: &[u8]) -> Location {
-    if resource.len() >= 5 && resource[..5].eq_ignore_ascii_case(b"data:") {
-        return Location::Remote;
-    }
-    match scheme(resource) {
-        Some((scheme, rest)) => match scheme.as_str() {
-            "http" | "https" | "ftp" | "ftps" | "data" => Location::Remote,
-            "file" if rest.starts_with(b"/") => Location::Path(bytes_to_path(rest)),
-            "file" if rest.len() >= 10 && rest[..10].eq_ignore_ascii_case(b"localhost/") => {
-                Location::Path(bytes_to_path(&rest[9..]))
-            }
-            "file" => Location::Remote,
-            "php" | "glob" | "compress.zlib" => Location::Absent,
-            "phar" if phar_archive(rest) => Location::Phar,
-            "phar" => Location::Absent,
-            _ => Location::Path(bytes_to_path(resource)),
-        },
-        None => Location::Path(bytes_to_path(resource)),
-    }
-}
-
-/// Whether a `phar://` URL's path starts with an existing file (the
-/// archive PHP would open).
-fn phar_archive(rest: &[u8]) -> bool {
-    (1..=rest.len()).any(|end| {
-        (end == rest.len() || rest[end] == b'/') && bytes_to_path(&rest[..end]).is_file()
-    })
-}
-
-fn quoted(before: &str, resource: &[u8], after: &str) -> Vec<u8> {
-    let mut m = before.as_bytes().to_vec();
-    m.extend_from_slice(resource);
-    m.extend_from_slice(after.as_bytes());
-    m
-}
 
 impl LoaderInterface for XliffFileLoader {
     fn load(
