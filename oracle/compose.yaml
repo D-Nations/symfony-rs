@@ -2,6 +2,11 @@
 # repository (../symfony-demo) with its dependencies installed.
 #
 #   docker compose -f oracle/compose.yaml run --rm php oracle/manifest.php upstream/symfony/routing
+#
+# Packages pinned past the demo's composer.lock (parity/packages.tsv, the
+# rows marked "moved") are mounted from upstream/ over the demo's vendor
+# copy, so recorders load the pinned version. Keep this list equal to those
+# rows: scripts/fetch-upstream.sh --verify checks it.
 services:
   php:
     build: .
@@ -9,3 +14,6 @@ services:
     volumes:
       - ..:/work:ro
       - ../../symfony-demo:/demo:ro
+      - ../upstream/symfony/http-foundation:/demo/vendor/symfony/http-foundation:ro
+      - ../upstream/symfony/http-kernel:/demo/vendor/symfony/http-kernel:ro
+      - ../upstream/symfony/routing:/demo/vendor/symfony/routing:ro

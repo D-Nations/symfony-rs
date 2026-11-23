@@ -53,9 +53,9 @@ assert_eq!(response.headers()["x-content-type-options"], "nosniff");
 | Failure in exception listeners propagates; failure filtering an already handled error does not recursively dispatch exceptions | `HttpKernel::handleThrowable` | Stage failure test |
 | Higher priorities first; ties retain registration order; stop affects only its event | `EventDispatcher::sortListeners`, `callListeners` | Priority/order and per-event propagation tests |
 
-The source is the installed Symfony HttpKernel commit
-`924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1`. Ten supported methods from its
-[`Tests/HttpKernelTest.php`](https://github.com/symfony/http-kernel/blob/924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1/Tests/HttpKernelTest.php)
+The source is the pinned (v8.1.11) Symfony HttpKernel commit
+`460658504e26a2794aa614b4fbe6cf9bac2076fe`. Ten supported methods from its
+[`Tests/HttpKernelTest.php`](https://github.com/symfony/http-kernel/blob/460658504e26a2794aa614b4fbe6cf9bac2076fe/Tests/HttpKernelTest.php)
 retain their names and relevant assertions in `tests/lifecycle.rs`.
 Six additional tests cover the Rust integration boundaries, including
 HttpFoundation's surprising `isRedirect()` classification: 201 is retained,

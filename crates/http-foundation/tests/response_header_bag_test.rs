@@ -1,5 +1,5 @@
 //! ResponseHeaderBagTest.php at symfony/http-foundation
-//! 79325f87c3a2acc7564ddce9f457046e980e7255. Names and assertions are
+//! 30fa3efe6e736b0d06f5331cc6abe813582c0a26. Names and assertions are
 //! PHPUnit's. The class is `time-sensitive`: each test runs on a mocked
 //! clock. `assertSetCookieHeader()`'s pattern `^Set-Cookie:\s+...$` (`m`)
 //! is checked line by line.

@@ -1,6 +1,6 @@
 {
  "app": "oracle/apps/converter-fixture",
- "packages": "symfony/demo's vendor/ (parity/packages.tsv)",
+ "packages": "symfony/demo's vendor/, moved packages from upstream/ (parity/packages.tsv)",
  "php": "symfony-rs-oracle:8.4.27",
  "env": {
   "APP_ENV": "prod",

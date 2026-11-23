@@ -64,9 +64,20 @@ done < upstream.tsv
 
 [[ -n "$verify" ]] || exit 0
 status=0
+# Packages pinned past the vendor's lock: the oracle mounts them from
+# upstream/ (oracle/compose.yaml), so they are expected to differ.
+moved=" $(sed -n 's/^# moved: \([^(]*\).*/\1/p' parity/packages.tsv) "
 while IFS=$'\t' read -r package version reference repo; do
     [[ -z "$package" || "$package" == \#* ]] && continue
     wanted "$package" || continue
+    if [[ "$moved" == *" $package "* ]]; then
+        if grep -qF -- "- ../upstream/$package:/demo/vendor/$package:ro" oracle/compose.yaml; then
+            echo "moved   $package $version (mounted over the vendor copy)"
+        else
+            echo "MOVED   $package $version, but oracle/compose.yaml does not mount it"; status=1
+        fi
+        continue
+    fi
     # Composer dist archives leave out what .gitattributes marks
     # export-ignore (tests, CI files); compare what both contain.
     out=$(diff -rq -x .git "upstream/$package" "$verify/$package" | grep -v '^Only in ' || true)

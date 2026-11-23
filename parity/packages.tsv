@@ -1,4 +1,8 @@
-# Upstream packages, as installed by symfony/demo f42980c (composer.lock).
+# Upstream packages, as installed by symfony/demo f42980c (composer.lock),
+# except the rows moved past that lock (PLAN.md decision 16, November 22):
+# moved: symfony/http-foundation symfony/http-kernel symfony/routing (v8.1.11)
+# The oracle mounts moved packages from upstream/ over the demo's vendor
+# copy (oracle/compose.yaml); the demo itself stays at its lock.
 # Checked out at upstream/<package> by scripts/fetch-upstream.sh.
 # package	version	reference	repository
 doctrine/dbal	4.5.0	c435cd7ea33e17d2a89288caf994cf3d4549b879	https://github.com/doctrine/dbal.git
@@ -30,8 +34,8 @@ symfony/framework-bundle	v8.1.10	2332352f43f6689c3b1289ca0bb324c006f906c3	https:
 symfony/html-sanitizer	v8.1.8	c67061a71d3f8b55f899faee3167422efa4db027	https://github.com/symfony/html-sanitizer.git
 symfony/http-client	v8.1.9	f892301df77ac25613b19fc2450139c950d1368a	https://github.com/symfony/http-client.git
 symfony/http-client-contracts	v3.7.3	35be0019e2c2c9fba80f9dc033290a5240f7b44f	https://github.com/symfony/http-client-contracts.git
-symfony/http-foundation	v8.1.10	79325f87c3a2acc7564ddce9f457046e980e7255	https://github.com/symfony/http-foundation.git
-symfony/http-kernel	v8.1.10	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1	https://github.com/symfony/http-kernel.git
+symfony/http-foundation	v8.1.11	30fa3efe6e736b0d06f5331cc6abe813582c0a26	https://github.com/symfony/http-foundation.git
+symfony/http-kernel	v8.1.11	460658504e26a2794aa614b4fbe6cf9bac2076fe	https://github.com/symfony/http-kernel.git
 symfony/intl	v8.1.5	9a8ba3a0af4db32bf228ca841c319d5dc97f7d02	https://github.com/symfony/intl.git
 symfony/mailer	v8.1.7	8783380ecdafa23d36fc90c5873fd44b635c6e10	https://github.com/symfony/mailer.git
 symfony/mime	v8.1.10	8d1232052c9cdef170ed9608b3147bca4f61ff69	https://github.com/symfony/mime.git
@@ -42,7 +46,7 @@ symfony/password-hasher	v8.1.0	6934d16beaa4677f2c4584229fff1b51099dd7af	https://
 symfony/process	v8.1.10	08aa69fa0998bb65a089f9e148a2c0f8b391398e	https://github.com/symfony/process.git
 symfony/property-access	v8.1.10	38ce2d539230c1d0e3c42198289c4bae5e931727	https://github.com/symfony/property-access.git
 symfony/property-info	v8.1.10	cb5bfc9fbc9da75fdb1b8860a29d9c4fefb2b924	https://github.com/symfony/property-info.git
-symfony/routing	v8.1.10	41b32d2c5d907abe2c3ffaa7a112dd7492353822	https://github.com/symfony/routing.git
+symfony/routing	v8.1.11	f3fefc6cad3748d538be970ca81b71f06d7aa8b3	https://github.com/symfony/routing.git
 symfony/runtime	v8.1.9	8670c7b20dacb5b1bcc07891dc35546376685af1	https://github.com/symfony/runtime.git
 symfony/security-bundle	v8.1.9	31993005911620056ea14e282b9c5cb11223ea6c	https://github.com/symfony/security-bundle.git
 symfony/security-core	v8.1.9	41968f1068f89edf881ef4ae0e691e0d9dd5d448	https://github.com/symfony/security-core.git

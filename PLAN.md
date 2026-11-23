@@ -501,7 +501,9 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       the 60 packages pinned here, which come from symfony/demo at
       v8.1.10. Recommended: record this app with its own lock, naming the
       lock in each comparison, and keep the shared pins at the demo's
-      until a deliberate version move.
+      until a deliberate version move. (November 23: decision 16 moved
+      http-foundation, http-kernel and routing to v8.1.11; the other
+      shared pins stay at the demo's lock.)
     - **Production boot.** Its `when@prod` Doctrine config sets two options
       DoctrineBundle 3 removed, so `APP_ENV=prod` fails in Config's
       ArrayNode. Recommended: run the oracle copy (under `oracle/out/`,
@@ -572,7 +574,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     OS; `from_random_with()` keeps the caller's source for deterministic
     use (stack row "OS randomness").
 
-16. **HttpFoundation's v8.1.11 hardening (M2-A, November 22).** The pins
+16. **HttpFoundation's v8.1.11 hardening (M2-A, November 22; decided).** The pins
     are the demo's lock (v8.1.10). v8.1.11 adds a `/D` anchor to
     `HeaderUtils::makeDisposition()`'s ASCII check (at the pin a fallback
     filename ending in a newline passes it) and `IpUtils::PRIVATE_RANGES` with
@@ -582,6 +584,13 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     the pins move to v8.1.11 (a version move, with the demo's comparisons),
     then port the fixed code with its tests. Alternative: port them now at
     the pin and pin the pre-fix behaviour with a test.
+    **Owner, November 22: move the pins to v8.1.11 now.** Done November 23
+    ([docs/milestones/m2-a-pin-8.1.11.md](docs/milestones/m2-a-pin-8.1.11.md)):
+    symfony/http-foundation, symfony/http-kernel and symfony/routing are
+    pinned at v8.1.11 (none of their 8.1.11 releases needs another
+    package's), past the demo's lock; the oracle mounts them over the
+    demo's vendor copy. IpUtils and `makeDisposition()` are ported at
+    v8.1.11; `setTrustedProxies()` comes with `Request.php`.
 
 ## M0 progress
 
@@ -648,6 +657,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       `setTrustedProxies` (`PRIVATE_RANGES`) are none of them ported, so
       the Rust code is unaffected. Pins stay at the demo's `composer.lock`
       (the demo original is read-only); moving them is a version move.
+      (November 23: those three packages moved to v8.1.11, decision 16.)
 
 ## M1 progress
 
@@ -924,6 +934,22 @@ Stack rows (searched November 22):
       listed for these files. Next: AcceptHeader and AcceptHeaderItem as an
       API, `parse_str()` and `HeaderUtils::parseQuery()`, FileBag (needs
       UploadedFile).
+- [ ] Version move to v8.1.11 (decision 16, November 23;
+      [docs/milestones/m2-a-pin-8.1.11.md](docs/milestones/m2-a-pin-8.1.11.md)):
+      http-foundation, http-kernel and routing pinned at v8.1.11, mounted
+      over the demo's vendor copy in the oracle (`oracle/compose.yaml`,
+      checked by `fetch-upstream.sh --verify`). Their manifests gain 42
+      tests (13, 5 and 24), all `pending`; every existing vector records
+      unchanged at v8.1.11. Ported at v8.1.11: `IpUtils.php` (IpUtilsTest
+      18 of 19, 1 `n/a`) on php-value's new IP built-ins and PHP 8
+      string/number rules, and `HeaderUtils::makeDisposition()` (3 more
+      HeaderUtilsTest tests, its `/D` anchor pinned); 37,802 IpUtils calls
+      and 2,880 `makeDisposition()` calls recorded, all matching.
+      GHSA-38cx-cq6f-5755 is now `covered`. Not ported, waiting for their
+      classes: `Request::setTrustedProxies()` and `prepareBaseUrl()`'s
+      v8.1.11 fixes (Request.php), UrlHelper, BinaryFileResponse,
+      MethodRequestMatcher, SessionHandlerFactory, the compiled matcher's
+      host-variable fix and RouterListener's sub-request context.
 
 ## Verification
 

@@ -16,6 +16,7 @@ pub mod dateparse;
 pub mod datetime;
 pub mod filter;
 pub mod json;
+pub mod net;
 pub mod numeric;
 pub mod object;
 pub mod pcre;
