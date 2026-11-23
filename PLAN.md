@@ -906,9 +906,14 @@ Stack rows (searched November 19):
       `foo://bar` and `file://localhost/…` otherwise than PHP)
       ([docs/milestones/m1-c-xml-x3-xliff.md](docs/milestones/m1-c-xml-x3-xliff.md)).
       php-dom's `getElementsByTagName()` now compares the local name, as
-      PHP 8.4 does. X3 passed for the XLIFF loader; open: QtFileLoader
-      (DOMXPath), Validator's XmlFileLoader
-      (M5-A).
+      PHP 8.4 does. X3 passed for the XLIFF loader. Done (November 23):
+      QtFileLoader, with a `DOMXPath::evaluate()` subset in php-dom
+      (location paths on the child axis, name and `text()` tests, text,
+      attribute and position predicates, unions); QtFileLoaderTest 5 of 5,
+      133 of 134 recorded cases match, 1 listed (the same `FileResource`
+      difference) and 1 `evaluate()` refused
+      ([docs/milestones/m1-c-xml-x3-qt.md](docs/milestones/m1-c-xml-x3-qt.md)).
+      X3 passed for QtFileLoader; open: Validator's XmlFileLoader (M5-A).
 
 - [x] CssSelector (`symfony-css-selector`): every file; 80 of 85
       upstream tests, 5 `n/a` (TranslatorTest's DOM tests evaluate XPath
