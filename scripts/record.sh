@@ -8,7 +8,7 @@
 #   scripts/record.sh converter-fixture oracle/apps/converter-fixture/responses.json (M1-D fixture)
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
-#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter}.json
+#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter,parse_str}.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json, loaders.json
@@ -97,6 +97,12 @@ php_value() {
     python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["cases"]), "filter_var() cases")' "$tmp"
     mv "$tmp" "$out"
     echo "filter_var() vectors written to $out"
+    out=crates/php-value/tests/data/parse_str.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_value_parse_str.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "parse_str() cases")' "$tmp"
+    mv "$tmp" "$out"
+    echo "parse_str() vectors written to $out"
 }
 
 yaml() {

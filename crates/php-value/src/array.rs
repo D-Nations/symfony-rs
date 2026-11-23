@@ -217,13 +217,19 @@ impl PhpArray {
         }
     }
 
+    /// The key `$array[] = ...` would use, `None` when the next element is
+    /// occupied (after `PHP_INT_MAX`).
+    pub fn next_index(&self) -> Option<i64> {
+        match self.0.next {
+            Next::Start => Some(0),
+            Next::At(n) => Some(n),
+            Next::Occupied => None,
+        }
+    }
+
     /// `$array[] = $value`.
     pub fn push(&mut self, value: Value) -> Result<Key, NextElementOccupied> {
-        let key = match self.0.next {
-            Next::Start => 0,
-            Next::At(n) => n,
-            Next::Occupied => return Err(NextElementOccupied),
-        };
+        let key = self.next_index().ok_or(NextElementOccupied)?;
         self.insert(key, value);
         Ok(Key::Int(key))
     }
