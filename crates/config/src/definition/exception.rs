@@ -32,6 +32,15 @@ pub enum Class {
     InvalidDefinition,
     /// `Symfony\Component\Config\Exception\LogicException`.
     Logic,
+    /// `Symfony\Component\Config\Exception\LoaderLoadException` (extends
+    /// `\Exception`; see [`crate::exception`]).
+    LoaderLoad,
+    /// `Exception\FileLoaderImportCircularReferenceException` (extends
+    /// LoaderLoadException).
+    FileLoaderImportCircularReference,
+    /// `Exception\FileLocatorFileNotFoundException` (extends
+    /// `\InvalidArgumentException`), with the paths tried.
+    FileLocatorFileNotFound,
     /// `\InvalidArgumentException`.
     InvalidArgument,
     /// `Util\Exception\XmlParsingException` (extends
@@ -81,6 +90,13 @@ impl Class {
                 "Symfony\\Component\\Config\\Definition\\Exception\\InvalidDefinitionException"
             }
             Self::Logic => "Symfony\\Component\\Config\\Exception\\LogicException",
+            Self::LoaderLoad => "Symfony\\Component\\Config\\Exception\\LoaderLoadException",
+            Self::FileLoaderImportCircularReference => {
+                "Symfony\\Component\\Config\\Exception\\FileLoaderImportCircularReferenceException"
+            }
+            Self::FileLocatorFileNotFound => {
+                "Symfony\\Component\\Config\\Exception\\FileLocatorFileNotFoundException"
+            }
             Self::InvalidArgument => "InvalidArgumentException",
             Self::XmlParsing => "Symfony\\Component\\Config\\Util\\Exception\\XmlParsingException",
             Self::InvalidXml => "Symfony\\Component\\Config\\Util\\Exception\\InvalidXmlException",
@@ -129,7 +145,16 @@ impl Class {
 
     /// `instanceof \InvalidArgumentException`.
     pub fn is_invalid_argument(&self) -> bool {
-        matches!(self, Self::InvalidArgument) || self.is_xml_parsing()
+        matches!(self, Self::InvalidArgument | Self::FileLocatorFileNotFound)
+            || self.is_xml_parsing()
+    }
+
+    /// `instanceof LoaderLoadException`.
+    pub fn is_loader_load(&self) -> bool {
+        matches!(
+            self,
+            Self::LoaderLoad | Self::FileLoaderImportCircularReference
+        )
     }
 
     /// `instanceof XmlParsingException`.
@@ -145,6 +170,7 @@ impl Class {
             Self::Runtime => self.is_runtime(),
             Self::InvalidArgument => self.is_invalid_argument(),
             Self::XmlParsing => self.is_xml_parsing(),
+            Self::LoaderLoad => self.is_loader_load(),
             Self::Error => matches!(self, Self::Error | Self::TypeError),
             Self::Other { class, .. } => self.name() == class,
             other => self == other,
@@ -170,6 +196,8 @@ pub struct Error {
     previous: Option<Box<Error>>,
     /// InvalidConfigurationException's path.
     path: Option<PhpString>,
+    /// FileLocatorFileNotFoundException's `getPaths()`.
+    paths: Vec<Vec<u8>>,
     contains_hints: bool,
 }
 
@@ -181,6 +209,7 @@ impl Error {
             code: 0,
             previous: None,
             path: None,
+            paths: Vec::new(),
             contains_hints: false,
         }
     }
@@ -221,6 +250,23 @@ impl Error {
 
     pub fn get_path(&self) -> Option<&PhpString> {
         self.path.as_ref()
+    }
+
+    /// The exception's `$code`.
+    pub fn with_code(mut self, code: i64) -> Self {
+        self.code = code;
+        self
+    }
+
+    /// FileLocatorFileNotFoundException's `$paths`.
+    pub fn with_paths(mut self, paths: Vec<Vec<u8>>) -> Self {
+        self.paths = paths;
+        self
+    }
+
+    /// `getPaths()`: the paths a FileLocatorFileNotFoundException tried.
+    pub fn get_paths(&self) -> &[Vec<u8>] {
+        &self.paths
     }
 
     /// Appends "\nHint: " and the hint, or ", " and the hint after the

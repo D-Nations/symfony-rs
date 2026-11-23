@@ -13,8 +13,15 @@ yaml = ["dep:symfony-yaml"]
 
 [dependencies]
 php-dom = { path = "../php-dom" }
+php-pcre = { path = "../php-pcre" }
 php-value = { path = "../php-value" }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+# GlobResource (Glob::toRegex(), the Finder fallback) and the filesystem
+# as PHP's stream layer presents it.
+symfony-finder = { path = "../finder" }
+# hash('xxh128'): DirectoryResource::__toString(), GlobResource's hash
+# (PLAN.md stack row).
+twox-hash = { version = "2.1.5", default-features = false, features = ["xxhash3_128"] }
 symfony-yaml = { path = "../yaml", optional = true }
 
 [dev-dependencies]
