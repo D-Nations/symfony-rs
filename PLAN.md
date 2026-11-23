@@ -1013,6 +1013,20 @@ Stack rows (searched November 22):
       v8.1.11 fixes (Request.php), UrlHelper, BinaryFileResponse,
       MethodRequestMatcher, SessionHandlerFactory, the compiled matcher's
       host-variable fix and RouterListener's sub-request context.
+- [ ] HttpFoundation stage 3 (November 23;
+      [docs/milestones/m2-a-http-foundation-stage3.md](docs/milestones/m2-a-http-foundation-stage3.md)):
+      `AcceptHeader.php` and `AcceptHeaderItem.php` as an API
+      (AcceptHeaderTest 6 of 6, AcceptHeaderItemTest 5 of 5; `filter()` on
+      php-pcre) and `HeaderUtils::parseQuery()` (HeaderUtilsTest now 13 of
+      13). PHP's input-variable rules move from `query.rs` to
+      `php_value::vars`, shared with a new `parse_str()`; `query.rs` keeps
+      its API and its 160 recorded vectors. Recorded and matching: 254
+      `parse_str()` inputs, 3,000 `parseQuery()` calls, 1,500 Accept
+      headers with 6,000 `has()`/`get()` queries, 2,000 `get()` calls among
+      overlapping ranges, 21 `filter()` calls and 500 items.
+      `accept_language.rs` now reads through AcceptHeader. No advisory is
+      listed for these files. Next: FileBag with File and UploadedFile
+      (MIME guessing needs symfony/mime), then Request.
 
 ## Verification
 

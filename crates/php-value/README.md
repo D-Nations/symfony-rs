@@ -10,7 +10,7 @@ behaviour and checked against vectors recorded in the oracle container
 |---|---|
 | `Value`: null, bool, int, float, byte string, array, object; `===` as `PartialEq` | Unit use in dependants |
 | Array keys: canonical decimal strings become ints (`"7"`, `"-3"`; not `"07"`, `"+1"`, `"-0"`, `" 1"`, out-of-range); `true`/`false` → 1/0; `null` → `""` | 58 key vectors |
-| Array order and appending: assignment keeps an existing key's place; append uses one more than the largest int key ever used (not lowered by removal; negative keys count, PHP 8.3+); `Cannot add element to the array as the next element is already occupied` after `PHP_INT_MAX` | 9 scenarios |
+| Array order and appending: assignment keeps an existing key's place; append (`push()`, `next_index()`) uses one more than the largest int key ever used (not lowered by removal; negative keys count, PHP 8.3+); `Cannot add element to the array as the next element is already occupied` after `PHP_INT_MAX` | 9 scenarios |
 | `(int)`, `(float)` of strings (longest numeric prefix, whitespace, saturation, INF → 0) and `is_numeric()` | 55 vectors |
 | `(string)` of floats (`precision = 14`), `var_export()` and `json_encode()` of floats (shortest digits) | 338 vectors |
 | `hexdec()`, `octdec()`: invalid characters skipped, float after overflow | 19 vectors |
@@ -22,6 +22,8 @@ behaviour and checked against vectors recorded in the oracle container
 | `net::{validate_ip, inet_pton, inet_ntop, ip2long}`: `FILTER_VALIDATE_IP`'s address grammar (no leading zeros, one `::` for at least one group, IPv4 tail), glibc's `inet_ntop()` text, the `ValueError` for a NUL byte | 388 strings and 629 packed addresses recorded (symfony-http-foundation's `tests/data/ip_utils.json`) |
 | `numeric::{leading_numeric_value, compare_string_with_int, int_argument}`: a string in arithmetic, `$string <=> $int` and an `int` parameter under PHP 8's rules (a leading-numeric string is its prefix in arithmetic, compares as a string, and is a TypeError as an argument) | symfony-http-foundation's IpUtils netmask vectors |
 | `url::{urlencode, rawurlencode, urldecode, rawurldecode}` on bytes | Unit test; symfony-http-foundation's Cookie vectors |
+| `url::{http_build_query, bin2hex, hex2bin}`: `http_build_query($data, '', $separator)` (RFC 1738) for strings, ints, bools, null and nested arrays; a float or object entry is refused (`None`) | symfony-http-foundation's HeaderUtilsTest `parseQuery` tests and 3,000 recorded `parseQuery()` calls |
+| `vars::{register, parse_str, top_level_key}`: PHP's input-variable rules (NUL ends a name, leading spaces dropped, `.`/space/unclosed `[` to `_`, `[...]` groups, int keys, `[]` appends, `max_input_nesting_level` 64) and `parse_str()` (`max_input_vars` 1000, stops at a raw NUL byte); PHP's warnings are not reproduced | 254 recorded `parse_str()` inputs (`tests/data/parse_str.json`, oracle/recorders/php_value_parse_str.php); symfony-http-foundation's 160 query, 54 cookie and 274 multipart vectors |
 | `base64::decode()` (non-strict `base64_decode()`: bytes outside the alphabet skipped, trailing bits dropped) | 15 recorded answers |
 | `PhpArray::ksort()`, `array::compare_keys()` (PHP 8's `<=>` on keys) | symfony-http-foundation's header-bag vectors |
 | `object::Closure` (a `\Closure` over a Rust function), `StringableObject`, `PhpObject::to_php_string()` (`\Stringable`), `numeric::numeric_value()` | Unit use in dependants |
