@@ -134,11 +134,9 @@ fn recorded_qt() -> Result<(), BoxError> {
         std::fs::write(dir.join(name), base64(text(content)?)?)?;
     }
     let base = dir.to_string_lossy().into_owned().into_bytes();
-    let real_base = dir
-        .canonicalize()?
-        .to_string_lossy()
-        .into_owned()
-        .into_bytes();
+    // PHP's realpath(), as FileResource computes it (no `\\?\` prefix,
+    // `/` separators on Windows)
+    let real_base = symfony_finder::fs::realpath(&base).ok_or("realpath")?;
     let previous_cwd = std::env::current_dir()?;
     std::env::set_current_dir(&dir)?;
 
