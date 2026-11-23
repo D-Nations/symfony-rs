@@ -103,3 +103,6 @@ answered a second apart. Re-running the security flows twice against this
 branch gave 11 same, 0 differ, with both `expires` in the same second.
 (In that isolated run the control's 8 known security differences do not
 appear either: they depend on the state the earlier flows leave.)
+
+This is the last symfony-demo-rs comparison before the owner paused that
+step (November 23, PR #26); later stages do not run it until it resumes.
