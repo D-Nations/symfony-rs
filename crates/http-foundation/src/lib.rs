@@ -19,6 +19,7 @@ pub mod multipart;
 pub mod parameter_bag;
 pub mod query;
 pub mod scheme;
+pub mod server_bag;
 
 /// PHP's default `post_max_size`. HTTP adapters must bound body reads to
 /// this size and pass an empty body on read failure, as the demo does.

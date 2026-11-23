@@ -353,6 +353,7 @@ crates/http-foundation/src/lib.rs	symfony/http-foundation	Request.php	79325f87c3
 crates/http-foundation/src/parameter_bag.rs	symfony/http-foundation	ParameterBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/query.rs	symfony/http-foundation	InputBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/src/scheme.rs	symfony/http-foundation	Request.php	79325f87c3a2acc7564ddce9f457046e980e7255
+crates/http-foundation/src/server_bag.rs	symfony/http-foundation	ServerBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/tests/cookie_recorded.rs	symfony/http-foundation	Cookie.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/tests/cookie_test.rs	symfony/http-foundation	Tests/CookieTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/tests/header_bag_test.rs	symfony/http-foundation	Tests/HeaderBagTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
@@ -362,6 +363,8 @@ crates/http-foundation/tests/header_utils_test.rs	symfony/http-foundation	Tests/
 crates/http-foundation/tests/input_bag_test.rs	symfony/http-foundation	Tests/InputBagTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/tests/parameter_bag_test.rs	symfony/http-foundation	Tests/ParameterBagTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-foundation/tests/response_header_bag_test.rs	symfony/http-foundation	Tests/ResponseHeaderBagTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
+crates/http-foundation/tests/server_bag_recorded.rs	symfony/http-foundation	ServerBag.php	79325f87c3a2acc7564ddce9f457046e980e7255
+crates/http-foundation/tests/server_bag_test.rs	symfony/http-foundation	Tests/ServerBagTest.php	79325f87c3a2acc7564ddce9f457046e980e7255
 crates/http-kernel/src/lib.rs	symfony/http-kernel	HttpKernel.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
 crates/http-kernel/src/lib.rs	symfony/http-kernel	Event/RequestEvent.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1
 crates/http-kernel/src/lib.rs	symfony/http-kernel	Event/ControllerEvent.php	924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1

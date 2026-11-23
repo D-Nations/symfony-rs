@@ -541,20 +541,20 @@ Tests/ResponseTest.php	ResponseTest::testSetStatusCode	pending
 Tests/ResponseTest.php	ResponseTest::testSetVary	pending	
 Tests/ResponseTest.php	ResponseTest::testSettersAreChainable	pending	
 Tests/ResponseTest.php	ResponseTest::testToString	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgi	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiBogus	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiEmptyPassword	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiRedirect	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgi	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiBogus	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiRedirect	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptional	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptionalWhenPassedWithHttpPrefix	pending	
-Tests/ServerBagTest.php	ServerBagTest::testItDoesNotOverwriteTheAuthorizationHeaderIfItIsAlreadySet	pending	
-Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuth	pending	
-Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuthWithRedirect	pending	
-Tests/ServerBagTest.php	ServerBagTest::testRequestWithoutContentTypeAndContentLength	pending	
-Tests/ServerBagTest.php	ServerBagTest::testShouldExtractHeadersFromServerArray	pending	
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgi	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgi
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiBogus	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiBogus
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiEmptyPassword	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiEmptyPassword
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiRedirect	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiRedirect
+Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgi	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpDigestAuthWithPhpCgi
+Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiBogus	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpDigestAuthWithPhpCgiBogus
+Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiRedirect	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpDigestAuthWithPhpCgiRedirect
+Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptional	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpPasswordIsOptional
+Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptionalWhenPassedWithHttpPrefix	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpPasswordIsOptionalWhenPassedWithHttpPrefix
+Tests/ServerBagTest.php	ServerBagTest::testItDoesNotOverwriteTheAuthorizationHeaderIfItIsAlreadySet	ported	crates/http-foundation/tests/server_bag_test.rs::testItDoesNotOverwriteTheAuthorizationHeaderIfItIsAlreadySet
+Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuth	ported	crates/http-foundation/tests/server_bag_test.rs::testOAuthBearerAuth
+Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuthWithRedirect	ported	crates/http-foundation/tests/server_bag_test.rs::testOAuthBearerAuthWithRedirect
+Tests/ServerBagTest.php	ServerBagTest::testRequestWithoutContentTypeAndContentLength	ported	crates/http-foundation/tests/server_bag_test.rs::testRequestWithoutContentTypeAndContentLength
+Tests/ServerBagTest.php	ServerBagTest::testShouldExtractHeadersFromServerArray	ported	crates/http-foundation/tests/server_bag_test.rs::testShouldExtractHeadersFromServerArray
 Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testAll	pending	
 Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testClear	pending	
 Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testCount	pending	
