@@ -100,7 +100,10 @@ Several sessions may work on this repository at once. To keep them apart:
   it touches.
 - Before merging, `git fetch && git rebase origin/main`. Conflicts in
   PLAN.md, `parity/sources.tsv` and `Cargo.lock` usually need both sides
-  kept; regenerate `sources.tsv` and re-run every check after the rebase.
+  kept; regenerate `sources.tsv`. Re-run the full checks after the rebase
+  only if it brought in code (crates, `Cargo.*`, parity manifests, the
+  check scripts); for documentation-only changes, `scripts/sources.sh
+  --check` and `scripts/parity-check.sh` are enough (owner, November 23).
 - symfony-demo-rs comparisons run one at a time across all sessions: they
   share that checkout, its `Cargo.toml` `[patch]` edit and the
   `compare-original` container. Before starting, check that no
