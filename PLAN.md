@@ -592,7 +592,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     demo's vendor copy. IpUtils and `makeDisposition()` are ported at
     v8.1.11; `setTrustedProxies()` comes with `Request.php`.
 
-17. **Config's reflection-based resources (M1-C, November 23).**
+17. **Config's reflection-based resources (M1-C, November 23; accepted).**
     ClassExistenceResource, ReflectionClassResource and ComposerResource
     decide freshness by asking PHP at run time: whether a class can be
     autoloaded (running the autoloader, catching its errors), a hash of a
@@ -607,7 +607,9 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     forms and serialized formats, and mark the tests that change PHP code
     at run time `n/a`. Alternative: leave them unported, with DI's
     container cache relying on File and Glob resources only. The rows
-    stay `pending` until the owner decides.
+    stay `pending` until the owner decides. **Owner, November 23: the
+    build-time class registry.** The rows stay `pending` until that stage
+    ports them; tests that change PHP code at run time become `n/a`.
 
 ## M0 progress
 
