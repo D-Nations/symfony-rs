@@ -1,5 +1,5 @@
-//! Selected HttpKernelTest.php assertions at installed Symfony commit
-//! 924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1. Names are kept from PHPUnit.
+//! Selected HttpKernelTest.php assertions at pinned (v8.1.11) Symfony commit
+//! 460658504e26a2794aa614b4fbe6cf9bac2076fe. Names are kept from PHPUnit.
 //! Additional tests pin priority, propagation and explicit Rust error boundaries.
 //!
 //! Upstream: symfony/http-kernel Tests/HttpKernelTest.php

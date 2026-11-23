@@ -28,8 +28,8 @@ lab registers its own routes. Method refusals hold an ordered vector so
 multiple registrations for one path can aggregate their Allow values.
 
 `tests/upstream.rs` preserves names and relevant assertions from 16 methods
-of `UrlMatcherTest.php` / `RedirectableUrlMatcherTest.php` at the installed
-source commit `41b32d2c5d907abe2c3ffaa7a112dd7492353822`. Rust calls use
+of `UrlMatcherTest.php` / `RedirectableUrlMatcherTest.php` at the pinned (v8.1.11)
+commit `f3fefc6cad3748d538be970ca81b71f06d7aa8b3`. Rust calls use
 canonical method tokens rather than PHP's lowercase constructor arguments;
 the expected methods, route names, parameter values and redirect paths are
 preserved. This does not claim all upstream tests have been ported.
