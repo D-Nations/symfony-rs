@@ -23,14 +23,15 @@
 //! unknown scheme is a plain path. A `phar://` URL into an existing archive
 //! is refused ([`Class::Refused`]); one without an archive does not exist.
 //!
-//! Not yet ported: the `FileResource` that upstream adds to the catalogue
-//! for a file (symfony/config's resources).
+//! A catalogue loaded from a file gets symfony/config's `FileResource` for
+//! the resource as given (its real path, or the `file://` URL as given).
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
 //! Upstream: symfony/translation Loader/XliffFileLoader.php Loader/LoaderInterface.php
 
 use std::path::PathBuf;
+use std::rc::Rc;
 
 use php_dom::{Document, NodeId, NodeType};
 use php_value::{
@@ -38,6 +39,7 @@ use php_value::{
     numeric::{hexdec, is_numeric, string_to_int},
 };
 use symfony_config::XmlUtils;
+use symfony_config::resource::FileResource;
 
 use crate::exception::{Class, Error, Previous};
 use crate::message_catalogue::{INTL_DOMAIN_SUFFIX, MessageCatalogue};
@@ -229,6 +231,13 @@ impl LoaderInterface for XliffFileLoader {
 
         let catalogue = MessageCatalogue::new(locale, PhpArray::new());
         extract(&dom, &catalogue, domain)?;
+
+        // `is_file($resource)`: a path was found to be a file above
+        if path.is_some() {
+            let file = FileResource::new(resource)
+                .map_err(|e| Error::new(Class::Config(Box::new(e.clone())), e.get_message()))?;
+            catalogue.add_resource(Rc::new(file));
+        }
 
         Ok(catalogue)
     }

@@ -15,5 +15,5 @@ pub mod util;
 
 pub use exception::{Class, Error, Previous};
 pub use loader::{LoaderInterface, XliffFileLoader};
-pub use message_catalogue::{INTL_DOMAIN_SUFFIX, MessageCatalogue, Resource};
+pub use message_catalogue::{INTL_DOMAIN_SUFFIX, MessageCatalogue};
 pub use util::XliffUtils;

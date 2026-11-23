@@ -9,9 +9,8 @@
 //! adds its resources to it. The parent link is weak (PHP's is a strong
 //! reference); a parent nobody holds any more can no longer be seen.
 //!
-//! Resources stand for symfony/config's `ResourceInterface`
-//! ([`Resource`], keyed by its `__toString()`), which this crate does not
-//! take from symfony/config yet.
+//! Resources are symfony/config's [`ResourceInterface`] objects, keyed by
+//! their `__toString()`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -23,14 +22,12 @@ use std::rc::{Rc, Weak};
 
 use php_value::{Key, PhpArray, PhpString, Value};
 
+use symfony_config::resource::ResourceInterface;
+
 use crate::exception::{Class, Error};
 
 /// `MessageCatalogueInterface::INTL_DOMAIN_SUFFIX`.
 pub const INTL_DOMAIN_SUFFIX: &str = "+intl-icu";
-
-/// A resource a catalogue was loaded from: symfony/config's
-/// `ResourceInterface`, of which a catalogue uses `__toString()` only.
-pub trait Resource: fmt::Display + fmt::Debug {}
 
 /// `MessageCatalogue`.
 #[derive(Clone)]
@@ -41,7 +38,7 @@ struct Inner {
     messages: PhpArray,
     metadata: PhpArray,
     catalogue_metadata: PhpArray,
-    resources: Vec<(String, Rc<dyn Resource>)>,
+    resources: Vec<(Vec<u8>, Rc<dyn ResourceInterface>)>,
     fallback: Option<MessageCatalogue>,
     parent: Option<Weak<RefCell<Inner>>>,
 }
@@ -377,7 +374,7 @@ impl MessageCatalogue {
         self.0.borrow().fallback.clone()
     }
 
-    pub fn get_resources(&self) -> Vec<Rc<dyn Resource>> {
+    pub fn get_resources(&self) -> Vec<Rc<dyn ResourceInterface>> {
         self.0
             .borrow()
             .resources
@@ -388,7 +385,7 @@ impl MessageCatalogue {
 
     /// `addResource()`: keyed by `__toString()`; adding one with the same
     /// text replaces it in place.
-    pub fn add_resource(&self, resource: Rc<dyn Resource>) {
+    pub fn add_resource(&self, resource: Rc<dyn ResourceInterface>) {
         let key = resource.to_string();
         let mut inner = self.0.borrow_mut();
         match inner.resources.iter_mut().find(|(k, _)| *k == key) {

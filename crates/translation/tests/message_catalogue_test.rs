@@ -5,29 +5,39 @@
 //! Upstream: symfony/translation Tests/MessageCatalogueTest.php
 #![allow(non_snake_case)]
 
-use std::fmt;
 use std::rc::Rc;
 
 use php_value::{Key, PhpArray, Value};
-use symfony_translation::{Class, MessageCatalogue, Resource};
+use symfony_config::Error as ConfigError;
+use symfony_config::resource::ResourceInterface;
+use symfony_translation::{Class, MessageCatalogue};
 
 #[derive(Debug)]
 struct Stub(&'static str);
 
-impl fmt::Display for Stub {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(self.0)
+impl ResourceInterface for Stub {
+    fn class(&self) -> &str {
+        "Stub"
+    }
+
+    fn to_string(&self) -> Vec<u8> {
+        self.0.as_bytes().to_vec()
+    }
+
+    fn serialize(&self) -> Result<PhpArray, ConfigError> {
+        Ok(PhpArray::new())
     }
 }
 
-impl Resource for Stub {}
-
-fn stub(text: &'static str) -> Rc<dyn Resource> {
+fn stub(text: &'static str) -> Rc<dyn ResourceInterface> {
     Rc::new(Stub(text))
 }
 
-fn texts(resources: &[Rc<dyn Resource>]) -> Vec<String> {
-    resources.iter().map(|r| r.to_string()).collect()
+fn texts(resources: &[Rc<dyn ResourceInterface>]) -> Vec<String> {
+    resources
+        .iter()
+        .map(|r| String::from_utf8_lossy(&r.to_string()).into_owned())
+        .collect()
 }
 
 /// `['k' => 'v', …]`

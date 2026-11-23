@@ -4,14 +4,16 @@
 //!
 //! `assertSame([], libxml_get_errors())` and `libxml_get_last_error()`
 //! hold by construction: php-dom keeps no global error buffer (each call
-//! returns its errors). The tests that compare `getResources()` with a
-//! `FileResource` stay pending until symfony/config's resources are
-//! ported; tests/recorded_xliff.rs covers their other assertions.
+//! returns its errors). `getResources()` is compared as the resources'
+//! class and `__toString()`, which is what `assertEquals()` compares for a
+//! FileResource.
 //!
 //! Upstream: symfony/translation Tests/Loader/XliffFileLoaderTest.php
 #![allow(non_snake_case)]
 
+use php_dom::libxml_use_internal_errors;
 use php_value::{Key, PhpArray, Value};
+use symfony_config::resource::{FileResource, ResourceInterface};
 use symfony_translation::{
     Class, INTL_DOMAIN_SUFFIX, LoaderInterface, MessageCatalogue, XliffFileLoader,
 };
@@ -500,11 +502,98 @@ fn testExtractPgsSegmentSkipsInvalidCpCodepoints() {
     );
 }
 
+/// `assertEquals([new FileResource($resource)], $catalogue->getResources())`.
+fn assert_file_resource(catalogue: &MessageCatalogue, resource: &[u8]) {
+    let want = FileResource::new(resource).expect("FileResource");
+    let got: Vec<Vec<u8>> = catalogue
+        .get_resources()
+        .iter()
+        .map(|r| {
+            assert_eq!(r.class(), symfony_config::resource::file_resource::CLASS);
+            r.to_string()
+        })
+        .collect();
+    assert_eq!(got, [want.to_string()]);
+}
+
 #[test]
-fn version2_note_meta_without_resources() {
-    // testLoadVersion2WithNoteMeta's assertions other than getResources()
-    let catalogue = load(&fixture("resources-notes-meta.xlf"), "en", "domain1");
+fn testLoadFile() {
+    let resource = fixture("resources.xlf");
+    let catalogue = load(&resource, "en", "domain1");
+
     assert_eq!(catalogue.get_locale().as_bytes(), b"en");
+    assert_file_resource(&catalogue, &resource);
+    assert_contains_only_string(&catalogue.all(Some(b"domain1")));
+}
+
+#[test]
+fn testLoadWithInternalErrorsEnabled() {
+    let internal_errors = libxml_use_internal_errors(Some(true));
+
+    let resource = fixture("resources.xlf");
+    let catalogue = load(&resource, "en", "domain1");
+
+    assert_eq!(catalogue.get_locale().as_bytes(), b"en");
+    assert_file_resource(&catalogue, &resource);
+
+    libxml_use_internal_errors(Some(internal_errors));
+}
+
+#[test]
+fn testLoadWithExternalEntitiesDisabled() {
+    let resource = fixture("resources.xlf");
+    let catalogue = load(&resource, "en", "domain1");
+
+    assert_eq!(catalogue.get_locale().as_bytes(), b"en");
+    assert_file_resource(&catalogue, &resource);
+}
+
+fn assert_version2(name: &str) {
+    let resource = fixture(name);
+    let catalogue = load(&resource, "en", "domain1");
+
+    assert_eq!(catalogue.get_locale().as_bytes(), b"en");
+    assert_file_resource(&catalogue, &resource);
+
+    let domains = catalogue.all(None);
+    assert_eq!(
+        count(
+            domains
+                .get(&Key::from_bytes(b"domain1"))
+                .unwrap_or(&Value::Null)
+        ),
+        3
+    );
+    assert_contains_only_string(&catalogue.all(Some(b"domain1")));
+
+    // target attributes (assertEquals: 1 == '1')
+    assert_eq!(
+        catalogue.get_metadata(b"bar", b"domain1"),
+        array(&[("target-attributes", array(&[("order", s("1"))]))])
+    );
+}
+
+#[test]
+fn testLoadVersion2() {
+    assert_version2("resources-2.0.xlf");
+}
+
+#[test]
+fn testLoadVersion21() {
+    assert_version2("resources-2.1.xlf");
+}
+
+#[test]
+fn testLoadVersion22() {
+    assert_version2("resources-2.2.xlf");
+}
+
+#[test]
+fn testLoadVersion2WithNoteMeta() {
+    let resource = fixture("resources-notes-meta.xlf");
+    let catalogue = load(&resource, "en", "domain1");
+    assert_eq!(catalogue.get_locale().as_bytes(), b"en");
+    assert_file_resource(&catalogue, &resource);
 
     assert!(catalogue.defines(b"foo", b"domain1"));
     let notes = get(&catalogue.get_metadata(b"foo", b"domain1"), "notes");
@@ -528,28 +617,18 @@ fn version2_note_meta_without_resources() {
 }
 
 #[test]
-fn version2_without_resources() {
-    // testLoadVersion2, 21 and 22's assertions other than getResources()
-    for name in [
-        "resources-2.0.xlf",
-        "resources-2.1.xlf",
-        "resources-2.2.xlf",
-    ] {
-        let catalogue = load(&fixture(name), "en", "domain1");
-        assert_eq!(catalogue.get_locale().as_bytes(), b"en");
-        let domains = catalogue.all(None);
-        assert_eq!(
-            count(
-                domains
-                    .get(&Key::from_bytes(b"domain1"))
-                    .unwrap_or(&Value::Null)
-            ),
-            3
-        );
-        assert_contains_only_string(&catalogue.all(Some(b"domain1")));
-        assert_eq!(
-            catalogue.get_metadata(b"bar", b"domain1"),
-            array(&[("target-attributes", array(&[("order", s("1"))]))])
-        );
+fn testLoadVersion2WithMultiSegmentUnit() {
+    let resource = fixture("resources-2.0-multi-segment-unit.xlf");
+    let catalog = load(&resource, "en", "domain1");
+
+    assert_eq!(catalog.get_locale().as_bytes(), b"en");
+    assert_file_resource(&catalog, &resource);
+
+    for id in ["foo", "bar"] {
+        assert!(catalog.defines(id.as_bytes(), b"domain1"));
+        let notes = get(&catalog.get_metadata(id.as_bytes(), b"domain1"), "notes");
+        assert_eq!(count(&notes), 1);
+        assert_eq!(get(&at(&notes, 0), "category"), s("processed"));
+        assert_eq!(get(&at(&notes, 0), "content"), s("true"));
     }
 }

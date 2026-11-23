@@ -7,8 +7,8 @@
 //!
 //! For each load: the catalogue's locale, messages, metadata and catalogue
 //! metadata, or the exception chain (class, message, code), and
-//! `libxml_use_internal_errors()` afterwards. The catalogue's resources
-//! are not compared: the FileResource upstream adds is not ported yet.
+//! `libxml_use_internal_errors()` afterwards. Resources are compared as
+//! their `__toString()` (the FileResource of a file).
 //!
 //! The recorder wrote its files under /tmp/xliff and ran there; this test
 //! writes the same files to a temporary directory, runs there, and reads
@@ -96,6 +96,15 @@ fn same(expected: &Value, actual: &Value) -> bool {
     }
 }
 
+/// Loads that differ from PHP, stated in README.md: symfony/config's
+/// `FileResource` does not resolve these two names as PHP's `realpath()` and
+/// `file_exists()` do, so it throws "does not exist" where PHP adds the
+/// resource. `foo://bar` is the relative path `foo:/bar` for `realpath()`;
+/// `file_exists()` reads a `file://localhost/` URL.
+fn is_known(kind: &str, resource: &[u8]) -> bool {
+    kind == "raw" && (resource == b"foo://bar" || resource.starts_with(b"file://localhost/"))
+}
+
 #[test]
 fn recorded_xliff() -> Result<(), BoxError> {
     let data: Json = serde_json::from_str(include_str!("data/xliff.json"))?;
@@ -109,10 +118,16 @@ fn recorded_xliff() -> Result<(), BoxError> {
         std::fs::write(dir.join(name), base64(text(content)?)?)?;
     }
     let base = dir.to_string_lossy().into_owned().into_bytes();
+    let real_base = dir
+        .canonicalize()?
+        .to_string_lossy()
+        .into_owned()
+        .into_bytes();
     let previous_cwd = std::env::current_dir()?;
     std::env::set_current_dir(&dir)?;
 
     let mut failures = Vec::new();
+    let mut known = 0;
     let mut count = 0;
     for case in data["cases"].as_array().ok_or("cases")? {
         let kind = text(&case[0])?;
@@ -147,6 +162,7 @@ fn recorded_xliff() -> Result<(), BoxError> {
             ));
         }
 
+        let before = failures.len();
         match (text(&outcome[0])?, &result) {
             ("ok", Ok(catalogue)) => {
                 let expected = &outcome[1];
@@ -165,6 +181,27 @@ fn recorded_xliff() -> Result<(), BoxError> {
                             "{label}: {field}\n  expected {want:?}\n  actual   {actual:?}"
                         ));
                     }
+                }
+                let mut want = Vec::new();
+                for r in expected["resources"].as_array().ok_or("resources")? {
+                    want.push(replace(text(r)?.as_bytes(), RECORDED_BASE, &real_base));
+                }
+                let actual: Vec<Vec<u8>> = catalogue
+                    .get_resources()
+                    .iter()
+                    .map(|r| r.to_string())
+                    .collect();
+                if want != actual {
+                    let show = |v: &[Vec<u8>]| {
+                        v.iter()
+                            .map(|r| String::from_utf8_lossy(r).into_owned())
+                            .collect::<Vec<_>>()
+                    };
+                    failures.push(format!(
+                        "{label}: resources\n  expected {:?}\n  actual   {:?}",
+                        show(&want),
+                        show(&actual)
+                    ));
                 }
             }
             ("throws", Err(e)) => {
@@ -195,7 +232,21 @@ fn recorded_xliff() -> Result<(), BoxError> {
             }
             (expected, _) => failures.push(format!("{label}: expected {expected}, got {result:?}")),
         }
+        if is_known(kind, &resource) {
+            let refused = matches!(&result, Err(e) if e.class().name() == "InvalidArgumentException"
+                && e.get_message().ends_with(b"\" does not exist."));
+            if failures.len() == before || !refused {
+                failures.truncate(before);
+                failures.push(format!(
+                    "{label}: listed in is_known() but now differs otherwise or matches"
+                ));
+            } else {
+                failures.truncate(before);
+                known += 1;
+            }
+        }
     }
+    eprintln!("{known} recorded loads differ as listed in is_known()");
 
     std::env::set_current_dir(previous_cwd)?;
     let _ = std::fs::remove_dir_all(&dir);
