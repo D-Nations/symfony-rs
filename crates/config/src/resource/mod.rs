@@ -6,7 +6,7 @@
 //! A resource is a [`ResourceInterface`] trait object. `__toString()` is
 //! [`ResourceInterface::to_string`]; `__serialize()` is
 //! [`ResourceInterface::serialize`], the array PHP's `serialize()` stores
-//! for the object (ConfigCache's meta file, a later stage, writes it).
+//! for the object (ConfigCache's meta file writes it).
 //! Each resource's `from_serialized()` is what `unserialize()` restores.
 //!
 //! Paths are bytes and the filesystem is symfony-finder's
@@ -28,11 +28,15 @@ pub mod directory_resource;
 pub mod file_existence_resource;
 pub mod file_resource;
 pub mod glob_resource;
+pub mod self_checking_resource_checker;
+pub mod skipping_resource_checker;
 
 pub use directory_resource::DirectoryResource;
 pub use file_existence_resource::FileExistenceResource;
 pub use file_resource::FileResource;
 pub use glob_resource::GlobResource;
+pub use self_checking_resource_checker::SelfCheckingResourceChecker;
+pub use skipping_resource_checker::SkippingResourceChecker;
 
 /// `ResourceInterface`: a resource whose freshness a cache checks.
 pub trait ResourceInterface: Send + Sync + fmt::Debug {

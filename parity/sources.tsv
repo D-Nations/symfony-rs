@@ -1,4 +1,11 @@
 # rust file	package	upstream path	reference
+crates/config/src/config_cache.rs	symfony/config	ConfigCacheInterface.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/config_cache.rs	symfony/config	ResourceCheckerInterface.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/config_cache.rs	symfony/config	ResourceCheckerConfigCache.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/config_cache.rs	symfony/config	ConfigCache.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/config_cache_factory.rs	symfony/config	ConfigCacheFactoryInterface.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/config_cache_factory.rs	symfony/config	ConfigCacheFactory.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/config_cache_factory.rs	symfony/config	ResourceCheckerConfigCacheFactory.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/definition/array_node.rs	symfony/config	Definition/ArrayNode.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/definition/array_shape_generator.rs	symfony/config	Definition/ArrayShapeGenerator.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/definition/base_node.rs	symfony/config	Definition/BaseNode.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
@@ -64,6 +71,8 @@ crates/config/src/resource/file_resource.rs	symfony/config	Resource/FileResource
 crates/config/src/resource/glob_resource.rs	symfony/config	Resource/GlobResource.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/resource/mod.rs	symfony/config	Resource/ResourceInterface.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/resource/mod.rs	symfony/config	Resource/SelfCheckingResourceInterface.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/resource/self_checking_resource_checker.rs	symfony/config	Resource/SelfCheckingResourceChecker.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/src/resource/skipping_resource_checker.rs	symfony/config	Resource/SkippingResourceChecker.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/util/exception.rs	symfony/config	Util/Exception/XmlParsingException.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/util/exception.rs	symfony/config	Util/Exception/InvalidXmlException.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/src/util/xml_utils.rs	symfony/config	Util/XmlUtils.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
@@ -77,6 +86,8 @@ crates/config/tests/common/builder.rs	symfony/config	Tests/Fixtures/BarNode.php	
 crates/config/tests/common/builder.rs	symfony/config	Tests/Fixtures/Builder/BarNodeDefinition.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/common/builder.rs	symfony/config	Tests/Fixtures/Builder/NodeBuilder.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/common/builder.rs	symfony/config	Tests/Fixtures/Builder/VariableNodeDefinition.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/tests/common/cache.rs	symfony/config	Tests/Resource/ResourceStub.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/tests/common/cache.rs	symfony/config	Tests/Fixtures/ResourceWithVeryVeryVeryVeryVeryVeryVeryVeryLongName.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/common/configuration.rs	symfony/config	Tests/Fixtures/Configuration/ExampleConfiguration.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/common/configuration.rs	symfony/config	Tests/Fixtures/Configuration/CustomNode.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/common/configuration.rs	symfony/config	Tests/Fixtures/Configuration/CustomNodeDefinition.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
@@ -87,6 +98,7 @@ crates/config/tests/common/mod.rs	symfony/config	Tests/Fixtures/TestEnum2.php	4a
 crates/config/tests/common/mod.rs	symfony/config	Tests/Fixtures/StringBackedTestEnum.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/common/mod.rs	symfony/config	Tests/Fixtures/StringBackedTestEnum2.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/common/mod.rs	symfony/config	Tests/Fixtures/IntegerBackedTestEnum.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/tests/config_cache_test.rs	symfony/config	Tests/ConfigCacheTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/delegating_loader_test.rs	symfony/config	Tests/Loader/DelegatingLoaderTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/directory_resource_test.rs	symfony/config	Tests/Resource/DirectoryResourceTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/enum_node_definition_test.rs	symfony/config	Tests/Definition/Builder/EnumNodeDefinitionTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
@@ -109,6 +121,7 @@ crates/config/tests/node_definition_test.rs	symfony/config	Tests/Definition/Buil
 crates/config/tests/normalization_test.rs	symfony/config	Tests/Definition/NormalizationTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/numeric_node_definition_test.rs	symfony/config	Tests/Definition/Builder/NumericNodeDefinitionTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/prototyped_array_node_test.rs	symfony/config	Tests/Definition/PrototypedArrayNodeTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
+crates/config/tests/resource_checker_config_cache_test.rs	symfony/config	Tests/ResourceCheckerConfigCacheTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/scalar_node_test.rs	symfony/config	Tests/Definition/ScalarNodeTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/string_node_test.rs	symfony/config	Tests/Definition/StringNodeTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
 crates/config/tests/tree_builder_test.rs	symfony/config	Tests/Definition/Builder/TreeBuilderTest.php	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec
@@ -325,6 +338,14 @@ crates/event-dispatcher/tests/generic_event.rs	symfony/event-dispatcher	Tests/Ge
 crates/event-dispatcher/tests/immutable_event_dispatcher.rs	symfony/event-dispatcher	Tests/ImmutableEventDispatcherTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/event-dispatcher/tests/traceable_event_dispatcher.rs	symfony/event-dispatcher	Tests/Debug/TraceableEventDispatcherTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/event-dispatcher/tests/wrapped_listener.rs	symfony/event-dispatcher	Tests/Debug/WrappedListenerTest.php	7458da64220376b2e0dc2d8451bf43382c1ad297
+crates/filesystem/src/exception.rs	symfony/filesystem	Exception/IOException.php	43d109c803d22c00bb820ed45df250b6a8792ca2
+crates/filesystem/src/exception.rs	symfony/filesystem	Exception/InvalidArgumentException.php	43d109c803d22c00bb820ed45df250b6a8792ca2
+crates/filesystem/src/exception.rs	symfony/filesystem	Exception/RuntimeException.php	43d109c803d22c00bb820ed45df250b6a8792ca2
+crates/filesystem/src/filesystem.rs	symfony/filesystem	Filesystem.php	43d109c803d22c00bb820ed45df250b6a8792ca2
+crates/filesystem/src/path.rs	symfony/filesystem	Path.php	43d109c803d22c00bb820ed45df250b6a8792ca2
+crates/filesystem/tests/filesystem_test.rs	symfony/filesystem	Tests/FilesystemTest.php	43d109c803d22c00bb820ed45df250b6a8792ca2
+crates/filesystem/tests/filesystem_test.rs	symfony/filesystem	Tests/FilesystemTestCase.php	43d109c803d22c00bb820ed45df250b6a8792ca2
+crates/filesystem/tests/path_test.rs	symfony/filesystem	Tests/PathTest.php	43d109c803d22c00bb820ed45df250b6a8792ca2
 crates/finder/src/comparator/date_comparator.rs	symfony/finder	Comparator/DateComparator.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/src/comparator/mod.rs	symfony/finder	Comparator/Comparator.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43
 crates/finder/src/comparator/number_comparator.rs	symfony/finder	Comparator/NumberComparator.php	2f4c0f26106520d82e1b71759d2fb8d32d8b7a43

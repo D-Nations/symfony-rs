@@ -24,6 +24,7 @@ use symfony_config::{
     file_locator::parse_url_scheme,
     resource::{DirectoryResource, GlobResource, ResourceInterface},
 };
+use symfony_filesystem::php::{UrlScheme, parse_url_scheme_value};
 
 fn data() -> Json {
     let path = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/data/loaders.json");
@@ -126,6 +127,17 @@ fn scheme_and_is_absolute_path() {
         if expected != actual {
             failures.push(format!(
                 "parse_url({name:?}): PHP {expected:?}, port {actual:?}"
+            ));
+        }
+        // symfony-filesystem's Path::isAbsolute() tells null from false
+        let value = match &case["scheme"] {
+            Json::String(s) => UrlScheme::Scheme(s.as_bytes().to_vec()),
+            Json::Bool(false) => UrlScheme::False,
+            _ => UrlScheme::Null,
+        };
+        if parse_url_scheme_value(name.as_bytes()) != value {
+            failures.push(format!(
+                "parse_url({name:?}): null and false differ from PHP"
             ));
         }
         let absolute = case["absolute"].as_bool().unwrap_or_default();

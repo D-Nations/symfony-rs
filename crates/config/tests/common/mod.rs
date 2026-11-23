@@ -5,6 +5,7 @@
 #![allow(dead_code)]
 
 pub mod builder;
+pub mod cache;
 pub mod configuration;
 pub mod fs;
 pub mod loaders;
