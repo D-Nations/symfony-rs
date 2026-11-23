@@ -16,6 +16,12 @@ behaviour and checked against vectors recorded in the oracle container
 | `hexdec()`, `octdec()`: invalid characters skipped, float after overflow | 19 vectors |
 | `filter::filter_var()` for `FILTER_UNSAFE_RAW` (with `FILTER_FLAG_STRIP_LOW`), `FILTER_VALIDATE_INT` (hex, octal, `min_range`/`max_range`), `FILTER_VALIDATE_BOOL`, `FILTER_SANITIZE_NUMBER_INT` and `FILTER_CALLBACK`; `FILTER_REQUIRE_SCALAR`, `FILTER_REQUIRE_ARRAY`, `FILTER_FORCE_ARRAY`, `FILTER_NULL_ON_FAILURE`, `default`; the extension's constants. Any other filter, flag or option is refused (`Unsupported`) | 22,932 recorded calls (`tests/data/filter.json`, oracle/recorders/filter_var.php) and the constants' values |
 | `object::backed_enum_from()`: `BackedEnum::from()` in coercive mode (int- and string-backed), its `TypeError`/`ValueError` messages; the `E_DEPRECATED` for a truncated float is not reproduced | symfony-http-foundation's 2,450 recorded bag calls |
+| `clock::time()`, with `clock::mock()` fixing it per thread as ClockMock does | Unit test; symfony-http-foundation's time-sensitive tests |
+| `datetime::gmdate()` and the `D l M F j w N` format characters; a `GMT` zone | 13 recorded timestamps (`tests/data/dates.json`) |
+| `dateparse::strtotime()` and `dateparse::create_from_format_rfc2822()`: HTTP, cookie, asctime and ISO dates, `@timestamp`, relative offsets, single words; PHP's `false` where the reason is visible; any other text refused (`Unsupported`). Default time zone UTC | 173 + 209 recorded answers (`tests/data/dates.json`, oracle/recorders/http_foundation_dates.php); the refused texts are listed in `tests/dates.rs` |
+| `url::{urlencode, rawurlencode, urldecode, rawurldecode}` on bytes | Unit test; symfony-http-foundation's Cookie vectors |
+| `base64::decode()` (non-strict `base64_decode()`: bytes outside the alphabet skipped, trailing bits dropped) | 15 recorded answers |
+| `PhpArray::ksort()`, `array::compare_keys()` (PHP 8's `<=>` on keys) | symfony-http-foundation's header-bag vectors |
 | `object::Closure` (a `\Closure` over a Rust function), `StringableObject`, `PhpObject::to_php_string()` (`\Stringable`), `numeric::numeric_value()` | Unit use in dependants |
 
 Arrays have value semantics: a clone shares storage until one side is
