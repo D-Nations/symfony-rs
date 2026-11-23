@@ -15,6 +15,13 @@
 //! the working directory races with nothing.
 //!
 //! Upstream: none
+//!
+//! Unix only: the recording is of PHP on Linux, and its filesystem cases
+//! (resources.ts with a trailing space, `file://` URLs over Unix paths)
+//! mean other things on Windows or cannot be created there (owner,
+//! November 23). On a Windows host, run it in Linux with
+//! `scripts/linux-test.sh -p symfony-translation`.
+#![cfg(unix)]
 
 use php_dom::{
     Document, LoadOptions, NodeId, XPathError, libxml_use_internal_errors, load_xml, xpath,

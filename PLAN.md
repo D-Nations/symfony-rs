@@ -137,6 +137,12 @@ PLAN.md "Proposed: Symfony bundles as Rust modules".
 CI gates the manifests: a component marked done with `pending` rows fails,
 and so does a Rust test claiming an upstream name that isn't in the manifest.
 
+The gates run locally, before every merge (owner, November 23: no paid CI
+jobs; the GitHub-hosted `.github/workflows/checks.yml` is removed, and
+"CI" below means these local checks). Tests that only run on Unix are run
+on a Windows host with `scripts/linux-test.sh`, in a removed Linux
+container. The weekly upstream watch stays a scheduled workflow.
+
 A bounded stage can finish while its package remains partial: name the PHP
 files and upstream tests in that stage, pass all of them, and list every
 deferred integration with its dependency and destination stage below. Those
