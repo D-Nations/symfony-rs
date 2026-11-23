@@ -15,6 +15,11 @@ Potencier. Unofficial, not affiliated with or endorsed by Symfony.
 | Reference dumpers: YamlReferenceDumper (`dump()`, `dumpAtPath()` and its "Unable to find node" UnexpectedValueException, `dumpNode()`; defaults, examples and keys through symfony-yaml's `Inline::dump()`, behind the `yaml` feature) and XmlReferenceDumper (`dump()` / `dumpNode()` with or without a namespace; XML remappings, prototypes of every class and their placeholder values, attribute comments, `writeValue()`); a NodeInterface that does not extend BaseNode | `Definition/Dumper/YamlReferenceDumper.php`, `Definition/Dumper/XmlReferenceDumper.php` | YamlReferenceDumperTest, XmlReferenceDumperTest (7 of 7); recorded `yaml`, `yaml_at`, `xml`, `xml_ns` outputs |
 | `ArrayShapeGenerator::generate()`: PHPDoc shapes of every node class, quoted keys (`addslashes()`), optional keys and deep merging, normalized types (`array_unique()`, `sort()`), unsealed shapes, inline comments with deprecations, info and `json_encode()` defaults, `*/` escaped | `Definition/ArrayShapeGenerator.php` | ArrayShapeGeneratorTest (18 of 18); recorded `shape` outputs |
 | XmlUtils: `parse()` (`validateOnParse`, libxml's errors as `[LEVEL code] message (in file - line l, column c)`, document types refused, schema files with their imports resolved as libxml resolves them for a schema read from memory, validation callables: their result tested for truth, an `\Exception` as the previous exception, an `\Error` propagated), `loadFile()` (not a file, not readable, empty after `trim()`, InvalidXmlException rewrapped with the file name), `convertDomElementToArray()` (with and without the prefix check), `phpize()`; XmlParsingException and InvalidXmlException; `libxml_use_internal_errors()` set, restored and passed to callables as upstream does | `Util/XmlUtils.php`, `Util/Exception/XmlParsingException.php`, `Util/Exception/InvalidXmlException.php` | XmlUtilsTest (7 of 7); recorded `phpize` (3,045 values), `convert` (71 documents), `parse` and `load` (120 outcomes) |
+| Loader exceptions: LoaderLoadException (resource as `json_encode()` or "resource of type", the previous exception's message with one period removed, source resource, bundle `@` hints, type hint, code), FileLoaderImportCircularReferenceException, FileLocatorFileNotFoundException with `getPaths()` | `Exception/LoaderLoadException.php`, `Exception/FileLoaderImportCircularReferenceException.php`, `Exception/FileLocatorFileNotFoundException.php` | LoaderLoadExceptionTest (9 of 9); recorded `loader_load` (432 messages), `circular` |
+| FileLocator: `locate()` (absolute names, `$currentPath` first, `array_unique()`, first or every match, messages and tried paths), `isAbsolutePath()` with `parse_url()`'s scheme rules | `FileLocator.php`, `FileLocatorInterface.php` | FileLocatorTest (5 of 5); recorded `scheme` (94 names), `locate` (432 calls) |
+| Loaders: Loader (resolver, `resolve()`, `import()`), LoaderResolver, DelegatingLoader, FileLoader (`import()` with glob patterns, exclusions, `ignoreErrors`, `glob` type, `_excluded`; `glob()` and the resource it sets; `doImport()`'s locator delegation, loading set, circular-reference detection and exception wrapping), GlobFileLoader, ParamConfigurator; DirectoryAwareLoaderInterface | `Loader/*.php` (9 files) | LoaderTest, LoaderResolverTest, DelegatingLoaderTest, FileLoaderTest (24 of 24); recorded `import` (456 calls) |
+| Filesystem resources: FileResource, FileExistenceResource, DirectoryResource (`isFresh()` over the tree with a file pattern; `__toString()` as `hash('xxh128', serialize(...))`), GlobResource (`glob()` with and without `GLOB_BRACE`, `expandGlob()`, `/**/` patterns, excluded prefixes, `forExclusion`, the Finder fallback, `__toString()`, hash, `__serialize()` / `__unserialize()`); ResourceInterface, SelfCheckingResourceInterface | `Resource/FileResource.php`, `Resource/FileExistenceResource.php`, `Resource/DirectoryResource.php`, `Resource/GlobResource.php`, `Resource/ResourceInterface.php`, `Resource/SelfCheckingResourceInterface.php` | FileResourceTest, FileExistenceResourceTest, DirectoryResourceTest, GlobResourceTest (40 of 41; testPhar `n/a`); recorded `glob` (1,680 cases), `xxh128` |
+| Definition behaviour end to end | (the nodes and builders above) | NormalizationTest, MergeTest, FinalizationTest (12 of 12) |
 
 Vectors: `scripts/record.sh config` runs
 `oracle/recorders/config_definition.php`, `config_builder.php` and
@@ -27,6 +32,10 @@ The dumper vectors are 1,020 outputs on 34 generated trees.
 writes `tests/data/xml_utils.json`, which `tests/recorded_xml_utils.rs`
 replays (stage log
 [m1-c-xml-x3.md](../../docs/milestones/m1-c-xml-x3.md)).
+`scripts/record.sh config-loaders` runs `config_loaders.php` and writes
+`tests/data/loaders.json`, which `tests/recorded_loaders.rs` replays on a
+copy of `tests/fixtures` (stage log
+[m1-c-config-loaders.md](../../docs/milestones/m1-c-config-loaders.md)).
 
 ## Rust shape
 
@@ -147,8 +156,34 @@ replays (stage log
 - Schema errors name the document as the working directory plus `/`, as
   PHP does on Linux (recorded); PHP's form on Windows is not recorded.
 
+- Loaders are `Arc<dyn LoaderInterface>`; a loader and the resolver it
+  is given keep each other alive, as in PHP, until the process ends.
+  FileLoader's static `$loading` set is per thread. `class_exists()` in
+  `FileLoader::import()` is what `FileLoader::set_class_exists()` answers
+  (no class by default; PHP asks its autoloader). `glob()` collects the
+  paths before `import()` loads them, where PHP's generator interleaves
+  the two.
+- GlobResource refuses `phar://` prefixes (no PHP archive reader).
+  `GLOB_BRACE` is taken as defined, as on the oracle's glibc. The
+  iterator's values are paths, not `SplFileInfo` objects.
+- A directory GlobResource or DirectoryResource cannot open is SPL's
+  UnexpectedValueException with "RecursiveDirectoryIterator::__construct(path):
+  Failed to open directory: reason"; that text is not recorded.
+- Resources restored by `from_serialized()` check property types with
+  messages modelled on PHP's typed-property errors (not recorded).
+- The loaders' TypeErrors for a non-string resource given to a locator
+  name the interface method, not the implementing class.
+
 ## Not ported yet
 
-`Definition/Configuration.php`, `Definition/Loader`,
-`Definition/Configurator`, and the loaders, resources, `ConfigCache` and
-`FileLocator`: 135 upstream tests pending in `parity/symfony/config.tsv`.
+- `ConfigCache`, `ResourceCheckerConfigCache`, their factories and the
+  resource checkers (19 tests): they write through Filesystem's
+  `dumpFile()` and store PHP `serialize()` meta files.
+- `ClassExistenceResource`, `ReflectionClassResource` and
+  `ComposerResource` (23 tests): they ask PHP's autoloader and reflection
+  at run time (PLAN.md decision 16).
+- `Definition/Configuration.php`, `Definition/Loader` and
+  `Definition/Configurator` (2 tests): DefinitionFileLoader includes PHP
+  files.
+
+44 upstream tests pending in `parity/symfony/config.tsv`.
