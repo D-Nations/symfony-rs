@@ -618,6 +618,7 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "base64",
+ "php-pcre",
  "php-value",
  "serde",
  "serde_json",

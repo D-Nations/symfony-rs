@@ -67,4 +67,20 @@ if (isset($argv[1])) {
     exit;
 }
 
-echo json_encode(['split' => $split, 'strings' => $strings, 'disposition' => $disposition], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";
+// parseQuery() over generated queries (drawn after the sections above, so
+// their cases do not change): [query, ignoreBrackets, separator, result]
+$queryPieces = ['a', 'b', '1', '0', '.', ' ', '+', '[', ']', '[]', '[x]', '[1]', '[ ]', '=', '&', ';', '%20', '%2E', '%5B', '%5D',
+    '%00', "\0", '%', '%zz', '%41', '_', '-', 'é', "\xff", '9223372036854775807', '[a.b]', '=v', '==', 'a=1', '&&'];
+$query = [];
+for ($n = 0; $n < 3000; ++$n) {
+    $q = '';
+    $length = mt_rand(0, 8);
+    for ($i = 0; $i < $length; ++$i) {
+        $q .= $queryPieces[mt_rand(0, \count($queryPieces) - 1)];
+    }
+    $ignoreBrackets = 1 === mt_rand(0, 3);
+    $separator = 1 === mt_rand(0, 3) ? ';' : '&';
+    $query[] = [base64_encode($q), $ignoreBrackets, $separator, typed_value(HeaderUtils::parseQuery($q, $ignoreBrackets, $separator))];
+}
+
+echo json_encode(['split' => $split, 'strings' => $strings, 'disposition' => $disposition, 'query' => $query], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";

@@ -8,8 +8,14 @@
 //! recorded answers (`tests/data/query_vectors.json`, recorded by
 //! `scripts/record.sh request-vars`); no PHP source code is used (PLAN.md
 //! decision 8). `cookies` and `multipart` register their names here too.
+//! PHP's naming rules themselves live in `php_value::vars`, shared with
+//! `parse_str()`.
 //!
 //! Upstream: symfony/http-foundation InputBag.php
+
+use php_value::vars;
+pub(crate) use php_value::vars::Duplicate;
+use php_value::{Key, PhpArray, PhpString, Value, url};
 
 /// A parsed query value: a string, or an array (PHP arrays keep insertion
 /// order; keys are strings here).
@@ -20,10 +26,7 @@ pub enum QueryValue {
 }
 
 /// PHP's `max_input_vars` default.
-pub(crate) const MAX_INPUT_VARS: usize = 1000;
-/// PHP's `max_input_nesting_level` default: a name with more `[...]`
-/// groups is dropped.
-const MAX_NESTING: usize = 64;
+pub(crate) const MAX_INPUT_VARS: usize = php_value::vars::MAX_INPUT_VARS;
 
 /// `InputBag::get()` found an array where a string was expected; Symfony
 /// answers 400 Bad Request.
@@ -32,12 +35,28 @@ pub struct NonScalarValue(pub String);
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Query {
+    /// The variables as PHP stores them (`php_value::vars`).
+    vars: Vars,
+    /// `vars` as text, filled by the constructors.
     entries: Vec<(String, QueryValue)>,
     /// Top-level names whose value, as sent, was not UTF-8. PHP keeps the
     /// bytes; here they are replaced, so the places where the original
     /// fails on such bytes (`u()` in `findBySearchQuery()`) can ask.
     not_utf8: Vec<String>,
 }
+
+/// The variables, compared by their text form so `Query` keeps deriving
+/// `PartialEq`.
+#[derive(Debug, Clone, Default)]
+struct Vars(PhpArray);
+
+impl PartialEq for Vars {
+    fn eq(&self, other: &Self) -> bool {
+        to_entries(&self.0) == to_entries(&other.0)
+    }
+}
+
+impl Eq for Vars {}
 
 impl Query {
     /// A query string, as `$_GET`: pairs are separated by `&`, empty
@@ -52,7 +71,7 @@ impl Query {
         for pair in pairs.take(MAX_INPUT_VARS) {
             query.register_pair(pair, Decode::Plus, Duplicate::Replace);
         }
-        query
+        query.finish()
     }
 
     /// An `application/x-www-form-urlencoded` body, as `$_POST`. Unlike a
@@ -65,7 +84,7 @@ impl Query {
                 query.register_pair(pair, Decode::Plus, Duplicate::Replace);
             }
         }
-        query
+        query.finish()
     }
 
     /// The fields of a `multipart/form-data` body, already limited to
@@ -76,12 +95,18 @@ impl Query {
         for (name, value) in fields {
             query.register(name, value, Duplicate::Replace);
         }
-        query
+        query.finish()
     }
 
     /// Every parameter, as `$request->query->all()` returns them.
     pub fn all(&self) -> &[(String, QueryValue)] {
         &self.entries
+    }
+
+    /// The parameters as PHP holds them: binary-safe keys and values, int
+    /// keys where PHP has them.
+    pub fn vars(&self) -> &PhpArray {
+        &self.vars.0
     }
 
     pub fn has(&self, name: &str) -> bool {
@@ -109,8 +134,14 @@ impl Query {
         !self.not_utf8.iter().any(|n| n == name)
     }
 
+    /// Fills `entries` from `vars`; every constructor ends with it.
+    pub(crate) fn finish(mut self) -> Self {
+        self.entries = to_entries(&self.vars.0);
+        self
+    }
+
     pub(crate) fn into_entries(self) -> Vec<(String, QueryValue)> {
-        self.entries
+        to_entries(&self.vars.0)
     }
 
     /// One `name=value` pair: the name ends at the first `=`; a pair
@@ -121,44 +152,55 @@ impl Query {
             None => (pair, &b""[..]),
         };
         let (name, value) = match decode {
-            Decode::Plus => (decode_bytes(name, true), decode_bytes(value, true)),
-            Decode::ValueOnly => (name.to_vec(), decode_bytes(value, false)),
+            Decode::Plus => (url::urldecode(name), url::urldecode(value)),
+            Decode::ValueOnly => (name.to_vec(), url::rawurldecode(value)),
         };
         self.register(&name, &value, duplicate);
     }
 
-    /// Stores `value` under `name`, which may be `base[a][b]...`.
+    /// Stores `value` under `name`, which may be `base[a][b]...`, as PHP
+    /// does (`php_value::vars::register`).
     pub(crate) fn register(&mut self, name: &[u8], value: &[u8], duplicate: Duplicate) {
-        let Some(name) = Name::parse(name) else {
+        let done = vars::register(&mut self.vars.0, name, PhpString::from(value), duplicate);
+        if !done.stored && !done.replaced {
+            return;
+        }
+        let Some(base) = vars::top_level_key(name).map(|key| key_text(&key)) else {
             return;
         };
-        let text = String::from_utf8_lossy(value).into_owned();
-        let (replaced, stored) = match name.groups.as_slice() {
-            [] => {
-                let position = self.entries.iter().position(|(key, _)| *key == name.base);
-                match position {
-                    Some(_) if duplicate == Duplicate::KeepFirst => return,
-                    Some(at) => self.entries[at].1 = QueryValue::Str(text),
-                    None => self
-                        .entries
-                        .push((name.base.clone(), QueryValue::Str(text))),
-                }
-                (true, true)
-            }
-            // A new or replaced array stays even when the value itself
-            // cannot be appended.
-            groups => match map_entry(&mut self.entries, &name.base) {
-                Some((map, replaced)) => (replaced, store(map, groups, text)),
-                None => (false, false),
-            },
-        };
-        if replaced {
-            self.not_utf8.retain(|n| *n != name.base);
+        if done.replaced {
+            self.not_utf8.retain(|n| *n != base);
         }
-        if stored && std::str::from_utf8(value).is_err() && !self.not_utf8.contains(&name.base) {
-            self.not_utf8.push(name.base);
+        if done.stored && std::str::from_utf8(value).is_err() && !self.not_utf8.contains(&base) {
+            self.not_utf8.push(base);
         }
     }
+}
+
+fn key_text(key: &Key) -> String {
+    match key {
+        Key::Int(i) => i.to_string(),
+        Key::Str(s) => s.to_string_lossy().into_owned(),
+    }
+}
+
+/// An array's entries as text (bytes that are not UTF-8 replaced).
+fn to_entries(array: &PhpArray) -> Vec<(String, QueryValue)> {
+    array
+        .iter()
+        .map(|(key, value)| {
+            let value = match value {
+                Value::Array(children) => QueryValue::Map(to_entries(children)),
+                other => QueryValue::Str(
+                    other
+                        .to_php_string()
+                        .map(|s| s.to_string_lossy().into_owned())
+                        .unwrap_or_default(),
+                ),
+            };
+            (key_text(key), value)
+        })
+        .collect()
 }
 
 /// How a pair is decoded before it is registered.
@@ -171,231 +213,15 @@ pub(crate) enum Decode {
     ValueOnly,
 }
 
-/// What happens when a name without brackets is already present.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub(crate) enum Duplicate {
-    /// The later value replaces the earlier one in place.
-    Replace,
-    /// The first value stays (cookies).
-    KeepFirst,
-}
-
-/// One `[...]` group of a name.
-#[derive(Debug, PartialEq, Eq)]
-enum Group {
-    /// `[]`: the next integer index.
-    Append,
-    Key(Vec<u8>),
-}
-
-/// A registered name: the top-level key and its groups.
-#[derive(Debug, PartialEq, Eq)]
-struct Name {
-    base: String,
-    groups: Vec<Group>,
-}
-
-impl Name {
-    /// `None` when PHP stores nothing for this name.
-    ///
-    /// Recorded rules: the name ends at a NUL byte; leading spaces are
-    /// dropped; an empty name, or one starting with `[`, stores nothing.
-    /// Before the first `[`, spaces and dots become `_`. When that `[` has
-    /// no `]` after it, it is not an array: every space, dot and `[` of the
-    /// name becomes `_`. Otherwise each `[...]` group ends at the first `]`;
-    /// anything after a group other than `[` is ignored, as is an unclosed
-    /// later group. More than `max_input_nesting_level` groups store
-    /// nothing.
-    fn parse(name: &[u8]) -> Option<Self> {
-        let name = match name.iter().position(|&b| b == 0) {
-            Some(nul) => &name[..nul],
-            None => name,
-        };
-        let start = name.iter().position(|&b| b != b' ')?;
-        let name = &name[start..];
-        let Some(open) = name.iter().position(|&b| b == b'[') else {
-            return Some(Self::plain(name, b" ."));
-        };
-        if open == 0 {
-            return None;
-        }
-        if !name[open + 1..].contains(&b']') {
-            return Some(Self::plain(name, b" .["));
-        }
-        let mut groups = Vec::new();
-        let mut rest = &name[open..];
-        while let Some(inside) = rest.strip_prefix(b"[") {
-            let Some(close) = inside.iter().position(|&b| b == b']') else {
-                break;
-            };
-            groups.push(Group::of(&inside[..close]));
-            rest = &inside[close + 1..];
-        }
-        if groups.len() > MAX_NESTING {
-            return None;
-        }
-        Some(Self {
-            base: underscored(&name[..open], b" ."),
-            groups,
-        })
-    }
-
-    fn plain(name: &[u8], converted: &[u8]) -> Self {
-        Self {
-            base: underscored(name, converted),
-            groups: Vec::new(),
-        }
-    }
-}
-
-impl Group {
-    /// `[]`, and a group holding exactly one whitespace byte (`[ ]`,
-    /// `[\t]`, ...), append; anything else is the key as written, spaces
-    /// included (`[ b]`, `[  ]`).
-    fn of(inside: &[u8]) -> Self {
-        match inside {
-            [] => Self::Append,
-            [b' ' | b'\t' | b'\n' | b'\r' | 0x0b | 0x0c] => Self::Append,
-            key => Self::Key(key.to_vec()),
-        }
-    }
-}
-
-fn underscored(name: &[u8], converted: &[u8]) -> String {
-    let bytes: Vec<u8> = name
-        .iter()
-        .map(|&b| if converted.contains(&b) { b'_' } else { b })
-        .collect();
-    String::from_utf8_lossy(&bytes).into_owned()
-}
-
-/// The array stored under `key`, created at the end if absent and
-/// replacing a string in place. The flag is true unless an array was
-/// already there.
-fn map_entry<'a>(
-    entries: &'a mut Vec<(String, QueryValue)>,
-    key: &str,
-) -> Option<(&'a mut Vec<(String, QueryValue)>, bool)> {
-    let at = match entries.iter().position(|(k, _)| k == key) {
-        Some(at) => at,
-        None => {
-            entries.push((key.to_owned(), QueryValue::Map(Vec::new())));
-            entries.len() - 1
-        }
-    };
-    let slot = &mut entries.get_mut(at)?.1;
-    let replaced = !matches!(slot, QueryValue::Map(_));
-    if replaced {
-        *slot = QueryValue::Map(Vec::new());
-    }
-    match slot {
-        QueryValue::Map(map) => Some((map, replaced)),
-        QueryValue::Str(_) => None,
-    }
-}
-
-/// Stores `value` at `groups` below `map`. False when an append found the
-/// next index taken (after `PHP_INT_MAX`), in which case nothing more is
-/// stored.
-fn store(mut map: &mut Vec<(String, QueryValue)>, groups: &[Group], value: String) -> bool {
-    let Some((last, parents)) = groups.split_last() else {
-        return false;
-    };
-    for group in parents {
-        let Some(key) = key_for(map, group) else {
-            return false;
-        };
-        let Some((child, _)) = map_entry(map, &key) else {
-            return false;
-        };
-        map = child;
-    }
-    let Some(key) = key_for(map, last) else {
-        return false;
-    };
-    match map.iter().position(|(k, _)| *k == key) {
-        Some(at) => map[at].1 = QueryValue::Str(value),
-        None => map.push((key, QueryValue::Str(value))),
-    }
-    true
-}
-
-/// The array key a group stands for. Keys that are decimal integers in
-/// PHP's sense become those integers' text; `[]` is the largest integer
-/// key plus one (0 when there is none), and `None` past `PHP_INT_MAX`.
-fn key_for(map: &[(String, QueryValue)], group: &Group) -> Option<String> {
-    match group {
-        Group::Key(key) => Some(match int_key(key) {
-            Some(n) => n.to_string(),
-            None => String::from_utf8_lossy(key).into_owned(),
-        }),
-        Group::Append => match map.iter().filter_map(|(k, _)| int_key(k.as_bytes())).max() {
-            None => Some("0".to_owned()),
-            Some(i64::MAX) => None,
-            Some(n) => Some((n + 1).to_string()),
-        },
-    }
-}
-
-/// The PHP manual's rule for array keys: a string holding a decimal
-/// integer, with no `+`, no leading zero and not `-0`, that fits in an
-/// int, is that int.
-fn int_key(key: &[u8]) -> Option<i64> {
-    let digits = key.strip_prefix(b"-").unwrap_or(key);
-    let canonical = match digits {
-        [b'0'] => key.len() == 1,
-        [b'1'..=b'9', rest @ ..] => rest.iter().all(u8::is_ascii_digit),
-        _ => false,
-    };
-    if !canonical {
-        return None;
-    }
-    std::str::from_utf8(key).ok()?.parse().ok()
-}
-
 /// PHP's `urldecode()`: `+` is a space, `%XX` a byte; invalid escapes stay.
 /// Bytes that do not form UTF-8 are replaced.
 pub fn urldecode(text: &str) -> String {
-    String::from_utf8_lossy(&decode_bytes(text.as_bytes(), true)).into_owned()
+    String::from_utf8_lossy(&url::urldecode(text.as_bytes())).into_owned()
 }
 
 /// PHP's `rawurldecode()`: like `urldecode()`, but `+` stays.
 pub fn rawurldecode(text: &str) -> String {
-    String::from_utf8_lossy(&decode_bytes(text.as_bytes(), false)).into_owned()
-}
-
-/// `%` followed by two hexadecimal digits is that byte; any other `%`
-/// stays as it is (recorded: `%zz%41` is `%zzA`, `%%41` is `%A`).
-fn decode_bytes(text: &[u8], plus_is_space: bool) -> Vec<u8> {
-    let mut out = Vec::with_capacity(text.len());
-    let mut at = 0;
-    while let Some(&byte) = text.get(at) {
-        let escaped = match (byte, text.get(at + 1..at + 3)) {
-            (b'%', Some(&[high, low])) => hex(high).zip(hex(low)).map(|(h, l)| h << 4 | l),
-            _ => None,
-        };
-        match escaped {
-            Some(decoded) => {
-                out.push(decoded);
-                at += 3;
-            }
-            None => {
-                out.push(if plus_is_space && byte == b'+' {
-                    b' '
-                } else {
-                    byte
-                });
-                at += 1;
-            }
-        }
-    }
-    out
-}
-
-fn hex(digit: u8) -> Option<u8> {
-    char::from(digit)
-        .to_digit(16)
-        .and_then(|d| u8::try_from(d).ok())
+    String::from_utf8_lossy(&url::rawurldecode(text.as_bytes())).into_owned()
 }
 
 /// The value stored under `name` in a list of parameters or array entries.

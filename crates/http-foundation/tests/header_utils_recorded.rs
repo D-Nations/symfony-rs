@@ -2,13 +2,14 @@
 //! oracle/recorders/http_foundation_header_utils.php (`scripts/record.sh
 //! http-foundation`): `split()` on 3,000 generated headers and separator
 //! lists, `quote()` and `unquote()` on 633 strings, `makeDisposition()`
-//! on 2,880 type, filename and fallback combinations (v8.1.11).
+//! on 2,880 type, filename and fallback combinations (v8.1.11),
+//! `parseQuery()` on 3,000 generated queries, separators and modes.
 //!
 //! Upstream: none
 
 use php_value::vectors::{self, Error, base64};
 use serde_json::Value as Json;
-use symfony_http_foundation::header_utils::{quote, split, unquote};
+use symfony_http_foundation::header_utils::{parse_query, quote, split, unquote};
 
 fn data() -> Result<Json, Error> {
     Ok(serde_json::from_str(include_str!(
@@ -100,6 +101,35 @@ fn make_disposition_matches_php() -> Result<(), Error> {
                 String::from_utf8_lossy(&filename),
                 String::from_utf8_lossy(&fallback),
                 case[3]
+            ));
+        }
+    }
+    assert!(
+        failures.is_empty(),
+        "{} of {} differ:\n{}",
+        failures.len(),
+        cases.len(),
+        failures[..failures.len().min(30)].join("\n")
+    );
+    Ok(())
+}
+
+#[test]
+fn parse_query_matches_php() -> Result<(), Error> {
+    let data = data()?;
+    let cases = data["query"].as_array().ok_or("query")?;
+    assert_eq!(cases.len(), 3000);
+    let mut failures = Vec::new();
+    for case in cases {
+        let query = bytes(&case[0])?;
+        let ignore_brackets = case[1].as_bool().ok_or("ignoreBrackets")?;
+        let separator = case[2].as_str().ok_or("separator")?;
+        let expected = vectors::decode(&case[3])?;
+        let actual = parse_query(&query, ignore_brackets, separator.as_bytes())?;
+        if expected != php_value::Value::Array(actual.clone()) {
+            failures.push(format!(
+                "{:?} {ignore_brackets} {separator:?}: PHP {expected:?}, Rust {actual:?}",
+                String::from_utf8_lossy(&query)
             ));
         }
     }

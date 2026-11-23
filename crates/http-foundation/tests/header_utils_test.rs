@@ -1,14 +1,14 @@
 //! HeaderUtilsTest.php at symfony/http-foundation
 //! 30fa3efe6e736b0d06f5331cc6abe813582c0a26. Names and assertions are
-//! PHPUnit's; a provider's cases run in a loop. parseQuery is not ported
-//! (header_utils's module doc), so its tests stay pending.
+//! PHPUnit's; a provider's cases run in a loop. `http_build_query()` is
+//! php_value::url's.
 //!
 //! Upstream: symfony/http-foundation Tests/HeaderUtilsTest.php
 #![allow(non_snake_case)]
 
-use php_value::{PhpArray, PhpString, Value, php_array};
+use php_value::{PhpArray, PhpString, Value, php_array, url};
 use symfony_http_foundation::header_utils::{
-    combine, make_disposition, quote, split, to_string, unquote,
+    combine, make_disposition, parse_query, quote, split, to_string, unquote,
 };
 
 type TestResult = Result<(), Box<dyn std::error::Error>>;
@@ -350,4 +350,81 @@ fn make_disposition_rejects_a_fallback_ending_in_a_newline() {
     }
     // A filename ending in a newline is its own fallback, so it fails too.
     assert!(make_disposition(b"attachment", b"foo\n", b"").is_err());
+}
+
+fn provide_parse_query() -> Vec<(&'static [u8], Option<&'static str>)> {
+    vec![
+        (b"a=b&c=d", None),
+        (b"a.b=c", None),
+        (b"a+b=c", None),
+        (b"a\0b=c", Some("a=")),
+        (b"a%00b=c", Some("a=c")),
+        (b"a[b=c", Some("a%5Bb=c")),
+        (b"a]b=c", Some("a%5Db=c")),
+        (b"a[b]=c", Some("a%5Bb%5D=c")),
+        (b"a[b][c.d]=c", Some("a%5Bb%5D%5Bc.d%5D=c")),
+        (b"a%5Bb%5D=c", None),
+        (
+            b"f[%2525][%26][%3D][p.c]=d",
+            Some("f%5B%2525%5D%5B%26%5D%5B%3D%5D%5Bp.c%5D=d"),
+        ),
+    ]
+}
+
+/// `http_build_query($query, '', $separator)`.
+fn build(query: &PhpArray, separator: &str) -> Result<String, Box<dyn std::error::Error>> {
+    let built = url::http_build_query(query, separator.as_bytes()).ok_or("http_build_query")?;
+    Ok(String::from_utf8(built)?)
+}
+
+#[test]
+fn testParseQuery() -> TestResult {
+    for (query, expected) in provide_parse_query() {
+        let expected = match expected {
+            Some(expected) => expected.to_owned(),
+            None => String::from_utf8(query.to_vec())?,
+        };
+        assert_eq!(expected, build(&parse_query(query, false, b"&")?, "&")?);
+    }
+    Ok(())
+}
+
+#[test]
+fn testParseCookie() -> TestResult {
+    let query = "a.b=c; def%5Bg%5D=h";
+    assert_eq!(
+        query,
+        build(&parse_query(query.as_bytes(), false, b";")?, "; ")?
+    );
+    Ok(())
+}
+
+#[test]
+fn testParseQueryIgnoreBrackets() -> TestResult {
+    assert_eq!(
+        php_array!["a.b" => php_array!["A", "B"]],
+        parse_query(b"a.b=A&a.b=B", true, b"&")?
+    );
+    assert_eq!(
+        php_array!["a.b[]" => php_array!["A"]],
+        parse_query(b"a.b[]=A", true, b"&")?
+    );
+    assert_eq!(
+        php_array!["a.b[]" => php_array!["A"]],
+        parse_query(b"a.b%5B%5D=A", true, b"&")?
+    );
+    Ok(())
+}
+
+/// PHP's warning is not reproduced at all (php_value::vars::parse_str()),
+/// so only the result is compared.
+#[test]
+fn testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel() -> TestResult {
+    let deep_key = format!(
+        "a{}",
+        "[b]".repeat(php_value::vars::MAX_INPUT_NESTING_LEVEL + 1)
+    );
+    let query = parse_query(format!("{deep_key}=1&x=2").as_bytes(), false, b"&")?;
+    assert_eq!(php_array!["x" => "2"], query);
+    Ok(())
 }
