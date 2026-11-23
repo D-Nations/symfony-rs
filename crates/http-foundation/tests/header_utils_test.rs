@@ -1,14 +1,15 @@
 //! HeaderUtilsTest.php at symfony/http-foundation
-//! 79325f87c3a2acc7564ddce9f457046e980e7255. Names and assertions are
-//! PHPUnit's; a provider's cases run in a loop. makeDisposition and
-//! parseQuery are not ported (header_utils's module doc), so their tests
-//! stay pending.
+//! 30fa3efe6e736b0d06f5331cc6abe813582c0a26. Names and assertions are
+//! PHPUnit's; a provider's cases run in a loop. parseQuery is not ported
+//! (header_utils's module doc), so its tests stay pending.
 //!
 //! Upstream: symfony/http-foundation Tests/HeaderUtilsTest.php
 #![allow(non_snake_case)]
 
 use php_value::{PhpArray, PhpString, Value, php_array};
-use symfony_http_foundation::header_utils::{combine, quote, split, to_string, unquote};
+use symfony_http_foundation::header_utils::{
+    combine, make_disposition, quote, split, to_string, unquote,
+};
 
 type TestResult = Result<(), Box<dyn std::error::Error>>;
 
@@ -250,4 +251,103 @@ fn long_whitespace_runs_split_in_linear_time() -> TestResult {
     );
     assert!(started.elapsed() < std::time::Duration::from_secs(5));
     Ok(())
+}
+
+#[test]
+fn testMakeDispositionInvalidDisposition() {
+    let e = make_disposition(b"invalid", b"foo.html", b"").unwrap_err();
+    assert!(e.is_a("InvalidArgumentException"));
+}
+
+fn provide_make_disposition() -> Vec<(&'static str, &'static str, &'static str, &'static str)> {
+    vec![
+        (
+            "attachment",
+            "foo.html",
+            "foo.html",
+            "attachment; filename=foo.html",
+        ),
+        (
+            "attachment",
+            "foo.html",
+            "",
+            "attachment; filename=foo.html",
+        ),
+        (
+            "attachment",
+            "foo bar.html",
+            "",
+            "attachment; filename=\"foo bar.html\"",
+        ),
+        (
+            "attachment",
+            "foo \"bar\".html",
+            "",
+            "attachment; filename=\"foo \\\"bar\\\".html\"",
+        ),
+        (
+            "attachment",
+            "foo%20bar.html",
+            "foo bar.html",
+            "attachment; filename=\"foo bar.html\"; filename*=utf-8''foo%2520bar.html",
+        ),
+        (
+            "attachment",
+            "föö.html",
+            "foo.html",
+            "attachment; filename=foo.html; filename*=utf-8''f%C3%B6%C3%B6.html",
+        ),
+    ]
+}
+
+#[test]
+fn testMakeDisposition() -> TestResult {
+    for (disposition, filename, filename_fallback, expected) in provide_make_disposition() {
+        assert_eq!(
+            PhpString::from(expected),
+            make_disposition(
+                disposition.as_bytes(),
+                filename.as_bytes(),
+                filename_fallback.as_bytes()
+            )?
+        );
+    }
+    Ok(())
+}
+
+fn provide_make_disposition_fail() -> Vec<(&'static str, &'static str)> {
+    vec![
+        ("attachment", "foo%20bar.html"),
+        ("attachment", "foo/bar.html"),
+        ("attachment", "/foo.html"),
+        ("attachment", "foo\\bar.html"),
+        ("attachment", "\\foo.html"),
+        ("attachment", "föö.html"),
+    ]
+}
+
+#[test]
+fn testMakeDispositionFail() {
+    for (disposition, filename) in provide_make_disposition_fail() {
+        let e = make_disposition(disposition.as_bytes(), filename.as_bytes(), b"").unwrap_err();
+        assert!(e.is_a("InvalidArgumentException"), "{filename}");
+    }
+}
+
+/// Not upstream here: v8.1.11's `/D` anchor, the fix that
+/// BinaryFileResponseTest's `testSetContentDispositionRejectsTrailingNewlineInFallback`
+/// pins through BinaryFileResponse (not ported). v8.1.10 accepted a
+/// fallback ending in one newline and put it into the header.
+#[test]
+fn make_disposition_rejects_a_fallback_ending_in_a_newline() {
+    for fallback in [&b"foo\n"[..], b"foo\r\n", b"\n"] {
+        let e = make_disposition(b"attachment", b"foo", fallback).unwrap_err();
+        assert!(e.is_a("InvalidArgumentException"));
+        assert_eq!(
+            "The filename fallback must only contain ASCII characters.",
+            e.message().to_string_lossy()
+        );
+    }
+    // A filename ending in a newline is its own fallback, so it fails too.
+    assert!(make_disposition(b"attachment", b"foo\n", b"").is_err());
 }

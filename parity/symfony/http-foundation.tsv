@@ -171,9 +171,9 @@ Tests/HeaderBagTest.php	HeaderBagTest::testSetAssociativeArray	ported	crates/htt
 Tests/HeaderBagTest.php	HeaderBagTest::testToStringNotNull	ported	crates/http-foundation/tests/header_bag_test.rs::testToStringNotNull
 Tests/HeaderBagTest.php	HeaderBagTest::testToStringNull	ported	crates/http-foundation/tests/header_bag_test.rs::testToStringNull
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testCombine	ported	crates/http-foundation/tests/header_utils_test.rs::testCombine
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDisposition	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionFail	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionInvalidDisposition	pending	
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDisposition	ported	crates/http-foundation/tests/header_utils_test.rs::testMakeDisposition
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionFail	ported	crates/http-foundation/tests/header_utils_test.rs::testMakeDispositionFail
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionInvalidDisposition	ported	crates/http-foundation/tests/header_utils_test.rs::testMakeDispositionInvalidDisposition
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseCookie	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQuery	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel	pending	
@@ -208,24 +208,24 @@ Tests/InputBagTest.php	InputBagTest::testGetWithNonStringDefaultValue	ported	cra
 Tests/InputBagTest.php	InputBagTest::testGettingANonStringValue	ported	crates/http-foundation/tests/input_bag_test.rs::testGettingANonStringValue
 Tests/InputBagTest.php	InputBagTest::testReplace	ported	crates/http-foundation/tests/input_bag_test.rs::testReplace
 Tests/InputBagTest.php	InputBagTest::testSetWithNonScalarOrArray	ported	crates/http-foundation/tests/input_bag_test.rs::testSetWithNonScalarOrArray
-Tests/IpUtilsTest.php	IpUtilsTest::testAnIpv6WithOptionDisabledIpv6	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testAnonymize	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV4WithNegativeBytes	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV4WithTooManyBytes	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV6WithNegativeBytes	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV6WithTooManyBytes	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeWithBytes	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testCacheSizeLimit	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testInvalidIpAddressesDoNotMatch	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testIp4SubnetMaskZero	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testIpv4	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testIpv4MappedAddressesAreCheckedAsTheIpv4HostTheyEmbed	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testIpv6	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testIsPrivateIp	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testIsPrivateIpThrowsOnNonCanonicalIp	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testPrivateRangesAreASubsetOfPrivateSubnets	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testPrivateRangesDoNotCoverAddressesARemoteClientCanPresent	pending	
-Tests/IpUtilsTest.php	IpUtilsTest::testSeparateCachesPerProtocol	pending	
+Tests/IpUtilsTest.php	IpUtilsTest::testAnIpv6WithOptionDisabledIpv6	n/a: IPv6 support is always present in Rust; PHP skips this test unless built with disable-ipv6	
+Tests/IpUtilsTest.php	IpUtilsTest::testAnonymize	ported	crates/http-foundation/tests/ip_utils_test.rs::testAnonymize
+Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV4WithNegativeBytes	ported	crates/http-foundation/tests/ip_utils_test.rs::testAnonymizeV4WithNegativeBytes
+Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV4WithTooManyBytes	ported	crates/http-foundation/tests/ip_utils_test.rs::testAnonymizeV4WithTooManyBytes
+Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV6WithNegativeBytes	ported	crates/http-foundation/tests/ip_utils_test.rs::testAnonymizeV6WithNegativeBytes
+Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeV6WithTooManyBytes	ported	crates/http-foundation/tests/ip_utils_test.rs::testAnonymizeV6WithTooManyBytes
+Tests/IpUtilsTest.php	IpUtilsTest::testAnonymizeWithBytes	ported	crates/http-foundation/tests/ip_utils_test.rs::testAnonymizeWithBytes
+Tests/IpUtilsTest.php	IpUtilsTest::testCacheSizeLimit	ported	crates/http-foundation/tests/ip_utils_test.rs::testCacheSizeLimit
+Tests/IpUtilsTest.php	IpUtilsTest::testInvalidIpAddressesDoNotMatch	ported	crates/http-foundation/tests/ip_utils_test.rs::testInvalidIpAddressesDoNotMatch
+Tests/IpUtilsTest.php	IpUtilsTest::testIp4SubnetMaskZero	ported	crates/http-foundation/tests/ip_utils_test.rs::testIp4SubnetMaskZero
+Tests/IpUtilsTest.php	IpUtilsTest::testIpv4	ported	crates/http-foundation/tests/ip_utils_test.rs::testIpv4
+Tests/IpUtilsTest.php	IpUtilsTest::testIpv4MappedAddressesAreCheckedAsTheIpv4HostTheyEmbed	ported	crates/http-foundation/tests/ip_utils_test.rs::testIpv4MappedAddressesAreCheckedAsTheIpv4HostTheyEmbed
+Tests/IpUtilsTest.php	IpUtilsTest::testIpv6	ported	crates/http-foundation/tests/ip_utils_test.rs::testIpv6
+Tests/IpUtilsTest.php	IpUtilsTest::testIsPrivateIp	ported	crates/http-foundation/tests/ip_utils_test.rs::testIsPrivateIp
+Tests/IpUtilsTest.php	IpUtilsTest::testIsPrivateIpThrowsOnNonCanonicalIp	ported	crates/http-foundation/tests/ip_utils_test.rs::testIsPrivateIpThrowsOnNonCanonicalIp
+Tests/IpUtilsTest.php	IpUtilsTest::testPrivateRangesAreASubsetOfPrivateSubnets	ported	crates/http-foundation/tests/ip_utils_test.rs::testPrivateRangesAreASubsetOfPrivateSubnets
+Tests/IpUtilsTest.php	IpUtilsTest::testPrivateRangesDoNotCoverAddressesARemoteClientCanPresent	ported	crates/http-foundation/tests/ip_utils_test.rs::testPrivateRangesDoNotCoverAddressesARemoteClientCanPresent
+Tests/IpUtilsTest.php	IpUtilsTest::testSeparateCachesPerProtocol	ported	crates/http-foundation/tests/ip_utils_test.rs::testSeparateCachesPerProtocol
 Tests/JsonResponseTest.php	JsonResponseTest::testConstructorAddsContentTypeHeader	pending	
 Tests/JsonResponseTest.php	JsonResponseTest::testConstructorEmptyCreatesJsonObject	pending	
 Tests/JsonResponseTest.php	JsonResponseTest::testConstructorWithArrayCreatesJsonArray	pending	

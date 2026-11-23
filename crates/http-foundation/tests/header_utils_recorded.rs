@@ -1,7 +1,8 @@
 //! HeaderUtils against PHP 8.4.27's answers recorded by
 //! oracle/recorders/http_foundation_header_utils.php (`scripts/record.sh
 //! http-foundation`): `split()` on 3,000 generated headers and separator
-//! lists, `quote()` and `unquote()` on 633 strings.
+//! lists, `quote()` and `unquote()` on 633 strings, `makeDisposition()`
+//! on 2,880 type, filename and fallback combinations (v8.1.11).
 //!
 //! Upstream: none
 
@@ -73,6 +74,41 @@ fn quote_and_unquote_match_php() -> Result<(), Error> {
         failures.len(),
         cases.len(),
         failures.join("\n")
+    );
+    Ok(())
+}
+
+#[test]
+fn make_disposition_matches_php() -> Result<(), Error> {
+    use symfony_http_foundation::header_utils::make_disposition;
+    let data = data()?;
+    let cases = data["disposition"].as_array().ok_or("disposition")?;
+    let mut failures = Vec::new();
+    for case in cases {
+        let (kind, filename, fallback) = (bytes(&case[0])?, bytes(&case[1])?, bytes(&case[2])?);
+        let actual = match make_disposition(&kind, &filename, &fallback) {
+            Ok(value) => Json::String(base64::Engine::encode(
+                &base64::engine::general_purpose::STANDARD,
+                value.as_bytes(),
+            )),
+            Err(e) => serde_json::json!(["throw", e.class().name(), e.message().to_string_lossy()]),
+        };
+        if actual != case[3] {
+            failures.push(format!(
+                "{:?} {:?} {:?}: PHP {}, Rust {actual}",
+                String::from_utf8_lossy(&kind),
+                String::from_utf8_lossy(&filename),
+                String::from_utf8_lossy(&fallback),
+                case[3]
+            ));
+        }
+    }
+    assert!(
+        failures.is_empty(),
+        "{} of {} differ:\n{}",
+        failures.len(),
+        cases.len(),
+        failures[..failures.len().min(30)].join("\n")
     );
     Ok(())
 }
