@@ -2,11 +2,20 @@
 // HeaderUtils answers for what its tests leave open, for
 // crates/http-foundation/tests/data/header_utils.json (scripts/record.sh
 // http-foundation): split() over generated headers and separator lists,
-// quote() and unquote() over generated strings. Strings are base64.
+// quote() and unquote() over generated strings, makeDisposition() over
+// generated names. Strings are base64; a thrown error is ["throw", class,
+// message].
+//
+// With argv[1] = a path to another HeaderUtils.php (an earlier release),
+// only the makeDisposition() section is recorded with that file.
 
 error_reporting(E_ALL);
 
-require '/demo/vendor/autoload.php';
+if (isset($argv[1])) {
+    require $argv[1];
+} else {
+    require '/demo/vendor/autoload.php';
+}
 require __DIR__ . '/lib/typed.php';
 
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -38,4 +47,24 @@ foreach (['', "foo\n", "foo\n\n", "\nfoo", "a\\\nb", "a\\", 'a-b_c.d~e', "foo\r\
     $strings[] = [base64_encode($s), base64_encode(HeaderUtils::quote($s)), base64_encode(HeaderUtils::unquote($s))];
 }
 
-echo json_encode(['split' => $split, 'strings' => $strings], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";
+$names = ['', 'foo', 'foo.html', 'foo bar.html', 'a"b', 'a\\b', 'a/b', 'a%20b', '%', "foo\n", "foo\r\n", "\n", "foo\nbar", "foo\t", "\x7f", "\x1f", '~', ' ', 'föö.html', "\xff", "foo\0", 'tok;en', 'a=b', 'é'];
+$disposition = [];
+foreach (['attachment', 'inline', 'invalid', 'ATTACHMENT', ''] as $type) {
+    foreach ($names as $filename) {
+        foreach ($names as $fallback) {
+            try {
+                $answer = base64_encode(HeaderUtils::makeDisposition($type, $filename, $fallback));
+            } catch (\Throwable $e) {
+                $answer = ['throw', $e::class, $e->getMessage()];
+            }
+            $disposition[] = [base64_encode($type), base64_encode($filename), base64_encode($fallback), $answer];
+        }
+    }
+}
+
+if (isset($argv[1])) {
+    echo json_encode(['disposition' => $disposition], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";
+    exit;
+}
+
+echo json_encode(['split' => $split, 'strings' => $strings, 'disposition' => $disposition], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";

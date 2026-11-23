@@ -31,6 +31,8 @@ pub enum Class {
     PhpRuntime,
     /// PHP's `\TypeError`.
     PhpTypeError,
+    /// PHP's `\ValueError` (`IpUtils::isPrivateIp()`, `inet_pton()`).
+    PhpValueError,
     /// PHP's `\Error`.
     PhpError,
     /// Input this port does not reproduce; not a PHP class. It is refused
@@ -52,6 +54,7 @@ impl Class {
             Self::PhpInvalidArgument => "InvalidArgumentException",
             Self::PhpRuntime => "RuntimeException",
             Self::PhpTypeError => "TypeError",
+            Self::PhpValueError => "ValueError",
             Self::PhpError => "Error",
             Self::NotPorted => "NotPorted",
         }
@@ -90,6 +93,7 @@ impl Class {
             ],
             Self::PhpRuntime => &["RuntimeException", "Exception", "Throwable"],
             Self::PhpTypeError => &["TypeError", "Error", "Throwable"],
+            Self::PhpValueError => &["ValueError", "Error", "Throwable"],
             Self::PhpError => &["Error", "Throwable"],
             Self::NotPorted => &["NotPorted"],
         }

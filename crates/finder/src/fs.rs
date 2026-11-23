@@ -375,7 +375,27 @@ pub fn glob_dirs(pattern: &[u8]) -> Vec<Vec<u8>> {
     }
     let mut out = Vec::new();
     for p in brace_expand(pattern) {
-        glob_one(&p, &mut out);
+        glob_one(&p, true, &mut out);
+    }
+    out
+}
+
+/// `glob($pattern, GLOB_NOSORT)`, or with `brace` `GLOB_NOSORT |
+/// GLOB_BRACE`, on local paths: files and directories, by the rules of
+/// [`glob_dirs`], where a segment starting with `.` also matches the `.`
+/// and `..` entries. A pattern ending in `/` matches directories only,
+/// and they keep the `/`.
+pub fn glob(pattern: &[u8], brace: bool) -> Vec<Vec<u8>> {
+    if is_url(pattern) {
+        return Vec::new();
+    }
+    let mut out = Vec::new();
+    if brace {
+        for p in brace_expand(pattern) {
+            glob_one(&p, false, &mut out);
+        }
+    } else {
+        glob_one(pattern, false, &mut out);
     }
     out
 }
@@ -445,7 +465,7 @@ fn unescape(segment: &[u8]) -> Vec<u8> {
     out
 }
 
-fn glob_one(pattern: &[u8], out: &mut Vec<Vec<u8>>) {
+fn glob_one(pattern: &[u8], dirs_only: bool, out: &mut Vec<Vec<u8>>) {
     let trailing_slash = pattern.ends_with(b"/");
     let absolute = pattern.starts_with(b"/");
     let segments: Vec<&[u8]> = pattern
@@ -470,6 +490,12 @@ fn glob_one(pattern: &[u8], out: &mut Vec<Vec<u8>>) {
                     continue;
                 };
                 names.sort();
+                // glibc's readdir() lists "." and "..", which a segment
+                // starting with a dot matches (the full glob() only;
+                // glob_dirs() keeps its behaviour).
+                if !dirs_only && segment.first() == Some(&b'.') {
+                    names.splice(0..0, [b".".to_vec(), b"..".to_vec()]);
+                }
                 for name in names {
                     if fnmatch(segment, &name) {
                         next.push(join(&name));
@@ -487,6 +513,8 @@ fn glob_one(pattern: &[u8], out: &mut Vec<Vec<u8>>) {
             if trailing_slash && !c.ends_with(b"/") {
                 c.push(b'/');
             }
+            out.push(c);
+        } else if !dirs_only && !trailing_slash && lstat(&c).is_some() {
             out.push(c);
         }
     }

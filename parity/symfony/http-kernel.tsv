@@ -1,4 +1,4 @@
-# symfony/http-kernel at 924974dbdcdf4cc40d7bb2c65ae83bb6dc67cff1: upstream test	method	status	rust test
+# symfony/http-kernel at 460658504e26a2794aa614b4fbe6cf9bac2076fe: upstream test	method	status	rust test
 Tests/Attribute/RateLimitTest.php	RateLimitTest::testDefaults	pending	
 Tests/Attribute/RateLimitTest.php	RateLimitTest::testMethodsAreNormalized	pending	
 Tests/Attribute/RateLimitTest.php	RateLimitTest::testTokensMustBePositive	pending	
@@ -409,6 +409,7 @@ Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::t
 Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::testAttributeRespectsExplicitPrivateFromController	pending	
 Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::testAttributeRespectsExplicitPublicFromController	pending	
 Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::testCacheAppliedOnlyWhenIfEvaluatesToTrue	pending	
+Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::testCacheMaxAgeIgnoresDaylightSavingTime	pending	
 Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::testCacheMaxAgeSupportsStrtotimeFormat	pending	
 Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::testConfigurationDoesNotOverrideAlreadySetResponseHeaders	pending	
 Tests/EventListener/CacheAttributeListenerTest.php	CacheAttributeListenerTest::testErrorIsThrownWhenIfEvaluatesToNonBool	pending	
@@ -533,6 +534,7 @@ Tests/EventListener/RouterListenerTest.php	RouterListenerTest::testRequestMatche
 Tests/EventListener/RouterListenerTest.php	RouterListenerTest::testRequestWithBadHost	pending	
 Tests/EventListener/RouterListenerTest.php	RouterListenerTest::testResourceNotFoundException	pending	
 Tests/EventListener/RouterListenerTest.php	RouterListenerTest::testRouteMapping	pending	
+Tests/EventListener/RouterListenerTest.php	RouterListenerTest::testRoutingContextOfTheParentIsRestoredAfterNestedMainRequest	pending	
 Tests/EventListener/RouterListenerTest.php	RouterListenerTest::testSubRequestWithDifferentMethod	pending	
 Tests/EventListener/RouterListenerTest.php	RouterListenerTest::testWithBadRequest	pending	
 Tests/EventListener/SerializeControllerResultListenerTest.php	SerializeControllerResultListenerTest::testMethodLevelAttributeTakesPrecedenceOverClassLevel	pending	
@@ -699,6 +701,8 @@ Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testRe
 Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testRenderWithControllerReference	pending	
 Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testRenderWithObjectsAsAttributes	pending	
 Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testRenderWithTrustedHeaderDisabled	pending	
+Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testRoutingContextOfTheParentIgnoresUntrustedHeadersAfterSubRequest	pending	
+Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testRoutingContextOfTheParentIgnoresUntrustedHeadersAfterSubRequestAnsweredBeforeRouting	pending	
 Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testStatelessAttributeCanBeDisabled	pending	
 Tests/Fragment/InlineFragmentRendererTest.php	InlineFragmentRendererTest::testStatelessAttributeIsForwardedByDefault	pending	
 Tests/Fragment/RoutableFragmentRendererTest.php	RoutableFragmentRendererTest::testGenerateAbsoluteFragmentUri	pending	
@@ -1022,6 +1026,7 @@ Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testRetrieve
 Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testRetrieveByIp	pending	
 Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testRetrieveByMethodAndLimit	pending	
 Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testRetrieveByStatusCode	pending	
+Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testRetrieveByStatusCodeZero	pending	
 Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testRetrieveByUrl	pending	
 Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testStatusCode	pending	
 Tests/Profiler/FileProfilerStorageTest.php	FileProfilerStorageTest::testStore	pending	

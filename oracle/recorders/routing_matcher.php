@@ -1,7 +1,7 @@
 <?php
 // Records the installed Symfony Routing matcher, without booting/editing the app.
 // Moved from symfony-demo-rs compare/routing_vectors.php; run by scripts/record.sh.
-// Source: vendor/symfony/routing at 41b32d2c5d907abe2c3ffaa7a112dd7492353822.
+// Source: symfony/routing v8.1.11 (oracle/compose.yaml mounts it over vendor/) at f3fefc6cad3748d538be970ca81b71f06d7aa8b3.
 require '/demo/vendor/autoload.php';
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;

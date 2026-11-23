@@ -1,15 +1,18 @@
 //! Port of Symfony\Component\HttpFoundation\HeaderUtils.php: `split()`,
-//! `combine()`, `toString()`, `quote()` and `unquote()`.
+//! `combine()`, `toString()`, `quote()`, `unquote()` and
+//! `makeDisposition()`.
 //!
 //! `split()`'s pattern is matched by hand, in one pass, as the fixed
 //! pattern of GHSA-r925-mgvr-h9cc (8.1.7) matches: a value never ends on
 //! whitespace, so nothing is given back. Results are PHP arrays of byte
 //! strings, nested once per separator.
 //!
-//! Not ported: `makeDisposition()` (the pin, v8.1.10, lacks v8.1.11's
-//! `/D` anchor on the ASCII check; it waits for the version move, PLAN.md
-//! "Decisions for the owner") and `parseQuery()` (it needs `parse_str()`
-//! and `http_build_query()`).
+//! `makeDisposition()` is v8.1.11's: its ASCII check on the fallback
+//! filename is anchored with `/D`, so a fallback ending in a newline is
+//! refused (v8.1.10 let it through into the header; PLAN.md decision 16).
+//!
+//! Not ported: `parseQuery()` (it needs `parse_str()` and
+//! `http_build_query()`).
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -251,6 +254,70 @@ pub fn to_string(assoc: &PhpArray, separator: &[u8]) -> Result<PhpString> {
     }
     let glue = [separator, b" "].concat();
     Ok(PhpString::from(parts.join(glue.as_slice())))
+}
+
+/// `HeaderUtils::makeDisposition($disposition, $filename,
+/// $filenameFallback)`: a `Content-Disposition` value. An empty fallback
+/// is the filename itself; the fallback must be printable ASCII without
+/// `%`, and neither may hold `/` or `\`. A filename that differs from the
+/// fallback is added as `filename*=utf-8''` with `rawurlencode()`.
+pub fn make_disposition(
+    disposition: &[u8],
+    filename: &[u8],
+    filename_fallback: &[u8],
+) -> Result<PhpString> {
+    if disposition != DISPOSITION_ATTACHMENT.as_bytes()
+        && disposition != DISPOSITION_INLINE.as_bytes()
+    {
+        return Err(Error::new(
+            Class::PhpInvalidArgument,
+            format!(
+                "The disposition must be either \"{DISPOSITION_ATTACHMENT}\" or \"{DISPOSITION_INLINE}\"."
+            ),
+        ));
+    }
+    let fallback = if filename_fallback.is_empty() {
+        filename
+    } else {
+        filename_fallback
+    };
+    // preg_match('/^[\x20-\x7e]*$/D', $filenameFallback)
+    if !fallback.iter().all(|&b| (0x20..=0x7e).contains(&b)) {
+        return Err(Error::new(
+            Class::PhpInvalidArgument,
+            "The filename fallback must only contain ASCII characters.",
+        ));
+    }
+    if fallback.contains(&b'%') {
+        return Err(Error::new(
+            Class::PhpInvalidArgument,
+            "The filename fallback cannot contain the \"%\" character.",
+        ));
+    }
+    let separator = |s: &[u8]| s.contains(&b'/') || s.contains(&b'\\');
+    if separator(filename) || separator(fallback) {
+        return Err(Error::new(
+            Class::PhpInvalidArgument,
+            "The filename and the fallback cannot contain the \"/\" and \"\\\" characters.",
+        ));
+    }
+    let mut params = PhpArray::new();
+    params.insert(
+        Key::from(PhpString::from("filename")),
+        Value::from(PhpString::from(fallback)),
+    );
+    if filename != fallback {
+        let mut encoded = b"utf-8''".to_vec();
+        encoded.extend(php_value::url::rawurlencode(filename));
+        params.insert(
+            Key::from(PhpString::from("filename*")),
+            Value::from(PhpString::from(encoded)),
+        );
+    }
+    let mut out = disposition.to_vec();
+    out.extend_from_slice(b"; ");
+    out.extend_from_slice(to_string(&params, b";")?.as_bytes());
+    Ok(PhpString::from(out))
 }
 
 /// The characters of HTTP's "token".

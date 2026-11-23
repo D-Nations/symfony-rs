@@ -6,6 +6,8 @@
 
 pub mod builder;
 pub mod configuration;
+pub mod fs;
+pub mod loaders;
 
 use php_value::{Value, constants::Registry, object::EnumCase};
 use symfony_config::{Class, Error};

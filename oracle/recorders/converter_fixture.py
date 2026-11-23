@@ -6,7 +6,8 @@ from PHP: oracle/apps/converter-fixture/responses.json.
 
 The app is served with APP_ENV=prod by PHP's built-in server in the oracle
 image, on 127.0.0.1 only, with this repository and symfony/demo (whose
-vendor/ holds the pinned packages) mounted read-only. Each case is one
+vendor/ holds the pinned packages, with the ones moved past its lock
+mounted from upstream/) mounted read-only. Each case is one
 request; the server runs every request with fresh PHP state, as PHP-FPM
 does, so repeating a request shows that no service state is shared.
 Every response header is kept, in order; `Date` is replaced by a
@@ -63,10 +64,23 @@ def run(*args: str, check: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(args, capture_output=True, text=True, check=check)
 
 
+def moved_mounts() -> list[str]:
+    """`-v` options mounting the packages pinned past the demo's lock
+    (parity/packages.tsv, "# moved:") over its vendor copy, as
+    oracle/compose.yaml does."""
+    options: list[str] = []
+    for line in (ROOT / "parity" / "packages.tsv").read_text(encoding="utf-8").splitlines():
+        if line.startswith("# moved:"):
+            for package in line[len("# moved:"):].split("(")[0].split():
+                options += ["-v", f"{host_path(ROOT / 'upstream' / package)}:/demo/vendor/{package}:ro"]
+    return options
+
+
 def start() -> None:
     run("docker", "rm", "-f", CONTAINER, check=False)
     run("docker", "run", "-d", "--rm", "--name", CONTAINER,
         "-v", f"{host_path(ROOT)}:/work:ro", "-v", f"{host_path(DEMO)}:/demo:ro",
+        *moved_mounts(),
         "-p", f"127.0.0.1:{PORT}:8000", "--entrypoint", "php", IMAGE,
         "-d", "display_errors=0", "-S", "0.0.0.0:8000", "-t", f"{APP}/public")
     for _ in range(120):
@@ -105,7 +119,7 @@ def main() -> int:
         sys.exit("expected symfony/demo with its vendor/ at ../symfony-demo")
     recording = {
         "app": "oracle/apps/converter-fixture",
-        "packages": "symfony/demo's vendor/ (parity/packages.tsv)",
+        "packages": "symfony/demo's vendor/, moved packages from upstream/ (parity/packages.tsv)",
         "php": IMAGE,
         "env": {"APP_ENV": "prod", "APP_DEBUG": "0"},
         "server": "PHP built-in server (php -S), docroot public/",

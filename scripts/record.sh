@@ -11,8 +11,9 @@
 #   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter}.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
-#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json
+#   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json, loaders.json
 #   scripts/record.sh config-xml-utils crates/config/tests/data/xml_utils.json
+#   scripts/record.sh config-loaders crates/config/tests/data/loaders.json
 #   scripts/record.sh translation-xliff crates/translation/tests/data/xliff.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,builtins,case,inflector,lazy,*_test}.*
@@ -21,7 +22,8 @@
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
-#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag}.json, crates/php-value/tests/data/dates.json
+#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag,ip_utils}.json, crates/php-value/tests/data/dates.json
+#   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -178,6 +180,17 @@ config() {
     mv "$tmp" "$out"
     echo "Config dumper vectors written to $out"
     config_xml_utils
+    config_loaders
+}
+
+config_loaders() {
+    local out=crates/config/tests/data/loaders.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_loaders.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config loader and resource vectors written to $out"
 }
 
 config_xml_utils() {
@@ -341,10 +354,30 @@ php_dom_schema() {
     echo "DOMDocument::schemaValidateSource() answers written to $out"
 }
 
+# IpUtils (isPrivateIp(), checkIp()) and HeaderUtils (makeDisposition())
+# answers of earlier releases: before GHSA-38cx-cq6f-5755's fix (v8.0.8,
+# v8.0.13) and around the v8.1.11 move. Written to oracle/out/ for checking
+# advisory verdicts and the move's differences; nothing is committed.
+http_foundation_releases() {
+    local tag dir
+    mkdir -p oracle/out
+    for tag in v8.0.8 v8.0.13 v8.1.10 v8.1.11; do
+        dir=$(mktemp -d -p oracle/out)
+        git -C "$dir" init -q
+        git -C "$dir" fetch -q --depth 1 https://github.com/symfony/http-foundation.git "refs/tags/$tag"
+        git -C "$dir" show FETCH_HEAD:IpUtils.php > "oracle/out/IpUtils-$tag.php"
+        git -C "$dir" show FETCH_HEAD:HeaderUtils.php > "oracle/out/HeaderUtils-$tag.php"
+        rm -rf "$dir"
+        oracle oracle/recorders/http_foundation_ip_utils.php "/work/oracle/out/IpUtils-$tag.php" > "oracle/out/ip_utils_$tag.json"
+        oracle oracle/recorders/http_foundation_header_utils.php "/work/oracle/out/HeaderUtils-$tag.php" > "oracle/out/header_utils_$tag.json"
+        echo "IpUtils and HeaderUtils $tag answers written to oracle/out/{ip,header}_utils_$tag.json"
+    done
+}
+
 http_foundation() {
     local name out tmp
     mkdir -p oracle/out crates/http-foundation/tests/data
-    for name in bags header_utils cookie header_bags server_bag; do
+    for name in bags header_utils cookie header_bags server_bag ip_utils; do
         out=crates/http-foundation/tests/data/$name.json
         tmp=$(mktemp -p oracle/out)
         oracle "oracle/recorders/http_foundation_$name.php" > "$tmp"
@@ -373,6 +406,7 @@ case "${1:-}" in
     dotenv) dotenv ;;
     config) config ;;
     config-xml-utils) config_xml_utils ;;
+    config-loaders) config_loaders ;;
     translation-xliff) translation_xliff ;;
     string) string ;;
     console) console ;;
@@ -382,6 +416,7 @@ case "${1:-}" in
     php-dom) php_dom ;;
     php-dom-schema) php_dom_schema ;;
     http-foundation) http_foundation ;;
+    http-foundation-releases) http_foundation_releases ;;
     all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; translation_xliff ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|all" >&2; exit 2 ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-releases|translation-xliff|all" >&2; exit 2 ;;
 esac
