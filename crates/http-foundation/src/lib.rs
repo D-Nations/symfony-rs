@@ -12,6 +12,7 @@ pub mod accept_language;
 pub mod cookie;
 pub mod cookies;
 pub mod exception;
+pub mod header_bag;
 pub mod header_utils;
 pub mod input_bag;
 pub mod multipart;
