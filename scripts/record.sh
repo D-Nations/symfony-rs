@@ -13,6 +13,7 @@
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json
 #   scripts/record.sh config-xml-utils crates/config/tests/data/xml_utils.json
+#   scripts/record.sh translation-xliff crates/translation/tests/data/xliff.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,builtins,case,inflector,lazy,*_test}.*
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
@@ -189,6 +190,16 @@ config_xml_utils() {
     echo "Config XmlUtils vectors written to $out"
 }
 
+translation_xliff() {
+    local out=crates/translation/tests/data/xliff.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/translation_xliff.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))["cases"]), "load() cases")' "$tmp"
+    mv "$tmp" "$out"
+    echo "Translation XLIFF vectors written to $out"
+}
+
 console() {
     local out=crates/console/tests/data/strip_tags.json tmp
     mkdir -p oracle/out "$(dirname "$out")"
@@ -362,6 +373,7 @@ case "${1:-}" in
     dotenv) dotenv ;;
     config) config ;;
     config-xml-utils) config_xml_utils ;;
+    translation-xliff) translation_xliff ;;
     string) string ;;
     console) console ;;
     css-selector) css_selector ;;
@@ -370,6 +382,6 @@ case "${1:-}" in
     php-dom) php_dom ;;
     php-dom-schema) php_dom_schema ;;
     http-foundation) http_foundation ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; translation_xliff ;;
     *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|all" >&2; exit 2 ;;
 esac
