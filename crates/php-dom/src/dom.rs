@@ -372,13 +372,15 @@ impl Document {
     }
 
     /// `$node->getElementsByTagName($name)`: the descendant elements whose
-    /// qualified name is `name` (`'*'` for all), in document order.
+    /// local name is `name` (`'*'` for all), in document order. PHP 8.4
+    /// compares the local name only, so a qualified name such as `x:b`
+    /// matches nothing (recorded: symfony-translation's `tag_names`).
     pub fn get_elements_by_tag_name(&self, id: NodeId, name: &str) -> Vec<NodeId> {
         let mut out = Vec::new();
         let mut stack: Vec<NodeId> = self.children(id).iter().rev().copied().collect();
         while let Some(n) = stack.pop() {
             if let Kind::Element(e) = &self.nodes[n.0].kind {
-                if name == "*" || e.name == name {
+                if name == "*" || e.local_name == name {
                     out.push(n);
                 }
                 stack.extend(self.children(n).iter().rev().copied());

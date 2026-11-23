@@ -10,6 +10,7 @@ members = [
     "crates/dotenv",
     "crates/deprecation-contracts",
     "crates/config",
+    "crates/translation",
     "crates/console",
     "crates/http-foundation",
     "crates/routing",

@@ -659,6 +659,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-translation"
+version = "0.1.0"
+dependencies = [
+ "php-dom",
+ "php-value",
+ "serde_json",
+ "symfony-config",
+ "symfony-finder",
+]
+
+[[package]]
 name = "symfony-yaml"
 version = "0.1.0"
 dependencies = [

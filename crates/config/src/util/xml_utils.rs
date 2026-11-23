@@ -168,10 +168,20 @@ impl XmlUtils {
 
     /// `XmlUtils::loadFile($file, $schemaOrCallable)`.
     pub fn load_file(file: &Path, validation: Option<Validation<'_>>) -> Result<Document, Error> {
-        let name = path_bytes(file);
+        Self::load_file_named(file, &path_bytes(file), validation)
+    }
+
+    /// `XmlUtils::loadFile($file, $schemaOrCallable)` where `$file` is
+    /// `name` and the file system finds it at `file` (a `file://` URL,
+    /// which PHP's functions open as the path it names).
+    pub fn load_file_named(
+        file: &Path,
+        name: &[u8],
+        validation: Option<Validation<'_>>,
+    ) -> Result<Document, Error> {
         let message = |before: &str, after: &str| {
             let mut m = before.as_bytes().to_vec();
-            m.extend_from_slice(&name);
+            m.extend_from_slice(name);
             m.extend_from_slice(after.as_bytes());
             m
         };
@@ -188,7 +198,7 @@ impl XmlUtils {
             ));
         }
 
-        let content = read_file(file)?;
+        let content = read_file_named(file, name)?;
 
         if trim(&content).is_empty() {
             return Err(Error::new(
@@ -450,9 +460,13 @@ fn dom_class(node_type: NodeType) -> &'static str {
 /// `(new Filesystem())->readFile($filename)`: the content, or
 /// Filesystem's IOException.
 fn read_file(path: &Path) -> Result<Vec<u8>, Error> {
+    read_file_named(path, &path_bytes(path))
+}
+
+fn read_file_named(path: &Path, name: &[u8]) -> Result<Vec<u8>, Error> {
     let io = |reason: String| {
         let mut message = b"Failed to read file \"".to_vec();
-        message.extend_from_slice(&path_bytes(path));
+        message.extend_from_slice(name);
         message.extend_from_slice(b"\": ");
         message.extend_from_slice(reason.as_bytes());
         Error::new(
@@ -474,7 +488,7 @@ fn read_file(path: &Path) -> Result<Vec<u8>, Error> {
         };
         io(format!(
             "file_get_contents({}): Failed to open stream: {reason}",
-            String::from_utf8_lossy(&path_bytes(path))
+            String::from_utf8_lossy(name)
         ))
     })
 }

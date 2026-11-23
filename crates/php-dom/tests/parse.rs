@@ -270,6 +270,18 @@ fn compare(
 
 #[test]
 fn load_xml_matches_recorded_php() {
+    // The recorded trees nest deeply. When the workspace builds serde_json
+    // with `unbounded_depth` (yaml and http-foundation enable it), reading
+    // and comparing them needs more than the 2 MiB test-thread stack.
+    std::thread::Builder::new()
+        .stack_size(64 * 1024 * 1024)
+        .spawn(load_xml_matches_recorded_php_body)
+        .expect("spawn")
+        .join()
+        .expect("load_xml_matches_recorded_php");
+}
+
+fn load_xml_matches_recorded_php_body() {
     let data: Value = serde_json::from_str(include_str!("data/parse.json")).expect("parse.json");
     assert_eq!(data["libxml"], "2.9.14");
     let known: BTreeMap<&str, &str> = KNOWN.iter().copied().collect();

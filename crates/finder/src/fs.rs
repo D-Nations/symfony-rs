@@ -16,7 +16,6 @@ use std::{
     ffi::OsString,
     path::PathBuf,
     sync::{Arc, LazyLock, RwLock},
-    time::UNIX_EPOCH,
 };
 
 /// What `url_stat()` / `stat()` report.
@@ -159,9 +158,10 @@ fn os_bytes(s: OsString) -> Vec<u8> {
     s.to_string_lossy().into_owned().into_bytes()
 }
 
+#[cfg(not(unix))]
 fn secs(t: std::io::Result<std::time::SystemTime>) -> i64 {
     match t {
-        Ok(t) => match t.duration_since(UNIX_EPOCH) {
+        Ok(t) => match t.duration_since(std::time::UNIX_EPOCH) {
             Ok(d) => i64::try_from(d.as_secs()).unwrap_or(i64::MAX),
             Err(e) => -i64::try_from(e.duration().as_secs()).unwrap_or(i64::MAX),
         },
