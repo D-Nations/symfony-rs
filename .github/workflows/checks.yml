@@ -17,6 +17,8 @@ jobs:
         run: rustup toolchain install stable --profile minimal --component rustfmt --component clippy
       - run: cargo +stable fmt --check
       - run: cargo +stable clippy --locked --all-targets -- -D warnings
+      # finder's tests read upstream's Tests/Fixtures tree (upstream/ is not in Git)
+      - run: scripts/fetch-upstream.sh symfony/finder
       - run: cargo +stable test --locked
       - run: scripts/sources.sh --check
       - run: scripts/parity-check.sh
