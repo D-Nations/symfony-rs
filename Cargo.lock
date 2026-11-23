@@ -541,6 +541,7 @@ dependencies = [
  "serde_json",
  "symfony-config",
  "symfony-deprecation-contracts",
+ "symfony-filesystem",
  "symfony-finder",
  "symfony-yaml",
  "twox-hash",
@@ -593,6 +594,14 @@ dependencies = [
 [[package]]
 name = "symfony-event-dispatcher-contracts"
 version = "0.1.0"
+
+[[package]]
+name = "symfony-filesystem"
+version = "0.1.0"
+dependencies = [
+ "getrandom",
+ "symfony-finder",
+]
 
 [[package]]
 name = "symfony-finder"

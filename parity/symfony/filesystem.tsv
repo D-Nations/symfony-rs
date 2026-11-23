@@ -1,0 +1,158 @@
+# symfony/filesystem at 43d109c803d22c00bb820ed45df250b6a8792ca2: upstream test	method	status	rust test
+Tests/ExceptionTest.php	ExceptionTest::testCustomMessage	pending	
+Tests/ExceptionTest.php	ExceptionTest::testGeneratedMessage	pending	
+Tests/ExceptionTest.php	ExceptionTest::testGeneratedMessageWithoutPath	pending	
+Tests/ExceptionTest.php	ExceptionTest::testGetPath	pending	
+Tests/FilesystemTest.php	FilesystemTest::testAppendToFile	pending	
+Tests/FilesystemTest.php	FilesystemTest::testAppendToFileCreateTheFileIfNotExists	pending	
+Tests/FilesystemTest.php	FilesystemTest::testAppendToFileFollowsSymlink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testAppendToFileWithResource	pending	
+Tests/FilesystemTest.php	FilesystemTest::testAppendToFileWithScheme	pending	
+Tests/FilesystemTest.php	FilesystemTest::testAppendToFileWithZlibScheme	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpById	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpByName	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpFail	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpLinkFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpRecursive	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpSymlinkById	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpSymlinkByName	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChgrpSymlinkFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChmodAppliesUmask	ported	crates/filesystem/tests/filesystem_test.rs::testChmodAppliesUmask
+Tests/FilesystemTest.php	FilesystemTest::testChmodChangesFileMode	ported	crates/filesystem/tests/filesystem_test.rs::testChmodChangesFileMode
+Tests/FilesystemTest.php	FilesystemTest::testChmodChangesModeOfArrayOfFiles	ported	crates/filesystem/tests/filesystem_test.rs::testChmodChangesModeOfArrayOfFiles
+Tests/FilesystemTest.php	FilesystemTest::testChmodChangesModeOfTraversableFileObject	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChmodChangesZeroModeOnSubdirectoriesOnRecursive	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChmodRecursive	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownById	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownByName	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownFail	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownLinkFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownRecursiveById	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownRecursiveByName	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownSymlink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testChownSymlinkFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyCreatesNewFile	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyCreatesTargetDirectoryIfItDoesNotExist	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyDoesNotOverrideExistingFileByDefault	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyOverridesExistingFileIfForced	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyOverridesExistingFileIfModified	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyShouldKeepExecutionPermission	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyShouldKeepRestrictivePermissions	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyUnreadableFileFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testCopyWithOverrideWithReadOnlyTargetFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testDumpFile	ported	crates/filesystem/tests/filesystem_test.rs::testDumpFile
+Tests/FilesystemTest.php	FilesystemTest::testDumpFileCleansUpAfterFailure	ported	crates/filesystem/tests/filesystem_test.rs::testDumpFileCleansUpAfterFailure
+Tests/FilesystemTest.php	FilesystemTest::testDumpFileFollowsSymlink	ported	crates/filesystem/tests/filesystem_test.rs::testDumpFileFollowsSymlink
+Tests/FilesystemTest.php	FilesystemTest::testDumpFileOverwritesAnExistingFile	ported	crates/filesystem/tests/filesystem_test.rs::testDumpFileOverwritesAnExistingFile
+Tests/FilesystemTest.php	FilesystemTest::testDumpFileWithFileScheme	ported	crates/filesystem/tests/filesystem_test.rs::testDumpFileWithFileScheme
+Tests/FilesystemTest.php	FilesystemTest::testDumpFileWithResource	pending	
+Tests/FilesystemTest.php	FilesystemTest::testDumpFileWithZlibScheme	pending	
+Tests/FilesystemTest.php	FilesystemTest::testDumpKeepsExistingPermissionsWhenOverwritingAnExistingFile	pending	
+Tests/FilesystemTest.php	FilesystemTest::testDumpRemovesTmpFilesOnFailure	pending	
+Tests/FilesystemTest.php	FilesystemTest::testDumpToProtectedDirectory	pending	
+Tests/FilesystemTest.php	FilesystemTest::testFilesExists	pending	
+Tests/FilesystemTest.php	FilesystemTest::testFilesExistsFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testFilesExistsTraversableObjectOfFilesAndDirectories	pending	
+Tests/FilesystemTest.php	FilesystemTest::testFilesNotExistsTraversableObjectOfFilesAndDirectories	pending	
+Tests/FilesystemTest.php	FilesystemTest::testInvalidFileNotExists	pending	
+Tests/FilesystemTest.php	FilesystemTest::testIsAbsolutePath	pending	
+Tests/FilesystemTest.php	FilesystemTest::testLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testLinkIsNotOverwrittenIfAlreadyCreated	pending	
+Tests/FilesystemTest.php	FilesystemTest::testLinkIsOverwrittenIfPointsToDifferentTarget	pending	
+Tests/FilesystemTest.php	FilesystemTest::testLinkWithSameTarget	pending	
+Tests/FilesystemTest.php	FilesystemTest::testLinkWithSeveralTargets	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMakePathRelative	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMakePathRelativeWithExistingFile	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMakePathRelativeWithRelativeEndPath	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMakePathRelativeWithRelativeStartPath	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorAvoidCopyingTargetDirectoryIfInSourceDirectory	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorContentsWithSameNameAsSourceOrTargetWithDeleteOption	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorContentsWithSameNameAsSourceOrTargetWithoutDeleteOption	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorCopiesFilesAndDirectoriesRecursively	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorCopiesLinkedDirectoryContents	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorCopiesLinks	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorCopiesLinksByFollowingSymlinks	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorCopiesRelativeLinkedContents	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorCopyOnWindowsOptionTriggersDeprecation	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorCreatesEmptyDirectory	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorFollowSymlinksOverridesCopyOnWindows	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorFromSubdirectoryInToParentDirectory	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMirrorWithCustomIteratorAndDeleteOption	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMkdirCreatesDirectoriesFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMkdirCreatesDirectoriesFromArray	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMkdirCreatesDirectoriesFromTraversableObject	pending	
+Tests/FilesystemTest.php	FilesystemTest::testMkdirCreatesDirectoriesRecursively	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadAbsoluteLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadBrokenLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadDirectory	ported	crates/filesystem/tests/filesystem_test.rs::testReadDirectory
+Tests/FilesystemTest.php	FilesystemTest::testReadFile	ported	crates/filesystem/tests/filesystem_test.rs::testReadFile
+Tests/FilesystemTest.php	FilesystemTest::testReadLinkCanonicalizePath	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadLinkCanonicalizedPathDoesNotExist	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadLinkDefaultPathDoesNotExist	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadLinkDefaultPathNotLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadNonExistentFile	ported	crates/filesystem/tests/filesystem_test.rs::testReadNonExistentFile
+Tests/FilesystemTest.php	FilesystemTest::testReadRelativeLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testReadUnreadableFile	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveCleansArrayOfFilesAndDirectories	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveCleansFilesAndDirectoriesIteratively	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveCleansInvalidLinks	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveCleansTraversableObjectOfFilesAndDirectories	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveIgnoresNonExistingFiles	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveLink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveSymlink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRemoveThrowsExceptionOnPermissionDenied	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRename	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRenameOverwritesTheTargetIfItAlreadyExists	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRenameThrowsExceptionIfTargetAlreadyExists	pending	
+Tests/FilesystemTest.php	FilesystemTest::testRenameThrowsExceptionOnError	pending	
+Tests/FilesystemTest.php	FilesystemTest::testSymlink	pending	
+Tests/FilesystemTest.php	FilesystemTest::testSymlinkCreatesTargetDirectoryIfItDoesNotExist	pending	
+Tests/FilesystemTest.php	FilesystemTest::testSymlinkIsNotOverwrittenIfAlreadyCreated	pending	
+Tests/FilesystemTest.php	FilesystemTest::testSymlinkIsOverwrittenIfPointsToDifferentTarget	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnam	ported	crates/filesystem/tests/filesystem_test.rs::testTempnam
+Tests/FilesystemTest.php	FilesystemTest::testTempnamOnUnwritableFallsBackToSysTmp	ported	crates/filesystem/tests/filesystem_test.rs::testTempnamOnUnwritableFallsBackToSysTmp
+Tests/FilesystemTest.php	FilesystemTest::testTempnamTrimsTrailingWhitespaceFromTruncatedPrefix	ported	crates/filesystem/tests/filesystem_test.rs::testTempnamTrimsTrailingWhitespaceFromTruncatedPrefix
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithFileScheme	ported	crates/filesystem/tests/filesystem_test.rs::testTempnamWithFileScheme
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithHTTPSchemeFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithMockScheme	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithPHPTempSchemeFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithPharSchemeFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithSuffix	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithSuffix0	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithSuffixIsPrivate	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTempnamWithZlibSchemeFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTouchCreatesEmptyFile	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTouchCreatesEmptyFilesFromArray	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTouchCreatesEmptyFilesFromTraversableObject	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTouchFails	pending	
+Tests/FilesystemTest.php	FilesystemTest::testTouchWithZeroTimestamp	pending	
+Tests/PathTest.php	PathTest::testCanonicalize	ported	crates/filesystem/tests/path_test.rs::testCanonicalize
+Tests/PathTest.php	PathTest::testChangeExtension	pending	
+Tests/PathTest.php	PathTest::testGetDirectory	pending	
+Tests/PathTest.php	PathTest::testGetExtension	pending	
+Tests/PathTest.php	PathTest::testGetFilenameWithoutExtension	pending	
+Tests/PathTest.php	PathTest::testGetHomeDirectoryFailsIfNotSupportedOperatingSystem	ported	crates/filesystem/tests/path_test.rs::testGetHomeDirectoryFailsIfNotSupportedOperatingSystem
+Tests/PathTest.php	PathTest::testGetHomeDirectoryForUnix	ported	crates/filesystem/tests/path_test.rs::testGetHomeDirectoryForUnix
+Tests/PathTest.php	PathTest::testGetHomeDirectoryForWindows	ported	crates/filesystem/tests/path_test.rs::testGetHomeDirectoryForWindows
+Tests/PathTest.php	PathTest::testGetLongestCommonBasePath	pending	
+Tests/PathTest.php	PathTest::testGetRoot	ported	crates/filesystem/tests/path_test.rs::testGetRoot
+Tests/PathTest.php	PathTest::testHasExtension	pending	
+Tests/PathTest.php	PathTest::testIsAbsolute	ported	crates/filesystem/tests/path_test.rs::testIsAbsolute
+Tests/PathTest.php	PathTest::testIsBasePath	pending	
+Tests/PathTest.php	PathTest::testIsLocal	pending	
+Tests/PathTest.php	PathTest::testIsRelative	ported	crates/filesystem/tests/path_test.rs::testIsRelative
+Tests/PathTest.php	PathTest::testJoin	pending	
+Tests/PathTest.php	PathTest::testJoinVarArgs	pending	
+Tests/PathTest.php	PathTest::testMakeAbsolute	ported	crates/filesystem/tests/path_test.rs::testMakeAbsolute
+Tests/PathTest.php	PathTest::testMakeAbsoluteDoesNotFailIfDifferentRoot	ported	crates/filesystem/tests/path_test.rs::testMakeAbsoluteDoesNotFailIfDifferentRoot
+Tests/PathTest.php	PathTest::testMakeAbsoluteFailsIfBasePathEmpty	ported	crates/filesystem/tests/path_test.rs::testMakeAbsoluteFailsIfBasePathEmpty
+Tests/PathTest.php	PathTest::testMakeAbsoluteFailsIfBasePathNotAbsolute	ported	crates/filesystem/tests/path_test.rs::testMakeAbsoluteFailsIfBasePathNotAbsolute
+Tests/PathTest.php	PathTest::testMakeRelative	pending	
+Tests/PathTest.php	PathTest::testMakeRelativeFailsIfAbsolutePathAndBasePathEmpty	pending	
+Tests/PathTest.php	PathTest::testMakeRelativeFailsIfAbsolutePathAndBasePathNotAbsolute	pending	
+Tests/PathTest.php	PathTest::testMakeRelativeFailsIfDifferentRoot	pending	
+Tests/PathTest.php	PathTest::testNormalize	ported	crates/filesystem/tests/path_test.rs::testNormalize

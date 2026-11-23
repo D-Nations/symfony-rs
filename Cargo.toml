@@ -9,6 +9,7 @@ members = [
     "crates/yaml",
     "crates/dotenv",
     "crates/deprecation-contracts",
+    "crates/filesystem",
     "crates/config",
     "crates/translation",
     "crates/console",

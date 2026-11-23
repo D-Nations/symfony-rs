@@ -1,0 +1,16 @@
+[package]
+name = "symfony-filesystem"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Port of the symfony/filesystem component (the subset Config's caches use)"
+
+[dependencies]
+# The six random characters of tempnam()'s file name (PLAN.md stack row
+# "Atomic file writes"; the crate decision 15 chose for OS randomness).
+getrandom = "0.4"
+# PHP's view of the filesystem (stat(), is_link(), dirname(), file://).
+symfony-finder = { path = "../finder" }
+
+[dev-dependencies]
