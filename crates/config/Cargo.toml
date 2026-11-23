@@ -19,6 +19,9 @@ symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 # GlobResource (Glob::toRegex(), the Finder fallback) and the filesystem
 # as PHP's stream layer presents it.
 symfony-finder = { path = "../finder" }
+# dumpFile(), readFile() and chmod() for the caches, and parse_url()'s
+# scheme (FileLocator::isAbsolutePath()).
+symfony-filesystem = { path = "../filesystem" }
 # hash('xxh128'): DirectoryResource::__toString(), GlobResource's hash
 # (PLAN.md stack row).
 twox-hash = { version = "2.1.5", default-features = false, features = ["xxhash3_128"] }

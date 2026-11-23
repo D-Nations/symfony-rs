@@ -14,6 +14,7 @@
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json, loaders.json
 #   scripts/record.sh config-xml-utils crates/config/tests/data/xml_utils.json
 #   scripts/record.sh config-loaders crates/config/tests/data/loaders.json
+#   scripts/record.sh config-cache crates/config/tests/data/cache.json (Filesystem calls included)
 #   scripts/record.sh translation-xliff crates/translation/tests/data/xliff.json
 #   scripts/record.sh translation-qt crates/translation/tests/data/qt.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
@@ -212,6 +213,16 @@ translation_xliff() {
     python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))["cases"]), "load() cases")' "$tmp"
     mv "$tmp" "$out"
     echo "Translation XLIFF vectors written to $out"
+}
+
+config_cache() {
+    local out=crates/config/tests/data/cache.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/config_cache.php > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); print(len(d["write"]), "writes,", len(d["fresh"]), "isFresh() calls,", len(d["filesystem"]), "Filesystem calls")' "$tmp"
+    mv "$tmp" "$out"
+    echo "Config cache vectors written to $out"
 }
 
 translation_qt() {
@@ -420,6 +431,7 @@ case "${1:-}" in
     config-loaders) config_loaders ;;
     translation-xliff) translation_xliff ;;
     translation-qt) translation_qt ;;
+    config-cache) config_cache ;;
     string) string ;;
     console) console ;;
     css-selector) css_selector ;;
@@ -429,6 +441,6 @@ case "${1:-}" in
     php-dom-schema) php_dom_schema ;;
     http-foundation) http_foundation ;;
     http-foundation-releases) http_foundation_releases ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; translation_xliff; translation_qt ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-releases|translation-xliff|translation-qt|all" >&2; exit 2 ;;
+    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-releases|translation-xliff|translation-qt|config-cache|all" >&2; exit 2 ;;
 esac
