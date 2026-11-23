@@ -178,6 +178,9 @@ in one area before entering the next. Execute bounded stages in dependency
 order, one PHP file and its tests at a time. Each stage ends with the checks
 above, a log under `docs/milestones/`, and fresh comparisons for the apps it
 affects. The demo's original phase order and comparison rules stay in force.
+**Owner, November 23:** the symfony-demo-rs comparison step is paused until
+the owner turns it back on (AGENTS.md, "Checks"); stages log that it was
+not run, and no acceptance that requires it is marked passed meanwhile.
 
 ### Delivery order and deferred integrations
 

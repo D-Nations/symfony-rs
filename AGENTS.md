@@ -73,9 +73,12 @@ scripts/sources.sh --check
 scripts/parity-check.sh
 ```
 
-Then, for any change to a crate symfony-demo-rs uses, run that repository's
-checks and page comparison against this checkout (its `[patch]` override).
-An unexplained difference is a failure, not a note. Do not weaken, skip or
+The symfony-demo-rs step (that repository's checks and page comparison
+against this checkout, for a change to a crate it uses) is paused by the
+owner (November 23): do not run it until the owner turns it back on. Stage
+logs say it was not run; acceptance criteria that name these comparisons
+stay open meanwhile. When it runs, an unexplained difference is a failure,
+not a note. Do not weaken, skip or
 delete a test or comparison rule to get a pass; if a check is wrong, say so
 and ask. Debug builds only.
 
