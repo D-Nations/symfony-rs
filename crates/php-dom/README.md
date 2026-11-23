@@ -17,7 +17,7 @@ refused (`LoadError::Refused`, with a line and column).
 |---|---|
 | `load_xml(bytes, LoadOptions { validate_on_parse })` = `DOMDocument::loadXML()` with XmlUtils's settings (`validateOnParse`, `LIBXML_NONET \| LIBXML_COMPACT`) or plain: whether it loads, and `libxml_get_errors()` (level, code, trimmed message, line, column), in libxml's order and with its recovery after errors | 457 of 472 recorded documents, both modes, every error |
 | The tree: document (`encoding`, `xmlVersion`, `xmlStandalone`), document type (`name`, `publicId`, `systemId`), elements (`nodeName`, `localName`, `prefix`, `namespaceURI`, `getLineNo()`, attributes with the same fields and `value`), text, CDATA, comments, PIs, entity references | Same documents |
-| Read-only navigation: `childNodes`, `parentNode`, siblings, `documentElement`, `textContent`, `getAttribute`, `hasAttribute`, `getElementsByTagName` | Unit use in consumers (X3) |
+| Read-only navigation: `childNodes`, `parentNode`, siblings, `documentElement`, `textContent`, `getAttribute`, `hasAttribute`, `getElementsByTagName` (by local name, as PHP 8.4 compares it) | Unit use in consumers (X3); symfony-translation's recorded `tag_names` |
 | Encodings: UTF-8 (with or without a byte-order mark), UTF-16 LE/BE (byte-order mark or `<?` detection), ISO-8859-1 and its glibc names, US-ASCII; invalid UTF-8 as libxml reports it | Recorded encoding cases |
 | Bounds: 256 open elements, 50,000-byte names, 10,000,000-byte attribute values, entity nesting 40, 10,000,000 characters of attribute-entity expansion | Recorded limit cases |
 | `''` → `LoadError::Empty` (PHP's `ValueError` text) | Recorded |
@@ -48,5 +48,5 @@ with a document type; `internalSubset`; DTD-defaulted attributes and
 namespace declarations; libxml's entity-amplification check (billion
 laughs fails here too, with different errors); `normalizeDocument()`
 (an identity on every recorded parse); `schemaValidate($path)` reading a
-file (the caller reads it); SimpleXML and XPath (gate X3's loaders;
-XmlUtils itself needs neither).
+file (the caller reads it); SimpleXML (symfony-translation reads the
+tree as SimpleXML would) and XPath (QtFileLoader, still open in X3).
