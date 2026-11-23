@@ -11,14 +11,15 @@
 //! filename is anchored with `/D`, so a fallback ending in a newline is
 //! refused (v8.1.10 let it through into the header; PLAN.md decision 16).
 //!
-//! Not ported: `parseQuery()` (it needs `parse_str()` and
-//! `http_build_query()`).
+//! `parseQuery()` runs on `php_value::vars::parse_str()`, PHP's naming
+//! rules included: the hex-encoded names it builds go through them, so a
+//! `[` without a `]` still becomes `_` after the first byte, as in PHP.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
 //! Upstream: symfony/http-foundation HeaderUtils.php
 
-use php_value::{Key, PhpArray, PhpString, Value};
+use php_value::{Key, PhpArray, PhpString, Value, url, vars};
 
 use crate::exception::{Class, Error, Result};
 
@@ -318,6 +319,107 @@ pub fn make_disposition(
     out.extend_from_slice(b"; ");
     out.extend_from_slice(to_string(&params, b";")?.as_bytes());
     Ok(PhpString::from(out))
+}
+
+/// `HeaderUtils::parseQuery($query, $ignoreBrackets, $separator)`: like
+/// `parse_str()`, but dots and spaces in names are kept. Each name is
+/// hex-encoded up to its first `[` (the rest `rawurlencode()`d) before
+/// `parse_str()` and decoded after it. With `ignore_brackets`, every name
+/// is a plain key collecting a list of its values.
+pub fn parse_query(query: &[u8], ignore_brackets: bool, separator: &[u8]) -> Result<PhpArray> {
+    if separator.is_empty() {
+        return Err(Error::new(
+            Class::PhpValueError,
+            "explode(): Argument #1 ($separator) cannot be empty",
+        ));
+    }
+    let mut lists = PhpArray::new();
+    let mut encoded: Vec<Vec<u8>> = Vec::new();
+    for v in explode(separator, query) {
+        let v = until_nul(v);
+        let (k, v) = match v.iter().position(|&b| b == b'=') {
+            None => (url::urldecode(v), &b""[..]),
+            Some(i) => (url::urldecode(&v[..i]), &v[i..]),
+        };
+        let k = until_nul(&k);
+        let start = k.iter().position(|&b| b != b' ').unwrap_or(k.len());
+        let k = &k[start..];
+
+        if ignore_brackets {
+            // $q[$k][] = urldecode(substr($v, 1));
+            let key = Key::from_bytes(k);
+            let value = Value::String(PhpString::from(url::urldecode(
+                v.get(1..).unwrap_or_default(),
+            )));
+            let mut list = match lists.get(&key) {
+                Some(Value::Array(list)) => list.clone(),
+                _ => PhpArray::new(),
+            };
+            list.push(value)
+                .map_err(|e| Error::new(Class::PhpError, e.to_string()))?;
+            lists.insert(key, Value::Array(list));
+            continue;
+        }
+
+        let mut pair = match k.iter().position(|&b| b == b'[') {
+            None => url::bin2hex(k),
+            Some(i) => {
+                let mut pair = url::bin2hex(&k[..i]);
+                pair.extend(url::rawurlencode(&k[i..]));
+                pair
+            }
+        };
+        pair.extend_from_slice(v);
+        encoded.push(pair);
+    }
+    if ignore_brackets {
+        return Ok(lists);
+    }
+
+    let parsed = vars::parse_str(&encoded.join(&b'&'));
+    let mut result = PhpArray::new();
+    for (k, v) in parsed.iter() {
+        let k = match k {
+            Key::Int(i) => i.to_string().into_bytes(),
+            Key::Str(s) => s.as_bytes().to_vec(),
+        };
+        let name = match k.iter().position(|&b| b == b'_') {
+            // substr_replace($k, hex2bin(substr($k, 0, $i)).'[', 0, 1 + $i)
+            Some(i) => {
+                let mut name = url::hex2bin(&k[..i]).unwrap_or_default();
+                name.push(b'[');
+                name.extend_from_slice(&k[i + 1..]);
+                Key::from_bytes(&name)
+            }
+            // hex2bin($k), whose false is the key 0
+            None => url::hex2bin(&k).map_or(Key::Int(0), |name| Key::from_bytes(&name)),
+        };
+        result.insert(name, v.clone());
+    }
+    Ok(result)
+}
+
+/// `explode($separator, $string)` with a non-empty separator.
+fn explode<'a>(separator: &[u8], string: &'a [u8]) -> Vec<&'a [u8]> {
+    let mut parts = Vec::new();
+    let mut rest = string;
+    while let Some(at) = rest
+        .windows(separator.len())
+        .position(|window| window == separator)
+    {
+        parts.push(&rest[..at]);
+        rest = &rest[at + separator.len()..];
+    }
+    parts.push(rest);
+    parts
+}
+
+/// The text before its first NUL byte.
+fn until_nul(text: &[u8]) -> &[u8] {
+    match text.iter().position(|&b| b == 0) {
+        Some(nul) => &text[..nul],
+        None => text,
+    }
 }
 
 /// The characters of HTTP's "token".

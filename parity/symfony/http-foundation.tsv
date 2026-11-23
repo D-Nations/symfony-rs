@@ -174,10 +174,10 @@ Tests/HeaderUtilsTest.php	HeaderUtilsTest::testCombine	ported	crates/http-founda
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDisposition	ported	crates/http-foundation/tests/header_utils_test.rs::testMakeDisposition
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionFail	ported	crates/http-foundation/tests/header_utils_test.rs::testMakeDispositionFail
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionInvalidDisposition	ported	crates/http-foundation/tests/header_utils_test.rs::testMakeDispositionInvalidDisposition
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseCookie	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQuery	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel	pending	
-Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryIgnoreBrackets	pending	
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseCookie	ported	crates/http-foundation/tests/header_utils_test.rs::testParseCookie
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQuery	ported	crates/http-foundation/tests/header_utils_test.rs::testParseQuery
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel	ported	crates/http-foundation/tests/header_utils_test.rs::testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel
+Tests/HeaderUtilsTest.php	HeaderUtilsTest::testParseQueryIgnoreBrackets	ported	crates/http-foundation/tests/header_utils_test.rs::testParseQueryIgnoreBrackets
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testQuote	ported	crates/http-foundation/tests/header_utils_test.rs::testQuote
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplit	ported	crates/http-foundation/tests/header_utils_test.rs::testSplit
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators	ported	crates/http-foundation/tests/header_utils_test.rs::testSplitIsNotAmbiguousAboutWhitespaceBeforeSeparators
