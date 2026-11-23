@@ -79,6 +79,39 @@ An unexplained difference is a failure, not a note. Do not weaken, skip or
 delete a test or comparison rule to get a pass; if a check is wrong, say so
 and ask. Debug builds only.
 
+Tests that only run on Unix are run on a Windows host with
+`scripts/linux-test.sh [-p CRATE...]`, in a removed Linux container. There
+is no hosted CI for these checks (owner: no paid CI jobs), so they run
+locally before every merge.
+
+## Parallel sessions
+
+Several sessions may work on this repository at once. To keep them apart:
+
+- Work in your own git worktree beside the repository, never in the shared
+  main checkout: `git worktree add -b <branch> ../symfony-rs-wt-<name>
+  origin/main`. Fill its ignored `upstream/` with `scripts/fetch-upstream.sh`
+  (php-src is not fetched; never read it).
+- Pick a stage whose crates no open branch is changing (check
+  `gh pr list` and the remote branches first). Say in the PR which crates
+  it touches.
+- Before merging, `git fetch && git rebase origin/main`. Conflicts in
+  PLAN.md, `parity/sources.tsv` and `Cargo.lock` usually need both sides
+  kept; regenerate `sources.tsv` and re-run every check after the rebase.
+- symfony-demo-rs comparisons run one at a time across all sessions: they
+  share that checkout, its `Cargo.toml` `[patch]` edit and the
+  `compare-original` container. Before starting, check that no
+  `compare-original` container is running and that `Cargo.toml` there has
+  no `[patch]` edit. Point the patch at your worktree, confirm with
+  `cargo tree` that the demo builds against it, revert the edit when done,
+  and commit nothing there.
+- A control run (the comparison on the demo's pinned revision) depends only
+  on the symfony-demo-rs commit, the symfony-rs revision its `Cargo.toml`
+  pins, and the `compare-original` image id. Reuse the latest
+  `compare/out/run-control-*` whose three values still match, and record
+  them in the stage log; run a new control only when one has changed.
+- Stop only the containers and processes you started.
+
 ## Running PHP
 
 - Never install PHP, Composer or PHP extensions on the host. PHP runs only
