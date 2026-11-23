@@ -40,59 +40,59 @@ Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testUnpreparedResponseS
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testUnsupportedXSendfileTypeIsIgnored	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testXAccelMapping	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testXSendfile	pending	
-Tests/CookieTest.php	CookieTest::testConstructorWithDateTime	pending	
-Tests/CookieTest.php	CookieTest::testConstructorWithDateTimeImmutable	pending	
-Tests/CookieTest.php	CookieTest::testCookieIsCleared	pending	
-Tests/CookieTest.php	CookieTest::testCookieIsNotCleared	pending	
-Tests/CookieTest.php	CookieTest::testExpiredWithMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromString	pending	
-Tests/CookieTest.php	CookieTest::testFromStringAcceptsZeroName	pending	
-Tests/CookieTest.php	CookieTest::testFromStringEndsQuotedPathsAtTheNextSemicolon	pending	
-Tests/CookieTest.php	CookieTest::testFromStringExpiresNonPositiveMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromStringHandlesOverflowingMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidExpires	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidSameSite	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesInExpires	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesWhenSplittingAttributes	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresRawAttribute	pending	
-Tests/CookieTest.php	CookieTest::testFromStringKeepsQuotesInAttributeValues	pending	
-Tests/CookieTest.php	CookieTest::testFromStringKeepsValidAttributesBeforeInvalidDuplicates	pending	
-Tests/CookieTest.php	CookieTest::testFromStringPreservesQuotes	pending	
-Tests/CookieTest.php	CookieTest::testFromStringReadsTimestampExpires	pending	
-Tests/CookieTest.php	CookieTest::testFromStringTreatsHttpOnlyAsFlag	pending	
-Tests/CookieTest.php	CookieTest::testFromStringTreatsPartitionedAsFlag	pending	
-Tests/CookieTest.php	CookieTest::testFromStringTreatsSecureAsFlag	pending	
-Tests/CookieTest.php	CookieTest::testFromStringUsesTheDefaultPathForAPathWithoutValue	pending	
-Tests/CookieTest.php	CookieTest::testFromStringWithHttpOnly	pending	
-Tests/CookieTest.php	CookieTest::testGetDomain	pending	
-Tests/CookieTest.php	CookieTest::testGetExpiresTime	pending	
-Tests/CookieTest.php	CookieTest::testGetExpiresTimeWithStringValue	pending	
-Tests/CookieTest.php	CookieTest::testGetMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testGetPath	pending	
-Tests/CookieTest.php	CookieTest::testGetValue	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationAcceptsZeroName	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationSucceedNonRawCookieNameContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfCookieNameIsEmpty	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfDomainContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfPathContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfRawCookieNameContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInvalidExpiration	pending	
-Tests/CookieTest.php	CookieTest::testIsHttpOnly	pending	
-Tests/CookieTest.php	CookieTest::testIsPartitioned	pending	
-Tests/CookieTest.php	CookieTest::testIsSecure	pending	
-Tests/CookieTest.php	CookieTest::testMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testMinimalParameters	pending	
-Tests/CookieTest.php	CookieTest::testNegativeExpirationIsNotPossible	pending	
-Tests/CookieTest.php	CookieTest::testNullAndEmptyPathsAndDomainsAreAccepted	pending	
-Tests/CookieTest.php	CookieTest::testOrdinaryPathsAndDomainsAreAccepted	pending	
-Tests/CookieTest.php	CookieTest::testRawCookie	pending	
-Tests/CookieTest.php	CookieTest::testSameSiteAttribute	pending	
-Tests/CookieTest.php	CookieTest::testSetSecureDefault	pending	
-Tests/CookieTest.php	CookieTest::testToString	pending	
-Tests/CookieTest.php	CookieTest::testWithDomainThrowsExceptionIfDomainContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testWithPathThrowsExceptionIfPathContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testWithRawThrowsExceptionIfCookieNameContainsSpecialCharacters	pending	
+Tests/CookieTest.php	CookieTest::testConstructorWithDateTime	ported	crates/http-foundation/tests/cookie_test.rs::testConstructorWithDateTime
+Tests/CookieTest.php	CookieTest::testConstructorWithDateTimeImmutable	ported	crates/http-foundation/tests/cookie_test.rs::testConstructorWithDateTimeImmutable
+Tests/CookieTest.php	CookieTest::testCookieIsCleared	ported	crates/http-foundation/tests/cookie_test.rs::testCookieIsCleared
+Tests/CookieTest.php	CookieTest::testCookieIsNotCleared	ported	crates/http-foundation/tests/cookie_test.rs::testCookieIsNotCleared
+Tests/CookieTest.php	CookieTest::testExpiredWithMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testExpiredWithMaxAge
+Tests/CookieTest.php	CookieTest::testFromString	ported	crates/http-foundation/tests/cookie_test.rs::testFromString
+Tests/CookieTest.php	CookieTest::testFromStringAcceptsZeroName	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringAcceptsZeroName
+Tests/CookieTest.php	CookieTest::testFromStringEndsQuotedPathsAtTheNextSemicolon	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringEndsQuotedPathsAtTheNextSemicolon
+Tests/CookieTest.php	CookieTest::testFromStringExpiresNonPositiveMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringExpiresNonPositiveMaxAge
+Tests/CookieTest.php	CookieTest::testFromStringHandlesOverflowingMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringHandlesOverflowingMaxAge
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidExpires	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresInvalidExpires
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresInvalidMaxAge
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidSameSite	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresInvalidSameSite
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesInExpires	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresQuotesInExpires
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesWhenSplittingAttributes	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresQuotesWhenSplittingAttributes
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresRawAttribute	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresRawAttribute
+Tests/CookieTest.php	CookieTest::testFromStringKeepsQuotesInAttributeValues	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringKeepsQuotesInAttributeValues
+Tests/CookieTest.php	CookieTest::testFromStringKeepsValidAttributesBeforeInvalidDuplicates	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringKeepsValidAttributesBeforeInvalidDuplicates
+Tests/CookieTest.php	CookieTest::testFromStringPreservesQuotes	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringPreservesQuotes
+Tests/CookieTest.php	CookieTest::testFromStringReadsTimestampExpires	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringReadsTimestampExpires
+Tests/CookieTest.php	CookieTest::testFromStringTreatsHttpOnlyAsFlag	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringTreatsHttpOnlyAsFlag
+Tests/CookieTest.php	CookieTest::testFromStringTreatsPartitionedAsFlag	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringTreatsPartitionedAsFlag
+Tests/CookieTest.php	CookieTest::testFromStringTreatsSecureAsFlag	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringTreatsSecureAsFlag
+Tests/CookieTest.php	CookieTest::testFromStringUsesTheDefaultPathForAPathWithoutValue	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringUsesTheDefaultPathForAPathWithoutValue
+Tests/CookieTest.php	CookieTest::testFromStringWithHttpOnly	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringWithHttpOnly
+Tests/CookieTest.php	CookieTest::testGetDomain	ported	crates/http-foundation/tests/cookie_test.rs::testGetDomain
+Tests/CookieTest.php	CookieTest::testGetExpiresTime	ported	crates/http-foundation/tests/cookie_test.rs::testGetExpiresTime
+Tests/CookieTest.php	CookieTest::testGetExpiresTimeWithStringValue	ported	crates/http-foundation/tests/cookie_test.rs::testGetExpiresTimeWithStringValue
+Tests/CookieTest.php	CookieTest::testGetMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testGetMaxAge
+Tests/CookieTest.php	CookieTest::testGetPath	ported	crates/http-foundation/tests/cookie_test.rs::testGetPath
+Tests/CookieTest.php	CookieTest::testGetValue	ported	crates/http-foundation/tests/cookie_test.rs::testGetValue
+Tests/CookieTest.php	CookieTest::testInstantiationAcceptsZeroName	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationAcceptsZeroName
+Tests/CookieTest.php	CookieTest::testInstantiationSucceedNonRawCookieNameContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationSucceedNonRawCookieNameContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfCookieNameIsEmpty	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfCookieNameIsEmpty
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfDomainContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfDomainContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfPathContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfPathContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfRawCookieNameContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfRawCookieNameContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInvalidExpiration	ported	crates/http-foundation/tests/cookie_test.rs::testInvalidExpiration
+Tests/CookieTest.php	CookieTest::testIsHttpOnly	ported	crates/http-foundation/tests/cookie_test.rs::testIsHttpOnly
+Tests/CookieTest.php	CookieTest::testIsPartitioned	ported	crates/http-foundation/tests/cookie_test.rs::testIsPartitioned
+Tests/CookieTest.php	CookieTest::testIsSecure	ported	crates/http-foundation/tests/cookie_test.rs::testIsSecure
+Tests/CookieTest.php	CookieTest::testMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testMaxAge
+Tests/CookieTest.php	CookieTest::testMinimalParameters	ported	crates/http-foundation/tests/cookie_test.rs::testMinimalParameters
+Tests/CookieTest.php	CookieTest::testNegativeExpirationIsNotPossible	ported	crates/http-foundation/tests/cookie_test.rs::testNegativeExpirationIsNotPossible
+Tests/CookieTest.php	CookieTest::testNullAndEmptyPathsAndDomainsAreAccepted	ported	crates/http-foundation/tests/cookie_test.rs::testNullAndEmptyPathsAndDomainsAreAccepted
+Tests/CookieTest.php	CookieTest::testOrdinaryPathsAndDomainsAreAccepted	ported	crates/http-foundation/tests/cookie_test.rs::testOrdinaryPathsAndDomainsAreAccepted
+Tests/CookieTest.php	CookieTest::testRawCookie	ported	crates/http-foundation/tests/cookie_test.rs::testRawCookie
+Tests/CookieTest.php	CookieTest::testSameSiteAttribute	ported	crates/http-foundation/tests/cookie_test.rs::testSameSiteAttribute
+Tests/CookieTest.php	CookieTest::testSetSecureDefault	ported	crates/http-foundation/tests/cookie_test.rs::testSetSecureDefault
+Tests/CookieTest.php	CookieTest::testToString	ported	crates/http-foundation/tests/cookie_test.rs::testToString
+Tests/CookieTest.php	CookieTest::testWithDomainThrowsExceptionIfDomainContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testWithDomainThrowsExceptionIfDomainContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testWithPathThrowsExceptionIfPathContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testWithPathThrowsExceptionIfPathContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testWithRawThrowsExceptionIfCookieNameContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testWithRawThrowsExceptionIfCookieNameContainsSpecialCharacters
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testInitializationWithDefaultValues	pending	
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testPresentOfExpiresHeader	pending	
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testRetryIsNotSharedBetweenServerEvents	pending	
@@ -148,26 +148,26 @@ Tests/FileBagTest.php	FileBagTest::testShouldNotRemoveEmptyUploadedFilesForAssoc
 Tests/FileBagTest.php	FileBagTest::testShouldRemoveEmptyUploadedFilesForMultiUpload	pending	
 Tests/FileBagTest.php	FileBagTest::testShouldSetEmptyUploadedFilesToNull	pending	
 Tests/FileBagTest.php	FileBagTest::testWebkitDirectoryUpload	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testAll	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlClone	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveAccessors	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveOverrideWithReplace	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveParsing	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveParsingQuotedZero	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testConstructor	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testContains	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testCount	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testGet	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testGetCacheControlHeader	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testGetDate	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testGetDateException	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testGetDateNull	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testGetIterator	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testKeys	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testReplace	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testSetAssociativeArray	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testToStringNotNull	pending	
-Tests/HeaderBagTest.php	HeaderBagTest::testToStringNull	pending	
+Tests/HeaderBagTest.php	HeaderBagTest::testAll	ported	crates/http-foundation/tests/header_bag_test.rs::testAll
+Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlClone	ported	crates/http-foundation/tests/header_bag_test.rs::testCacheControlClone
+Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveAccessors	ported	crates/http-foundation/tests/header_bag_test.rs::testCacheControlDirectiveAccessors
+Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveOverrideWithReplace	ported	crates/http-foundation/tests/header_bag_test.rs::testCacheControlDirectiveOverrideWithReplace
+Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveParsing	ported	crates/http-foundation/tests/header_bag_test.rs::testCacheControlDirectiveParsing
+Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveParsingQuotedZero	ported	crates/http-foundation/tests/header_bag_test.rs::testCacheControlDirectiveParsingQuotedZero
+Tests/HeaderBagTest.php	HeaderBagTest::testConstructor	ported	crates/http-foundation/tests/header_bag_test.rs::testConstructor
+Tests/HeaderBagTest.php	HeaderBagTest::testContains	ported	crates/http-foundation/tests/header_bag_test.rs::testContains
+Tests/HeaderBagTest.php	HeaderBagTest::testCount	ported	crates/http-foundation/tests/header_bag_test.rs::testCount
+Tests/HeaderBagTest.php	HeaderBagTest::testGet	ported	crates/http-foundation/tests/header_bag_test.rs::testGet
+Tests/HeaderBagTest.php	HeaderBagTest::testGetCacheControlHeader	ported	crates/http-foundation/tests/header_bag_test.rs::testGetCacheControlHeader
+Tests/HeaderBagTest.php	HeaderBagTest::testGetDate	ported	crates/http-foundation/tests/header_bag_test.rs::testGetDate
+Tests/HeaderBagTest.php	HeaderBagTest::testGetDateException	ported	crates/http-foundation/tests/header_bag_test.rs::testGetDateException
+Tests/HeaderBagTest.php	HeaderBagTest::testGetDateNull	ported	crates/http-foundation/tests/header_bag_test.rs::testGetDateNull
+Tests/HeaderBagTest.php	HeaderBagTest::testGetIterator	ported	crates/http-foundation/tests/header_bag_test.rs::testGetIterator
+Tests/HeaderBagTest.php	HeaderBagTest::testKeys	ported	crates/http-foundation/tests/header_bag_test.rs::testKeys
+Tests/HeaderBagTest.php	HeaderBagTest::testReplace	ported	crates/http-foundation/tests/header_bag_test.rs::testReplace
+Tests/HeaderBagTest.php	HeaderBagTest::testSetAssociativeArray	ported	crates/http-foundation/tests/header_bag_test.rs::testSetAssociativeArray
+Tests/HeaderBagTest.php	HeaderBagTest::testToStringNotNull	ported	crates/http-foundation/tests/header_bag_test.rs::testToStringNotNull
+Tests/HeaderBagTest.php	HeaderBagTest::testToStringNull	ported	crates/http-foundation/tests/header_bag_test.rs::testToStringNull
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testCombine	ported	crates/http-foundation/tests/header_utils_test.rs::testCombine
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDisposition	pending	
 Tests/HeaderUtilsTest.php	HeaderUtilsTest::testMakeDispositionFail	pending	
@@ -441,25 +441,25 @@ Tests/RequestTest.php	RequestTest::testUrlencodedStringPrefix	pending
 Tests/RequestTest.php	RequestTest::testVeryLongHosts	pending	
 Tests/ResponseFunctionalTest.php	ResponseFunctionalTest::testCookie	pending	
 Tests/ResponseFunctionalTest.php	ResponseFunctionalTest::testInformationalResponse	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testAllPreserveCase	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCacheControlClone	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCacheControlHeader	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testClearCookiePartitioned	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testClearCookieSamesite	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testClearCookieSecureNotHttpOnly	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCookiesWithSameNames	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderAddedOnCreation	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderCanBeSetOnCreation	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderWillBeRecreatedWhenHeadersAreReplaced	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderWillBeRecreatedWhenRemoved	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testGetCookiesWithInvalidArgument	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testRemoveCookie	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testRemoveCookieWithNullRemove	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testReplace	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testReplaceWithRemove	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testSetCookieHeader	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testToStringDoesntMessUpHeaders	pending	
-Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testToStringIncludesCookieHeaders	pending	
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testAllPreserveCase	ported	crates/http-foundation/tests/response_header_bag_test.rs::testAllPreserveCase
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCacheControlClone	ported	crates/http-foundation/tests/response_header_bag_test.rs::testCacheControlClone
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCacheControlHeader	ported	crates/http-foundation/tests/response_header_bag_test.rs::testCacheControlHeader
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testClearCookiePartitioned	ported	crates/http-foundation/tests/response_header_bag_test.rs::testClearCookiePartitioned
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testClearCookieSamesite	ported	crates/http-foundation/tests/response_header_bag_test.rs::testClearCookieSamesite
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testClearCookieSecureNotHttpOnly	ported	crates/http-foundation/tests/response_header_bag_test.rs::testClearCookieSecureNotHttpOnly
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCookiesWithSameNames	ported	crates/http-foundation/tests/response_header_bag_test.rs::testCookiesWithSameNames
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderAddedOnCreation	ported	crates/http-foundation/tests/response_header_bag_test.rs::testDateHeaderAddedOnCreation
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderCanBeSetOnCreation	ported	crates/http-foundation/tests/response_header_bag_test.rs::testDateHeaderCanBeSetOnCreation
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderWillBeRecreatedWhenHeadersAreReplaced	ported	crates/http-foundation/tests/response_header_bag_test.rs::testDateHeaderWillBeRecreatedWhenHeadersAreReplaced
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testDateHeaderWillBeRecreatedWhenRemoved	ported	crates/http-foundation/tests/response_header_bag_test.rs::testDateHeaderWillBeRecreatedWhenRemoved
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testGetCookiesWithInvalidArgument	ported	crates/http-foundation/tests/response_header_bag_test.rs::testGetCookiesWithInvalidArgument
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testRemoveCookie	ported	crates/http-foundation/tests/response_header_bag_test.rs::testRemoveCookie
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testRemoveCookieWithNullRemove	ported	crates/http-foundation/tests/response_header_bag_test.rs::testRemoveCookieWithNullRemove
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testReplace	ported	crates/http-foundation/tests/response_header_bag_test.rs::testReplace
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testReplaceWithRemove	ported	crates/http-foundation/tests/response_header_bag_test.rs::testReplaceWithRemove
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testSetCookieHeader	ported	crates/http-foundation/tests/response_header_bag_test.rs::testSetCookieHeader
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testToStringDoesntMessUpHeaders	ported	crates/http-foundation/tests/response_header_bag_test.rs::testToStringDoesntMessUpHeaders
+Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testToStringIncludesCookieHeaders	ported	crates/http-foundation/tests/response_header_bag_test.rs::testToStringIncludesCookieHeaders
 Tests/ResponseTest.php	ResponseTest::testClone	pending	
 Tests/ResponseTest.php	ResponseTest::testContentTypeCharset	pending	
 Tests/ResponseTest.php	ResponseTest::testContentTypeIsNull	pending	
@@ -541,20 +541,20 @@ Tests/ResponseTest.php	ResponseTest::testSetStatusCode	pending
 Tests/ResponseTest.php	ResponseTest::testSetVary	pending	
 Tests/ResponseTest.php	ResponseTest::testSettersAreChainable	pending	
 Tests/ResponseTest.php	ResponseTest::testToString	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgi	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiBogus	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiEmptyPassword	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiRedirect	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgi	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiBogus	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiRedirect	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptional	pending	
-Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptionalWhenPassedWithHttpPrefix	pending	
-Tests/ServerBagTest.php	ServerBagTest::testItDoesNotOverwriteTheAuthorizationHeaderIfItIsAlreadySet	pending	
-Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuth	pending	
-Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuthWithRedirect	pending	
-Tests/ServerBagTest.php	ServerBagTest::testRequestWithoutContentTypeAndContentLength	pending	
-Tests/ServerBagTest.php	ServerBagTest::testShouldExtractHeadersFromServerArray	pending	
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgi	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgi
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiBogus	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiBogus
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiEmptyPassword	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiEmptyPassword
+Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiRedirect	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiRedirect
+Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgi	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpDigestAuthWithPhpCgi
+Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiBogus	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpDigestAuthWithPhpCgiBogus
+Tests/ServerBagTest.php	ServerBagTest::testHttpDigestAuthWithPhpCgiRedirect	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpDigestAuthWithPhpCgiRedirect
+Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptional	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpPasswordIsOptional
+Tests/ServerBagTest.php	ServerBagTest::testHttpPasswordIsOptionalWhenPassedWithHttpPrefix	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpPasswordIsOptionalWhenPassedWithHttpPrefix
+Tests/ServerBagTest.php	ServerBagTest::testItDoesNotOverwriteTheAuthorizationHeaderIfItIsAlreadySet	ported	crates/http-foundation/tests/server_bag_test.rs::testItDoesNotOverwriteTheAuthorizationHeaderIfItIsAlreadySet
+Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuth	ported	crates/http-foundation/tests/server_bag_test.rs::testOAuthBearerAuth
+Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuthWithRedirect	ported	crates/http-foundation/tests/server_bag_test.rs::testOAuthBearerAuthWithRedirect
+Tests/ServerBagTest.php	ServerBagTest::testRequestWithoutContentTypeAndContentLength	ported	crates/http-foundation/tests/server_bag_test.rs::testRequestWithoutContentTypeAndContentLength
+Tests/ServerBagTest.php	ServerBagTest::testShouldExtractHeadersFromServerArray	ported	crates/http-foundation/tests/server_bag_test.rs::testShouldExtractHeadersFromServerArray
 Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testAll	pending	
 Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testClear	pending	
 Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testCount	pending	

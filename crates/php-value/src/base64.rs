@@ -1,4 +1,10 @@
-//! `base64_encode()` and strict `base64_decode($data, true)`.
+//! `base64_encode()`, `base64_decode($data)` and strict
+//! `base64_decode($data, true)`.
+//!
+//! Non-strict decoding skips every byte outside the alphabet, `=`
+//! included, and drops the bits left over after the last whole byte
+//! (recorded from PHP 8.4.27: `Zm9v=OmJhcg==` and `Zm9v!!OmJhcg` are
+//! `foo:bar`, `Zg=a` is `f`, `Z` is empty).
 //!
 //! Strict decoding fails on any character outside the alphabet, on `=`
 //! anywhere but at the end, and on more than two `=`; missing padding is
@@ -24,6 +30,24 @@ pub fn encode(bytes: &[u8]) -> String {
             } else {
                 out.push('=');
             }
+        }
+    }
+    out
+}
+
+/// `base64_decode($text)`: never false.
+pub fn decode(text: &[u8]) -> Vec<u8> {
+    let mut out = Vec::with_capacity(text.len() * 3 / 4);
+    let (mut buffer, mut bits) = (0u32, 0);
+    for &c in text {
+        let Some(v) = ALPHABET.iter().position(|&a| a == c) else {
+            continue;
+        };
+        buffer = ((buffer << 6) | v as u32) & 0xFFFF;
+        bits += 6;
+        if bits >= 8 {
+            bits -= 8;
+            out.push(((buffer >> bits) & 0xFF) as u8);
         }
     }
     out
@@ -67,5 +91,38 @@ mod tests {
         assert_eq!(decode_strict(b"Zm9v===="), None);
         assert_eq!(decode_strict(b"Zm=9v"), None);
         assert_eq!(decode_strict(b"Zm9"), Some(b"fo".to_vec()));
+    }
+}
+
+#[cfg(test)]
+mod lenient_tests {
+    use super::decode;
+
+    /// Recorded from PHP 8.4.27 (`base64_decode($s)`).
+    #[test]
+    fn non_strict_matches_php() {
+        for (text, hex) in [
+            ("Zm9vOmJhcg==", "666f6f3a626172"),
+            ("Zm9vOmJhcg", "666f6f3a626172"),
+            ("Zm9v OmJh cg==", "666f6f3a626172"),
+            ("Zm9v=OmJhcg==", "666f6f3a626172"),
+            ("=Zm9v", "666f6f"),
+            ("Zm9v!!OmJhcg", "666f6f3a626172"),
+            ("Z", ""),
+            ("Zm", "66"),
+            ("Zm9vO", "666f6f"),
+            ("====", ""),
+            ("Zg=a", "6606"),
+            ("Zg==Zg==", "660660"),
+            ("Zh==", "66"),
+            ("Zm9vOmJhcg==x", "666f6f3a6261720c"),
+            ("Y=WI", "6162"),
+        ] {
+            let decoded: String = decode(text.as_bytes())
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect();
+            assert_eq!(decoded, hex, "{text}");
+        }
     }
 }

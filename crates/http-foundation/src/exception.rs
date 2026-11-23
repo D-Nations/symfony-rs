@@ -27,6 +27,10 @@ pub enum Class {
     PhpUnexpectedValue,
     /// PHP's `\InvalidArgumentException`.
     PhpInvalidArgument,
+    /// PHP's `\RuntimeException` (`HeaderBag::getDate()`).
+    PhpRuntime,
+    /// PHP's `\TypeError`.
+    PhpTypeError,
     /// PHP's `\Error`.
     PhpError,
     /// Input this port does not reproduce; not a PHP class. It is refused
@@ -46,6 +50,8 @@ impl Class {
             }
             Self::PhpUnexpectedValue => "UnexpectedValueException",
             Self::PhpInvalidArgument => "InvalidArgumentException",
+            Self::PhpRuntime => "RuntimeException",
+            Self::PhpTypeError => "TypeError",
             Self::PhpError => "Error",
             Self::NotPorted => "NotPorted",
         }
@@ -82,6 +88,8 @@ impl Class {
                 "Exception",
                 "Throwable",
             ],
+            Self::PhpRuntime => &["RuntimeException", "Exception", "Throwable"],
+            Self::PhpTypeError => &["TypeError", "Error", "Throwable"],
             Self::PhpError => &["Error", "Throwable"],
             Self::NotPorted => &["NotPorted"],
         }

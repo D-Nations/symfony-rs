@@ -910,6 +910,20 @@ Stack rows (searched November 22):
       and AcceptHeaderItem as an API, HeaderBag, ServerBag,
       ResponseHeaderBag, Cookie, FileBag (needs UploadedFile); IpUtils,
       `makeDisposition()` and `setTrustedProxies()` wait for decision 16.
+- [ ] HttpFoundation stage 2 (November 23;
+      [docs/milestones/m2-a-http-foundation-headers.md](docs/milestones/m2-a-http-foundation-headers.md)):
+      `Cookie.php`, `HeaderBag.php`, `ResponseHeaderBag.php` (without
+      `makeDisposition()`, decision 16) and `ServerBag.php`, on `php-value`,
+      which gains `time()` (mockable, as ClockMock), `gmdate()`,
+      `strtotime()` and `createFromFormat(DATE_RFC2822)` subsets that
+      refuse what they do not read as PHP does, URL encoding, non-strict
+      `base64_decode()` and `ksort()`. CookieTest 53 of 53, HeaderBagTest
+      20 of 20, ResponseHeaderBagTest 19 of 19, ServerBagTest 14 of 14;
+      plus 382 recorded date answers, 2,277 Cookie calls, 400 header-bag
+      call scripts and 360 `$_SERVER` arrays, all matching. No advisory is
+      listed for these files. Next: AcceptHeader and AcceptHeaderItem as an
+      API, `parse_str()` and `HeaderUtils::parseQuery()`, FileBag (needs
+      UploadedFile).
 
 ## Verification
 

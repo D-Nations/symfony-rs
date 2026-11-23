@@ -20,6 +20,9 @@ pub enum TimeZone {
     Utc,
     /// The `Z` abbreviation: offset 0, named "Z".
     Zulu,
+    /// The `GMT` abbreviation: offset 0, named "GMT" (what
+    /// `createFromFormat()` gives for a `GMT` zone).
+    Gmt,
     /// A fixed UTC offset in seconds, named like "+05:30".
     Offset(i32),
 }
@@ -27,7 +30,7 @@ pub enum TimeZone {
 impl TimeZone {
     pub fn offset_seconds(self) -> i32 {
         match self {
-            Self::Utc | Self::Zulu => 0,
+            Self::Utc | Self::Zulu | Self::Gmt => 0,
             Self::Offset(seconds) => seconds,
         }
     }
@@ -37,6 +40,7 @@ impl TimeZone {
         match self {
             Self::Utc => "UTC".to_owned(),
             Self::Zulu => "Z".to_owned(),
+            Self::Gmt => "GMT".to_owned(),
             Self::Offset(seconds) => offset_text(seconds, true),
         }
     }
@@ -46,6 +50,7 @@ impl TimeZone {
         match self {
             Self::Utc => "UTC".to_owned(),
             Self::Zulu => "Z".to_owned(),
+            Self::Gmt => "GMT".to_owned(),
             Self::Offset(seconds) => format!("GMT{}", offset_text(seconds, false)),
         }
     }
@@ -85,7 +90,7 @@ pub struct DateTimeImmutable {
 }
 
 /// Days since 1970-01-01 of a proleptic Gregorian date (month 1..=12).
-fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
+pub(crate) fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
     let y = if month <= 2 { year - 1 } else { year };
     let era = y.div_euclid(400);
     let yoe = y - era * 400;
@@ -96,7 +101,7 @@ fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
 }
 
 /// The date of a day number: (year, month, day).
-fn civil_from_days(days: i64) -> (i64, i64, i64) {
+pub(crate) fn civil_from_days(days: i64) -> (i64, i64, i64) {
     let z = days + 719_468;
     let era = z.div_euclid(146_097);
     let doe = z - era * 146_097;
@@ -156,11 +161,17 @@ impl DateTimeImmutable {
         }
     }
 
-    /// `format($format)` for the characters `Y m d H i s u v P O Z U e T c`
-    /// and `\` escapes; any other character is copied, as PHP copies
-    /// characters that are not format characters.
+    /// `format($format)` for the characters `Y m d j H i s u v P O Z U e
+    /// T c D l M F w N` and `\` escapes; any other character is copied, as
+    /// PHP copies characters that are not format characters.
     pub fn format(&self, format: &str) -> String {
+        self.format_as(format, false)
+    }
+
+    /// `format()`, with `gmt` making `T` "GMT" as `gmdate()` writes it.
+    fn format_as(&self, format: &str, gmt: bool) -> String {
         let f = self.local_fields();
+        let weekday = weekday(f.year, f.month, f.day);
         let mut out = String::new();
         let mut chars = format.chars();
         while let Some(c) = chars.next() {
@@ -174,6 +185,13 @@ impl DateTimeImmutable {
                 }
                 'm' => write!(out, "{:02}", f.month),
                 'd' => write!(out, "{:02}", f.day),
+                'j' => write!(out, "{}", f.day),
+                'D' => write!(out, "{}", &DAY_NAMES[weekday][..3]),
+                'l' => write!(out, "{}", DAY_NAMES[weekday]),
+                'w' => write!(out, "{weekday}"),
+                'N' => write!(out, "{}", if weekday == 0 { 7 } else { weekday }),
+                'M' => write!(out, "{}", &MONTH_NAMES[month_index(f.month)][..3]),
+                'F' => write!(out, "{}", MONTH_NAMES[month_index(f.month)]),
                 'H' => write!(out, "{:02}", f.hour),
                 'i' => write!(out, "{:02}", f.minute),
                 's' => write!(out, "{:02}", f.second),
@@ -184,10 +202,11 @@ impl DateTimeImmutable {
                 'Z' => write!(out, "{}", self.zone.offset_seconds()),
                 'U' => write!(out, "{}", self.timestamp),
                 'e' => write!(out, "{}", self.zone.name()),
+                'T' if gmt => write!(out, "GMT"),
                 'T' => write!(out, "{}", self.zone.abbreviation()),
                 // ISO 8601: the year's sign counts toward its four digits
                 // (-1 is "-001"), unlike `Y` ("-0001").
-                'c' => write!(out, "{:04}{}", f.year, self.format("-m-d\\TH:i:sP")),
+                'c' => write!(out, "{:04}{}", f.year, self.format_as("-m-d\\TH:i:sP", gmt)),
                 '\\' => match chars.next() {
                     Some(escaped) => write!(out, "{escaped}"),
                     None => write!(out, "\\"),
@@ -196,6 +215,62 @@ impl DateTimeImmutable {
             };
         }
         out
+    }
+}
+
+/// English day names, Sunday first (`w` order).
+pub(crate) const DAY_NAMES: [&str; 7] = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+];
+
+/// English month names, January first.
+pub(crate) const MONTH_NAMES: [&str; 12] = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
+/// A month number (1..=12) as an index into `MONTH_NAMES`.
+fn month_index(month: i64) -> usize {
+    usize::try_from(month - 1).unwrap_or(0).min(11)
+}
+
+/// The day of the week of a date, 0 for Sunday (`w`).
+pub(crate) fn weekday(year: i64, month: i64, day: i64) -> usize {
+    // 1970-01-01 was a Thursday.
+    usize::try_from((days_from_civil(year, month, day) + 4).rem_euclid(7)).unwrap_or(0)
+}
+
+/// `gmdate($format, $timestamp)`: `format()` in UTC, with `T` written as
+/// "GMT".
+pub fn gmdate(format: &str, timestamp: i64) -> String {
+    DateTimeImmutable::from_timestamp(timestamp, 0, TimeZone::Utc).format_as(format, true)
+}
+
+impl DateTimeImmutable {
+    /// The instant `timestamp` (seconds since the epoch, UTC) shown in
+    /// `zone`.
+    pub fn from_timestamp(timestamp: i64, microsecond: u32, zone: TimeZone) -> Self {
+        Self {
+            timestamp,
+            microsecond,
+            zone,
+        }
     }
 }
 
@@ -211,7 +286,7 @@ impl PhpObject for DateTimeImmutable {
         properties.insert("date", self.format("Y-m-d H:i:s.u").into());
         let kind = match self.zone {
             TimeZone::Offset(_) => 1,
-            TimeZone::Zulu => 2,
+            TimeZone::Zulu | TimeZone::Gmt => 2,
             TimeZone::Utc => 3,
         };
         properties.insert("timezone_type", kind.into());

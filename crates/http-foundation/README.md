@@ -19,6 +19,9 @@ complete port of Symfony HttpFoundation.
 | `input_bag` | Symfony `InputBag`: scalar-only getters throwing `BadRequestException`, checked `set`/`add`/`replace`, `\Stringable` returned as its string | InputBagTest 23 of 25 (2 `n/a`: PHP references); the recorded calls | As `parameter_bag` |
 | `exception` | `BadRequestException`, `UnexpectedValueException`, and the PHP exceptions the bags throw, with `instanceof` (`Error::is_a`) | The bag tests' `expectException` checks | One error type; messages are upstream's, as bytes |
 | `header_utils` | Symfony `HeaderUtils`: `split()` (one linear pass), `combine()`, `toString()`, `quote()`, `unquote()` | HeaderUtilsTest 6 of 13, including GHSA-r925-mgvr-h9cc's test; 3,000 recorded `split()` calls and 633 `quote()`/`unquote()` strings (`tests/data/header_utils.json`) | No `makeDisposition()` (waits for the v8.1.11 version move, PLAN.md decision 16) or `parseQuery()`; `toString()` refuses null, array and object values (PHP's TypeError) |
+| `cookie` | Symfony `Cookie`: constructor, `create()`, `fromString()`, the `with*()` copies, the `Set-Cookie` text | CookieTest 53 of 53; 2,112 recorded `fromString()` calls and 165 constructions (`tests/data/cookie.json`) | `$expire` texts go through php-value's `strtotime()` subset; one it does not read is refused (`Class::NotPorted`) |
+| `header_bag` | Symfony `HeaderBag` and `ResponseHeaderBag`: headers, Cache-Control directives, computed Cache-Control, Date, cookies, `allPreserveCase()` | HeaderBagTest 20 of 20, ResponseHeaderBagTest 19 of 19; 400 recorded call scripts (`tests/data/header_bags.json`) | No `makeDisposition()` (decision 16); values are strings or null; `getDate()` reads php-value's `DATE_RFC2822` subset and refuses other zones |
+| `server_bag` | Symfony `ServerBag::getHeaders()`, including Basic, Digest and Bearer `Authorization` | ServerBagTest 14 of 14; 360 recorded `$_SERVER` arrays (`tests/data/server_bag.json`) | PHP's TypeError messages for array and object `Authorization` values |
 | `scheme` | Symfony `Request` trusted HTTPS proxy subset | Demo proxy/security regression tests, request-lab untrusted-header test | Axum adapter; exact trusted peer IPs and one `X-Forwarded-Proto` value only |
 
 HTTP adapters bound body reads using `POST_MAX_SIZE` (8 MiB), and supply an
@@ -36,7 +39,8 @@ symfony-demo-rs's `src/request/mod.rs` re-exports this API. The second consumer 
 [`request-lab`](../../examples/request-lab/README.md); it has no dependency on
 the demo crate, its database, templates, translations or built assets.
 
-The bag and HeaderUtils vectors are recorded by `scripts/record.sh
+The bag, HeaderUtils, Cookie, header-bag and ServerBag vectors (and
+php-value's date vectors) are recorded by `scripts/record.sh
 http-foundation` (`oracle/recorders/http_foundation_*.php`).
 
 The request vectors are recorded in the oracle image: `scripts/record.sh multipart`
@@ -65,8 +69,9 @@ where the earlier, php-src-derived code did not:
 
 ## Not implemented
 
-Not implemented: general Request/Response objects, HeaderBag, ServerBag,
-FileBag, ResponseHeaderBag, Cookie, AcceptHeader as an API, IpUtils,
+Not implemented: general Request/Response objects, FileBag, AcceptHeader
+as an API, `parse_str()`/`HeaderUtils::parseQuery()`, `makeDisposition()`,
+IpUtils,
 uploaded-file handling, JSON payload access, sessions, response cache
 negotiation, streamed/binary responses, general proxy handling, routing,
 HttpKernel events, a service container or bundle configuration. The next
