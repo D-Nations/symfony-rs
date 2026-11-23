@@ -23,7 +23,7 @@
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
 #   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
-#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag,ip_utils}.json, crates/php-value/tests/data/dates.json
+#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag,ip_utils,accept_header}.json, crates/php-value/tests/data/dates.json
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh all
 #
@@ -394,7 +394,7 @@ http_foundation_releases() {
 http_foundation() {
     local name out tmp
     mkdir -p oracle/out crates/http-foundation/tests/data
-    for name in bags header_utils cookie header_bags server_bag ip_utils; do
+    for name in bags header_utils cookie header_bags server_bag ip_utils accept_header; do
         out=crates/http-foundation/tests/data/$name.json
         tmp=$(mktemp -p oracle/out)
         oracle "oracle/recorders/http_foundation_$name.php" > "$tmp"

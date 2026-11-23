@@ -8,6 +8,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod accept_header;
 pub mod accept_language;
 pub mod cookie;
 pub mod cookies;

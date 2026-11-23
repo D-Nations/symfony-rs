@@ -1,15 +1,15 @@
 # symfony/http-foundation at 30fa3efe6e736b0d06f5331cc6abe813582c0a26: upstream test	method	status	rust test
-Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testAttribute	pending	
-Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testFromString	pending	
-Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testQuality	pending	
-Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testToString	pending	
-Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testValue	pending	
-Tests/AcceptHeaderTest.php	AcceptHeaderTest::testDefaultValue	pending	
-Tests/AcceptHeaderTest.php	AcceptHeaderTest::testFilter	pending	
-Tests/AcceptHeaderTest.php	AcceptHeaderTest::testFirst	pending	
-Tests/AcceptHeaderTest.php	AcceptHeaderTest::testFromString	pending	
-Tests/AcceptHeaderTest.php	AcceptHeaderTest::testSorting	pending	
-Tests/AcceptHeaderTest.php	AcceptHeaderTest::testToString	pending	
+Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testAttribute	ported	crates/http-foundation/tests/accept_header_item_test.rs::testAttribute
+Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testFromString	ported	crates/http-foundation/tests/accept_header_item_test.rs::testFromString
+Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testQuality	ported	crates/http-foundation/tests/accept_header_item_test.rs::testQuality
+Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testToString	ported	crates/http-foundation/tests/accept_header_item_test.rs::testToString
+Tests/AcceptHeaderItemTest.php	AcceptHeaderItemTest::testValue	ported	crates/http-foundation/tests/accept_header_item_test.rs::testValue
+Tests/AcceptHeaderTest.php	AcceptHeaderTest::testDefaultValue	ported	crates/http-foundation/tests/accept_header_test.rs::testDefaultValue
+Tests/AcceptHeaderTest.php	AcceptHeaderTest::testFilter	ported	crates/http-foundation/tests/accept_header_test.rs::testFilter
+Tests/AcceptHeaderTest.php	AcceptHeaderTest::testFirst	ported	crates/http-foundation/tests/accept_header_test.rs::testFirst
+Tests/AcceptHeaderTest.php	AcceptHeaderTest::testFromString	ported	crates/http-foundation/tests/accept_header_test.rs::testFromString
+Tests/AcceptHeaderTest.php	AcceptHeaderTest::testSorting	ported	crates/http-foundation/tests/accept_header_test.rs::testSorting
+Tests/AcceptHeaderTest.php	AcceptHeaderTest::testToString	ported	crates/http-foundation/tests/accept_header_test.rs::testToString
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testAcceptRangeNotOverridden	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testAcceptRangeOnUnsafeMethods	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testConstructWithNonAsciiFilename	pending	

@@ -8,6 +8,7 @@ description = "A tested subset of Symfony HttpFoundation and PHP request semanti
 
 [dependencies]
 axum = "0.8.9"
+php-pcre = { path = "../php-pcre" }
 php-value = { path = "../php-value" }
 
 [dev-dependencies]
