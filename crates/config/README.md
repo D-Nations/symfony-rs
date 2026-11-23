@@ -20,6 +20,7 @@ Potencier. Unofficial, not affiliated with or endorsed by Symfony.
 | Loaders: Loader (resolver, `resolve()`, `import()`), LoaderResolver, DelegatingLoader, FileLoader (`import()` with glob patterns, exclusions, `ignoreErrors`, `glob` type, `_excluded`; `glob()` and the resource it sets; `doImport()`'s locator delegation, loading set, circular-reference detection and exception wrapping), GlobFileLoader, ParamConfigurator; DirectoryAwareLoaderInterface | `Loader/*.php` (9 files) | LoaderTest, LoaderResolverTest, DelegatingLoaderTest, FileLoaderTest (24 of 24); recorded `import` (456 calls) |
 | Filesystem resources: FileResource, FileExistenceResource, DirectoryResource (`isFresh()` over the tree with a file pattern; `__toString()` as `hash('xxh128', serialize(...))`), GlobResource (`glob()` with and without `GLOB_BRACE`, `expandGlob()`, `/**/` patterns, excluded prefixes, `forExclusion`, the Finder fallback, `__toString()`, hash, `__serialize()` / `__unserialize()`); ResourceInterface, SelfCheckingResourceInterface | `Resource/FileResource.php`, `Resource/FileExistenceResource.php`, `Resource/DirectoryResource.php`, `Resource/GlobResource.php`, `Resource/ResourceInterface.php`, `Resource/SelfCheckingResourceInterface.php` | FileResourceTest, FileExistenceResourceTest, DirectoryResourceTest, GlobResourceTest (40 of 41; testPhar `n/a`); recorded `glob` (1,680 cases), `xxh128` |
 | Definition behaviour end to end | (the nodes and builders above) | NormalizationTest, MergeTest, FinalizationTest (12 of 12) |
+| Caches: ResourceCheckerConfigCache (`getPath()`, `isFresh()` with the first supporting checker deciding, the meta file read with every registered class allowed, an unknown class, a syntax error or trailing data making it stale, a scalar meta value fresh, a non-resource element a TypeError; `write()` through symfony-filesystem's atomic `dumpFile()`, the `serialize()` meta file and its `.json` copy, modes `0666 & ~umask()`), ConfigCache (debug and production, skipped resource types), ConfigCacheFactory, ResourceCheckerConfigCacheFactory, SelfCheckingResourceChecker (answers shared by every instance), SkippingResourceChecker | `ConfigCache.php`, `ConfigCacheInterface.php`, `ResourceCheckerConfigCache.php`, `ResourceCheckerInterface.php`, `ConfigCacheFactory.php`, `ConfigCacheFactoryInterface.php`, `ResourceCheckerConfigCacheFactory.php`, `Resource/SelfCheckingResourceChecker.php`, `Resource/SkippingResourceChecker.php` | ConfigCacheTest, ResourceCheckerConfigCacheTest (18 of 18; ConfigCacheFactoryTest's one test `n/a`); recorded `write` (27 cases), `fresh` (1,170 `isFresh()` calls) |
 
 Vectors: `scripts/record.sh config` runs
 `oracle/recorders/config_definition.php`, `config_builder.php` and
@@ -36,6 +37,10 @@ replays (stage log
 `tests/data/loaders.json`, which `tests/recorded_loaders.rs` replays on a
 copy of `tests/fixtures` (stage log
 [m1-c-config-loaders.md](../../docs/milestones/m1-c-config-loaders.md)).
+`scripts/record.sh config-cache` runs `config_cache.php` and writes
+`tests/data/cache.json`, which `tests/recorded_cache.rs` replays (Linux
+and other Unix only; stage log
+[m1-c-config-cache.md](../../docs/milestones/m1-c-config-cache.md)).
 
 ## Rust shape
 
@@ -173,12 +178,27 @@ copy of `tests/fixtures` (stage log
   messages modelled on PHP's typed-property errors (not recorded).
 - The loaders' TypeErrors for a non-string resource given to a locator
   name the interface method, not the implementing class.
+- Cache metadata is a slice of `Arc<dyn ResourceInterface>` (a list, as
+  upstream's tests pass it). The classes a meta file may name are a
+  `ResourceClasses` registry (Config's four filesystem resources by
+  default; `register()` adds one), standing for PHP's autoloader.
+  ResourceCheckerInterface implementations name their class for the
+  TypeError a non-resource element gives; its ", called in <file> on line
+  <n>" suffix is not reproduced. SelfCheckingResourceChecker's shared
+  answers are process-wide (`clear_cache()` empties them, as upstream's
+  tests do through reflection). OPcache has no counterpart.
+- Listed differences (tests/recorded_cache.rs): an object met twice in a
+  resource's `__serialize()` array is written again where PHP writes
+  `r:<n>;` (php-value's `serialize()` has no references; 1 recorded
+  write); GlobResource's restore refuses any object as a Stringable,
+  where PHP refuses only a `\Stringable` and then fails the typed
+  property with a TypeError (8 recorded `isFresh()` calls).
+- `FileLocator::isAbsolutePath()`'s `parse_url()` scheme is
+  symfony-filesystem's (`php::parse_url_scheme`), shared with
+  `Path::isAbsolute()`, which tells null from false.
 
 ## Not ported yet
 
-- `ConfigCache`, `ResourceCheckerConfigCache`, their factories and the
-  resource checkers (19 tests): they write through Filesystem's
-  `dumpFile()` and store PHP `serialize()` meta files.
 - `ClassExistenceResource`, `ReflectionClassResource` and
   `ComposerResource` (23 tests): they ask PHP's autoloader and reflection
   at run time (PLAN.md decision 17).
@@ -186,4 +206,4 @@ copy of `tests/fixtures` (stage log
   `Definition/Configurator` (2 tests): DefinitionFileLoader includes PHP
   files.
 
-44 upstream tests pending in `parity/symfony/config.tsv`.
+25 upstream tests pending in `parity/symfony/config.tsv`.
