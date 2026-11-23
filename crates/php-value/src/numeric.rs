@@ -131,6 +131,49 @@ pub fn string_to_float(s: &[u8]) -> f64 {
     }
 }
 
+/// The number a string stands for in arithmetic (`$string / 16`): a
+/// numeric string's value, or the longest numeric prefix of a
+/// leading-numeric one (`"10x"` is 10, with a warning PHP prints and this
+/// does not); `None` when there is no prefix, where PHP throws
+/// `TypeError: Unsupported operand types`.
+pub fn leading_numeric_value(s: &[u8]) -> Option<Number> {
+    let (start, end, integer) = numeric_prefix(s)?;
+    let number = &s[start..end];
+    if integer && let Some(int) = checked_int(number) {
+        return Some(Number::Int(int));
+    }
+    Some(Number::Float(parse_float(number)))
+}
+
+/// `$string <=> $int` under PHP 8's rules: a numeric string compares as
+/// a number; any other string compares bytewise with the int's decimal
+/// form (`"8x" > 32`, since `"8x"` sorts after `"32"`).
+pub fn compare_string_with_int(s: &[u8], int: i64) -> std::cmp::Ordering {
+    match numeric_value(s) {
+        Some(Number::Int(value)) => value.cmp(&int),
+        Some(Number::Float(value)) => value
+            .partial_cmp(&(int as f64))
+            .unwrap_or(std::cmp::Ordering::Greater),
+        None => s.cmp(int.to_string().as_bytes()),
+    }
+}
+
+/// A string passed to an `int` parameter: a numeric string's value, a
+/// float one truncated toward zero (PHP 8.1+ deprecates a fraction but
+/// still truncates); `None` for any other string, a leading-numeric one
+/// included, where PHP throws `TypeError: ... must be of type int, string
+/// given`, and for a float outside the int range.
+pub fn int_argument(s: &[u8]) -> Option<i64> {
+    const LIMIT: f64 = 9_223_372_036_854_775_808.0; // 2^63
+    match numeric_value(s)? {
+        Number::Int(value) => Some(value),
+        Number::Float(value) if value.is_finite() && (-LIMIT..LIMIT).contains(&value) => {
+            Some(value.trunc() as i64)
+        }
+        Number::Float(_) => None,
+    }
+}
+
 /// `(int) $string`.
 pub fn string_to_int(s: &[u8]) -> i64 {
     let Some((start, end, integer)) = numeric_prefix(s) else {
