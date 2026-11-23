@@ -40,59 +40,59 @@ Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testUnpreparedResponseS
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testUnsupportedXSendfileTypeIsIgnored	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testXAccelMapping	pending	
 Tests/BinaryFileResponseTest.php	BinaryFileResponseTest::testXSendfile	pending	
-Tests/CookieTest.php	CookieTest::testConstructorWithDateTime	pending	
-Tests/CookieTest.php	CookieTest::testConstructorWithDateTimeImmutable	pending	
-Tests/CookieTest.php	CookieTest::testCookieIsCleared	pending	
-Tests/CookieTest.php	CookieTest::testCookieIsNotCleared	pending	
-Tests/CookieTest.php	CookieTest::testExpiredWithMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromString	pending	
-Tests/CookieTest.php	CookieTest::testFromStringAcceptsZeroName	pending	
-Tests/CookieTest.php	CookieTest::testFromStringEndsQuotedPathsAtTheNextSemicolon	pending	
-Tests/CookieTest.php	CookieTest::testFromStringExpiresNonPositiveMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromStringHandlesOverflowingMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidExpires	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidSameSite	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesInExpires	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesWhenSplittingAttributes	pending	
-Tests/CookieTest.php	CookieTest::testFromStringIgnoresRawAttribute	pending	
-Tests/CookieTest.php	CookieTest::testFromStringKeepsQuotesInAttributeValues	pending	
-Tests/CookieTest.php	CookieTest::testFromStringKeepsValidAttributesBeforeInvalidDuplicates	pending	
-Tests/CookieTest.php	CookieTest::testFromStringPreservesQuotes	pending	
-Tests/CookieTest.php	CookieTest::testFromStringReadsTimestampExpires	pending	
-Tests/CookieTest.php	CookieTest::testFromStringTreatsHttpOnlyAsFlag	pending	
-Tests/CookieTest.php	CookieTest::testFromStringTreatsPartitionedAsFlag	pending	
-Tests/CookieTest.php	CookieTest::testFromStringTreatsSecureAsFlag	pending	
-Tests/CookieTest.php	CookieTest::testFromStringUsesTheDefaultPathForAPathWithoutValue	pending	
-Tests/CookieTest.php	CookieTest::testFromStringWithHttpOnly	pending	
-Tests/CookieTest.php	CookieTest::testGetDomain	pending	
-Tests/CookieTest.php	CookieTest::testGetExpiresTime	pending	
-Tests/CookieTest.php	CookieTest::testGetExpiresTimeWithStringValue	pending	
-Tests/CookieTest.php	CookieTest::testGetMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testGetPath	pending	
-Tests/CookieTest.php	CookieTest::testGetValue	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationAcceptsZeroName	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationSucceedNonRawCookieNameContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfCookieNameIsEmpty	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfDomainContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfPathContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfRawCookieNameContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testInvalidExpiration	pending	
-Tests/CookieTest.php	CookieTest::testIsHttpOnly	pending	
-Tests/CookieTest.php	CookieTest::testIsPartitioned	pending	
-Tests/CookieTest.php	CookieTest::testIsSecure	pending	
-Tests/CookieTest.php	CookieTest::testMaxAge	pending	
-Tests/CookieTest.php	CookieTest::testMinimalParameters	pending	
-Tests/CookieTest.php	CookieTest::testNegativeExpirationIsNotPossible	pending	
-Tests/CookieTest.php	CookieTest::testNullAndEmptyPathsAndDomainsAreAccepted	pending	
-Tests/CookieTest.php	CookieTest::testOrdinaryPathsAndDomainsAreAccepted	pending	
-Tests/CookieTest.php	CookieTest::testRawCookie	pending	
-Tests/CookieTest.php	CookieTest::testSameSiteAttribute	pending	
-Tests/CookieTest.php	CookieTest::testSetSecureDefault	pending	
-Tests/CookieTest.php	CookieTest::testToString	pending	
-Tests/CookieTest.php	CookieTest::testWithDomainThrowsExceptionIfDomainContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testWithPathThrowsExceptionIfPathContainsSpecialCharacters	pending	
-Tests/CookieTest.php	CookieTest::testWithRawThrowsExceptionIfCookieNameContainsSpecialCharacters	pending	
+Tests/CookieTest.php	CookieTest::testConstructorWithDateTime	ported	crates/http-foundation/tests/cookie_test.rs::testConstructorWithDateTime
+Tests/CookieTest.php	CookieTest::testConstructorWithDateTimeImmutable	ported	crates/http-foundation/tests/cookie_test.rs::testConstructorWithDateTimeImmutable
+Tests/CookieTest.php	CookieTest::testCookieIsCleared	ported	crates/http-foundation/tests/cookie_test.rs::testCookieIsCleared
+Tests/CookieTest.php	CookieTest::testCookieIsNotCleared	ported	crates/http-foundation/tests/cookie_test.rs::testCookieIsNotCleared
+Tests/CookieTest.php	CookieTest::testExpiredWithMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testExpiredWithMaxAge
+Tests/CookieTest.php	CookieTest::testFromString	ported	crates/http-foundation/tests/cookie_test.rs::testFromString
+Tests/CookieTest.php	CookieTest::testFromStringAcceptsZeroName	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringAcceptsZeroName
+Tests/CookieTest.php	CookieTest::testFromStringEndsQuotedPathsAtTheNextSemicolon	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringEndsQuotedPathsAtTheNextSemicolon
+Tests/CookieTest.php	CookieTest::testFromStringExpiresNonPositiveMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringExpiresNonPositiveMaxAge
+Tests/CookieTest.php	CookieTest::testFromStringHandlesOverflowingMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringHandlesOverflowingMaxAge
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidExpires	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresInvalidExpires
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresInvalidMaxAge
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresInvalidSameSite	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresInvalidSameSite
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesInExpires	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresQuotesInExpires
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresQuotesWhenSplittingAttributes	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresQuotesWhenSplittingAttributes
+Tests/CookieTest.php	CookieTest::testFromStringIgnoresRawAttribute	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringIgnoresRawAttribute
+Tests/CookieTest.php	CookieTest::testFromStringKeepsQuotesInAttributeValues	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringKeepsQuotesInAttributeValues
+Tests/CookieTest.php	CookieTest::testFromStringKeepsValidAttributesBeforeInvalidDuplicates	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringKeepsValidAttributesBeforeInvalidDuplicates
+Tests/CookieTest.php	CookieTest::testFromStringPreservesQuotes	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringPreservesQuotes
+Tests/CookieTest.php	CookieTest::testFromStringReadsTimestampExpires	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringReadsTimestampExpires
+Tests/CookieTest.php	CookieTest::testFromStringTreatsHttpOnlyAsFlag	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringTreatsHttpOnlyAsFlag
+Tests/CookieTest.php	CookieTest::testFromStringTreatsPartitionedAsFlag	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringTreatsPartitionedAsFlag
+Tests/CookieTest.php	CookieTest::testFromStringTreatsSecureAsFlag	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringTreatsSecureAsFlag
+Tests/CookieTest.php	CookieTest::testFromStringUsesTheDefaultPathForAPathWithoutValue	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringUsesTheDefaultPathForAPathWithoutValue
+Tests/CookieTest.php	CookieTest::testFromStringWithHttpOnly	ported	crates/http-foundation/tests/cookie_test.rs::testFromStringWithHttpOnly
+Tests/CookieTest.php	CookieTest::testGetDomain	ported	crates/http-foundation/tests/cookie_test.rs::testGetDomain
+Tests/CookieTest.php	CookieTest::testGetExpiresTime	ported	crates/http-foundation/tests/cookie_test.rs::testGetExpiresTime
+Tests/CookieTest.php	CookieTest::testGetExpiresTimeWithStringValue	ported	crates/http-foundation/tests/cookie_test.rs::testGetExpiresTimeWithStringValue
+Tests/CookieTest.php	CookieTest::testGetMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testGetMaxAge
+Tests/CookieTest.php	CookieTest::testGetPath	ported	crates/http-foundation/tests/cookie_test.rs::testGetPath
+Tests/CookieTest.php	CookieTest::testGetValue	ported	crates/http-foundation/tests/cookie_test.rs::testGetValue
+Tests/CookieTest.php	CookieTest::testInstantiationAcceptsZeroName	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationAcceptsZeroName
+Tests/CookieTest.php	CookieTest::testInstantiationSucceedNonRawCookieNameContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationSucceedNonRawCookieNameContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfCookieNameIsEmpty	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfCookieNameIsEmpty
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfDomainContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfDomainContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfPathContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfPathContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInstantiationThrowsExceptionIfRawCookieNameContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testInstantiationThrowsExceptionIfRawCookieNameContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testInvalidExpiration	ported	crates/http-foundation/tests/cookie_test.rs::testInvalidExpiration
+Tests/CookieTest.php	CookieTest::testIsHttpOnly	ported	crates/http-foundation/tests/cookie_test.rs::testIsHttpOnly
+Tests/CookieTest.php	CookieTest::testIsPartitioned	ported	crates/http-foundation/tests/cookie_test.rs::testIsPartitioned
+Tests/CookieTest.php	CookieTest::testIsSecure	ported	crates/http-foundation/tests/cookie_test.rs::testIsSecure
+Tests/CookieTest.php	CookieTest::testMaxAge	ported	crates/http-foundation/tests/cookie_test.rs::testMaxAge
+Tests/CookieTest.php	CookieTest::testMinimalParameters	ported	crates/http-foundation/tests/cookie_test.rs::testMinimalParameters
+Tests/CookieTest.php	CookieTest::testNegativeExpirationIsNotPossible	ported	crates/http-foundation/tests/cookie_test.rs::testNegativeExpirationIsNotPossible
+Tests/CookieTest.php	CookieTest::testNullAndEmptyPathsAndDomainsAreAccepted	ported	crates/http-foundation/tests/cookie_test.rs::testNullAndEmptyPathsAndDomainsAreAccepted
+Tests/CookieTest.php	CookieTest::testOrdinaryPathsAndDomainsAreAccepted	ported	crates/http-foundation/tests/cookie_test.rs::testOrdinaryPathsAndDomainsAreAccepted
+Tests/CookieTest.php	CookieTest::testRawCookie	ported	crates/http-foundation/tests/cookie_test.rs::testRawCookie
+Tests/CookieTest.php	CookieTest::testSameSiteAttribute	ported	crates/http-foundation/tests/cookie_test.rs::testSameSiteAttribute
+Tests/CookieTest.php	CookieTest::testSetSecureDefault	ported	crates/http-foundation/tests/cookie_test.rs::testSetSecureDefault
+Tests/CookieTest.php	CookieTest::testToString	ported	crates/http-foundation/tests/cookie_test.rs::testToString
+Tests/CookieTest.php	CookieTest::testWithDomainThrowsExceptionIfDomainContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testWithDomainThrowsExceptionIfDomainContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testWithPathThrowsExceptionIfPathContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testWithPathThrowsExceptionIfPathContainsSpecialCharacters
+Tests/CookieTest.php	CookieTest::testWithRawThrowsExceptionIfCookieNameContainsSpecialCharacters	ported	crates/http-foundation/tests/cookie_test.rs::testWithRawThrowsExceptionIfCookieNameContainsSpecialCharacters
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testInitializationWithDefaultValues	pending	
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testPresentOfExpiresHeader	pending	
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testRetryIsNotSharedBetweenServerEvents	pending	

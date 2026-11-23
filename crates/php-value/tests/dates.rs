@@ -3,6 +3,8 @@
 //! oracle/recorders/http_foundation_dates.php). A text the port refuses
 //! must be listed in `REFUSED_*`, so a change in what is read shows up;
 //! every other text must give PHP's answer, `false` included.
+//!
+//! Upstream: none
 
 use php_value::{base64, dateparse, datetime::gmdate};
 use serde_json::Value as Json;

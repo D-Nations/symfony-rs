@@ -9,6 +9,7 @@
 #![forbid(unsafe_code)]
 
 pub mod accept_language;
+pub mod cookie;
 pub mod cookies;
 pub mod exception;
 pub mod header_utils;
