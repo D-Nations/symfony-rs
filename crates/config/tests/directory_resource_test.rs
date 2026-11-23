@@ -234,7 +234,10 @@ fn testSerializeUnserialize() -> TestResult {
 
     let _ = DirectoryResource::from_serialized(&resource.serialize()?)?;
 
-    assert_eq!(realpath(&t.directory), Some(resource.get_resource().to_vec()));
+    assert_eq!(
+        realpath(&t.directory),
+        Some(resource.get_resource().to_vec())
+    );
     assert_eq!(Some(&br"/\.(foo|xml)$/"[..]), resource.get_pattern());
     Ok(())
 }

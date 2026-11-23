@@ -28,6 +28,9 @@ use crate::{Class, Error, php};
 
 pub const CLASS: &str = "Symfony\\Component\\Config\\Resource\\GlobResource";
 
+/// A path `glob()` found and the regex its walk filters with.
+type Candidate = (Vec<u8>, Option<Vec<u8>>);
+
 /// `defined('GLOB_BRACE') ? GLOB_BRACE : 0` on the oracle's glibc.
 const GLOB_BRACE: bool = true;
 
@@ -235,18 +238,22 @@ impl GlobResource {
         if self.recursive {
             // substr_replace($regex, …, -2, 1)
             let at = regex.len().saturating_sub(2);
-            let with: &[u8] = if pattern.ends_with(b"/") { b"" } else { b"(/|$)" };
+            let with: &[u8] = if pattern.ends_with(b"/") {
+                b""
+            } else {
+                b"(/|$)"
+            };
             regex.splice(at..at + 1, with.iter().copied());
         }
-        let regex = Some(regex);
 
         let prefix_len = prefix.len();
-        let mut paths: Option<Vec<(Vec<u8>, Option<Vec<u8>>)>> = None;
-        let add = |paths: &mut Vec<(Vec<u8>, Option<Vec<u8>>)>, path: Vec<u8>, rx: Option<Vec<u8>>| {
-            if !paths.iter().any(|(p, _)| *p == path) {
-                paths.push((path, rx));
-            }
-        };
+        let mut paths: Option<Vec<Candidate>> = None;
+        let add =
+            |paths: &mut Vec<(Vec<u8>, Option<Vec<u8>>)>, path: Vec<u8>, rx: Option<Vec<u8>>| {
+                if !paths.iter().any(|(p, _)| *p == path) {
+                    paths.push((path, rx));
+                }
+            };
 
         if self.pattern.is_empty() && fs::is_file(&self.prefix) {
             paths = Some(vec![(self.prefix.clone(), None)]);
@@ -277,7 +284,7 @@ impl GlobResource {
                         add(
                             &mut found,
                             path,
-                            if globstar { regex.clone() } else { None },
+                            if globstar { Some(regex.clone()) } else { None },
                         );
                     }
                 }
@@ -334,7 +341,7 @@ impl GlobResource {
         let mut finder = Finder::new();
         let excluded = self.clone();
         let filter_prefix = prefix.clone();
-        let rx = regex.unwrap_or_default();
+        let rx = regex;
         finder
             .follow_links()
             .filter(

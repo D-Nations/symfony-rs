@@ -41,8 +41,13 @@ fn testMessageCannotLoadResourceWithType() {
 
 #[test]
 fn testMessageCannotLoadResourceWithAnnotationType() {
-    let exception =
-        loader_load_exception(&Value::string("resource"), None, 0, None, Some(b"annotation"));
+    let exception = loader_load_exception(
+        &Value::string("resource"),
+        None,
+        0,
+        None,
+        Some(b"annotation"),
+    );
     assert_message(
         "Cannot load resource \"resource\". Make sure there is a loader supporting the \"annotation\" type.",
         &exception,
@@ -51,8 +56,13 @@ fn testMessageCannotLoadResourceWithAnnotationType() {
 
 #[test]
 fn testMessageCannotLoadResourceWithAttributeType() {
-    let exception =
-        loader_load_exception(&Value::string("resource"), None, 0, None, Some(b"attribute"));
+    let exception = loader_load_exception(
+        &Value::string("resource"),
+        None,
+        0,
+        None,
+        Some(b"attribute"),
+    );
     assert_message(
         "Cannot load resource \"resource\". Make sure there is a loader supporting the \"attribute\" type.",
         &exception,

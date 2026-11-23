@@ -54,7 +54,10 @@ impl MockLoader {
     }
 
     pub fn loads(&self) -> Vec<Call> {
-        self.load_calls.lock().map(|c| c.clone()).unwrap_or_default()
+        self.load_calls
+            .lock()
+            .map(|c| c.clone())
+            .unwrap_or_default()
     }
 }
 
@@ -141,7 +144,12 @@ impl MockLocator {
 }
 
 impl FileLocatorInterface for MockLocator {
-    fn locate(&self, _name: &[u8], _current: Option<&[u8]>, _first: bool) -> Result<Located, Error> {
+    fn locate(
+        &self,
+        _name: &[u8],
+        _current: Option<&[u8]>,
+        _first: bool,
+    ) -> Result<Located, Error> {
         let n = self.calls.fetch_add(1, Ordering::SeqCst);
         Ok(self
             .answers

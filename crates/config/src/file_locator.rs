@@ -16,11 +16,7 @@
 
 use symfony_finder::fs;
 
-use crate::{
-    Class, Error,
-    exception::file_locator_file_not_found_exception,
-    php::implode,
-};
+use crate::{Class, Error, exception::file_locator_file_not_found_exception, php::implode};
 
 /// What `locate()` returns: a path (`$first`), or every path found.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -35,9 +31,9 @@ impl Located {
         use php_value::{PhpArray, Value};
         match self {
             Self::Path(p) => Value::string(p.clone()),
-            Self::Paths(ps) => Value::Array(PhpArray::list(
-                ps.iter().map(|p| Value::string(p.clone())),
-            )),
+            Self::Paths(ps) => {
+                Value::Array(PhpArray::list(ps.iter().map(|p| Value::string(p.clone()))))
+            }
         }
     }
 }
@@ -243,7 +239,10 @@ mod tests {
 
     #[test]
     fn scheme_basics() {
-        assert_eq!(parse_url_scheme(b"https://server/foo.xml"), Some(b"https".to_vec()));
+        assert_eq!(
+            parse_url_scheme(b"https://server/foo.xml"),
+            Some(b"https".to_vec())
+        );
         assert_eq!(parse_url_scheme(b"foo.xml"), None);
         assert_eq!(parse_url_scheme(b"localhost:80"), None);
     }

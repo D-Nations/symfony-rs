@@ -122,10 +122,7 @@ impl DirectoryResource {
 
             // RecursiveDirectoryIterator enters directories, not links to
             // them.
-            if stat.is_dir()
-                && !fs::is_link(&path)
-                && !self.fresh_under(&path, regex, timestamp)?
-            {
+            if stat.is_dir() && !fs::is_link(&path) && !self.fresh_under(&path, regex, timestamp)? {
                 return Ok(false);
             }
         }

@@ -74,7 +74,11 @@ fn testLocate() -> TestResult {
 
     assert_eq!(
         Located::Path(format!("{fixtures}/foo.xml").into_bytes()),
-        loader.locate(format!("{fixtures}/foo.xml").as_bytes(), Some(dir.as_bytes()), true)?,
+        loader.locate(
+            format!("{fixtures}/foo.xml").as_bytes(),
+            Some(dir.as_bytes()),
+            true
+        )?,
         "->locate() returns the absolute filename if the file exists in one of the paths given in the constructor"
     );
 

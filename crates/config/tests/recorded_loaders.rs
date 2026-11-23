@@ -61,7 +61,12 @@ impl Root {
             }
             Value::Array(a) => Json::Object(
                 a.iter()
-                    .map(|(k, v)| (self.rel(&symfony_config::php::key_bytes(k)), self.rel_value(v)))
+                    .map(|(k, v)| {
+                        (
+                            self.rel(&symfony_config::php::key_bytes(k)),
+                            self.rel_value(v),
+                        )
+                    })
                     .collect(),
             ),
             Value::Bool(b) => Json::Bool(*b),
@@ -77,7 +82,12 @@ impl Root {
         if *e.class() == symfony_config::Class::FileLocatorFileNotFound {
             m.insert(
                 "paths".into(),
-                Json::Array(e.get_paths().iter().map(|p| Json::String(self.rel(p))).collect()),
+                Json::Array(
+                    e.get_paths()
+                        .iter()
+                        .map(|p| Json::String(self.rel(p)))
+                        .collect(),
+                ),
             );
         }
         if let Some(p) = e.get_previous() {
@@ -111,9 +121,12 @@ fn scheme_and_is_absolute_path() {
         let name = case["name"].as_str().unwrap_or_default();
         // null and false are both "no scheme"
         let expected = case["scheme"].as_str().map(str::to_owned);
-        let actual = parse_url_scheme(name.as_bytes()).map(|s| String::from_utf8_lossy(&s).into_owned());
+        let actual =
+            parse_url_scheme(name.as_bytes()).map(|s| String::from_utf8_lossy(&s).into_owned());
         if expected != actual {
-            failures.push(format!("parse_url({name:?}): PHP {expected:?}, port {actual:?}"));
+            failures.push(format!(
+                "parse_url({name:?}): PHP {expected:?}, port {actual:?}"
+            ));
         }
         let absolute = case["absolute"].as_bool().unwrap_or_default();
         if absolute != FileLocator::is_absolute_path(name.as_bytes()) {
@@ -188,7 +201,9 @@ fn loader_load_exception_messages() {
             String::from_utf8_lossy(e.get_message()) == expected && e.get_code() == 3
         };
         if !matched {
-            failures.push(format!("{label} {previous:?} {source:?} {type:?}: PHP {expected:?}"));
+            failures.push(format!(
+                "{label} {previous:?} {source:?} {type:?}: PHP {expected:?}"
+            ));
         }
     }
     report("loader_load", &failures, cases.len());
@@ -196,7 +211,12 @@ fn loader_load_exception_messages() {
     for case in data["circular"].as_array().expect("circular cases") {
         let resources: Vec<Vec<u8>> = case["resources"]
             .as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str()).map(|s| s.as_bytes().to_vec()).collect())
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str())
+                    .map(|s| s.as_bytes().to_vec())
+                    .collect()
+            })
             .unwrap_or_default();
         let e = file_loader_import_circular_reference_exception(&resources);
         assert_eq!(
@@ -215,13 +235,22 @@ fn file_locator_locate() {
     for case in cases {
         let paths: Vec<String> = case["paths"]
             .as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str()).map(|p| root.abs(p)).collect())
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str())
+                    .map(|p| root.abs(p))
+                    .collect()
+            })
             .unwrap_or_default();
         let locator = FileLocator::new(&paths);
         let name = root.abs(case["name"].as_str().unwrap_or_default());
         let current = opt_str(&case["current"]).map(|c| root.abs(&c));
         let first = case["first"].as_bool().unwrap_or_default();
-        let actual = match locator.locate(name.as_bytes(), current.as_deref().map(str::as_bytes), first) {
+        let actual = match locator.locate(
+            name.as_bytes(),
+            current.as_deref().map(str::as_bytes),
+            first,
+        ) {
             Ok(Located::Path(p)) => ("result", Json::String(root.rel(&p))),
             Ok(Located::Paths(ps)) => (
                 "result",

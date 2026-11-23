@@ -32,9 +32,8 @@ pub fn loader_load_exception(
     let resource: Vec<u8> = match resource {
         Value::String(s) => s.as_bytes().to_vec(),
         // json_encode($resource, \JSON_THROW_ON_ERROR)
-        other => php::json_encode(other).unwrap_or_else(|| {
-            format!("resource of type \"{}\"", other.debug_type()).into_bytes()
-        }),
+        other => php::json_encode(other)
+            .unwrap_or_else(|| format!("resource of type \"{}\"", other.debug_type()).into_bytes()),
     };
 
     let mut message = Vec::new();

@@ -99,7 +99,8 @@ impl FileLoader {
     /// What `class_exists()` answers for a resource string (PHP's
     /// autoloader).
     pub fn set_class_exists(&self, class_exists: impl Fn(&[u8]) -> bool + Send + Sync + 'static) {
-        *self.class_exists.write().unwrap_or_else(|e| e.into_inner()) = Some(Arc::new(class_exists));
+        *self.class_exists.write().unwrap_or_else(|e| e.into_inner()) =
+            Some(Arc::new(class_exists));
     }
 
     fn class_exists(&self, name: &[u8]) -> bool {
@@ -172,7 +173,11 @@ impl FileLoader {
                         false,
                         excluded.clone(),
                     )?;
-                    let r#type_for = if r#type == Some(b"glob") { None } else { r#type };
+                    let r#type_for = if r#type == Some(b"glob") {
+                        None
+                    } else {
+                        r#type
+                    };
                     for path in paths {
                         let res = self.do_import(
                             Value::string(path),
@@ -320,7 +325,11 @@ impl FileLoader {
         };
 
         if let Some(dir) = self.current_dir() {
-            let name = string_argument(resource, "Symfony\\Component\\Config\\FileLocatorInterface::locate", "name")?;
+            let name = string_argument(
+                resource,
+                "Symfony\\Component\\Config\\FileLocatorInterface::locate",
+                "name",
+            )?;
             *resource = file_loader
                 .get_locator()
                 .locate(&name, Some(&dir), false)?

@@ -181,7 +181,7 @@ copy of `tests/fixtures` (stage log
   `dumpFile()` and store PHP `serialize()` meta files.
 - `ClassExistenceResource`, `ReflectionClassResource` and
   `ComposerResource` (23 tests): they ask PHP's autoloader and reflection
-  at run time (PLAN.md decision 16).
+  at run time (PLAN.md decision 17).
 - `Definition/Configuration.php`, `Definition/Loader` and
   `Definition/Configurator` (2 tests): DefinitionFileLoader includes PHP
   files.

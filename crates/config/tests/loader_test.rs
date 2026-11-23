@@ -61,7 +61,10 @@ fn testResolve() -> TestResult {
         "->resolve() finds a loader"
     );
     assert!(
-        same(&resolved_loader, &loader.loader.resolve(&s("foo.xml"), None)?),
+        same(
+            &resolved_loader,
+            &loader.loader.resolve(&s("foo.xml"), None)?
+        ),
         "->resolve() finds a loader"
     );
     let calls = resolver.resolves();

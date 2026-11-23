@@ -592,6 +592,23 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     demo's vendor copy. IpUtils and `makeDisposition()` are ported at
     v8.1.11; `setTrustedProxies()` comes with `Request.php`.
 
+17. **Config's reflection-based resources (M1-C, November 23).**
+    ClassExistenceResource, ReflectionClassResource and ComposerResource
+    decide freshness by asking PHP at run time: whether a class can be
+    autoloaded (running the autoloader, catching its errors), a hash of a
+    class's reflected signatures (constants, properties, methods,
+    parameters, attributes), and the mtimes of Composer's installed.json
+    for the autoloaders declared. Their 23 tests load PHP code (`eval`,
+    fixture classes) to change those answers. In a converted application
+    classes are compiled in, so the answers are fixed at build time.
+    Recommended: port them over a class registry the converter fills at
+    build time (existence, a signature hash computed from the PHP source
+    by the converter, Composer's vendor directories), keep their string
+    forms and serialized formats, and mark the tests that change PHP code
+    at run time `n/a`. Alternative: leave them unported, with DI's
+    container cache relying on File and Glob resources only. The rows
+    stay `pending` until the owner decides.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -684,6 +701,7 @@ Stack rows (searched November 19):
 | Console (M1-B subset; searched November 20) | No Rust port of Symfony Console (searches find only the PHP original and Node ports such as [symfony-style-console](https://www.npmjs.org/package/symfony-style-console)); [clap](https://docs.rs/clap) (its own argv grammar, errors and help), [clap_complete](https://docs.rs/clap_complete) (its own completion protocol), [comfy-table](https://github.com/Nukesor/comfy-table) / tabled (their own layout and wrapping); symfony-demo-rs's `src/console` (a partial port arranged around the demo's commands) | Port on `php-value`, no dependency; move the demo's measured width table in | None reproduces Symfony's ArrayInput/ArgvInput binding and messages, SymfonyStyle's blocks and spacing, Table's layout, or `_complete`'s input model. Process: none of the three commands M1-B needs (Yaml `lint:yaml`, Dotenv `debug:dotenv` and `dotenv:dump`) uses symfony/process, so M1-B ports no Process behaviour |
 | String's Unicode layer for Console (owner, November 20) | [unicode-normalization](https://docs.rs/unicode-normalization) + [unicode-segmentation](https://docs.rs/unicode-segmentation) (unicode-rs, no dependencies; the demo already uses unicode-segmentation) vs tables extracted from the oracle's ICU and PCRE2 with hand-written UAX #29 and NFC | The two crates, checked against the oracle | They match ICU 72.1 on all 13,233 NFC cases and 4,105 grapheme sequences; PCRE2's `\X` (used by `chunk()`) is reproduced by splitting their clusters where PCRE2 does, matching all 4,105. Remaining differences come from their newer Unicode data (95 code points assigned after 15.0, and Indic conjuncts in `length()`), listed in crates/string/README.md |
 | OS randomness for `ByteString::fromRandom()` (owner, November 22; decision 15) | [getrandom](https://docs.rs/getrandom) (rust-random, the OS CSPRNG only; adds `cfg-if` everywhere and `libc` on Unix, `r-efi` only for UEFI targets), [rand](https://docs.rs/rand) / `rand_core::OsRng` (built on getrandom, adds generators the port does not need), reading `/dev/urandom` by hand (Unix only; Windows needs `BCryptGenRandom` through FFI, excluded by no-`unsafe`), the caller supplying the bytes (no dependency, differs from PHP's signature) | `getrandom` 0.4 | The smallest crate that reaches each platform's CSPRNG, as PHP's `Random\Randomizer` does, with no `unsafe` in this workspace; `rand` would add code for nothing. `from_random_with()` keeps a caller's source |
+| `hash('xxh128')` for Config's DirectoryResource and GlobResource (November 23) | [twox-hash](https://docs.rs/twox-hash) 2.1 (MIT, XXH3-128 with `default-features = false`, no dependencies), [xxhash-rust](https://docs.rs/xxhash-rust) 0.8 (BSL-1.0, no dependencies), a hand-written XXH3-128 (seven length paths and the long-input loop) | `twox-hash`, feature `xxhash3_128` only | Hashing is below the behaviour layer (AGENTS.md); MIT like this repository; matches PHP's `hash('xxh128')` on the recorded vectors (empty, short, 300-byte and invalid-UTF-8 inputs) |
 | String's case mappings, NFKC_CF and patterns (November 22) | Rust's `char::to_lowercase()` / `to_uppercase()` (its own Unicode version, no title case or folding), [unicase](https://docs.rs/unicase) / [caseless](https://docs.rs/caseless) (folding only), [icu_casemap](https://docs.rs/icu_casemap) + icu_normalizer (ICU4X: complete, but a large dependency tree and newer data than the oracle's ICU 72.1), tables recorded from the oracle; for `match()`, `replaceMatches()` and flagged `split()`: Finder's PCRE translator | Tables of mbstring's lower, upper, title and fold mappings, ICU's NFKC_CF and the final sigma properties, recorded per code point (`scripts/gen-string-tables.py`); Finder's `pcre.rs` moved into a `php-pcre` crate both use | The tables are PHP's own answers for every code point (11,881 differ from identity), so case results cannot drift with a crate's Unicode version; no new crate in the lock. symfony-finder re-exports php-pcre unchanged; `\p{..}` inside a class is now translated as outside one |
 | CssSelector (searched November 20) | No Rust port of Symfony CssSelector or Python cssselect. [css-to-xpath](https://docs.rs/css-to-xpath) (Servo's `selectors`/`cssparser`, its own XPath shapes, Generic/Html/Xhtml modes, no nested `:has()`); [selectors](https://docs.rs/selectors) / [scraper](https://docs.rs/scraper) (match against a DOM, no XPath); scrapling's translator (cssselect-like, tied to its crate); cssifier / xcss (XPath to CSS, the other direction) | Port on `php-value` and `regex` (bytes, `(?-u)`), no new dependency | None produces Symfony's XPath strings, node string forms, specificity, `ParseException` texts with token positions, PHP truthiness (`"0"`), byte-wise patterns or the LRU cache |
 | OptionsResolver (searched November 20) | No Rust port found (crates.io/GitHub searches for "options resolver" find only module-path resolvers such as oxc_resolver); typed option structs with [serde](https://serde.rs) defaults or builder derives ([derive_builder](https://docs.rs/derive_builder)), and layered config crates (schematic, figment) | Port on `php-value` and `symfony-deprecation-contracts`, no new dependency | Typed structs fix the option set at compile time; Symfony's is built at run time by form types and bundles (lazy defaults reading other options, normalizers, allowed types/values, nested and prototype options, deprecations) with its own messages and resolution order |
@@ -774,11 +792,28 @@ Stack rows (searched November 19):
       3,045 `phpize()` values, 71 conversions and 120 `parse()` /
       `loadFile()` outcomes recorded (`config_xml_utils.php`; stage log
       [docs/milestones/m1-c-xml-x3.md](docs/milestones/m1-c-xml-x3.md)).
-      Config stays partial: deferred are `Definition/Loader`,
-      `Definition/Configurator` and `Definition/Configuration.php` (they
-      need Config's loaders; M1-C), and loaders, resources, `ConfigCache`
-      and `FileLocator` (Filesystem, Finder; M1-C). Their 135 rows stay
-      `pending`.
+      Stage 5 (November 23, M1-C): the loader exceptions,
+      `FileLocator.php`, `Loader/*` (Loader, LoaderResolver,
+      DelegatingLoader, FileLoader, GlobFileLoader, ParamConfigurator)
+      and the filesystem resources (FileResource, FileExistenceResource,
+      DirectoryResource, GlobResource), with Normalization-, Merge- and
+      FinalizationTest for the Definition code already ported: 90 more
+      tests, 1 `n/a` (GlobResourceTest::testPhar, no phar reader), 289 of
+      334. Recorded (`config_loaders.php`): 94 `parse_url()` schemes, 432
+      LoaderLoadException messages, 432 `locate()` calls, 1,680
+      GlobResource cases and 456 `import()` calls, all matching; they
+      found PHP's `parse_url()` authority rules, glibc's `.*` matching `.`
+      and `..`, and `realpath()` refusing `file://`. symfony-finder's
+      `fs` gains a files-and-directories `glob()` (`glob_dirs()`
+      unchanged). Stage log
+      [docs/milestones/m1-c-config-loaders.md](docs/milestones/m1-c-config-loaders.md).
+      Config stays partial (44 rows `pending`): `ConfigCache`,
+      `ResourceCheckerConfigCache`, their factories and the resource
+      checkers (19 tests; they need symfony/filesystem's `dumpFile()` and
+      PHP `serialize()` meta files: the next stage), the reflection-based
+      resources (23 tests; decision 17) and `Definition/Loader`,
+      `Definition/Configurator` and `Definition/Configuration.php` (2
+      tests; DefinitionFileLoader includes PHP files).
 - [ ] M1-D. Done: provisional converter contract 0.1
       ([docs/converter-contract.md](docs/converter-contract.md)), with
       prior art compared (stack row above); the second app recommended

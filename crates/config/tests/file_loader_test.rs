@@ -54,14 +54,26 @@ fn testImportWithFileLocatorDelegation() -> TestResult {
     file_loader.set_resolver(loader_resolver);
 
     // Default case
-    assert!(file_loader.import("my_resource")?.identical(&s("path/to/file1")));
+    assert!(
+        file_loader
+            .import("my_resource")?
+            .identical(&s("path/to/file1"))
+    );
 
     // Check first file is imported if not already loading
-    assert!(file_loader.import("my_resource")?.identical(&s("path/to/file1")));
+    assert!(
+        file_loader
+            .import("my_resource")?
+            .identical(&s("path/to/file1"))
+    );
 
     // Check second file is imported if first is already loading
     file_loader.add_loading("path/to/file1");
-    assert!(file_loader.import("my_resource")?.identical(&s("path/to/file2")));
+    assert!(
+        file_loader
+            .import("my_resource")?
+            .identical(&s("path/to/file2"))
+    );
 
     // Check exception throws if first (and only available) file is
     // already loading
@@ -170,7 +182,11 @@ fn testImportWithSimpleGlob() -> TestResult {
     let (_dir, loader_dir, file) = tests_dir();
     let loader = TestFileLoader::new(Arc::new(FileLocator::new([&loader_dir])));
 
-    assert!(loader.import("FileLoaderTest.*")?.identical(&Value::string(file)));
+    assert!(
+        loader
+            .import("FileLoaderTest.*")?
+            .identical(&Value::string(file))
+    );
     Ok(())
 }
 
@@ -218,7 +234,12 @@ fn testImportWithExclude() -> TestResult {
         let loaded_files = loader
             .file
             .import(&s(include), None, false, None, &exclude)?;
-        assert_eq!(expected_count, count(&loaded_files), "{include} {}", php_value_text(&exclude));
+        assert_eq!(
+            expected_count,
+            count(&loaded_files),
+            "{include} {}",
+            php_value_text(&exclude)
+        );
         assert!(!contains(&loaded_files, "ExcludeFile.txt"));
     }
     Ok(())

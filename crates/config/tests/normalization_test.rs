@@ -55,14 +55,14 @@ fn encoder_tree() -> Result<Node, Box<dyn std::error::Error>> {
 }
 
 fn get_encoder_tests() -> Vec<Value> {
-    let foo = || php_array!["class" => "foo", "algorithm" => "plaintext"];
+    let encoder = || php_array!["class" => "foo", "algorithm" => "plaintext"];
     vec![
         // XML
-        array(php_array!["encoder" => array(PhpArray::list([array(foo())]))]),
+        array(php_array!["encoder" => array(PhpArray::list([array(encoder())]))]),
         // XML when only one element of this type
-        array(php_array!["encoder" => array(foo())]),
+        array(php_array!["encoder" => array(encoder())]),
         // YAML/PHP
-        array(php_array!["encoders" => array(PhpArray::list([array(foo())]))]),
+        array(php_array!["encoders" => array(PhpArray::list([array(encoder())]))]),
         // YAML/PHP
         array(php_array!["encoders" => array(php_array!["foo" => "plaintext"])]),
         // YAML/PHP

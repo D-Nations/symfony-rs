@@ -55,9 +55,8 @@ impl Loader {
 
     /// `getResolver()`.
     pub fn get_resolver(&self) -> Result<Arc<dyn LoaderResolverInterface>, Error> {
-        self.resolver().ok_or_else(|| {
-            Error::new(Class::Logic, "Cannot get a resolver if none was set.")
-        })
+        self.resolver()
+            .ok_or_else(|| Error::new(Class::Logic, "Cannot get a resolver if none was set."))
     }
 
     /// `setResolver($resolver)`.

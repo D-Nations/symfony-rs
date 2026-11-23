@@ -36,8 +36,7 @@ impl LoaderInterface for GlobFileLoader {
     }
 
     fn load(&self, resource: &Value, _type: Option<&[u8]>) -> Result<Value, Error> {
-        self.file
-            .import(resource, None, false, None, &Value::Null)
+        self.file.import(resource, None, false, None, &Value::Null)
     }
 
     fn supports(&self, _resource: &Value, r#type: Option<&[u8]>) -> bool {
