@@ -622,6 +622,9 @@ dependencies = [
  "php-value",
  "serde",
  "serde_json",
+ "symfony-filesystem",
+ "symfony-finder",
+ "symfony-mime",
 ]
 
 [[package]]
@@ -630,6 +633,13 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "tokio",
+]
+
+[[package]]
+name = "symfony-mime"
+version = "0.1.0"
+dependencies = [
+ "symfony-finder",
 ]
 
 [[package]]
