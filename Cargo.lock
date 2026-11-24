@@ -245,6 +245,7 @@ dependencies = [
  "di-trial-compiler",
  "di-trial-runtime",
  "php-value",
+ "serde_json",
 ]
 
 [[package]]

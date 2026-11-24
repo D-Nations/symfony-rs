@@ -6,6 +6,11 @@
 // scripts/record.sh di-trial writes the output to
 // spikes/di-trial/demo/data/container.xml.
 //
+// With the argument "classes", it prints instead, for each public service,
+// the type of the object PHP's compiled container returns
+// (get_debug_type()), or the exception it throws, as JSON
+// (spikes/di-trial/demo/tests/data/php_classes.json).
+//
 // XmlDumper writes a tagged iterator or tagged locator as its tag only,
 // although the compiled argument already holds the services it resolved
 // to (sorted by priority, keyed by index-by). Before dumping, each one is
@@ -104,4 +109,27 @@ if (null === App\Kernel::$xml) {
     fwrite(STDERR, "the container was not compiled\n");
     exit(1);
 }
-echo App\Kernel::$xml;
+if ('classes' !== ($argv[1] ?? '')) {
+    echo App\Kernel::$xml;
+    exit(0);
+}
+
+$container = $kernel->getContainer();
+$ids = [];
+$dom = new DOMDocument();
+$dom->loadXML(App\Kernel::$xml);
+$xpath = new DOMXPath($dom);
+$xpath->registerNamespace('c', 'http://symfony.com/schema/dic/services');
+foreach ($xpath->query('/c:container/c:services/c:service[@public="true"]') as $node) {
+    $ids[] = $node->getAttribute('id');
+}
+sort($ids);
+$types = [];
+foreach ($ids as $id) {
+    try {
+        $types[$id] = get_debug_type($container->get($id));
+    } catch (Throwable $e) {
+        $types[$id] = 'exception: '.get_class($e).': '.$e->getMessage();
+    }
+}
+echo json_encode($types, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), "\n";

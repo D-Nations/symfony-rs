@@ -12,3 +12,6 @@ di-trial-runtime = { path = "../runtime" }
 
 [build-dependencies]
 di-trial-compiler = { path = "../compiler" }
+
+[dev-dependencies]
+serde_json = "1.0.154"

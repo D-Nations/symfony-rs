@@ -31,7 +31,7 @@
 #   scripts/record.sh mime-fileinfo crates/mime/tests/data/fileinfo.json (FileinfoMimeTypeGuesser, needs upstream/)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")
-#   scripts/record.sh di-trial     spikes/di-trial/demo/data/container.xml (the demo's compiled container)
+#   scripts/record.sh di-trial     spikes/di-trial/demo/data/container.xml (the demo's compiled container), demo/tests/data/php_classes.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -89,6 +89,14 @@ di_trial() {
         oracle/recorders/di_container.php > "$tmp"
     mv "$tmp" "$out"
     echo "$(grep -c '<service ' "$out") service definitions written to $out"
+    out=spikes/di-trial/demo/tests/data/php_classes.json
+    mkdir -p "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    docker compose -f oracle/compose.yaml run --rm -T --tmpfs /demo/var php \
+        oracle/recorders/di_container.php classes > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "public service types written to $out"
 }
 
 event_dispatcher() {
