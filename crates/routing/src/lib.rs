@@ -3,9 +3,9 @@
 //! Routes are registered once as typed segments; there is no request-time
 //! route-pattern or regular-expression compilation. See README for omissions.
 //!
-//! The modules [`route`], [`compiled_route`], [`route_compiler`],
+//! The modules [`route`], [`compiled_route`], [`route_compiler`], [`request_context`],
 //! [`route_collection`] and [`alias`] port Symfony's own Route,
-//! CompiledRoute, RouteCompiler, RouteCollection and Alias classes; the
+//! CompiledRoute, RouteCompiler, RequestContext, RouteCollection and Alias classes; the
 //! matcher and generator do not use them yet.
 //!
 //! Upstream: symfony/routing Matcher/UrlMatcher.php Matcher/RedirectableUrlMatcher.php Generator/UrlGenerator.php
@@ -17,6 +17,7 @@ pub mod compiled_route;
 pub mod exception;
 pub mod generator;
 mod php;
+pub mod request_context;
 pub mod route;
 pub mod route_collection;
 pub mod route_compiler;
