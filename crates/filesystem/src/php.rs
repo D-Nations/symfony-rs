@@ -271,9 +271,9 @@ pub fn file_put_contents(filename: &[u8], data: &[u8]) -> Boxed<Option<usize>> {
     }
 }
 
-/// `file_get_contents($filename)`, or PHP's warning. A path through a
-/// file (`a.txt/x`) is "No such file or directory", as PHP reports it
-/// (the C library says "Not a directory").
+/// `file_get_contents($filename)`, or PHP's warning. Missing files and
+/// paths through a file (`a.txt/x`) report "No such file or directory"
+/// on every host (the latter's native error is "Not a directory").
 pub fn file_get_contents(filename: &[u8]) -> Result<Vec<u8>, String> {
     let failed = |reason: &str| {
         format!(
@@ -285,7 +285,9 @@ pub fn file_get_contents(filename: &[u8]) -> Result<Vec<u8>, String> {
         return Err(failed("No such file or directory"));
     };
     std::fs::read(path).map_err(|e| match e.kind() {
-        std::io::ErrorKind::NotADirectory => failed("No such file or directory"),
+        std::io::ErrorKind::NotFound | std::io::ErrorKind::NotADirectory => {
+            failed("No such file or directory")
+        }
         _ => failed(&reason(&e)),
     })
 }
