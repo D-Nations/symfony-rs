@@ -72,9 +72,9 @@ pub fn exists(path: &str) -> bool {
     Path::new(path).exists()
 }
 
-/// `#[RequiresPhpExtension('fileinfo')]`: a MIME type guesser runs here
-/// (the `file` command; PLAN.md decision 18). Otherwise the test is
-/// skipped, as upstream without fileinfo.
+/// `#[RequiresPhpExtension('fileinfo')]`: a MIME type guesser runs here.
+/// The finfo port (PLAN.md decision 18) is always supported, so the
+/// check stays only as upstream's condition.
 pub fn skipped_without_guesser() -> bool {
     use symfony_mime::{MimeTypeGuesser, MimeTypes};
     let unsupported = !MimeTypes::get_default().is_guesser_supported();

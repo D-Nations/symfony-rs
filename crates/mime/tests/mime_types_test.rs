@@ -1,9 +1,9 @@
 //! MimeTypesTest.php at symfony/mime
 //! 8d1232052c9cdef170ed9608b3147bca4f61ff69, with the tests it inherits
 //! from AbstractMimeTypeGuesserTestCase (`common`). Upstream requires
-//! the fileinfo extension for the class; here the default guesser is
-//! `file` (PLAN.md decision 18), so the tests that guess are skipped
-//! where it is not supported, as upstream without fileinfo.
+//! the fileinfo extension for the class; here the default guessers are
+//! the finfo port (PLAN.md decision 18), which is always supported, and
+//! the `file` command.
 //!
 //! Upstream: symfony/mime Tests/MimeTypesTest.php
 #![allow(non_snake_case)]

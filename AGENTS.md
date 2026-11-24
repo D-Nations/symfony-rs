@@ -157,6 +157,10 @@ fail the test's inputs.
   (`feat(HeaderBag.php): ...`). Feature branches and reviewable PRs; do not
   change repository visibility or publish crates without the owner.
 - Never commit `target/`, `upstream/` or `oracle/out/`.
+- Test fixtures taken from a third party (not Symfony upstream) keep that
+  party's licence file next to them and are named in the crate README.
+- A test that reads `upstream/` skips, with a note on stderr, when the
+  checkout is not fetched.
 - Stop oracle containers when finished; remove superseded images by hand.
 - Keep the MIT licence and Symfony copyright lines. No wording that suggests
   Symfony endorses this work.

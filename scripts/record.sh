@@ -28,6 +28,7 @@
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
 #   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag,ip_utils,accept_header}.json, crates/php-value/tests/data/dates.json
 #   scripts/record.sh http-foundation-files crates/http-foundation/tests/data/files.json (UploadedFile, FileBag)
+#   scripts/record.sh mime-fileinfo crates/mime/tests/data/fileinfo.json (FileinfoMimeTypeGuesser, needs upstream/)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh all
 #
@@ -459,6 +460,16 @@ http_foundation_files() {
     echo "HttpFoundation file vectors written to $out"
 }
 
+mime_fileinfo() {
+    local out=crates/mime/tests/data/fileinfo.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/mime_fileinfo.php > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "FileinfoMimeTypeGuesser answers written to $out"
+}
+
 case "${1:-}" in
     routing) routing; routing_route ;;
     routing-route) routing_route ;;
@@ -487,7 +498,8 @@ case "${1:-}" in
     php-dom-schema) php_dom_schema ;;
     http-foundation) http_foundation ;;
     http-foundation-files) http_foundation_files ;;
+    mime-fileinfo) mime_fileinfo ;;
     http-foundation-releases) http_foundation_releases ;;
-    all) routing; routing_route; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|http-foundation-releases|translation-xliff|translation-qt|config-cache|all" >&2; exit 2 ;;
+    all) routing; routing_route; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|all" >&2; exit 2 ;;
 esac

@@ -277,7 +277,8 @@ demo's comparisons are identical to a control run on its pinned revision.
   the existing recorders (`compare/routing_vectors.py`,
   `multipart_vectors.py`, `data/*/extract.php`).
 - `parity/` manifest generator, CI gate, `sources.tsv`, upstream watch job,
-  Linux CI (extend the existing `.github/workflows/checks.yml`).
+  Linux CI (extend the existing `.github/workflows/checks.yml`; removed
+  November 23, the gates now run locally).
 - Backfill manifests for http-foundation, routing and http-kernel. Their
   `pending` rows become the M2 work list.
 
@@ -638,8 +639,18 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     (`pure-magic` 0.5, `libmagic-rs` 0.12) with a magic database pinned to
     PHP 8.4's, checked against recorded `finfo` answers on a corpus.
     Recommended: (c) if one of them reproduces the recorded answers,
-    else (a). The FileinfoMimeTypeGuesserTest rows stay `pending` until
-    the owner decides.
+    else (a). **Owner, November 24: option (c), pure-Rust libmagic, in a
+    separate PR.** Done in the M2-A finfo stage
+    ([docs/milestones/m2-a-mime-fileinfo.md](docs/milestones/m2-a-mime-fileinfo.md)):
+    `pure-magic` 0.5.2 with the `magic-db` 0.7.2 rules (both under their
+    BSD-2-Clause option). `libmagic-rs` 0.12 has no `!:mime` support yet,
+    so it gives no MIME types; `pure-magic` loading the `file` 5.45 magic
+    sources (PHP 8.4's libmagic is 5.45) fails on 6 of 341 files and
+    matched fewer answers than `magic-db`. No crate reproduces PHP's
+    answers exactly: 12,525 of 12,843 upstream files and 107 of 124
+    samples match, and each difference is listed and checked. `new
+    MimeTypes()` registers it after the `file` command, as upstream, so it
+    is asked first; on Windows it is the only guesser.
 
 ## M0 progress
 
@@ -1001,6 +1012,7 @@ Stack rows (searched November 22):
 |---|---|---|---|
 | PHP's `filter_var()` and `BackedEnum::from()` (ParameterBag, InputBag) | No Rust crate reproduces PHP's filter extension; validator crates ([validator](https://docs.rs/validator), [garde](https://docs.rs/garde)) check typed struct fields with their own rules and messages; php2rust's `php-rt` has no filter or enum support | Written in `php-value` from the PHP manual and recorded answers, no dependency | The bags' behaviour is PHP's: string conversion of scalars, `FILTER_NULL_ON_FAILURE`, array walking, `default`, hex/octal as unsigned 64-bit, coercive enum arguments and their messages. 22,932 `filter_var()` calls and 2,450 bag calls recorded from PHP 8.4.27 pin them |
 | MIME types and guessing (symfony/mime `MimeTypes`, for File and UploadedFile; searched November 24 with `cargo search`) | Extension tables: [mime_guess](https://docs.rs/mime_guess) 2.0 / new_mime_guess (their own extension lists and order); content guessing: [magic](https://docs.rs/magic) 0.17 and filemagic (libmagic FFI), [pure-magic](https://docs.rs/pure-magic) 0.5 and [libmagic-rs](https://docs.rs/libmagic-rs) 0.12 (pure Rust) and [file-format](https://docs.rs/file-format) (own signatures); no Rust port of symfony/mime | Port `MimeTypes.php` (its `MAP` and `REVERSE_MAP` generated from upstream by `scripts/gen-mime-types.py`) and `FileBinaryMimeTypeGuesser.php` in a new in-workspace crate `symfony-mime`, no external dependency | `getExtensions()` / `getMimeTypes()` answers are Symfony's own tables and order, which no extension crate reproduces. Content guessing follows libmagic; which one to use is decision 18 |
+| `FileinfoMimeTypeGuesser` content guessing (PHP's `finfo`; compared November 24 on 12,843 upstream files and 124 samples against PHP 8.4.27) | [pure-magic](https://docs.rs/pure-magic) 0.5.2 with [magic-db](https://docs.rs/magic-db) 0.7.2 (safe Rust, `forbid(unsafe_code)`, GPL-3.0 OR BSD-2-Clause); pure-magic loading the `file` 5.45 Magdir (6 of 341 files fail to parse, fewer matches); [libmagic-rs](https://docs.rs/libmagic-rs) 0.12 (no MIME output); `magic` 0.17 / `magic-sys` (FFI to the system's libmagic, excluded by decision 18) | `pure-magic` =0.5.2 and `magic-db` =0.7.2 in `symfony-mime`, under the BSD-2-Clause option | Closest to PHP's answers (97.5% of upstream files, 86% of the binary samples), no C library, works on Windows. It adds about 60 crates to the lock (pest, regex, serde, postcard, jiff, flate2, tar, memmap2, stacker); `stacker`/`psm` compile a small assembly file with `cc`, so a C toolchain is needed to build. Versions are pinned with `=`, because a new rule set changes answers; the differences list (`crates/mime/tests/data/fileinfo_differences.tsv`) shows the effect of an update |
 | Routing's Route, RouteCompiler and RouteCollection (searched November 24) | No Rust port of Symfony Routing on GitHub or crates.io; router crates ([matchit](https://docs.rs/matchit), [path-tree](https://docs.rs/path-tree), [route-recognizer](https://docs.rs/route-recognizer), axum's and actix's routers) have their own pattern languages: no inline `{name<requirement>?default}`, separators before optional trailing variables, host patterns, PCRE requirements or Symfony's compiled regex and tokens | Ported from Route.php, RouteCompiler.php and RouteCollection.php on php-value and php-pcre (workspace crates), no new dependency | The compiled regex, tokens, static prefix and `serialize()` bytes are what the matcher dumpers, generator and cached routes read; 2,000 routes and 300 collection scripts recorded from PHP 8.4.27 pin them |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
@@ -1088,6 +1100,14 @@ Stack rows (searched November 22):
       error codes, 71 `$_FILES` arrays through FileBag), all matching.
       `is_uploaded_file()` / `move_uploaded_file()` read a list the upload
       code fills. No advisory is listed for these files. Next: Request.
+- [ ] symfony/mime finfo guesser (November 24, decision 18 option (c);
+      [docs/milestones/m2-a-mime-fileinfo.md](docs/milestones/m2-a-mime-fileinfo.md)):
+      `FileinfoMimeTypeGuesser.php` on `pure-magic` with `magic-db`.
+      FileinfoMimeTypeGuesserTest 8 of 8. PHP 8.4.27's answers recorded
+      for 124 sample files and the 12,843 files of `upstream/symfony`
+      (`scripts/record.sh mime-fileinfo`): 107 and 12,525 match, and the
+      test checks each of the 335 differences. `MimeTypes::new()` now
+      registers it, as upstream. No advisory is listed for this file.
 
 ## Verification
 
