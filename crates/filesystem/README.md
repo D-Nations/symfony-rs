@@ -40,9 +40,9 @@ let _ = Filesystem::new();
   `[a-z0-9]`, 6 from `[a-zA-Z0-9]`), the form PHP 8.4's take, from the
   OS random source (`getrandom`); files are created with `O_EXCL` and
   mode 0600.
-- A path through a file (`a.txt/x`) reads as "No such file or directory",
-  as PHP reports it. PHP's own texts are used for other failures through
-  the C library's `strerror()`.
+- Missing files and paths through a file (`a.txt/x`) read as "No such
+  file or directory" on every host, as the pinned PHP tests expect.
+  Other failure reasons retain the host's native error text.
 - Content is a string; a stream resource has no counterpart.
 - Refused with `Class::Unsupported`: stream wrappers other than `file://`
   (`compress.zlib://`, `gs://`, user wrappers) and renaming a directory
