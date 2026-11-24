@@ -120,10 +120,15 @@ request takes 1.6 ms (debug), and the services one page needs
 ```
 cargo fmt --check                                  ok
 cargo clippy --all-targets -- -D warnings          ok
-cargo test                                         see the PR
+cargo test                                         2,603 passed, 1 failed (see below)
 scripts/sources.sh --check                         ok (spikes/ is not scanned)
 scripts/parity-check.sh                            ok (no manifest change)
 ```
+
+The one failure is symfony-config's `testLoadFile`, which fails only when
+the tests run as root (a `chmod 000` file stays readable); this session
+runs as root. `scripts/linux-test.sh` runs the checks as an unprivileged
+user since PR #39. The trial's own tests (16) pass.
 
 The symfony-demo-rs comparison was not run (paused by the owner,
 November 23).
