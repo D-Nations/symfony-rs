@@ -116,6 +116,71 @@ PLAN.md "Proposed: Symfony bundles as Rust modules".
 | `src/request/multipart.rs`, `src/middleware/` | already in `http-foundation` / `http-kernel` |
 | `compare/*.py`, `data/*/extract.php` vector recorders | the new repo's `oracle/` |
 
+### Progressive static specialization (cross-milestone plan, November 24)
+
+Preserve PHP behaviour, not the runtime cost of its mechanisms where that
+cost is unnecessary. This is an extension of the typed-core/build-time
+compiler architecture above and the M1-D converter contract, not a new
+blocking milestone. Continue the existing dependency-ordered ports.
+
+**Design rules.** Prefer concrete types, generic traits for useful static
+dispatch, and enums for closed sets. Keep trait objects for open extension
+points and where specialization is not worthwhile. Keep `php-value` for
+observable PHP semantics (mixed types, ordered arrays, byte strings, coercion,
+object identity, reflection and dynamic dispatch). Convert at explicit
+boundaries only when semantics are preserved; no silent approximation or
+unsupported-input fallback that bypasses the refusal rule. Security, parity,
+ownership and request isolation precede performance. Do not count generic
+parameters or trait objects as a performance metric.
+
+**Current refactor scope (now / next non-conflicting bounded stages):**
+- [ ] Record these rules in the converter contract (coordinate with
+      php2rust), and audit generated-code-shaped fixture types. Preserve the
+      existing concrete container, typed controller enum, typed routes and
+      generic `Kernel<C>::handle<R, I, F>`. Prefer declared scalar, nullable
+      and class types; keep PHP coercion and error handling at boundaries.
+- [ ] During the next HttpKernel stage (M2-A), introduce a minimal listener
+      execution seam, e.g. `Kernel<C, L = DynamicListeners<C>>` with a
+      listener pipeline trait. Keep the existing dynamic registration API
+      and default behaviour; prove the seam with a small static fixture.
+      If the kernel interface is still changing, defer the seam until its
+      lifecycle contract is stable rather than blocking the current port.
+      Test priority, equal-priority order, propagation, controller replacement,
+      early response, exceptions and response filtering in both modes.
+- [ ] Keep the general EventDispatcher's dynamic API and observable mutation,
+      lazy loading and identity semantics. Document a typed alternative
+      boundary, but do not rewrite that component or duplicate its logic now.
+- [ ] Inventory dynamic `Value`, `PhpArray`, `Arc<dyn ...>`, boxed futures,
+      locks and allocations on fixture request paths. Record why each is
+      required or a candidate for later removal; no blanket rewrite.
+- [ ] Establish reproducible baseline measurements on the fixture: latency,
+      throughput, allocations, memory, binary size and build time. Use the
+      same workloads, profiles and environment for comparisons. No new
+      dependencies without the existing stack review.
+
+**Implementation gates (all pending):**
+
+| Existing milestone / trigger | Specialization work and exit evidence |
+|---|---|
+| M1-D and early converter work | Map declared types, nullability, concrete classes and safe closed unions to Rust; preserve PHP byte-string, array, overflow/coercion and identity semantics where needed. Use `Value` where types or semantics remain dynamic. Emit and build the actual fixture, compare PHP outcomes; hand-authored code cannot close the converter gate. |
+| M2-A HTTP lifecycle and routing | Validate the listener seam and typed route/controller execution with oracle and differential tests. Keep dynamic behaviour available; do not optimize routing before the matcher contract is proven. |
+| M3-A DI and event integration | Use the compiled service graph to emit concrete constructors, correct scopes, lazy services and typed references (incorporate the DI trial findings). Generate direct per-event listener pipelines only for provably closed sets; preserve priorities, registration/mutation semantics and dynamic escape paths. Test static vs dynamic and PHP, including failures. |
+| M4–M6 provider stages | Extend conservative local/collection type inference and typed access to Twig, Form, Validator, Serializer and Doctrine as each provider becomes usable. Verify every specialization against its compatibility path and pinned PHP; heterogeneous arrays and uncertain calls remain dynamic. |
+| Demo and second-app acceptance | Benchmark actual generated workflows including database/authentication, bundles and dynamic extensions. Optimize measured hot paths (dispatch, matcher, allocation, locking); require no parity regression. Demo comparisons remain paused by the owner until explicitly resumed; no dependent gate closes meanwhile. |
+| M7–M8 integration and API stabilization | Expand whole-application call/service/event graph analysis where safe; verify dynamic interoperability. Stabilize documented interfaces after evidence from both applications. Track runtime gains against binary size, build time and maintainability. |
+
+**Verification.** Each bounded implementation stage keeps the existing
+AGENTS.md checks, parity manifests, source mappings and stage logs. Add
+differential tests of static and dynamic paths against the pinned oracle,
+including error text, ordering, mutation, ownership and asynchronous request
+isolation. Record baseline and candidate revisions, workload, build profile,
+hardware and repeated measurements; do not claim speedups without evidence.
+Follow the debug-build-only rule; release-profile benchmarking and additional
+profiling tools (e.g. cargo llvm-lines, cargo bloat, cargo asm, Criterion)
+require owner approval where they change current rules or dependencies.
+Do not add hosted paid CI. Defer broad specialization and allocation tuning
+until representative workloads expose a measurable bottleneck.
+
 ## Per-component loop (every component, every milestone)
 
 1. Search GitHub/crates.io for an existing port or primitive; add a stack row
