@@ -23,6 +23,8 @@ pub enum Class {
     /// `Exception\InvalidArgumentException` (extends
     /// `\InvalidArgumentException`).
     InvalidArgument,
+    /// PHP native \InvalidArgumentException (invalid catalogue batch).
+    NativeInvalidArgument,
     /// `Exception\LogicException` (extends `\LogicException`).
     Logic,
     /// `Exception\RuntimeException` (extends `\RuntimeException`).
@@ -55,6 +57,7 @@ impl Class {
             Self::InvalidArgument => {
                 "Symfony\\Component\\Translation\\Exception\\InvalidArgumentException"
             }
+            Self::NativeInvalidArgument => "InvalidArgumentException",
             Self::Logic => "Symfony\\Component\\Translation\\Exception\\LogicException",
             Self::Runtime => "Symfony\\Component\\Translation\\Exception\\RuntimeException",
             Self::ValueError => "ValueError",
@@ -69,7 +72,10 @@ impl Class {
     pub fn is_invalid_argument(&self) -> bool {
         matches!(
             self,
-            Self::InvalidResource | Self::NotFoundResource | Self::InvalidArgument
+            Self::InvalidResource
+                | Self::NotFoundResource
+                | Self::InvalidArgument
+                | Self::NativeInvalidArgument
         )
     }
 
