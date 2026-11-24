@@ -51,8 +51,8 @@ git archive --format=tar HEAD | docker run --rm -i "${mount[@]}" "$image" bash -
         cd /work && tar -x
         test -z \"\$(ls -A target 2>/dev/null)\"
         if [ -d /upstream ]; then ln -s /upstream upstream; fi
-        if [[ "\$1" == "--workspace" ]]; then cargo fmt --all --check; else cargo fmt --check "\$@"; fi
-        cargo clippy --locked --all-targets "\$@" -- -D warnings
-        cargo test --locked "\$@" --no-fail-fast
-    ' -- "\$@"
+        if [[ \"\$1\" == \"--workspace\" ]]; then cargo fmt --all --check; else cargo fmt --check \"\$@\"; fi
+        cargo clippy --locked --all-targets \"\$@\" -- -D warnings
+        cargo test --locked \"\$@\" --no-fail-fast
+    ' -- \"\$@\"
 " -- "${args[@]}"
