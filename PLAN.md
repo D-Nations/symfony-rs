@@ -619,6 +619,27 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     stay `pending` until the owner decides. **Owner, November 23: the
     build-time class registry.** The rows stay `pending` until that stage
     ports them; tests that change PHP code at run time become `n/a`.
+18. **MIME type guessing (`File::getMimeType()`, M2-A, November 24).**
+    symfony/mime's `MimeTypes` asks `FileinfoMimeTypeGuesser` first: PHP's
+    `finfo`, which runs the libmagic copy and magic database bundled with
+    PHP. `FileBinaryMimeTypeGuesser` (the `file` command) is upstream's
+    fallback. Neither is reproducible from Rust without libmagic: on the
+    472 files of the http-foundation and mime checkouts, the oracle's
+    `finfo` and its `file` 5.44 differ on 13 (`application/x-empty` vs
+    `inode/x-empty` for empty files, `text/x-php` vs
+    `application/javascript` for 9 PHP files), and the `file` command
+    differs by system and is absent on Windows. Options: (a) keep the
+    `file` command as the only default guesser (done in this stage;
+    Windows has none, so `getMimeType()` is upstream's LogicException
+    there, and the MIME tests are skipped there as upstream skips them
+    without fileinfo); (b) bind the system libmagic (`magic` 0.17 /
+    `magic-sys`, FFI, needs libmagic on every host, answers follow the
+    system's magic database, not PHP's); (c) a pure-Rust libmagic
+    (`pure-magic` 0.5, `libmagic-rs` 0.12) with a magic database pinned to
+    PHP 8.4's, checked against recorded `finfo` answers on a corpus.
+    Recommended: (c) if one of them reproduces the recorded answers,
+    else (a). The FileinfoMimeTypeGuesserTest rows stay `pending` until
+    the owner decides.
 
 ## M0 progress
 
@@ -978,6 +999,7 @@ Stack rows (searched November 22):
 | Component | Options compared | Choice | Reason |
 |---|---|---|---|
 | PHP's `filter_var()` and `BackedEnum::from()` (ParameterBag, InputBag) | No Rust crate reproduces PHP's filter extension; validator crates ([validator](https://docs.rs/validator), [garde](https://docs.rs/garde)) check typed struct fields with their own rules and messages; php2rust's `php-rt` has no filter or enum support | Written in `php-value` from the PHP manual and recorded answers, no dependency | The bags' behaviour is PHP's: string conversion of scalars, `FILTER_NULL_ON_FAILURE`, array walking, `default`, hex/octal as unsigned 64-bit, coercive enum arguments and their messages. 22,932 `filter_var()` calls and 2,450 bag calls recorded from PHP 8.4.27 pin them |
+| MIME types and guessing (symfony/mime `MimeTypes`, for File and UploadedFile; searched November 24 with `cargo search`) | Extension tables: [mime_guess](https://docs.rs/mime_guess) 2.0 / new_mime_guess (their own extension lists and order); content guessing: [magic](https://docs.rs/magic) 0.17 and filemagic (libmagic FFI), [pure-magic](https://docs.rs/pure-magic) 0.5 and [libmagic-rs](https://docs.rs/libmagic-rs) 0.12 (pure Rust) and [file-format](https://docs.rs/file-format) (own signatures); no Rust port of symfony/mime | Port `MimeTypes.php` (its `MAP` and `REVERSE_MAP` generated from upstream by `scripts/gen-mime-types.py`) and `FileBinaryMimeTypeGuesser.php` in a new in-workspace crate `symfony-mime`, no external dependency | `getExtensions()` / `getMimeTypes()` answers are Symfony's own tables and order, which no extension crate reproduces. Content guessing follows libmagic; which one to use is decision 18 |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1038,6 +1060,18 @@ Stack rows (searched November 22):
       `accept_language.rs` now reads through AcceptHeader. No advisory is
       listed for these files. Next: FileBag with File and UploadedFile
       (MIME guessing needs symfony/mime), then Request.
+- [ ] HttpFoundation stage 4 (November 24;
+      [docs/milestones/m2-a-http-foundation-files.md](docs/milestones/m2-a-http-foundation-files.md)):
+      `File/File.php`, `File/UploadedFile.php`, `FileBag.php` and the File
+      exceptions, on a new `symfony-mime` crate (`MimeTypes.php` and
+      `FileBinaryMimeTypeGuesser.php`; MimeTypesTest 13 of 13,
+      FileBinaryMimeTypeGuesserTest 7 of 8, 1 `n/a`; the finfo guesser is
+      decision 18). FileTest 9 of 9, UploadedFileTest 23 of 23,
+      FileBagTest 9 of 9; plus 419 recorded answers (`parseFilesize()`,
+      `getMaxFilesize()` under 126 ini pairs, client names and MIME types,
+      error codes, 71 `$_FILES` arrays through FileBag), all matching.
+      `is_uploaded_file()` / `move_uploaded_file()` read a list the upload
+      code fills. No advisory is listed for these files. Next: Request.
 
 ## Verification
 
