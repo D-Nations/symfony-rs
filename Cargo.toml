@@ -21,6 +21,7 @@ members = [
     "crates/finder",
     "crates/php-dom",
     "crates/php-pcre",
+    "crates/mime",
     "examples/request-lab",
     "fixtures/converter-app",
 ]

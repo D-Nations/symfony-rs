@@ -1,0 +1,11 @@
+[package]
+name = "symfony-mime"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Port of the symfony/mime component (the MIME type part HttpFoundation's File uses)"
+
+[dependencies]
+# PHP's view of the filesystem (is_file(), is_readable()).
+symfony-finder = { path = "../finder" }

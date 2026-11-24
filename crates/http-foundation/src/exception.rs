@@ -2,7 +2,8 @@
 //! UnexpectedValueException.php and RequestExceptionInterface.php, with
 //! the PHP exceptions the bags throw (`\UnexpectedValueException`,
 //! `\InvalidArgumentException`) and PHP's `\Error` for an enum class that
-//! has no `from()`.
+//! has no `from()`; and the File exceptions (`File/Exception/*.php`)
+//! with symfony/mime's, which `File` passes on.
 //!
 //! One error type carries the class PHP would throw, so callers can test
 //! it as `catch`/`instanceof` would ([`Error::is_a`]). Messages are
@@ -11,7 +12,7 @@
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
-//! Upstream: symfony/http-foundation Exception/BadRequestException.php Exception/UnexpectedValueException.php Exception/RequestExceptionInterface.php
+//! Upstream: symfony/http-foundation Exception/BadRequestException.php Exception/UnexpectedValueException.php Exception/RequestExceptionInterface.php File/Exception/FileException.php File/Exception/FileNotFoundException.php File/Exception/AccessDeniedException.php File/Exception/CannotWriteFileException.php File/Exception/ExtensionFileException.php File/Exception/FormSizeFileException.php File/Exception/IniSizeFileException.php File/Exception/NoFileException.php File/Exception/NoTmpDirFileException.php File/Exception/PartialFileException.php File/Exception/UnexpectedTypeException.php File/Exception/UploadException.php
 
 use php_value::PhpString;
 
@@ -35,6 +36,36 @@ pub enum Class {
     PhpValueError,
     /// PHP's `\Error`.
     PhpError,
+    /// `Symfony\Component\HttpFoundation\File\Exception\FileException`.
+    File,
+    /// `Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException`, a FileException.
+    FileNotFound,
+    /// `Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException`, a FileException.
+    AccessDenied,
+    /// `Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException`, a FileException.
+    CannotWriteFile,
+    /// `Symfony\Component\HttpFoundation\File\Exception\ExtensionFileException`, a FileException.
+    ExtensionFile,
+    /// `Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException`, a FileException.
+    FormSizeFile,
+    /// `Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException`, a FileException.
+    IniSizeFile,
+    /// `Symfony\Component\HttpFoundation\File\Exception\NoFileException`, a FileException.
+    NoFile,
+    /// `Symfony\Component\HttpFoundation\File\Exception\NoTmpDirFileException`, a FileException.
+    NoTmpDirFile,
+    /// `Symfony\Component\HttpFoundation\File\Exception\PartialFileException`, a FileException.
+    PartialFile,
+    /// `Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException`, a FileException.
+    UnexpectedType,
+    /// `Symfony\Component\HttpFoundation\File\Exception\UploadException`, a FileException.
+    Upload,
+    /// `Symfony\Component\Mime\Exception\LogicException`.
+    MimeLogic,
+    /// `Symfony\Component\Mime\Exception\InvalidArgumentException`.
+    MimeInvalidArgument,
+    /// `Symfony\Component\Mime\Exception\RuntimeException`.
+    MimeRuntime,
     /// Input this port does not reproduce; not a PHP class. It is refused
     /// rather than approximated.
     NotPorted,
@@ -56,6 +87,41 @@ impl Class {
             Self::PhpTypeError => "TypeError",
             Self::PhpValueError => "ValueError",
             Self::PhpError => "Error",
+            Self::File => "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+            Self::FileNotFound => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileNotFoundException"
+            }
+            Self::AccessDenied => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\AccessDeniedException"
+            }
+            Self::CannotWriteFile => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\CannotWriteFileException"
+            }
+            Self::ExtensionFile => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\ExtensionFileException"
+            }
+            Self::FormSizeFile => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FormSizeFileException"
+            }
+            Self::IniSizeFile => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\IniSizeFileException"
+            }
+            Self::NoFile => "Symfony\\Component\\HttpFoundation\\File\\Exception\\NoFileException",
+            Self::NoTmpDirFile => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\NoTmpDirFileException"
+            }
+            Self::PartialFile => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\PartialFileException"
+            }
+            Self::UnexpectedType => {
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\UnexpectedTypeException"
+            }
+            Self::Upload => "Symfony\\Component\\HttpFoundation\\File\\Exception\\UploadException",
+            Self::MimeLogic => "Symfony\\Component\\Mime\\Exception\\LogicException",
+            Self::MimeInvalidArgument => {
+                "Symfony\\Component\\Mime\\Exception\\InvalidArgumentException"
+            }
+            Self::MimeRuntime => "Symfony\\Component\\Mime\\Exception\\RuntimeException",
             Self::NotPorted => "NotPorted",
         }
     }
@@ -95,6 +161,111 @@ impl Class {
             Self::PhpTypeError => &["TypeError", "Error", "Throwable"],
             Self::PhpValueError => &["ValueError", "Error", "Throwable"],
             Self::PhpError => &["Error", "Throwable"],
+            Self::File => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::FileNotFound => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileNotFoundException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::AccessDenied => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\AccessDeniedException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::CannotWriteFile => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\CannotWriteFileException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::ExtensionFile => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\ExtensionFileException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::FormSizeFile => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FormSizeFileException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::IniSizeFile => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\IniSizeFileException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::NoFile => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\NoFileException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::NoTmpDirFile => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\NoTmpDirFileException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::PartialFile => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\PartialFileException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::UnexpectedType => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\UnexpectedTypeException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::Upload => &[
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\UploadException",
+                "Symfony\\Component\\HttpFoundation\\File\\Exception\\FileException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::MimeLogic => &[
+                "Symfony\\Component\\Mime\\Exception\\LogicException",
+                "Symfony\\Component\\Mime\\Exception\\ExceptionInterface",
+                "LogicException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::MimeInvalidArgument => &[
+                "Symfony\\Component\\Mime\\Exception\\InvalidArgumentException",
+                "Symfony\\Component\\Mime\\Exception\\ExceptionInterface",
+                "InvalidArgumentException",
+                "LogicException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::MimeRuntime => &[
+                "Symfony\\Component\\Mime\\Exception\\RuntimeException",
+                "Symfony\\Component\\Mime\\Exception\\ExceptionInterface",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
             Self::NotPorted => &["NotPorted"],
         }
     }
@@ -152,6 +323,18 @@ impl std::error::Error for Error {}
 impl From<php_value::filter::Unsupported> for Error {
     fn from(error: php_value::filter::Unsupported) -> Self {
         Self::new(Class::NotPorted, error.to_string())
+    }
+}
+
+impl From<symfony_mime::Error> for Error {
+    fn from(error: symfony_mime::Error) -> Self {
+        let class = match error.class() {
+            symfony_mime::Class::Logic => Class::MimeLogic,
+            symfony_mime::Class::InvalidArgument => Class::MimeInvalidArgument,
+            symfony_mime::Class::Runtime => Class::MimeRuntime,
+            symfony_mime::Class::NotPorted => Class::NotPorted,
+        };
+        Self::new(class, error.message())
     }
 }
 

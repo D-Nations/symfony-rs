@@ -13,15 +13,19 @@ pub mod accept_language;
 pub mod cookie;
 pub mod cookies;
 pub mod exception;
+pub mod file;
+pub mod file_bag;
 pub mod header_bag;
 pub mod header_utils;
 pub mod input_bag;
 pub mod ip_utils;
 pub mod multipart;
 pub mod parameter_bag;
+pub mod php;
 pub mod query;
 pub mod scheme;
 pub mod server_bag;
+pub mod uploaded_file;
 
 /// PHP's default `post_max_size`. HTTP adapters must bound body reads to
 /// this size and pass an empty body on read failure, as the demo does.
