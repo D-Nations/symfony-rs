@@ -269,11 +269,5 @@ impl Filesystem {
 
 /// PHP's `basename($path)` (no suffix), with `/` as the separator.
 pub fn basename(path: &[u8]) -> Vec<u8> {
-    let end = path.iter().rposition(|&c| c != b'/').map_or(0, |i| i + 1);
-    let trimmed = &path[..end];
-    let start = trimmed
-        .iter()
-        .rposition(|&c| c == b'/')
-        .map_or(0, |i| i + 1);
-    trimmed[start..].to_vec()
+    php_value::path::basename(path).to_vec()
 }

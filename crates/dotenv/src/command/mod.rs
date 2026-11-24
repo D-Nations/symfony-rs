@@ -34,24 +34,7 @@ pub(crate) fn console_error(error: crate::exception::Error) -> ConsoleError {
     }
 }
 
-/// `basename($path)` with `/` separators.
-pub(crate) fn basename(path: &str) -> &str {
-    let trimmed = path.trim_end_matches('/');
-    match trimmed.rfind('/') {
-        Some(i) => &trimmed[i + 1..],
-        None => trimmed,
-    }
-}
-
-/// `dirname($path)` with `/` separators.
-pub(crate) fn dirname(path: &str) -> String {
-    let trimmed = path.trim_end_matches('/');
-    match trimmed.rfind('/') {
-        Some(0) => "/".to_owned(),
-        Some(i) => trimmed[..i].to_owned(),
-        None => ".".to_owned(),
-    }
-}
+pub(crate) use php_value::path::{basename_str as basename, dirname_str as dirname};
 
 pub(crate) fn is_file(path: &str) -> bool {
     std::path::Path::new(path).is_file()

@@ -56,6 +56,15 @@ of real PHP running it. **Read upstream, never edit it.**
 - No `unsafe`. No `unwrap`/`expect` on anything derived from a request, a
   database, a file or the network; return an error.
 - Enums for closed sets, with each value's string form defined once.
+- For compatibility problems (paths, OS differences, encodings), use the
+  standard, idiomatic Rust solution, as long as it does not disturb the
+  port's progress (owner, November 24). Do not solve one again in each
+  crate.
+- File paths: keep PHP's bytes for every path PHP shows (messages, return
+  values, keys), and use `std::path::Path`/`PathBuf` for every system call.
+  Convert only with `php_value::path` (`to_path`, `from_path`, …), and use
+  its `basename()`/`dirname()`; do not add a crate's own copy or
+  `#[cfg(unix)]` conversion.
 - No new dependency without a PLAN.md stack row saying what it was compared
   with and why it won.
 - Every crate keeps `publish = false` until the owner decides naming and
