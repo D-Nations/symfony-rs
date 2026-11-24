@@ -1,0 +1,68 @@
+{
+    "php": "8.4.27",
+    "twig": "3.30.0",
+    "cases": [
+        {
+            "name": "two tags, one selected",
+            "output": "<article class=\"post\">\n    <h2>\n        <a href=\"/blog_post?slug=lorem-ipsum-dolor\">\n            Lorem ipsum dolor sit amet\n        </a>\n    </h2>\n\n    <p class=\"post-metadata\">\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:calendar-month\"/> [2026-11-20 10:30:00 long/medium//UTC]</span>\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:user\"/> Jane Doe</span>\n    </p>\n\n    <p>Pellentesque vitae velit ex.</p>\n\n        <p class=\"post-tags\">\n                    <a href=\"/blog_index?tag=lorem\"\n               class=\"badge badge-secondary\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> lorem\n            </a>\n                    <a href=\"/blog_index?tag=~\"\n               class=\"badge badge-success\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> symfony\n            </a>\n            </p>\n\n</article>\n"
+        },
+        {
+            "name": "no tags, no query",
+            "output": "<article class=\"post\">\n    <h2>\n        <a href=\"/blog_post?slug=no-tags\">\n            A post without tags\n        </a>\n    </h2>\n\n    <p class=\"post-metadata\">\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:calendar-month\"/> [2026-01-02 03:04:05 long/medium//UTC]</span>\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:user\"/> Tom Doe</span>\n    </p>\n\n    <p>Nothing to list.</p>\n\n    \n</article>\n"
+        },
+        {
+            "name": "characters that HTML escaping changes",
+            "output": "<article class=\"post\">\n    <h2>\n        <a href=\"/blog_post?slug=a&amp;b &quot;quoted&quot; &lt;tag&gt;\">\n            &lt;script&gt;alert(&#039;x&#039;)&lt;/script&gt; &amp; &quot;more&quot;\n        </a>\n    </h2>\n\n    <p class=\"post-metadata\">\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:calendar-month\"/> [2025-12-31 23:59:59 long/medium//UTC]</span>\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:user\"/> O&#039;Brien &lt;ob@example.com&gt;</span>\n    </p>\n\n    <p>It&#039;s 5 &gt; 3 &amp; 2 &lt; 4</p>\n\n        <p class=\"post-tags\">\n                    <a href=\"/blog_index?tag=c#\"\n               class=\"badge badge-secondary\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> c#\n            </a>\n                    <a href=\"/blog_index?tag=a&amp;b\"\n               class=\"badge badge-secondary\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> a&amp;b\n            </a>\n                    <a href=\"/blog_index?tag=&lt;i&gt;\"\n               class=\"badge badge-secondary\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> &lt;i&gt;\n            </a>\n            </p>\n\n</article>\n"
+        },
+        {
+            "name": "numeric strings compare loosely",
+            "output": "<article class=\"post\">\n    <h2>\n        <a href=\"/blog_post?slug=numbers\">\n            Numbers\n        </a>\n    </h2>\n\n    <p class=\"post-metadata\">\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:calendar-month\"/> [2026-06-15 12:00:00 long/medium//UTC]</span>\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:user\"/> Ann Number</span>\n    </p>\n\n    <p>10 == &quot;10.0&quot; in PHP 8</p>\n\n        <p class=\"post-tags\">\n                    <a href=\"/blog_index?tag=~\"\n               class=\"badge badge-success\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> 10\n            </a>\n                    <a href=\"/blog_index?tag=~\"\n               class=\"badge badge-success\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> 1e1\n            </a>\n                    <a href=\"/blog_index?tag=~\"\n               class=\"badge badge-success\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> 010\n            </a>\n                    <a href=\"/blog_index?tag=ten\"\n               class=\"badge badge-secondary\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> ten\n            </a>\n            </p>\n\n</article>\n"
+        },
+        {
+            "name": "non-ASCII text",
+            "output": "<article class=\"post\">\n    <h2>\n        <a href=\"/blog_post?slug=unicode\">\n            Ünïcödé — ‘quotes’\n        </a>\n    </h2>\n\n    <p class=\"post-metadata\">\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:calendar-month\"/> [2026-11-24 15:34:00 long/medium//UTC]</span>\n        <span class=\"metadata\"><stub-component name=\"ux:icon\" name=\"tabler:user\"/> Zoë Ångström</span>\n    </p>\n\n    <p>Emoji 🎉 and 日本語</p>\n\n        <p class=\"post-tags\">\n                    <a href=\"/blog_index?tag=~\"\n               class=\"badge badge-success\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> 日本語\n            </a>\n                    <a href=\"/blog_index?tag=émoji\"\n               class=\"badge badge-secondary\"\n            >\n                <stub-component name=\"ux:icon\" name=\"tabler:tag\" style=\"top: 0\"/> émoji\n            </a>\n            </p>\n\n</article>\n"
+        }
+    ],
+    "snippets": [
+        {
+            "name": "snippets/01-whitespace.html.twig",
+            "output": "axbcde\n f\n"
+        },
+        {
+            "name": "snippets/02-precedence.html.twig",
+            "output": "7 9 a3 3 4 1001\n"
+        },
+        {
+            "name": "snippets/03-loose-equality.html.twig",
+            "output": "ynyynyyyyy\n"
+        },
+        {
+            "name": "snippets/04-for-if.html.twig",
+            "output": "x=1;y=two;|noneone two many "
+        },
+        {
+            "name": "snippets/05-loop-scope.html.twig",
+            "output": "outer12outer|3\n"
+        },
+        {
+            "name": "snippets/06-arrays.html.twig",
+            "output": "A[]Cl12k\n"
+        },
+        {
+            "name": "snippets/07-comments.html.twig",
+            "output": "xy\nz w\n"
+        },
+        {
+            "name": "snippets/08-numbers.html.twig",
+            "output": "1.5 1 0.3 1000 0.0025 1[][] 9.2233720368548E+18\n"
+        },
+        {
+            "name": "snippets/09-escaping.html.twig",
+            "output": "&lt;a href=&quot;x&quot;&gt;&#039;&amp;&#039;&lt;/a&gt;|<a href=\"x\">'&'</a>|&lt;a href=&quot;x&quot;&gt;&#039;&amp;&#039;&lt;/a&gt;|<b>\n"
+        },
+        {
+            "name": "snippets/10-logic.html.twig",
+            "output": "nyndfltA|\n"
+        }
+    ]
+}

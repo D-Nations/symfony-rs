@@ -1,0 +1,64 @@
+{
+    "cases": [
+        {
+            "name": "two tags, one selected",
+            "query": {"tag": "symfony"},
+            "post": {
+                "slug": "lorem-ipsum-dolor",
+                "title": "Lorem ipsum dolor sit amet",
+                "summary": "Pellentesque vitae velit ex.",
+                "publishedAt": "2026-11-20 10:30:00",
+                "author": "Jane Doe",
+                "tags": ["lorem", "symfony"]
+            }
+        },
+        {
+            "name": "no tags, no query",
+            "query": {},
+            "post": {
+                "slug": "no-tags",
+                "title": "A post without tags",
+                "summary": "Nothing to list.",
+                "publishedAt": "2026-01-02 03:04:05",
+                "author": "Tom Doe",
+                "tags": []
+            }
+        },
+        {
+            "name": "characters that HTML escaping changes",
+            "query": {"tag": ""},
+            "post": {
+                "slug": "a&b \"quoted\" <tag>",
+                "title": "<script>alert('x')</script> & \"more\"",
+                "summary": "It's 5 > 3 & 2 < 4",
+                "publishedAt": "2025-12-31 23:59:59",
+                "author": "O'Brien <ob@example.com>",
+                "tags": ["c#", "a&b", "<i>"]
+            }
+        },
+        {
+            "name": "numeric strings compare loosely",
+            "query": {"tag": "10.0"},
+            "post": {
+                "slug": "numbers",
+                "title": "Numbers",
+                "summary": "10 == \"10.0\" in PHP 8",
+                "publishedAt": "2026-06-15 12:00:00",
+                "author": "Ann Number",
+                "tags": ["10", "1e1", "010", "ten"]
+            }
+        },
+        {
+            "name": "non-ASCII text",
+            "query": {"tag": "日本語"},
+            "post": {
+                "slug": "unicode",
+                "title": "Ünïcödé — ‘quotes’",
+                "summary": "Emoji 🎉 and 日本語",
+                "publishedAt": "2026-11-24 15:34:00",
+                "author": "Zoë Ångström",
+                "tags": ["日本語", "émoji"]
+            }
+        }
+    ]
+}

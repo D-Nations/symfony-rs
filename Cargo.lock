@@ -1351,6 +1351,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "twig-trial-demo"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "serde_json",
+ "twig-trial-compiler",
+ "twig-trial-runtime",
+]
+
+[[package]]
 name = "twig-trial-runtime"
 version = "0.1.0"
 dependencies = [
