@@ -52,6 +52,71 @@ scripts/sources.sh --check
 scripts/parity-check.sh   # manifest claims and completion status
 ```
 
+## Faster local checks (Windows and Linux)
+
+Use Python 3.10+ (standard library only), Git, and Cargo. On Windows,
+the full check also needs Git Bash on PATH for the existing parity scripts.
+Run these from PowerShell or a Unix shell:
+
+```text
+python scripts/dev_check.py list
+python scripts/dev_check.py check
+python scripts/dev_check.py test
+python scripts/dev_check.py test --nextest
+python scripts/dev_check.py check -p php-value
+python scripts/dev_check.py full
+python scripts/test_dev_check.py
+```
+
+The default base is origin/main; use --base to select another ref. Refresh
+the base with git fetch when appropriate. Affected mode includes changes
+in commits, the index, the working tree, and untracked files. It includes
+transitive workspace consumers of each changed crate using Cargo metadata,
+including optional, dev, build and target-specific path dependencies.
+Unknown paths, root/configuration or manifest changes, data changes, an
+empty change set, and metadata failures select the full workspace.
+Explicit -p selects only the named packages, not reverse dependents.
+This is a development convenience, not a proof of impact: external inputs,
+cross-package include paths and runtime integrations can require full checks.
+
+Optional nextest: install cargo-nextest using your preferred installation
+method (e.g. cargo install cargo-nextest --locked). The development runner
+also runs Cargo doctests, which nextest does not run. If nextest is not
+installed, use ordinary test mode. The full gate always uses Cargo test
+and includes the existing source/parity scripts. No tests are suppressed.
+Windows-specific failures must still be verified with the existing
+scripts/linux-test.sh; it checks committed HEAD in a fresh Linux container.
+Oracle recordings, upstream source retrieval, generated-table checks and
+converter/second-app acceptance remain separate and unchanged. Do not run
+the paused symfony-demo-rs comparison until the owner resumes it.
+
+Normal dev/test profiles now emit line tables instead of full debug info.
+For full debugger symbols use cargo test --profile dev-full or cargo build
+--profile dev-full. Profile changes cause an initial rebuild; later builds
+reuse compatible artifacts. Keep target directories separate per concurrent
+worktree; sccache can share compatible compiler results without target locks.
+Set RUSTC_WRAPPER=sccache in your environment if installed. Incremental Rust
+compilation is not cacheable by sccache; compare warm incremental builds
+with CARGO_INCREMENTAL=0 plus sccache before choosing a local setting.
+Do not change global environment settings from project scripts.
+
+To inspect the cost rather than guess:
+
+```text
+python scripts/dev_check.py audit
+python scripts/dev_check.py audit --timings
+python scripts/dev_check.py test --timings
+sccache --show-stats
+```
+
+The audit prints duplicate dependency versions and feature activation;
+timings are Cargo HTML reports under the configured target directory.
+A lockfile entry is not a compilation unit: test targets, build scripts,
+proc macros and feature combinations can compile the same package more
+than once. Review unused features and duplicate versions only after
+measuring and verifying parity. No runtime dependency change is needed
+for these tools.
+
 Pinned upstream sources (with their tests), for porting and for parity
 manifests: `scripts/fetch-upstream.sh` clones them into the ignored
 `upstream/` directory. `scripts/manifest.sh <package>` (re)generates

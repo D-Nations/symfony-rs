@@ -82,6 +82,13 @@ scripts/sources.sh --check
 scripts/parity-check.sh
 ```
 
+For fast development iterations use `python scripts/dev_check.py list`,
+`check` or `test` (see README.md). Affected checks and optional nextest
+are not a substitute for the full pre-merge gate. `python
+scripts/dev_check.py full` runs the full workspace gate above, with
+explicit workspace scope and no-fail-fast tests. Keep the oracle and
+Linux/fixture acceptance steps as required by each stage.
+
 The symfony-demo-rs step (that repository's checks and page comparison
 against this checkout, for a change to a crate it uses) is paused by the
 owner (November 23): do not run it until the owner turns it back on. Stage

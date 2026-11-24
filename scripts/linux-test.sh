@@ -22,14 +22,25 @@ export MSYS_NO_PATHCONV=1
 
 # rust:1.99-slim, as scripts/converter-fixture.sh
 image=rust@sha256:f6c4a35d21dbb3c89d7a8d056c193e94fc09037f2b58dd858b09c39a47dd02d7
-args="${*:-}"
+args=()
+while (( $# )); do
+    if [[ "$1" != "-p" || $# -lt 2 || ! "$2" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+        echo "usage: scripts/linux-test.sh [-p CRATE ...]" >&2
+        exit 2
+    fi
+    args+=("-p" "$2")
+    shift 2
+done
+if (( ${#args[@]} == 0 )); then
+    args=(--workspace)
+fi
 mount=()
 if [ -d upstream ]; then
     host=$(cd upstream && (pwd -W 2>/dev/null || pwd))
     mount=(-v "$host:/upstream:ro")
 fi
 
-echo "linux checks at $(git rev-parse --short HEAD): ${args:-workspace}"
+echo "linux checks at $(git rev-parse --short HEAD): ${args[*]}"
 git archive --format=tar HEAD | docker run --rm -i "${mount[@]}" "$image" bash -euo pipefail -c "
     rustup component add rustfmt clippy >/dev/null 2>&1
     useradd --create-home --uid 1000 check
@@ -40,8 +51,8 @@ git archive --format=tar HEAD | docker run --rm -i "${mount[@]}" "$image" bash -
         cd /work && tar -x
         test -z \"\$(ls -A target 2>/dev/null)\"
         if [ -d /upstream ]; then ln -s /upstream upstream; fi
-        cargo fmt --check $args
-        cargo clippy --locked --all-targets $args -- -D warnings
-        cargo test --locked $args
-    '
-"
+        if [[ "\$1" == "--workspace" ]]; then cargo fmt --all --check; else cargo fmt --check "\$@"; fi
+        cargo clippy --locked --all-targets "\$@" -- -D warnings
+        cargo test --locked "\$@" --no-fail-fast
+    ' -- "\$@"
+" -- "${args[@]}"

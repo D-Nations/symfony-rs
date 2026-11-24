@@ -32,3 +32,16 @@ members = [
     "spikes/di-trial/demo",
 ]
 resolver = "3"
+
+# Keep source locations for normal development without full debug symbols.
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.test]
+debug = "line-tables-only"
+
+# Use cargo test --profile dev-full (or cargo build --profile dev-full)
+# when a debugger needs local variables and complete type information.
+[profile.dev-full]
+inherits = "dev"
+debug = 2
