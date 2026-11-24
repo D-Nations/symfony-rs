@@ -26,6 +26,11 @@ pub trait PhpObject: Any + Send + Sync + fmt::Debug {
     fn to_php_string(&self) -> Option<PhpString> {
         None
     }
+
+    /// `$object instanceof \Stringable`, without calling `__toString()`.
+    fn is_stringable(&self) -> bool {
+        self.to_php_string().is_some()
+    }
 }
 
 impl dyn PhpObject {

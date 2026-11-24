@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Record test vectors from the PHP oracle (oracle/, Docker) into the crates.
 #
-#   scripts/record.sh routing      crates/routing/tests/data/matcher.json
+#   scripts/record.sh routing      crates/routing/tests/data/matcher.json and route.json
+#   scripts/record.sh routing-route crates/routing/tests/data/route.json (Route, RouteCompiler, RouteCollection)
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
 #   scripts/record.sh request-vars crates/http-foundation/tests/data/{query,cookie,content_type}_vectors.json
 #   scripts/record.sh second-app-w1 oracle/apps/easyadmin-demo/w1.json (second app, W1)
@@ -50,6 +51,15 @@ routing() {
     fi
     mv "$tmp" "$out"
     echo "$count Symfony Routing cases written to $out"
+}
+
+routing_route() {
+    local out=crates/routing/tests/data/route.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/routing_route.php > "$tmp"
+    mv "$tmp" "$out"
+    echo "Route, RouteCompiler and RouteCollection answers written to $out"
 }
 
 multipart() { python oracle/recorders/multipart.py; }
@@ -422,7 +432,8 @@ http_foundation() {
 }
 
 case "${1:-}" in
-    routing) routing ;;
+    routing) routing; routing_route ;;
+    routing-route) routing_route ;;
     multipart) multipart ;;
     request-vars) request_vars ;;
     second-app-w1) second_app_w1 ;;
@@ -447,6 +458,6 @@ case "${1:-}" in
     php-dom-schema) php_dom_schema ;;
     http-foundation) http_foundation ;;
     http-foundation-releases) http_foundation_releases ;;
-    all) routing; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-releases|translation-xliff|translation-qt|config-cache|all" >&2; exit 2 ;;
+    all) routing; routing_route; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-releases|translation-xliff|translation-qt|config-cache|all" >&2; exit 2 ;;
 esac

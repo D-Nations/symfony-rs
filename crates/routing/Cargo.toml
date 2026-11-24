@@ -6,8 +6,21 @@ license = "MIT"
 publish = false
 description = "Typed subset of Symfony routing and URL generation"
 
+[features]
+# RouteCollection's resources (symfony/config's ResourceInterface, which
+# upstream lists in require-dev only).
+config = ["dep:symfony-config"]
+
 [dependencies]
+php-pcre = { path = "../php-pcre" }
+php-value = { path = "../php-value" }
+symfony-config = { path = "../config", optional = true }
+symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 symfony-http-foundation = { path = "../http-foundation" }
 
 [dev-dependencies]
+# The tests cover RouteCollection's resources too.
+symfony-routing = { path = ".", features = ["config"] }
+symfony-config = { path = "../config" }
+php-value = { path = "../php-value", features = ["vectors"] }
 serde_json = "1.0.154"

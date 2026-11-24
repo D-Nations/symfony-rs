@@ -1,7 +1,7 @@
 # symfony/routing at f3fefc6cad3748d538be970ca81b71f06d7aa8b3: upstream test	method	status	rust test
 Tests/Attribute/RouteTest.php	RouteTest::testLoadFromAttribute	pending	
-Tests/CompiledRouteTest.php	CompiledRouteTest::testAccessors	pending	
-Tests/CompiledRouteTest.php	CompiledRouteTest::testUnserializeRejectsObjectInTypedScalarProperty	pending	
+Tests/CompiledRouteTest.php	CompiledRouteTest::testAccessors	ported	crates/routing/tests/compiled_route_test.rs::testAccessors
+Tests/CompiledRouteTest.php	CompiledRouteTest::testUnserializeRejectsObjectInTypedScalarProperty	ported	crates/routing/tests/compiled_route_test.rs::testUnserializeRejectsObjectInTypedScalarProperty
 Tests/DependencyInjection/AddExpressionLanguageProvidersPassTest.php	AddExpressionLanguageProvidersPassTest::testProcessForRouter	pending	
 Tests/DependencyInjection/AddExpressionLanguageProvidersPassTest.php	AddExpressionLanguageProvidersPassTest::testProcessForRouterAlias	pending	
 Tests/DependencyInjection/RoutingControllerPassTest.php	RoutingControllerPassTest::testProcessInjectsTaggedControllerClassesOrderedAndUnique	pending	
@@ -824,64 +824,64 @@ Tests/Requirement/RequirementTest.php	RequirementTest::testUuidV7KO	pending
 Tests/Requirement/RequirementTest.php	RequirementTest::testUuidV7OK	pending	
 Tests/Requirement/RequirementTest.php	RequirementTest::testUuidV8KO	pending	
 Tests/Requirement/RequirementTest.php	RequirementTest::testUuidV8OK	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddCollection	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddCollectionWithResources	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddDefaultsAndRequirementsAndOptions	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddNamePrefix	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddNamePrefixCanonicalRouteName	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddNamePrefixDoesNotBreakExternalAliases	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddPrefix	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddPrefixOverridesDefaultsAndRequirements	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddWithPriority	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testAddWithPriorityAndPrefix	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testClone	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testCount	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testDeepOverriddenRoute	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testGet	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testIterator	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testOverriddenRoute	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testRemove	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testResource	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testRoute	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testSetCondition	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testSetHost	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testSetMethods	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testSetSchemes	pending	
-Tests/RouteCollectionTest.php	RouteCollectionTest::testUniqueRouteWithGivenName	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testCompile	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testCompileImplicitUtf8Data	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testCompileWithHost	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testRemoveCapturingGroup	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testRequirementCharsetMismatch	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteCharsetMismatch	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithFragmentAsPathParameter	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithSameVariableTwice	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithTooLongVariableName	pending	
-Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithVariableNameStartingWithADigit	pending	
-Tests/RouteTest.php	RouteTest::testCompile	pending	
-Tests/RouteTest.php	RouteTest::testCondition	pending	
-Tests/RouteTest.php	RouteTest::testConstructor	pending	
-Tests/RouteTest.php	RouteTest::testDefaults	pending	
-Tests/RouteTest.php	RouteTest::testHost	pending	
-Tests/RouteTest.php	RouteTest::testInlineDefaultAndRequirement	pending	
-Tests/RouteTest.php	RouteTest::testLocaleDefaultWithLocalizedRoutes	pending	
-Tests/RouteTest.php	RouteTest::testLocaleDefaultWithNonLocalizedRoutes	pending	
-Tests/RouteTest.php	RouteTest::testLocaleRequirementWithLocalizedRoutes	pending	
-Tests/RouteTest.php	RouteTest::testLocaleRequirementWithNonLocalizedRoutes	pending	
-Tests/RouteTest.php	RouteTest::testMethod	pending	
-Tests/RouteTest.php	RouteTest::testOption	pending	
-Tests/RouteTest.php	RouteTest::testOptions	pending	
-Tests/RouteTest.php	RouteTest::testPath	pending	
-Tests/RouteTest.php	RouteTest::testRequirement	pending	
-Tests/RouteTest.php	RouteTest::testRequirementAlternativeStartAndEndRegexSyntax	pending	
-Tests/RouteTest.php	RouteTest::testRequirements	pending	
-Tests/RouteTest.php	RouteTest::testScheme	pending	
-Tests/RouteTest.php	RouteTest::testSerialize	pending	
-Tests/RouteTest.php	RouteTest::testSerializeWhenCompiled	pending	
-Tests/RouteTest.php	RouteTest::testSerializeWhenCompiledWithClass	pending	
-Tests/RouteTest.php	RouteTest::testSerializedRepresentationKeepsWorking	pending	
-Tests/RouteTest.php	RouteTest::testSetInvalidRequirement	pending	
-Tests/RouteTest.php	RouteTest::testUnserializeRejectsObjectInTypedScalarProperty	pending	
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddCollection	ported	crates/routing/tests/route_collection_test.rs::testAddCollection
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddCollectionWithResources	ported	crates/routing/tests/route_collection_test.rs::testAddCollectionWithResources
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddDefaultsAndRequirementsAndOptions	ported	crates/routing/tests/route_collection_test.rs::testAddDefaultsAndRequirementsAndOptions
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddNamePrefix	ported	crates/routing/tests/route_collection_test.rs::testAddNamePrefix
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddNamePrefixCanonicalRouteName	ported	crates/routing/tests/route_collection_test.rs::testAddNamePrefixCanonicalRouteName
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddNamePrefixDoesNotBreakExternalAliases	ported	crates/routing/tests/route_collection_test.rs::testAddNamePrefixDoesNotBreakExternalAliases
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddPrefix	ported	crates/routing/tests/route_collection_test.rs::testAddPrefix
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddPrefixOverridesDefaultsAndRequirements	ported	crates/routing/tests/route_collection_test.rs::testAddPrefixOverridesDefaultsAndRequirements
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddWithPriority	ported	crates/routing/tests/route_collection_test.rs::testAddWithPriority
+Tests/RouteCollectionTest.php	RouteCollectionTest::testAddWithPriorityAndPrefix	ported	crates/routing/tests/route_collection_test.rs::testAddWithPriorityAndPrefix
+Tests/RouteCollectionTest.php	RouteCollectionTest::testClone	ported	crates/routing/tests/route_collection_test.rs::testClone
+Tests/RouteCollectionTest.php	RouteCollectionTest::testCount	ported	crates/routing/tests/route_collection_test.rs::testCount
+Tests/RouteCollectionTest.php	RouteCollectionTest::testDeepOverriddenRoute	ported	crates/routing/tests/route_collection_test.rs::testDeepOverriddenRoute
+Tests/RouteCollectionTest.php	RouteCollectionTest::testGet	ported	crates/routing/tests/route_collection_test.rs::testGet
+Tests/RouteCollectionTest.php	RouteCollectionTest::testIterator	ported	crates/routing/tests/route_collection_test.rs::testIterator
+Tests/RouteCollectionTest.php	RouteCollectionTest::testOverriddenRoute	ported	crates/routing/tests/route_collection_test.rs::testOverriddenRoute
+Tests/RouteCollectionTest.php	RouteCollectionTest::testRemove	ported	crates/routing/tests/route_collection_test.rs::testRemove
+Tests/RouteCollectionTest.php	RouteCollectionTest::testResource	ported	crates/routing/tests/route_collection_test.rs::testResource
+Tests/RouteCollectionTest.php	RouteCollectionTest::testRoute	ported	crates/routing/tests/route_collection_test.rs::testRoute
+Tests/RouteCollectionTest.php	RouteCollectionTest::testSetCondition	ported	crates/routing/tests/route_collection_test.rs::testSetCondition
+Tests/RouteCollectionTest.php	RouteCollectionTest::testSetHost	ported	crates/routing/tests/route_collection_test.rs::testSetHost
+Tests/RouteCollectionTest.php	RouteCollectionTest::testSetMethods	ported	crates/routing/tests/route_collection_test.rs::testSetMethods
+Tests/RouteCollectionTest.php	RouteCollectionTest::testSetSchemes	ported	crates/routing/tests/route_collection_test.rs::testSetSchemes
+Tests/RouteCollectionTest.php	RouteCollectionTest::testUniqueRouteWithGivenName	ported	crates/routing/tests/route_collection_test.rs::testUniqueRouteWithGivenName
+Tests/RouteCompilerTest.php	RouteCompilerTest::testCompile	ported	crates/routing/tests/route_compiler_test.rs::testCompile
+Tests/RouteCompilerTest.php	RouteCompilerTest::testCompileImplicitUtf8Data	ported	crates/routing/tests/route_compiler_test.rs::testCompileImplicitUtf8Data
+Tests/RouteCompilerTest.php	RouteCompilerTest::testCompileWithHost	ported	crates/routing/tests/route_compiler_test.rs::testCompileWithHost
+Tests/RouteCompilerTest.php	RouteCompilerTest::testRemoveCapturingGroup	ported	crates/routing/tests/route_compiler_test.rs::testRemoveCapturingGroup
+Tests/RouteCompilerTest.php	RouteCompilerTest::testRequirementCharsetMismatch	ported	crates/routing/tests/route_compiler_test.rs::testRequirementCharsetMismatch
+Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteCharsetMismatch	ported	crates/routing/tests/route_compiler_test.rs::testRouteCharsetMismatch
+Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithFragmentAsPathParameter	ported	crates/routing/tests/route_compiler_test.rs::testRouteWithFragmentAsPathParameter
+Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithSameVariableTwice	ported	crates/routing/tests/route_compiler_test.rs::testRouteWithSameVariableTwice
+Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithTooLongVariableName	ported	crates/routing/tests/route_compiler_test.rs::testRouteWithTooLongVariableName
+Tests/RouteCompilerTest.php	RouteCompilerTest::testRouteWithVariableNameStartingWithADigit	ported	crates/routing/tests/route_compiler_test.rs::testRouteWithVariableNameStartingWithADigit
+Tests/RouteTest.php	RouteTest::testCompile	ported	crates/routing/tests/route_test.rs::testCompile
+Tests/RouteTest.php	RouteTest::testCondition	ported	crates/routing/tests/route_test.rs::testCondition
+Tests/RouteTest.php	RouteTest::testConstructor	ported	crates/routing/tests/route_test.rs::testConstructor
+Tests/RouteTest.php	RouteTest::testDefaults	ported	crates/routing/tests/route_test.rs::testDefaults
+Tests/RouteTest.php	RouteTest::testHost	ported	crates/routing/tests/route_test.rs::testHost
+Tests/RouteTest.php	RouteTest::testInlineDefaultAndRequirement	ported	crates/routing/tests/route_test.rs::testInlineDefaultAndRequirement
+Tests/RouteTest.php	RouteTest::testLocaleDefaultWithLocalizedRoutes	ported	crates/routing/tests/route_test.rs::testLocaleDefaultWithLocalizedRoutes
+Tests/RouteTest.php	RouteTest::testLocaleDefaultWithNonLocalizedRoutes	ported	crates/routing/tests/route_test.rs::testLocaleDefaultWithNonLocalizedRoutes
+Tests/RouteTest.php	RouteTest::testLocaleRequirementWithLocalizedRoutes	ported	crates/routing/tests/route_test.rs::testLocaleRequirementWithLocalizedRoutes
+Tests/RouteTest.php	RouteTest::testLocaleRequirementWithNonLocalizedRoutes	ported	crates/routing/tests/route_test.rs::testLocaleRequirementWithNonLocalizedRoutes
+Tests/RouteTest.php	RouteTest::testMethod	ported	crates/routing/tests/route_test.rs::testMethod
+Tests/RouteTest.php	RouteTest::testOption	ported	crates/routing/tests/route_test.rs::testOption
+Tests/RouteTest.php	RouteTest::testOptions	ported	crates/routing/tests/route_test.rs::testOptions
+Tests/RouteTest.php	RouteTest::testPath	ported	crates/routing/tests/route_test.rs::testPath
+Tests/RouteTest.php	RouteTest::testRequirement	ported	crates/routing/tests/route_test.rs::testRequirement
+Tests/RouteTest.php	RouteTest::testRequirementAlternativeStartAndEndRegexSyntax	ported	crates/routing/tests/route_test.rs::testRequirementAlternativeStartAndEndRegexSyntax
+Tests/RouteTest.php	RouteTest::testRequirements	ported	crates/routing/tests/route_test.rs::testRequirements
+Tests/RouteTest.php	RouteTest::testScheme	ported	crates/routing/tests/route_test.rs::testScheme
+Tests/RouteTest.php	RouteTest::testSerialize	ported	crates/routing/tests/route_test.rs::testSerialize
+Tests/RouteTest.php	RouteTest::testSerializeWhenCompiled	ported	crates/routing/tests/route_test.rs::testSerializeWhenCompiled
+Tests/RouteTest.php	RouteTest::testSerializeWhenCompiledWithClass	ported	crates/routing/tests/route_test.rs::testSerializeWhenCompiledWithClass
+Tests/RouteTest.php	RouteTest::testSerializedRepresentationKeepsWorking	ported	crates/routing/tests/route_test.rs::testSerializedRepresentationKeepsWorking
+Tests/RouteTest.php	RouteTest::testSetInvalidRequirement	ported	crates/routing/tests/route_test.rs::testSetInvalidRequirement
+Tests/RouteTest.php	RouteTest::testUnserializeRejectsObjectInTypedScalarProperty	ported	crates/routing/tests/route_test.rs::testUnserializeRejectsObjectInTypedScalarProperty
 Tests/RouterTest.php	RouterTest::testDefaultLocaleIsPassedToCompiledGeneratorCacheClass	pending	
 Tests/RouterTest.php	RouterTest::testDefaultLocaleIsPassedToGeneratorClass	pending	
 Tests/RouterTest.php	RouterTest::testGeneratorIsCreatedIfCacheIsNotConfigured	pending	
