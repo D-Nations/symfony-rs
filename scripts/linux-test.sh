@@ -10,6 +10,11 @@
 # seen) is unpacked into an empty directory of a removed Rust container,
 # pinned by digest, which downloads the locked crates itself. The ignored
 # upstream/ checkout, which some tests read, is mounted read-only.
+#
+# The checks run as an unprivileged user (`check`), not root: root reads a
+# file whatever its mode, so tests of unreadable files (chmod 0) would
+# fail under root (owner, November 24). Only installing rustfmt and
+# clippy into the image's toolchain runs as root.
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$root"
@@ -27,10 +32,16 @@ fi
 echo "linux checks at $(git rev-parse --short HEAD): ${args:-workspace}"
 git archive --format=tar HEAD | docker run --rm -i "${mount[@]}" "$image" bash -euo pipefail -c "
     rustup component add rustfmt clippy >/dev/null 2>&1
-    mkdir /work && cd /work && tar -x
-    test -z \"\$(ls -A target 2>/dev/null)\"
-    if [ -d /upstream ]; then ln -s /upstream upstream; fi
-    cargo fmt --check $args
-    cargo clippy --locked --all-targets $args -- -D warnings
-    cargo test --locked $args
+    useradd --create-home --uid 1000 check
+    mkdir /work && chown check:check /work
+    runuser -u check -- env HOME=/home/check CARGO_HOME=/home/check/.cargo \
+        RUSTUP_HOME=\"\$RUSTUP_HOME\" PATH=\"\$PATH\" bash -euo pipefail -c '
+        test \"\$(id -u)\" != 0
+        cd /work && tar -x
+        test -z \"\$(ls -A target 2>/dev/null)\"
+        if [ -d /upstream ]; then ln -s /upstream upstream; fi
+        cargo fmt --check $args
+        cargo clippy --locked --all-targets $args -- -D warnings
+        cargo test --locked $args
+    '
 "
