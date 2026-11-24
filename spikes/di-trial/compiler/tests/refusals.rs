@@ -93,7 +93,10 @@ fn unsupported_input_is_refused_with_its_line() {
     assert_eq!(e.message, "unsupported argument type=\"expression\"");
     assert_eq!(e.line, 5);
     let e = refusal(r#"    <service id="a" class="A" decorates="b"/>"#);
-    assert_eq!(e.message, "unsupported attribute decorates=\"b\" on <service>");
+    assert_eq!(
+        e.message,
+        "unsupported attribute decorates=\"b\" on <service>"
+    );
 }
 
 #[test]

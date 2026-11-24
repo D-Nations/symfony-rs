@@ -329,6 +329,17 @@ container, and those `debug:*` JSON outputs match real Symfony's for the demo
 M3-A closes EventDispatcher's DI integrations and uses the Console subset
 from M1-B for debug commands; it does not require all of M7's Console work.
 
+**Trial, November 24 (owner request):** [spikes/di-trial](spikes/di-trial/README.md)
+emits symfony/demo's compiled container (548 services, recorded from PHP
+after the compiler passes) as Rust in `build.rs`; every service resolves,
+with shared, non-shared, lazy, request and application scopes and PHP's
+order for cycles through method calls. It passes no gate and tests only
+the back half (graph to Rust), not loaders or passes in Rust. Findings for
+M3 (64% of services become request-scoped by propagation from
+`kernel.reset`; XmlDumper's file is incomplete as an interface; declared
+classes are not always the runtime type; Twig's call cycle; lazy services;
+env processors) are in [docs/milestones/m3-di-trial.md](docs/milestones/m3-di-trial.md).
+
 ### M4: Twig (build-time compiler)
 Port Twig 3.30's Lexer, TokenStream, Parser, token parsers, Node tree and
 operator precedence. The compiler emits Rust (quote + prettyplease, as
@@ -764,6 +775,7 @@ Stack rows (searched November 19):
 | Config's YamlReferenceDumper values (`Inline::dump()`; November 22) | symfony-yaml (this workspace's port of symfony/yaml, upstream's own dependency for this class), a second inline dumper written into symfony-config | symfony-yaml, optional, behind symfony-config's `yaml` feature | Upstream calls symfony/yaml's `Inline::dump()`; symfony-yaml reproduces it on its recorded vectors, and a copy would drift from it. No new crate in the lock |
 | composer.json for `dotenv:dump` and `debug:dotenv` (November 21) | A hand-written JSON reader in `php-value` (none exists; it would need PHP's `json_decode()` rules for depth, big integers and invalid UTF-8), `serde_json` (already in the lock as every crate's test dependency) | `serde_json`, optional, only with symfony-dotenv's `console` feature | The commands read `extra.runtime` from a file the project owns; integers that do not fit become floats as in PHP, invalid JSON is `null`. No new crate in the lock |
 | Twig trial emission (spikes/twig-trial, November 24) | Rust source as hand-built strings (no dependency); `quote` + `proc-macro2` + `syn` 2 (already in Cargo.lock through other crates) with [prettyplease](https://docs.rs/prettyplease) 0.2 to lay out the file, as php2rust does; [genco](https://docs.rs/genco) (quasi-quoting with its own formatter) | `quote` + `syn` + `prettyplease`, in the trial compiler only (a build dependency) | It was the planned M4 approach ("quote + prettyplease"), the emitted tokens are checked by `syn` before they are written, and readable output makes generated templates reviewable. M4 repeats this row when the real `twig` crate starts |
+| DI trial input and emission (spikes/di-trial, November 24) | Input: `debug:container --format=json` or the debug container XML it reads (both exist only with `kernel.debug` and are written before the removal passes), or `XmlDumper` on the final `ContainerBuilder` from a recorder; output: hand-built strings, or `quote` + `syn` + `prettyplease` as in the Twig trial; existing Rust DI crates ([shaku](https://docs.rs/crate/shaku), [lockjaw](https://docs.rs/crate/lockjaw/latest/source/userguide/src/setup.md), [fundle](https://docs.rs/crate/fundle/0.3.5), [injectable-rs](https://docs.rs/injectable-rs), [chassis](https://docs.rs/crate/chassis/0.2.0), [rustyinject](https://docs.rs/crate/rustyinject/latest), [dill](https://docs.rs/dill), [dependency-injector](https://docs.rs/crate/dependency-injector/2.1.0)) | `XmlDumper` output of the final graph (prod, no debug), read with `php-dom` and `XmlUtils::phpize()`; `quote` + `syn` + `prettyplease`, in the trial compiler only | It is the graph `PhpDumper` compiles, in Symfony's own format, read with workspace crates (no new dependency). The DI crates take their graph from hand-written Rust attributes and could not take Symfony's. M3 repeats this row when the real crate starts |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
