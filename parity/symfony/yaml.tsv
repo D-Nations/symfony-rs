@@ -288,7 +288,7 @@ Tests/ParserTest.php	ParserTest::testParserThrowsExceptionWithCorrectLineNumber	
 Tests/ParserTest.php	ParserTest::testParsingIniThrowsException	ported	crates/yaml/tests/parser_test.rs::testParsingIniThrowsException
 Tests/ParserTest.php	ParserTest::testParsingMultipleDocuments	ported	crates/yaml/tests/parser_test.rs::testParsingMultipleDocuments
 Tests/ParserTest.php	ParserTest::testParsingNonExistentFilesThrowsException	ported	crates/yaml/tests/parser_test.rs::testParsingNonExistentFilesThrowsException
-Tests/ParserTest.php	ParserTest::testParsingNotReadableFilesThrowsException	n/a: upstream skips it as root and on Windows, and the oracle runs as root; parseFile() keeps the cannot-be-read branch	
+Tests/ParserTest.php	ParserTest::testParsingNotReadableFilesThrowsException	ported	crates/yaml/tests/parser_test.rs::testParsingNotReadableFilesThrowsException
 Tests/ParserTest.php	ParserTest::testPhpConstantTagMappingAsScalarKey	ported	crates/yaml/tests/parser_test.rs::testPhpConstantTagMappingAsScalarKey
 Tests/ParserTest.php	ParserTest::testPhpConstantTagMappingKey	ported	crates/yaml/tests/parser_test.rs::testPhpConstantTagMappingKey
 Tests/ParserTest.php	ParserTest::testReferenceResolvingInInlineStrings	ported	crates/yaml/tests/parser_test.rs::testReferenceResolvingInInlineStrings

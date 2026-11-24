@@ -13,7 +13,7 @@ Values are `php-value` values (PLAN.md decision 3).
 | When strings need double or single quoting (keywords, `\s`/`\p{Zs}` under `/u`), and how they are escaped (`str_replace` order) | `Escaper.php` | 347 recorded cases |
 | `TaggedValue` | `Tag/TaggedValue.php` | InlineTest tag tests |
 | Inline YAML: flow sequences and mappings, quoted and plain scalars, ints/floats/octal/hex/`.inf`/`.nan`, booleans and null, anchors and aliases, merge keys, `!!str` `!!float` `!!binary`, custom tags, `!php/const` `!php/enum` `!php/object`, `PARSE_OBJECT_FOR_MAP`, nesting and alias limits, and `dump()` with the `DUMP_*` flags | `Inline.php`, `ParserState.php` | InlineTest (84 of 85; 1 `n/a`), on upstream's provider data |
-| Block YAML: mappings and sequences (compact and unindented), block scalars with chomping and indentation indicators, plain and quoted multi-line scalars, multi-line flow collections, anchors and aliases (circular references), merge keys, tags on blocks, `%YAML` headers, document markers and the root node's properties, line numbers and snippets in errors, `parseFile()` | `Parser.php` | ParserTest (171 of 172, 1 `n/a`): every call each upstream test makes, replayed |
+| Block YAML: mappings and sequences (compact and unindented), block scalars with chomping and indentation indicators, plain and quoted multi-line scalars, multi-line flow collections, anchors and aliases (circular references), merge keys, tags on blocks, `%YAML` headers, document markers and the root node's properties, line numbers and snippets in errors, `parseFile()` | `Parser.php` | ParserTest (172 of 172): recorded calls replayed; unreadable-file case exercised live on Unix against the unprivileged oracle |
 | Block YAML out: mappings and sequences up to the inline level, `DUMP_MULTI_LINE_LITERAL_BLOCK` (indentation and chomping indicators), tagged values, `DUMP_OBJECT_AS_MAP`, `DUMP_COMPACT_NESTED_MAPPING`, `DUMP_NUMERIC_KEY_AS_STRING`, the indentation | `Dumper.php` | DumperTest (66 of 66), replayed |
 | The YAML test suite cases upstream runs (200 of the 402 in yaml-test-suite 2022.01.17; upstream skips the rest) | `Parser.php` | YamlTestSuiteTest, replayed |
 | Timestamps: what PHP's date parser accepts among strings matching the timestamp regex, rollover of out-of-range fields, int/float timestamps and `PARSE_DATETIME` objects | `Inline.php` + PHP behaviour | 1,221 recorded inputs |
@@ -28,6 +28,14 @@ with recording subclasses of the real Parser and Dumper, and fails unless
 every upstream test passes there). The Rust tests replay those calls under
 the upstream test names and check the exception each test expects
 (`tests/common/replay.rs`).
+The permission-dependent ParserTest uses `tests/data/unreadable_file.json`
+instead of the skipped root recording: `scripts/record.sh yaml-unreadable`
+runs the pinned oracle as UID 1000, copies the upstream fixture into its
+private temporary directory, applies mode 0200, and records the exception
+plus readable/restored controls. The Rust case builds the same preconditions
+in a private temporary directory on Unix. It requires an unprivileged
+process; `scripts/linux-test.sh` enforces this. Windows omits this Unix
+permission test, matching upstream's platform restriction.
 
 `tests/Fixtures/` is upstream's Tests/Fixtures (MIT), without the PHP
 enums. `tests/yaml-test-suite/` has the `in.yaml` of each case

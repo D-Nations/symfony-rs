@@ -14,6 +14,7 @@
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
 #   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter,parse_str,parse_url,loose_equals,http_build_query}.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
+#   scripts/record.sh yaml-unreadable crates/yaml/tests/data/unreadable_file.json (unprivileged oracle)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json, loaders.json
 #   scripts/record.sh config-xml-utils crates/config/tests/data/xml_utils.json
@@ -190,6 +191,19 @@ php_value() {
     echo "http_build_query() vectors written to $out"
 }
 
+yaml_unreadable() {
+    local out=crates/yaml/tests/data/unreadable_file.json tmp
+    mkdir -p oracle/out
+    tmp=$(mktemp -p oracle/out)
+    # PHP's root process can read chmod(0200) files. This case must run
+    # without that privilege; repository mounts remain read-only.
+    docker compose -f oracle/compose.yaml run --rm -T --user 1000:1000 \
+        --env USER=check php oracle/recorders/yaml_unreadable.php > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1])); assert d["unreadable"][0] == "throws"; assert d["readable"] == d["restored"]' "$tmp"
+    mv "$tmp" "$out"
+    echo "Unprivileged Parser::parseFile() answers written to $out"
+}
+
 yaml() {
     local name out tmp
     mkdir -p oracle/out crates/yaml/tests/data
@@ -226,6 +240,7 @@ yaml() {
         mv "$tmp" "$out"
         echo "Yaml $class calls written to $out"
     done
+    yaml_unreadable
 }
 
 dotenv() {
@@ -566,6 +581,7 @@ case "${1:-}" in
     stopwatch) stopwatch ;;
     php-value) php_value ;;
     yaml) yaml ;;
+    yaml-unreadable) yaml_unreadable ;;
     dotenv) dotenv ;;
     config) config ;;
     config-xml-utils) config_xml_utils ;;
@@ -587,5 +603,5 @@ case "${1:-}" in
     http-foundation-releases) http_foundation_releases ;;
     twig-trial) twig_trial ;;
     all) routing; routing_route; routing_request_context; routing_url_generator; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
 esac

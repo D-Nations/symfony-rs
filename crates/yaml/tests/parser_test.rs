@@ -7,8 +7,9 @@
 //!
 //! Inputs over 64 KiB are not recorded: the four tests that build them
 //! with `str_repeat()` build them here the same way, and check them
-//! against the recorded length. testParsingNotReadableFilesThrowsException
-//! is skipped upstream when run as root or on Windows, as on the oracle.
+//! against the recorded length. The unreadable-file case is exercised
+//! live on Unix against an unprivileged PHP oracle recording; its old
+//! root-oracle recording was skipped. scripts/linux-test.sh runs non-root.
 //!
 //! Upstream: symfony/yaml Tests/ParserTest.php
 #![allow(non_snake_case)]
@@ -155,7 +156,6 @@ const REPLAYED: &[&str] = &[
     "testParsingIniThrowsException",
     "testParsingMultipleDocuments",
     "testParsingNonExistentFilesThrowsException",
-    "testParsingNotReadableFilesThrowsException",
     "testPhpConstantTagMappingAsScalarKey",
     "testPhpConstantTagMappingKey",
     "testReferenceResolvingInInlineStrings",
@@ -809,9 +809,78 @@ fn testParsingNonExistentFilesThrowsException() -> TestResult {
     replay("testParsingNonExistentFilesThrowsException")
 }
 
+#[cfg(unix)]
 #[test]
 fn testParsingNotReadableFilesThrowsException() -> TestResult {
-    replay("testParsingNotReadableFilesThrowsException")
+    use std::{
+        fs,
+        os::unix::fs::{DirBuilderExt, PermissionsExt},
+        path::PathBuf,
+        time::{SystemTime, UNIX_EPOCH},
+    };
+
+    struct Directory(PathBuf);
+    impl Drop for Directory {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    let nonce = SystemTime::now().duration_since(UNIX_EPOCH)?.as_nanos();
+    let directory = std::env::temp_dir().join(format!(
+        "symfony-yaml-parser-{}-{nonce}",
+        std::process::id()
+    ));
+    fs::DirBuilder::new().mode(0o700).create(&directory)?;
+    let directory = Directory(directory);
+    fs::create_dir(directory.0.join("Fixtures"))?;
+    let file = directory.0.join("Fixtures/not_readable.yml");
+    fs::write(&file, include_bytes!("Fixtures/not_readable.yml"))?;
+    let filename = String::from_utf8(php_value::path::from_path(&file))?;
+    let root = String::from_utf8(php_value::path::from_path(&directory.0))?;
+    let recorded: Json = serde_json::from_str(include_str!("data/unreadable_file.json"))?;
+    let mut parser = Parser::new();
+
+    let readable = parser.parse_file(&filename, Flags::NONE)?;
+    assert!(same(
+        &php_value::vectors::decode(&recorded["readable"])?,
+        &readable
+    ));
+    fs::set_permissions(&file, fs::Permissions::from_mode(0o200))?;
+    assert_eq!(
+        fs::File::open(&file).err().map(|error| error.kind()),
+        Some(std::io::ErrorKind::PermissionDenied),
+        "Run this permission-dependent case as an unprivileged user."
+    );
+
+    // The Result error is ParseException, as upstream expects.
+    let error = parser
+        .parse_file(&filename, Flags::NONE)
+        .err()
+        .ok_or("the unreadable file unexpectedly parsed")?;
+    assert_eq!(recorded["unreadable"][0], "throws");
+    assert_eq!(
+        recorded["unreadable"][1],
+        r"Symfony\Component\Yaml\Exception\ParseException"
+    );
+    let expected = recorded["unreadable"][2]
+        .as_str()
+        .ok_or("missing recorded exception message")?
+        .replace("{tmp}", &root);
+    assert_eq!(error.get_message().as_bytes(), expected.as_bytes());
+    // ParserTest.php's expectExceptionMessageMatches(), unchanged.
+    assert!(
+        regex::Regex::new(r#"^File ".+/Fixtures/not_readable.yml" cannot be read\.$"#)?
+            .is_match(&error.get_message().to_string())
+    );
+
+    fs::set_permissions(&file, fs::Permissions::from_mode(0o644))?;
+    let restored = parser.parse_file(&filename, Flags::NONE)?;
+    assert!(same(
+        &php_value::vectors::decode(&recorded["restored"])?,
+        &restored
+    ));
+    Ok(())
 }
 
 #[test]
@@ -1044,12 +1113,13 @@ fn testYamlDirective() -> TestResult {
     replay("testYamlDirective")
 }
 
-/// The tests written out below, as they build inputs too large to record.
+/// Tests with constructed large inputs or a live Unix filesystem precondition.
 const BUILT: &[&str] = &[
     "testCanParseVeryLongValue",
     "testParseHandlesLargeDocumentMarkers",
     "testParseHandlesLargeLeadingComments",
     "testParseHandlesLargeYamlHeaders",
+    "testParsingNotReadableFilesThrowsException",
 ];
 
 #[test]

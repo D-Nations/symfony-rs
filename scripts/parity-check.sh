@@ -58,7 +58,7 @@ done
 
 # Rust test files that port upstream tests: every test* fn must be claimed.
 while IFS= read -r file; do
-    grep -Eq '^//! Upstream: [^ ]+ .*(^| )([^ ]*/)?[Tt]ests/' "$file" || continue
+    grep -Eq '^//! Upstream: [^[:space:]]+[[:blank:]]+([^[:space:]]+[[:blank:]]+)*([^[:space:]]*/)?[Tt]ests/' "$file" || continue
     while IFS= read -r fn; do
         if ! grep -qxF "$file::$fn" "$claims"; then
             echo "$file::$fn ports an upstream test but no manifest row claims it" >&2; status=1
