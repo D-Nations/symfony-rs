@@ -1036,6 +1036,7 @@ Stack rows (searched November 22):
 | `FileinfoMimeTypeGuesser` content guessing (PHP's `finfo`; compared November 24 on 12,843 upstream files and 124 samples against PHP 8.4.27) | [pure-magic](https://docs.rs/pure-magic) 0.5.2 with [magic-db](https://docs.rs/magic-db) 0.7.2 (safe Rust, `forbid(unsafe_code)`, GPL-3.0 OR BSD-2-Clause); pure-magic loading the `file` 5.45 Magdir (6 of 341 files fail to parse, fewer matches); [libmagic-rs](https://docs.rs/libmagic-rs) 0.12 (no MIME output); `magic` 0.17 / `magic-sys` (FFI to the system's libmagic, excluded by decision 18) | `pure-magic` =0.5.2 and `magic-db` =0.7.2 in `symfony-mime`, under the BSD-2-Clause option | Closest to PHP's answers (97.5% of upstream files, 86% of the binary samples), no C library, works on Windows. It adds about 60 crates to the lock (pest, regex, serde, postcard, jiff, flate2, tar, memmap2, stacker); `stacker`/`psm` compile a small assembly file with `cc`, so a C toolchain is needed to build. Versions are pinned with `=`, because a new rule set changes answers; the differences list (`crates/mime/tests/data/fileinfo_differences.tsv`) shows the effect of an update |
 | Routing's Route, RouteCompiler and RouteCollection (searched November 24) | No Rust port of Symfony Routing on GitHub or crates.io; router crates ([matchit](https://docs.rs/matchit), [path-tree](https://docs.rs/path-tree), [route-recognizer](https://docs.rs/route-recognizer), axum's and actix's routers) have their own pattern languages: no inline `{name<requirement>?default}`, separators before optional trailing variables, host patterns, PCRE requirements or Symfony's compiled regex and tokens | Ported from Route.php, RouteCompiler.php and RouteCollection.php on php-value and php-pcre (workspace crates), no new dependency | The compiled regex, tokens, static prefix and `serialize()` bytes are what the matcher dumpers, generator and cached routes read; 2,000 routes and 300 collection scripts recorded from PHP 8.4.27 pin them |
 | PHP's `parse_url()` (RequestContext::fromUri(), searched November 24) | [url](https://docs.rs/url) (WHATWG URL Standard: normalizes, lowercases, percent-encodes, other failures), [http::Uri](https://docs.rs/http) and [fluent-uri](https://docs.rs/fluent-uri) (strict RFC 3986: reject control bytes, spaces and `[` hosts PHP accepts), symfony-filesystem's scheme-only `parse_url_scheme()` | Written in `php-value::url` from the PHP manual and recorded answers, no dependency | PHP's components for malformed input (`host:port` without `//`, `false` for empty hosts and long ports, control bytes as `_`, `file:///`) are what `fromUri()` reads; 12,119 calls recorded from PHP 8.4.27 pin them |
+| PHP's loose equality `==` (UrlGenerator's `array_udiff_assoc()` against defaults; searched November 24) | No Rust crate implements it: [ext-php-rs](https://docs.rs/ext-php-rs) and [phper](https://docs.rs/phper) bind the PHP engine through FFI (needs libphp and `unsafe`); symfony-console's `loose_equals_str()` and symfony-finder's `loose_eq()` cover a string or scalar operand only | Written in `php-value::compare` from the PHP manual's comparison table, no dependency | Every PHP type is compared (arrays by key, objects by class and properties, numeric strings, big integer strings as bytes, NAN); 8,649 pairs recorded from PHP 8.4.27 pin it. The two crate copies can move to it later |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1106,6 +1107,16 @@ Stack rows (searched November 22):
       3,000 `fromUri()` calls recorded, all matching. Next, in separate
       sessions: `Matcher/UrlMatcher.php` and `Generator/UrlGenerator.php`
       (with GHSA-72xp-p242-47p9's fix) on these classes.
+- [ ] Routing stage 3, the generator (November 24;
+      [docs/milestones/m2-a-routing-url-generator.md](docs/milestones/m2-a-routing-url-generator.md)):
+      `Generator/UrlGenerator.php` with its two interfaces, on the ported
+      Route, RouteCollection and RequestContext. `php-value` gains loose
+      equality (`compare::loose_equals()`) and `http_build_query()` with
+      RFC 3986 and floats. UrlGeneratorTest 91 of 91; 3,000 `generate()`
+      and 2,000 `getRelativePath()` calls, 8,649 `==` pairs and 1,022
+      `http_build_query()` calls recorded, all matching.
+      GHSA-72xp-p242-47p9 is `covered`. The demo's typed generator is
+      unchanged. Next: `CompiledUrlGenerator.php` and its dumper.
 - [ ] HttpFoundation stage 3 (November 23;
       [docs/milestones/m2-a-http-foundation-stage3.md](docs/milestones/m2-a-http-foundation-stage3.md)):
       `AcceptHeader.php` and `AcceptHeaderItem.php` as an API

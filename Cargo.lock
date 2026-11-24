@@ -1172,6 +1172,7 @@ version = "0.1.0"
 dependencies = [
  "php-pcre",
  "php-value",
+ "psr-log",
  "serde_json",
  "symfony-config",
  "symfony-deprecation-contracts",
