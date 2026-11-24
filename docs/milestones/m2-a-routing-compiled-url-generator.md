@@ -77,7 +77,13 @@ No advisory in the upstream watch names these files.
 
 ## Checks
 
-See the PR.
+`cargo fmt --check` ok, `cargo clippy --all-targets -- -D warnings`
+clean, `scripts/sources.sh --check` ok, `scripts/parity-check.sh` ok
+(routing 204 ported, 1 n/a, 691 pending). `cargo test` on the Windows
+host: 2,711 passed, 1 failed, the known Windows-only `symfony-filesystem`
+`testReadNonExistentFile` (OS error text), which this branch does not
+touch. `scripts/linux-test.sh -p symfony-routing` on the committed branch
+(fmt, clippy, tests, as a non-root user): 217 passed, 0 failed.
 
 ## Not done
 
