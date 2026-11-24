@@ -6,11 +6,13 @@ Verified November 24, 2026 (Asia/Tokyo), in the isolated
 ## Scope
 
 Original PR head: `945fb2227889fddcbd18c3eda907cbf1eedb6991`.
-Current main `c9288fd` was merged without rewriting the original PR commits.
-The only crate edits are rustfmt changes in **php-value** and
-**symfony-options-resolver**, inherited from main's failing format check.
-No runtime behavior, dependency, lockfile, source mapping or parity status
-was changed.
+Main `c9288fd` was initially merged without rewriting the original PR commits.
+Formatting repairs in **php-value** and **symfony-options-resolver** fixed
+main's inherited failures; another session subsequently merged the same
+formatting and Routing improvements into main `d6c4812`. That main was
+then merged here and both full gates were rerun. The final PR diff touches
+**no crate source files**. No runtime behavior, dependency, lockfile, source
+mapping or parity status was changed by this PR.
 
 The runner finds Git Bash on Windows, reports command timings, runs the
 tooling tests in the full gate and still runs doctests after nextest fails.
@@ -68,6 +70,27 @@ by runner tests, but the optional nextest binary was not exercised.
 Raw logs and Cargo timing artifacts remain ignored under oracle/out/ and
 target/. All containers started for these checks exited and were removed.
 Only this worktree's two development cache volumes are retained.
+
+## Recheck after main advanced
+
+While validation was finishing, another session merged PR #48 into main
+(`d6c4812`): Routing's ordered lookup implementation, two tests, formatting
+and plan updates. Merged here as `eccca31`; there were no conflicts.
+Both complete gates were rerun because runtime code changed.
+
+| Final check at eccca31 | Result |
+|---|---|
+| python scripts/dev_check.py full | exit 0 |
+| Tooling discovery | 24 tests pass, including malformed-TSV negative subcases |
+| Windows rustfmt / Clippy | both exit 0 |
+| Windows Cargo tests | **2,718 passed, 0 failed, 0 ignored**; 85.08 s |
+| Source and parity checks | both exit 0; 0.21 s and 0.33 s |
+| Fresh Linux workspace | **2,728 passed, 0 failed, 0 ignored**; format and Clippy exit 0; 194.50 s wall time |
+
+Final logs are oracle/out/pr46-host-merged.log and
+oracle/out/pr46-linux-merged.log. Differences in elapsed time between runs
+include warm OS caches, concurrent load and the merged Routing work; they
+do not establish a speedup for the tooling alone. No demo comparison ran.
 
 ## Observed timings
 
