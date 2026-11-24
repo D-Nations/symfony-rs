@@ -171,7 +171,7 @@ fn item_bytes(token: &Value, i: i64) -> Result<PhpString, Error> {
 
 /// `(string) $value`: an array is `"Array"` (PHP warns), an object
 /// without `__toString()` an `\Error`.
-fn cast(value: &Value) -> Result<PhpString, Error> {
+pub(crate) fn cast(value: &Value) -> Result<PhpString, Error> {
     match value {
         Value::Array(_) => Ok(PhpString::from("Array")),
         Value::Object(o) => o.to_php_string().ok_or_else(|| {
@@ -680,42 +680,85 @@ impl UrlGenerator {
 
     /// The route `generate()` uses for `$name` and `$locale`.
     fn find(&self, name: &[u8], parameters: &PhpArray) -> Result<Option<&Route>, Error> {
-        let locale = get(parameters, b"_locale")
-            .or_else(|| self.context.parameter(b"_locale").filter(|v| !v.is_null()))
-            .filter(|v| truthy(v))
-            .cloned()
-            .or_else(|| self.default_locale.clone().map(Value::String));
-
+        let locale = requested_locale(&self.context, parameters, self.default_locale.as_ref());
         let mut route = None;
         if let Some(locale) = locale {
-            let mut text = cast(&locale)?.as_bytes().to_vec();
-            let mut first = true;
-            loop {
-                let localized = concat(&[name, b".", &text]);
+            for_each_locale(&locale, |text| {
+                let localized = concat(&[name, b".", text]);
                 route = self.routes.get(&localized)?;
-                if let Some(found) = route {
+                Ok(route.is_some_and(|found| {
                     let canonical = found.default_value(b"_canonical_route");
-                    if canonical.is_some_and(|c| c.identical(&Value::string(name)))
+                    canonical.is_some_and(|c| c.identical(&Value::string(name)))
                         || self.routes.alias(&localized).is_some()
-                    {
-                        break;
-                    }
-                }
-                if first {
-                    first = false;
-                    // strstr() takes a string
-                    argument(&locale, "strstr", 1, "haystack")?;
-                }
-                match before_underscore(&text) {
-                    Some(prefix) => text = prefix.to_vec(),
-                    None => break,
-                }
-            }
+                }))
+            })?;
         }
 
         match route {
             Some(route) => Ok(Some(route)),
             None => self.routes.get(name),
+        }
+    }
+}
+
+/// `$parameters['_locale'] ?? $this->context->getParameter('_locale') ?:
+/// $this->defaultLocale`.
+pub(crate) fn requested_locale(
+    context: &RequestContext,
+    parameters: &PhpArray,
+    default_locale: Option<&PhpString>,
+) -> Option<Value> {
+    get(parameters, b"_locale")
+        .or_else(|| context.parameter(b"_locale").filter(|v| !v.is_null()))
+        .filter(|v| truthy(v))
+        .cloned()
+        .or_else(|| default_locale.cloned().map(Value::String))
+}
+
+/// `do { if ($found($locale)) break; } while (false !== $locale =
+/// strstr($locale, '_', true));`: the locale as a string, then each part
+/// before its first `_`, until `found` says so. `strstr()` takes a string
+/// argument, so an array locale is a TypeError after the first try.
+pub(crate) fn for_each_locale(
+    locale: &Value,
+    mut found: impl FnMut(&[u8]) -> Result<bool, Error>,
+) -> Result<(), Error> {
+    let mut text = cast(locale)?.as_bytes().to_vec();
+    let mut first = true;
+    loop {
+        if found(&text)? {
+            return Ok(());
+        }
+        if first {
+            first = false;
+            argument(locale, "strstr", 1, "haystack")?;
+        }
+        match before_underscore(&text) {
+            Some(prefix) => text = prefix.to_vec(),
+            None => return Ok(()),
+        }
+    }
+}
+
+/// A localized route's `_locale`: dropped from the parameters when the
+/// path has no `{_locale}`, else the route's own unless one is given.
+pub(crate) fn localize_parameters(
+    defaults: &PhpArray,
+    variables: &PhpArray,
+    parameters: &mut PhpArray,
+) {
+    if isset(defaults, b"_canonical_route") && isset(defaults, b"_locale") {
+        let locale = Value::string("_locale");
+        if !variables.values().any(|v| v.identical(&locale)) {
+            parameters.remove(&Key::from("_locale"));
+        } else if !isset(parameters, b"_locale") {
+            parameters.insert(
+                "_locale",
+                defaults
+                    .get(&Key::from("_locale"))
+                    .cloned()
+                    .unwrap_or_default(),
+            );
         }
     }
 }
@@ -801,20 +844,7 @@ impl UrlGeneratorInterface for UrlGenerator {
         let defaults = route.defaults();
         let variables = compiled.variables();
 
-        if isset(defaults, b"_canonical_route") && isset(defaults, b"_locale") {
-            let locale = Value::string("_locale");
-            if !variables.values().any(|v| v.identical(&locale)) {
-                parameters.remove(&Key::from("_locale"));
-            } else if !isset(&parameters, b"_locale") {
-                parameters.insert(
-                    "_locale",
-                    defaults
-                        .get(&Key::from("_locale"))
-                        .cloned()
-                        .unwrap_or_default(),
-                );
-            }
-        }
+        localize_parameters(defaults, variables, &mut parameters);
 
         self.do_generate(
             variables,

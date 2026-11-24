@@ -14,6 +14,8 @@
 
 pub mod alias;
 pub mod compiled_route;
+pub mod compiled_url_generator;
+pub mod compiled_url_generator_dumper;
 pub mod exception;
 pub mod generator;
 mod php;
