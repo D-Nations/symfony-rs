@@ -66,7 +66,9 @@ clean, `scripts/sources.sh --check` ok, `scripts/parity-check.sh` ok
 (routing 94 ported, 1 n/a, 801 pending). `cargo test` on the Windows
 host: 2,526 passed, 1 failed, the known Windows-only
 `symfony-filesystem` `testReadNonExistentFile` (OS error text), which
-this branch does not touch. Linux run: see the PR.
+this branch does not touch. `scripts/linux-test.sh -p symfony-routing -p
+php-value` on the committed branch (fmt, clippy, tests): 125 passed, 0
+failed.
 
 ## Advisories
 
