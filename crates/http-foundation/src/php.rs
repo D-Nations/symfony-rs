@@ -130,20 +130,8 @@ pub fn pathinfo_extension(name: &[u8]) -> &[u8] {
     }
 }
 
-/// `basename($path)` (no suffix): the last component, without trailing
-/// separators (`/`, and `\` on Windows).
-pub fn basename(path: &[u8]) -> &[u8] {
-    let separator = |c: &u8| *c == b'/' || (cfg!(windows) && *c == b'\\');
-    let end = path
-        .iter()
-        .rposition(|c| !separator(c))
-        .map_or(0, |i| i + 1);
-    let trimmed = &path[..end];
-    match trimmed.iter().rposition(separator) {
-        Some(at) => &trimmed[at + 1..],
-        None => trimmed,
-    }
-}
+/// `basename($path)` (no suffix), `/` being the separator.
+pub use php_value::path::basename;
 
 /// The TypeError PHP throws for argument `n` of `new UploadedFile()`.
 fn type_error(n: usize, name: &str, expected: &str, given: &Value) -> Error {
