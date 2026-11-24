@@ -489,6 +489,9 @@ crates/psr-log/src/lib.rs	psr/log	src/AbstractLogger.php	f16e1d5863e37f8d8c2a017
 crates/psr-log/src/lib.rs	psr/log	src/LoggerTrait.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
 crates/routing/src/alias.rs	symfony/routing	Alias.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/compiled_route.rs	symfony/routing	CompiledRoute.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/compiled_url_generator.rs	symfony/routing	Generator/CompiledUrlGenerator.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/compiled_url_generator_dumper.rs	symfony/routing	Generator/Dumper/CompiledUrlGeneratorDumper.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/compiled_url_generator_dumper.rs	symfony/routing	Generator/Dumper/GeneratorDumper.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/exception.rs	symfony/routing	Exception/ExceptionInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/exception.rs	symfony/routing	Exception/InvalidArgumentException.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/exception.rs	symfony/routing	Exception/InvalidParameterException.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
@@ -514,6 +517,7 @@ crates/routing/src/url_generator.rs	symfony/routing	Generator/UrlGenerator.php	f
 crates/routing/src/url_generator.rs	symfony/routing	Generator/UrlGeneratorInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/url_generator.rs	symfony/routing	Generator/ConfigurableRequirementsInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/compiled_route_test.rs	symfony/routing	Tests/CompiledRouteTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/tests/compiled_url_generator_dumper_test.rs	symfony/routing	Tests/Generator/Dumper/CompiledUrlGeneratorDumperTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/request_context_test.rs	symfony/routing	Tests/RequestContextTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/route_collection_test.rs	symfony/routing	Tests/RouteCollectionTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/route_compiler_test.rs	symfony/routing	Tests/RouteCompilerTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3

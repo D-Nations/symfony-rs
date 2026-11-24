@@ -20,6 +20,7 @@ unofficial and is not affiliated with or endorsed by Symfony.
 | `request_context::RequestContext`: constructor defaults, base URL without trailing slashes, uppercased method, lowercased host and scheme, ports, query string (null is `''`), parameters, `isSecure()`, `fromUri()` (URIs with a backslash before `?`/`#`, an end byte up to space, or CR/LF/tab read as `''`; the path as base URL; a port for the scheme it names, compared before lowercasing). `fromRequest()` is not ported (it needs HttpFoundation's Request) | `RequestContext.php`; RequestContextTest 16 of 18 (1 `n/a`, `testFromRequest` pending); 3,000 `fromUri()` and 10 `setBaseUrl()` calls recorded (`tests/data/request_context.json`) |
 | `exception`: every routing exception class with its PHP ancestry (`Error::is_a()`), MethodNotAllowedException's uppercased allowed methods and MissingMandatoryParametersException's route name, parameters and message (`Error::detail()`) | `Exception/*.php` (no upstream test class; used by the matcher and generator stages) |
 | `url_generator::UrlGenerator`: `generate()` with localized routes (`_locale` from the parameters, the context or the default locale, `_canonical_route`, aliases), defaults and context parameters, optional and important variables, requirement checks anchored as a whole after removing look-arounds (GHSA-72xp-p242-47p9) in strict, logging (`Some(false)`) and unchecked (`None`) modes, path encoding with dot segments, host tokens, scheme requirements, the four reference types, extra and `_query` parameters compared with defaults by `==` and built with `http_build_query()` (RFC 3986), objects turned into their public properties or `__toString()` (circular references refused), fragments; `getRelativePath()`. The logger receives context values as strings; a subclass's `$decodedChars` is not ported | `Generator/UrlGenerator.php`, `UrlGeneratorInterface.php`, `ConfigurableRequirementsInterface.php`; UrlGeneratorTest 91 of 91; 3,000 `generate()` and 2,000 `getRelativePath()` calls recorded (`tests/data/url_generator.json`) |
+| `compiled_url_generator::CompiledUrlGenerator` and `compiled_url_generator_dumper::CompiledUrlGeneratorDumper`: `getCompiledRoutes()` and `getCompiledAliases()` (alias chains with loosely compared cycle detection, missing targets, deprecations collected and triggered, `_canonical_route` for localized alias names) as data; `generate()` on that data (localized names by `_canonical_route`, alias deprecations). `dump()`, which writes the data as PHP code, is not ported (owner, November 24: a build-time emitter later); `compiled()` is what its file returns | `Generator/CompiledUrlGenerator.php`, `Generator/Dumper/CompiledUrlGeneratorDumper.php`, `GeneratorDumper.php`; CompiledUrlGeneratorDumperTest 21 of 21; 1,500 dumped collections and 3,690 calls through both generators recorded (`tests/data/compiled_url_generator.json`) |
 
 `RouteCollection<T>` holds ordered `Definition<T>` registrations. Each
 definition contains literal/parameter segments and a startup-created target
@@ -51,7 +52,8 @@ cargo test -p symfony-routing
 ```
 
 The ported Route classes (`route`, `compiled_route`, `route_compiler`,
-`request_context`, `route_collection`, `alias`, `url_generator`) are Symfony's, and are not yet used by the
+`request_context`, `route_collection`, `alias`, `url_generator`,
+`compiled_url_generator`, `compiled_url_generator_dumper`) are Symfony's, and are not yet used by the
 typed matcher and generator above. A collection owns its routes (PHP
 shares Route objects between handles), and `compiler_class` is chosen at
 build time with `Route::compile_with::<C>()`. Their tests are
@@ -60,7 +62,10 @@ build time with `Route::compile_with::<C>()`. Their tests are
 `url_generator_test.rs`, plus the replays `route_recorded.rs`
 (`scripts/record.sh routing-route`), `request_context_recorded.rs`
 (`scripts/record.sh routing-request-context`) and
-`url_generator_recorded.rs` (`scripts/record.sh routing-url-generator`). Not reproduced, and refused instead:
+`url_generator_recorded.rs` (`scripts/record.sh routing-url-generator`),
+with `compiled_url_generator_dumper_test.rs` and
+`compiled_url_generator_recorded.rs` (`scripts/record.sh
+routing-compiled-url-generator`). Not reproduced, and refused instead:
 the "called in" suffix of a TypeError for a non-string requirement, a
 non-array `_route_mapping` default when a pattern adds a mapping, and a
 `_canonical_route` default that cannot be concatenated in

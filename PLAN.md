@@ -1273,6 +1273,19 @@ Stack rows (searched November 22):
       `http_build_query()` calls recorded, all matching.
       GHSA-72xp-p242-47p9 is `covered`. The demo's typed generator is
       unchanged. Next: `CompiledUrlGenerator.php` and its dumper.
+- [ ] Routing stage 4, the compiled generator (November 24;
+      [docs/milestones/m2-a-routing-compiled-url-generator.md](docs/milestones/m2-a-routing-compiled-url-generator.md)):
+      `Generator/CompiledUrlGenerator.php` and
+      `Generator/Dumper/CompiledUrlGeneratorDumper.php` with
+      `GeneratorDumper.php`. The dumper's compiled routes and aliases are
+      data; `dump()` (PHP code for `require`) is not ported and becomes a
+      build-time emitter with the route loaders (owner, November 24).
+      CompiledUrlGeneratorDumperTest 21 of 21; 1,500 dumped collections and
+      3,690 calls through both generators recorded, all matching.
+      Recording found that `RouteCollection::get()` detects alias cycles
+      with a loose `array_search()` (`"010"` is `"10"`); fixed here.
+      Next: `RouteCollection::add()` is quadratic in the number of routes
+      (8 s for 32,769 in a debug build).
 - [ ] HttpFoundation stage 3 (November 23;
       [docs/milestones/m2-a-http-foundation-stage3.md](docs/milestones/m2-a-http-foundation-stage3.md)):
       `AcceptHeader.php` and `AcceptHeaderItem.php` as an API

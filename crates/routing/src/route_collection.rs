@@ -20,7 +20,7 @@
 #[cfg(feature = "config")]
 use std::sync::Arc;
 
-use php_value::{PhpArray, PhpString};
+use php_value::{PhpArray, PhpString, Value, compare::loose_equals};
 #[cfg(feature = "config")]
 use symfony_config::resource::ResourceInterface;
 use symfony_deprecation_contracts::trigger_deprecation;
@@ -120,7 +120,12 @@ impl RouteCollection {
         let mut visited: Vec<Vec<u8>> = Vec::new();
         while let Some(i) = position(&self.aliases, &name) {
             let alias = &self.aliases[i].1;
-            if let Some(search_key) = visited.iter().position(|v| *v == name) {
+            // array_search() compares loosely: "010" is found as "10"
+            let current = Value::string(name.as_slice());
+            let search_key = visited
+                .iter()
+                .position(|v| loose_equals(&Value::string(v.as_slice()), &current));
+            if let Some(search_key) = search_key {
                 visited.push(name.clone());
                 let path: Vec<&[u8]> = visited[search_key..].iter().map(Vec::as_slice).collect();
                 return Err(Error::circular_reference(&name, &path));
