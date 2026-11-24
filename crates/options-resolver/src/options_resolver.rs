@@ -998,11 +998,7 @@ impl OptionsResolver {
         if self.state().defined.contains(&option) {
             return Err(error(
                 Class::OptionDefinition,
-                concat(&[
-                    b"The option \"",
-                    &option.bytes(),
-                    b"\" is already defined.",
-                ]),
+                concat(&[b"The option \"", &option.bytes(), b"\" is already defined."]),
             ));
         }
         OptionConfigurator::new(option, self)
