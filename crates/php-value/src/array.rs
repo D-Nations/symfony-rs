@@ -338,10 +338,8 @@ pub fn compare_keys(a: &Key, b: &Key) -> std::cmp::Ordering {
 
 impl<'a> IntoIterator for &'a PhpArray {
     type Item = (&'a Key, &'a Value);
-    type IntoIter = std::iter::Map<
-        std::slice::Iter<'a, (Key, Value)>,
-        fn(&(Key, Value)) -> (&Key, &Value),
-    >;
+    type IntoIter =
+        std::iter::Map<std::slice::Iter<'a, (Key, Value)>, fn(&(Key, Value)) -> (&Key, &Value)>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.0.entries.iter().map(|(key, value)| (key, value))
@@ -388,7 +386,10 @@ mod collection_trait_tests {
             .collect();
         array.extend([(1_i64, Value::Int(30)), (3, Value::Int(40))]);
         assert_eq!(
-            (&array).into_iter().map(|(key, _)| key.clone()).collect::<Vec<_>>(),
+            (&array)
+                .into_iter()
+                .map(|(key, _)| key.clone())
+                .collect::<Vec<_>>(),
             vec![Key::Int(1), Key::Int(2), Key::Int(3)],
         );
         assert_eq!(array.get(&Key::Int(1)), Some(&Value::Int(30)));
