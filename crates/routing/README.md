@@ -17,6 +17,8 @@ unofficial and is not affiliated with or endorsed by Symfony.
 | `route_compiler::RouteCompiler`: static prefix, path and host regex, tokens and variables, separators and possessive quantifiers, optional trailing variables, `!` important variables, the `utf8` option and its errors, `_locale` substitution, capturing-group rewriting, name errors | `RouteCompiler.php`, `RouteCompilerInterface.php`; RouteCompilerTest 10 of 10; the recorded routes' `compile()` |
 | `compiled_route::CompiledRoute` accessors and serialization | `CompiledRoute.php`; CompiledRouteTest 2 of 2 |
 | `route_collection::RouteCollection`: replacement by name, priorities, aliases with circular-reference and deprecation handling, remove, `addCollection()`, `addPrefix()`, `addNamePrefix()` (canonical routes, local and external aliases), bulk setters, resources (`config` feature) | `RouteCollection.php`, `Alias.php`; RouteCollectionTest 24 of 24; 300 recorded collection scripts |
+| `request_context::RequestContext`: constructor defaults, base URL without trailing slashes, uppercased method, lowercased host and scheme, ports, query string (null is `''`), parameters, `isSecure()`, `fromUri()` (URIs with a backslash before `?`/`#`, an end byte up to space, or CR/LF/tab read as `''`; the path as base URL; a port for the scheme it names, compared before lowercasing). `fromRequest()` is not ported (it needs HttpFoundation's Request) | `RequestContext.php`; RequestContextTest 16 of 18 (1 `n/a`, `testFromRequest` pending); 3,000 `fromUri()` and 10 `setBaseUrl()` calls recorded (`tests/data/request_context.json`) |
+| `exception`: every routing exception class with its PHP ancestry (`Error::is_a()`), MethodNotAllowedException's uppercased allowed methods and MissingMandatoryParametersException's route name, parameters and message (`Error::detail()`) | `Exception/*.php` (no upstream test class; used by the matcher and generator stages) |
 
 `RouteCollection<T>` holds ordered `Definition<T>` registrations. Each
 definition contains literal/parameter segments and a startup-created target
@@ -48,13 +50,14 @@ cargo test -p symfony-routing
 ```
 
 The ported Route classes (`route`, `compiled_route`, `route_compiler`,
-`route_collection`, `alias`) are Symfony's, and are not yet used by the
+`request_context`, `route_collection`, `alias`) are Symfony's, and are not yet used by the
 typed matcher and generator above. A collection owns its routes (PHP
 shares Route objects between handles), and `compiler_class` is chosen at
 build time with `Route::compile_with::<C>()`. Their tests are
 `tests/route_test.rs`, `route_compiler_test.rs`, `compiled_route_test.rs`,
-`route_collection_test.rs`, plus the replay `route_recorded.rs`
-(`scripts/record.sh routing-route`). Not reproduced, and refused instead:
+`route_collection_test.rs`, `request_context_test.rs`, plus the replays
+`route_recorded.rs` (`scripts/record.sh routing-route`) and
+`request_context_recorded.rs` (`scripts/record.sh routing-request-context`). Not reproduced, and refused instead:
 the "called in" suffix of a TypeError for a non-string requirement, a
 non-array `_route_mapping` default when a pattern adds a mapping, and a
 `_canonical_route` default that cannot be concatenated in

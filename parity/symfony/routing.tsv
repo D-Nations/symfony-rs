@@ -763,24 +763,24 @@ Tests/Matcher/UrlMatcherTest.php	UrlMatcherTest::testWithOutHostHostDoesNotMatch
 Tests/Matcher/UrlMatcherTest.php	UrlMatcherTest::testZero	ported	crates/routing/tests/upstream.rs::test_zero
 Tests/Matcher/UrlMatcherTest.php	UrlMatcherTest::testZeroCondition	pending	
 Tests/Matcher/UrlMatcherTest.php	UrlMatcherTest::testZeroConditionNextToOtherConditions	pending	
-Tests/RequestContextTest.php	RequestContextTest::testConstruct	pending	
-Tests/RequestContextTest.php	RequestContextTest::testConstructParametersBcLayer	pending	
-Tests/RequestContextTest.php	RequestContextTest::testFluentInterface	pending	
-Tests/RequestContextTest.php	RequestContextTest::testFromBadUri	pending	
+Tests/RequestContextTest.php	RequestContextTest::testConstruct	ported	crates/routing/tests/request_context_test.rs::testConstruct
+Tests/RequestContextTest.php	RequestContextTest::testConstructParametersBcLayer	n/a: a PHP subclass calls setParameters() before the parent constructor; a Rust RequestContext is built whole (crates/routing/src/request_context.rs)	
+Tests/RequestContextTest.php	RequestContextTest::testFluentInterface	ported	crates/routing/tests/request_context_test.rs::testFluentInterface
+Tests/RequestContextTest.php	RequestContextTest::testFromBadUri	ported	crates/routing/tests/request_context_test.rs::testFromBadUri
 Tests/RequestContextTest.php	RequestContextTest::testFromRequest	pending	
-Tests/RequestContextTest.php	RequestContextTest::testFromUriBeingEmpty	pending	
-Tests/RequestContextTest.php	RequestContextTest::testFromUriWithBaseUrl	pending	
-Tests/RequestContextTest.php	RequestContextTest::testFromUriWithTrailingSlash	pending	
-Tests/RequestContextTest.php	RequestContextTest::testFromUriWithoutTrailingSlash	pending	
-Tests/RequestContextTest.php	RequestContextTest::testGetParameter	pending	
-Tests/RequestContextTest.php	RequestContextTest::testGetParameters	pending	
-Tests/RequestContextTest.php	RequestContextTest::testHasParameter	pending	
-Tests/RequestContextTest.php	RequestContextTest::testHost	pending	
-Tests/RequestContextTest.php	RequestContextTest::testMethod	pending	
-Tests/RequestContextTest.php	RequestContextTest::testPort	pending	
-Tests/RequestContextTest.php	RequestContextTest::testQueryString	pending	
-Tests/RequestContextTest.php	RequestContextTest::testScheme	pending	
-Tests/RequestContextTest.php	RequestContextTest::testSetParameter	pending	
+Tests/RequestContextTest.php	RequestContextTest::testFromUriBeingEmpty	ported	crates/routing/tests/request_context_test.rs::testFromUriBeingEmpty
+Tests/RequestContextTest.php	RequestContextTest::testFromUriWithBaseUrl	ported	crates/routing/tests/request_context_test.rs::testFromUriWithBaseUrl
+Tests/RequestContextTest.php	RequestContextTest::testFromUriWithTrailingSlash	ported	crates/routing/tests/request_context_test.rs::testFromUriWithTrailingSlash
+Tests/RequestContextTest.php	RequestContextTest::testFromUriWithoutTrailingSlash	ported	crates/routing/tests/request_context_test.rs::testFromUriWithoutTrailingSlash
+Tests/RequestContextTest.php	RequestContextTest::testGetParameter	ported	crates/routing/tests/request_context_test.rs::testGetParameter
+Tests/RequestContextTest.php	RequestContextTest::testGetParameters	ported	crates/routing/tests/request_context_test.rs::testGetParameters
+Tests/RequestContextTest.php	RequestContextTest::testHasParameter	ported	crates/routing/tests/request_context_test.rs::testHasParameter
+Tests/RequestContextTest.php	RequestContextTest::testHost	ported	crates/routing/tests/request_context_test.rs::testHost
+Tests/RequestContextTest.php	RequestContextTest::testMethod	ported	crates/routing/tests/request_context_test.rs::testMethod
+Tests/RequestContextTest.php	RequestContextTest::testPort	ported	crates/routing/tests/request_context_test.rs::testPort
+Tests/RequestContextTest.php	RequestContextTest::testQueryString	ported	crates/routing/tests/request_context_test.rs::testQueryString
+Tests/RequestContextTest.php	RequestContextTest::testScheme	ported	crates/routing/tests/request_context_test.rs::testScheme
+Tests/RequestContextTest.php	RequestContextTest::testSetParameter	ported	crates/routing/tests/request_context_test.rs::testSetParameter
 Tests/Requirement/EnumRequirementTest.php	EnumRequirementTest::testCaseFromAnotherEnum	pending	
 Tests/Requirement/EnumRequirementTest.php	EnumRequirementTest::testCaseNotABackedEnum	pending	
 Tests/Requirement/EnumRequirementTest.php	EnumRequirementTest::testInRoute	pending	
