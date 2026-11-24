@@ -5,8 +5,9 @@
 //! Paths are bytes, as PHP's. As `\SplFileInfo`, the path keeps its text
 //! without trailing `/`; nothing is cached, so a moved file is a new
 //! `File`, as upstream returns. The MIME type comes from symfony/mime's
-//! default `MimeTypes` (crate `symfony-mime`), whose guesser is the
-//! `file` command, not PHP's `finfo` (PLAN.md decision 18).
+//! default `MimeTypes` (crate `symfony-mime`): its finfo port
+//! (`FileinfoMimeTypeGuesser` on a pure-Rust libmagic, PLAN.md decision
+//! 18) first, then the `file` command.
 //!
 //! `move()` (here [`File::move_to`], `move` being a Rust keyword) reports
 //! the warning of the failed `rename()` as a web SAPI gives it

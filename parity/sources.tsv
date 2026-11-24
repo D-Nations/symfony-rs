@@ -458,12 +458,14 @@ crates/mime/src/exception.rs	symfony/mime	Exception/LogicException.php	8d1232052
 crates/mime/src/exception.rs	symfony/mime	Exception/InvalidArgumentException.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/exception.rs	symfony/mime	Exception/RuntimeException.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/file_binary_mime_type_guesser.rs	symfony/mime	FileBinaryMimeTypeGuesser.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
+crates/mime/src/fileinfo_mime_type_guesser.rs	symfony/mime	FileinfoMimeTypeGuesser.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/map.rs	symfony/mime	MimeTypes.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/mime_types.rs	symfony/mime	MimeTypes.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/mime_types.rs	symfony/mime	MimeTypesInterface.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/mime_types.rs	symfony/mime	MimeTypeGuesserInterface.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/tests/common/mod.rs	symfony/mime	Tests/AbstractMimeTypeGuesserTestCase.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/tests/file_binary_mime_type_guesser_test.rs	symfony/mime	Tests/FileBinaryMimeTypeGuesserTest.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
+crates/mime/tests/fileinfo_mime_type_guesser_test.rs	symfony/mime	Tests/FileinfoMimeTypeGuesserTest.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/tests/mime_types_test.rs	symfony/mime	Tests/MimeTypesTest.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/options-resolver/src/debug/mod.rs	symfony/options-resolver	Debug/OptionsResolverIntrospector.php	88f9c561f678a02d54b897014049fa839e33ff82
 crates/options-resolver/src/exception.rs	symfony/options-resolver	Exception/ExceptionInterface.php	88f9c561f678a02d54b897014049fa839e33ff82

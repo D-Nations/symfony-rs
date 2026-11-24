@@ -9,3 +9,11 @@ description = "Port of the symfony/mime component (the MIME type part HttpFounda
 [dependencies]
 # PHP's view of the filesystem (is_file(), is_readable()).
 symfony-finder = { path = "../finder" }
+# FileinfoMimeTypeGuesser: libmagic in safe Rust and its rule database,
+# both used under their BSD-2-Clause option (PLAN.md decision 18).
+pure-magic = "=0.5.2"
+magic-db = "=0.7.2"
+
+[dev-dependencies]
+# Reads the recorded finfo answers (tests/data/fileinfo.json).
+serde_json = "1.0.154"
