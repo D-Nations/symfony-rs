@@ -18,7 +18,7 @@ let _ = Filesystem::new();
 | Contract | Source | Evidence |
 |---|---|---|
 | `dumpFile()`: the atomic write (temporary file from `tempnam()` in the target's directory, content, the target's mode or `0666 & ~umask()`, `rename()` over the target, the temporary file removed on failure), missing directories created, symbolic links followed (absolute, relative, chains, dangling; a link whose target is `"0"` replaced), `file://` URLs; upstream's IOException and InvalidArgumentException messages with PHP's warnings | `Filesystem.php` | FilesystemTest's dumpFile tests (5); recorded `filesystem` (22 dumpFile calls) |
-| `readFile()`, `chmod()` (mode and umask, several files), `mkdir()`, `rename()`, `readlink()`, `tempnam()` (local and `file://` directories, the 63-character prefix, the system's temporary directory as fallback) | `Filesystem.php` | FilesystemTest (10 more); recorded `filesystem` (17 calls) |
+| `readFile()` (including "No such file or directory" for missing files on Windows), `chmod()` (mode and umask, several files), `mkdir()`, `rename()`, `readlink()`, `tempnam()` (local and `file://` directories, the 63-character prefix, the system's temporary directory as fallback) | `Filesystem.php` | FilesystemTest (10 more); recorded `filesystem` (17 calls) |
 | `Path::canonicalize()`, `normalize()`, `getRoot()`, `isAbsolute()` / `isRelative()` (`parse_url()` giving anything but null), `makeAbsolute()`, `getHomeDirectory()` | `Path.php` | PathTest (12 of its tests, the rows for `/` as `DIRECTORY_SEPARATOR`) |
 | Exceptions: IOException (with `getPath()`), InvalidArgumentException, RuntimeException | `Exception/*.php` | the tests above |
 
