@@ -2,7 +2,7 @@
 //!
 //! Upstream: none
 
-use std::{borrow::Borrow, fmt, ops::Deref, sync::Arc};
+use std::{borrow::Borrow, cmp::Ordering, fmt, ops::Deref, sync::Arc};
 
 /// A PHP string: bytes, not necessarily UTF-8.
 #[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
@@ -41,6 +41,12 @@ impl Deref for PhpString {
 
     fn deref(&self) -> &[u8] {
         &self.0
+    }
+}
+
+impl AsRef<[u8]> for PhpString {
+    fn as_ref(&self) -> &[u8] {
+        self.as_bytes()
     }
 }
 
@@ -138,11 +144,11 @@ pub fn truthy(s: &[u8]) -> bool {
     !(s.is_empty() || s == b"0")
 }
 
-pub fn strnatcmp(a: &[u8], b: &[u8]) -> std::cmp::Ordering {
+pub fn strnatcmp(a: &[u8], b: &[u8]) -> Ordering {
     natural(a, b, false)
 }
 
-pub fn strnatcasecmp(a: &[u8], b: &[u8]) -> std::cmp::Ordering {
+pub fn strnatcasecmp(a: &[u8], b: &[u8]) -> Ordering {
     natural(a, b, true)
 }
 
@@ -150,7 +156,7 @@ fn is_c_space(c: u8) -> bool {
     matches!(c, b' ' | b'\t' | b'\n' | 0x0b | 0x0c | b'\r')
 }
 
-fn natural(a: &[u8], b: &[u8], fold: bool) -> std::cmp::Ordering {
+fn natural(a: &[u8], b: &[u8], fold: bool) -> Ordering {
     if a.is_empty() || b.is_empty() {
         return a.len().cmp(&b.len());
     }
@@ -188,13 +194,13 @@ fn natural(a: &[u8], b: &[u8], fold: bool) -> std::cmp::Ordering {
             } else {
                 compare_right(a, &mut i, b, &mut j)
             };
-            if result != std::cmp::Ordering::Equal {
+            if result != Ordering::Equal {
                 return result;
             }
             match (i >= a.len(), j >= b.len()) {
-                (true, true) => return std::cmp::Ordering::Equal,
-                (true, false) => return std::cmp::Ordering::Less,
-                (false, true) => return std::cmp::Ordering::Greater,
+                (true, true) => return Ordering::Equal,
+                (true, false) => return Ordering::Less,
+                (false, true) => return Ordering::Greater,
                 _ => {
                     after_digits = true;
                     continue;
@@ -207,31 +213,31 @@ fn natural(a: &[u8], b: &[u8], fold: bool) -> std::cmp::Ordering {
             (ca, cb)
         };
         match ca.cmp(&cb) {
-            std::cmp::Ordering::Equal => {}
+            Ordering::Equal => {}
             o => return o,
         }
         i += 1;
         j += 1;
         match (i >= a.len(), j >= b.len()) {
-            (true, true) => return std::cmp::Ordering::Equal,
-            (true, false) => return std::cmp::Ordering::Less,
-            (false, true) => return std::cmp::Ordering::Greater,
+            (true, true) => return Ordering::Equal,
+            (true, false) => return Ordering::Less,
+            (false, true) => return Ordering::Greater,
             _ => {}
         }
     }
 }
 
-fn compare_right(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> std::cmp::Ordering {
-    let mut bias = std::cmp::Ordering::Equal;
+fn compare_right(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> Ordering {
+    let mut bias = Ordering::Equal;
     loop {
         let da = a.get(*i).is_some_and(u8::is_ascii_digit);
         let db = b.get(*j).is_some_and(u8::is_ascii_digit);
         match (da, db) {
             (false, false) => return bias,
-            (false, true) => return std::cmp::Ordering::Less,
-            (true, false) => return std::cmp::Ordering::Greater,
+            (false, true) => return Ordering::Less,
+            (true, false) => return Ordering::Greater,
             (true, true) => {
-                if bias == std::cmp::Ordering::Equal {
+                if bias == Ordering::Equal {
                     bias = a[*i].cmp(&b[*j]);
                 }
             }
@@ -241,16 +247,16 @@ fn compare_right(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> std::cmp::
     }
 }
 
-fn compare_left(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> std::cmp::Ordering {
+fn compare_left(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> Ordering {
     loop {
         let da = a.get(*i).is_some_and(u8::is_ascii_digit);
         let db = b.get(*j).is_some_and(u8::is_ascii_digit);
         match (da, db) {
-            (false, false) => return std::cmp::Ordering::Equal,
-            (false, true) => return std::cmp::Ordering::Less,
-            (true, false) => return std::cmp::Ordering::Greater,
+            (false, false) => return Ordering::Equal,
+            (false, true) => return Ordering::Less,
+            (true, false) => return Ordering::Greater,
             (true, true) => match a[*i].cmp(&b[*j]) {
-                std::cmp::Ordering::Equal => {}
+                Ordering::Equal => {}
                 o => return o,
             },
         }
@@ -262,7 +268,6 @@ fn compare_left(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> std::cmp::O
 #[cfg(test)]
 mod shared_primitive_tests {
     use super::*;
-    use std::cmp::Ordering;
 
     #[test]
     fn edit_distance_and_natural_order() {

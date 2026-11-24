@@ -216,11 +216,13 @@ impl PhpArray {
                 _ => i.checked_add(1).map_or(Next::Occupied, Next::At),
             };
         }
-        match data.index.get(&key) {
-            Some(&i) => data.entries[i].1 = value,
-            None => {
-                data.index.insert(key.clone(), data.entries.len());
-                data.entries.push((key, value));
+        match data.index.entry(key) {
+            std::collections::hash_map::Entry::Occupied(entry) => {
+                data.entries[*entry.get()].1 = value;
+            }
+            std::collections::hash_map::Entry::Vacant(entry) => {
+                data.entries.push((entry.key().clone(), value));
+                entry.insert(data.entries.len() - 1);
             }
         }
     }
@@ -334,12 +336,30 @@ pub fn compare_keys(a: &Key, b: &Key) -> std::cmp::Ordering {
     }
 }
 
+impl<'a> IntoIterator for &'a PhpArray {
+    type Item = (&'a Key, &'a Value);
+    type IntoIter = std::iter::Map<
+        std::slice::Iter<'a, (Key, Value)>,
+        fn(&(Key, Value)) -> (&Key, &Value),
+    >;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.entries.iter().map(|(key, value)| (key, value))
+    }
+}
+
+impl<K: Into<Key>> Extend<(K, Value)> for PhpArray {
+    fn extend<I: IntoIterator<Item = (K, Value)>>(&mut self, iter: I) {
+        for (key, value) in iter {
+            self.insert(key, value);
+        }
+    }
+}
+
 impl<K: Into<Key>> FromIterator<(K, Value)> for PhpArray {
     fn from_iter<I: IntoIterator<Item = (K, Value)>>(iter: I) -> Self {
         let mut array = Self::new();
-        for (k, v) in iter {
-            array.insert(k, v);
-        }
+        array.extend(iter);
         array
     }
 }
@@ -354,5 +374,23 @@ impl PartialEq for PhpArray {
 impl fmt::Debug for PhpArray {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_map().entries(self.iter()).finish()
+    }
+}
+
+#[cfg(test)]
+mod collection_trait_tests {
+    use super::*;
+
+    #[test]
+    fn extend_and_iterate_in_php_order() {
+        let mut array: PhpArray = [(1_i64, Value::Int(10)), (2, Value::Int(20))]
+            .into_iter()
+            .collect();
+        array.extend([(1_i64, Value::Int(30)), (3, Value::Int(40))]);
+        assert_eq!(
+            (&array).into_iter().map(|(key, _)| key.clone()).collect::<Vec<_>>(),
+            vec![Key::Int(1), Key::Int(2), Key::Int(3)],
+        );
+        assert_eq!(array.get(&Key::Int(1)), Some(&Value::Int(30)));
     }
 }

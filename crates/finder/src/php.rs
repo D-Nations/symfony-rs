@@ -129,9 +129,4 @@ pub fn filename_without_extension(basename: &[u8]) -> &[u8] {
 }
 
 /// `SplFileInfo::getExtension()` of a base name.
-pub fn extension(basename: &[u8]) -> &[u8] {
-    match basename.iter().rposition(|&c| c == b'.') {
-        Some(dot) => &basename[dot + 1..],
-        None => b"",
-    }
-}
+pub use php_value::path::basename_extension as extension;

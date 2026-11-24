@@ -31,11 +31,6 @@ use crate::{
     value::Value,
 };
 
-/// `(bool) $value`.
-fn truthy(value: &Value) -> bool {
-    value.is_truthy()
-}
-
 fn numbers_equal(a: Number, b: Number) -> bool {
     match (a, b) {
         (Number::Int(a), Number::Int(b)) => a == b,
@@ -88,7 +83,7 @@ pub fn loose_equals(a: &Value, b: &Value) -> bool {
     match (a, b) {
         (Null, Null) => true,
         (Null, String(s)) | (String(s), Null) => s.is_empty(),
-        (Bool(_) | Null, _) | (_, Bool(_) | Null) => truthy(a) == truthy(b),
+        (Bool(_) | Null, _) | (_, Bool(_) | Null) => a.is_truthy() == b.is_truthy(),
         (Int(x), Int(y)) => x == y,
         (Int(_) | Float(_), Int(_) | Float(_)) => numbers_equal(number(a), number(b)),
         (String(x), String(y)) => strings_equal(x.as_bytes(), y.as_bytes()),

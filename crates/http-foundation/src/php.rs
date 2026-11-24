@@ -122,13 +122,7 @@ pub fn intval_prefixed(s: &[u8], base: u32) -> i64 {
 
 /// `pathinfo($name, PATHINFO_EXTENSION)` of a name without `/`: what
 /// follows its last `.`, or `""`.
-pub fn pathinfo_extension(name: &[u8]) -> &[u8] {
-    let base = basename(name);
-    match base.iter().rposition(|&c| c == b'.') {
-        Some(at) => &base[at + 1..],
-        None => b"",
-    }
-}
+pub use php_value::path::pathinfo_extension;
 
 /// `basename($path)` (no suffix), `/` being the separator.
 pub use php_value::path::basename;
