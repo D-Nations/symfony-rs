@@ -11,15 +11,7 @@ use crate::exception::{Class, Error};
 
 /// `(bool) $value`.
 pub(crate) fn truthy(value: &Value) -> bool {
-    match value {
-        Value::Null => false,
-        Value::Bool(b) => *b,
-        Value::Int(i) => *i != 0,
-        Value::Float(f) => *f != 0.0,
-        Value::String(s) => !(s.is_empty() || s.as_bytes() == b"0"),
-        Value::Array(a) => !a.is_empty(),
-        Value::Object(_) => true,
-    }
+    value.is_truthy()
 }
 
 /// `isset($array[$key])`.
@@ -36,25 +28,11 @@ pub(crate) fn get<'a>(array: &'a PhpArray, key: &[u8]) -> Option<&'a Value> {
 
 /// A key as the string PHP gives it in a string context.
 pub(crate) fn key_bytes(key: &Key) -> Vec<u8> {
-    match key {
-        Key::Int(i) => i.to_string().into_bytes(),
-        Key::Str(s) => s.as_bytes().to_vec(),
-    }
-}
-
-fn is_trim_space(c: u8) -> bool {
-    matches!(c, b' ' | b'\t' | b'\n' | b'\r' | 0 | 0x0b)
+    key.bytes().into_owned()
 }
 
 /// `trim($s)` with the default characters.
-pub(crate) fn trim(s: &[u8]) -> &[u8] {
-    let start = s.iter().position(|&c| !is_trim_space(c)).unwrap_or(s.len());
-    let end = s
-        .iter()
-        .rposition(|&c| !is_trim_space(c))
-        .map_or(start, |e| e + 1);
-    &s[start..end]
-}
+pub(crate) use php_value::string::trim;
 
 /// `trim($s, $c)` / `ltrim($s, $c)` for one character.
 pub(crate) fn trim_char(s: &[u8], c: u8, right: bool) -> &[u8] {

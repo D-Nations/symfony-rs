@@ -509,7 +509,7 @@ fn format_options(state: &mut State, options: &[Key]) -> Vec<u8> {
             && let Some(index) = &state.prototype_index
         {
             prefix.push(b'[');
-            prefix.extend(php::key_bytes(index));
+            prefix.extend_from_slice(&index.bytes());
             prefix.push(b']');
         }
         names = names
@@ -1000,7 +1000,7 @@ impl OptionsResolver {
                 Class::OptionDefinition,
                 concat(&[
                     b"The option \"",
-                    &php::key_bytes(&option),
+                    &option.bytes(),
                     b"\" is already defined.",
                 ]),
             ));
@@ -1232,7 +1232,7 @@ impl OptionsResolver {
                 trigger_deprecation(
                     package.as_bytes(),
                     version.as_bytes(),
-                    &php::replace(&message, b"%name%", &php::key_bytes(&option)),
+                    &php::replace(&message, b"%name%", &option.bytes()),
                 );
             }
             return Ok(value);
@@ -1304,7 +1304,7 @@ impl OptionsResolver {
                         (&state.prototype_index, child.parents_options.last_mut())
                 {
                     last.push(b'[');
-                    last.extend(php::key_bytes(index));
+                    last.extend_from_slice(&index.bytes());
                     last.push(b']');
                 }
                 child.parents_options.push(php::key_bytes(&option));
@@ -1441,7 +1441,7 @@ impl OptionsResolver {
                     trigger_deprecation(
                         deprecation.package.as_bytes(),
                         deprecation.version.as_bytes(),
-                        &php::replace(&message, b"%name%", &php::key_bytes(&option)),
+                        &php::replace(&message, b"%name%", &option.bytes()),
                     );
                     state = self.state();
                 }

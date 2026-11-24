@@ -198,8 +198,8 @@ pub(crate) fn pre_normalize(data: &ArrayData, value: Value) -> Value {
     }
     let mut normalized = PhpArray::new();
     for (k, v) in array.iter() {
-        let text = php::key_bytes(k);
-        if php::contains(&text, b"-") && !php::contains(&text, b"_") {
+        let text = k.bytes();
+        if text.contains(&b'-') && !text.contains(&b'_') {
             let renamed: Vec<u8> = text
                 .iter()
                 .map(|&b| if b == b'-' { b'_' } else { b })
@@ -268,7 +268,7 @@ pub(crate) fn finalize_value(node: &Node, data: &ArrayData, value: Value) -> Res
         let Some(current) = value.get(name).cloned() else {
             if child.is_required() {
                 let mut message = Msg::new("The child config \"")
-                    .b(&php::key_bytes(name))
+                    .b(&name.bytes())
                     .s("\" under \"")
                     .b(&node.get_path())
                     .s("\" must be configured");
@@ -362,10 +362,10 @@ fn unrecognized_options(node: &Node, data: &ArrayData, extra: &PhpArray) -> Erro
     // $guesses[$proposal] = $distance, in insertion order.
     let mut guesses: Vec<(Key, usize)> = Vec::new();
     for subject in extra.keys() {
-        let subject = php::key_bytes(subject);
+        let subject = subject.bytes();
         let mut min_score = usize::MAX;
         for proposal in &proposals {
-            let distance = php::levenshtein(&subject, &php::key_bytes(proposal));
+            let distance = php::levenshtein(&subject, &proposal.bytes());
             if distance <= min_score && distance < 3 {
                 match guesses.iter_mut().find(|(k, _)| k == proposal) {
                     Some(entry) => entry.1 = distance,

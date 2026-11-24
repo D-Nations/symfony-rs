@@ -9,7 +9,7 @@
 //!
 //! Upstream: none
 
-use crate::array::{Key, PhpArray};
+use crate::array::PhpArray;
 use crate::numeric::float_to_string;
 use crate::value::Value;
 
@@ -111,17 +111,10 @@ pub fn http_build_query_with(
 ) -> Option<Vec<u8>> {
     let mut pairs: Vec<Vec<u8>> = Vec::new();
     for (key, value) in data.iter() {
-        let name = encoding.encode(&key_bytes(key));
+        let name = encoding.encode(&key.bytes());
         build_pairs(&mut pairs, name, value, encoding)?;
     }
     Some(pairs.join(separator))
-}
-
-fn key_bytes(key: &Key) -> Vec<u8> {
-    match key {
-        Key::Int(i) => i.to_string().into_bytes(),
-        Key::Str(s) => s.as_bytes().to_vec(),
-    }
 }
 
 fn build_pairs(
@@ -141,7 +134,7 @@ fn build_pairs(
             for (key, child) in children.iter() {
                 let mut child_name = name.clone();
                 child_name.extend_from_slice(b"%5B");
-                child_name.extend(encoding.encode(&key_bytes(key)));
+                child_name.extend(encoding.encode(&key.bytes()));
                 child_name.extend_from_slice(b"%5D");
                 build_pairs(pairs, child_name, child, encoding)?;
             }

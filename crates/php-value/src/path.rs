@@ -86,6 +86,18 @@ pub fn basename(path: &[u8]) -> &[u8] {
     &trimmed[start..]
 }
 
+/// PHP extension of a basename, including leading dots.
+pub fn basename_extension(name: &[u8]) -> &[u8] {
+    name.iter()
+        .rposition(|&c| c == b'.')
+        .map_or(b"".as_slice(), |at| &name[at + 1..])
+}
+
+/// PHP extension of a path, after applying PHP basename rules.
+pub fn pathinfo_extension(path: &[u8]) -> &[u8] {
+    basename_extension(basename(path))
+}
+
 /// [`basename`] of a UTF-8 path. The result is UTF-8, as `/` is ASCII.
 pub fn basename_str(path: &str) -> &str {
     let end = path.trim_end_matches('/').len();
@@ -199,5 +211,18 @@ mod tests {
     #[test]
     fn non_utf8_bytes_name_no_file_elsewhere() {
         assert_eq!(None, to_path(b"/tmp/\xff\xfe"));
+    }
+}
+
+#[cfg(test)]
+mod extension_tests {
+    use super::*;
+
+    #[test]
+    fn extension_preserves_php_dot_rules() {
+        assert_eq!(basename_extension(b".env"), b"env");
+        assert_eq!(basename_extension(b"name."), b"");
+        assert_eq!(pathinfo_extension(b"/dir.with.dot/file"), b"");
+        assert_eq!(pathinfo_extension(b"/dir/file.tar.gz"), b"gz");
     }
 }

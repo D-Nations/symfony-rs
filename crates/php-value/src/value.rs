@@ -55,6 +55,19 @@ pub enum Value {
 }
 
 impl Value {
+    /// PHP boolean conversion.
+    pub fn is_truthy(&self) -> bool {
+        match self {
+            Value::Null => false,
+            Value::Bool(b) => *b,
+            Value::Int(i) => *i != 0,
+            Value::Float(f) => *f != 0.0,
+            Value::String(s) => crate::string::truthy(s.as_bytes()),
+            Value::Array(a) => !a.is_empty(),
+            Value::Object(_) => true,
+        }
+    }
+
     pub fn string(s: impl Into<PhpString>) -> Self {
         Self::String(s.into())
     }

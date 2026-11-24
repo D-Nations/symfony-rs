@@ -433,7 +433,7 @@ impl Route {
                 2,
                 "regex",
             )?;
-            let sanitized = sanitize_requirement(&php::key_bytes(key), &regex)?;
+            let sanitized = sanitize_requirement(&key.bytes(), &regex)?;
             self.requirements
                 .insert(key.clone(), Value::String(sanitized));
         }
