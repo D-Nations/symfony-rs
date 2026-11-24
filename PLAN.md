@@ -1000,6 +1000,7 @@ Stack rows (searched November 22):
 |---|---|---|---|
 | PHP's `filter_var()` and `BackedEnum::from()` (ParameterBag, InputBag) | No Rust crate reproduces PHP's filter extension; validator crates ([validator](https://docs.rs/validator), [garde](https://docs.rs/garde)) check typed struct fields with their own rules and messages; php2rust's `php-rt` has no filter or enum support | Written in `php-value` from the PHP manual and recorded answers, no dependency | The bags' behaviour is PHP's: string conversion of scalars, `FILTER_NULL_ON_FAILURE`, array walking, `default`, hex/octal as unsigned 64-bit, coercive enum arguments and their messages. 22,932 `filter_var()` calls and 2,450 bag calls recorded from PHP 8.4.27 pin them |
 | MIME types and guessing (symfony/mime `MimeTypes`, for File and UploadedFile; searched November 24 with `cargo search`) | Extension tables: [mime_guess](https://docs.rs/mime_guess) 2.0 / new_mime_guess (their own extension lists and order); content guessing: [magic](https://docs.rs/magic) 0.17 and filemagic (libmagic FFI), [pure-magic](https://docs.rs/pure-magic) 0.5 and [libmagic-rs](https://docs.rs/libmagic-rs) 0.12 (pure Rust) and [file-format](https://docs.rs/file-format) (own signatures); no Rust port of symfony/mime | Port `MimeTypes.php` (its `MAP` and `REVERSE_MAP` generated from upstream by `scripts/gen-mime-types.py`) and `FileBinaryMimeTypeGuesser.php` in a new in-workspace crate `symfony-mime`, no external dependency | `getExtensions()` / `getMimeTypes()` answers are Symfony's own tables and order, which no extension crate reproduces. Content guessing follows libmagic; which one to use is decision 18 |
+| Routing's Route, RouteCompiler and RouteCollection (searched November 24) | No Rust port of Symfony Routing on GitHub or crates.io; router crates ([matchit](https://docs.rs/matchit), [path-tree](https://docs.rs/path-tree), [route-recognizer](https://docs.rs/route-recognizer), axum's and actix's routers) have their own pattern languages: no inline `{name<requirement>?default}`, separators before optional trailing variables, host patterns, PCRE requirements or Symfony's compiled regex and tokens | Ported from Route.php, RouteCompiler.php and RouteCollection.php on php-value and php-pcre (workspace crates), no new dependency | The compiled regex, tokens, static prefix and `serialize()` bytes are what the matcher dumpers, generator and cached routes read; 2,000 routes and 300 collection scripts recorded from PHP 8.4.27 pin them |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1046,6 +1047,20 @@ Stack rows (searched November 22):
       v8.1.11 fixes (Request.php), UrlHelper, BinaryFileResponse,
       MethodRequestMatcher, SessionHandlerFactory, the compiled matcher's
       host-variable fix and RouterListener's sub-request context.
+- [ ] Routing (`symfony-routing`), stage 1 (November 24;
+      [docs/milestones/m2-a-routing-route.md](docs/milestones/m2-a-routing-route.md)):
+      `Route.php`, `CompiledRoute.php`, `RouteCompiler.php`,
+      `RouteCompilerInterface.php`, `RouteCollection.php`, `Alias.php` and
+      the exceptions they throw, on `php-value` (one additive method,
+      `PhpObject::is_stringable()`) and `php-pcre`, with resources behind
+      an optional `config` feature. RouteTest 24 of 24, RouteCompilerTest
+      10 of 10, CompiledRouteTest 2 of 2, RouteCollectionTest 24 of 24;
+      plus 2,000 generated routes (construction, compile, serialize),
+      1,000 requirements, 300 collection scripts and 131 malformed
+      `unserialize()` payloads recorded, all matching. Recording found
+      `findNextSeparator()`'s TypeError for a newline after a variable.
+      The demo's typed matcher and generator are unchanged. Next:
+      `RequestContext.php` and `Matcher/UrlMatcher.php` on these routes.
 - [ ] HttpFoundation stage 3 (November 23;
       [docs/milestones/m2-a-http-foundation-stage3.md](docs/milestones/m2-a-http-foundation-stage3.md)):
       `AcceptHeader.php` and `AcceptHeaderItem.php` as an API

@@ -655,8 +655,13 @@ dependencies = [
 name = "symfony-routing"
 version = "0.1.0"
 dependencies = [
+ "php-pcre",
+ "php-value",
  "serde_json",
+ "symfony-config",
+ "symfony-deprecation-contracts",
  "symfony-http-foundation",
+ "symfony-routing",
 ]
 
 [[package]]
