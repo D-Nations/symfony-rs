@@ -181,6 +181,97 @@ require owner approval where they change current rules or dependencies.
 Do not add hosted paid CI. Defer broad specialization and allocation tuning
 until representative workloads expose a measurable bottleneck.
 
+### Code consolidation and idiomatic Rust (cross-milestone plan, November 24)
+
+Reduce accidental complexity and maintain idiomatic Rust throughout the
+port, starting now. This is distinct from static specialization: fewer
+lines, fewer allocations and fewer generic instantiations are different
+objectives. Preserve security, PHP/Symfony observable behaviour, source
+traceability and independently useful package boundaries. Do not pause
+the dependency-ordered port for a workspace-wide rewrite.
+
+**Package boundaries (owner requirement).** Retain one independently usable
+Rust crate per ported PHP package/dependency, including non-Symfony
+dependencies such as Twig and Doctrine where applicable. A package must be
+usable by another project without pulling in the whole framework or its
+converter. Keep crate names, public contracts and feature boundaries
+explicit; keep application-specific code outside reusable crates.
+Consolidation means sharing proven common implementations, not merging
+packages into a monolithic runtime. Lower-level PHP semantics and primitives
+belong in narrowly scoped shared crates (such as the existing php-value,
+php-pcre and php-dom); prefer the standard library where its semantics
+match. Use optional dependencies for genuine integrations, keep dependency
+direction acyclic and avoid umbrella dependencies, duplicated implementations
+or unnecessary abstraction crates. Preserve `publish = false` until the
+owner's existing naming/publication decision; future independent publication
+is a design goal, not authorization to publish now.
+
+**Start now:**
+- [ ] Inventory source size by crate: handwritten production Rust, tests,
+      generated source/tables, fixtures/oracle data and documentation
+      separately. Record dependency counts and repeated implementations.
+      Use this as a baseline, not a line-count quota; do not treat parity
+      tests, required Unicode/ICU tables or recorded vectors as waste.
+- [ ] Audit the existing shared helpers and obvious duplicate algorithms
+      during the next affected component stages. Examples to investigate:
+      byte/string conversions, path handling, PHP array operations,
+      comparison/coercion, repeated parsers, error construction and lookup
+      helpers. The existing path policy and php-value loose equality
+      consolidation are precedents. Verify semantics before sharing code.
+- [ ] Make the idiomatic Rust checklist below part of every new port and
+      bounded refactor. Fix obvious local issues as files are touched;
+      schedule cross-crate changes as separate reviewable stages, avoiding
+      conflicts with active branches.
+- [ ] Audit public APIs and crate dependency graphs for independent use:
+      build/test each crate with its supported feature sets, including
+      minimal features when applicable. Check for accidental dependencies
+      on the converter, application fixtures or unrelated framework crates.
+
+**Idiomatic Rust checklist (apply to existing and new code):**
+- Model invariants with concrete structs, enums, newtypes, Option and
+  Result; use exhaustive matching and typed errors. Avoid PHP-style
+  inheritance emulation, string-based dispatch and dynamic values unless
+  required for compatibility.
+- Prefer borrowing, slices and suitable standard collections; use iterator
+  methods, pattern matching, entry APIs and error propagation where they
+  improve clarity. Simple loops are fine. Avoid gratuitous clone/to_owned,
+  allocation, boxing, Arc, Mutex, redundant conversions and intermediate
+  collections. Preserve ownership, identity and async isolation.
+- Prefer standard traits and conversion APIs; use generics only where
+  they simplify reuse or provide a justified specialization. Avoid
+  speculative abstractions, wrappers that add no invariant, needless
+  getters/setters and macros that hide important behaviour.
+- Keep visibility narrow and modules cohesive. Share canonical helpers
+  without erasing upstream source mappings or making independent crates
+  depend on unrelated framework packages. Keep dependencies small and
+  document alternatives under the existing stack-review rule.
+- Follow rustfmt and Clippy; investigate warnings rather than suppressing
+  them broadly. Document necessary compatibility exceptions. No unsafe
+  code, panics on external inputs or weakening of tests.
+
+**Scheduling and exit gates:**
+
+| Stage | Scope and evidence |
+|---|---|
+| Now / ongoing bounded ports | Baseline inventory, idiomatic checklist, local simplification and obvious duplicate removal; parity and source checks remain mandatory. |
+| M1/M2 foundations and HTTP | Consolidate shared semantics when two or more proven consumers need them; prefer existing shared crates. Keep native and compatibility paths sharing behaviour cores where practical. |
+| M3–M6 integration | Review crate boundaries, feature dependencies, public contracts and converter-generated boilerplate as providers stabilize. Avoid premature API churn or rewrites. |
+| Representative app acceptance | Profile actual generated applications before broader allocation/dispatch changes; compare code size, binary size, build time and runtime metrics separately. |
+| M7–M8 stabilization | Review all reusable crate contracts, standalone consumption and documentation; check minimal dependency/feature combinations and remove obsolete internal duplication. Publication remains a separate owner decision. |
+
+**Acceptance.** Every refactor must preserve the pinned upstream tests,
+oracle vectors, security fixes, error messages and other observable
+behaviour. Retain existing source mappings and explain shared
+implementations in the affected crate contracts. Record before/after
+measurements and rationale for cross-crate refactors in the stage logs;
+no arbitrary LOC-reduction target. Run the existing local verification
+checks, with affected-crate feature checks as appropriate. The demo
+comparison pause stays in force until the owner resumes it; no dependent
+acceptance gate closes meanwhile. Do not add paid hosted CI or change the
+debug-build-only rule. Prefer deleting redundant code over adding a
+second implementation unless the measured benefit or compatibility need
+justifies maintaining both.
+
 ## Per-component loop (every component, every milestone)
 
 1. Search GitHub/crates.io for an existing port or primitive; add a stack row
