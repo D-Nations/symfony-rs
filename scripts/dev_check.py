@@ -13,8 +13,10 @@ import json
 import os
 from pathlib import Path
 import shlex
+import shutil
 import subprocess
 import sys
+import time
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -25,7 +27,43 @@ def capture(*args: str) -> bytes:
 
 def run(*args: str) -> None:
     print("+", shlex.join(args), flush=True)
-    subprocess.run(args, cwd=ROOT, check=True)
+    started = time.perf_counter()
+    try:
+        subprocess.run(
+            args, cwd=ROOT, check=True,
+            env={**os.environ, "SYMFONY_RS_PYTHON": sys.executable},
+        )
+    finally:
+        print(f"  elapsed: {time.perf_counter() - started:.2f}s", flush=True)
+
+
+def run_checks(commands: list[tuple[str, ...]]) -> int:
+    """Report every failure, including doctests after a nextest failure."""
+    failed = []
+    for command in commands:
+        try:
+            run(*command)
+        except (subprocess.CalledProcessError, OSError) as error:
+            failed.append(shlex.join(command))
+            print(error, file=sys.stderr)
+    if failed:
+        print("Failed checks: " + "; ".join(failed), file=sys.stderr)
+    return int(bool(failed))
+
+
+def bash_executable(requested: str | None) -> str:
+    if requested:
+        return requested
+    # Windows' system32/bash.exe launches WSL, not the host Git checkout.
+    # Prefer Bash from the same Git installation used for change detection.
+    if sys.platform == "win32":
+        git = shutil.which("git")
+        if git:
+            install = Path(git).resolve().parent.parent
+            for candidate in (install / "bin/bash.exe", install / "usr/bin/bash.exe"):
+                if candidate.is_file():
+                    return str(candidate)
+    return shutil.which("bash") or "bash"
 
 
 def changed_paths(base: str) -> set[str]:
@@ -108,14 +146,15 @@ def selection(base: str) -> tuple[list[str], str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=["list", "check", "test", "full", "audit"])
+    parser.add_argument("mode", choices=["list", "check", "test", "full", "parity", "audit"])
+    parser.add_argument("--bash", help="Bash executable for source/parity checks (auto-detect Git Bash on Windows)")
     parser.add_argument("--base", default="origin/main", help="Git comparison ref")
     parser.add_argument("--workspace", action="store_true", help="force all packages")
     parser.add_argument("-p", "--package", action="append", default=[], help="explicit package (development only)")
     parser.add_argument("--nextest", action="store_true", help="use installed nextest for development tests, then Cargo doctests")
     parser.add_argument("--timings", action="store_true", help="write Cargo HTML compilation timings")
     options = parser.parse_args()
-    if options.package and (options.workspace or options.mode in {"full", "audit"}):
+    if options.package and (options.workspace or options.mode in {"full", "parity", "audit"}):
         parser.error("explicit packages are only for scoped development checks")
     if options.nextest and options.mode != "test":
         parser.error("--nextest is only for development test mode")
@@ -124,7 +163,7 @@ def main() -> int:
     if options.nextest and options.timings:
         parser.error("use Cargo test mode for compilation timings")
 
-    if options.mode in {"full", "audit"} or options.workspace:
+    if options.mode in {"full", "parity", "audit"} or options.workspace:
         packages, reason = [], "explicit full workspace"
     elif options.package:
         packages, reason = options.package, "explicit packages (no reverse closure)"
@@ -139,28 +178,27 @@ def main() -> int:
         run("cargo", "check", "--locked", "--all-targets", *scope, *timing)
     elif options.mode == "test":
         if options.nextest:
-            run("cargo", "nextest", "run", "--locked", *scope, "--no-fail-fast")
-            run("cargo", "test", "--locked", *scope, "--doc")
+            return run_checks([
+                ("cargo", "nextest", "run", "--locked", *scope, "--no-fail-fast"),
+                ("cargo", "test", "--locked", *scope, "--doc"),
+            ])
         else:
             run("cargo", "test", "--locked", *scope, "--no-fail-fast", *timing)
-    elif options.mode == "full":
-        commands = [
-            ("cargo", "fmt", "--all", "--check"),
-            ("cargo", "clippy", "--locked", "--workspace", "--all-targets", "--", "-D", "warnings"),
-            ("cargo", "test", "--locked", "--workspace", "--no-fail-fast"),
-            ("bash", "scripts/sources.sh", "--check"),
-            ("bash", "scripts/parity-check.sh"),
-        ]
-        failed = []
-        for command in commands:
-            try:
-                run(*command)
-            except (subprocess.CalledProcessError, OSError) as error:
-                failed.append(shlex.join(command))
-                print(error, file=sys.stderr)
-        if failed:
-            print("Failed checks: " + "; ".join(failed), file=sys.stderr)
-            return 1
+    elif options.mode in {"full", "parity"}:
+        bash = bash_executable(options.bash)
+        commands = []
+        if options.mode == "full":
+            commands.extend([
+                (sys.executable, "-m", "unittest", "discover", "-s", "scripts", "-p", "test_*.py"),
+                ("cargo", "fmt", "--all", "--check"),
+                ("cargo", "clippy", "--locked", "--workspace", "--all-targets", "--", "-D", "warnings"),
+                ("cargo", "test", "--locked", "--workspace", "--no-fail-fast"),
+            ])
+        commands.extend([
+            (bash, "scripts/sources.sh", "--check"),
+            (bash, "scripts/parity-check.sh"),
+        ])
+        return run_checks(commands)
     else:
         run("cargo", "tree", "--locked", "--workspace", "--duplicates")
         run("cargo", "tree", "--locked", "--workspace", "-e", "features")

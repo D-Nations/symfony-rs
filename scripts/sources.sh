@@ -11,6 +11,11 @@
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$root"
+# The development runner opts into the batch implementation with its
+# current interpreter. Unset the variable to use the reference Bash check.
+if [[ -n "${SYMFONY_RS_PYTHON:-}" ]]; then
+    exec "$SYMFONY_RS_PYTHON" "$root/scripts/parity_check.py" sources "$@"
+fi
 
 known() { # package -> reference, from parity/packages.tsv or upstream.tsv
     awk -F'\t' -v p="$1" '!/^#/ && $1 == p { print $3; found=1 } END { exit !found }' \

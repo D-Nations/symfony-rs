@@ -55,7 +55,8 @@ scripts/parity-check.sh   # manifest claims and completion status
 ## Faster local checks (Windows and Linux)
 
 Use Python 3.10+ (standard library only), Git, and Cargo. On Windows,
-the full check also needs Git Bash on PATH for the existing parity scripts.
+the full check finds Bash beside Git automatically. Use --bash PATH to
+select another executable; the Windows WSL launcher is avoided.
 Run these from PowerShell or a Unix shell:
 
 ```text
@@ -65,7 +66,8 @@ python scripts/dev_check.py test
 python scripts/dev_check.py test --nextest
 python scripts/dev_check.py check -p php-value
 python scripts/dev_check.py full
-python scripts/test_dev_check.py
+python scripts/dev_check.py parity
+python -m unittest discover -s scripts -p "test_*.py"
 ```
 
 The default base is origin/main; use --base to select another ref. Refresh
@@ -81,7 +83,7 @@ cross-package include paths and runtime integrations can require full checks.
 
 Optional nextest: install cargo-nextest using your preferred installation
 method (e.g. cargo install cargo-nextest --locked). The development runner
-also runs Cargo doctests, which nextest does not run. If nextest is not
+also runs Cargo doctests, even if nextest fails; nextest does not run them. If nextest is not
 installed, use ordinary test mode. The full gate always uses Cargo test
 and includes the existing source/parity scripts. No tests are suppressed.
 Windows-specific failures must still be verified with the existing
@@ -89,6 +91,38 @@ scripts/linux-test.sh; it checks committed HEAD in a fresh Linux container.
 Oracle recordings, upstream source retrieval, generated-table checks and
 converter/second-app acceptance remain separate and unchanged. Do not run
 the paused symfony-demo-rs comparison until the owner resumes it.
+
+Each command reports elapsed time. The full gate also tests the tooling.
+The source/parity scripts use a standard-library Python batch backend when
+the runner supplies SYMFONY_RS_PYTHON. This checks the same manifests,
+source mappings and test names without launching grep/awk/sed per row.
+Run python scripts/parity_check.py sources --check and python
+scripts/parity_check.py parity directly to avoid Bash entirely. The original
+Bash implementations remain available when SYMFONY_RS_PYTHON is unset;
+the tool tests compare both on valid and deliberately broken fixtures.
+
+For repeated Linux parity replays:
+
+```sh
+bash scripts/linux-test.sh --cached -p symfony-filesystem
+bash scripts/linux-test.sh --cached -p symfony-filesystem -p php-value
+bash scripts/linux-test.sh                 # fresh pre-merge acceptance
+```
+
+All modes check committed HEAD, as before; commit edits before testing.
+The small scripts/linux-check build context caches the pinned Rust image
+and rustfmt/clippy installation. Default runs still start with empty Cargo
+downloads and build directories. --cached is for development: Docker volumes
+reuse downloads and build artifacts inside the Linux VM, avoiding a Windows
+target bind mount. Names include the image recipe and worktree path, so
+concurrent worktrees have independent caches. Tests still run in a removed,
+unprivileged container with upstream mounted read-only. The script prints
+the two volume names; use docker volume rm NAME... when they are no longer
+needed. Do not remove another session's volumes.
+
+Full demo comparisons remain paused. Existing recorded-vector Rust tests
+benefit from the same Cargo caches; oracle recordings still use the pinned
+PHP image and are never replaced with cached answers.
 
 Normal dev/test profiles now emit line tables instead of full debug info.
 For full debugger symbols use cargo test --profile dev-full or cargo build
@@ -115,7 +149,9 @@ A lockfile entry is not a compilation unit: test targets, build scripts,
 proc macros and feature combinations can compile the same package more
 than once. Review unused features and duplicate versions only after
 measuring and verifying parity. No runtime dependency change is needed
-for these tools.
+for these tools. Profile and cache guidance follows the
+[Cargo profiles reference](https://doc.rust-lang.org/cargo/reference/profiles.html)
+and [Docker cache guidance](https://docs.docker.com/build/cache/optimize/).
 
 Pinned upstream sources (with their tests), for porting and for parity
 manifests: `scripts/fetch-upstream.sh` clones them into the ignored
