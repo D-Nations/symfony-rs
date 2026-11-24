@@ -144,11 +144,23 @@ def main() -> int:
         else:
             run("cargo", "test", "--locked", *scope, "--no-fail-fast", *timing)
     elif options.mode == "full":
-        run("cargo", "fmt", "--all", "--check")
-        run("cargo", "clippy", "--locked", "--workspace", "--all-targets", "--", "-D", "warnings")
-        run("cargo", "test", "--locked", "--workspace", "--no-fail-fast")
-        run("bash", "scripts/sources.sh", "--check")
-        run("bash", "scripts/parity-check.sh")
+        commands = [
+            ("cargo", "fmt", "--all", "--check"),
+            ("cargo", "clippy", "--locked", "--workspace", "--all-targets", "--", "-D", "warnings"),
+            ("cargo", "test", "--locked", "--workspace", "--no-fail-fast"),
+            ("bash", "scripts/sources.sh", "--check"),
+            ("bash", "scripts/parity-check.sh"),
+        ]
+        failed = []
+        for command in commands:
+            try:
+                run(*command)
+            except (subprocess.CalledProcessError, OSError) as error:
+                failed.append(shlex.join(command))
+                print(error, file=sys.stderr)
+        if failed:
+            print("Failed checks: " + "; ".join(failed), file=sys.stderr)
+            return 1
     else:
         run("cargo", "tree", "--locked", "--workspace", "--duplicates")
         run("cargo", "tree", "--locked", "--workspace", "-e", "features")
