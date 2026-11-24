@@ -120,7 +120,7 @@ request takes 1.6 ms (debug), and the services one page needs
 ```
 cargo fmt --check                                  ok
 cargo clippy --all-targets -- -D warnings          ok
-cargo test                                         2,603 passed, 1 failed (see below)
+cargo test                                         2,699 passed, 1 failed (see below; after merging main with #40)
 scripts/sources.sh --check                         ok (spikes/ is not scanned)
 scripts/parity-check.sh                            ok (no manifest change)
 ```
