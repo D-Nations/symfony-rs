@@ -13,6 +13,10 @@ unofficial and is not affiliated with or endorsed by Symfony.
 | Positive signed 64-bit controller ids, ASCII slugs, nonempty segments | Existing demo constraints; original demo routing assertions and request-lab HTTP test |
 | Application predicates, e.g. allowed locales | Typed `Requirement::Custom`; demo registrations |
 | Path/query escaping | Existing `Generator/UrlGenerator.php` subset extracted without changing its algorithms; demo encoding assertions |
+| `route::Route`: path/host normalization, inline `{!name:argument.path<requirement>?default}` settings, `_route_mapping`, requirement anchors and the empty-requirement error, lowercased schemes, uppercased methods, options with `compiler_class`, the `_locale` rule for localized routes, `__serialize()` / `__unserialize()` with its type errors and Stringable refusal | `Route.php`; RouteTest 24 of 24; 2,000 generated routes, 1,000 requirements and 131 `unserialize()` payloads recorded from PHP 8.4.27 (`tests/data/route.json`) |
+| `route_compiler::RouteCompiler`: static prefix, path and host regex, tokens and variables, separators and possessive quantifiers, optional trailing variables, `!` important variables, the `utf8` option and its errors, `_locale` substitution, capturing-group rewriting, name errors | `RouteCompiler.php`, `RouteCompilerInterface.php`; RouteCompilerTest 10 of 10; the recorded routes' `compile()` |
+| `compiled_route::CompiledRoute` accessors and serialization | `CompiledRoute.php`; CompiledRouteTest 2 of 2 |
+| `route_collection::RouteCollection`: replacement by name, priorities, aliases with circular-reference and deprecation handling, remove, `addCollection()`, `addPrefix()`, `addNamePrefix()` (canonical routes, local and external aliases), bulk setters, resources (`config` feature) | `RouteCollection.php`, `Alias.php`; RouteCollectionTest 24 of 24; 300 recorded collection scripts |
 
 `RouteCollection<T>` holds ordered `Definition<T>` registrations. Each
 definition contains literal/parameter segments and a startup-created target
@@ -43,7 +47,20 @@ uv run python compare/routing_vectors.py
 cargo test -p symfony-routing
 ```
 
-Not implemented: arbitrary PCRE requirements, adjacent/greedy parameters,
+The ported Route classes (`route`, `compiled_route`, `route_compiler`,
+`route_collection`, `alias`) are Symfony's, and are not yet used by the
+typed matcher and generator above. A collection owns its routes (PHP
+shares Route objects between handles), and `compiler_class` is chosen at
+build time with `Route::compile_with::<C>()`. Their tests are
+`tests/route_test.rs`, `route_compiler_test.rs`, `compiled_route_test.rs`,
+`route_collection_test.rs`, plus the replay `route_recorded.rs`
+(`scripts/record.sh routing-route`). Not reproduced, and refused instead:
+the "called in" suffix of a TypeError for a non-string requirement, a
+non-array `_route_mapping` default when a pattern adds a mapping, and a
+`_canonical_route` default that cannot be concatenated in
+`addNamePrefix()`.
+
+Not implemented in the typed matcher and generator: arbitrary PCRE requirements, adjacent/greedy parameters,
 optional-parameter/default inference, host or scheme routing, expression
 conditions, route loaders, route aliases, locale-aware generation, complete
 named URL generation, relative URLs, or HttpKernel events. Application
