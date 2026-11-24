@@ -27,5 +27,8 @@ members = [
     "spikes/twig-trial/compiler",
     "spikes/twig-trial/runtime",
     "spikes/twig-trial/demo",
+    "spikes/di-trial/compiler",
+    "spikes/di-trial/runtime",
+    "spikes/di-trial/demo",
 ]
 resolver = "3"
