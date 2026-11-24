@@ -1323,6 +1323,33 @@ Stack rows (searched November 22):
       test checks each of the 335 differences. `MimeTypes::new()` now
       registers it, as upstream. No advisory is listed for this file.
 
+## Local development performance
+
+- Fast iteration: derive affected crates and reverse dependencies from
+  Cargo metadata; fall back to the workspace for uncertain changes.
+  Keep full workspace checks before merge and all existing parity gates.
+- Optional nextest for development with separate doctests; no hosted CI
+  or required new tool. Default debug line tables, full-symbol opt-in
+  profile; use separate worktree targets and optional sccache.
+- Audit compilation timings and feature activation before removing
+  dependencies or splitting tests. The November 24 lockfile contains
+  163 package entries (two repeated names, embedded-io and syn);
+  build unit counts can be larger. No dependency feature change without
+  evidence, stack review where needed, and unchanged parity.
+- Preserve fresh Linux container checks and the pinned oracle; do not
+  replace a clean acceptance run with a cached development run.
+  The prepared pinned image caches rustfmt/clippy installation only by
+  default; --cached explicitly opts into per-worktree Docker volumes for
+  Cargo downloads/builds during development. Sources still come from HEAD,
+  tests run unprivileged and upstream mounts stay read-only.
+- Batch source/parity validation in standard-library Python avoids a
+  process per file/manifest row. The Bash reference implementations remain
+  available; tests compare success and deliberately broken inputs.
+- Validate Windows Git Bash discovery, all Git change states, reverse
+  dependency cycles and nextest failure followed by doctests. Record per-
+  command timings and measured cache runs; no unchecked speedup claims.
+  See README.md and scripts/dev_check.py.
+
 ## Verification
 
 - Per complete package: manifest has no `pending` rows (CI-enforced);
