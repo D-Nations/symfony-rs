@@ -25,6 +25,14 @@ pub enum Key {
 }
 
 impl Key {
+    /// The key's PHP string representation, borrowing string keys.
+    pub fn bytes(&self) -> std::borrow::Cow<'_, [u8]> {
+        match self {
+            Self::Int(i) => std::borrow::Cow::Owned(i.to_string().into_bytes()),
+            Self::Str(s) => std::borrow::Cow::Borrowed(s.as_bytes()),
+        }
+    }
+
     /// The key PHP uses for the string `bytes`.
     pub fn from_bytes(bytes: &[u8]) -> Self {
         match canonical_int(bytes) {

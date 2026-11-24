@@ -68,7 +68,7 @@ own GitHub/crates.io search for that component, recorded as a stack-table row.
 depends on it by pinned git rev, with a `[patch]` path override for local
 work. `examples/request-lab` moves along as the minimal second consumer.
 
-**Crate per Symfony package**, same names as Composer (`symfony-yaml`,
+**Crates generally follow Symfony packages**, with names matching Composer (`symfony-yaml`,
 `symfony-form`, `twig`, `doctrine-orm`, ...), each with: its source mapping
 (module header names the PHP file, kept from AGENTS.md), README contract
 table (as the three existing crates already have), `parity/` manifest, and
@@ -190,14 +190,14 @@ objectives. Preserve security, PHP/Symfony observable behaviour, source
 traceability and independently useful package boundaries. Do not pause
 the dependency-ordered port for a workspace-wide rewrite.
 
-**Package boundaries (owner requirement).** Retain one independently usable
-Rust crate per ported PHP package/dependency, including non-Symfony
-dependencies such as Twig and Doctrine where applicable. A package must be
-usable by another project without pulling in the whole framework or its
-converter. Keep crate names, public contracts and feature boundaries
+**Package boundaries (owner requirement, revised November 24).** Prefer
+independently reusable crates where useful, but one Rust crate per PHP
+package or dependency is not mandatory. Group cohesive components or helpers
+when that reduces complexity and dependency overhead. Preserve standalone
+consumption of useful components without the whole framework or converter. Keep crate names, public contracts and feature boundaries
 explicit; keep application-specific code outside reusable crates.
-Consolidation means sharing proven common implementations, not merging
-packages into a monolithic runtime. Lower-level PHP semantics and primitives
+Consolidation means sharing proven common implementations and allowing
+cohesive grouping, not merging everything into a monolithic runtime. Lower-level PHP semantics and primitives
 belong in narrowly scoped shared crates (such as the existing php-value,
 php-pcre and php-dom); prefer the standard library where its semantics
 match. Use optional dependencies for genuine integrations, keep dependency

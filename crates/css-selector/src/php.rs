@@ -5,9 +5,7 @@
 //! Upstream: none
 
 /// `(bool) $string`: false for `""` and `"0"`.
-pub(crate) fn truthy(s: &[u8]) -> bool {
-    !(s.is_empty() || s == b"0")
-}
+pub(crate) use php_value::string::truthy;
 
 /// `(bool) $nullableString`.
 pub(crate) fn truthy_opt(s: Option<&[u8]>) -> bool {
@@ -25,12 +23,7 @@ pub(crate) fn strtolower(s: &[u8]) -> Vec<u8> {
 }
 
 /// `trim()` with its default characters (`" \t\n\r\0\x0B"`).
-pub(crate) fn trim(s: &[u8]) -> &[u8] {
-    let strip = |b: &u8| matches!(b, b' ' | b'\t' | b'\n' | b'\r' | 0 | 0x0b);
-    let start = s.iter().position(|b| !strip(b)).unwrap_or(s.len());
-    let end = s.iter().rposition(|b| !strip(b)).map_or(start, |e| e + 1);
-    &s[start..end]
-}
+pub(crate) use php_value::string::trim;
 
 /// `substr($string, $start, $length)` for non-negative `$start` and
 /// `$length`.

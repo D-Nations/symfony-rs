@@ -33,15 +33,7 @@ use crate::{
 
 /// `(bool) $value`.
 fn truthy(value: &Value) -> bool {
-    match value {
-        Value::Null => false,
-        Value::Bool(b) => *b,
-        Value::Int(i) => *i != 0,
-        Value::Float(f) => *f != 0.0,
-        Value::String(s) => !(s.is_empty() || s.as_bytes() == b"0"),
-        Value::Array(a) => !a.is_empty(),
-        Value::Object(_) => true,
-    }
+    value.is_truthy()
 }
 
 fn numbers_equal(a: Number, b: Number) -> bool {

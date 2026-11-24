@@ -32,23 +32,12 @@ use php_value::{
 
 /// `(bool) $value`.
 pub fn truthy(value: &Value) -> bool {
-    match value {
-        Value::Null => false,
-        Value::Bool(b) => *b,
-        Value::Int(i) => *i != 0,
-        Value::Float(f) => *f != 0.0,
-        Value::String(s) => !(s.is_empty() || s.as_bytes() == b"0"),
-        Value::Array(a) => !a.is_empty(),
-        Value::Object(_) => true,
-    }
+    value.is_truthy()
 }
 
 /// A key as the string PHP gives it in a string context.
 pub fn key_bytes(key: &Key) -> Vec<u8> {
-    match key {
-        Key::Int(i) => i.to_string().into_bytes(),
-        Key::Str(s) => s.as_bytes().to_vec(),
-    }
+    key.bytes().into_owned()
 }
 
 /// `sprintf('%s', $value)` / `(string)` for scalars and null; arrays give
@@ -76,27 +65,7 @@ pub fn error_type_name(value: &Value) -> String {
 }
 
 /// `levenshtein($a, $b)` with insertion, replacement and deletion costs 1.
-pub fn levenshtein(a: &[u8], b: &[u8]) -> usize {
-    if a.is_empty() {
-        return b.len();
-    }
-    if b.is_empty() {
-        return a.len();
-    }
-    let mut previous: Vec<usize> = (0..=b.len()).collect();
-    let mut current = vec![0; b.len() + 1];
-    for (i, &ca) in a.iter().enumerate() {
-        current[0] = i + 1;
-        for (j, &cb) in b.iter().enumerate() {
-            let replace = previous[j] + usize::from(ca != cb);
-            let insert = current[j] + 1;
-            let delete = previous[j + 1] + 1;
-            current[j + 1] = replace.min(insert).min(delete);
-        }
-        std::mem::swap(&mut previous, &mut current);
-    }
-    previous[b.len()]
-}
+pub use php_value::string::levenshtein;
 
 enum Num {
     Int(i64),
@@ -681,12 +650,7 @@ pub fn sprintf(format: &[u8], args: &[Value]) -> Result<Vec<u8>, crate::Error> {
 }
 
 /// `trim($string)`: strips `" \t\n\r\0\x0B"` from both ends.
-pub fn trim(s: &[u8]) -> &[u8] {
-    let strip = |b: &u8| matches!(b, b' ' | b'\t' | b'\n' | b'\r' | 0 | 0x0B);
-    let start = s.iter().position(|b| !strip(b)).unwrap_or(s.len());
-    let end = s.iter().rposition(|b| !strip(b)).map_or(start, |i| i + 1);
-    &s[start..end]
-}
+pub use php_value::string::trim;
 
 /// `ctype_digit($string)`: non-empty and only ASCII digits.
 pub fn ctype_digit(s: &[u8]) -> bool {

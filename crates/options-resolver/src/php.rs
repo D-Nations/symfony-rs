@@ -196,10 +196,7 @@ pub fn is_callable(value: &Value) -> bool {
 
 /// `(string) $key`.
 pub fn key_bytes(key: &Key) -> Vec<u8> {
-    match key {
-        Key::Int(i) => i.to_string().into_bytes(),
-        Key::Str(s) => s.to_vec(),
-    }
+    key.bytes().into_owned()
 }
 
 /// `(string) $value` for an int or float (the only kinds
@@ -216,14 +213,7 @@ pub fn scalar_bytes(value: &Value) -> Vec<u8> {
 
 /// `implode($glue, $pieces)` of byte strings.
 pub fn implode(glue: &[u8], pieces: &[Vec<u8>]) -> Vec<u8> {
-    let mut out = Vec::new();
-    for (i, piece) in pieces.iter().enumerate() {
-        if i > 0 {
-            out.extend_from_slice(glue);
-        }
-        out.extend_from_slice(piece);
-    }
-    out
+    pieces.join(glue)
 }
 
 /// `strtr($subject, [$from => $to])`: every non-overlapping occurrence,
