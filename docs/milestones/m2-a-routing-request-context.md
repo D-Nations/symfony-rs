@@ -20,8 +20,9 @@ Upstream symfony/routing at the pin (v8.1.11,
 
 `php-value` gains `url::parse_url()` (`Url`, `Url::to_array()`), written
 from the PHP manual and recorded answers (no PHP source, decision 8).
-symfony-filesystem's scheme-only `parse_url_scheme()` stays where it is,
-because open PR #33 is moving that module.
+symfony-filesystem's scheme-only `parse_url_scheme()` (in its `php.rs`,
+reworked by PR #33 while this stage ran) is left unchanged here. Having it
+call `php_value::url::parse_url()` is a follow-up for that crate.
 
 Prior art for `parse_url()` (PLAN.md stack row): `url` follows the WHATWG
 standard, and `http::Uri` and `fluent-uri` follow RFC 3986 strictly.
@@ -66,7 +67,8 @@ clean, `scripts/sources.sh --check` ok, `scripts/parity-check.sh` ok
 (routing 94 ported, 1 n/a, 801 pending). `cargo test` on the Windows
 host: 2,526 passed, 1 failed, the known Windows-only
 `symfony-filesystem` `testReadNonExistentFile` (OS error text), which
-this branch does not touch. `scripts/linux-test.sh -p symfony-routing -p
+this branch does not touch (before the rebase onto 99caa76). After it: see
+below. `scripts/linux-test.sh -p symfony-routing -p
 php-value` on the committed branch (fmt, clippy, tests): 125 passed, 0
 failed.
 
