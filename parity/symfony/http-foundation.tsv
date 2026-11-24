@@ -109,47 +109,47 @@ Tests/EventStreamResponseTest.php	EventStreamResponseTest::testStreamEventWithSe
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testStreamEventsAndData	pending	
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testStreamEventsWithRetryFallback	pending	
 Tests/EventStreamResponseTest.php	EventStreamResponseTest::testStreamSingleEvent	pending	
-Tests/File/FileTest.php	FileTest::testConstructWhenFileNotExists	pending	
-Tests/File/FileTest.php	FileTest::testGetContent	pending	
-Tests/File/FileTest.php	FileTest::testGetMimeTypeUsesMimeTypeGuessers	pending	
-Tests/File/FileTest.php	FileTest::testGuessExtensionIsBasedOnMimeType	pending	
-Tests/File/FileTest.php	FileTest::testGuessExtensionWithoutGuesser	pending	
-Tests/File/FileTest.php	FileTest::testMove	pending	
-Tests/File/FileTest.php	FileTest::testMoveToAnUnexistentDirectory	pending	
-Tests/File/FileTest.php	FileTest::testMoveWithNewName	pending	
-Tests/File/FileTest.php	FileTest::testMoveWithNonLatinName	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testCaseSensitiveMimeType	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testConstructWhenFileNotExists	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testErrorIsOkByDefault	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testFileUploadsWithNoMimeType	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testFileUploadsWithUnknownMimeType	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGetClientOriginalExtension	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGetClientOriginalName	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGetClientOriginalNameSanitizeFilename	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGetExtension	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGetMaxFilesize	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGetSize	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGuessClientExtension	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testGuessClientExtensionWithIncorrectMimeType	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testInvalidFile	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testIsInvalidIfNotHttpUpload	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testIsInvalidOnUploadError	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testIsValid	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testMoveFailed	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testMoveLocalFileIsAllowedInTestMode	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testMoveLocalFileIsNotAllowed	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testNoErrorMessageIfErrorIsUploadErrOk	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testgetClientOriginalPath	pending	
-Tests/File/UploadedFileTest.php	UploadedFileTest::testgetClientOriginalPathWebkitDirectory	pending	
-Tests/FileBagTest.php	FileBagTest::testFileMustBeAnArrayOrUploadedFile	pending	
-Tests/FileBagTest.php	FileBagTest::testShouldConvertNestedUploadedFilesWithPhpBug	pending	
-Tests/FileBagTest.php	FileBagTest::testShouldConvertUploadedFilesWithPhpBug	pending	
-Tests/FileBagTest.php	FileBagTest::testShouldConvertsUploadedFiles	pending	
-Tests/FileBagTest.php	FileBagTest::testShouldNotConvertNestedUploadedFiles	pending	
-Tests/FileBagTest.php	FileBagTest::testShouldNotRemoveEmptyUploadedFilesForAssociativeArray	pending	
-Tests/FileBagTest.php	FileBagTest::testShouldRemoveEmptyUploadedFilesForMultiUpload	pending	
-Tests/FileBagTest.php	FileBagTest::testShouldSetEmptyUploadedFilesToNull	pending	
-Tests/FileBagTest.php	FileBagTest::testWebkitDirectoryUpload	pending	
+Tests/File/FileTest.php	FileTest::testConstructWhenFileNotExists	ported	crates/http-foundation/tests/file_test.rs::testConstructWhenFileNotExists
+Tests/File/FileTest.php	FileTest::testGetContent	ported	crates/http-foundation/tests/file_test.rs::testGetContent
+Tests/File/FileTest.php	FileTest::testGetMimeTypeUsesMimeTypeGuessers	ported	crates/http-foundation/tests/file_test.rs::testGetMimeTypeUsesMimeTypeGuessers
+Tests/File/FileTest.php	FileTest::testGuessExtensionIsBasedOnMimeType	ported	crates/http-foundation/tests/file_test.rs::testGuessExtensionIsBasedOnMimeType
+Tests/File/FileTest.php	FileTest::testGuessExtensionWithoutGuesser	ported	crates/http-foundation/tests/file_test.rs::testGuessExtensionWithoutGuesser
+Tests/File/FileTest.php	FileTest::testMove	ported	crates/http-foundation/tests/file_test.rs::testMove
+Tests/File/FileTest.php	FileTest::testMoveToAnUnexistentDirectory	ported	crates/http-foundation/tests/file_test.rs::testMoveToAnUnexistentDirectory
+Tests/File/FileTest.php	FileTest::testMoveWithNewName	ported	crates/http-foundation/tests/file_test.rs::testMoveWithNewName
+Tests/File/FileTest.php	FileTest::testMoveWithNonLatinName	ported	crates/http-foundation/tests/file_test.rs::testMoveWithNonLatinName
+Tests/File/UploadedFileTest.php	UploadedFileTest::testCaseSensitiveMimeType	ported	crates/http-foundation/tests/uploaded_file_test.rs::testCaseSensitiveMimeType
+Tests/File/UploadedFileTest.php	UploadedFileTest::testConstructWhenFileNotExists	ported	crates/http-foundation/tests/uploaded_file_test.rs::testConstructWhenFileNotExists
+Tests/File/UploadedFileTest.php	UploadedFileTest::testErrorIsOkByDefault	ported	crates/http-foundation/tests/uploaded_file_test.rs::testErrorIsOkByDefault
+Tests/File/UploadedFileTest.php	UploadedFileTest::testFileUploadsWithNoMimeType	ported	crates/http-foundation/tests/uploaded_file_test.rs::testFileUploadsWithNoMimeType
+Tests/File/UploadedFileTest.php	UploadedFileTest::testFileUploadsWithUnknownMimeType	ported	crates/http-foundation/tests/uploaded_file_test.rs::testFileUploadsWithUnknownMimeType
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGetClientOriginalExtension	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGetClientOriginalExtension
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGetClientOriginalName	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGetClientOriginalName
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGetClientOriginalNameSanitizeFilename	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGetClientOriginalNameSanitizeFilename
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGetExtension	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGetExtension
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGetMaxFilesize	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGetMaxFilesize
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGetSize	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGetSize
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGuessClientExtension	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGuessClientExtension
+Tests/File/UploadedFileTest.php	UploadedFileTest::testGuessClientExtensionWithIncorrectMimeType	ported	crates/http-foundation/tests/uploaded_file_test.rs::testGuessClientExtensionWithIncorrectMimeType
+Tests/File/UploadedFileTest.php	UploadedFileTest::testInvalidFile	ported	crates/http-foundation/tests/uploaded_file_test.rs::testInvalidFile
+Tests/File/UploadedFileTest.php	UploadedFileTest::testIsInvalidIfNotHttpUpload	ported	crates/http-foundation/tests/uploaded_file_test.rs::testIsInvalidIfNotHttpUpload
+Tests/File/UploadedFileTest.php	UploadedFileTest::testIsInvalidOnUploadError	ported	crates/http-foundation/tests/uploaded_file_test.rs::testIsInvalidOnUploadError
+Tests/File/UploadedFileTest.php	UploadedFileTest::testIsValid	ported	crates/http-foundation/tests/uploaded_file_test.rs::testIsValid
+Tests/File/UploadedFileTest.php	UploadedFileTest::testMoveFailed	ported	crates/http-foundation/tests/uploaded_file_test.rs::testMoveFailed
+Tests/File/UploadedFileTest.php	UploadedFileTest::testMoveLocalFileIsAllowedInTestMode	ported	crates/http-foundation/tests/uploaded_file_test.rs::testMoveLocalFileIsAllowedInTestMode
+Tests/File/UploadedFileTest.php	UploadedFileTest::testMoveLocalFileIsNotAllowed	ported	crates/http-foundation/tests/uploaded_file_test.rs::testMoveLocalFileIsNotAllowed
+Tests/File/UploadedFileTest.php	UploadedFileTest::testNoErrorMessageIfErrorIsUploadErrOk	ported	crates/http-foundation/tests/uploaded_file_test.rs::testNoErrorMessageIfErrorIsUploadErrOk
+Tests/File/UploadedFileTest.php	UploadedFileTest::testgetClientOriginalPath	ported	crates/http-foundation/tests/uploaded_file_test.rs::testgetClientOriginalPath
+Tests/File/UploadedFileTest.php	UploadedFileTest::testgetClientOriginalPathWebkitDirectory	ported	crates/http-foundation/tests/uploaded_file_test.rs::testgetClientOriginalPathWebkitDirectory
+Tests/FileBagTest.php	FileBagTest::testFileMustBeAnArrayOrUploadedFile	ported	crates/http-foundation/tests/file_bag_test.rs::testFileMustBeAnArrayOrUploadedFile
+Tests/FileBagTest.php	FileBagTest::testShouldConvertNestedUploadedFilesWithPhpBug	ported	crates/http-foundation/tests/file_bag_test.rs::testShouldConvertNestedUploadedFilesWithPhpBug
+Tests/FileBagTest.php	FileBagTest::testShouldConvertUploadedFilesWithPhpBug	ported	crates/http-foundation/tests/file_bag_test.rs::testShouldConvertUploadedFilesWithPhpBug
+Tests/FileBagTest.php	FileBagTest::testShouldConvertsUploadedFiles	ported	crates/http-foundation/tests/file_bag_test.rs::testShouldConvertsUploadedFiles
+Tests/FileBagTest.php	FileBagTest::testShouldNotConvertNestedUploadedFiles	ported	crates/http-foundation/tests/file_bag_test.rs::testShouldNotConvertNestedUploadedFiles
+Tests/FileBagTest.php	FileBagTest::testShouldNotRemoveEmptyUploadedFilesForAssociativeArray	ported	crates/http-foundation/tests/file_bag_test.rs::testShouldNotRemoveEmptyUploadedFilesForAssociativeArray
+Tests/FileBagTest.php	FileBagTest::testShouldRemoveEmptyUploadedFilesForMultiUpload	ported	crates/http-foundation/tests/file_bag_test.rs::testShouldRemoveEmptyUploadedFilesForMultiUpload
+Tests/FileBagTest.php	FileBagTest::testShouldSetEmptyUploadedFilesToNull	ported	crates/http-foundation/tests/file_bag_test.rs::testShouldSetEmptyUploadedFilesToNull
+Tests/FileBagTest.php	FileBagTest::testWebkitDirectoryUpload	ported	crates/http-foundation/tests/file_bag_test.rs::testWebkitDirectoryUpload
 Tests/HeaderBagTest.php	HeaderBagTest::testAll	ported	crates/http-foundation/tests/header_bag_test.rs::testAll
 Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlClone	ported	crates/http-foundation/tests/header_bag_test.rs::testCacheControlClone
 Tests/HeaderBagTest.php	HeaderBagTest::testCacheControlDirectiveAccessors	ported	crates/http-foundation/tests/header_bag_test.rs::testCacheControlDirectiveAccessors
