@@ -1,0 +1,17 @@
+[package]
+name = "di-trial-demo"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "DI trial: symfony/demo's compiled container emitted as Rust at build time"
+
+[dependencies]
+php-value = { path = "../../../crates/php-value" }
+di-trial-runtime = { path = "../runtime" }
+
+[build-dependencies]
+di-trial-compiler = { path = "../compiler" }
+
+[dev-dependencies]
+serde_json = "1.0.154"

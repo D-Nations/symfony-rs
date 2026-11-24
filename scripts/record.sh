@@ -33,6 +33,7 @@
 #   scripts/record.sh mime-fileinfo crates/mime/tests/data/fileinfo.json (FileinfoMimeTypeGuesser, needs upstream/)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")
+#   scripts/record.sh di-trial     spikes/di-trial/demo/data/container.xml (the demo's compiled container), demo/tests/data/php_classes.json
 #   scripts/record.sh all
 #
 # The oracle loads the pinned packages from ../symfony-demo/vendor
@@ -99,6 +100,25 @@ second_app_w1() {
 }
 
 converter_fixture() { python oracle/recorders/converter_fixture.py; }
+
+di_trial() {
+    local out=spikes/di-trial/demo/data/container.xml tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    # /demo is read-only; the kernel writes its cache to a tmpfs on /demo/var.
+    docker compose -f oracle/compose.yaml run --rm -T --tmpfs /demo/var php \
+        oracle/recorders/di_container.php > "$tmp"
+    mv "$tmp" "$out"
+    echo "$(grep -c '<service ' "$out") service definitions written to $out"
+    out=spikes/di-trial/demo/tests/data/php_classes.json
+    mkdir -p "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    docker compose -f oracle/compose.yaml run --rm -T --tmpfs /demo/var php \
+        oracle/recorders/di_container.php classes > "$tmp"
+    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
+    mv "$tmp" "$out"
+    echo "public service types written to $out"
+}
 
 event_dispatcher() {
     local out=crates/event-dispatcher/tests/data/edges.txt tmp
@@ -529,6 +549,7 @@ case "${1:-}" in
     request-vars) request_vars ;;
     second-app-w1) second_app_w1 ;;
     converter-fixture) converter_fixture ;;
+    di-trial) di_trial ;;
     event-dispatcher) event_dispatcher ;;
     stopwatch) stopwatch ;;
     php-value) php_value ;;
@@ -554,5 +575,5 @@ case "${1:-}" in
     http-foundation-releases) http_foundation_releases ;;
     twig-trial) twig_trial ;;
     all) routing; routing_route; routing_request_context; routing_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
 esac
