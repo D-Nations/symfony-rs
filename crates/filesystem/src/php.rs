@@ -23,19 +23,10 @@
 //!
 //! Upstream: none
 
-use std::{ffi::OsString, io::Write, path::PathBuf};
+use std::{io::Write, path::PathBuf};
 
 /// A path as bytes.
-#[cfg(unix)]
-pub fn os_bytes(s: OsString) -> Vec<u8> {
-    use std::os::unix::ffi::OsStringExt;
-    s.into_vec()
-}
-
-#[cfg(not(unix))]
-pub fn os_bytes(s: OsString) -> Vec<u8> {
-    s.to_string_lossy().into_owned().into_bytes()
-}
+pub use php_value::path::from_os_string as os_bytes;
 
 /// The local file a path names: the path itself, or the part after
 /// `file://`. `None` for other stream wrappers and for `""`.
@@ -48,15 +39,7 @@ pub fn local_path(path: &[u8]) -> Option<PathBuf> {
     if path.is_empty() {
         return None;
     }
-    #[cfg(unix)]
-    {
-        use std::os::unix::ffi::OsStrExt;
-        Some(PathBuf::from(std::ffi::OsStr::from_bytes(path)))
-    }
-    #[cfg(not(unix))]
-    {
-        std::str::from_utf8(path).ok().map(PathBuf::from)
-    }
+    php_value::path::to_path(path)
 }
 
 fn shown(path: &[u8]) -> String {

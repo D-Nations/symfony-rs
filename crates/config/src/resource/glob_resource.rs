@@ -227,7 +227,7 @@ impl GlobResource {
         let mut prefix = normalize(&self.prefix);
         let pattern = if fs::is_file(&prefix) {
             prefix = fs::dirname(&prefix);
-            let mut p = basename(&prefix).to_vec();
+            let mut p = php_value::path::basename(&prefix).to_vec();
             p.extend_from_slice(&self.pattern);
             p
         } else {
@@ -478,21 +478,6 @@ fn normalize(path: &[u8]) -> Vec<u8> {
     path.iter()
         .map(|&c| if c == b'\\' { b'/' } else { c })
         .collect()
-}
-
-/// `basename($path)` for `/`-separated paths.
-fn basename(path: &[u8]) -> &[u8] {
-    let trimmed = {
-        let mut end = path.len();
-        while end > 1 && path[end - 1] == b'/' {
-            end -= 1;
-        }
-        &path[..end]
-    };
-    match trimmed.iter().rposition(|&c| c == b'/') {
-        Some(at) if trimmed.len() > 1 => &trimmed[at + 1..],
-        _ => trimmed,
-    }
 }
 
 /// `substr($s, $start)`, empty past the end.

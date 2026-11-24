@@ -20,16 +20,10 @@ pub(crate) enum Location {
     Path(PathBuf),
 }
 
-fn bytes_to_path(bytes: &[u8]) -> PathBuf {
-    #[cfg(unix)]
-    {
-        use std::os::unix::ffi::OsStrExt;
-        PathBuf::from(std::ffi::OsStr::from_bytes(bytes))
-    }
-    #[cfg(not(unix))]
-    {
-        PathBuf::from(String::from_utf8_lossy(bytes).into_owned())
-    }
+/// A local path; `None` for bytes that name no file on this system (not
+/// UTF-8 outside Unix).
+fn bytes_to_path(bytes: &[u8]) -> Option<PathBuf> {
+    php_value::path::to_path(bytes)
 }
 
 /// The scheme of `scheme://…` (letters, digits, `+`, `-`, `.`), lowercased.
@@ -54,25 +48,31 @@ pub(crate) fn locate(resource: &[u8]) -> Location {
     match scheme(resource) {
         Some((scheme, rest)) => match scheme.as_str() {
             "http" | "https" | "ftp" | "ftps" | "data" => Location::Remote,
-            "file" if rest.starts_with(b"/") => Location::Path(bytes_to_path(rest)),
+            "file" if rest.starts_with(b"/") => local(rest),
             "file" if rest.len() >= 10 && rest[..10].eq_ignore_ascii_case(b"localhost/") => {
-                Location::Path(bytes_to_path(&rest[9..]))
+                local(&rest[9..])
             }
             "file" => Location::Remote,
             "php" | "glob" | "compress.zlib" => Location::Absent,
             "phar" if phar_archive(rest) => Location::Phar,
             "phar" => Location::Absent,
-            _ => Location::Path(bytes_to_path(resource)),
+            _ => local(resource),
         },
-        None => Location::Path(bytes_to_path(resource)),
+        None => local(resource),
     }
+}
+
+/// A local file's location; one that names no file is [`Location::Absent`].
+fn local(bytes: &[u8]) -> Location {
+    bytes_to_path(bytes).map_or(Location::Absent, Location::Path)
 }
 
 /// Whether a `phar://` URL's path starts with an existing file (the
 /// archive PHP would open).
 fn phar_archive(rest: &[u8]) -> bool {
     (1..=rest.len()).any(|end| {
-        (end == rest.len() || rest[end] == b'/') && bytes_to_path(&rest[..end]).is_file()
+        (end == rest.len() || rest[end] == b'/')
+            && bytes_to_path(&rest[..end]).is_some_and(|p| p.is_file())
     })
 }
 

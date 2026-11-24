@@ -13,7 +13,6 @@
 
 use std::{
     collections::HashMap,
-    ffi::OsString,
     path::PathBuf,
     sync::{Arc, LazyLock, RwLock},
 };
@@ -130,33 +129,15 @@ pub fn is_url(path: &[u8]) -> bool {
     scheme(path).is_some_and(|s| !s.eq_ignore_ascii_case(b"file"))
 }
 
-#[cfg(unix)]
-fn local_path(path: &[u8]) -> Option<PathBuf> {
-    use std::os::unix::ffi::OsStrExt;
-    if path.is_empty() {
-        return None;
-    }
-    Some(PathBuf::from(std::ffi::OsStr::from_bytes(path)))
-}
-
-#[cfg(not(unix))]
+/// The local file a path names; `None` for `""`.
 fn local_path(path: &[u8]) -> Option<PathBuf> {
     if path.is_empty() {
         return None;
     }
-    std::str::from_utf8(path).ok().map(PathBuf::from)
+    php_value::path::to_path(path)
 }
 
-#[cfg(unix)]
-fn os_bytes(s: OsString) -> Vec<u8> {
-    use std::os::unix::ffi::OsStringExt;
-    s.into_vec()
-}
-
-#[cfg(not(unix))]
-fn os_bytes(s: OsString) -> Vec<u8> {
-    s.to_string_lossy().into_owned().into_bytes()
-}
+use php_value::path::from_os_string as os_bytes;
 
 #[cfg(not(unix))]
 fn secs(t: std::io::Result<std::time::SystemTime>) -> i64 {
@@ -336,33 +317,7 @@ pub fn realpath(path: &[u8]) -> Option<Vec<u8>> {
 }
 
 /// PHP's `dirname($path)` (one level, `/` separators).
-pub fn dirname(path: &[u8]) -> Vec<u8> {
-    let mut end = path.len();
-    while end > 1 && path[end - 1] == b'/' {
-        end -= 1;
-    }
-    let trimmed = &path[..end];
-    match trimmed.iter().rposition(|&c| c == b'/') {
-        None => {
-            if path.first() == Some(&b'/') {
-                b"/".to_vec()
-            } else {
-                b".".to_vec()
-            }
-        }
-        Some(at) => {
-            let mut stop = at;
-            while stop > 0 && trimmed[stop - 1] == b'/' {
-                stop -= 1;
-            }
-            if stop == 0 {
-                b"/".to_vec()
-            } else {
-                trimmed[..stop].to_vec()
-            }
-        }
-    }
-}
+pub use php_value::path::dirname;
 
 /// `glob($pattern, GLOB_BRACE | GLOB_ONLYDIR | GLOB_NOSORT)` on local
 /// paths (glibc's rules: `*`, `?`, `[...]` with `!`/`^`, `\` escapes, a

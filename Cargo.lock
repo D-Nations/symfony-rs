@@ -600,6 +600,7 @@ name = "symfony-filesystem"
 version = "0.1.0"
 dependencies = [
  "getrandom",
+ "php-value",
  "symfony-finder",
 ]
 

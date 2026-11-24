@@ -572,13 +572,5 @@ fn percent_decode(s: &str) -> Option<String> {
 
 /// A path as the bytes PHP has for it.
 fn path_bytes(path: &Path) -> Vec<u8> {
-    #[cfg(unix)]
-    {
-        use std::os::unix::ffi::OsStrExt;
-        path.as_os_str().as_bytes().to_vec()
-    }
-    #[cfg(not(unix))]
-    {
-        path.to_string_lossy().into_owned().into_bytes()
-    }
+    php_value::path::from_path(path)
 }
