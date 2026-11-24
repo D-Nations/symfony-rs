@@ -90,8 +90,52 @@ The existing weak parent reference limitation remains documented.
   "The system cannot find the file specified." No test or rule changed.
 - New operation tests: 12 MergeOperationTest + 13 TargetOperationTest pass.
 - Oracle replay: all 528 scenarios / 7,782 calls pass.
-- Final host Translation checks, source/parity checks: pending.
-- Full Linux workspace checks via scripts/linux-test.sh: pending.
+- Final host Translation checks: 82 tests passed (the two filesystem
+  recorder replays are Unix-only and run in Linux below).
+- scripts/sources.sh --check: passed (exit 0).
+- scripts/parity-check.sh: passed (exit 0), including all 26 new claims.
+- scripts/fetch-upstream.sh --verify ../symfony-demo/vendor symfony/translation:
+  "same symfony/translation v8.1.5".
+- Standard scripts/linux-test.sh -p symfony-translation at 088f500: passed
+  formatting, Clippy and all 84 Translation tests, including recorded XLIFF
+  and Qt replays.
+- Final full Linux workspace at 8765e49: formatting, Clippy all targets
+  with warnings denied, and cargo test --locked --no-fail-fast passed:
+  2408 passed, 0 failed, 0 ignored across 206 suite results.
+  This includes all 84 Translation tests on the final implementation.
+
+The default full scripts/linux-test.sh run initially failed Config's
+unchanged XmlUtilsTest::testLoadFile: root bypasses chmod 000 and reads the
+fixture. The full run therefore uses the same pinned Rust image and fresh
+archive setup with Docker --cap-drop=DAC_OVERRIDE and
+--cap-drop=DAC_READ_SEARCH. This removes privilege without changing or
+skipping tests. The first restricted-capability run exposed missing Finder
+upstream fixtures; fetching symfony/finder resolved those setup failures.
+The final full run is green, including Config and Finder.
+
+Reproduce the full Linux setup from the repository root (Git Bash on this
+Windows host), with upstream/symfony/finder fetched:
+
+```sh
+export MSYS_NO_PATHCONV=1
+host=$(cd upstream && pwd -W)
+git archive --format=tar HEAD | docker run --rm -i \
+  --cap-drop=DAC_OVERRIDE --cap-drop=DAC_READ_SEARCH \
+  -v "$host:/upstream:ro" \
+  rust@sha256:f6c4a35d21dbb3c89d7a8d056c193e94fc09037f2b58dd858b09c39a47dd02d7 \
+  bash -euo pipefail -c '
+    rustup component add rustfmt clippy >/dev/null 2>&1
+    mkdir /work && cd /work && tar -x
+    test -z "$(ls -A target 2>/dev/null)"
+    ln -s /upstream upstream
+    cargo fmt --check
+    cargo clippy --locked --all-targets -- -D warnings
+    cargo test --locked --no-fail-fast
+  '
+```
+
+No checks, tests or tracked runner scripts were weakened. All builds were
+debug builds; all oracle and Rust containers exit with --rm.
 
 The upstream-watch issue #23 (November 23) lists no translation advisory.
 A direct GitHub advisory query found only GHSA-f75p-x5vm-83qp, published

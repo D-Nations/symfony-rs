@@ -1084,7 +1084,9 @@ This session changes only symfony-translation behaviour; no edits to
 php-value, Routing or HttpFoundation, and no new dependency or lock change.
 Translator, other loaders, formatters, extraction and commands remain
 pending in M5-A. Demo checks/comparisons are paused by the owner; any
-acceptance depending on them remains open. Stage implementation and oracle replay are in place: 26 newly ported tests,
+acceptance depending on them remains open. Stage evidence: 26 newly ported tests,
 528 scenarios / 7,782 calls matching PHP (including four without intl).
-Full checks and Linux validation pending; details in
+Host formatting/Clippy, Translation tests, source/parity checks and the full
+Linux workspace checks pass (restricted-capability container; unchanged
+Windows OS-message test failure recorded). Details in
 [docs/milestones/m5-a-translation-catalogue.md](docs/milestones/m5-a-translation-catalogue.md).
