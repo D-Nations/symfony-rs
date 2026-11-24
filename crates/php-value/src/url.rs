@@ -10,6 +10,7 @@
 //! Upstream: none
 
 use crate::array::{Key, PhpArray};
+use crate::numeric::float_to_string;
 use crate::value::Value;
 
 const HEX: &[u8; 16] = b"0123456789ABCDEF";
@@ -76,17 +77,42 @@ fn decode(text: &[u8], plus_is_space: bool) -> Vec<u8> {
     out
 }
 
-/// `http_build_query($data, '', $separator)` (`PHP_QUERY_RFC1738`), per
-/// the PHP manual: `name=value` pairs, `urlencode()`d, joined by
-/// `separator`; a nested array's entries are named `name[key]` with the
-/// brackets encoded (`%5B`, `%5D`); `null` entries are skipped, `true` is
-/// `1`, `false` is `0`. `None` for a float or an object entry, which this
-/// port does not reproduce.
+/// `http_build_query()`'s `$encoding_type`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum QueryEncoding {
+    /// `PHP_QUERY_RFC1738` (the default): `urlencode()`, a space is `+`.
+    Rfc1738,
+    /// `PHP_QUERY_RFC3986`: `rawurlencode()`, a space is `%20`.
+    Rfc3986,
+}
+
+impl QueryEncoding {
+    fn encode(self, bytes: &[u8]) -> Vec<u8> {
+        encode(bytes, self == Self::Rfc3986)
+    }
+}
+
+/// `http_build_query($data, '', $separator)` (`PHP_QUERY_RFC1738`).
 pub fn http_build_query(data: &PhpArray, separator: &[u8]) -> Option<Vec<u8>> {
+    http_build_query_with(data, separator, QueryEncoding::Rfc1738)
+}
+
+/// `http_build_query($data, '', $separator, $encoding)`, per the PHP
+/// manual: `name=value` pairs, encoded, joined by `separator`; a nested
+/// array's entries are named `name[key]` with the brackets encoded (`%5B`,
+/// `%5D`); `null` entries and empty arrays give no pair, `true` is `1`,
+/// `false` is `0`, a float is its `(string)` form (`1.0E+20`, `NAN`).
+/// `None` for an object entry, which this port does not reproduce. Checked
+/// against PHP 8.4.27 (oracle/recorders/php_value_http_build_query.php).
+pub fn http_build_query_with(
+    data: &PhpArray,
+    separator: &[u8],
+    encoding: QueryEncoding,
+) -> Option<Vec<u8>> {
     let mut pairs: Vec<Vec<u8>> = Vec::new();
     for (key, value) in data.iter() {
-        let name = urlencode(&key_bytes(key));
-        build_pairs(&mut pairs, name, value)?;
+        let name = encoding.encode(&key_bytes(key));
+        build_pairs(&mut pairs, name, value, encoding)?;
     }
     Some(pairs.join(separator))
 }
@@ -98,24 +124,30 @@ fn key_bytes(key: &Key) -> Vec<u8> {
     }
 }
 
-fn build_pairs(pairs: &mut Vec<Vec<u8>>, name: Vec<u8>, value: &Value) -> Option<()> {
+fn build_pairs(
+    pairs: &mut Vec<Vec<u8>>,
+    name: Vec<u8>,
+    value: &Value,
+    encoding: QueryEncoding,
+) -> Option<()> {
     let text: Vec<u8> = match value {
         Value::Null => return Some(()),
         Value::Bool(true) => b"1".to_vec(),
         Value::Bool(false) => b"0".to_vec(),
         Value::Int(i) => i.to_string().into_bytes(),
-        Value::String(s) => urlencode(s.as_bytes()),
+        Value::Float(f) => encoding.encode(float_to_string(*f).as_bytes()),
+        Value::String(s) => encoding.encode(s.as_bytes()),
         Value::Array(children) => {
             for (key, child) in children.iter() {
                 let mut child_name = name.clone();
                 child_name.extend_from_slice(b"%5B");
-                child_name.extend(urlencode(&key_bytes(key)));
+                child_name.extend(encoding.encode(&key_bytes(key)));
                 child_name.extend_from_slice(b"%5D");
-                build_pairs(pairs, child_name, child)?;
+                build_pairs(pairs, child_name, child, encoding)?;
             }
             return Some(());
         }
-        _ => return None,
+        Value::Object(_) => return None,
     };
     let mut pair = name;
     pair.push(b'=');

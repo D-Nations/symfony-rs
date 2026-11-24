@@ -4,13 +4,14 @@
 #   scripts/record.sh routing      crates/routing/tests/data/matcher.json and route.json
 #   scripts/record.sh routing-route crates/routing/tests/data/route.json (Route, RouteCompiler, RouteCollection)
 #   scripts/record.sh routing-request-context crates/routing/tests/data/request_context.json
+#   scripts/record.sh routing-url-generator crates/routing/tests/data/url_generator.json (UrlGenerator)
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
 #   scripts/record.sh request-vars crates/http-foundation/tests/data/{query,cookie,content_type}_vectors.json
 #   scripts/record.sh second-app-w1 oracle/apps/easyadmin-demo/w1.json (second app, W1)
 #   scripts/record.sh converter-fixture oracle/apps/converter-fixture/responses.json (M1-D fixture)
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
-#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter,parse_str,parse_url}.json
+#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter,parse_str,parse_url,loose_equals,http_build_query}.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json, loaders.json
@@ -76,6 +77,16 @@ routing_request_context() {
     echo "RequestContext answers written to $out"
 }
 
+routing_url_generator() {
+    local out=crates/routing/tests/data/url_generator.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/routing_url_generator.php > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d["generate"]), "generate() calls,", len(d["relative"]), "getRelativePath() calls")' "$tmp"
+    mv "$tmp" "$out"
+    echo "UrlGenerator answers written to $out"
+}
+
 multipart() { python oracle/recorders/multipart.py; }
 
 request_vars() { python oracle/recorders/request_vars.py; }
@@ -134,6 +145,18 @@ php_value() {
     python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "parse_url() cases")' "$tmp"
     mv "$tmp" "$out"
     echo "parse_url() vectors written to $out"
+    out=crates/php-value/tests/data/loose_equals.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_value_loose_equals.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "== pairs")' "$tmp"
+    mv "$tmp" "$out"
+    echo "loose equality vectors written to $out"
+    out=crates/php-value/tests/data/http_build_query.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_value_http_build_query.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "http_build_query() cases")' "$tmp"
+    mv "$tmp" "$out"
+    echo "http_build_query() vectors written to $out"
 }
 
 yaml() {
@@ -500,6 +523,7 @@ twig_trial() {
 case "${1:-}" in
     routing) routing; routing_route; routing_request_context ;;
     routing-request-context) routing_request_context ;;
+    routing-url-generator) routing_url_generator ;;
     routing-route) routing_route ;;
     multipart) multipart ;;
     request-vars) request_vars ;;
@@ -529,6 +553,6 @@ case "${1:-}" in
     mime-fileinfo) mime_fileinfo ;;
     http-foundation-releases) http_foundation_releases ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|multipart|request-vars|second-app-w1|converter-fixture|event-dispatcher|stopwatch|php-value|yaml|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
 esac
