@@ -16,6 +16,7 @@
 #   scripts/record.sh config-loaders crates/config/tests/data/loaders.json
 #   scripts/record.sh config-cache crates/config/tests/data/cache.json (Filesystem calls included)
 #   scripts/record.sh translation-xliff crates/translation/tests/data/xliff.json
+#   scripts/record.sh translation-catalogue crates/translation/tests/data/catalogue.json
 #   scripts/record.sh translation-qt crates/translation/tests/data/qt.json
 #   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,builtins,case,inflector,lazy,*_test}.*
@@ -231,6 +232,22 @@ config_cache() {
     echo "Config cache vectors written to $out"
 }
 
+translation_catalogue() {
+    local out=crates/translation/tests/data/catalogue.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/translation_catalogue.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))["cases"]), "catalogue cases")' "$tmp"
+    mv "$tmp" "$out"
+    echo "Translation catalogue vectors written to $out"
+    out=crates/translation/tests/data/catalogue_no_intl.json
+    tmp=$(mktemp -p oracle/out)
+    oracle -n oracle/recorders/translation_catalogue.php --without-intl > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); assert not d["intl"]; print(len(d["cases"]), "catalogue cases without intl")' "$tmp"
+    mv "$tmp" "$out"
+    echo "Translation catalogue vectors without intl written to $out"
+}
+
 translation_qt() {
     local out=crates/translation/tests/data/qt.json tmp
     mkdir -p oracle/out "$(dirname "$out")"
@@ -436,6 +453,7 @@ case "${1:-}" in
     config-xml-utils) config_xml_utils ;;
     config-loaders) config_loaders ;;
     translation-xliff) translation_xliff ;;
+    translation-catalogue) translation_catalogue ;;
     translation-qt) translation_qt ;;
     config-cache) config_cache ;;
     string) string ;;

@@ -1,5 +1,5 @@
-//! Port of the symfony/translation component: the XLIFF and Qt loaders and
-//! what they need (MessageCatalogue, XliffUtils, the exceptions). See
+//! Port of the symfony/translation component: catalogues and catalogue
+//! operations, the XLIFF and Qt loaders, XliffUtils and exceptions. See
 //! README.md for the contract and what is ported so far.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -8,6 +8,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod catalogue;
 pub mod exception;
 pub mod loader;
 pub mod message_catalogue;
