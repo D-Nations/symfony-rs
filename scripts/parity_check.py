@@ -103,19 +103,24 @@ def check_parity(root: Path) -> int:
         package = manifest.relative_to(root / "parity").with_suffix("").as_posix()
         lines = text(manifest).splitlines()
         total = sum(not line.startswith("#") for line in lines)
-        ported = pending = 0
+        # The reference summary uses awk's raw TSV columns, whereas
+        # validation uses Bash read's whitespace rules.
+        columns = [line.split("\t") for line in lines if not line.startswith("#")]
+        ported = sum(len(fields) > 2 and fields[2] == "ported" for fields in columns)
+        pending = sum(len(fields) > 2 and fields[2] == "pending" for fields in columns)
         for line in lines:
             if not line or line.startswith("#"):
                 continue
-            fields = line.split("\t")
+            # Bash read with IFS=tab collapses adjacent/leading tabs.
+            # Preserve that rule so malformed rows cannot bypass a check.
+            fields = re.split(r"\t+", line.strip("\t"), maxsplit=3)
             fields += [""] * max(0, 4 - len(fields))
             _, test, state, rust = fields[:4]
             if state == "pending":
-                pending += 1
+                pass
             elif state.startswith("n/a: ") and len(state) > len("n/a: "):
                 pass
             elif state == "ported":
-                ported += 1
                 rfile, _, _ = rust.partition("::")
                 rfn = rust.rsplit("::", 1)[-1]
                 if not rust or rfile == rust or not (root / rfile).is_file():

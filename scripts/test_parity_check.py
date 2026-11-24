@@ -84,6 +84,8 @@ class ReferenceParityTests(unittest.TestCase):
         original = self.files[name]
         for replacement in (
             original.replace("\tported\t", "\tunknown\t", 1),
+            original.replace("testOne\tported", "\tported", 1),
+            original.replace("Tests/ExampleTest.php\ttestOne", "\ttestOne", 1),
             original.replace("::testOne", "::missing", 1),
             original.replace("test.rs::testOne", "absent.rs::testOne", 1),
             original.replace("\tported\t", "\tpending\t", 1),
