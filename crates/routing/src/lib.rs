@@ -18,6 +18,7 @@ pub mod compiled_url_generator;
 pub mod compiled_url_generator_dumper;
 pub mod exception;
 pub mod generator;
+mod ordered;
 mod php;
 pub mod request_context;
 pub mod route;
