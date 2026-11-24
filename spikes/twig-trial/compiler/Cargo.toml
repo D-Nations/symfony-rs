@@ -1,0 +1,13 @@
+[package]
+name = "twig-trial-compiler"
+version = "0.1.0"
+edition = "2024"
+license = "MIT AND BSD-3-Clause"
+publish = false
+description = "Trial build-time Twig compiler (subset), emitting Rust; not the M4 port"
+
+[dependencies]
+prettyplease = "0.2.37"
+proc-macro2 = "1.0.107"
+quote = "1.0.47"
+syn = { version = "2.0.119", default-features = false, features = ["full", "parsing", "printing"] }

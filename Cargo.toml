@@ -24,5 +24,8 @@ members = [
     "crates/mime",
     "examples/request-lab",
     "fixtures/converter-app",
+    "spikes/twig-trial/compiler",
+    "spikes/twig-trial/runtime",
+    "spikes/twig-trial/demo",
 ]
 resolver = "3"
