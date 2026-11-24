@@ -90,8 +90,14 @@ the full generator.
 
 ## Checks
 
-See the PR. `scripts/linux-test.sh -p symfony-routing -p php-value` runs
-before merge.
+`cargo fmt --check` ok, `cargo clippy --all-targets -- -D warnings`
+clean, `scripts/sources.sh --check` ok, `scripts/parity-check.sh` ok
+(routing 183 ported, 1 n/a, 712 pending). `cargo test` on the Windows
+host: 2,671 passed, 1 failed, the known Windows-only `symfony-filesystem`
+`testReadNonExistentFile` (OS error text), which this branch does not
+touch. `scripts/linux-test.sh -p symfony-routing -p php-value` on the
+committed branch (fmt, clippy, tests, as a non-root user): 224 passed, 0
+failed.
 
 ## Not done
 
