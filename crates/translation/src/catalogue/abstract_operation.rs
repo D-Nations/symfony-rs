@@ -31,21 +31,21 @@ impl TryFrom<&[u8]> for Batch {
     type Error = Error;
 
     fn try_from(value: &[u8]) -> Result<Self, Error> {
-        match value {
-            b"all" => Ok(Self::All),
-            b"new" => Ok(Self::New),
-            b"obsolete" => Ok(Self::Obsolete),
-            _ => Err(Error::new(
-                Class::NativeInvalidArgument,
-                format!(
-                    "$batch argument must be one of [\"{}\", \"{}\", \"{}\"].",
-                    Self::All.as_str(),
-                    Self::New.as_str(),
-                    Self::Obsolete.as_str()
+        [Self::All, Self::New, Self::Obsolete]
+            .into_iter()
+            .find(|batch| batch.as_str().as_bytes() == value)
+            .ok_or_else(|| {
+                Error::new(
+                    Class::NativeInvalidArgument,
+                    format!(
+                        "$batch argument must be one of [\"{}\", \"{}\", \"{}\"].",
+                        Self::All.as_str(),
+                        Self::New.as_str(),
+                        Self::Obsolete.as_str()
+                    )
+                    .into_bytes(),
                 )
-                .into_bytes(),
-            )),
-        }
+            })
     }
 }
 
