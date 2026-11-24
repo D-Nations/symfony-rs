@@ -10,7 +10,7 @@
 #   scripts/record.sh converter-fixture oracle/apps/converter-fixture/responses.json (M1-D fixture)
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
-#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter,parse_str,parse_url}.json
+#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter,parse_str,parse_url,loose_equals,http_build_query}.json
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
 #   scripts/record.sh config       crates/config/tests/data/definition.json, builder.json, dumpers.json, xml_utils.json, loaders.json
@@ -134,6 +134,18 @@ php_value() {
     python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "parse_url() cases")' "$tmp"
     mv "$tmp" "$out"
     echo "parse_url() vectors written to $out"
+    out=crates/php-value/tests/data/loose_equals.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_value_loose_equals.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "== pairs")' "$tmp"
+    mv "$tmp" "$out"
+    echo "loose equality vectors written to $out"
+    out=crates/php-value/tests/data/http_build_query.json
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/php_value_http_build_query.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "http_build_query() cases")' "$tmp"
+    mv "$tmp" "$out"
+    echo "http_build_query() vectors written to $out"
 }
 
 yaml() {

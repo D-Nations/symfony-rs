@@ -11,6 +11,7 @@
 pub mod array;
 pub mod base64;
 pub mod clock;
+pub mod compare;
 pub mod constants;
 pub mod dateparse;
 pub mod datetime;
