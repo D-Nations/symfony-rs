@@ -108,7 +108,11 @@ Linux suite above was run independently of the cached development tests.
 The default line-table profiles were retained; no before/after compile-time
 claim is made for those settings.
 
-## Existing parity-rule gap awaiting owner decision
+## Parity-rule gap identified during PR #46
+
+Follow-up implementation and verification:
+[parity-single-path.md](parity-single-path.md). The text below records
+the gap as it stood when PR #46 was verified.
 
 The original Bash test-mapping pattern requires an additional space after
 the first source path, so a single `Tests/...` path is not recognized for

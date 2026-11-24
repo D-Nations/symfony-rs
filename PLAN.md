@@ -992,8 +992,8 @@ Stack rows (searched November 19):
       `php-rt` `round()` (14,571 differ, from 2.35: it implements the
       pre-8.4 15-digit pre-rounding, a php2rust bug to report).
 - [x] Yaml (`symfony-yaml`, values in `php-value`). Ported: every file,
-      `Command/LintCommand.php` behind the `console` feature: 340 of 342
-      upstream tests, 2 `n/a` with their reasons in the manifest, plus
+      `Command/LintCommand.php` behind the `console` feature: 341 of 342
+      upstream tests, 1 `n/a` with its reason in the manifest, plus
       150 recorded `lint:yaml` runs; in `parity/done.txt`. The four
       advisories the watch lists are `covered`, checked against the
       releases before each fix ([m1-b-console.md](docs/milestones/m1-b-console.md)). ParserTest, DumperTest, YamlTest and
@@ -1002,6 +1002,10 @@ Stack rows (searched November 19):
       test runs and passes (`oracle/recorders/yaml_test_calls.php`);
       YamlTestSuiteTest runs on yaml-test-suite at the commit symfony/yaml
       pins (`upstream.tsv`), 200 cases, upstream's skip list.
+      The unreadable-file ParserTest now runs live on Unix against a
+      UID-1000 PHP oracle recording instead of the skipped root replay.
+      Both parity validators enforce a single or multi-path test mapping;
+      [follow-up evidence](docs/milestones/parity-single-path.md).
 - [x] Dotenv (`symfony-dotenv`): `Dotenv.php` and the exceptions, all 38
       DotenvTest tests (also run on Linux: the `$(...)` cases skip on
       Windows, as upstream's do) and 231 recorded `parse()` inputs. PHP's
