@@ -96,7 +96,8 @@ ported, 818 pending).
 Linux's "No such file or directory" and Windows says "The system cannot
 find the file specified.". It is unchanged by this branch and passes in
 `scripts/linux-test.sh -p symfony-filesystem`. `scripts/linux-test.sh -p
-symfony-routing -p php-value` on the committed branch: see the PR.
+symfony-routing -p php-value` on the committed branch (fmt, clippy and
+tests on Linux): 106 passed, 0 failed.
 
 ## Advisories
 
