@@ -355,6 +355,14 @@ Acceptance is staged:
 T1/T2 completion does not mark Twig or TwigBridge complete; unimplemented
 extensions and sandbox support retain pending coverage until accepted.
 
+**Trial, November 24 (owner request):** [spikes/twig-trial](spikes/twig-trial/README.md)
+compiles the demo's `blog/_post.html.twig` (with its include) at build time;
+its output is byte-identical to Twig 3.30 for 5 cases and 10 language
+snippets. It passes no gate. Findings for M4 (an attribute-lookup hook and
+PHP `==` in `php-value`, build-time extension set, compile-time
+`is_safe_callback`, lines on every node, strict variables) are in
+[docs/milestones/m4-twig-trial.md](docs/milestones/m4-twig-trial.md).
+
 ### M5: Application components (the demo's remaining stack, made complete)
 Translation (all loaders at build time, intl-icu domains, legacy `|`
 plurals, fallbacks), Intl (data from Symfony's `Resources/data`, the method
@@ -755,6 +763,7 @@ Stack rows (searched November 19):
 | Console's OutputWrapper and Table cell patterns (November 21) | `regex` (no atomic groups or lookbehind; upstream's wrap pattern needs both), a hand-written wrapper (the demo's `wrap()`, its own rules), `fancy-regex` 0.20 (already Finder's engine, decision 5) | `fancy-regex`, upstream's pattern written for it; `preg_replace()`'s scan done by hand | The wrap pattern is upstream's text and stays comparable; checked on 2,500 recorded `wrap()` calls and SymfonyStyle's 27 fixtures. No new crate in the workspace |
 | Config's YamlReferenceDumper values (`Inline::dump()`; November 22) | symfony-yaml (this workspace's port of symfony/yaml, upstream's own dependency for this class), a second inline dumper written into symfony-config | symfony-yaml, optional, behind symfony-config's `yaml` feature | Upstream calls symfony/yaml's `Inline::dump()`; symfony-yaml reproduces it on its recorded vectors, and a copy would drift from it. No new crate in the lock |
 | composer.json for `dotenv:dump` and `debug:dotenv` (November 21) | A hand-written JSON reader in `php-value` (none exists; it would need PHP's `json_decode()` rules for depth, big integers and invalid UTF-8), `serde_json` (already in the lock as every crate's test dependency) | `serde_json`, optional, only with symfony-dotenv's `console` feature | The commands read `extra.runtime` from a file the project owns; integers that do not fit become floats as in PHP, invalid JSON is `null`. No new crate in the lock |
+| Twig trial emission (spikes/twig-trial, November 24) | Rust source as hand-built strings (no dependency); `quote` + `proc-macro2` + `syn` 2 (already in Cargo.lock through other crates) with [prettyplease](https://docs.rs/prettyplease) 0.2 to lay out the file, as php2rust does; [genco](https://docs.rs/genco) (quasi-quoting with its own formatter) | `quote` + `syn` + `prettyplease`, in the trial compiler only (a build dependency) | It was the planned M4 approach ("quote + prettyplease"), the emitted tokens are checked by `syn` before they are written, and readable output makes generated templates reviewable. M4 repeats this row when the real `twig` crate starts |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
