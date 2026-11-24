@@ -6,9 +6,11 @@
 //! route in it is changed. Cloning is `__clone()`'s deep copy of routes
 //! and aliases; resources are shared, as PHP shares them.
 //!
-//! Names are PHP strings in insertion order. `all()` orders by priority
-//! (highest first), then by insertion; upstream sorts its own array in
-//! place, which gives the same order every later call observes.
+//! Names are PHP strings in insertion order, kept as PHP keeps its
+//! arrays ([`Ordered`]): looking up, adding and removing a name take
+//! constant time. `all()` orders by priority (highest first), then by
+//! insertion; upstream sorts its own array in place, which gives the same
+//! order every later call observes.
 //!
 //! Resources (`ResourceInterface` from symfony/config, upstream's
 //! require-dev) are available with the `config` feature.
@@ -17,6 +19,7 @@
 //!
 //! Upstream: symfony/routing RouteCollection.php
 
+use std::collections::HashSet;
 #[cfg(feature = "config")]
 use std::sync::Arc;
 
@@ -28,6 +31,7 @@ use symfony_deprecation_contracts::trigger_deprecation;
 use crate::{
     alias::Alias,
     exception::{Class, Error, concat},
+    ordered::Ordered,
     route::Route,
 };
 
@@ -35,34 +39,12 @@ use crate::{
 /// existing name removes the old one first, so the new one comes last.
 #[derive(Debug, Clone, Default)]
 pub struct RouteCollection {
-    routes: Vec<(PhpString, Route)>,
-    aliases: Vec<(PhpString, Alias)>,
+    routes: Ordered<Route>,
+    aliases: Ordered<Alias>,
+    /// By the resource's string form.
     #[cfg(feature = "config")]
-    resources: Vec<(Vec<u8>, Arc<dyn ResourceInterface>)>,
-    priorities: Vec<(PhpString, i64)>,
-}
-
-fn position<T>(list: &[(PhpString, T)], name: &[u8]) -> Option<usize> {
-    list.iter().position(|(n, _)| n.as_bytes() == name)
-}
-
-fn unset<T>(list: &mut Vec<(PhpString, T)>, name: &[u8]) {
-    list.retain(|(n, _)| n.as_bytes() != name);
-}
-
-/// Inserts or replaces in place, as assigning an existing PHP array key
-/// keeps its position.
-fn set<T>(list: &mut Vec<(PhpString, T)>, name: PhpString, value: T) -> usize {
-    match position(list, &name) {
-        Some(i) => {
-            list[i].1 = value;
-            i
-        }
-        None => {
-            list.push((name, value));
-            list.len() - 1
-        }
-    }
+    resources: Ordered<Arc<dyn ResourceInterface>>,
+    priorities: Ordered<i64>,
 }
 
 impl RouteCollection {
@@ -78,23 +60,29 @@ impl RouteCollection {
     /// `add()`.
     pub fn add(&mut self, name: impl Into<PhpString>, route: Route, priority: i64) {
         let name = name.into();
-        unset(&mut self.routes, &name);
-        unset(&mut self.priorities, &name);
-        unset(&mut self.aliases, &name);
-        self.routes.push((name.clone(), route));
+        self.unset(&name);
+        self.routes.set(name.clone(), route);
         if priority != 0 {
-            self.priorities.push((name, priority));
+            self.priorities.set(name, priority);
         }
     }
 
+    /// `unset($this->routes[$name], $this->priorities[$name],
+    /// $this->aliases[$name])`.
+    fn unset(&mut self, name: &[u8]) {
+        self.routes.remove(name);
+        self.priorities.remove(name);
+        self.aliases.remove(name);
+    }
+
     fn priority_of(&self, name: &[u8]) -> i64 {
-        position(&self.priorities, name).map_or(0, |i| self.priorities[i].1)
+        self.priorities.get(name).copied().unwrap_or(0)
     }
 
     /// `all()` (and `getIterator()`): every route, by priority, then in
     /// insertion order.
     pub fn all(&self) -> Vec<(&PhpString, &Route)> {
-        let mut all: Vec<_> = self.routes.iter().map(|(n, r)| (n, r)).collect();
+        let mut all: Vec<_> = self.routes.iter().collect();
         if !self.priorities.is_empty() {
             // a stable sort keeps insertion order among equal priorities
             all.sort_by_key(|(n, _)| std::cmp::Reverse(self.priority_of(n)));
@@ -106,20 +94,19 @@ impl RouteCollection {
     /// triggers its deprecation.
     pub fn get(&self, name: &[u8]) -> Result<Option<&Route>, Error> {
         let name = self.resolve(name)?;
-        Ok(position(&self.routes, &name).map(|i| &self.routes[i].1))
+        Ok(self.routes.get(&name))
     }
 
     /// `get()` for changing the route.
     pub fn get_mut(&mut self, name: &[u8]) -> Result<Option<&mut Route>, Error> {
         let name = self.resolve(name)?;
-        Ok(position(&self.routes, &name).map(|i| &mut self.routes[i].1))
+        Ok(self.routes.get_mut(&name))
     }
 
     fn resolve(&self, name: &[u8]) -> Result<Vec<u8>, Error> {
         let mut name = name.to_vec();
         let mut visited: Vec<Vec<u8>> = Vec::new();
-        while let Some(i) = position(&self.aliases, &name) {
-            let alias = &self.aliases[i].1;
+        while let Some(alias) = self.aliases.get(&name) {
             // array_search() compares loosely: "010" is found as "10"
             let current = Value::string(name.as_slice());
             let search_key = visited
@@ -150,20 +137,18 @@ impl RouteCollection {
 
     /// `remove()` with a list of names. Aliases of a removed route go too.
     pub fn remove_all(&mut self, names: &[&[u8]]) {
-        let mut routes: Vec<Vec<u8>> = Vec::new();
+        let mut routes: HashSet<Vec<u8>> = HashSet::new();
         for &n in names {
-            if position(&self.routes, n).is_some() {
-                routes.push(n.to_vec());
+            if self.routes.contains(n) {
+                routes.insert(n.to_vec());
             }
-            unset(&mut self.routes, n);
-            unset(&mut self.priorities, n);
-            unset(&mut self.aliases, n);
+            self.unset(n);
         }
         if routes.is_empty() {
             return;
         }
         self.aliases
-            .retain(|(_, alias)| !routes.iter().any(|r| r.as_slice() == alias.id().as_bytes()));
+            .retain(|_, alias| !routes.contains(alias.id().as_bytes()));
     }
 
     /// `addCollection()`: appends the routes of `collection`, replacing
@@ -177,34 +162,28 @@ impl RouteCollection {
             .map(|(n, _)| n.clone())
             .collect();
         let RouteCollection {
-            routes,
-            aliases,
+            mut routes,
+            mut aliases,
             #[cfg(feature = "config")]
-            resources,
+            mut resources,
             priorities,
         } = collection;
-        let mut routes = routes;
         for name in order {
-            let Some(i) = position(&routes, &name) else {
+            let Some((name, route)) = routes.remove(&name) else {
                 continue;
             };
-            let (name, route) = routes.remove(i);
-            unset(&mut self.routes, &name);
-            unset(&mut self.priorities, &name);
-            unset(&mut self.aliases, &name);
-            if let Some(p) = position(&priorities, &name) {
-                self.priorities.push((name.clone(), priorities[p].1));
+            self.unset(&name);
+            if let Some(&p) = priorities.get(&name) {
+                self.priorities.set(name.clone(), p);
             }
-            self.routes.push((name, route));
+            self.routes.set(name, route);
         }
-        for (name, alias) in aliases {
-            unset(&mut self.routes, &name);
-            unset(&mut self.priorities, &name);
-            unset(&mut self.aliases, &name);
-            self.aliases.push((name, alias));
+        for (name, alias) in aliases.take() {
+            self.unset(&name);
+            self.aliases.set(name, alias);
         }
         #[cfg(feature = "config")]
-        for (_, resource) in resources {
+        for (_, resource) in resources.take() {
             self.add_resource(resource);
         }
     }
@@ -220,7 +199,7 @@ impl RouteCollection {
         if prefix.is_empty() {
             return Ok(());
         }
-        for (_, route) in &mut self.routes {
+        for route in self.routes.values_mut() {
             let path = concat(&[b"/", prefix, route.path()]);
             route.set_path(path)?;
             route.add_defaults(defaults)?;
@@ -233,12 +212,12 @@ impl RouteCollection {
     /// the collection.
     pub fn add_name_prefix(&mut self, prefix: &[u8]) -> Result<(), Error> {
         let prefixed = |name: &[u8]| PhpString::from(concat(&[prefix, name]));
-        let mut prefixed_routes = Vec::new();
-        let mut prefixed_priorities = Vec::new();
-        let mut prefixed_aliases = Vec::new();
-        let names: Vec<PhpString> = self.routes.iter().map(|(n, _)| n.clone()).collect();
+        let mut prefixed_routes = Ordered::default();
+        let mut prefixed_priorities = Ordered::default();
+        let mut prefixed_aliases = Ordered::default();
+        let names: HashSet<Vec<u8>> = self.routes.iter().map(|(n, _)| n.to_vec()).collect();
 
-        for (name, mut route) in std::mem::take(&mut self.routes) {
+        for (name, mut route) in self.routes.take() {
             if let Some(canonical) = route.default_value(b"_canonical_route").cloned() {
                 // `$prefix.$canonicalName`
                 let Some(canonical) = canonical.to_php_string_or_stringable() else {
@@ -255,20 +234,18 @@ impl RouteCollection {
                     php_value::Value::String(prefixed(&canonical)),
                 )?;
             }
-            if let Some(p) = position(&self.priorities, &name) {
-                prefixed_priorities.push((prefixed(&name), self.priorities[p].1));
+            if let Some(&p) = self.priorities.get(&name) {
+                prefixed_priorities.set(prefixed(&name), p);
             }
-            set(&mut prefixed_routes, prefixed(&name), route);
+            prefixed_routes.set(prefixed(&name), route);
         }
 
-        for (name, alias) in &self.aliases {
+        for (name, alias) in self.aliases.iter() {
             let mut target = alias.id().to_vec();
-            if names.iter().any(|n| n.as_bytes() == target.as_slice())
-                || position(&self.aliases, &target).is_some()
-            {
+            if names.contains(&target) || self.aliases.contains(&target) {
                 target = concat(&[prefix, &target]);
             }
-            set(&mut prefixed_aliases, prefixed(name), alias.with_id(target));
+            prefixed_aliases.set(prefixed(name), alias.with_id(target));
         }
 
         self.routes = prefixed_routes;
@@ -284,7 +261,7 @@ impl RouteCollection {
         defaults: &PhpArray,
         requirements: &PhpArray,
     ) -> Result<(), Error> {
-        for (_, route) in &mut self.routes {
+        for route in self.routes.values_mut() {
             route.set_host(pattern)?;
             route.add_defaults(defaults)?;
             route.add_requirements(requirements)?;
@@ -295,7 +272,7 @@ impl RouteCollection {
     /// `setCondition()` on all routes; existing conditions are
     /// overridden. A null condition is `''`.
     pub fn set_condition(&mut self, condition: &[u8]) {
-        for (_, route) in &mut self.routes {
+        for route in self.routes.values_mut() {
             route.set_condition(condition);
         }
     }
@@ -304,7 +281,7 @@ impl RouteCollection {
     /// same name in a route is overridden.
     pub fn add_defaults(&mut self, defaults: &PhpArray) -> Result<(), Error> {
         if !defaults.is_empty() {
-            for (_, route) in &mut self.routes {
+            for route in self.routes.values_mut() {
                 route.add_defaults(defaults)?;
             }
         }
@@ -315,7 +292,7 @@ impl RouteCollection {
     /// same name in a route is overridden.
     pub fn add_requirements(&mut self, requirements: &PhpArray) -> Result<(), Error> {
         if !requirements.is_empty() {
-            for (_, route) in &mut self.routes {
+            for route in self.routes.values_mut() {
                 route.add_requirements(requirements)?;
             }
         }
@@ -326,7 +303,7 @@ impl RouteCollection {
     /// same name in a route is overridden.
     pub fn add_options(&mut self, options: &PhpArray) {
         if !options.is_empty() {
-            for (_, route) in &mut self.routes {
+            for route in self.routes.values_mut() {
                 route.add_options(options);
             }
         }
@@ -334,14 +311,14 @@ impl RouteCollection {
 
     /// `setSchemes()` on all child routes.
     pub fn set_schemes(&mut self, schemes: &[&str]) {
-        for (_, route) in &mut self.routes {
+        for route in self.routes.values_mut() {
             route.set_schemes(schemes.iter().copied());
         }
     }
 
     /// `setMethods()` on all child routes.
     pub fn set_methods(&mut self, methods: &[&str]) {
-        for (_, route) in &mut self.routes {
+        for route in self.routes.values_mut() {
             route.set_methods(methods.iter().copied());
         }
     }
@@ -357,8 +334,8 @@ impl RouteCollection {
     #[cfg(feature = "config")]
     pub fn add_resource(&mut self, resource: Arc<dyn ResourceInterface>) {
         let key = resource.to_string();
-        if !self.resources.iter().any(|(k, _)| *k == key) {
-            self.resources.push((key, resource));
+        if !self.resources.contains(&key) {
+            self.resources.set(PhpString::from(key), resource);
         }
     }
 
@@ -371,30 +348,32 @@ impl RouteCollection {
                 concat(&[b"Route alias \"", name, b"\" can not reference itself."]),
             ));
         }
-        unset(&mut self.routes, name);
-        unset(&mut self.priorities, name);
-        let i = set(&mut self.aliases, PhpString::from(name), Alias::new(alias));
-        Ok(&mut self.aliases[i].1)
+        self.routes.remove(name);
+        self.priorities.remove(name);
+        self.aliases.set(PhpString::from(name), Alias::new(alias));
+        self.aliases
+            .get_mut(name)
+            .ok_or_else(|| Error::new(Class::NotPorted, "alias not stored"))
     }
 
-    /// `getAliases()`.
-    pub fn aliases(&self) -> &[(PhpString, Alias)] {
-        &self.aliases
+    /// `getAliases()`, in order.
+    pub fn aliases(&self) -> Vec<(&PhpString, &Alias)> {
+        self.aliases.iter().collect()
     }
 
     /// `getAlias()`.
     pub fn alias(&self, name: &[u8]) -> Option<&Alias> {
-        position(&self.aliases, name).map(|i| &self.aliases[i].1)
+        self.aliases.get(name)
     }
 
     /// `getAlias()` for changing the alias (PHP's Alias is a handle the
     /// collection shares, e.g. for `setDeprecated()`).
     pub fn alias_mut(&mut self, name: &[u8]) -> Option<&mut Alias> {
-        position(&self.aliases, name).map(|i| &mut self.aliases[i].1)
+        self.aliases.get_mut(name)
     }
 
     /// `getPriority()`.
     pub fn priority(&self, name: &[u8]) -> Option<i64> {
-        position(&self.priorities, name).map(|i| self.priorities[i].1)
+        self.priorities.get(name).copied()
     }
 }

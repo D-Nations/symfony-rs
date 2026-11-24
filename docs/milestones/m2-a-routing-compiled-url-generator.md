@@ -88,10 +88,12 @@ touch. `scripts/linux-test.sh -p symfony-routing` on the committed branch
 ## Not done
 
 - `dump()` and `GeneratorDumperInterface` (owner's decision above).
-- `RouteCollection::add()` scans its lists for the name, so adding n
-  routes is quadratic: `testDumpWithTooManyRoutes` (32,769 routes) spends
-  8.1 s adding and 0.6 s compiling in a debug build. A follow-up for
-  `route_collection.rs`.
+- `RouteCollection::add()` scanned its lists for the name, so adding n
+  routes was quadratic: `testDumpWithTooManyRoutes` (32,769 routes) spent
+  8.1 s adding and 0.6 s compiling in a debug build. Fixed afterwards
+  (branch `m2/routing-collection-index`): the collection keeps its arrays
+  as PHP does, with a hash index (`ordered.rs`), and adding them takes
+  0.15 s.
 
 ## Demo comparison
 
