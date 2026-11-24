@@ -88,7 +88,7 @@
         "latin1.txt": "text/plain",
         "matilde.arm.testfile": "audio/amr",
         "multiple.testfile": "text/plain",
-        "nul": "application/octet-stream",
+        "nul-byte": "application/octet-stream",
         "one": "application/octet-stream",
         "pcjr.testfile": "application/octet-stream",
         "pgp-binary-key-v2-phil.testfile": "application/pgp-keys",
