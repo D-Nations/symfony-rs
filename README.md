@@ -18,7 +18,7 @@ Nothing outside those tables is claimed.
 
 | Crate | Package | Contract |
 |---|---|---|
-| [`symfony-http-foundation`](crates/http-foundation/README.md) | `symfony/http-foundation` (+ PHP request parsing) | Query, cookie and multipart parsing; ParameterBag, InputBag, ServerBag, HeaderBag, HeaderUtils, Cookie, IpUtils, AcceptHeader; File, UploadedFile and FileBag; method/format selection, trusted HTTPS scheme |
+| [`symfony-http-foundation`](crates/http-foundation/README.md) | `symfony/http-foundation` (+ PHP request parsing) | Query, cookie and multipart parsing; ParameterBag, InputBag, ServerBag, HeaderBag, HeaderUtils, Cookie, IpUtils, AcceptHeader; File, UploadedFile and FileBag; Request; Response (sending recorded for the HTTP adapter) |
 | [`symfony-routing`](crates/routing/README.md) | `symfony/routing` | Route, CompiledRoute, RouteCompiler, RouteCollection; typed registrations, matcher and redirectable matcher, URL escaping |
 | [`symfony-http-kernel`](crates/http-kernel/README.md) | `symfony/http-kernel` | Request, controller, response and exception hooks with priorities |
 | [`symfony-mime`](crates/mime/README.md) | `symfony/mime` | MimeTypes and its guessers (the `file` command, and finfo on a pure-Rust libmagic) |
@@ -159,7 +159,7 @@ manifests: `scripts/fetch-upstream.sh` clones them into the ignored
 `parity/<package>.tsv`, the list of every upstream test with its status,
 using the PHP oracle in `oracle/` (Docker).
 
-Manifest snapshot, November 24, 2026 (test methods, not a compatibility
+Manifest snapshot, November 25, 2026 (test methods, not a compatibility
 percentage; later changes are authoritative in `parity/`):
 
 | Package | Upstream tests | Ported | N/A | Pending |
@@ -171,16 +171,16 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/event-dispatcher | 140 | 114 | 0 | 26 |
 | symfony/filesystem | 157 | 27 | 0 | 130 |
 | symfony/finder | 143 | 139 | 4 | 0 |
-| symfony/http-foundation | 959 | 249 | 5 | 705 |
+| symfony/http-foundation | 959 | 442 | 10 | 507 |
 | symfony/http-kernel | 1,045 | 10 | 0 | 1,035 |
 | symfony/mime | 395 | 28 | 1 | 366 |
 | symfony/options-resolver | 234 | 234 | 0 | 0 |
-| symfony/routing | 896 | 78 | 0 | 818 |
+| symfony/routing | 896 | 372 | 1 | 523 |
 | symfony/stopwatch | 33 | 33 | 0 | 0 |
 | symfony/string | 266 | 235 | 1 | 30 |
-| symfony/translation | 345 | 55 | 2 | 288 |
-| symfony/yaml | 342 | 340 | 2 | 0 |
-| **Total** | **6,583** | **2,306** | **33** | **4,244** |
+| symfony/translation | 345 | 81 | 2 | 262 |
+| symfony/yaml | 342 | 341 | 1 | 0 |
+| **Total** | **6,583** | **2,820** | **38** | **3,725** |
 
 Six packages have no pending rows and are listed in `parity/done.txt`:
 Stopwatch, Yaml, Dotenv, CssSelector, OptionsResolver and Finder. M1 is
@@ -189,9 +189,11 @@ filesystem resources and ConfigCache ported (the reflection-based
 resources, decision 17, are a later stage); String, Console (the subset the Yaml and
 Dotenv commands use), Translation's XLIFF and Qt loaders and the XML
 gates are partial. M2 has started: HttpFoundation's bags, headers,
-cookies, IpUtils, AcceptHeader and the File classes, symfony/mime's MIME
-types and guessers, and Routing's Route, RouteCompiler and
-RouteCollection. symfony/filesystem has only the `dumpFile()` subset that
+cookies, IpUtils, AcceptHeader, the File classes, Request and Response,
+symfony/mime's MIME types and guessers, and Routing's Route,
+RouteCompiler, RouteCollection, RequestContext, both URL generators and
+both matchers (route conditions wait for ExpressionLanguage).
+symfony/filesystem has only the `dumpFile()` subset that
 ConfigCache needs. Deferred DI and
 Console integrations keep their tests pending. Per-stage detail is in
 [PLAN.md](PLAN.md#m1-progress) and `docs/milestones/`.

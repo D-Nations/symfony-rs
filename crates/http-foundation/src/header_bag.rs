@@ -140,6 +140,10 @@ impl<T> Ordered<T> {
         self.0.iter().map(|(k, _)| k)
     }
 
+    fn values_mut(&mut self) -> impl Iterator<Item = &mut T> {
+        self.0.iter_mut().map(|(_, v)| v)
+    }
+
     pub fn len(&self) -> usize {
         self.0.len()
     }
@@ -783,6 +787,19 @@ impl ResponseHeaderBag {
                 format!("Format \"{format}\" invalid (flat, array)."),
             )),
         }
+    }
+
+    /// The bag's own cookies, in `getCookies()`'s order. PHP's
+    /// `getCookies()` returns the objects the bag holds, so a change to
+    /// one (`Response::prepare()`'s `setSecureDefault()`) is a change to
+    /// the bag; here the bag lends them.
+    pub fn cookies_mut(&mut self) -> impl Iterator<Item = &mut Cookie> {
+        self.0.response.iter_mut().flat_map(|response| {
+            response
+                .cookies
+                .values_mut()
+                .flat_map(|paths| paths.values_mut().flat_map(Ordered::values_mut))
+        })
     }
 
     /// `clearCookie($name, $path, $domain, ...)`: a cookie that expired,

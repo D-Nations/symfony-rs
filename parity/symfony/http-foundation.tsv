@@ -448,7 +448,7 @@ Tests/RequestTest.php	RequestTest::testUnsafeMethodOverride	ported	crates/http-f
 Tests/RequestTest.php	RequestTest::testUrlencodedStringPrefix	ported	crates/http-foundation/tests/request_test.rs::testUrlencodedStringPrefix
 Tests/RequestTest.php	RequestTest::testVeryLongHosts	ported	crates/http-foundation/tests/request_test.rs::testVeryLongHosts
 Tests/ResponseFunctionalTest.php	ResponseFunctionalTest::testCookie	pending	
-Tests/ResponseFunctionalTest.php	ResponseFunctionalTest::testInformationalResponse	pending	
+Tests/ResponseFunctionalTest.php	ResponseFunctionalTest::testInformationalResponse	n/a: needs FrankenPHP serving early_hints.php on port 80 (#[Group('integration')]); headers_send() is recorded as OutputCall::HeadersSend and checked by response_recorded.rs	
 Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testAllPreserveCase	ported	crates/http-foundation/tests/response_header_bag_test.rs::testAllPreserveCase
 Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCacheControlClone	ported	crates/http-foundation/tests/response_header_bag_test.rs::testCacheControlClone
 Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testCacheControlHeader	ported	crates/http-foundation/tests/response_header_bag_test.rs::testCacheControlHeader
@@ -468,87 +468,87 @@ Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testReplaceWithRemove	por
 Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testSetCookieHeader	ported	crates/http-foundation/tests/response_header_bag_test.rs::testSetCookieHeader
 Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testToStringDoesntMessUpHeaders	ported	crates/http-foundation/tests/response_header_bag_test.rs::testToStringDoesntMessUpHeaders
 Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testToStringIncludesCookieHeaders	ported	crates/http-foundation/tests/response_header_bag_test.rs::testToStringIncludesCookieHeaders
-Tests/ResponseTest.php	ResponseTest::testClone	pending	
-Tests/ResponseTest.php	ResponseTest::testContentTypeCharset	pending	
-Tests/ResponseTest.php	ResponseTest::testContentTypeIsNull	pending	
-Tests/ResponseTest.php	ResponseTest::testDefaultContentType	pending	
-Tests/ResponseTest.php	ResponseTest::testDirectHeadersWriteFromSubclassReportsSubclass	pending	
-Tests/ResponseTest.php	ResponseTest::testDirectHeadersWriteIsDeprecated	pending	
-Tests/ResponseTest.php	ResponseTest::testExpire	pending	
-Tests/ResponseTest.php	ResponseTest::testGetCharset	pending	
-Tests/ResponseTest.php	ResponseTest::testGetDate	pending	
-Tests/ResponseTest.php	ResponseTest::testGetMaxAge	pending	
-Tests/ResponseTest.php	ResponseTest::testGetSetProtocolVersion	pending	
-Tests/ResponseTest.php	ResponseTest::testGetTtl	pending	
-Tests/ResponseTest.php	ResponseTest::testGetVary	pending	
-Tests/ResponseTest.php	ResponseTest::testHasVary	pending	
-Tests/ResponseTest.php	ResponseTest::testIfNoneMatchWithoutETag	pending	
-Tests/ResponseTest.php	ResponseTest::testIsCacheable	pending	
-Tests/ResponseTest.php	ResponseTest::testIsCacheableWithErrorCode	pending	
-Tests/ResponseTest.php	ResponseTest::testIsCacheableWithNoStoreDirective	pending	
-Tests/ResponseTest.php	ResponseTest::testIsCacheableWithSetTtl	pending	
-Tests/ResponseTest.php	ResponseTest::testIsEmpty	pending	
-Tests/ResponseTest.php	ResponseTest::testIsForbidden	pending	
-Tests/ResponseTest.php	ResponseTest::testIsImmutable	pending	
-Tests/ResponseTest.php	ResponseTest::testIsInformational	pending	
-Tests/ResponseTest.php	ResponseTest::testIsInvalid	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotFound	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotModified	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotModifiedEtag	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotModifiedIfModifiedSinceAndEtagWithoutLastModified	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotModifiedLastModified	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotModifiedLastModifiedAndEtag	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotModifiedNotSafe	pending	
-Tests/ResponseTest.php	ResponseTest::testIsNotModifiedWeakEtag	pending	
-Tests/ResponseTest.php	ResponseTest::testIsOk	pending	
-Tests/ResponseTest.php	ResponseTest::testIsPrivate	pending	
-Tests/ResponseTest.php	ResponseTest::testIsRedirectRedirection	pending	
-Tests/ResponseTest.php	ResponseTest::testIsServerOrClientError	pending	
-Tests/ResponseTest.php	ResponseTest::testIsSuccessful	pending	
-Tests/ResponseTest.php	ResponseTest::testIsValidateable	pending	
-Tests/ResponseTest.php	ResponseTest::testMustRevalidate	pending	
-Tests/ResponseTest.php	ResponseTest::testMustRevalidateWithMustRevalidateCacheControlHeader	pending	
-Tests/ResponseTest.php	ResponseTest::testMustRevalidateWithProxyRevalidateCacheControlHeader	pending	
-Tests/ResponseTest.php	ResponseTest::testNoCacheControlHeaderOnAttachmentUsingHTTPSAndMSIE	pending	
-Tests/ResponseTest.php	ResponseTest::testNoDeprecationsAreTriggered	pending	
-Tests/ResponseTest.php	ResponseTest::testNullExpireHeader	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareDoesNotSetContentTypeBasedOnRequestAcceptHeader	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareDoesNothingIfContentTypeIsSet	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareDoesNothingIfRequestFormatIsNotDefined	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareRemovesContentForHeadRequests	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareRemovesContentForInformationalResponse	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareRemovesContentLength	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareSetContentType	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareSetsCookiesSecure	pending	
-Tests/ResponseTest.php	ResponseTest::testPrepareSetsPragmaOnHttp10Only	pending	
-Tests/ResponseTest.php	ResponseTest::testReasonPhraseDefaultsAgainstIana	pending	
-Tests/ResponseTest.php	ResponseTest::testSend	pending	
-Tests/ResponseTest.php	ResponseTest::testSendContent	pending	
-Tests/ResponseTest.php	ResponseTest::testSendHeaders	pending	
-Tests/ResponseTest.php	ResponseTest::testSendInformationalResponse	pending	
-Tests/ResponseTest.php	ResponseTest::testSetCache	pending	
-Tests/ResponseTest.php	ResponseTest::testSetClientTtl	pending	
-Tests/ResponseTest.php	ResponseTest::testSetContent	pending	
-Tests/ResponseTest.php	ResponseTest::testSetContentSafe	pending	
-Tests/ResponseTest.php	ResponseTest::testSetDate	pending	
-Tests/ResponseTest.php	ResponseTest::testSetDateWithImmutable	pending	
-Tests/ResponseTest.php	ResponseTest::testSetEtag	pending	
-Tests/ResponseTest.php	ResponseTest::testSetExpires	pending	
-Tests/ResponseTest.php	ResponseTest::testSetExpiresWithImmutable	pending	
-Tests/ResponseTest.php	ResponseTest::testSetImmutable	pending	
-Tests/ResponseTest.php	ResponseTest::testSetLastModified	pending	
-Tests/ResponseTest.php	ResponseTest::testSetLastModifiedWithImmutable	pending	
-Tests/ResponseTest.php	ResponseTest::testSetNotModified	pending	
-Tests/ResponseTest.php	ResponseTest::testSetPublic	pending	
-Tests/ResponseTest.php	ResponseTest::testSetSharedMaxAge	pending	
-Tests/ResponseTest.php	ResponseTest::testSetStaleIfError	pending	
-Tests/ResponseTest.php	ResponseTest::testSetStaleIfErrorWithoutSharedMaxAge	pending	
-Tests/ResponseTest.php	ResponseTest::testSetStaleWhileRevalidate	pending	
-Tests/ResponseTest.php	ResponseTest::testSetStaleWhileRevalidateWithoutSharedMaxAge	pending	
-Tests/ResponseTest.php	ResponseTest::testSetStatusCode	pending	
-Tests/ResponseTest.php	ResponseTest::testSetVary	pending	
-Tests/ResponseTest.php	ResponseTest::testSettersAreChainable	pending	
-Tests/ResponseTest.php	ResponseTest::testToString	pending	
+Tests/ResponseTest.php	ResponseTest::testClone	ported	crates/http-foundation/tests/response_test.rs::testClone
+Tests/ResponseTest.php	ResponseTest::testContentTypeCharset	ported	crates/http-foundation/tests/response_test.rs::testContentTypeCharset
+Tests/ResponseTest.php	ResponseTest::testContentTypeIsNull	ported	crates/http-foundation/tests/response_test.rs::testContentTypeIsNull
+Tests/ResponseTest.php	ResponseTest::testDefaultContentType	ported	crates/http-foundation/tests/response_test.rs::testDefaultContentType
+Tests/ResponseTest.php	ResponseTest::testDirectHeadersWriteFromSubclassReportsSubclass	n/a: the deprecation names static::class of a DefaultResponse subclass; a Rust struct has no subclasses (the Response message is tested by testDirectHeadersWriteIsDeprecated)	
+Tests/ResponseTest.php	ResponseTest::testDirectHeadersWriteIsDeprecated	ported	crates/http-foundation/tests/response_test.rs::testDirectHeadersWriteIsDeprecated
+Tests/ResponseTest.php	ResponseTest::testExpire	ported	crates/http-foundation/tests/response_test.rs::testExpire
+Tests/ResponseTest.php	ResponseTest::testGetCharset	ported	crates/http-foundation/tests/response_test.rs::testGetCharset
+Tests/ResponseTest.php	ResponseTest::testGetDate	ported	crates/http-foundation/tests/response_test.rs::testGetDate
+Tests/ResponseTest.php	ResponseTest::testGetMaxAge	ported	crates/http-foundation/tests/response_test.rs::testGetMaxAge
+Tests/ResponseTest.php	ResponseTest::testGetSetProtocolVersion	ported	crates/http-foundation/tests/response_test.rs::testGetSetProtocolVersion
+Tests/ResponseTest.php	ResponseTest::testGetTtl	ported	crates/http-foundation/tests/response_test.rs::testGetTtl
+Tests/ResponseTest.php	ResponseTest::testGetVary	ported	crates/http-foundation/tests/response_test.rs::testGetVary
+Tests/ResponseTest.php	ResponseTest::testHasVary	ported	crates/http-foundation/tests/response_test.rs::testHasVary
+Tests/ResponseTest.php	ResponseTest::testIfNoneMatchWithoutETag	ported	crates/http-foundation/tests/response_test.rs::testIfNoneMatchWithoutETag
+Tests/ResponseTest.php	ResponseTest::testIsCacheable	ported	crates/http-foundation/tests/response_test.rs::testIsCacheable
+Tests/ResponseTest.php	ResponseTest::testIsCacheableWithErrorCode	ported	crates/http-foundation/tests/response_test.rs::testIsCacheableWithErrorCode
+Tests/ResponseTest.php	ResponseTest::testIsCacheableWithNoStoreDirective	ported	crates/http-foundation/tests/response_test.rs::testIsCacheableWithNoStoreDirective
+Tests/ResponseTest.php	ResponseTest::testIsCacheableWithSetTtl	ported	crates/http-foundation/tests/response_test.rs::testIsCacheableWithSetTtl
+Tests/ResponseTest.php	ResponseTest::testIsEmpty	ported	crates/http-foundation/tests/response_test.rs::testIsEmpty
+Tests/ResponseTest.php	ResponseTest::testIsForbidden	ported	crates/http-foundation/tests/response_test.rs::testIsForbidden
+Tests/ResponseTest.php	ResponseTest::testIsImmutable	ported	crates/http-foundation/tests/response_test.rs::testIsImmutable
+Tests/ResponseTest.php	ResponseTest::testIsInformational	ported	crates/http-foundation/tests/response_test.rs::testIsInformational
+Tests/ResponseTest.php	ResponseTest::testIsInvalid	ported	crates/http-foundation/tests/response_test.rs::testIsInvalid
+Tests/ResponseTest.php	ResponseTest::testIsNotFound	ported	crates/http-foundation/tests/response_test.rs::testIsNotFound
+Tests/ResponseTest.php	ResponseTest::testIsNotModified	ported	crates/http-foundation/tests/response_test.rs::testIsNotModified
+Tests/ResponseTest.php	ResponseTest::testIsNotModifiedEtag	ported	crates/http-foundation/tests/response_test.rs::testIsNotModifiedEtag
+Tests/ResponseTest.php	ResponseTest::testIsNotModifiedIfModifiedSinceAndEtagWithoutLastModified	ported	crates/http-foundation/tests/response_test.rs::testIsNotModifiedIfModifiedSinceAndEtagWithoutLastModified
+Tests/ResponseTest.php	ResponseTest::testIsNotModifiedLastModified	ported	crates/http-foundation/tests/response_test.rs::testIsNotModifiedLastModified
+Tests/ResponseTest.php	ResponseTest::testIsNotModifiedLastModifiedAndEtag	ported	crates/http-foundation/tests/response_test.rs::testIsNotModifiedLastModifiedAndEtag
+Tests/ResponseTest.php	ResponseTest::testIsNotModifiedNotSafe	ported	crates/http-foundation/tests/response_test.rs::testIsNotModifiedNotSafe
+Tests/ResponseTest.php	ResponseTest::testIsNotModifiedWeakEtag	ported	crates/http-foundation/tests/response_test.rs::testIsNotModifiedWeakEtag
+Tests/ResponseTest.php	ResponseTest::testIsOk	ported	crates/http-foundation/tests/response_test.rs::testIsOk
+Tests/ResponseTest.php	ResponseTest::testIsPrivate	ported	crates/http-foundation/tests/response_test.rs::testIsPrivate
+Tests/ResponseTest.php	ResponseTest::testIsRedirectRedirection	ported	crates/http-foundation/tests/response_test.rs::testIsRedirectRedirection
+Tests/ResponseTest.php	ResponseTest::testIsServerOrClientError	ported	crates/http-foundation/tests/response_test.rs::testIsServerOrClientError
+Tests/ResponseTest.php	ResponseTest::testIsSuccessful	ported	crates/http-foundation/tests/response_test.rs::testIsSuccessful
+Tests/ResponseTest.php	ResponseTest::testIsValidateable	ported	crates/http-foundation/tests/response_test.rs::testIsValidateable
+Tests/ResponseTest.php	ResponseTest::testMustRevalidate	ported	crates/http-foundation/tests/response_test.rs::testMustRevalidate
+Tests/ResponseTest.php	ResponseTest::testMustRevalidateWithMustRevalidateCacheControlHeader	ported	crates/http-foundation/tests/response_test.rs::testMustRevalidateWithMustRevalidateCacheControlHeader
+Tests/ResponseTest.php	ResponseTest::testMustRevalidateWithProxyRevalidateCacheControlHeader	ported	crates/http-foundation/tests/response_test.rs::testMustRevalidateWithProxyRevalidateCacheControlHeader
+Tests/ResponseTest.php	ResponseTest::testNoCacheControlHeaderOnAttachmentUsingHTTPSAndMSIE	ported	crates/http-foundation/tests/response_test.rs::testNoCacheControlHeaderOnAttachmentUsingHTTPSAndMSIE
+Tests/ResponseTest.php	ResponseTest::testNoDeprecationsAreTriggered	ported	crates/http-foundation/tests/response_test.rs::testNoDeprecationsAreTriggered
+Tests/ResponseTest.php	ResponseTest::testNullExpireHeader	ported	crates/http-foundation/tests/response_test.rs::testNullExpireHeader
+Tests/ResponseTest.php	ResponseTest::testPrepareDoesNotSetContentTypeBasedOnRequestAcceptHeader	ported	crates/http-foundation/tests/response_test.rs::testPrepareDoesNotSetContentTypeBasedOnRequestAcceptHeader
+Tests/ResponseTest.php	ResponseTest::testPrepareDoesNothingIfContentTypeIsSet	ported	crates/http-foundation/tests/response_test.rs::testPrepareDoesNothingIfContentTypeIsSet
+Tests/ResponseTest.php	ResponseTest::testPrepareDoesNothingIfRequestFormatIsNotDefined	ported	crates/http-foundation/tests/response_test.rs::testPrepareDoesNothingIfRequestFormatIsNotDefined
+Tests/ResponseTest.php	ResponseTest::testPrepareRemovesContentForHeadRequests	ported	crates/http-foundation/tests/response_test.rs::testPrepareRemovesContentForHeadRequests
+Tests/ResponseTest.php	ResponseTest::testPrepareRemovesContentForInformationalResponse	ported	crates/http-foundation/tests/response_test.rs::testPrepareRemovesContentForInformationalResponse
+Tests/ResponseTest.php	ResponseTest::testPrepareRemovesContentLength	ported	crates/http-foundation/tests/response_test.rs::testPrepareRemovesContentLength
+Tests/ResponseTest.php	ResponseTest::testPrepareSetContentType	ported	crates/http-foundation/tests/response_test.rs::testPrepareSetContentType
+Tests/ResponseTest.php	ResponseTest::testPrepareSetsCookiesSecure	ported	crates/http-foundation/tests/response_test.rs::testPrepareSetsCookiesSecure
+Tests/ResponseTest.php	ResponseTest::testPrepareSetsPragmaOnHttp10Only	ported	crates/http-foundation/tests/response_test.rs::testPrepareSetsPragmaOnHttp10Only
+Tests/ResponseTest.php	ResponseTest::testReasonPhraseDefaultsAgainstIana	ported	crates/http-foundation/tests/response_test.rs::testReasonPhraseDefaultsAgainstIana
+Tests/ResponseTest.php	ResponseTest::testSend	ported	crates/http-foundation/tests/response_test.rs::testSend
+Tests/ResponseTest.php	ResponseTest::testSendContent	ported	crates/http-foundation/tests/response_test.rs::testSendContent
+Tests/ResponseTest.php	ResponseTest::testSendHeaders	ported	crates/http-foundation/tests/response_test.rs::testSendHeaders
+Tests/ResponseTest.php	ResponseTest::testSendInformationalResponse	ported	crates/http-foundation/tests/response_test.rs::testSendInformationalResponse
+Tests/ResponseTest.php	ResponseTest::testSetCache	ported	crates/http-foundation/tests/response_test.rs::testSetCache
+Tests/ResponseTest.php	ResponseTest::testSetClientTtl	ported	crates/http-foundation/tests/response_test.rs::testSetClientTtl
+Tests/ResponseTest.php	ResponseTest::testSetContent	ported	crates/http-foundation/tests/response_test.rs::testSetContent
+Tests/ResponseTest.php	ResponseTest::testSetContentSafe	ported	crates/http-foundation/tests/response_test.rs::testSetContentSafe
+Tests/ResponseTest.php	ResponseTest::testSetDate	ported	crates/http-foundation/tests/response_test.rs::testSetDate
+Tests/ResponseTest.php	ResponseTest::testSetDateWithImmutable	ported	crates/http-foundation/tests/response_test.rs::testSetDateWithImmutable
+Tests/ResponseTest.php	ResponseTest::testSetEtag	ported	crates/http-foundation/tests/response_test.rs::testSetEtag
+Tests/ResponseTest.php	ResponseTest::testSetExpires	ported	crates/http-foundation/tests/response_test.rs::testSetExpires
+Tests/ResponseTest.php	ResponseTest::testSetExpiresWithImmutable	ported	crates/http-foundation/tests/response_test.rs::testSetExpiresWithImmutable
+Tests/ResponseTest.php	ResponseTest::testSetImmutable	ported	crates/http-foundation/tests/response_test.rs::testSetImmutable
+Tests/ResponseTest.php	ResponseTest::testSetLastModified	ported	crates/http-foundation/tests/response_test.rs::testSetLastModified
+Tests/ResponseTest.php	ResponseTest::testSetLastModifiedWithImmutable	ported	crates/http-foundation/tests/response_test.rs::testSetLastModifiedWithImmutable
+Tests/ResponseTest.php	ResponseTest::testSetNotModified	ported	crates/http-foundation/tests/response_test.rs::testSetNotModified
+Tests/ResponseTest.php	ResponseTest::testSetPublic	ported	crates/http-foundation/tests/response_test.rs::testSetPublic
+Tests/ResponseTest.php	ResponseTest::testSetSharedMaxAge	ported	crates/http-foundation/tests/response_test.rs::testSetSharedMaxAge
+Tests/ResponseTest.php	ResponseTest::testSetStaleIfError	ported	crates/http-foundation/tests/response_test.rs::testSetStaleIfError
+Tests/ResponseTest.php	ResponseTest::testSetStaleIfErrorWithoutSharedMaxAge	ported	crates/http-foundation/tests/response_test.rs::testSetStaleIfErrorWithoutSharedMaxAge
+Tests/ResponseTest.php	ResponseTest::testSetStaleWhileRevalidate	ported	crates/http-foundation/tests/response_test.rs::testSetStaleWhileRevalidate
+Tests/ResponseTest.php	ResponseTest::testSetStaleWhileRevalidateWithoutSharedMaxAge	ported	crates/http-foundation/tests/response_test.rs::testSetStaleWhileRevalidateWithoutSharedMaxAge
+Tests/ResponseTest.php	ResponseTest::testSetStatusCode	ported	crates/http-foundation/tests/response_test.rs::testSetStatusCode
+Tests/ResponseTest.php	ResponseTest::testSetVary	ported	crates/http-foundation/tests/response_test.rs::testSetVary
+Tests/ResponseTest.php	ResponseTest::testSettersAreChainable	ported	crates/http-foundation/tests/response_test.rs::testSettersAreChainable
+Tests/ResponseTest.php	ResponseTest::testToString	ported	crates/http-foundation/tests/response_test.rs::testToString
 Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgi	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgi
 Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiBogus	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiBogus
 Tests/ServerBagTest.php	ServerBagTest::testHttpBasicAuthWithPhpCgiEmptyPassword	ported	crates/http-foundation/tests/server_bag_test.rs::testHttpBasicAuthWithPhpCgiEmptyPassword
