@@ -1,107 +1,107 @@
 # symfony/expression-language at 9c2729bca940d84938dc0b435d037e4844f237c9: upstream test	method	status	rust test
-Tests/ExpressionFunctionTest.php	ExpressionFunctionTest::testFunctionDoesNotExist	pending	
-Tests/ExpressionFunctionTest.php	ExpressionFunctionTest::testFunctionNamespaced	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testBackedEnumFunction	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testBasicPhpFunction	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCachedParse	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCachingForOverriddenVariableNames	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCachingWithDifferentNamesOrder	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCommentsIgnored	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunction	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunctionInsideExpression	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunctionWithBackedEnum	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunctionWithConstantThrows	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testEnumFunction	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testEnumFunctionWithConstantThrows	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintAllowsComments	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintDoesntThrowOnValidExpression	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintThrowsOnInvalidComments	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintThrowsOnInvalidExpression	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullCoalescingCompile	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullCoalescingEvaluate	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullCoalescingEvaluateFailsOnObjectWithoutArrayAccess	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeCompile	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeCompileFails	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeEvaluate	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeEvaluateFails	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeEvaluateFailsWithReusedParsedExpression	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testOperatorCollisions	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseAlreadyParsedExpressionReturnsSameObject	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseDoesNotReuseAnExpressionParsedWithOtherFlags	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseReturnsObjectOnAlreadyParsedExpression	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseThrowsInsteadOfNotice	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testProviders	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testRegisterAfterCompile	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testRegisterAfterEval	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testRegisterAfterParse	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testShortCircuitOperatorsCompile	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testShortCircuitOperatorsEvaluate	pending	
-Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testStrictEquality	pending	
-Tests/ExpressionTest.php	ExpressionTest::testSerialization	pending	
-Tests/LexerTest.php	LexerTest::testOperatorRegexWasGeneratedWithScript	pending	
-Tests/LexerTest.php	LexerTest::testTokenize	pending	
-Tests/LexerTest.php	LexerTest::testTokenizeMultilineComment	pending	
-Tests/LexerTest.php	LexerTest::testTokenizeOnNotOpenedBracket	pending	
-Tests/LexerTest.php	LexerTest::testTokenizeThrowsErrorOnUnclosedBrace	pending	
-Tests/LexerTest.php	LexerTest::testTokenizeThrowsErrorWithMessage	pending	
-Tests/LexerTest.php	LexerTest::testTokenizeUnterminatedStringIsLinear	pending	
-Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testCompile	pending	
-Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testDump	pending	
-Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testEvaluate	pending	
-Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testSerialization	pending	
-Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testCompile	pending	
-Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testDump	pending	
-Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testEvaluate	pending	
-Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testSerialization	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompile	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithBooleanBinaryNode	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithInvalidRegexp	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithInvalidRegexpAsExpression	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithStringBinaryNode	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testDivisionByZero	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testDump	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluate	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluateMatchesWithInvalidRegexp	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluateMatchesWithInvalidRegexpAsExpression	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluateUnsupportedOperator	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testInOperatorStrictness	pending	
-Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testModuloByZero	pending	
-Tests/Node/ConditionalNodeTest.php	ConditionalNodeTest::testCompile	pending	
-Tests/Node/ConditionalNodeTest.php	ConditionalNodeTest::testDump	pending	
-Tests/Node/ConditionalNodeTest.php	ConditionalNodeTest::testEvaluate	pending	
-Tests/Node/ConstantNodeTest.php	ConstantNodeTest::testCompile	pending	
-Tests/Node/ConstantNodeTest.php	ConstantNodeTest::testDump	pending	
-Tests/Node/ConstantNodeTest.php	ConstantNodeTest::testEvaluate	pending	
-Tests/Node/FunctionNodeTest.php	FunctionNodeTest::testCompile	pending	
-Tests/Node/FunctionNodeTest.php	FunctionNodeTest::testDump	pending	
-Tests/Node/FunctionNodeTest.php	FunctionNodeTest::testEvaluate	pending	
-Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testCompile	pending	
-Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testDump	pending	
-Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testEvaluate	pending	
-Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testEvaluateNullSafeArrayOnNonArrayThrows	pending	
-Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testUnserializeMissingIsNullSafeDefaultsToFalse	pending	
-Tests/Node/NameNodeTest.php	NameNodeTest::testCompile	pending	
-Tests/Node/NameNodeTest.php	NameNodeTest::testDump	pending	
-Tests/Node/NameNodeTest.php	NameNodeTest::testEvaluate	pending	
-Tests/Node/NodeTest.php	NodeTest::testCompileActuallyCompilesAllNodes	pending	
-Tests/Node/NodeTest.php	NodeTest::testEvaluateActuallyEvaluatesAllNodes	pending	
-Tests/Node/NodeTest.php	NodeTest::testSerialization	pending	
-Tests/Node/NodeTest.php	NodeTest::testToString	pending	
-Tests/Node/NullCoalescedNameNodeTest.php	NullCoalescedNameNodeTest::testCompile	pending	
-Tests/Node/NullCoalescedNameNodeTest.php	NullCoalescedNameNodeTest::testDump	pending	
-Tests/Node/NullCoalescedNameNodeTest.php	NullCoalescedNameNodeTest::testEvaluate	pending	
-Tests/Node/UnaryNodeTest.php	UnaryNodeTest::testCompile	pending	
-Tests/Node/UnaryNodeTest.php	UnaryNodeTest::testDump	pending	
-Tests/Node/UnaryNodeTest.php	UnaryNodeTest::testEvaluate	pending	
-Tests/ParsedExpressionTest.php	ParsedExpressionTest::testSerialization	pending	
-Tests/ParserTest.php	ParserTest::testChainedTernariesWithBinaryConditionsAreAccepted	pending	
-Tests/ParserTest.php	ParserTest::testDeepButReasonableExpressionIsAccepted	pending	
-Tests/ParserTest.php	ParserTest::testDeeplyNestedExpressionIsRejected	pending	
-Tests/ParserTest.php	ParserTest::testLint	pending	
-Tests/ParserTest.php	ParserTest::testNameProposal	pending	
-Tests/ParserTest.php	ParserTest::testParse	pending	
-Tests/ParserTest.php	ParserTest::testParsePrimaryExpressionWithUnknownFunctionThrows	pending	
-Tests/ParserTest.php	ParserTest::testParseUnknownFunction	pending	
-Tests/ParserTest.php	ParserTest::testParseWithInvalidName	pending	
-Tests/ParserTest.php	ParserTest::testParseWithInvalidPostfixData	pending	
-Tests/ParserTest.php	ParserTest::testParseWithZeroInNames	pending	
+Tests/ExpressionFunctionTest.php	ExpressionFunctionTest::testFunctionDoesNotExist	ported	crates/expression-language/tests/expression_function.rs::testFunctionDoesNotExist
+Tests/ExpressionFunctionTest.php	ExpressionFunctionTest::testFunctionNamespaced	ported	crates/expression-language/tests/expression_function.rs::testFunctionNamespaced
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testBackedEnumFunction	ported	crates/expression-language/tests/expression_language.rs::testBackedEnumFunction
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testBasicPhpFunction	ported	crates/expression-language/tests/expression_language.rs::testBasicPhpFunction
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCachedParse	ported	crates/expression-language/tests/expression_language.rs::testCachedParse
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCachingForOverriddenVariableNames	ported	crates/expression-language/tests/expression_language.rs::testCachingForOverriddenVariableNames
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCachingWithDifferentNamesOrder	ported	crates/expression-language/tests/expression_language.rs::testCachingWithDifferentNamesOrder
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCommentsIgnored	ported	crates/expression-language/tests/expression_language.rs::testCommentsIgnored
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunction	ported	crates/expression-language/tests/expression_language.rs::testCompiledEnumFunction
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunctionInsideExpression	ported	crates/expression-language/tests/expression_language.rs::testCompiledEnumFunctionInsideExpression
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunctionWithBackedEnum	ported	crates/expression-language/tests/expression_language.rs::testCompiledEnumFunctionWithBackedEnum
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testCompiledEnumFunctionWithConstantThrows	ported	crates/expression-language/tests/expression_language.rs::testCompiledEnumFunctionWithConstantThrows
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testEnumFunction	ported	crates/expression-language/tests/expression_language.rs::testEnumFunction
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testEnumFunctionWithConstantThrows	ported	crates/expression-language/tests/expression_language.rs::testEnumFunctionWithConstantThrows
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintAllowsComments	ported	crates/expression-language/tests/expression_language.rs::testLintAllowsComments
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintDoesntThrowOnValidExpression	ported	crates/expression-language/tests/expression_language.rs::testLintDoesntThrowOnValidExpression
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintThrowsOnInvalidComments	ported	crates/expression-language/tests/expression_language.rs::testLintThrowsOnInvalidComments
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testLintThrowsOnInvalidExpression	ported	crates/expression-language/tests/expression_language.rs::testLintThrowsOnInvalidExpression
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullCoalescingCompile	ported	crates/expression-language/tests/expression_language.rs::testNullCoalescingCompile
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullCoalescingEvaluate	ported	crates/expression-language/tests/expression_language.rs::testNullCoalescingEvaluate
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullCoalescingEvaluateFailsOnObjectWithoutArrayAccess	ported	crates/expression-language/tests/expression_language.rs::testNullCoalescingEvaluateFailsOnObjectWithoutArrayAccess
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeCompile	ported	crates/expression-language/tests/expression_language.rs::testNullSafeCompile
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeCompileFails	ported	crates/expression-language/tests/expression_language.rs::testNullSafeCompileFails
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeEvaluate	ported	crates/expression-language/tests/expression_language.rs::testNullSafeEvaluate
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeEvaluateFails	ported	crates/expression-language/tests/expression_language.rs::testNullSafeEvaluateFails
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testNullSafeEvaluateFailsWithReusedParsedExpression	ported	crates/expression-language/tests/expression_language.rs::testNullSafeEvaluateFailsWithReusedParsedExpression
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testOperatorCollisions	ported	crates/expression-language/tests/expression_language.rs::testOperatorCollisions
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseAlreadyParsedExpressionReturnsSameObject	ported	crates/expression-language/tests/expression_language.rs::testParseAlreadyParsedExpressionReturnsSameObject
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseDoesNotReuseAnExpressionParsedWithOtherFlags	ported	crates/expression-language/tests/expression_language.rs::testParseDoesNotReuseAnExpressionParsedWithOtherFlags
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseReturnsObjectOnAlreadyParsedExpression	ported	crates/expression-language/tests/expression_language.rs::testParseReturnsObjectOnAlreadyParsedExpression
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testParseThrowsInsteadOfNotice	ported	crates/expression-language/tests/expression_language.rs::testParseThrowsInsteadOfNotice
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testProviders	ported	crates/expression-language/tests/expression_language.rs::testProviders
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testRegisterAfterCompile	ported	crates/expression-language/tests/expression_language.rs::testRegisterAfterCompile
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testRegisterAfterEval	ported	crates/expression-language/tests/expression_language.rs::testRegisterAfterEval
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testRegisterAfterParse	ported	crates/expression-language/tests/expression_language.rs::testRegisterAfterParse
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testShortCircuitOperatorsCompile	ported	crates/expression-language/tests/expression_language.rs::testShortCircuitOperatorsCompile
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testShortCircuitOperatorsEvaluate	ported	crates/expression-language/tests/expression_language.rs::testShortCircuitOperatorsEvaluate
+Tests/ExpressionLanguageTest.php	ExpressionLanguageTest::testStrictEquality	ported	crates/expression-language/tests/expression_language.rs::testStrictEquality
+Tests/ExpressionTest.php	ExpressionTest::testSerialization	n/a: tests PHP's serialize() and unserialize() of objects; the port has no PHP serializer (the Rust types are Clone)	
+Tests/LexerTest.php	LexerTest::testOperatorRegexWasGeneratedWithScript	ported	crates/expression-language/tests/lexer.rs::testOperatorRegexWasGeneratedWithScript
+Tests/LexerTest.php	LexerTest::testTokenize	ported	crates/expression-language/tests/lexer.rs::testTokenize
+Tests/LexerTest.php	LexerTest::testTokenizeMultilineComment	ported	crates/expression-language/tests/lexer.rs::testTokenizeMultilineComment
+Tests/LexerTest.php	LexerTest::testTokenizeOnNotOpenedBracket	ported	crates/expression-language/tests/lexer.rs::testTokenizeOnNotOpenedBracket
+Tests/LexerTest.php	LexerTest::testTokenizeThrowsErrorOnUnclosedBrace	ported	crates/expression-language/tests/lexer.rs::testTokenizeThrowsErrorOnUnclosedBrace
+Tests/LexerTest.php	LexerTest::testTokenizeThrowsErrorWithMessage	ported	crates/expression-language/tests/lexer.rs::testTokenizeThrowsErrorWithMessage
+Tests/LexerTest.php	LexerTest::testTokenizeUnterminatedStringIsLinear	ported	crates/expression-language/tests/lexer.rs::testTokenizeUnterminatedStringIsLinear
+Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testCompile	ported	crates/expression-language/tests/node_arguments_node.rs::testCompile
+Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testDump	ported	crates/expression-language/tests/node_arguments_node.rs::testDump
+Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testEvaluate	ported	crates/expression-language/tests/node_arguments_node.rs::testEvaluate
+Tests/Node/ArgumentsNodeTest.php	ArgumentsNodeTest::testSerialization	n/a: tests PHP's serialize() and unserialize() of objects; the port has no PHP serializer (the Rust types are Clone)	
+Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testCompile	ported	crates/expression-language/tests/node_array_node.rs::testCompile
+Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testDump	ported	crates/expression-language/tests/node_array_node.rs::testDump
+Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testEvaluate	ported	crates/expression-language/tests/node_array_node.rs::testEvaluate
+Tests/Node/ArrayNodeTest.php	ArrayNodeTest::testSerialization	n/a: tests PHP's serialize() and unserialize() of objects; the port has no PHP serializer (the Rust types are Clone)	
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompile	ported	crates/expression-language/tests/node_binary_node.rs::testCompile
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithBooleanBinaryNode	ported	crates/expression-language/tests/node_binary_node.rs::testCompileMatchesWithBooleanBinaryNode
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithInvalidRegexp	ported	crates/expression-language/tests/node_binary_node.rs::testCompileMatchesWithInvalidRegexp
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithInvalidRegexpAsExpression	ported	crates/expression-language/tests/node_binary_node.rs::testCompileMatchesWithInvalidRegexpAsExpression
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testCompileMatchesWithStringBinaryNode	ported	crates/expression-language/tests/node_binary_node.rs::testCompileMatchesWithStringBinaryNode
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testDivisionByZero	ported	crates/expression-language/tests/node_binary_node.rs::testDivisionByZero
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testDump	ported	crates/expression-language/tests/node_binary_node.rs::testDump
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluate	ported	crates/expression-language/tests/node_binary_node.rs::testEvaluate
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluateMatchesWithInvalidRegexp	ported	crates/expression-language/tests/node_binary_node.rs::testEvaluateMatchesWithInvalidRegexp
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluateMatchesWithInvalidRegexpAsExpression	ported	crates/expression-language/tests/node_binary_node.rs::testEvaluateMatchesWithInvalidRegexpAsExpression
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testEvaluateUnsupportedOperator	ported	crates/expression-language/tests/node_binary_node.rs::testEvaluateUnsupportedOperator
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testInOperatorStrictness	ported	crates/expression-language/tests/node_binary_node.rs::testInOperatorStrictness
+Tests/Node/BinaryNodeTest.php	BinaryNodeTest::testModuloByZero	ported	crates/expression-language/tests/node_binary_node.rs::testModuloByZero
+Tests/Node/ConditionalNodeTest.php	ConditionalNodeTest::testCompile	ported	crates/expression-language/tests/node_conditional_node.rs::testCompile
+Tests/Node/ConditionalNodeTest.php	ConditionalNodeTest::testDump	ported	crates/expression-language/tests/node_conditional_node.rs::testDump
+Tests/Node/ConditionalNodeTest.php	ConditionalNodeTest::testEvaluate	ported	crates/expression-language/tests/node_conditional_node.rs::testEvaluate
+Tests/Node/ConstantNodeTest.php	ConstantNodeTest::testCompile	ported	crates/expression-language/tests/node_constant_node.rs::testCompile
+Tests/Node/ConstantNodeTest.php	ConstantNodeTest::testDump	ported	crates/expression-language/tests/node_constant_node.rs::testDump
+Tests/Node/ConstantNodeTest.php	ConstantNodeTest::testEvaluate	ported	crates/expression-language/tests/node_constant_node.rs::testEvaluate
+Tests/Node/FunctionNodeTest.php	FunctionNodeTest::testCompile	ported	crates/expression-language/tests/node_function_node.rs::testCompile
+Tests/Node/FunctionNodeTest.php	FunctionNodeTest::testDump	ported	crates/expression-language/tests/node_function_node.rs::testDump
+Tests/Node/FunctionNodeTest.php	FunctionNodeTest::testEvaluate	ported	crates/expression-language/tests/node_function_node.rs::testEvaluate
+Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testCompile	ported	crates/expression-language/tests/node_get_attr_node.rs::testCompile
+Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testDump	ported	crates/expression-language/tests/node_get_attr_node.rs::testDump
+Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testEvaluate	ported	crates/expression-language/tests/node_get_attr_node.rs::testEvaluate
+Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testEvaluateNullSafeArrayOnNonArrayThrows	ported	crates/expression-language/tests/node_get_attr_node.rs::testEvaluateNullSafeArrayOnNonArrayThrows
+Tests/Node/GetAttrNodeTest.php	GetAttrNodeTest::testUnserializeMissingIsNullSafeDefaultsToFalse	ported	crates/expression-language/tests/node_get_attr_node.rs::testUnserializeMissingIsNullSafeDefaultsToFalse
+Tests/Node/NameNodeTest.php	NameNodeTest::testCompile	ported	crates/expression-language/tests/node_name_node.rs::testCompile
+Tests/Node/NameNodeTest.php	NameNodeTest::testDump	ported	crates/expression-language/tests/node_name_node.rs::testDump
+Tests/Node/NameNodeTest.php	NameNodeTest::testEvaluate	ported	crates/expression-language/tests/node_name_node.rs::testEvaluate
+Tests/Node/NodeTest.php	NodeTest::testCompileActuallyCompilesAllNodes	ported	crates/expression-language/tests/node_node.rs::testCompileActuallyCompilesAllNodes
+Tests/Node/NodeTest.php	NodeTest::testEvaluateActuallyEvaluatesAllNodes	ported	crates/expression-language/tests/node_node.rs::testEvaluateActuallyEvaluatesAllNodes
+Tests/Node/NodeTest.php	NodeTest::testSerialization	n/a: tests PHP's serialize() and unserialize() of objects; the port has no PHP serializer (the Rust types are Clone)	
+Tests/Node/NodeTest.php	NodeTest::testToString	ported	crates/expression-language/tests/node_node.rs::testToString
+Tests/Node/NullCoalescedNameNodeTest.php	NullCoalescedNameNodeTest::testCompile	ported	crates/expression-language/tests/node_null_coalesced_name_node.rs::testCompile
+Tests/Node/NullCoalescedNameNodeTest.php	NullCoalescedNameNodeTest::testDump	ported	crates/expression-language/tests/node_null_coalesced_name_node.rs::testDump
+Tests/Node/NullCoalescedNameNodeTest.php	NullCoalescedNameNodeTest::testEvaluate	ported	crates/expression-language/tests/node_null_coalesced_name_node.rs::testEvaluate
+Tests/Node/UnaryNodeTest.php	UnaryNodeTest::testCompile	ported	crates/expression-language/tests/node_unary_node.rs::testCompile
+Tests/Node/UnaryNodeTest.php	UnaryNodeTest::testDump	ported	crates/expression-language/tests/node_unary_node.rs::testDump
+Tests/Node/UnaryNodeTest.php	UnaryNodeTest::testEvaluate	ported	crates/expression-language/tests/node_unary_node.rs::testEvaluate
+Tests/ParsedExpressionTest.php	ParsedExpressionTest::testSerialization	n/a: tests PHP's serialize() and unserialize() of objects; the port has no PHP serializer (the Rust types are Clone)	
+Tests/ParserTest.php	ParserTest::testChainedTernariesWithBinaryConditionsAreAccepted	ported	crates/expression-language/tests/parser.rs::testChainedTernariesWithBinaryConditionsAreAccepted
+Tests/ParserTest.php	ParserTest::testDeepButReasonableExpressionIsAccepted	ported	crates/expression-language/tests/parser.rs::testDeepButReasonableExpressionIsAccepted
+Tests/ParserTest.php	ParserTest::testDeeplyNestedExpressionIsRejected	ported	crates/expression-language/tests/parser.rs::testDeeplyNestedExpressionIsRejected
+Tests/ParserTest.php	ParserTest::testLint	ported	crates/expression-language/tests/parser.rs::testLint
+Tests/ParserTest.php	ParserTest::testNameProposal	ported	crates/expression-language/tests/parser.rs::testNameProposal
+Tests/ParserTest.php	ParserTest::testParse	ported	crates/expression-language/tests/parser.rs::testParse
+Tests/ParserTest.php	ParserTest::testParsePrimaryExpressionWithUnknownFunctionThrows	ported	crates/expression-language/tests/parser.rs::testParsePrimaryExpressionWithUnknownFunctionThrows
+Tests/ParserTest.php	ParserTest::testParseUnknownFunction	ported	crates/expression-language/tests/parser.rs::testParseUnknownFunction
+Tests/ParserTest.php	ParserTest::testParseWithInvalidName	ported	crates/expression-language/tests/parser.rs::testParseWithInvalidName
+Tests/ParserTest.php	ParserTest::testParseWithInvalidPostfixData	ported	crates/expression-language/tests/parser.rs::testParseWithInvalidPostfixData
+Tests/ParserTest.php	ParserTest::testParseWithZeroInNames	ported	crates/expression-language/tests/parser.rs::testParseWithZeroInNames

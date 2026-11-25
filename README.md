@@ -32,7 +32,7 @@ Nothing outside those tables is claimed.
 | [`symfony-event-dispatcher`](crates/event-dispatcher/README.md), [contracts](crates/event-dispatcher-contracts/README.md) | `symfony/event-dispatcher` | Dispatcher, listeners, subscribers |
 | [`twig`](crates/twig/README.md) | `twig/twig` | M4 started: Source, errors, tokens, token stream, Lexer, nodes, extensions, expression and token parsers, Parser, node visitors |
 | [`doctrine-dbal`](crates/doctrine-dbal/README.md) | `doctrine/dbal` | M6 started: the SQL parser and list-parameter expansion |
-| [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md), [`symfony-clock`](crates/clock/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
+| [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md), [`symfony-clock`](crates/clock/README.md), [`symfony-expression-language`](crates/expression-language/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
 | [`symfony-deprecation-contracts`](crates/deprecation-contracts/README.md), [`psr-log`](crates/psr-log/README.md) | `symfony/deprecation-contracts`, `psr/log` | The contracts |
 | [`php-value`](crates/php-value/README.md), [`php-dom`](crates/php-dom/README.md), [`php-pcre`](crates/php-pcre/README.md) | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source |
 | [`request-lab`](examples/request-lab/README.md) | — | Independent example application on the ported kernel (RouterListener, ControllerResolver, ArgumentResolver, HttpKernel) through the HTTP adapter |
@@ -208,7 +208,7 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/error-handler | 114 | 0 | 0 | 114 |
 | symfony/event-dispatcher-contracts | 0 | 0 | 0 | 0 |
 | symfony/event-dispatcher | 140 | 114 | 0 | 26 |
-| symfony/expression-language | 106 | 0 | 0 | 106 |
+| symfony/expression-language | 106 | 101 | 5 | 0 |
 | symfony/filesystem | 157 | 27 | 0 | 130 |
 | symfony/finder | 143 | 139 | 4 | 0 |
 | symfony/form | 2,734 | 0 | 0 | 2,734 |
@@ -256,7 +256,7 @@ percentage; later changes are authoritative in `parity/`):
 | twig/intl-extra | 17 | 0 | 0 | 17 |
 | twig/markdown-extra | 6 | 0 | 0 | 6 |
 | twig/twig | 778 | 0 | 0 | 778 |
-| **Total** | **29,037** | **3,146** | **46** | **25,845** |
+| **Total** | **29,037** | **3,247** | **51** | **25,739** |
 
 Every package pinned in `parity/packages.tsv` has a manifest; those
 without a Rust port yet are all `pending`, and the contracts packages
