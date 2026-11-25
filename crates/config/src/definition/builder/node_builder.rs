@@ -297,6 +297,10 @@ impl<P: Clone> NodeBuilder<P> {
     }
 
     /// `append($node)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn append<D: class::Marker, Q: Clone>(&self, node: &Definition<D, Q>) -> Self {
         self.append_def(&node.def);
         self.clone()
@@ -317,6 +321,10 @@ impl<P: Clone> NodeBuilder<P> {
     }
 
     /// `setNodeClass($type, $class)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn set_node_class(&self, type_name: &str, class: impl Into<NodeClass>) -> Self {
         let type_name = type_name.to_ascii_lowercase();
         let class = class.into();

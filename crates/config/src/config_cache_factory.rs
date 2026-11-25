@@ -47,6 +47,7 @@ impl ConfigCacheFactory {
     }
 
     /// The classes the caches' meta files may name.
+    #[must_use]
     pub fn with_classes(mut self, classes: ResourceClasses) -> Self {
         self.classes = classes;
         self
@@ -86,6 +87,7 @@ impl ResourceCheckerConfigCacheFactory {
     }
 
     /// The classes the caches' meta files may name.
+    #[must_use]
     pub fn with_classes(mut self, classes: ResourceClasses) -> Self {
         self.classes = classes;
         self

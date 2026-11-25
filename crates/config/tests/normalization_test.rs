@@ -3,6 +3,10 @@
 //!
 //! Upstream: symfony/config Tests/Definition/NormalizationTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::needless_pass_by_value,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 mod common;
 

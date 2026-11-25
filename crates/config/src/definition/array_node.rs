@@ -26,6 +26,7 @@ pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\ArrayNode";
 
 /// `ArrayNode`'s properties (`PrototypedArrayNode` has them too).
 #[derive(Clone)]
+#[expect(clippy::struct_excessive_bools, reason = "upstream's flags")]
 pub(crate) struct ArrayData {
     pub(crate) xml_remappings: Vec<(PhpString, PhpString)>,
     pub(crate) children: Vec<(Key, Node)>,

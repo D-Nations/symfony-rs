@@ -292,7 +292,13 @@ fn backed_from(data: &EnumData, value: &Value) -> Option<Value> {
 
 /// A string passed to an `int` parameter: a numeric string whose value is
 /// an int in range (a fraction is dropped).
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn int_from_string(s: &[u8]) -> Option<i64> {
+    // 2^63: the first float above the int range.
+    const LIMIT: f64 = 9_223_372_036_854_775_808.0;
     if !is_numeric(s) {
         return None;
     }
@@ -305,8 +311,6 @@ fn int_from_string(s: &[u8]) -> Option<i64> {
         return Some(i);
     }
     let f = string_to_float(s);
-    // 2^63: the first float above the int range.
-    const LIMIT: f64 = 9_223_372_036_854_775_808.0;
     (f.is_finite() && (-LIMIT..LIMIT).contains(&f)).then(|| f.trunc() as i64)
 }
 

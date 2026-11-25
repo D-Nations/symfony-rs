@@ -76,6 +76,10 @@ impl DirectoryResource {
     }
 
     /// Whether nothing under `dir` is newer than `timestamp`.
+    #[expect(
+        clippy::self_only_used_in_recursion,
+        reason = "a method, as upstream's"
+    )]
     fn fresh_under(
         &self,
         dir: &[u8],

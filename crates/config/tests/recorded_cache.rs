@@ -10,6 +10,14 @@
 //!
 //! Upstream: none
 #![cfg(unix)]
+#![allow(
+    clippy::items_after_statements,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
+#![allow(
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 mod common;
 
@@ -91,7 +99,7 @@ fn masked(s: &[u8]) -> Vec<u8> {
     out
 }
 
-/// A directory as long as the recorder's, its files as reset_base()
+/// A directory as long as the recorder's, its files as `reset_base()`
 /// leaves them.
 struct Base {
     path: Vec<u8>,
@@ -158,7 +166,7 @@ fn touch(path: &[u8], t: i64) {
 struct ProbeResource(PhpArray);
 
 impl ResourceInterface for ProbeResource {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "ProbeResource"
     }
 
@@ -171,14 +179,14 @@ impl ResourceInterface for ProbeResource {
     }
 }
 
-/// The recorder's TestChecker.
+/// The recorder's `TestChecker`.
 struct TestChecker {
     class: Option<&'static str>,
     fresh: bool,
 }
 
 impl ResourceCheckerInterface for TestChecker {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "TestChecker"
     }
 
@@ -240,7 +248,7 @@ fn resource(base: &Base, spec: &Json) -> Result<Arc<dyn ResourceInterface>, Erro
     })
 }
 
-/// What file_state() records, with this directory in place of the
+/// What `file_state()` records, with this directory in place of the
 /// recorder's and modes PHP derived from umask 022 made this process's.
 fn state(base: &Base, path: &[u8]) -> Json {
     let p = os(path);
@@ -295,7 +303,7 @@ fn throwable(base: &Base, e: &Error) -> Json {
     ])
 }
 
-/// GlobResource's hash covers the absolute paths it finds, which differ
+/// `GlobResource`'s hash covers the absolute paths it finds, which differ
 /// here: its 32 hex digits are compared as `@HASH@`.
 fn unhashed(state: &Json) -> Json {
     let mut state = state.clone();
@@ -333,14 +341,16 @@ fn report(failures: &[String], total: usize, what: &str) {
 
 /// The written meta files PHP and this port cannot agree on, listed in
 /// README.md: PHP writes `r:` for an object met twice, php-value's
-/// serialize() writes it again.
+/// `serialize()` writes it again.
 fn listed_write(case: &Json) -> bool {
     case["metadata"][0][1].to_string().contains("\"Hidden\"")
 }
 
 #[test]
 fn write_files_as_php() {
-    let _shared = SHARED.lock().unwrap_or_else(|e| e.into_inner());
+    let _shared = SHARED
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     let base = Base::new(1);
     let data = data();
     let cases = data["write"].as_array().expect("write cases");
@@ -453,10 +463,10 @@ fn change(base: &Base, name: &str) {
     }
 }
 
-/// The isFresh() answers listed in README.md: GlobResource's restore
+/// The `isFresh()` answers listed in README.md: `GlobResource`'s restore
 /// (symfony-config's resource code) refuses any object as a Stringable,
 /// where PHP refuses only a `\Stringable` and then fails the typed
-/// property (a TypeError).
+/// property (a `TypeError`).
 fn listed_fresh(case: &Json) -> bool {
     String::from_utf8_lossy(&b64(&case["meta"]))
         .contains("GlobResource\":1:{s:6:\"prefix\";O:8:\"stdClass\"")
@@ -464,7 +474,9 @@ fn listed_fresh(case: &Json) -> bool {
 
 #[test]
 fn is_fresh_as_php() {
-    let _shared = SHARED.lock().unwrap_or_else(|e| e.into_inner());
+    let _shared = SHARED
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     let base = Base::new(2);
     let data = data();
     let cases = data["fresh"].as_array().expect("fresh cases");
@@ -512,7 +524,7 @@ fn is_fresh_as_php() {
     report(&failures, cases.len(), "isFresh() calls");
 }
 
-/// Every file under the directory, as the recorder's listing().
+/// Every file under the directory, as the recorder's `listing()`.
 fn listing(base: &Base) -> Json {
     fn walk(dir: &Path, root: &Path, out: &mut BTreeMap<Vec<u8>, PathBuf>) {
         let Ok(entries) = std::fs::read_dir(dir) else {
@@ -555,6 +567,7 @@ fn expected_listing(recorded: &Json) -> Json {
 }
 
 #[test]
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 fn filesystem_as_php() {
     let base = Base::new(3);
     let data = data();
@@ -591,7 +604,7 @@ fn filesystem_as_php() {
             replace(&base.here(t.as_bytes()), &RECORDED_BASE[5..], &own_name)
         };
         match kind {
-            Some("link") | Some("link-in-sub") => {
+            Some("link" | "link-in-sub") => {
                 std::os::unix::fs::symlink(os(&target(3)), os(&path)).expect("symlink");
             }
             Some("relative-link") => {

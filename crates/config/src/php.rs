@@ -72,6 +72,10 @@ enum Num {
     Float(f64),
 }
 
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn compare_numbers(a: Num, b: Num) -> Option<Ordering> {
     match (a, b) {
         (Num::Int(x), Num::Int(y)) => Some(x.cmp(&y)),
@@ -240,12 +244,14 @@ impl Msg {
     }
 
     /// Appends literal text.
+    #[must_use]
     pub fn s(mut self, text: &str) -> Self {
         self.0.extend_from_slice(text.as_bytes());
         self
     }
 
     /// Appends bytes.
+    #[must_use]
     pub fn b(mut self, bytes: &[u8]) -> Self {
         self.0.extend_from_slice(bytes);
         self
@@ -389,6 +395,13 @@ fn format_error(class: &str, message: impl Into<Vec<u8>>) -> crate::Error {
 /// never approximated. Left-justified `d` and `u` pad with spaces where
 /// `0` is asked, as PHP does. Too few arguments is PHP's
 /// `ArgumentCountError`, a bad specifier its `ValueError`.
+#[expect(
+    clippy::cast_possible_truncation,
+    clippy::cast_precision_loss,
+    clippy::cast_sign_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 pub fn sprintf(format: &[u8], args: &[Value]) -> Result<Vec<u8>, crate::Error> {
     struct Spec {
         arg: usize,
@@ -685,6 +698,10 @@ pub fn decoct(value: i64) -> String {
 }
 
 /// `bindec($string)`.
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 pub fn bindec(s: &[u8]) -> php_value::Number {
     let mut int: i64 = 0;
     let mut float: Option<f64> = None;

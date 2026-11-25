@@ -374,6 +374,10 @@ impl FileLoader {
 
 /// An array offset as `isset($a[$v])` / `$a[$v] = …` reads it: the key's
 /// string form, or PHP's `TypeError` for arrays and objects.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn offset(value: &Value, isset: bool) -> Result<Vec<u8>, Error> {
     match value {
         Value::Null => Ok(Vec::new()),

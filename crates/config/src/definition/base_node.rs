@@ -311,6 +311,7 @@ impl Node {
     /// PHP's `clone $node`: a new node with the same properties; child
     /// nodes, prototype and parent are shared, as PHP's shallow clone
     /// shares objects.
+    #[must_use]
     pub fn clone_node(&self) -> Node {
         Node(Arc::new(Mutex::new(self.read(Inner::clone))))
     }
@@ -329,6 +330,7 @@ impl Node {
     /// Makes this new node an instance of `class`, a PHP subclass of its
     /// class that overrides nothing (`class BarNode extends ArrayNode
     /// {}`). Called right after the node is constructed.
+    #[must_use]
     pub fn with_class(self, class: &str) -> Self {
         self.write(|n| n.base.subclass = Some(Arc::from(class)));
         self

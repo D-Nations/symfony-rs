@@ -352,8 +352,8 @@ impl GlobResource {
                     {
                         return false;
                     }
-                    !(!excluded.excluded_prefixes.is_empty()
-                        && excluded.under_excluded(&normalized, &filter_prefix))
+                    excluded.excluded_prefixes.is_empty()
+                        || !excluded.under_excluded(&normalized, &filter_prefix)
                 },
                 false,
             )
@@ -531,6 +531,11 @@ fn split_braces(pattern: &[u8]) -> Vec<Vec<u8>> {
 }
 
 /// `expandGlob()`: the patterns a `{a,b}` pattern stands for.
+#[expect(
+    clippy::cast_possible_wrap,
+    clippy::cast_sign_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn expand_glob(pattern: &[u8]) -> Vec<Vec<u8>> {
     let segments = split_braces(pattern);
     let mut paths = vec![segments[0].clone()];

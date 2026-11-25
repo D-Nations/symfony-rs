@@ -4,6 +4,10 @@
 //! `ProjectLoader1` and `TestFileLoader`.
 //!
 //! Upstream: symfony/config Tests/Loader/LoaderTest.php Tests/Loader/FileLoaderTest.php
+#![allow(
+    clippy::unused_self,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use std::sync::{
     Arc, Mutex, RwLock, Weak,
