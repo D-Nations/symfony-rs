@@ -184,7 +184,7 @@ impl HttpKernelInterface for FakeKernel {
         if self.fail {
             return Err(PhpException::new(PhpClass::LogicException, "broken").throwable());
         }
-        let uri = request.with_mut(|r| r.get_request_uri()).unwrap();
+        let uri = request.with_mut(PhpRequest::get_request_uri).unwrap();
         let headers = ResponseHeaderBag::new([("X-Uri", uri)]).unwrap();
         Ok(Handle::new(
             Response::new(Some(self.content), 201, headers).unwrap(),
