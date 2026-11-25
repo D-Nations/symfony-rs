@@ -1100,8 +1100,10 @@ name = "symfony-dependency-injection"
 version = "0.1.0"
 dependencies = [
  "php-value",
+ "serde_json",
  "symfony-config",
  "symfony-deprecation-contracts",
+ "symfony-dotenv",
 ]
 
 [[package]]

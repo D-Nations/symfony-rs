@@ -9,6 +9,7 @@
 
 mod abstract_argument;
 mod bound_argument;
+mod env_closure;
 mod env_closure_argument;
 mod iterator_argument;
 mod service_closure_argument;
@@ -16,6 +17,7 @@ mod service_locator_argument;
 
 pub use abstract_argument::AbstractArgument;
 pub use bound_argument::{BoundArgument, DEFAULTS_BINDING, INSTANCEOF_BINDING, SERVICE_BINDING};
+pub use env_closure::EnvClosure;
 pub use env_closure_argument::EnvClosureArgument;
 pub use iterator_argument::{IteratorArgument, TaggedData};
 pub use service_closure_argument::ServiceClosureArgument;
