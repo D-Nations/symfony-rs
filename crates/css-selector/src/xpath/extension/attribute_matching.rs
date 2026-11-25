@@ -116,7 +116,9 @@ impl AttributeMatchingExtension {
                 b", string-length(",
                 attribute,
                 b")-",
-                (v.len() as i64 - 1).to_string().as_bytes(),
+                (i64::try_from(v.len()).unwrap_or(i64::MAX) - 1)
+                    .to_string()
+                    .as_bytes(),
                 b") = ",
                 &Translator::get_xpath_literal(v),
             ]),

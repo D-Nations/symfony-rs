@@ -97,6 +97,7 @@ impl NodeExtension {
     }
 
     /// `:is()` and `:where()`.
+    #[expect(clippy::unused_self, reason = "a method, as upstream's NodeExtension")]
     fn translate_matching_or_specificity_adjustment(
         &self,
         selector: &Node,

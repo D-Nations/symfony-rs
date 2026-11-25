@@ -46,6 +46,7 @@ pub(crate) fn strpos(haystack: &[u8], needle: &[u8], offset: usize) -> Option<us
 
 /// `(string) $int` of an integer result, which PHP turns into a float
 /// once it leaves the `int` range (the series arithmetic adds or takes 1).
+#[expect(clippy::cast_precision_loss, reason = "PHP turns the int into a float")]
 pub(crate) fn int_string(value: i128) -> Vec<u8> {
     match i64::try_from(value) {
         Ok(v) => v.to_string().into_bytes(),

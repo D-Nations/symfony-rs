@@ -27,6 +27,7 @@ impl Specificity {
         Self { a, b, c }
     }
 
+    #[must_use]
     pub fn plus(&self, specificity: &Specificity) -> Self {
         Self::new(
             self.a + specificity.a,
@@ -123,6 +124,7 @@ impl Node {
     }
 
     /// `__toString()`.
+    #[expect(clippy::too_many_lines, reason = "one match over the node kinds")]
     pub fn to_php_string(&self) -> Vec<u8> {
         let name = self.get_node_name().as_bytes();
         match self {

@@ -256,6 +256,7 @@ impl Parser {
 
     /// Parses the next simple selector (hash, class, pseudo, negation);
     /// returns it with its pseudo-element.
+    #[expect(clippy::too_many_lines, reason = "one parser function, as upstream's")]
     fn parse_simple_selector(
         &self,
         stream: &mut TokenStream,

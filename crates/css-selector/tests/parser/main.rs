@@ -94,7 +94,7 @@ fn assert_remaining_content(reader: &Reader, remaining_content: &[u8], row: &str
         assert!(reader.is_eof(), "row {row}");
     } else {
         assert_eq!(
-            remaining_content.len() as i64,
+            i64::try_from(remaining_content.len()).unwrap_or(i64::MAX),
             reader.get_remaining_length(),
             "row {row}"
         );

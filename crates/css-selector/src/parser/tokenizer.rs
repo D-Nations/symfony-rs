@@ -121,6 +121,11 @@ impl TokenizerPatterns {
         }
     }
 
+    #[expect(
+        clippy::unused_self,
+        clippy::trivially_copy_pass_by_ref,
+        reason = "upstream's getter on the patterns object"
+    )]
     pub(crate) fn get_whitespace_pattern(&self) -> &'static Regex {
         &patterns().whitespace
     }
@@ -156,6 +161,12 @@ impl TokenizerEscaping {
     /// `\XXXXXX` escapes to UTF-8, code point taken modulo 0x200000;
     /// from U+10000 on they are dropped, and surrogates are encoded as
     /// they come (upstream's own encoder).
+    #[expect(
+        clippy::trivially_copy_pass_by_ref,
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        reason = "upstream's method; `c` is in 0..0x200000, so the casts keep its bits"
+    )]
     fn replace_unicode_sequences(&self, value: &[u8]) -> Vec<u8> {
         self.patterns
             .get_unicode_escape_pattern()

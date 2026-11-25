@@ -131,7 +131,7 @@ fn testHasNestingWithinLimitIsAccepted() {
 fn testMatchingNestingDepthLimit() {
     for (name, args) in provider(CLASS, "testMatchingNestingDepthLimit") {
         let parser = Parser::default();
-        parser.set_nesting_depth(args[0].int() as usize);
+        parser.set_nesting_depth(usize::try_from(args[0].int()).unwrap_or_default());
 
         let error = syntax_error(parser.parse(&args[1].bytes()), &name);
         assert_eq!(show(&args[2].bytes()), show(error.message()), "row {name}");
