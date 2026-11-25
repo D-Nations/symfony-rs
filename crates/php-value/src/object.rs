@@ -7,9 +7,9 @@
 use std::sync::Arc;
 
 use crate::{
-    array::PhpArray,
+    array::{Key, PhpArray},
     string::PhpString,
-    value::{Object, PhpObject, Value},
+    value::{Object, PhpObject, Thrown, Value},
 };
 
 /// `stdClass`: dynamic public properties. Property names are kept as
@@ -99,6 +99,202 @@ impl PhpObject for ArrayObject {
     fn properties(&self) -> PhpArray {
         self.storage.clone()
     }
+
+    fn instance_of(&self, class: &str) -> bool {
+        array_like_instance_of(class, "IteratorAggregate")
+    }
+
+    fn methods(&self) -> Vec<String> {
+        [
+            "__construct",
+            "offsetExists",
+            "offsetGet",
+            "offsetSet",
+            "offsetUnset",
+            "append",
+            "getArrayCopy",
+            "count",
+            "getFlags",
+            "setFlags",
+            "asort",
+            "ksort",
+            "uasort",
+            "uksort",
+            "natsort",
+            "natcasesort",
+            "unserialize",
+            "serialize",
+            "__serialize",
+            "__unserialize",
+            "__debugInfo",
+            "getIterator",
+            "exchangeArray",
+            "setIteratorClass",
+            "getIteratorClass",
+        ]
+        .into_iter()
+        .map(str::to_owned)
+        .collect()
+    }
+
+    fn call_method(&self, name: &str, arguments: &[Value]) -> Option<Result<Value, Thrown>> {
+        array_like_call(&self.storage, name, arguments)
+    }
+
+    /// Its storage entries are not properties.
+    fn property(&self, _name: &[u8]) -> Option<Value> {
+        None
+    }
+
+    fn offset_get(&self, offset: &Value) -> Option<Result<Value, Thrown>> {
+        Some(Ok(array_offset(&self.storage, offset)))
+    }
+
+    fn offset_exists(&self, offset: &Value) -> Option<Result<bool, Thrown>> {
+        Some(Ok(array_offset_exists(&self.storage, offset)))
+    }
+
+    fn php_count(&self) -> Option<Result<i64, Thrown>> {
+        Some(Ok(i64::try_from(self.storage.len()).unwrap_or(i64::MAX)))
+    }
+
+    fn traverse(&self) -> Option<Result<Vec<(Value, Value)>, Thrown>> {
+        Some(Ok(array_pairs(&self.storage)))
+    }
+}
+
+/// `ArrayIterator`: an iterator over an array (its storage).
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct ArrayIterator {
+    storage: PhpArray,
+}
+
+impl ArrayIterator {
+    pub const CLASS: &'static str = "ArrayIterator";
+
+    pub fn new(storage: PhpArray) -> Self {
+        Self { storage }
+    }
+
+    /// `getArrayCopy()`.
+    pub fn storage(&self) -> &PhpArray {
+        &self.storage
+    }
+}
+
+impl PhpObject for ArrayIterator {
+    fn class(&self) -> &str {
+        Self::CLASS
+    }
+
+    fn properties(&self) -> PhpArray {
+        self.storage.clone()
+    }
+
+    fn instance_of(&self, class: &str) -> bool {
+        array_like_instance_of(class, "SeekableIterator") || matches!(class, "Iterator")
+    }
+
+    fn methods(&self) -> Vec<String> {
+        [
+            "__construct",
+            "offsetExists",
+            "offsetGet",
+            "offsetSet",
+            "offsetUnset",
+            "append",
+            "getArrayCopy",
+            "count",
+            "getFlags",
+            "setFlags",
+            "asort",
+            "ksort",
+            "uasort",
+            "uksort",
+            "natsort",
+            "natcasesort",
+            "unserialize",
+            "serialize",
+            "__serialize",
+            "__unserialize",
+            "__debugInfo",
+            "rewind",
+            "current",
+            "key",
+            "next",
+            "valid",
+            "seek",
+        ]
+        .into_iter()
+        .map(str::to_owned)
+        .collect()
+    }
+
+    fn call_method(&self, name: &str, arguments: &[Value]) -> Option<Result<Value, Thrown>> {
+        array_like_call(&self.storage, name, arguments)
+    }
+
+    fn property(&self, _name: &[u8]) -> Option<Value> {
+        None
+    }
+
+    fn offset_get(&self, offset: &Value) -> Option<Result<Value, Thrown>> {
+        Some(Ok(array_offset(&self.storage, offset)))
+    }
+
+    fn offset_exists(&self, offset: &Value) -> Option<Result<bool, Thrown>> {
+        Some(Ok(array_offset_exists(&self.storage, offset)))
+    }
+
+    fn php_count(&self) -> Option<Result<i64, Thrown>> {
+        Some(Ok(i64::try_from(self.storage.len()).unwrap_or(i64::MAX)))
+    }
+
+    fn traverse(&self) -> Option<Result<Vec<(Value, Value)>, Thrown>> {
+        Some(Ok(array_pairs(&self.storage)))
+    }
+}
+
+fn array_like_instance_of(class: &str, iterator: &str) -> bool {
+    matches!(
+        class.trim_start_matches('\\'),
+        "ArrayAccess" | "Countable" | "Traversable" | "Serializable"
+    ) || class.trim_start_matches('\\') == iterator
+}
+
+fn array_like_call(
+    storage: &PhpArray,
+    name: &str,
+    arguments: &[Value],
+) -> Option<Result<Value, Thrown>> {
+    let first = arguments.first().cloned().unwrap_or_default();
+    Some(Ok(match name.to_ascii_lowercase().as_str() {
+        "getarraycopy" => Value::Array(storage.clone()),
+        "count" => Value::Int(i64::try_from(storage.len()).unwrap_or(i64::MAX)),
+        "offsetget" => array_offset(storage, &first),
+        "offsetexists" => Value::Bool(array_offset_exists(storage, &first)),
+        _ => return None,
+    }))
+}
+
+fn array_offset(storage: &PhpArray, offset: &Value) -> Value {
+    Key::from_value(offset)
+        .and_then(|k| storage.get(&k).cloned())
+        .unwrap_or_default()
+}
+
+fn array_offset_exists(storage: &PhpArray, offset: &Value) -> bool {
+    // isset(): a null entry counts as missing
+    Key::from_value(offset)
+        .and_then(|k| storage.get(&k))
+        .is_some_and(|v| !v.is_null())
+}
+
+fn array_pairs(storage: &PhpArray) -> Vec<(Value, Value)> {
+    storage
+        .iter()
+        .map(|(k, v)| (k.to_value(), v.clone()))
+        .collect()
 }
 
 /// A case of a PHP enum. Cases are singletons in PHP, so `===` compares

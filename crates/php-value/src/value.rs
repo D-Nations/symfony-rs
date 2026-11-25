@@ -38,6 +38,62 @@ pub trait PhpObject: Any + Send + Sync + fmt::Debug {
     fn json_serialize(&self) -> Option<Result<Value, Thrown>> {
         None
     }
+
+    /// `$object instanceof $class` for a parent class or an interface
+    /// (`ArrayAccess`, `Countable`, `Traversable`, ...); the object's own
+    /// class is [`PhpObject::class`].
+    fn instance_of(&self, class: &str) -> bool {
+        let _ = class;
+        false
+    }
+
+    /// The public methods, as `get_class_methods()` lists them from
+    /// outside the class (declaration order, parents after).
+    fn methods(&self) -> Vec<String> {
+        Vec::new()
+    }
+
+    /// `$object->$name(...$arguments)` for a public method (PHP matches
+    /// method names without case); `None` when there is no such method.
+    fn call_method(&self, name: &str, arguments: &[Value]) -> Option<Result<Value, Thrown>> {
+        let _ = (name, arguments);
+        None
+    }
+
+    /// `$object->$name` for a property readable from outside the class
+    /// (`isset()` semantics: a null property reads as unset); `None` when
+    /// there is none.
+    fn property(&self, name: &[u8]) -> Option<Value> {
+        self.properties()
+            .get(&crate::array::Key::from_bytes(name))
+            .cloned()
+    }
+
+    /// `$object[$offset]` for a class implementing `\ArrayAccess`
+    /// (`offsetGet()`); `None` for any other class.
+    fn offset_get(&self, offset: &Value) -> Option<Result<Value, Thrown>> {
+        let _ = offset;
+        None
+    }
+
+    /// `isset($object[$offset])` for a class implementing `\ArrayAccess`
+    /// (`offsetExists()`); `None` for any other class.
+    fn offset_exists(&self, offset: &Value) -> Option<Result<bool, Thrown>> {
+        let _ = offset;
+        None
+    }
+
+    /// `count($object)` for a class implementing `\Countable`; `None` for
+    /// any other class.
+    fn php_count(&self) -> Option<Result<i64, Thrown>> {
+        None
+    }
+
+    /// `foreach ($object as $key => $value)` for a class implementing
+    /// `\Traversable`: the pairs in order; `None` for any other class.
+    fn traverse(&self) -> Option<Result<Vec<(Value, Value)>, Thrown>> {
+        None
+    }
 }
 
 /// An exception a PHP method threw: its class, message and code.
