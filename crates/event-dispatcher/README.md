@@ -33,6 +33,7 @@ assert!(event.is_propagation_stopped());
 | The base class resolves lazy listeners on first call; a subclass resolves them when sorting | `EventDispatcher.php` (`$optimized`) | `testDispatchLazyListener` on both |
 | Default event name is the event's PHP class; non-stoppable events reach every listener; a listener's exception ends the dispatch and is returned | `EventDispatcher.php`, PSR-14 | Oracle vectors |
 | Subscribers: `'m'`, `['m', $priority]`, `[['m1', $p], ['m2']]` | `EventDispatcher.php`, `EventSubscriberInterface.php` | Subscriber upstream tests |
+| `CompiledEventDispatcher` (the listener seam, not a pinned PHP class; design after symfony/symfony#66122, 8.2): listeners compiled into a `ListenerMap` dispatch as `EventDispatcher` with the same `addListener()` calls does; anything but `dispatch()` and `hasListeners()` thaws it into a plain dispatcher in the state the pinned one would have (shared slots, buckets of dispatched events sorted); `ListenerPipeline` lets generated code run the listeners itself | `EventDispatcher.php` | `tests/compiled_event_dispatcher.rs`: 20,000 generated scripts against the plain dispatcher; http-kernel's 1,500 recorded lifecycles in both modes |
 | `GenericEvent` subject, ordered arguments, `ArrayAccess`, iteration, `Argument "%s" not found.` | `GenericEvent.php` | GenericEventTest (13) |
 | `ImmutableEventDispatcher` delegates reads and refuses changes with `Unmodifiable event dispatchers must not be modified.` | `ImmutableEventDispatcher.php` | ImmutableEventDispatcherTest (7) |
 | Feature `debug`: `TraceableEventDispatcher` wraps each listener during a dispatch and unwraps it after; called / not-called listeners (counted, per request), orphaned events, reset (also mid-dispatch), nested and re-entrant dispatches, priorities while dispatching, `section` / `event_listener` Stopwatch events, PSR-3 debug messages | `Debug/TraceableEventDispatcher.php` | TraceableEventDispatcherTest (34) |
@@ -57,6 +58,10 @@ Oracle vectors: `scripts/record.sh event-dispatcher` runs
   dispatcher throws from them. Priorities are `i64`, as PHP's `int`.
 - A PHP subclass that overrides `callListeners()` is
   `EventDispatcher::with_call_listeners(impl CallListeners)`.
+- `CompiledEventDispatcher<P: ListenerPipeline = ListenerMap>` is for a
+  listener set known before the first request: build a `ListenerMap` with
+  `add_listener`/`add_subscriber`, then share the dispatcher. It does not
+  trigger Symfony 8.2's deprecation notices (the pinned 8.1 has none).
 - The dispatcher is `Send + Sync`. No lock is held while a listener or a
   lazy factory runs, so either may call back into it, as in PHP. Two
   threads dispatching a lazy listener for the first time may both call its
@@ -88,6 +93,3 @@ it, `symfony-stopwatch` and `psr-log` come in.
 - `DependencyInjection/RegisterListenersPass.php`, `AddEventAliasesPass.php`
   and `Attribute/AsEventListener.php` (26 tests): container compilation, M3.
 - String callables (`'var_dump'`, `['Class', 'staticMethod']`).
-- symfony-http-kernel still has its own typed dispatcher: its events borrow
-  the request, and `EventObject` needs `'static` types. It moves onto this
-  crate when HttpKernel's events own their request (M2).

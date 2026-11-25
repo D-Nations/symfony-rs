@@ -11,6 +11,11 @@
 //! result and output; and a throwable from `terminate()` given back to
 //! `terminateWithException()`, which knows it as its own.
 //!
+//! Each script runs twice: on the plain `EventDispatcher`, and on a
+//! `CompiledEventDispatcher` holding the same listeners (the listener seam:
+//! priority, equal-priority order, propagation, controller replacement,
+//! early response, exceptions and response filtering in both modes).
+//!
 //! Upstream: none
 
 use std::sync::{Arc, Mutex};
@@ -18,7 +23,10 @@ use std::sync::{Arc, Mutex};
 use base64::Engine;
 use php_value::{Handle, Key, PhpArray, PhpString, Value, clock, vectors};
 use serde_json::{Value as Json, json};
-use symfony_event_dispatcher::{EventDispatcher, EventDispatcherInterface, EventObject, Listener};
+use symfony_event_dispatcher::{
+    CompiledEventDispatcher, ContractsEventDispatcherInterface, EventDispatcher,
+    EventDispatcherInterface, EventObject, Listener, ListenerMap,
+};
 use symfony_http_foundation::{
     exception::{Class, Error as FoundationError},
     header_bag::ResponseHeaderBag,
@@ -464,8 +472,27 @@ fn calls() -> Json {
 }
 
 #[test]
-#[allow(clippy::too_many_lines, reason = "one replay, in the recorder's order")]
 fn lifecycles_run_as_in_php() -> Result<(), TestError> {
+    replay(Mode::Plain)
+}
+
+/// The same scripts on the listener seam: the listeners compiled into a
+/// `CompiledEventDispatcher` before the kernel is built, as the converter
+/// emits them. No listener here changes the dispatcher, so every dispatch
+/// goes through the compiled table.
+#[test]
+fn lifecycles_run_as_in_php_on_a_compiled_dispatcher() -> Result<(), TestError> {
+    replay(Mode::Compiled)
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Mode {
+    Plain,
+    Compiled,
+}
+
+#[allow(clippy::too_many_lines, reason = "one replay, in the recorder's order")]
+fn replay(kind: Mode) -> Result<(), TestError> {
     let data: Json = serde_json::from_str(DATA)?;
     let values: Vec<Value> = data["values"]
         .as_array()
@@ -484,16 +511,16 @@ fn lifecycles_run_as_in_php() -> Result<(), TestError> {
         Request::reset_statics();
 
         let log: Log = Arc::default();
-        let dispatcher = Arc::new(EventDispatcher::new());
         let stack = RequestStack::default();
+        let mut registrations = Vec::new();
         for (index, spec) in script["listeners"]
             .as_array()
             .ok_or("listeners")?
             .iter()
             .enumerate()
         {
-            dispatcher.add_listener(
-                text(&spec[0])?,
+            registrations.push((
+                text(&spec[0])?.to_owned(),
                 listener(
                     index,
                     text(&spec[0])?.to_owned(),
@@ -502,8 +529,27 @@ fn lifecycles_run_as_in_php() -> Result<(), TestError> {
                     stack.clone(),
                 ),
                 int(&spec[1])?,
-            )?;
+            ));
         }
+        let mut compiled = None;
+        let dispatcher: Arc<dyn ContractsEventDispatcherInterface> = match kind {
+            Mode::Plain => {
+                let dispatcher = EventDispatcher::new();
+                for (name, listener, priority) in registrations {
+                    dispatcher.add_listener(&name, listener, priority)?;
+                }
+                Arc::new(dispatcher)
+            }
+            Mode::Compiled => {
+                let mut map = ListenerMap::new();
+                for (name, listener, priority) in registrations {
+                    map.add_listener(&name, listener, priority);
+                }
+                let dispatcher = Arc::new(CompiledEventDispatcher::from(map));
+                compiled = Some(dispatcher.clone());
+                dispatcher
+            }
+        };
         let kernel = HttpKernel::new(
             dispatcher,
             Arc::new(Resolver(controller(&script["controller"], &values)?)),
@@ -589,6 +635,9 @@ fn lifecycles_run_as_in_php() -> Result<(), TestError> {
             &mut failures,
         );
         compare("calls", &recorded["calls"], &made, &mut failures);
+        if compiled.is_some_and(|d| d.is_thawed()) {
+            failures.push(format!("script {n}: the compiled dispatcher thawed"));
+        }
     }
     Request::reset_statics();
     let total = failures.len();

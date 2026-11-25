@@ -1,4 +1,4 @@
-# Converter contract (provisional, version 0.3)
+# Converter contract (provisional, version 0.4)
 
 What code generated from a Symfony application may assume about this
 runtime, and what the runtime may assume about that code. It is the
@@ -7,7 +7,8 @@ the crates in this workspace.
 
 **Status: provisional.** Version 0.1 was written before any converter
 output existed (PLAN.md, M1-D); 0.2 adds what the first fixture showed;
-0.3 moves the fixture onto the ported Symfony kernel. The converter fixture pins the version it was built
+0.3 moves the fixture onto the ported Symfony kernel; 0.4 compiles its
+listeners (the listener seam). The converter fixture pins the version it was built
 against. Each change to this document bumps the version and adds a row to
 the change log at the end. Nothing here is stable before M8.
 
@@ -142,10 +143,15 @@ identity maps).
 - The HTTP boundary is `symfony-runtime`'s `FrontController`, which serves
   `public/index.php` as nginx and PHP-FPM would: one request per blocking
   thread, a kernel built per request by the generated factory, and
-  `HttpKernelRunner` running the ported `HttpKernel` on an
-  `EventDispatcher` with the listeners the application's container
-  registers (FrameworkBundle's `RouterListener` and `ResponseListener`,
-  the application's subscribers).
+  `HttpKernelRunner` running the ported `HttpKernel` on a
+  `CompiledEventDispatcher` holding the listeners the application's
+  container registers (FrameworkBundle's `RouterListener` and
+  `ResponseListener`, the application's subscribers), added to a
+  `ListenerMap` in the container's `addListener()`/`addSubscriber()`
+  order. It behaves as an `EventDispatcher` with those calls, and falls
+  back to one if anything reads or changes its listeners. Generated code
+  may implement `ListenerPipeline` to call the listeners directly; it then
+  keeps a `ListenerMap` of the same listeners for that fallback.
 - Routes are a `symfony-routing` `RouteCollection` built from the table
   Symfony compiles (`debug:router`, attributes and loaders; route options
   such as `utf8` included), matched by the `RouterListener`.
@@ -179,3 +185,4 @@ identity maps).
 | 0.1 | First provisional contract (M1-D), before any converter output |
 | 0.2 | From the first fixture: a service's state includes the services it reaches (section 4); non-HTTP exceptions reach listeners through `Exception::from_throwable`, and request exceptions become 400s (section 5) |
 | 0.3 | The fixture on the ported kernel: the container is a PSR-11 container and request-scoped services are `Send + Sync` (section 4); exceptions are shared `Throwable`s (section 5); the boundary is `symfony-runtime`'s front controller, routes a routing `RouteCollection`, controllers declared classes resolved by the `ContainerControllerResolver` with `$this` through `Method::with_this`, and bodies synchronous (sections 6 and 7) |
+| 0.4 | The listener seam: the kernel's dispatcher is a `CompiledEventDispatcher` built from a `ListenerMap`; generated pipelines implement `ListenerPipeline` (section 6) |
