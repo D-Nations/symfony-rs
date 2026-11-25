@@ -856,6 +856,22 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     samples match, and each difference is listed and checked. `new
     MimeTypes()` registers it after the `file` command, as upstream, so it
     is asked first; on Windows it is the only guesser.
+19. **The file named by a constructor's `ArgumentCountError` (HttpKernel
+    ControllerResolver, M2-A, November 25).** `new $class()` on a class
+    whose constructor needs arguments throws PHP's `Too few arguments to
+    function X::__construct(), 0 passed in <file> on line 152 and exactly
+    1 expected`: the file is wherever the application's
+    `vendor/symfony/http-kernel/Controller/ControllerResolver.php` lives.
+    A Rust application has no such file. Done: the resolver names the
+    path given by `with_source_file()`, by default
+    `vendor/symfony/http-kernel/Controller/ControllerResolver.php`
+    (relative), and line 152; the recorded vectors pass the oracle's
+    path. Recommended: keep; a converter can pass the original project's
+    absolute path where messages must match byte for byte. Also not run:
+    `Closure::bind()`, `bindTo()`, `call()` and `fromCallable()` used as
+    controllers resolve as in PHP and give PHP's `ArgumentCountError`
+    without enough arguments, but otherwise throw a `LogicException`
+    (no app routes to them).
 
 ## M0 progress
 
@@ -1231,6 +1247,7 @@ Stack rows (searched November 22):
 | HttpKernel's `HttpKernel.php` lifecycle, its events and `RequestStack.php` (searched November 25) | No Rust port of Symfony's HttpKernel on GitHub or crates.io; [Serenade](https://github.com/Interchouette-ITC/Serenade) (row above) is conceptual only; tower/axum middleware have no event semantics (priorities, propagation, a response that stops an event, exception-to-response rules). For PHP object identity: borrowed events (this crate's typed `Kernel<C>`, which the type-erased `'static` dispatcher cannot carry), `Rc<RefCell<_>>` (not `Send`, while listeners and the request stack are shared services), `Arc<Mutex<_>>` | Ported in `http_kernel.rs`, `event.rs`, `controller.rs` and `exception.rs` on the ported EventDispatcher, Request, Response and RequestStack; PHP object handles are php-value's new `Handle<T>` (`Arc<Mutex<T>>` with `===` by identity); no new dependency | The kernel's observable order (which listener sees what, when the request leaves the stack, which status survives an exception) is pinned by 1,500 recorded lifecycles; handles keep PHP's shared-object semantics that listeners rely on |
 | HttpKernel's `RouterListener.php` (November 25; no new search: the HttpKernel row above covers the component) | The HttpKernel row's search (no Rust port). For the shared routing context: change routing's matchers to hold a `Handle<RequestContext>` (touches every matcher and generator caller), or give the listener the handle and let routing's matchers match in a copy filled from the request, as their `matchRequest()` does | Ported in `router_listener.rs`; the listener holds a `Handle<RequestContext>`. In-workspace dependencies only: http-kernel gains `symfony-routing`, `psr-log` and `symfony-finder` (`realpath()`), and `psr-log` gains `php-value` for PSR-3's `mixed` context values | The matchers stay as recorded; what the listener shares (the context the URL generator also reads) is a PHP object handle, as in PHP |
 | HttpKernel's `ArgumentResolver.php`, its value resolvers and `ArgumentMetadata` (November 25; no new search: the HttpKernel row covers the component) | PHP reflects the controller at run time. Options: a proc-macro reading a Rust function's signature (types are Rust's, not PHP's: `?string`, unions and class names have no Rust spelling), or the controller declaring what reflection would report (name, type as PHP prints it, nullability, default, attributes), as the kernel's `Controller` already declares parameters and attributes | Declared `Parameter`s, read by the ported `ArgumentMetadataFactory`; no new dependency. A converter can generate the declarations from the PHP signature at build time | The resolvers see exactly the metadata PHP's reflection gives (pinned by 4,000 recorded signatures); nothing is reflected per request |
+| HttpKernel's `ControllerResolver.php` and `Attribute/AsController.php` (November 25; no new search: the HttpKernel row covers the component) | PHP instantiates classes and asks `is_callable()`, `method_exists()`, `get_class_methods()` and reflection at run time. Options: a proc-macro per Rust controller type (Rust has no PHP visibility, `__call`, inheritance or case-insensitive names to reflect), or declaring the PHP program: classes (kind, parent, interfaces, attribute names, methods with visibility, staticness and a `Controller` body), functions and closures | A `ClassRegistry` of declarations, answered by the ported resolver with PHP's lookup rules; no new dependency. A converter can generate the declarations from the PHP classes at build time | The callable, the error messages and `checkController()` are PHP's on 4,000 recorded programs; nothing is reflected per request |
 | HttpFoundation's `Response.php` (searched November 25) | No Rust port of Symfony's Response on GitHub or crates.io. Nearest: [http-fresh](https://docs.rs/http-fresh) (Express's `fresh`: conditional GET only, honours a request `no-cache`, no `strtotime()` dates), [http-cache-semantics](https://crates.io/crates/http-cache-semantics) and [http-cache](https://docs.rs/http-cache) (RFC 7234 cache policy for clients and proxies: other freshness rules, no `setCache()`, `prepare()` or `sendHeaders()`) | Ported in `response.rs` on the ported ResponseHeaderBag, Request, php-value and php-pcre; no new dependency. What PHP does while sending is recorded in `php::Output` | Symfony's own rules decide the headers a converted app sends: `getMaxAge()`'s order, weak ETag matching, `strtotime()` comparison of `false`, loose `==` on the protocol, the MSIE rule, 103 early hints. 33,387 answers, 300 buffer calls and 121 protocol pairs recorded from PHP 8.4.27 pin them |
 | HttpFoundation's `JsonResponse.php` and `RedirectResponse.php`, and PHP's `json_encode()` (November 25) | The responses: the `Response.php` row's search covers them (no Rust port of Symfony's responses). `json_encode()`: [serde_json](https://docs.rs/serde_json) (already a test dependency; its serializer has no `JSON_HEX_*`, `NUMERIC_CHECK`, `PARTIAL_OUTPUT_ON_ERROR` or invalid-UTF-8 handling, writes floats and non-ASCII its own way, and has no PHP arrays, enum cases or `JsonSerializable`), the config crate's scalar `json_encode_with()` (no flags beyond two, no errors) | Ported in `json_response.rs` and `redirect_response.rs`; `json_encode()` (`json::encode`), `json_decode()` to objects and `htmlspecialchars()` written in php-value; no new dependency | The content of a converted app's JSON and redirect responses is PHP's text byte for byte: escapes, float layout, errors and which of them end the encoding. 15,747 `json_encode()` calls, 8,154 `json_decode()` documents and 11,772 response answers recorded from PHP 8.4.27 pin them |
 | PHP's `parse_url()` (RequestContext::fromUri(), searched November 24) | [url](https://docs.rs/url) (WHATWG URL Standard: normalizes, lowercases, percent-encodes, other failures), [http::Uri](https://docs.rs/http) and [fluent-uri](https://docs.rs/fluent-uri) (strict RFC 3986: reject control bytes, spaces and `[` hosts PHP accepts), symfony-filesystem's scheme-only `parse_url_scheme()` | Written in `php-value::url` from the PHP manual and recorded answers, no dependency | PHP's components for malformed input (`host:port` without `//`, `false` for empty hosts and long ports, control bytes as `_`, `file:///`) are what `fromUri()` reads; 12,119 calls recorded from PHP 8.4.27 pin them |
@@ -1498,6 +1515,24 @@ Stack rows (searched November 22):
       the encoding while an invalid value does, and that mangled property
       names are left out. No advisory is listed for these files. Next:
       StreamedResponse and StreamedJsonResponse.
+- [ ] HttpKernel stage 4, the ControllerResolver (November 25;
+      [docs/milestones/m2-a-http-kernel-controller-resolver.md](docs/milestones/m2-a-http-kernel-controller-resolver.md)):
+      `Controller/ControllerResolver.php` and `Attribute/AsController.php`.
+      The PHP program is declared in a `ClassRegistry` (classes, abstract
+      classes, interfaces, traits; methods with visibility, staticness and
+      a `Controller` body; functions; closures with what reflection
+      reports), and the resolver answers `new`, `is_callable()`,
+      `method_exists()` and `get_class_methods()` from it as PHP does
+      (case-insensitive names, one leading backslash, `__invoke`, `__call`,
+      `__callStatic`, inherited private methods). It returns PHP's callable
+      and the kernel's `Controller`. ControllerResolverTest 15 of 15;
+      4,000 recorded programs (constructors of every visibility, arity and
+      outcome, `_controller` of every shape, `checkController()` with
+      `allowControllers()`, anonymous classes), all matching; 17 mutation
+      checks each caught. ContainerControllerResolverTest stays pending (a
+      service container). Decision 19 records the file a constructor's
+      `ArgumentCountError` names. No advisory is listed for these files.
+      Next: request-lab on the kernel with both resolvers.
 
 ## Local development performance
 
