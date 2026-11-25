@@ -9,7 +9,12 @@
 //! cannot hold.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/DecoratorServicePassTest.php
-#![allow(non_snake_case, clippy::unwrap_used)]
+#![allow(
+    non_snake_case,
+    clippy::unwrap_used,
+    clippy::similar_names,
+    clippy::disallowed_names
+)]
 
 use php_value::compare::loose_equals;
 use php_value::{PhpArray, Value};
@@ -259,9 +264,12 @@ fn testProcessMovesTagsFromDecoratedDefinitionToDecoratingDefinitionMultipleTime
     ));
 }
 
+/// A decorator id, the id it decorates and its priority.
+type Decorator = (&'static str, &'static str, i64);
+
 #[test]
 fn testProcessMovesTagsToTheOutermostDecoratorOfTheService() {
-    let cases: [(&[(&str, &str, i64)], &str); 3] = [
+    let cases: [(&[Decorator], &str); 3] = [
         // decorator of a decorator processed first
         (&[("deco1", "foo", 0), ("deco2", "deco1", 5)], "deco2"),
         // decorator of a decorator processed in between
