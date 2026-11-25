@@ -10,6 +10,7 @@
 
 use std::collections::BTreeMap;
 
+use super::alias_deprecated_public_services_pass::AliasDeprecatedPublicServicesPass;
 use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
 use super::check_arguments_validity_pass::CheckArgumentsValidityPass;
 use super::check_circular_references_pass::CheckCircularReferencesPass;
@@ -208,7 +209,7 @@ impl PassConfig {
                 vec![
                     pending("ResolveHotPathPass"),
                     pending("ResolveNoPreloadPass"),
-                    pending("AliasDeprecatedPublicServicesPass"),
+                    Pass::new(AliasDeprecatedPublicServicesPass::new()),
                 ],
             ),
             // Let build parameters be available as late as possible

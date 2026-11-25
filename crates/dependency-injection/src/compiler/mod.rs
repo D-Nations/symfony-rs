@@ -25,6 +25,9 @@ pub use service_reference_graph::{
     ServiceReferenceGraphNode,
 };
 
+mod alias_deprecated_public_services_pass;
+pub use alias_deprecated_public_services_pass::AliasDeprecatedPublicServicesPass;
+
 mod analyze_service_references_pass;
 pub use analyze_service_references_pass::AnalyzeServiceReferencesPass;
 
