@@ -21,6 +21,8 @@ unofficial and is not affiliated with or endorsed by Symfony.
 | `exception`: every routing exception class with its PHP ancestry (`Error::is_a()`), MethodNotAllowedException's uppercased allowed methods and MissingMandatoryParametersException's route name, parameters and message (`Error::detail()`) | `Exception/*.php` (no upstream test class; used by the matcher and generator stages) |
 | `url_generator::UrlGenerator`: `generate()` with localized routes (`_locale` from the parameters, the context or the default locale, `_canonical_route`, aliases), defaults and context parameters, optional and important variables, requirement checks anchored as a whole after removing look-arounds (GHSA-72xp-p242-47p9) in strict, logging (`Some(false)`) and unchecked (`None`) modes, path encoding with dot segments, host tokens, scheme requirements, the four reference types, extra and `_query` parameters compared with defaults by `==` and built with `http_build_query()` (RFC 3986), objects turned into their public properties or `__toString()` (circular references refused), fragments; `getRelativePath()`. The logger receives context values as strings; a subclass's `$decodedChars` is not ported | `Generator/UrlGenerator.php`, `UrlGeneratorInterface.php`, `ConfigurableRequirementsInterface.php`; UrlGeneratorTest 91 of 91; 3,000 `generate()` and 2,000 `getRelativePath()` calls recorded (`tests/data/url_generator.json`) |
 | `compiled_url_generator::CompiledUrlGenerator` and `compiled_url_generator_dumper::CompiledUrlGeneratorDumper`: `getCompiledRoutes()` and `getCompiledAliases()` (alias chains with loosely compared cycle detection, missing targets, deprecations collected and triggered, `_canonical_route` for localized alias names) as data; `generate()` on that data (localized names by `_canonical_route`, alias deprecations). `dump()`, which writes the data as PHP code, is not ported (owner, November 24: a build-time emitter later); `compiled()` is what its file returns | `Generator/CompiledUrlGenerator.php`, `Generator/Dumper/CompiledUrlGeneratorDumper.php`, `GeneratorDumper.php`; CompiledUrlGeneratorDumperTest 21 of 21; 1,500 dumped collections and 3,690 calls through both generators recorded (`tests/data/compiled_url_generator.json`) |
+| `url_matcher::UrlMatcher`: `match()` over the collection in priority order, the path decoded once (`rawurldecode()`, `''` read as `/`), static prefixes, path regexes made tolerant of a trailing slash, trailing variables, host regexes and their variables, schemes and methods (HEAD as GET), the collected methods (`MethodNotAllowedException`, first occurrences in order) and `NoConfigurationException` for `/` when nothing was collected; attributes as upstream builds them (defaults overridden by named matches, `_route` or the `_canonical_route` default, `_route_mapping`); routes compiled once, a route that does not compile failing the match that reaches it. A route condition throws upstream's `\LogicException` for a missing ExpressionLanguage component (ExpressionLanguage is not ported); `matchRequest()` is not ported (it needs HttpFoundation's Request) | `Matcher/UrlMatcher.php`, `UrlMatcherInterface.php`; UrlMatcherTest 83 of 91 (the 6 condition tests and 2 `matchRequest()` tests pending); 11,152 requests on 2,548 recorded collections (`tests/data/url_matcher.json`) |
+| `redirectable_url_matcher::RedirectableUrlMatcher<R>`: for GET and HEAD, the slash-toggled path, then the collected schemes (first one), the slash-variant and fallback schemes, each retry a fresh match on a copy of the context; `redirect()` (`RedirectableUrlMatcherInterface`, implemented by `R`) gets the path still encoded, the `_route` as a `string` argument and the scheme, and its array is merged as `redirect() + $ret`. Only routing exceptions are caught on a retry | `Matcher/RedirectableUrlMatcher.php`, `RedirectableUrlMatcherInterface.php`; RedirectableUrlMatcherTest 96 of 104 (its own 17 and the 79 inherited it does not override; the inherited condition and `matchRequest()` tests pending); the same recorded requests |
 
 `RouteCollection<T>` holds ordered `Definition<T>` registrations. Each
 definition contains literal/parameter segments and a startup-created target
@@ -35,12 +37,13 @@ keeps its route enum, URL layouts and public matching facade. The independent
 lab registers its own routes. Method refusals hold an ordered vector so
 multiple registrations for one path can aggregate their Allow values.
 
-`tests/upstream.rs` preserves names and relevant assertions from 16 methods
-of `UrlMatcherTest.php` / `RedirectableUrlMatcherTest.php` at the pinned (v8.1.11)
-commit `f3fefc6cad3748d538be970ca81b71f06d7aa8b3`. Rust calls use
-canonical method tokens rather than PHP's lowercase constructor arguments;
-the expected methods, route names, parameter values and redirect paths are
-preserved. This does not claim all upstream tests have been ported.
+`tests/upstream.rs` checks the typed subset against the assertions of 16
+methods of `UrlMatcherTest.php` / `RedirectableUrlMatcherTest.php` at the
+pinned (v8.1.11) commit `f3fefc6cad3748d538be970ca81b71f06d7aa8b3`, in
+functions named `typed_*` after them. Rust calls use canonical method
+tokens rather than PHP's lowercase constructor arguments; the expected
+methods, route names, parameter values and redirect paths are preserved.
+The upstream test classes themselves run on the ported matchers below.
 
 An additional test compares 90 outcomes recorded directly from that installed
 PHP matcher: `tests/data/matcher.json`. Regenerate from a symfony-demo-rs
@@ -53,7 +56,8 @@ cargo test -p symfony-routing
 
 The ported Route classes (`route`, `compiled_route`, `route_compiler`,
 `request_context`, `route_collection`, `alias`, `url_generator`,
-`compiled_url_generator`, `compiled_url_generator_dumper`) are Symfony's, and are not yet used by the
+`compiled_url_generator`, `compiled_url_generator_dumper`, `url_matcher`,
+`redirectable_url_matcher`) are Symfony's, and are not yet used by the
 typed matcher and generator above. A collection owns its routes (PHP
 shares Route objects between handles), and `compiler_class` is chosen at
 build time with `Route::compile_with::<C>()`. Their tests are

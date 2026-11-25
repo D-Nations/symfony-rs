@@ -1,13 +1,40 @@
 //! The PHP engine behaviour Route, `CompiledRoute` and `RouteCompiler` rely
-//! on: truthiness, `trim()`, case mapping, and the coercion of a value
-//! assigned to a typed property in `__unserialize()`. Written from PHP's
-//! documentation and answers recorded in the oracle; no PHP source.
+//! on: truthiness, `trim()`, case mapping, the coercion of a value
+//! assigned to a typed property in `__unserialize()`, and the `$matches`
+//! array of `preg_match()`. Written from PHP's documentation and answers
+//! recorded in the oracle; no PHP source.
 //!
 //! Upstream: none
 
+use php_pcre::Pcre;
 use php_value::{Key, PhpArray, PhpString, Value};
 
 use crate::exception::{Class, Error};
+
+/// `preg_match($regex, $subject, $matches)` without flags: the `$matches`
+/// array for a match, `None` for no match and for PHP's `false` (a subject
+/// that is not UTF-8 under `/u`, or a match error).
+///
+/// Each group is reported under its name (if it has one) and then under
+/// its number; a group that did not take part is `''`, and the groups
+/// after the last one that did are left out.
+pub(crate) fn preg_match(regex: &Pcre, subject: &[u8]) -> Option<PhpArray> {
+    let groups = regex.captures_from(subject, 0).ok()??;
+    let names = regex.group_names();
+    let last = groups.iter().rposition(Option::is_some).unwrap_or(0);
+    let mut matches = PhpArray::new();
+    for (number, group) in groups.iter().enumerate().take(last + 1) {
+        let text = group.map_or_else(PhpString::default, |(start, end)| {
+            PhpString::from(&subject[start..end])
+        });
+        if let Some(name) = names.get(number).copied().flatten() {
+            matches.insert(Key::from_bytes(name), Value::String(text.clone()));
+        }
+        let number = i64::try_from(number).unwrap_or(i64::MAX);
+        matches.insert(number, Value::String(text));
+    }
+    Some(matches)
+}
 
 /// `(bool) $value`.
 pub(crate) fn truthy(value: &Value) -> bool {

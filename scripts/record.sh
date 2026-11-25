@@ -5,6 +5,7 @@
 #   scripts/record.sh routing-route crates/routing/tests/data/route.json (Route, RouteCompiler, RouteCollection)
 #   scripts/record.sh routing-request-context crates/routing/tests/data/request_context.json
 #   scripts/record.sh routing-url-generator crates/routing/tests/data/url_generator.json (UrlGenerator)
+#   scripts/record.sh routing-url-matcher crates/routing/tests/data/url_matcher.json (UrlMatcher and RedirectableUrlMatcher)
 #   scripts/record.sh routing-compiled-url-generator crates/routing/tests/data/compiled_url_generator.json (CompiledUrlGenerator and its dumper)
 #   scripts/record.sh multipart    crates/http-foundation/tests/data/multipart_vectors.json
 #   scripts/record.sh request-vars crates/http-foundation/tests/data/{query,cookie,content_type}_vectors.json
@@ -88,6 +89,16 @@ routing_url_generator() {
     python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d["generate"]), "generate() calls,", len(d["relative"]), "getRelativePath() calls")' "$tmp"
     mv "$tmp" "$out"
     echo "UrlGenerator answers written to $out"
+}
+
+routing_url_matcher() {
+    local out=crates/routing/tests/data/url_matcher.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/routing_url_matcher.php > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d), "collections,", sum(len(c[1]) for c in d), "requests")' "$tmp"
+    mv "$tmp" "$out"
+    echo "UrlMatcher answers written to $out"
 }
 
 routing_compiled_url_generator() {
@@ -571,6 +582,7 @@ case "${1:-}" in
     routing) routing; routing_route; routing_request_context ;;
     routing-request-context) routing_request_context ;;
     routing-url-generator) routing_url_generator ;;
+    routing-url-matcher) routing_url_matcher ;;
     routing-compiled-url-generator) routing_compiled_url_generator ;;
     routing-route) routing_route ;;
     multipart) multipart ;;
@@ -603,6 +615,6 @@ case "${1:-}" in
     mime-fileinfo) mime_fileinfo ;;
     http-foundation-releases) http_foundation_releases ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
 esac
