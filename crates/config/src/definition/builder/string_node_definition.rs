@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\Builder\StringNodeDefinition.php:
-//! the definition of a StringNode. Its null equivalent is `""` (set by
+//! the definition of a `StringNode`. Its null equivalent is `""` (set by
 //! the constructor in [`crate::definition::builder::node_definition`]).
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -13,7 +13,7 @@ use crate::definition::{
     string_node::StringNode,
 };
 
-/// StringNodeDefinition.
+/// `StringNodeDefinition`.
 pub type StringNodeDefinition<P = ()> = Definition<class::String, P>;
 
 /// `instantiateNode()`.

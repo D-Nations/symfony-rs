@@ -1,6 +1,6 @@
 //! Rust emission for the trial node tree, the counterpart of Twig's
-//! Compiler and each Node's compile() method (PrintNode, TextNode, IfNode,
-//! ForNode, GetAttrExpression, FunctionExpression, FilterExpression), and
+//! Compiler and each Node's `compile()` method (`PrintNode`, `TextNode`, `IfNode`,
+//! `ForNode`, `GetAttrExpression`, `FunctionExpression`, `FilterExpression`), and
 //! of the escaper and safe-analysis node visitors: escaping is decided
 //! here, at build time. Output is built with `quote` and laid out with
 //! `prettyplease`.
@@ -82,9 +82,10 @@ impl Emitter<'_> {
         Ok(match node {
             Node::Text(text) => {
                 let mut chars = text.chars();
-                match (chars.next(), chars.next()) {
-                    (Some(c), None) => quote! { out.push(#c); },
-                    _ => quote! { out.push_str(#text); },
+                if let (Some(c), None) = (chars.next(), chars.next()) {
+                    quote! { out.push(#c); }
+                } else {
+                    quote! { out.push_str(#text); }
                 }
             }
             Node::Print(expr, line) => {
@@ -137,12 +138,11 @@ impl Emitter<'_> {
                     .map(String::as_str)
                     .chain([value.as_str()])
                     .collect();
-                let otherwise = match otherwise {
-                    Some(nodes) => {
-                        let nodes = self.nodes(nodes)?;
-                        quote! { if !iterated { #nodes } }
-                    }
-                    None => quote! { let _ = iterated; },
+                let otherwise = if let Some(nodes) = otherwise {
+                    let nodes = self.nodes(nodes)?;
+                    quote! { if !iterated { #nodes } }
+                } else {
+                    quote! { let _ = iterated; }
                 };
                 quote! {
                     {
@@ -163,7 +163,7 @@ impl Emitter<'_> {
         })
     }
 
-    /// SafeAnalysisNodeVisitor, for the `html` strategy.
+    /// `SafeAnalysisNodeVisitor`, for the `html` strategy.
     fn is_safe(&self, expr: &Expr) -> bool {
         match expr {
             Expr::Constant(_) => true,
@@ -208,12 +208,11 @@ impl Emitter<'_> {
                 let mut items = Vec::new();
                 for (key, value) in elements {
                     let value = self.expr(value, line)?;
-                    items.push(match key {
-                        Some(key) => {
-                            let key = self.expr(key, line)?;
-                            quote! { (Some(#key), #value) }
-                        }
-                        None => quote! { (None, #value) },
+                    items.push(if let Some(key) = key {
+                        let key = self.expr(key, line)?;
+                        quote! { (Some(#key), #value) }
+                    } else {
+                        quote! { (None, #value) }
                     });
                 }
                 quote! { rt::array(vec![#(#items),*]) }

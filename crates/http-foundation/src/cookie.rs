@@ -5,7 +5,7 @@
 //! read by `php_value::dateparse::strtotime()`, which refuses
 //! ([`Class::NotPorted`]) a date it does not read as PHP would, never
 //! guessing. The clock is `php_value::clock::time()`, which tests mock as
-//! ClockMock does. PHP's string truthiness is kept: a path or domain of
+//! `ClockMock` does. PHP's string truthiness is kept: a path or domain of
 //! `"0"` is not written, and a path of `"0"` becomes `/`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.

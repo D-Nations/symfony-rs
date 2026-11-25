@@ -49,7 +49,7 @@ impl Loader {
     pub fn resolver(&self) -> Option<Arc<dyn LoaderResolverInterface>> {
         self.resolver
             .read()
-            .unwrap_or_else(|e| e.into_inner())
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
             .clone()
     }
 
@@ -61,7 +61,10 @@ impl Loader {
 
     /// `setResolver($resolver)`.
     pub fn set_resolver(&self, resolver: Arc<dyn LoaderResolverInterface>) {
-        *self.resolver.write().unwrap_or_else(|e| e.into_inner()) = Some(resolver);
+        *self
+            .resolver
+            .write()
+            .unwrap_or_else(std::sync::PoisonError::into_inner) = Some(resolver);
     }
 
     /// `import($resource, $type)`: imports a resource.

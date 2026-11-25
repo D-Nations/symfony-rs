@@ -3,8 +3,8 @@
 //!
 //! As upstream (recorded on PHP 8.4.27, libxml 2.9.14):
 //! - the resource is checked as the XLIFF loader checks a file name
-//!   (`stream_is_local()`, `file_exists()`), then read with XmlUtils's
-//!   `loadFile()`; its InvalidArgumentException becomes
+//!   (`stream_is_local()`, `file_exists()`), then read with `XmlUtils`'s
+//!   `loadFile()`; its `InvalidArgumentException` becomes
 //!   `Unable to load "%s".` with that code and the exception as previous;
 //! - the domain is pasted into the XPath `//TS/context/name[text()="%s"]`
 //!   without escaping, so a domain with `"` changes the expression (an
@@ -13,7 +13,7 @@
 //!   grandparent (the TS), every `message` element by local name, in all
 //!   contexts; the text content of the first `translation`, when truthy (not
 //!   `''` or `'0'`), is set for the text content of the first `source` (`''`
-//!   when there is none); then the catalogue gets a FileResource;
+//!   when there is none); then the catalogue gets a `FileResource`;
 //! - a found node with no next sibling is PHP's `\Error` (a method called
 //!   on `null`), and `libxml_use_internal_errors()` stays `true`.
 //!

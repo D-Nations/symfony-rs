@@ -1,5 +1,5 @@
-//! Route, RouteCompiler, CompiledRoute, RouteCollection and Alias against
-//! PHP 8.4.27's answers recorded by oracle/recorders/routing_route.php
+//! Route, `RouteCompiler`, `CompiledRoute`, `RouteCollection` and Alias against
+//! PHP 8.4.27's answers recorded by `oracle/recorders/routing_route.php`
 //! (`scripts/record.sh routing-route`):
 //!
 //! - 2,000 generated routes (paths and hosts with inline settings,
@@ -7,11 +7,11 @@
 //!   options, schemes, methods): the constructed route, `compile()`, the
 //!   route after compiling, and `serialize()`'s bytes;
 //! - 1,000 generated requirements through `setRequirement()`;
-//! - 300 generated RouteCollection scripts (add with priorities, aliases,
+//! - 300 generated `RouteCollection` scripts (add with priorities, aliases,
 //!   alias deprecations, remove, addNamePrefix, addPrefix, addCollection):
 //!   each step's answer, then `all()`, the aliases, and `get()` of every
 //!   name with the deprecations it triggers;
-//! - Route and CompiledRoute payloads with a value of another type in
+//! - Route and `CompiledRoute` payloads with a value of another type in
 //!   each property, through `unserialize()`.
 //!
 //! Values compare with `===`; a thrown error by class and message.

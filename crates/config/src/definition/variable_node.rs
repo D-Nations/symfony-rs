@@ -30,7 +30,7 @@ pub enum DefaultValue {
     Closure(DefaultClosure),
 }
 
-/// VariableNode's properties.
+/// `VariableNode`'s properties.
 #[derive(Clone)]
 pub(crate) struct VariableData {
     pub(crate) default_value_set: bool,
@@ -81,7 +81,7 @@ pub(crate) fn get_default_value(data: &VariableData) -> Result<Value, Error> {
 }
 
 impl Node {
-    /// VariableNode's `setDefaultValue($value)`; PrototypedArrayNode's
+    /// `VariableNode`'s `setDefaultValue($value)`; `PrototypedArrayNode`'s
     /// takes an array.
     pub fn set_default_value(&self, value: impl Into<DefaultValue>) -> Result<(), Error> {
         let value = value.into();
@@ -116,7 +116,7 @@ impl Node {
         }
     }
 
-    /// `setAllowEmptyValue()`, which VariableNode and its subclasses have.
+    /// `setAllowEmptyValue()`, which `VariableNode` and its subclasses have.
     pub fn set_allow_empty_value(&self, allow: bool) -> Result<(), Error> {
         let done = self.write(|n| match &mut n.kind {
             Kind::Variable { data, .. } => {
@@ -151,7 +151,7 @@ fn json_encode_empty(value: &Value) -> Vec<u8> {
     php::json_encode_scalar(value, flags, false).unwrap_or_else(|| b"false".to_vec())
 }
 
-/// VariableNode's `finalizeValue()`.
+/// `VariableNode`'s `finalizeValue()`.
 pub(crate) fn finalize_value(
     node: &Node,
     data: &VariableData,

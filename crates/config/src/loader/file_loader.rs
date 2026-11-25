@@ -2,10 +2,10 @@
 //! glob patterns and exclusions, through the file locator, detecting
 //! circular imports.
 //!
-//! Upstream's `protected static $loading` (shared by every FileLoader of
+//! Upstream's `protected static $loading` (shared by every `FileLoader` of
 //! the PHP process, which serves one request) is per thread here, as
 //! Config's placeholders are. `class_exists($resource)` triggers PHP's
-//! autoloader; a FileLoader is given that answer by
+//! autoloader; a `FileLoader` is given that answer by
 //! [`FileLoader::set_class_exists`] (none by default). `glob()` collects
 //! its paths before `import()` loads them, where upstream's generator
 //! interleaves the two; the paths are the same unless a load changes
@@ -43,7 +43,7 @@ pub enum GlobResult {
     /// The pattern's resource.
     Glob(GlobResource),
     /// The prefix was not found (with `$ignoreErrors`): a
-    /// FileExistenceResource for each path the locator tried.
+    /// `FileExistenceResource` for each path the locator tried.
     Existence(Vec<FileExistenceResource>),
 }
 
@@ -81,13 +81,16 @@ impl FileLoader {
 
     /// `setCurrentDir($dir)`.
     pub fn set_current_dir(&self, dir: &[u8]) {
-        *self.current_dir.write().unwrap_or_else(|e| e.into_inner()) = Some(dir.to_vec());
+        *self
+            .current_dir
+            .write()
+            .unwrap_or_else(std::sync::PoisonError::into_inner) = Some(dir.to_vec());
     }
 
     fn current_dir(&self) -> Option<Vec<u8>> {
         self.current_dir
             .read()
-            .unwrap_or_else(|e| e.into_inner())
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
             .clone()
     }
 
@@ -370,7 +373,7 @@ impl FileLoader {
 }
 
 /// An array offset as `isset($a[$v])` / `$a[$v] = …` reads it: the key's
-/// string form, or PHP's TypeError for arrays and objects.
+/// string form, or PHP's `TypeError` for arrays and objects.
 fn offset(value: &Value, isset: bool) -> Result<Vec<u8>, Error> {
     match value {
         Value::Null => Ok(Vec::new()),
@@ -395,7 +398,7 @@ fn offset(value: &Value, isset: bool) -> Result<Vec<u8>, Error> {
 }
 
 /// A `string` parameter in PHP's coercive mode: scalars convert, null,
-/// arrays and objects are a TypeError.
+/// arrays and objects are a `TypeError`.
 fn string_argument(value: &Value, function: &str, parameter: &str) -> Result<Vec<u8>, Error> {
     match value {
         Value::String(s) => Ok(s.as_bytes().to_vec()),

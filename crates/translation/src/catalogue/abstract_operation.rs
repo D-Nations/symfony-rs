@@ -69,7 +69,7 @@ impl Messages {
 pub(super) type Processor =
     fn(&MessageCatalogue, &MessageCatalogue, &MessageCatalogue, &[u8]) -> Messages;
 
-/// Shared state. Construct the concrete MergeOperation or TargetOperation.
+/// Shared state. Construct the concrete `MergeOperation` or `TargetOperation`.
 /// Inputs and result are shared handles; returned arrays are value copies.
 #[derive(Debug)]
 pub struct AbstractOperation {
@@ -155,13 +155,12 @@ impl AbstractOperation {
     }
 
     fn process_domain(&mut self, domain: &[u8]) -> &Messages {
-        let index = match self.messages.iter().position(|(d, _)| d == domain) {
-            Some(index) => index,
-            None => {
-                let messages = (self.process)(&self.source, &self.target, &self.result, domain);
-                self.messages.push((domain.to_vec(), messages));
-                self.messages.len() - 1
-            }
+        let index = if let Some(index) = self.messages.iter().position(|(d, _)| d == domain) {
+            index
+        } else {
+            let messages = (self.process)(&self.source, &self.target, &self.result, domain);
+            self.messages.push((domain.to_vec(), messages));
+            self.messages.len() - 1
         };
         &self.messages[index].1
     }
@@ -194,7 +193,7 @@ impl AbstractOperation {
     }
 
     /// `intl_available` is the build-time equivalent of PHP's
-    /// class_exists(MessageFormatter::class); Batch::All is PHP's default.
+    /// `class_exists(MessageFormatter::class)`; `Batch::All` is PHP's default.
     pub fn move_messages_to_intl_domains_if_possible(
         &mut self,
         batch: Batch,

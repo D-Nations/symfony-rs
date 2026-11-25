@@ -1,14 +1,20 @@
-//! UploadedFile and FileBag against PHP 8.4.27's answers for what
-//! UploadedFileTest and FileBagTest leave open (tests/data/files.json,
-//! oracle/recorders/http_foundation_files.php): 108 `parseFilesize()`
-//! texts, 126 `getMaxFilesize()` ini pairs with their UPLOAD_ERR_INI_SIZE
+//! `UploadedFile` and `FileBag` against PHP 8.4.27's answers for what
+//! `UploadedFileTest` and `FileBagTest` leave open (tests/data/files.json,
+//! `oracle/recorders/http_foundation_files.php`): 108 `parseFilesize()`
+//! texts, 126 `getMaxFilesize()` ini pairs with their `UPLOAD_ERR_INI_SIZE`
 //! message, 55 client names, 33 client MIME types, 26 error codes in and
-//! out of test mode, and 71 `$_FILES`-like arrays through FileBag.
+//! out of test mode, and 71 `$_FILES`-like arrays through `FileBag`.
 //!
 //! Paths under the fixtures directory are recorded as `@FIX@...`. PHP's
-//! TypeError messages are compared up to their ", called in" suffix.
+//! `TypeError` messages are compared up to their ", called in" suffix.
 //!
 //! Upstream: symfony/http-foundation File/UploadedFile.php FileBag.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 mod files;
 
@@ -75,7 +81,7 @@ fn unfix_bytes(path: &[u8]) -> Vec<u8> {
     }
 }
 
-/// A result as the recorder writes it: UploadedFiles as
+/// A result as the recorder writes it: `UploadedFiles` as
 /// `['@uploaded', pathname, name, path, type, error]`.
 fn unfix(value: &Value) -> Value {
     if let Some(file) = uploaded_file(value) {
@@ -115,7 +121,7 @@ fn recorded_parse_filesize() {
         let actual = number(parse_filesize(&text));
         match (&expected, &actual) {
             (Value::Float(a), Value::Float(b)) => {
-                assert_eq!(a.to_bits(), b.to_bits(), "{}", text.escape_ascii())
+                assert_eq!(a.to_bits(), b.to_bits(), "{}", text.escape_ascii());
             }
             _ => assert_eq!(expected, actual, "{}", text.escape_ascii()),
         }

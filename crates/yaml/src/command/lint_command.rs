@@ -4,7 +4,7 @@
 //! the constants `!php/const` may name, which PHP finds among the loaded
 //! classes and a converter states at build time.
 //!
-//! Upstream turns a deprecation raised while parsing into a ParseException
+//! Upstream turns a deprecation raised while parsing into a `ParseException`
 //! with an error handler. The Yaml port raises none (symfony/yaml 8 itself
 //! triggers no deprecation), so there is no handler here.
 //!
@@ -215,7 +215,7 @@ impl LintCommand {
 }
 
 impl CommandHandler for LintCommand {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Symfony\\Component\\Yaml\\Command\\LintCommand"
     }
 

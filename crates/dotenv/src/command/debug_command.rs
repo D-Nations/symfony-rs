@@ -255,7 +255,7 @@ fn compare_keys(a: &Key, b: &Key) -> std::cmp::Ordering {
 }
 
 impl CommandHandler for DebugCommand {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Symfony\\Component\\Dotenv\\Command\\DebugCommand"
     }
 

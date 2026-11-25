@@ -3,7 +3,7 @@
 //!
 //! The compiler writes regular expressions as strings; it runs only
 //! upstream's own helper patterns (through php-pcre), never the route's.
-//! A subclass that changes `SEPARATORS` (upstream's Utf8RouteCompiler
+//! A subclass that changes `SEPARATORS` (upstream's `Utf8RouteCompiler`
 //! fixture) is [`RouteCompiler::compile_with_separators`] under its own
 //! [`RouteCompilerInterface::CLASS`].
 //!
@@ -23,7 +23,7 @@ use crate::{
     route::{Route, match_error, pcre},
 };
 
-/// `RouteCompilerInterface`: compiles a Route to a CompiledRoute.
+/// `RouteCompilerInterface`: compiles a Route to a `CompiledRoute`.
 pub trait RouteCompilerInterface {
     /// The class name a route's `compiler_class` option names.
     const CLASS: &'static str;
@@ -52,7 +52,7 @@ static UTF8_REQUIREMENT: Lazy = LazyLock::new(|| {
     Pcre::new(br"/[\x80-\xFF]|(?<!\\)\\(?:\\\\)*+(?-i:X|[pP][\{CLMNPSZ]|x\{[A-Fa-f0-9]{3})/")
 });
 
-/// A token as RouteCompiler builds it, before it becomes a PHP array.
+/// A token as `RouteCompiler` builds it, before it becomes a PHP array.
 enum Token {
     Text(Vec<u8>),
     Variable {

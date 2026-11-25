@@ -1,12 +1,12 @@
-//! Replays tests/data/qt.json, recorded from QtFileLoader and DOMXPath on
+//! Replays tests/data/qt.json, recorded from `QtFileLoader` and `DOMXPath` on
 //! PHP 8.4.27 and libxml 2.9.14 (`scripts/record.sh translation-qt`,
-//! oracle/recorders/translation_qt.php): `load()` of upstream's
+//! `oracle/recorders/translation_qt.php`): `load()` of upstream's
 //! resources.ts, of written documents and of other resources, and
 //! `DOMXPath::evaluate()` over one document.
 //!
 //! For each load: the catalogue's locale, messages (with integer or string
 //! keys) and resources, or the throwable chain (class, message, code), and
-//! `libxml_use_internal_errors()` afterwards. For each evaluate(): the
+//! `libxml_use_internal_errors()` afterwards. For each `evaluate()`: the
 //! nodes found, as sibling positions from the document, or `false`.
 //!
 //! The recorder wrote its files under /tmp/qt and ran there; this test

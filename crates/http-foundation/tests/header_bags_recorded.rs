@@ -1,12 +1,18 @@
-//! HeaderBag and ResponseHeaderBag against PHP 8.4.27's answers for what
-//! their tests leave open (tests/data/header_bags.json,
-//! oracle/recorders/http_foundation_header_bags.php): 400 seeded scripts
+//! `HeaderBag` and `ResponseHeaderBag` against PHP 8.4.27's answers for what
+//! their tests leave open (`tests/data/header_bags.json`,
+//! `oracle/recorders/http_foundation_header_bags.php`): 400 seeded scripts
 //! of calls on a fixed clock, each compared on `all()`, `keys()`, the
 //! string form, `count()`, the Cache-Control readers and, for responses,
-//! `allPreserveCase()` with and without cookies. A TypeError's message
+//! `allPreserveCase()` with and without cookies. A `TypeError`'s message
 //! is compared up to PHP's ", called in FILE on line N".
 //!
 //! Upstream: symfony/http-foundation HeaderBag.php ResponseHeaderBag.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use php_value::{Key, PhpString, Value, base64, clock};
 use serde_json::Value as Json;

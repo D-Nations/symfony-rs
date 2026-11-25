@@ -1,12 +1,12 @@
 //! Port of Symfony\Component\Config\Resource\ResourceInterface.php and
 //! SelfCheckingResourceInterface.php, and the resources that watch the
-//! filesystem: FileResource, FileExistenceResource, DirectoryResource and
-//! GlobResource.
+//! filesystem: `FileResource`, `FileExistenceResource`, `DirectoryResource` and
+//! `GlobResource`.
 //!
 //! A resource is a [`ResourceInterface`] trait object. `__toString()` is
 //! [`ResourceInterface::to_string`]; `__serialize()` is
 //! [`ResourceInterface::serialize`], the array PHP's `serialize()` stores
-//! for the object (ConfigCache's meta file writes it).
+//! for the object (`ConfigCache`'s meta file writes it).
 //! Each resource's `from_serialized()` is what `unserialize()` restores.
 //!
 //! Paths are bytes and the filesystem is symfony-finder's

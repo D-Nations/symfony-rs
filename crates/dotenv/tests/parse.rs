@@ -1,5 +1,5 @@
 //! `Dotenv::parse()` against PHP on generated inputs
-//! (oracle/recorders/dotenv_parse.php, `scripts/record.sh dotenv`): the
+//! (`oracle/recorders/dotenv_parse.php`, `scripts/record.sh dotenv`): the
 //! same values, or the same exception class and message.
 //!
 //! Upstream: none
@@ -55,9 +55,7 @@ fn parse_matches_php() -> TestResult {
 fn a_value_ending_in_an_open_command_fails_instead_of_looping() {
     // upstream reads past the end of the data and never returns
     let result = Dotenv::new().parse(&Globals::new(), b"BAR=$(", ".env");
-    let message = result
-        .map(|_| String::new())
-        .unwrap_or_else(|e| e.to_string());
+    let message = result.map_or_else(|e| e.to_string(), |_| String::new());
     assert!(
         message.starts_with("Missing closing parenthesis. in \".env\" at line 1."),
         "{message}"

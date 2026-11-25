@@ -1,9 +1,9 @@
 //! Replays tests/data/loaders.json, recorded from PHP 8.4.27 by
-//! oracle/recorders/config_loaders.php: parse_url() schemes and
-//! isAbsolutePath(), LoaderLoadException and the circular-reference
-//! message, FileLocator::locate(), GlobResource (paths and string form,
-//! with and without GLOB_BRACE), hash('xxh128'), DirectoryResource's
-//! string form and FileLoader::import().
+//! `oracle/recorders/config_loaders.php`: `parse_url()` schemes and
+//! `isAbsolutePath()`, `LoaderLoadException` and the circular-reference
+//! message, `FileLocator::locate()`, `GlobResource` (paths and string form,
+//! with and without `GLOB_BRACE`), hash('xxh128'), `DirectoryResource`'s
+//! string form and `FileLoader::import()`.
 //!
 //! "{root}" in the recording is the recorder's copy of tests/fixtures;
 //! here it is a private copy's real path.

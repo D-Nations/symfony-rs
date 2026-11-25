@@ -1,12 +1,12 @@
 //! Port of Symfony\Component\Routing\Exception\*.php: the routing
-//! exceptions, with the PHP exceptions that Route, RouteCompiler,
-//! RouteCollection and RequestContext throw.
+//! exceptions, with the PHP exceptions that Route, `RouteCompiler`,
+//! `RouteCollection` and `RequestContext` throw.
 //!
 //! One error type carries the class PHP would throw, so callers can test
 //! it as `catch`/`instanceof` would ([`Error::is_a`]). Messages are
 //! upstream's, built from its format strings; they are bytes, since a
-//! route pattern need not be UTF-8. MethodNotAllowedException's allowed
-//! methods and MissingMandatoryParametersException's route name and
+//! route pattern need not be UTF-8. `MethodNotAllowedException`'s allowed
+//! methods and `MissingMandatoryParametersException`'s route name and
 //! parameters are [`Detail`]s.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -24,7 +24,7 @@ pub enum Class {
     /// parameter does not match its requirement when generating a URL.
     InvalidParameter,
     /// `Symfony\Component\Routing\Exception\LogicException` (not an
-    /// ExceptionInterface).
+    /// `ExceptionInterface`).
     Logic,
     /// `Symfony\Component\Routing\Exception\MethodNotAllowedException`
     /// (HTTP 405), with [`Detail::AllowedMethods`].
@@ -183,9 +183,9 @@ impl Class {
 pub enum Detail {
     #[default]
     None,
-    /// MethodNotAllowedException's `getAllowedMethods()`: uppercased.
+    /// `MethodNotAllowedException`'s `getAllowedMethods()`: uppercased.
     AllowedMethods(Vec<PhpString>),
-    /// MissingMandatoryParametersException's `getRouteName()` and
+    /// `MissingMandatoryParametersException`'s `getRouteName()` and
     /// `getMissingParameters()`.
     MissingParameters {
         route_name: PhpString,
@@ -238,7 +238,10 @@ impl Error {
             .into_iter()
             .map(|p| PhpString::from(p.as_ref()))
             .collect();
-        let joined: Vec<&[u8]> = parameters.iter().map(|p| p.as_bytes()).collect();
+        let joined: Vec<&[u8]> = parameters
+            .iter()
+            .map(php_value::PhpString::as_bytes)
+            .collect();
         let message = concat(&[
             b"Some mandatory parameters are missing (\"",
             &joined.join(&b"\", \""[..]),

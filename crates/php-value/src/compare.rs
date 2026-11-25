@@ -1,7 +1,7 @@
 //! PHP 8's loose equality (`==`), written from the PHP manual's
 //! "Comparison with Various Types" table and checked against PHP 8.4.27's
-//! answers (oracle/recorders/php_value_loose_equals.php ->
-//! tests/data/loose_equals.json):
+//! answers (`oracle/recorders/php_value_loose_equals.php` ->
+//! `tests/data/loose_equals.json`):
 //!
 //! - a bool or null against anything else compares truthiness, except
 //!   that null against a string is `''` against that string;
@@ -79,7 +79,7 @@ fn arrays_equal(a: &PhpArray, b: &PhpArray) -> bool {
 
 /// `$a == $b`.
 pub fn loose_equals(a: &Value, b: &Value) -> bool {
-    use Value::*;
+    use Value::{Array, Bool, Float, Int, Null, Object, String};
     match (a, b) {
         (Null, Null) => true,
         (Null, String(s)) | (String(s), Null) => s.is_empty(),

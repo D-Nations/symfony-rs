@@ -212,15 +212,12 @@ fn strtr(subject: &[u8], pairs: &[(&[u8], &[u8])]) -> Vec<u8> {
             .iter()
             .filter(|(from, _)| subject[i..].starts_with(from))
             .max_by_key(|(from, _)| from.len());
-        match found {
-            Some((from, to)) => {
-                out.extend_from_slice(to);
-                i += from.len();
-            }
-            None => {
-                out.push(subject[i]);
-                i += 1;
-            }
+        if let Some((from, to)) = found {
+            out.extend_from_slice(to);
+            i += from.len();
+        } else {
+            out.push(subject[i]);
+            i += 1;
         }
     }
     out
@@ -718,7 +715,7 @@ pub(crate) fn requested_locale(
 /// `do { if ($found($locale)) break; } while (false !== $locale =
 /// strstr($locale, '_', true));`: the locale as a string, then each part
 /// before its first `_`, until `found` says so. `strstr()` takes a string
-/// argument, so an array locale is a TypeError after the first try.
+/// argument, so an array locale is a `TypeError` after the first try.
 pub(crate) fn for_each_locale(
     locale: &Value,
     mut found: impl FnMut(&[u8]) -> Result<bool, Error>,
@@ -776,7 +773,7 @@ fn cast_objects(
         let value = match value {
             Value::Array(nested) => Value::Array(cast_objects(nested, seen, name)?),
             Value::Object(object) => {
-                let id = Arc::as_ptr(object) as *const ();
+                let id = Arc::as_ptr(object).cast::<()>();
                 if seen.contains(&id) {
                     return Err(Error::new(
                         Class::InvalidParameter,

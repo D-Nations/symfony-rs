@@ -1,6 +1,6 @@
 //! ResourceCheckerConfigCacheTest.php at symfony/config v8.1.10. Names
 //! and assertions are PHPUnit's; `createMock()` / `createStub()` of
-//! ResourceCheckerInterface are `MockChecker`s that count their calls, and
+//! `ResourceCheckerInterface` are `MockChecker`s that count their calls, and
 //! an `\ArrayIterator` of checkers is any Rust iterator.
 //!
 //! Upstream: symfony/config Tests/ResourceCheckerConfigCacheTest.php

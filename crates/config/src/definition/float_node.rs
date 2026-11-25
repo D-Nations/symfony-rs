@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\FloatNode.php: a
-//! NumericNode for floats; ints are accepted too (and kept as ints, as
+//! `NumericNode` for floats; ints are accepted too (and kept as ints, as
 //! upstream only casts its local copy).
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -46,7 +46,7 @@ impl FloatNode {
     }
 }
 
-/// FloatNode's `validateType()`.
+/// `FloatNode`'s `validateType()`.
 pub(crate) fn validate_type(node: &Node, value: &Value) -> Result<(), Error> {
     match value {
         Value::Int(_) | Value::Float(_) => Ok(()),

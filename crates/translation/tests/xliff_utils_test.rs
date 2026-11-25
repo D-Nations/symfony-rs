@@ -8,7 +8,7 @@
 use php_dom::{LoadOptions, load_xml};
 use symfony_translation::XliffUtils;
 
-/// providePaths()
+/// `providePaths()`
 const PATHS: &[(&str, &str, &str)] = &[
     (
         "plain POSIX path",

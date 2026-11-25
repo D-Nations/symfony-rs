@@ -1,6 +1,6 @@
 //! ConfigCacheTest.php at symfony/config v8.1.10. Names and assertions
 //! are PHPUnit's; a data provider's rows run in one Rust test. The tests
-//! that reset SelfCheckingResourceChecker's shared answers (upstream does
+//! that reset `SelfCheckingResourceChecker`'s shared answers (upstream does
 //! it through reflection) hold a lock, since Rust runs tests in parallel.
 //!
 //! Upstream: symfony/config Tests/ConfigCacheTest.php
@@ -65,7 +65,9 @@ fn testIsFreshWhenNoResourceProvided() -> TestResult {
 
 #[test]
 fn testFreshResourceInDebug() -> TestResult {
-    let _lock = SHARED_CACHE.lock().unwrap_or_else(|e| e.into_inner());
+    let _lock = SHARED_CACHE
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     SelfCheckingResourceChecker::clear_cache();
     let files = set_up();
     let fresh = ResourceStub::new();
@@ -78,7 +80,9 @@ fn testFreshResourceInDebug() -> TestResult {
 
 #[test]
 fn testStaleResourceInDebug() -> TestResult {
-    let _lock = SHARED_CACHE.lock().unwrap_or_else(|e| e.into_inner());
+    let _lock = SHARED_CACHE
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     SelfCheckingResourceChecker::clear_cache();
     let files = set_up();
     let stale = ResourceStub::new();

@@ -284,7 +284,7 @@ impl Reader<'_> {
                 .take_while(|b| b.is_ascii_hexdigit())
                 .count();
             if digits > 0 {
-                let text = std::str::from_utf8(&self.rest()[1..1 + digits]).unwrap_or("0");
+                let text = std::str::from_utf8(&self.rest()[1..=digits]).unwrap_or("0");
                 out.push(u8::from_str_radix(text, 16).unwrap_or(0));
                 self.i += 1 + digits;
                 return;

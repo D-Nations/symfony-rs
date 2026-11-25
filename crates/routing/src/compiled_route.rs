@@ -2,7 +2,7 @@
 //!
 //! Tokens and variables are PHP arrays, as upstream stores them: the
 //! class accepts any array (its own test passes `['tokens']`), and the
-//! compiled matcher and generator read them by position. RouteCompiler
+//! compiled matcher and generator read them by position. `RouteCompiler`
 //! writes `['text', $text]` and `['variable', $separator, $regex, $name]`
 //! with the optional `utf8` and `important` flags at indexes 4 and 5.
 //!
@@ -22,7 +22,7 @@ use crate::{
 
 pub const CLASS: &str = "Symfony\\Component\\Routing\\CompiledRoute";
 
-/// `CompiledRoute`: what RouteCompiler makes of a Route.
+/// `CompiledRoute`: what `RouteCompiler` makes of a Route.
 #[derive(Debug, Clone, PartialEq)]
 pub struct CompiledRoute {
     class: String,

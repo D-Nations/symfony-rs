@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\ArrayShapeGenerator.php:
-//! the PHPDoc array shape of a configuration tree, as the config builders
+//! the `PHPDoc` array shape of a configuration tree, as the config builders
 //! and `config/reference.php` print it.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -219,8 +219,8 @@ fn handle_numeric_node(node: &Node) -> &'static [u8] {
     b"int|float"
 }
 
-/// The TypeError of a parameter typed `BaseNode` given a node that only
-/// implements NodeInterface.
+/// The `TypeError` of a parameter typed `BaseNode` given a node that only
+/// implements `NodeInterface`.
 fn require_base_node(node: &Node, function: &str) -> Result<(), Error> {
     if node.is_base_node() {
         return Ok(());
@@ -252,10 +252,10 @@ fn generate_inline_php_doc_for_node(node: &Node) -> Result<Vec<u8>, Error> {
 
     // `!$node instanceof ArrayNode || ($node = $node->getParent()) instanceof
     // PrototypedArrayNode`: an array node reports its prototyped parent's default.
-    let subject = if !node.is_array_node() {
-        Some(node.clone())
-    } else {
+    let subject = if node.is_array_node() {
         node.get_parent().filter(Node::is_prototyped_array_node)
+    } else {
+        Some(node.clone())
     };
     if let Some(subject) = subject
         && subject.has_default_value()

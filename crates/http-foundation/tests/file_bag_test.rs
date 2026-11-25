@@ -2,10 +2,16 @@
 //! 30fa3efe6e736b0d06f5331cc6abe813582c0a26. `createTempFile()` writes
 //! into a directory of the test's own (upstream: `form_test` in the
 //! system's temporary directory, made in `setUp()`, emptied in
-//! `tearDown()`). `assertEquals()` on two UploadedFiles compares their
+//! `tearDown()`). `assertEquals()` on two `UploadedFiles` compares their
 //! properties, as `==` on the Rust values does.
 //!
 //! Upstream: symfony/http-foundation Tests/FileBagTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 mod files;

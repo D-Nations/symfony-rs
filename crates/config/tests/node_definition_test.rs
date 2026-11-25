@@ -2,7 +2,7 @@
 //! are PHPUnit's; provider rows are upstream's, written as literals.
 //! The mock of testSetPathSeparatorChangesChildren is a
 //! [`CustomDefinition`] that overrides `setParent()` and
-//! `setPathSeparator()` and counts the calls. ReflectionProperty reads
+//! `setPathSeparator()` and counts the calls. `ReflectionProperty` reads
 //! are `property()`; Composer's installed phpunit/phpunit is registered
 //! with the version the oracle reports.
 //!
@@ -32,7 +32,7 @@ struct MockDefinition {
 struct Mock(Arc<MockDefinition>);
 
 impl CustomDefinition for Mock {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "MockObject_NodeDefinition"
     }
 

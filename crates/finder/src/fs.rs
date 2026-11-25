@@ -68,7 +68,9 @@ static WRAPPERS: LazyLock<Registry> = LazyLock::new(|| RwLock::new(HashMap::new(
 
 /// `stream_wrapper_register($protocol, ...)`; false when it is taken.
 pub fn stream_wrapper_register(protocol: &str, wrapper: Arc<dyn StreamWrapper>) -> bool {
-    let mut map = WRAPPERS.write().unwrap_or_else(|e| e.into_inner());
+    let mut map = WRAPPERS
+        .write()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     let key = protocol.as_bytes().to_ascii_lowercase();
     if map.contains_key(&key) || key == b"file" {
         return false;
@@ -79,7 +81,9 @@ pub fn stream_wrapper_register(protocol: &str, wrapper: Arc<dyn StreamWrapper>) 
 
 /// `stream_wrapper_unregister($protocol)`.
 pub fn stream_wrapper_unregister(protocol: &str) -> bool {
-    let mut map = WRAPPERS.write().unwrap_or_else(|e| e.into_inner());
+    let mut map = WRAPPERS
+        .write()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     map.remove(&protocol.as_bytes().to_ascii_lowercase())
         .is_some()
 }
@@ -111,7 +115,9 @@ fn target(path: &[u8]) -> Target {
             None => Target::Unknown,
         },
         Some(s) => {
-            let map = WRAPPERS.read().unwrap_or_else(|e| e.into_inner());
+            let map = WRAPPERS
+                .read()
+                .unwrap_or_else(std::sync::PoisonError::into_inner);
             match map.get(&s.to_ascii_lowercase()) {
                 Some(w) => Target::Wrapper(Arc::clone(w)),
                 None => Target::Unknown,
@@ -307,10 +313,10 @@ pub fn realpath(path: &[u8]) -> Option<Vec<u8>> {
     let bytes = os_bytes(real.into_os_string());
     if cfg!(windows) {
         let text = String::from_utf8_lossy(&bytes).into_owned();
-        let text = text
-            .strip_prefix(r"\\?\UNC\")
-            .map(|rest| format!(r"\\{rest}"))
-            .unwrap_or_else(|| text.strip_prefix(r"\\?\").unwrap_or(&text).to_string());
+        let text = text.strip_prefix(r"\\?\UNC\").map_or_else(
+            || text.strip_prefix(r"\\?\").unwrap_or(&text).to_string(),
+            |rest| format!(r"\\{rest}"),
+        );
         return Some(text.replace('\\', "/").into_bytes());
     }
     Some(bytes)

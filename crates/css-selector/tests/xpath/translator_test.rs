@@ -4,7 +4,7 @@
 //! testXmlLang, testHtmlIds, testHtmlShakespear,
 //! testOnlyOfTypeFindsSingleChildrenOfGivenType and
 //! testDisabledAndEnabledInsideFieldsets evaluate the XPath on a document
-//! (DOMDocument, SimpleXMLElement), which needs an XPath engine; they are
+//! (`DOMDocument`, `SimpleXMLElement`), which needs an XPath engine; they are
 //! `n/a` in the manifest (PLAN.md decision 9). What this crate produces
 //! for them, the XPath string, is checked against the one PHP generated
 //! for every one of their rows in `dom_rows_translate_as_php_did`, and the

@@ -8,6 +8,12 @@
 //! on values (PHP's `===`).
 //!
 //! Upstream: symfony/options-resolver Tests/OptionsResolverTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::sync::{
@@ -228,7 +234,10 @@ fn testResolveFailsFromLazyOption() -> TestResult {
 #[test]
 fn testSetDefaultReturnsThis() -> TestResult {
     let resolver = OptionsResolver::new();
-    assert!(std::ptr::eq(&resolver, resolver.set_default("foo", "bar")?));
+    assert!(std::ptr::eq(
+        &raw const resolver,
+        resolver.set_default("foo", "bar")?
+    ));
     Ok(())
 }
 
@@ -282,7 +291,7 @@ fn testHasDefaultWithNullValue() -> TestResult {
 fn testSetLazyReturnsThis() -> TestResult {
     let resolver = OptionsResolver::new();
     assert!(std::ptr::eq(
-        &resolver,
+        &raw const resolver,
         resolver.set_default("foo", lazy(|_| Ok(Value::Null)))?
     ));
     Ok(())
@@ -426,7 +435,10 @@ fn testInvokeEachLazyOptionOnlyOnce() -> TestResult {
 #[test]
 fn testSetRequiredReturnsThis() -> TestResult {
     let resolver = OptionsResolver::new();
-    assert!(std::ptr::eq(&resolver, resolver.set_required("foo")?));
+    assert!(std::ptr::eq(
+        &raw const resolver,
+        resolver.set_required("foo")?
+    ));
     Ok(())
 }
 
@@ -1802,7 +1814,7 @@ fn testSetNormalizerReturnsThis() -> TestResult {
     let resolver = OptionsResolver::new();
     resolver.set_default("foo", "bar")?;
     assert!(std::ptr::eq(
-        &resolver,
+        &raw const resolver,
         resolver.set_normalizer("foo", noop())?
     ));
     Ok(())
@@ -2129,7 +2141,7 @@ fn testAddNormalizerReturnsThis() -> TestResult {
     resolver.set_default("foo", "bar")?;
 
     assert!(std::ptr::eq(
-        &resolver,
+        &raw const resolver,
         resolver.add_normalizer("foo", noop(), false)?
     ));
     Ok(())
@@ -2227,7 +2239,7 @@ fn testFailIfAddNormalizerFromLazyOption() -> TestResult {
 fn testSetDefaultsReturnsThis() -> TestResult {
     let resolver = OptionsResolver::new();
     assert!(std::ptr::eq(
-        &resolver,
+        &raw const resolver,
         resolver.set_defaults_array(&php_array!["foo", "bar"])?
     ));
     Ok(())
@@ -2268,7 +2280,7 @@ fn testRemoveReturnsThis() -> TestResult {
     let resolver = OptionsResolver::new();
     resolver.set_default("foo", "bar")?;
 
-    assert!(std::ptr::eq(&resolver, resolver.remove("foo")?));
+    assert!(std::ptr::eq(&raw const resolver, resolver.remove("foo")?));
     Ok(())
 }
 
@@ -2370,7 +2382,7 @@ fn testRemoveUnknownOptionIgnored() -> TestResult {
 #[test]
 fn testClearReturnsThis() -> TestResult {
     let resolver = OptionsResolver::new();
-    assert!(std::ptr::eq(&resolver, resolver.clear()?));
+    assert!(std::ptr::eq(&raw const resolver, resolver.clear()?));
     Ok(())
 }
 
@@ -2618,8 +2630,8 @@ fn testCount() -> TestResult {
     Ok(())
 }
 
-/// In resolve() we count the options that are actually set (which may be
-/// only a subset of the defined options). Outside of resolve(), it's not
+/// In `resolve()` we count the options that are actually set (which may be
+/// only a subset of the defined options). Outside of `resolve()`, it's not
 /// clear what is counted.
 #[test]
 fn testCountFailsOutsideResolve() -> TestResult {

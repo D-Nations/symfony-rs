@@ -1,6 +1,6 @@
 //! EnumNodeTest.php at symfony/config v8.1.10. Names and assertions are
 //! PHPUnit's. The fixtures' enums are registered in a Registry
-//! (common::enums), as PHP's autoloader would load them. Placeholders are
+//! (`common::enums`), as PHP's autoloader would load them. Placeholders are
 //! thread-local here, so each test starts from none; the two placeholder
 //! tests reset them at the end (upstream leaves them set).
 //!

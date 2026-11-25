@@ -151,12 +151,9 @@ impl V<'_, '_> {
         attr: Option<&QName>,
     ) -> Option<String> {
         let mut errs: ValueErrors = Vec::new();
-        let result = match self.schema.check_value(ty, raw, &mut Some(&mut errs)) {
-            Ok(r) => r,
-            Err(_) => {
-                self.refuse(node, "a non-ASCII digit tested against \\d");
-                return None;
-            }
+        let Ok(result) = self.schema.check_value(ty, raw, &mut Some(&mut errs)) else {
+            self.refuse(node, "a non-ASCII digit tested against \\d");
+            return None;
         };
         for (code, msg) in errs {
             match attr {
@@ -576,7 +573,11 @@ fn key_text(k: &[String]) -> String {
 }
 
 fn expected_text(cursor: &Cursor<'_>) -> String {
-    let names: Vec<String> = cursor.expected().iter().flat_map(|a| a.display()).collect();
+    let names: Vec<String> = cursor
+        .expected()
+        .iter()
+        .flat_map(super::content::Atom::display)
+        .collect();
     match names.len() {
         0 => String::new(),
         1 => format!(" Expected is ( {} ).", names[0]),

@@ -3,7 +3,7 @@
 //! `$_SERVER`, `putenv()`) are a fresh `Globals` per test, so upstream's
 //! cleanup of them is only kept where a test resets between its cases.
 //! The data-provider tests read the provider rows recorded from upstream
-//! (tests/data/dotenv_test.json, `scripts/record.sh dotenv`). The rows and
+//! (`tests/data/dotenv_test.json`, `scripts/record.sh dotenv`). The rows and
 //! tests upstream runs only off Windows (they run `$(...)` commands) are
 //! skipped on Windows here too.
 //!

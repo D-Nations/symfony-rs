@@ -95,7 +95,7 @@ impl PhpObject for ArrayObject {
         Self::CLASS
     }
 
-    /// `(array)` of an ArrayObject gives its storage.
+    /// `(array)` of an `ArrayObject` gives its storage.
     fn properties(&self) -> PhpArray {
         self.storage.clone()
     }
@@ -339,18 +339,17 @@ pub fn backed_enum_from(
     let found = cases
         .iter()
         .find(|c| backing(c).is_some_and(|v| v.identical(&wanted)));
-    Some(match found {
-        Some(case) => Ok(case.clone()),
-        None => {
-            let mut message = match &wanted {
-                Value::Int(i) => i.to_string().into_bytes(),
-                Value::String(s) => [b"\"".as_slice(), s.as_bytes(), b"\""].concat(),
-                _ => Vec::new(),
-            };
-            message.extend_from_slice(
-                format!(" is not a valid backing value for enum {class}").as_bytes(),
-            );
-            Err(EnumFromError::ValueError(PhpString::from(message)))
-        }
+    Some(if let Some(case) = found {
+        Ok(case.clone())
+    } else {
+        let mut message = match &wanted {
+            Value::Int(i) => i.to_string().into_bytes(),
+            Value::String(s) => [b"\"".as_slice(), s.as_bytes(), b"\""].concat(),
+            _ => Vec::new(),
+        };
+        message.extend_from_slice(
+            format!(" is not a valid backing value for enum {class}").as_bytes(),
+        );
+        Err(EnumFromError::ValueError(PhpString::from(message)))
     })
 }

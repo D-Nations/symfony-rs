@@ -1,11 +1,11 @@
-//! Port of Symfony\Component\HttpFoundation\InputBag.php: a ParameterBag
+//! Port of Symfony\Component\HttpFoundation\InputBag.php: a `ParameterBag`
 //! for user input (`$_GET`, `$_POST`, `$_COOKIE`), whose getters accept
 //! scalars only and throw `BadRequestException` otherwise.
 //!
 //! `get()`'s return type is `string|int|float|bool|null`, so PHP converts
 //! a `\Stringable` value (or default) to its string on return; this port
 //! does the same. The constructor stores what it is given unchecked, as
-//! ParameterBag's does; `set()`, `add()` and `replace()` check.
+//! `ParameterBag`'s does; `set()`, `add()` and `replace()` check.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -139,8 +139,8 @@ impl InputBag {
         }
     }
 
-    /// `getEnum($key, $class, $default)`: ParameterBag's, with an
-    /// UnexpectedValueException rethrown as BadRequestException.
+    /// `getEnum($key, $class, $default)`: `ParameterBag`'s, with an
+    /// `UnexpectedValueException` rethrown as `BadRequestException`.
     pub fn get_enum(
         &self,
         key: &str,

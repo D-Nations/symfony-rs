@@ -1,6 +1,6 @@
-//! Replays tests/data/cache.json (oracle/recorders/config_cache.php,
-//! `scripts/record.sh config-cache`): what PHP's ResourceCheckerConfigCache,
-//! ConfigCache and the Filesystem calls they make wrote and answered.
+//! Replays tests/data/cache.json (`oracle/recorders/config_cache.php`,
+//! `scripts/record.sh config-cache`): what PHP's `ResourceCheckerConfigCache`,
+//! `ConfigCache` and the Filesystem calls they make wrote and answered.
 //!
 //! Each test works in a directory with a path as long as the recorder's
 //! (`/tmp/cc-00000000`), so the lengths in serialized strings stay valid

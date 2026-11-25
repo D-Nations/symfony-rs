@@ -1,5 +1,5 @@
 //! Replays tests/data/definition.json, recorded from the PHP oracle by
-//! oracle/recorders/config_definition.php (`scripts/record.sh config`):
+//! `oracle/recorders/config_definition.php` (`scripts/record.sh config`):
 //! the Definition nodes on generated inputs (type checks, empty values,
 //! minimum and maximum, enums and their casts, unrecognized options,
 //! dashed keys, XML singulars, attribute keys, prototyped merges) and the

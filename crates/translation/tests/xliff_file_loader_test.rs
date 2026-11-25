@@ -6,9 +6,15 @@
 //! hold by construction: php-dom keeps no global error buffer (each call
 //! returns its errors). `getResources()` is compared as the resources'
 //! class and `__toString()`, which is what `assertEquals()` compares for a
-//! FileResource.
+//! `FileResource`.
 //!
 //! Upstream: symfony/translation Tests/Loader/XliffFileLoaderTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use php_dom::libxml_use_internal_errors;
@@ -415,7 +421,7 @@ fn testLoadVersion22WithPgsCombined() {
     );
 }
 
-/// provideMalformedPgsSwitchValues()
+/// `provideMalformedPgsSwitchValues()`
 const MALFORMED_PGS_SWITCH_VALUES: &[(&str, &str)] = &[
     ("empty", ""),
     ("whitespace", "   "),
@@ -442,9 +448,8 @@ fn testLoadVersion22RejectsMalformedPgsSwitch() {
 </xliff>"#
         );
 
-        let e = match XliffFileLoader.load(xml.as_bytes(), b"fr", b"domain1") {
-            Ok(_) => panic!("{name}: expected an exception"),
-            Err(e) => e,
+        let Err(e) = XliffFileLoader.load(xml.as_bytes(), b"fr", b"domain1") else {
+            panic!("{name}: expected an exception")
         };
         assert_eq!(*e.class(), Class::InvalidResource, "{name}");
     }

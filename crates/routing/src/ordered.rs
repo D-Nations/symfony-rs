@@ -1,4 +1,4 @@
-//! A PHP array keyed by name, as RouteCollection keeps its routes,
+//! A PHP array keyed by name, as `RouteCollection` keeps its routes,
 //! aliases and priorities: insertion order, assignment to an existing name
 //! in place, `unset()` then assignment appends. Lookup, assignment and
 //! removal are O(1): entries live in a vector, removed ones leave a hole
@@ -54,13 +54,12 @@ impl<T> Ordered<T> {
 
     /// `$array[$name] = $value`: in place for an existing name, else last.
     pub(crate) fn set(&mut self, name: PhpString, value: T) {
-        match self.index.get(name.as_bytes()) {
-            Some(&i) => self.slots[i] = Some((name, value)),
-            None => {
-                self.index
-                    .insert(name.as_bytes().to_vec(), self.slots.len());
-                self.slots.push(Some((name, value)));
-            }
+        if let Some(&i) = self.index.get(name.as_bytes()) {
+            self.slots[i] = Some((name, value))
+        } else {
+            self.index
+                .insert(name.as_bytes().to_vec(), self.slots.len());
+            self.slots.push(Some((name, value)));
         }
     }
 

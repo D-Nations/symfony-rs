@@ -1,11 +1,11 @@
 //! Replays tests/data/builder.json, recorded from the PHP oracle by
-//! oracle/recorders/config_builder.php (`scripts/record.sh config`): trees
-//! built by ArrayNodeDefinition from lists of steps (normalized types,
-//! defaults, and processing of configs, which covers canBeEnabled() /
-//! canBeDisabled(), acceptAndWrap(), default children, key attributes,
+//! `oracle/recorders/config_builder.php` (`scripts/record.sh config`): trees
+//! built by `ArrayNodeDefinition` from lists of steps (normalized types,
+//! defaults, and processing of configs, which covers `canBeEnabled()` /
+//! `canBeDisabled()`, `acceptAndWrap()`, default children, key attributes,
 //! XML remapping and the checks of concrete and prototype nodes);
-//! thenInvalid()'s sprintf() and json_encode(); find(); min() / max();
-//! docUrl(); and the TypeErrors of a definition still parented by its
+//! `thenInvalid()`'s `sprintf()` and `json_encode()`; `find()`; `min()` / `max()`;
+//! `docUrl()`; and the `TypeErrors` of a definition still parented by its
 //! builder and of the methods' return types. Each result must be
 //! identical, and each exception must have the same class and message,
 //! except that PHP's ", called in <file> on line <n>" is not reproduced.
@@ -237,7 +237,7 @@ fn run(op: &str, args: &[Value]) -> Result<Value, Error> {
             let found = find_tree(&text(&args[0]))?.find(php_value_bytes(&args[1]))?;
             Ok(Value::Array(PhpArray::list([
                 Value::from(found.class()),
-                found.name().map(Value::String).unwrap_or(Value::Null),
+                found.name().map_or(Value::Null, Value::String),
             ])))
         }
         "bounds" => {
@@ -261,9 +261,7 @@ fn run(op: &str, args: &[Value]) -> Result<Value, Error> {
                 d.get_node(false)?.finalize(Value::Float(4.0))
             }
         }
-        "version" => Ok(composer::get_version(&text(&args[0]))?
-            .map(Value::from)
-            .unwrap_or(Value::Null)),
+        "version" => Ok(composer::get_version(&text(&args[0]))?.map_or(Value::Null, Value::from)),
         "doc_url" => {
             let d = ArrayNodeDefinition::new("r");
             let package = args[1]
@@ -337,7 +335,7 @@ fn number(v: &Value) -> php_value::Number {
     }
 }
 
-/// PHP's TypeError message without ", called in <file> on line <n>".
+/// PHP's `TypeError` message without ", called in <file> on line <n>".
 fn without_called_in(message: &str) -> &str {
     message
         .find(", called in ")

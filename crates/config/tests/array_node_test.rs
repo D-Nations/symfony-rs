@@ -1,6 +1,6 @@
 //! ArrayNodeTest.php at symfony/config v8.1.10. Names and assertions are
 //! PHPUnit's; the provider rows are upstream's, written as literals. The
-//! protected methods upstream calls through ReflectionMethod are public
+//! protected methods upstream calls through `ReflectionMethod` are public
 //! here. The deprecation handler is [`symfony_deprecation_contracts`]'s.
 //!
 //! Upstream: symfony/config Tests/Definition/ArrayNodeTest.php

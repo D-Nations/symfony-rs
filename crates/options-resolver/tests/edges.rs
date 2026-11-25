@@ -1,4 +1,4 @@
-//! OptionsResolver behaviour its upstream tests leave open, checked
+//! `OptionsResolver` behaviour its upstream tests leave open, checked
 //! against `tests/data/edges.json`, recorded from PHP 8.4.27 by
 //! `oracle/recorders/options_resolver_edges.php` (`scripts/record.sh
 //! options-resolver`). Each case here builds the same resolver as the

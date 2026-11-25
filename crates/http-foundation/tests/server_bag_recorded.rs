@@ -1,7 +1,7 @@
-//! ServerBag::getHeaders() against PHP 8.4.27's answers for what
-//! ServerBagTest leaves open (tests/data/server_bag.json,
-//! oracle/recorders/http_foundation_server_bag.php): 360 `$_SERVER`
-//! arrays, compared on the headers (in order, with `===`), any TypeError,
+//! `ServerBag::getHeaders()` against PHP 8.4.27's answers for what
+//! `ServerBagTest` leaves open (`tests/data/server_bag.json`,
+//! `oracle/recorders/http_foundation_server_bag.php`): 360 `$_SERVER`
+//! arrays, compared on the headers (in order, with `===`), any `TypeError`,
 //! and the bag's parameters afterwards.
 //!
 //! Upstream: symfony/http-foundation ServerBag.php

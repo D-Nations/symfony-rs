@@ -1,4 +1,4 @@
-//! Request scheme resolution, as Symfony's HttpFoundation `Request.php`
+//! Request scheme resolution, as Symfony's `HttpFoundation` `Request.php`
 //! does behind a trusted reverse proxy. This server listens over HTTP;
 //! only an explicitly trusted TCP peer may report HTTPS termination.
 //!

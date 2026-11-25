@@ -264,7 +264,7 @@ fn leading_lines_and_directive(s: &[u8]) -> usize {
 /// `(?=(?:\#[^\n]*+)?+(?:\n|\z))` at `i`.
 fn followed_by_comment_or_eol(s: &[u8], i: usize) -> bool {
     match s.get(i) {
-        None | Some(b'\n') | Some(b'#') => true,
+        None | Some(b'\n' | b'#') => true,
         Some(_) => false,
     }
 }
@@ -905,8 +905,7 @@ impl Block {
             let last = doc
                 .data
                 .last()
-                .map(|(_, v)| v.clone())
-                .unwrap_or(Value::Bool(false));
+                .map_or(Value::Bool(false), |(_, v)| v.clone());
             sh.refs.insert(Key::from_bytes(&name), last);
             self.refs_being_parsed.pop();
         }
@@ -1306,7 +1305,7 @@ impl Block {
         let mut parser = Block::new(None, offset);
         parser.total_number_of_lines = self.total_number_of_lines;
         parser.skipped_line_numbers = skipped_line_numbers;
-        parser.refs_being_parsed = self.refs_being_parsed.clone();
+        parser.refs_being_parsed.clone_from(&self.refs_being_parsed);
 
         sh.state.enter_nesting_level(
             offset + 1,
@@ -1541,14 +1540,14 @@ impl Block {
                 .saturating_sub(rtrim(value).len())
         };
         match value.first() {
-            Some(b'{') | Some(b'[') => {
+            Some(b'{' | b'[') => {
                 let closing = if value[0] == b'{' { b'}' } else { b']' };
                 let mut cursor = start(self);
                 let lexed = self.lex_inline_structure(sh, &mut cursor, closing, true)?;
                 sh.inline
                     .parse(&lexed, flags, sh.refs, Some(&mut *sh.state))
             }
-            Some(b'"') | Some(b'\'') => {
+            Some(b'"' | b'\'') => {
                 let mut cursor = start(self);
                 let lexed = self.lex_inline_quoted_string(&mut cursor)?;
                 let parsed_value = sh
@@ -1872,7 +1871,7 @@ impl Block {
 
     /// Tells whether the next line belongs to a block scalar whose header ends the given value.
     ///
-    /// Unlike isNextLineIndented(), empty and comment-like lines are not skipped, as they can be part of the block scalar.
+    /// Unlike `isNextLineIndented()`, empty and comment-like lines are not skipped, as they can be part of the block scalar.
     fn is_next_line_in_block_scalar(&self, value: &[u8]) -> bool {
         let Some(next_line) = self.lines.get((self.current_line_nb + 1) as usize) else {
             return false;
@@ -2303,7 +2302,7 @@ fn trim_tag(value: &[u8]) -> &[u8] {
             .iter()
             .take_while(|b| !matches!(b, b' ' | b'\r' | b'\n'))
             .count();
-        return ltrim_chars(&value[1..1 + len], b" ");
+        return ltrim_chars(&value[1..=len], b" ");
     }
     value
 }

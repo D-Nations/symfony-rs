@@ -1,5 +1,5 @@
-//! IpUtils and the PHP built-ins it calls, against PHP 8.4.27's answers
-//! recorded by oracle/recorders/http_foundation_ip_utils.php
+//! `IpUtils` and the PHP built-ins it calls, against PHP 8.4.27's answers
+//! recorded by `oracle/recorders/http_foundation_ip_utils.php`
 //! (`scripts/record.sh http-foundation`) with symfony/http-foundation
 //! v8.1.11: `filter_var(FILTER_VALIDATE_IP)`, `inet_pton()`, `ip2long()`
 //! and `inet_ntop()` over generated strings, then `checkIp4()`,
@@ -102,7 +102,7 @@ fn inet_ntop_matches_php() -> Result<(), Error> {
     Ok(())
 }
 
-/// Every IpUtils section, in the order PHP ran them.
+/// Every `IpUtils` section, in the order PHP ran them.
 #[test]
 fn ip_utils_matches_php() -> Result<(), Error> {
     let data = data()?;

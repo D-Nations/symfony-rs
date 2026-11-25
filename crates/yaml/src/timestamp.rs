@@ -3,7 +3,7 @@
 //! the strings it matches.
 //!
 //! PHP's date parser is not ported; its behaviour on exactly these shapes
-//! was recorded (oracle/recorders/yaml_timestamps.php, 1,200+ inputs) and
+//! was recorded (`oracle/recorders/yaml_timestamps.php`, 1,200+ inputs) and
 //! reduced to these rules, which all recorded cases follow:
 //! - rejected: month above 12, day above 31, hour above 24, minute above
 //!   59, second above 60, offset minutes above 59;
@@ -48,13 +48,11 @@ pub(crate) fn is_timestamp(scalar: &[u8]) -> bool {
 }
 
 fn number(bytes: Option<regex::bytes::Match<'_>>) -> i64 {
-    bytes
-        .map(|m| {
-            m.as_bytes()
-                .iter()
-                .fold(0, |n, &d| n * 10 + i64::from(d - b'0'))
-        })
-        .unwrap_or(0)
+    bytes.map_or(0, |m| {
+        m.as_bytes()
+            .iter()
+            .fold(0, |n, &d| n * 10 + i64::from(d - b'0'))
+    })
 }
 
 /// The instant PHP makes of a timestamp, or `None` where PHP's date

@@ -1,5 +1,5 @@
 //! `parse_str()` against PHP 8.4.27's answers recorded by
-//! oracle/recorders/php_value_parse_str.php (`scripts/record.sh
+//! `oracle/recorders/php_value_parse_str.php` (`scripts/record.sh
 //! php-value`): every raw input of the request vectors plus nesting,
 //! `max_input_vars` and key cases.
 //!

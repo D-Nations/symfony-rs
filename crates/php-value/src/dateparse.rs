@@ -1,5 +1,5 @@
 //! `strtotime()` and `DateTimeImmutable::createFromFormat(DATE_RFC2822)`
-//! for the texts Symfony's Cookie and HeaderBag read: HTTP and cookie
+//! for the texts Symfony's Cookie and `HeaderBag` read: HTTP and cookie
 //! dates, ISO dates, `@timestamp`, relative offsets and a few words.
 //!
 //! PHP's date parser accepts far more than this. Each function answers

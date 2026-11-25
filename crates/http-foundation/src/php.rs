@@ -1,4 +1,4 @@
-//! PHP built-ins that File, UploadedFile and FileBag call, written from
+//! PHP built-ins that File, `UploadedFile` and `FileBag` call, written from
 //! the PHP manual and recorded answers (`tests/data/files.json`,
 //! `oracle/recorders/http_foundation_files.php`); no PHP source code
 //! (PLAN.md decision 8):
@@ -16,7 +16,7 @@
 //!   gives them (a leading `0x` or `0`), saturating;
 //! - `pathinfo($name, PATHINFO_EXTENSION)` and `SplFileInfo::getBasename()`;
 //! - PHP's coercion of the values `FileBag` passes to `new
-//!   UploadedFile()` (no `strict_types`), and its TypeError texts without
+//!   UploadedFile()` (no `strict_types`), and its `TypeError` texts without
 //!   the "called in" suffix.
 //!
 //! Upstream: none
@@ -42,7 +42,9 @@ pub const DIRECTORY_SEPARATOR: u8 = if cfg!(windows) { b'\\' } else { b'/' };
 static UPLOADED: Mutex<BTreeSet<Vec<u8>>> = Mutex::new(BTreeSet::new());
 
 fn uploaded() -> std::sync::MutexGuard<'static, BTreeSet<Vec<u8>>> {
-    UPLOADED.lock().unwrap_or_else(|e| e.into_inner())
+    UPLOADED
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
 }
 
 /// Marks `path` as a file PHP received in this request's body.
@@ -127,7 +129,7 @@ pub use php_value::path::pathinfo_extension;
 /// `basename($path)` (no suffix), `/` being the separator.
 pub use php_value::path::basename;
 
-/// The TypeError PHP throws for argument `n` of `new UploadedFile()`.
+/// The `TypeError` PHP throws for argument `n` of `new UploadedFile()`.
 fn type_error(n: usize, name: &str, expected: &str, given: &Value) -> Error {
     Error::new(
         Class::PhpTypeError,

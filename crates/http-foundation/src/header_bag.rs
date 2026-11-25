@@ -3,8 +3,8 @@
 //! Cache-Control directives, and a response's cookies and computed
 //! Cache-Control.
 //!
-//! In PHP, ResponseHeaderBag overrides `set()`, `remove()`, `all()`,
-//! `replace()` and the Cache-Control readers, and HeaderBag's own methods
+//! In PHP, `ResponseHeaderBag` overrides `set()`, `remove()`, `all()`,
+//! `replace()` and the Cache-Control readers, and `HeaderBag`'s own methods
 //! (`get()`, `has()`, `keys()`, `__toString()`, the constructor) call
 //! those overrides. Here one [`HeaderBag`] holds an optional response
 //! part and each method follows the override when it is present;
@@ -119,12 +119,11 @@ impl<T> Ordered<T> {
     }
 
     fn entry(&mut self, key: Key, default: impl FnOnce() -> T) -> &mut T {
-        let at = match self.0.iter().position(|(k, _)| *k == key) {
-            Some(at) => at,
-            None => {
-                self.0.push((key, default()));
-                self.0.len() - 1
-            }
+        let at = if let Some(at) = self.0.iter().position(|(k, _)| *k == key) {
+            at
+        } else {
+            self.0.push((key, default()));
+            self.0.len() - 1
         };
         &mut self.0[at].1
     }
@@ -380,7 +379,7 @@ impl HeaderBag {
         Ok(())
     }
 
-    /// HeaderBag's own `set()`.
+    /// `HeaderBag`'s own `set()`.
     fn set_plain(&mut self, key: &[u8], values: HeaderValues, replace: bool) {
         let key = normalize(key);
         let exists = self.headers.contains_key(&key);

@@ -1,4 +1,4 @@
-//! PHP 8.4.27's behaviour recorded by oracle/recorders/php_value.php
+//! PHP 8.4.27's behaviour recorded by `oracle/recorders/php_value.php`
 //! (`scripts/record.sh php-value`).
 //!
 //! Upstream: none
@@ -217,7 +217,7 @@ fn pcre_space_classes_match_php() -> TestResult {
             .filter_map(Json::as_u64)
             .map(|c| c as u32)
             .collect();
-        let actual: Vec<u32> = (0..=0x10FFFFu32)
+        let actual: Vec<u32> = (0..=0x0010_FFFF_u32)
             .filter_map(char::from_u32)
             .filter(|&c| class(c))
             .map(u32::from)

@@ -11,6 +11,7 @@
 
 use super::{Builtin, Schema, Variety};
 use crate::chars::{is_name_char, is_name_start};
+use std::fmt::Write as _;
 
 /// A value the validator cannot decide (a character class needing
 /// Unicode data this crate does not carry).
@@ -64,7 +65,7 @@ fn any_uri(s: &str) -> bool {
     let mut escaped = String::with_capacity(s.len());
     for b in s.bytes() {
         if b == b' ' || b >= 0x80 {
-            escaped.push_str(&format!("%{b:02X}"));
+            let _ = write!(escaped, "%{b:02X}");
         } else {
             escaped.push(b as char);
         }

@@ -1,4 +1,4 @@
-//! RealIteratorTestCase and IteratorTestCase helpers: the fixture tree in
+//! `RealIteratorTestCase` and `IteratorTestCase` helpers: the fixture tree in
 //! a temporary directory, and the iterator assertions.
 //!
 //! Upstream: none
@@ -29,7 +29,7 @@ pub fn upstream_tests() -> String {
     String::from_utf8_lossy(&real).into_owned()
 }
 
-/// The files of RealIteratorTestCase, relative to its directory.
+/// The files of `RealIteratorTestCase`, relative to its directory.
 pub const FILES: [&str; 23] = [
     ".git/",
     ".foo/",
@@ -82,7 +82,7 @@ pub fn touch(path: &str, time: Option<SystemTime>) {
     }
 }
 
-/// Filesystem::remove() of a tree.
+/// `Filesystem::remove()` of a tree.
 pub fn remove_dir(path: &str) {
     if fs::symlink_metadata(path).is_ok() {
         #[cfg(unix)]
@@ -109,8 +109,8 @@ fn walk(path: &str) -> Vec<String> {
     out
 }
 
-/// setUpBeforeClass(): the fixture tree in `<temp>/symfony_finder_<name>`;
-/// FinderTest adds the gitignore tree.
+/// `setUpBeforeClass()`: the fixture tree in `<temp>/symfony_finder_<name>`;
+/// `FinderTest` adds the gitignore tree.
 pub fn real_fixture(name: &str, with_gitignore: bool) -> String {
     let tmp = format!("{}/symfony_finder_{name}", temp_root());
     remove_dir(&tmp);
@@ -129,7 +129,7 @@ pub fn real_fixture(name: &str, with_gitignore: bool) -> String {
     }
     fs::write(format!("{tmp}/test.php"), " ".repeat(800)).unwrap_or_else(|e| panic!("{e}"));
     fs::write(format!("{tmp}/test.py"), " ".repeat(2000)).unwrap_or_else(|e| panic!("{e}"));
-    let one_year_ago = SystemTime::now() - Duration::from_secs(365 * 86_400);
+    let one_year_ago = SystemTime::now() - Duration::from_hours(8760);
     touch(&format!("{tmp}/foo/bar.tmp"), Some(one_year_ago));
     touch(&format!("{tmp}/test.php"), Some(one_year_ago));
     if with_gitignore {
@@ -155,7 +155,7 @@ pub fn real_fixture(name: &str, with_gitignore: bool) -> String {
     tmp
 }
 
-/// Filesystem::mirror() of a plain tree.
+/// `Filesystem::mirror()` of a plain tree.
 pub fn mirror(from: &str, to: &str) {
     fs::create_dir_all(to).unwrap_or_else(|e| panic!("mkdir {to}: {e}"));
     for entry in fs::read_dir(from)
@@ -191,7 +191,7 @@ where
         .collect()
 }
 
-/// IteratorTestCase::assertIterator(): the pathnames, in any order.
+/// `IteratorTestCase::assertIterator()`: the pathnames, in any order.
 pub fn assert_iterator<I, F>(expected: Vec<String>, iterator: I)
 where
     I: IntoIterator<Item = Result<F, Error>>,
@@ -204,7 +204,7 @@ where
     assert_eq!(expected, values);
 }
 
-/// IteratorTestCase::assertOrderedIterator().
+/// `IteratorTestCase::assertOrderedIterator()`.
 pub fn assert_ordered_iterator<I, F>(expected: Vec<String>, iterator: I)
 where
     I: IntoIterator<Item = Result<F, Error>>,
@@ -213,7 +213,7 @@ where
     assert_eq!(expected, pathnames(iterator));
 }
 
-/// IteratorTestCase::assertOrderedIteratorForGroups().
+/// `IteratorTestCase::assertOrderedIteratorForGroups()`.
 pub fn assert_ordered_iterator_for_groups<I, F>(expected: Vec<Vec<String>>, iterator: I)
 where
     I: IntoIterator<Item = Result<F, Error>>,
@@ -247,10 +247,10 @@ pub fn symlink(target: &str, link: &str) -> Option<()> {
     }
     #[cfg(windows)]
     {
-        let resolved = std::path::Path::new(link)
-            .parent()
-            .map(|p| p.join(target))
-            .unwrap_or_else(|| std::path::Path::new(target).to_path_buf());
+        let resolved = std::path::Path::new(link).parent().map_or_else(
+            || std::path::Path::new(target).to_path_buf(),
+            |p| p.join(target),
+        );
         if resolved.is_dir() {
             std::os::windows::fs::symlink_dir(target, link).ok()
         } else {

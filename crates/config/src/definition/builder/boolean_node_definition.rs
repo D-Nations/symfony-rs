@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\Builder\BooleanNodeDefinition.php:
-//! the definition of a BooleanNode, nullable when its null equivalent is
+//! the definition of a `BooleanNode`, nullable when its null equivalent is
 //! null. Its null equivalent is `true` until `defaultValue(null)`; the
 //! constructor, `defaultValue()` and `cannotBeEmpty()` (which it refuses)
 //! are in [`crate::definition::builder::node_definition`].
@@ -15,7 +15,7 @@ use crate::definition::{
     exception::Error,
 };
 
-/// BooleanNodeDefinition.
+/// `BooleanNodeDefinition`.
 pub type BooleanNodeDefinition<P = ()> = Definition<class::Boolean, P>;
 
 /// `instantiateNode()`.

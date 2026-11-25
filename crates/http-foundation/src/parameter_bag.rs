@@ -3,7 +3,7 @@
 //!
 //! Keys follow PHP's array rules (`'12'` is the int key 12). `filter()`
 //! runs on `php_value::filter::filter_var()`, which reproduces the
-//! filters ParameterBag is used with and refuses others
+//! filters `ParameterBag` is used with and refuses others
 //! ([`Class::NotPorted`]). `getEnum()` resolves the enum class in a
 //! `php_value` [`Registry`], as PHP's class table would. Not reproduced:
 //! the `E_DEPRECATED` PHP raises when `getEnum()` truncates a float, and
@@ -34,8 +34,8 @@ pub struct ParameterBag {
     parameters: PhpArray,
 }
 
-/// Which class's method is running, where InputBag overrides
-/// ParameterBag.
+/// Which class's method is running, where `InputBag` overrides
+/// `ParameterBag`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Flavor {
     Parameter,

@@ -1,5 +1,5 @@
 //! Port of the symfony/translation component: catalogues and catalogue
-//! operations, the XLIFF and Qt loaders, XliffUtils and exceptions. See
+//! operations, the XLIFF and Qt loaders, `XliffUtils` and exceptions. See
 //! README.md for the contract and what is ported so far.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.

@@ -50,7 +50,7 @@ impl Token {
     }
 }
 
-/// The operator tokens of CoreExtension::getExpressionParsers() (names
+/// The operator tokens of `CoreExtension::getExpressionParsers()` (names
 /// and aliases). The real lexer builds this list from the registered
 /// extensions; the trial fixes it to the core set.
 const OPERATORS: &[&str] = &[
@@ -597,7 +597,7 @@ fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     haystack.windows(needle.len()).position(|w| w == needle)
 }
 
-/// Lexer::stripcslashes() for the escapes the trial accepts.
+/// `Lexer::stripcslashes()` for the escapes the trial accepts.
 fn strip_c_slashes(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     let mut chars = s.chars();

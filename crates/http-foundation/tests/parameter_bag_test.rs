@@ -3,7 +3,7 @@
 //! PHPUnit's; a data provider's cases run in a loop, each named.
 //!
 //! Closures passed with `FILTER_CALLBACK` are php-value `Closure`s; a
-//! Stringable test class is a `StringableObject`. FooEnum is registered in
+//! Stringable test class is a `StringableObject`. `FooEnum` is registered in
 //! a `Registry`, as PHP's class table holds it. testFilterArrayWithCycle
 //! and testFilterArrayWithSharedScalarReference build PHP references
 //! (`&$value`), which php-value arrays cannot hold (`n/a` in the manifest).

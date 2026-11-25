@@ -4,8 +4,8 @@
 //!
 //! `TreeBuilder<C>` names the root's class as upstream's `@template T`
 //! does (`'array'` by default); a root of another class than `C` (a type
-//! mapped to another class by a custom NodeBuilder) is refused when the
-//! TreeBuilder is created, where PHP would fail at the first call the
+//! mapped to another class by a custom `NodeBuilder`) is refused when the
+//! `TreeBuilder` is created, where PHP would fail at the first call the
 //! root does not have.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -34,7 +34,7 @@ struct TreeState {
     root: Def,
 }
 
-/// A TreeBuilder whose root definition is of class `C`.
+/// A `TreeBuilder` whose root definition is of class `C`.
 pub struct TreeBuilder<C = class::Array> {
     inner: Arc<Mutex<TreeState>>,
     class: PhantomData<fn() -> C>,

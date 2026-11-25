@@ -7,6 +7,12 @@
 //!
 //! Upstream: none
 
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
+
 mod common;
 
 use common::{assert_outcome, data, decode, show};

@@ -31,7 +31,7 @@ impl Reader {
         self.position
     }
 
-    /// Sets the position, as upstream's ReaderTest does by reflection.
+    /// Sets the position, as upstream's `ReaderTest` does by reflection.
     pub fn set_position(&mut self, position: usize) {
         self.position = position;
     }

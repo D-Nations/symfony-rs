@@ -4,7 +4,7 @@
 //! $context->setX())` (the fluent interface) compares the returned
 //! reference with the context. `testPort` passes PHP's `'123'` and `'456'`
 //! as the integers PHP's coercion makes of them before the call.
-//! `testFromRequest` waits for HttpFoundation's Request, and
+//! `testFromRequest` waits for `HttpFoundation`'s Request, and
 //! `testConstructParametersBcLayer` is a PHP subclass calling
 //! `setParameters()` before the parent constructor (not applicable to a
 //! Rust value); both are listed in the manifest.
@@ -205,7 +205,7 @@ fn testPort() {
 #[test]
 fn testFluentInterface() {
     let mut request_context = RequestContext::default();
-    let this: *const RequestContext = &request_context;
+    let this: *const RequestContext = &raw const request_context;
 
     assert!(std::ptr::eq(this, request_context.set_base_url("/app.php")));
     assert!(std::ptr::eq(this, request_context.set_path_info("/index")));

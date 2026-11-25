@@ -1,12 +1,12 @@
 //! Replays tests/data/dumpers.json, recorded from the PHP oracle by
-//! oracle/recorders/config_dumpers.php (`scripts/record.sh config`): the
-//! YAML and XML reference dumpers and ArrayShapeGenerator on generated
+//! `oracle/recorders/config_dumpers.php` (`scripts/record.sh config`): the
+//! YAML and XML reference dumpers and `ArrayShapeGenerator` on generated
 //! trees (defaults and examples of every kind, info and deprecations at
 //! each depth, key widths, prototypes of every class, nested and keyed
 //! prototypes, key attributes "0" and "", normalized types, quoted shape
-//! keys, `dumpAtPath()` on 25 paths, a node that is not a BaseNode).
+//! keys, `dumpAtPath()` on 25 paths, a node that is not a `BaseNode`).
 //! Each output must be identical, and each exception must have the same
-//! class and message; a TypeError's message is compared without PHP's
+//! class and message; a `TypeError`'s message is compared without PHP's
 //! ", called in <file> on line <n>".
 //!
 //! Upstream: none
@@ -92,7 +92,7 @@ fn strings(json: &Json) -> Result<Vec<PhpString>, Fail> {
         .collect()
 }
 
-/// config_dumpers.php's `build()`.
+/// `config_dumpers.php`'s `build()`.
 fn build(spec: &Json, parent: Option<&Node>, enums: &Registry) -> Result<Node, Fail> {
     let name = str_of(&spec["n"])?.as_bytes();
     let node = match str_of(&spec["c"])? {
@@ -189,7 +189,7 @@ fn build(spec: &Json, parent: Option<&Node>, enums: &Registry) -> Result<Node, F
     Ok(node)
 }
 
-/// PHP's TypeError message without ", called in <file> on line <n>".
+/// PHP's `TypeError` message without ", called in <file> on line <n>".
 fn without_called_in(message: &str) -> &str {
     message
         .find(", called in ")

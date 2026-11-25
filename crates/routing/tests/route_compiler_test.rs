@@ -3,7 +3,7 @@
 //! PHPUnit's; a data provider's cases run in a loop inside one test.
 //! `new \ReflectionClass(Route::class)->newInstanceArgs($arguments)` is
 //! `Route::with()` with the same positional arguments, and the
-//! Utf8RouteCompiler fixture (a RouteCompiler whose SEPARATORS are `/§`)
+//! `Utf8RouteCompiler` fixture (a `RouteCompiler` whose SEPARATORS are `/§`)
 //! is `RouteCompiler::compile_with_separators()` under its class name.
 //!
 //! Upstream: symfony/routing Tests/RouteCompilerTest.php
@@ -20,7 +20,7 @@ use symfony_routing::{
     route_compiler::{RouteCompiler, RouteCompilerInterface},
 };
 
-/// The Utf8RouteCompiler class at the end of RouteCompilerTest.php.
+/// The `Utf8RouteCompiler` class at the end of RouteCompilerTest.php.
 struct Utf8RouteCompiler;
 
 impl RouteCompilerInterface for Utf8RouteCompiler {

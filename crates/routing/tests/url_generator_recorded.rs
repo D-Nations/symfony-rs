@@ -1,5 +1,5 @@
-//! UrlGenerator against PHP 8.4.27 running the pinned symfony/routing,
-//! recorded by oracle/recorders/routing_url_generator.php
+//! `UrlGenerator` against PHP 8.4.27 running the pinned symfony/routing,
+//! recorded by `oracle/recorders/routing_url_generator.php`
 //! (`scripts/record.sh routing-url-generator`): 3,000 generated
 //! collections, contexts and `generate()` calls (URL, exception class and
 //! message, and what the logger received), 2,000 `getRelativePath()`

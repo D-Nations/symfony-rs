@@ -2,7 +2,7 @@
 //!
 //! Each test has its upstream name and replays every call the upstream
 //! test makes to the parser and the dumper, for each of its data-provider
-//! rows, from tests/data/yaml_test.json (common/replay.rs says how).
+//! rows, from `tests/data/yaml_test.json` (common/replay.rs says how).
 //!
 //! Upstream: symfony/yaml Tests/YamlTest.php
 #![allow(non_snake_case)]

@@ -63,8 +63,7 @@ impl V {
             V::Object(_, props) => props
                 .iter()
                 .find(|(n, _)| n == name)
-                .map(|(_, v)| v.clone())
-                .unwrap_or(V::Null),
+                .map_or(V::Null, |(_, v)| v.clone()),
             other => panic!("not an object: {other:?}"),
         }
     }

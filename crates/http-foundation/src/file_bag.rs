@@ -1,10 +1,10 @@
-//! Port of Symfony\Component\HttpFoundation\FileBag.php: a ParameterBag of
+//! Port of Symfony\Component\HttpFoundation\FileBag.php: a `ParameterBag` of
 //! uploaded files, converting `$_FILES` arrays into [`UploadedFile`]
 //! objects (and the array-named fields' "PHP bug" layout into nested
 //! arrays).
 //!
 //! Values PHP coerces into `new UploadedFile()`'s parameters are coerced
-//! the same way ([`crate::php`]); one PHP rejects is its TypeError
+//! the same way ([`crate::php`]); one PHP rejects is its `TypeError`
 //! (without the "called in" suffix). Not reproduced, so refused
 //! (`Class::NotPorted`): a sibling field read as a string or an object
 //! where the `name` field is an array (PHP's string offsets), and arrays
@@ -30,7 +30,7 @@ const FILE_KEYS: [&str; 6] = ["error", "full_path", "name", "size", "tmp_name", 
 
 const MAX_DEPTH: usize = 512;
 
-/// `new FileBag($parameters)`. It reads as a ParameterBag; changes go
+/// `new FileBag($parameters)`. It reads as a `ParameterBag`; changes go
 /// through its own `set()`, `add()` and `replace()`.
 #[derive(Debug, Clone, Default)]
 pub struct FileBag(ParameterBag);
@@ -43,7 +43,7 @@ impl Deref for FileBag {
     }
 }
 
-/// The UploadedFile a value holds, if any.
+/// The `UploadedFile` a value holds, if any.
 pub fn uploaded_file(value: &Value) -> Option<&UploadedFile> {
     match value {
         Value::Object(object) => object.downcast_ref::<UploadedFile>(),
@@ -51,7 +51,7 @@ pub fn uploaded_file(value: &Value) -> Option<&UploadedFile> {
     }
 }
 
-/// `array_keys($data + ['full_path' => null])`, sorted, is FILE_KEYS.
+/// `array_keys($data + ['full_path' => null])`, sorted, is `FILE_KEYS`.
 fn has_file_keys(data: &PhpArray) -> bool {
     let all = FILE_KEYS
         .iter()
@@ -204,8 +204,8 @@ impl FileBag {
         self.add(files)
     }
 
-    /// `set($key, $value)`: an array (converted) or an UploadedFile; any
-    /// other value is PHP's InvalidArgumentException.
+    /// `set($key, $value)`: an array (converted) or an `UploadedFile`; any
+    /// other value is PHP's `InvalidArgumentException`.
     pub fn set(&mut self, key: &str, value: Value) -> Result<()> {
         let converted = match value {
             Value::Array(array) => convert_array(&array, 0)?,

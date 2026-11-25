@@ -20,7 +20,7 @@ use php_value::PhpString;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Class {
     /// `Symfony\Component\HttpFoundation\Exception\BadRequestException`,
-    /// a RequestExceptionInterface (HttpKernel answers it with 400).
+    /// a `RequestExceptionInterface` (`HttpKernel` answers it with 400).
     BadRequest,
     /// `Symfony\Component\HttpFoundation\Exception\UnexpectedValueException`.
     UnexpectedValue,
@@ -38,27 +38,27 @@ pub enum Class {
     PhpError,
     /// `Symfony\Component\HttpFoundation\File\Exception\FileException`.
     File,
-    /// `Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException`, a `FileException`.
     FileNotFound,
-    /// `Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException`, a `FileException`.
     AccessDenied,
-    /// `Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException`, a `FileException`.
     CannotWriteFile,
-    /// `Symfony\Component\HttpFoundation\File\Exception\ExtensionFileException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\ExtensionFileException`, a `FileException`.
     ExtensionFile,
-    /// `Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException`, a `FileException`.
     FormSizeFile,
-    /// `Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException`, a `FileException`.
     IniSizeFile,
-    /// `Symfony\Component\HttpFoundation\File\Exception\NoFileException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\NoFileException`, a `FileException`.
     NoFile,
-    /// `Symfony\Component\HttpFoundation\File\Exception\NoTmpDirFileException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\NoTmpDirFileException`, a `FileException`.
     NoTmpDirFile,
-    /// `Symfony\Component\HttpFoundation\File\Exception\PartialFileException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\PartialFileException`, a `FileException`.
     PartialFile,
-    /// `Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException`, a `FileException`.
     UnexpectedType,
-    /// `Symfony\Component\HttpFoundation\File\Exception\UploadException`, a FileException.
+    /// `Symfony\Component\HttpFoundation\File\Exception\UploadException`, a `FileException`.
     Upload,
     /// `Symfony\Component\Mime\Exception\LogicException`.
     MimeLogic,

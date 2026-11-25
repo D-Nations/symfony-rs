@@ -1,5 +1,5 @@
 //! `loose_equals()` against PHP 8.4.27's `==` answers recorded by
-//! oracle/recorders/php_value_loose_equals.php (`scripts/record.sh
+//! `oracle/recorders/php_value_loose_equals.php` (`scripts/record.sh
 //! php-value`): every ordered pair of a pool of null, bools, ints, floats,
 //! numeric and other strings, arrays and objects.
 //!

@@ -1,6 +1,6 @@
 //! Port of Symfony\Component\Routing\RequestContext.php.
 //!
-//! `fromRequest()` waits for HttpFoundation's Request (not ported yet).
+//! `fromRequest()` waits for `HttpFoundation`'s Request (not ported yet).
 //! The constructor's `$parameters = null` keeps the parameters a PHP
 //! subclass set before calling it; a Rust value is built whole, so `None`
 //! is `[]`. Ports are integers: PHP's coercion of a numeric string

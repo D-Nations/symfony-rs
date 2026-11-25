@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\PrototypedArrayNode.php:
-//! an ArrayNode whose elements all follow one prototype node, keyed by
+//! an `ArrayNode` whose elements all follow one prototype node, keyed by
 //! position or by a key attribute, with default children and a minimum
 //! number of elements.
 //!
@@ -27,7 +27,7 @@ use crate::{
 
 pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\PrototypedArrayNode";
 
-/// PrototypedArrayNode's own properties.
+/// `PrototypedArrayNode`'s own properties.
 #[derive(Clone, Default)]
 pub(crate) struct PrototypedData {
     pub(crate) prototype: Option<Node>,
@@ -84,7 +84,7 @@ impl Node {
 
     pub fn set_min_number_of_elements(&self, number: i64) -> Result<(), Error> {
         self.with_prototyped("setMinNumberOfElements", |d| {
-            d.min_number_of_elements = number
+            d.min_number_of_elements = number;
         })
     }
 
@@ -177,7 +177,7 @@ fn int_children(n: i64) -> Vec<Value> {
     }
 }
 
-/// PrototypedArrayNode's `getDefaultValue()`.
+/// `PrototypedArrayNode`'s `getDefaultValue()`.
 pub(crate) fn get_default_value(data: &PrototypedData) -> Result<Value, Error> {
     if data.default_to_null {
         return Ok(Value::Null);
@@ -236,7 +236,7 @@ fn get_prototype_for_child(node: &Node, key: &[u8]) -> Result<Node, Error> {
     Ok(prototype)
 }
 
-/// PrototypedArrayNode's `finalizeValue()`.
+/// `PrototypedArrayNode`'s `finalizeValue()`.
 pub(crate) fn finalize_value(
     node: &Node,
     data: &PrototypedData,
@@ -274,7 +274,7 @@ pub(crate) fn finalize_value(
     Ok(Value::Array(value))
 }
 
-/// PrototypedArrayNode's `normalizeValue()`.
+/// `PrototypedArrayNode`'s `normalizeValue()`.
 pub(crate) fn normalize_value(
     node: &Node,
     array: &ArrayData,
@@ -348,7 +348,7 @@ pub(crate) fn normalize_value(
     Ok(Value::Array(normalized))
 }
 
-/// `array_key_exists($k, ...)`'s key, or its TypeError.
+/// `array_key_exists($k, ...)`'s key, or its `TypeError`.
 fn array_key_exists_offset(k: &Value) -> Result<Key, Error> {
     Key::from_value(k).ok_or_else(|| {
         Error::new(
@@ -359,7 +359,7 @@ fn array_key_exists_offset(k: &Value) -> Result<Key, Error> {
 }
 
 /// Registers the value prototype for an element keyed `k` that only has
-/// "value" left, when the prototype is an ArrayNode with a "value" child.
+/// "value" left, when the prototype is an `ArrayNode` with a "value" child.
 fn use_value_prototype(node: &Node, k: &Value) -> Result<(), Error> {
     let prototype = node.get_prototype()?;
     if !prototype.is_array_node() {
@@ -394,7 +394,7 @@ fn use_value_prototype(node: &Node, k: &Value) -> Result<(), Error> {
     })
 }
 
-/// PrototypedArrayNode's `mergeValues()`.
+/// `PrototypedArrayNode`'s `mergeValues()`.
 pub(crate) fn merge_values(
     node: &Node,
     array: &ArrayData,

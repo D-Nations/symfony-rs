@@ -1,7 +1,7 @@
 //! Port of Symfony\Component\Translation\Loader\XliffFileLoader.php, on
-//! `php-dom` and symfony-config's XmlUtils.
+//! `php-dom` and symfony-config's `XmlUtils`.
 //!
-//! Upstream reads the DOM through SimpleXML and XPath. What it uses of
+//! Upstream reads the DOM through `SimpleXML` and XPath. What it uses of
 //! them is written here on php-dom's tree, as PHP 8.4.27 behaves
 //! (recorded, `scripts/record.sh translation-xliff`):
 //! - `$el->name` (and `foreach`, `isset()`): the child elements with that
@@ -580,7 +580,7 @@ fn collect_pgs_text(dom: &Document, node: NodeId, plural: &[&str], out: &mut Str
                         // past PHP_INT_MAX: a float, above 0x10FFFF
                         Number::Float(_) => continue,
                     };
-                    if codepoint <= 0x10FFFF
+                    if codepoint <= 0x0010_FFFF
                         && !(0xD800..=0xDFFF).contains(&codepoint)
                         && let Some(c) = u32::try_from(codepoint).ok().and_then(char::from_u32)
                     {

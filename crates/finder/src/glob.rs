@@ -1,7 +1,7 @@
 //! Port of Symfony\Component\Finder\Glob.php.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
-//! Based on Richard Clamp's Perl Text::Glob.
+//! Based on Richard Clamp's Perl `Text::Glob`.
 //!
 //! Upstream: symfony/finder Glob.php
 

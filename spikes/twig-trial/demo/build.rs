@@ -1,5 +1,5 @@
 //! Compiles templates/**/*.twig and tests/snippets/*.twig to Rust in
-//! OUT_DIR/templates.rs.
+//! `OUT_DIR/templates.rs`.
 //!
 //! Upstream: none
 
@@ -9,7 +9,7 @@ use twig_trial_compiler::{Callable, Environment, compile};
 
 fn collect(dir: &Path, root: &Path, out: &mut Vec<(String, String)>) -> std::io::Result<()> {
     let mut entries: Vec<_> = fs::read_dir(dir)?.collect::<Result<_, _>>()?;
-    entries.sort_by_key(|e| e.path());
+    entries.sort_by_key(std::fs::DirEntry::path);
     for entry in entries {
         let path = entry.path();
         if path.is_dir() {

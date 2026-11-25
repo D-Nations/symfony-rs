@@ -295,6 +295,7 @@ fn value_of(text: &[u8]) -> (Vec<u8>, usize) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fmt::Write as _;
 
     fn field(name: &str, value: &str) -> (Vec<u8>, Vec<u8>) {
         (name.as_bytes().to_vec(), value.as_bytes().to_vec())
@@ -383,9 +384,10 @@ mod tests {
     fn stops_counting_at_max_input_vars() {
         let mut body = String::new();
         for i in 0..=MAX_INPUT_VARS {
-            body.push_str(&format!(
+            let _ = write!(
+                body,
                 "--XyZ\r\nContent-Disposition: form-data; name=v{i}\r\n\r\n{i}\r\n"
-            ));
+            );
         }
         let parsed = parse(TYPE, body.as_bytes());
         assert_eq!(parsed.fields.len(), MAX_INPUT_VARS);

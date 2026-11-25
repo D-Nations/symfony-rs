@@ -108,7 +108,7 @@ fn unescape_character(escape: &[u8]) -> Result<Vec<u8>, ParseException> {
 
 /// `utf8chr()`: the UTF-8-style bytes of a code point, modulo 0x200000.
 fn utf8chr(c: i64) -> Vec<u8> {
-    let c = c.rem_euclid(0x200000) as u32;
+    let c = c.rem_euclid(0x0020_0000) as u32;
     let byte = |v: u32| (v & 0xff) as u8;
     if c < 0x80 {
         vec![byte(c)]

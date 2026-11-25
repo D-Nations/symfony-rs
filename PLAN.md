@@ -249,6 +249,36 @@ is a design goal, not authorization to publish now.
   them broadly. Document necessary compatibility exceptions. No unsafe
   code, panics on external inputs or weakening of tests.
 
+**Clippy rule set (owner, November 25).** The workspace `Cargo.toml`
+defines `[workspace.lints.clippy]`: `all` and `pedantic` as warnings, minus
+`module_name_repetitions`, `must_use_candidate`, `missing_errors_doc` and
+`missing_panics_doc`; plus `unwrap_used`, `expect_used`, `todo`,
+`unimplemented` and `print_stdout` as warnings, and `dbg_macro` and
+`await_holding_lock` as errors. `clippy.toml` lets test code unwrap, expect
+and print; integration-test files whose helpers unwrap say so with a
+file-level `allow`. The gate stays `cargo clippy --all-targets -- -D
+warnings`, so a warning fails it.
+
+- Strictness rises in steps. A member opts in with `[lints] workspace =
+  true` once it passes; members that have not opted in keep Clippy's
+  defaults. `nursery` and `restriction` are never enabled as groups, only
+  as chosen lints.
+- In code that reproduces PHP behaviour, PHP compatibility wins over a
+  lint (owner, November 25): the code keeps PHP's semantics (int/float
+  conversion, `(int)` truncation, wrapping) and the lint is silenced at
+  that item with `#[expect(clippy::..., reason = "...")]`. Elsewhere the
+  lint is fixed.
+- Generated files are fixed in their generator (`scripts/gen-*.py`,
+  `build.rs`), never by hand.
+- Opted in (November 25): psr-log, event-dispatcher-contracts,
+  deprecation-contracts, http-kernel, request-lab, php-pcre, filesystem,
+  mime, event-dispatcher, stopwatch, converter-app fixture. Still to opt
+  in, each needing hand review (mostly `usize`/`i64` casts for PHP offsets
+  and lengths): string, console, config, yaml, http-foundation,
+  css-selector, php-value, php-dom, finder, options-resolver, routing,
+  dotenv, translation, and the twig/di spikes (whose generated templates
+  need their generators fixed).
+
 **Scheduling and exit gates:**
 
 | Stage | Scope and evidence |

@@ -1,6 +1,6 @@
 //! EnumNodeDefinitionTest.php at symfony/config v8.1.10. Names and
 //! assertions are PHPUnit's; the fixture enums are registered in a
-//! Registry (common::enums()).
+//! Registry (`common::enums()`).
 //!
 //! Upstream: symfony/config Tests/Definition/Builder/EnumNodeDefinitionTest.php
 #![allow(non_snake_case)]

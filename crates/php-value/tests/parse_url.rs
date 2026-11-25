@@ -1,5 +1,5 @@
 //! `parse_url()` against PHP 8.4.27's answers recorded by
-//! oracle/recorders/php_value_parse_url.php (`scripts/record.sh
+//! `oracle/recorders/php_value_parse_url.php` (`scripts/record.sh
 //! php-value`): 119 hand-picked URLs, 6,000 generated strings over the
 //! characters it treats specially, and 6,000 generated
 //! scheme/authority/path/query/fragment combinations.

@@ -153,7 +153,9 @@ fn random_suffix() -> Vec<u8> {
             .map_or(0, |d| d.as_nanos() as u64);
         let mixed = now ^ COUNTER.fetch_add(0x9e37_79b9_7f4a_7c15, Ordering::Relaxed);
         for (i, b) in bytes.iter_mut().enumerate() {
-            *b = mixed.rotate_left(u32::try_from(i * 7).unwrap_or(0)).to_le_bytes()[0];
+            *b = mixed
+                .rotate_left(u32::try_from(i * 7).unwrap_or(0))
+                .to_le_bytes()[0];
         }
     }
     let lower = &ALPHABET[..26];

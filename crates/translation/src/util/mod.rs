@@ -1,4 +1,4 @@
-//! Symfony\Component\Translation\Util: XliffUtils.
+//! Symfony\Component\Translation\Util: `XliffUtils`.
 //!
 //! Upstream: none
 

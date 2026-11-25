@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\Builder\EnumNodeDefinition.php:
-//! the definition of an EnumNode, from a list of values or an enum
+//! the definition of an `EnumNode`, from a list of values or an enum
 //! class (looked up in a [`Registry`], PHP's class table here).
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -15,7 +15,7 @@ use crate::definition::{
     exception::{Class, Error},
 };
 
-/// EnumNodeDefinition.
+/// `EnumNodeDefinition`.
 pub type EnumNodeDefinition<P = ()> = Definition<class::Enum, P>;
 
 impl<P: Clone> Definition<class::Enum, P> {

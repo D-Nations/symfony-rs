@@ -14,7 +14,7 @@
 //! are read with upstream's own regular expression through php-pcre.
 //!
 //! `compile()` resolves the `compiler_class` option. PHP looks the class
-//! up at run time; here [`Route::compile`] knows RouteCompiler and
+//! up at run time; here [`Route::compile`] knows `RouteCompiler` and
 //! [`Route::compile_with`] names another compiler type, so the class is
 //! chosen when the program is built (AGENTS.md). Any other class is PHP's
 //! `Class "%s" not found`.
@@ -231,7 +231,7 @@ impl Route {
     }
 
     /// The classes `unserialize()` must allow for a route: Route and
-    /// CompiledRoute. Add a compiled route's subclass, or the class of an
+    /// `CompiledRoute`. Add a compiled route's subclass, or the class of an
     /// object a default holds, before unserializing.
     pub fn classes() -> Classes {
         let mut classes = Classes::new();
@@ -480,12 +480,12 @@ impl Route {
         self.compiled.as_ref()
     }
 
-    /// `compile()` when `compiler_class` is RouteCompiler.
+    /// `compile()` when `compiler_class` is `RouteCompiler`.
     pub fn compile(&mut self) -> Result<&CompiledRoute, Error> {
         self.compile_with::<RouteCompiler>()
     }
 
-    /// `compile()` when `compiler_class` names `C` (or RouteCompiler).
+    /// `compile()` when `compiler_class` names `C` (or `RouteCompiler`).
     pub fn compile_with<C: RouteCompilerInterface>(&mut self) -> Result<&CompiledRoute, Error> {
         if self.compiled.is_none() {
             let class = self.option(b"compiler_class").cloned().unwrap_or_default();

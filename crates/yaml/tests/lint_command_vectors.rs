@@ -1,6 +1,6 @@
-//! Replays tests/data/lint_command.json: lint:yaml's exact output and exit
+//! Replays `tests/data/lint_command.json`: lint:yaml's exact output and exit
 //! code recorded from PHP 8.4.27 with symfony/yaml and symfony/console
-//! v8.1.9 (oracle/recorders/yaml_lint.php, `scripts/record.sh yaml`). The
+//! v8.1.9 (`oracle/recorders/yaml_lint.php`, `scripts/record.sh yaml`). The
 //! files are written to the same relative directory the recorder used,
 //! from this crate's directory, with COLUMNS=80 as there.
 //!

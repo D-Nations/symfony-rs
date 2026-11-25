@@ -3,7 +3,7 @@
 //! --format=xml`).
 //!
 //! `PHP_EOL` is `"\n"`. Dumping renames a prototype that is itself a
-//! PrototypedArrayNode to its parent's key attribute, as upstream's
+//! `PrototypedArrayNode` to its parent's key attribute, as upstream's
 //! `setName()` does.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.

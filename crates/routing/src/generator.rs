@@ -119,8 +119,8 @@ mod tests {
     use super::*;
 
     /// The typed generator's dot-segment step, on the paths of
-    /// UrlGeneratorTest::testEncodingOfRelativePathSegments (ported in full
-    /// in tests/url_generator_test.rs). The expected paths drop upstream's
+    /// `UrlGeneratorTest::testEncodingOfRelativePathSegments` (ported in full
+    /// in `tests/url_generator_test.rs`). The expected paths drop upstream's
     /// `/app.php` base URL, which is prepended after this step.
     #[test]
     fn encodes_relative_path_segments() {
@@ -137,8 +137,8 @@ mod tests {
 
     /// GHSA-h5x3-xfc9-m39h (CVE-2026-48784): chained dot segments in a
     /// parameter that may contain `/` (requirement `.+`), as in
-    /// UrlGeneratorTest::testEncodingOfChainedRelativePathSegments (ported
-    /// in full in tests/url_generator_test.rs).
+    /// `UrlGeneratorTest::testEncodingOfChainedRelativePathSegments` (ported
+    /// in full in `tests/url_generator_test.rs`).
     #[test]
     fn encodes_chained_relative_path_segments() {
         let between = |path: &str| encode_dot_segments(&format!("/foo/{}/bar", encode_path(path)));

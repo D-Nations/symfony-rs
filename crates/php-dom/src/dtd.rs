@@ -172,10 +172,10 @@ impl Parser {
             s.push(char::from(self.raw()));
             self.next();
         }
-        if self.raw() != stop {
-            self.fatal_code(44);
-        } else {
+        if self.raw() == stop {
             self.next();
+        } else {
+            self.fatal_code(44);
         }
         Some(s)
     }
@@ -202,11 +202,10 @@ impl Parser {
                         1,
                         "xmlParseInternalSubset: error detected in Markup declaration",
                     );
-                    if !self.input_stack.is_empty() {
-                        self.pop_input();
-                    } else {
+                    if self.input_stack.is_empty() {
                         break;
                     }
+                    self.pop_input();
                 }
             }
             if self.raw() == b']' {
@@ -386,13 +385,7 @@ impl Parser {
             });
         }
         self.skip_blanks();
-        if self.raw() != b'>' {
-            self.fatal(
-                37,
-                &format!("xmlParseEntityDecl: entity {name} not terminated"),
-            );
-            self.halt();
-        } else {
+        if self.raw() == b'>' {
             if depth != self.input_stack.len() {
                 self.fatal(
                     90,
@@ -400,6 +393,12 @@ impl Parser {
                 );
             }
             self.next();
+        } else {
+            self.fatal(
+                37,
+                &format!("xmlParseEntityDecl: entity {name} not terminated"),
+            );
+            self.halt();
         }
     }
 
@@ -546,13 +545,13 @@ impl Parser {
             return;
         };
         self.skip_blanks();
-        if self.raw() != b'>' {
-            self.fatal_code(73);
-        } else {
+        if self.raw() == b'>' {
             self.next();
             if ok && self.well_formed {
                 self.dtd_has_decls = true;
             }
+        } else {
+            self.fatal_code(73);
         }
         let _ = name;
     }

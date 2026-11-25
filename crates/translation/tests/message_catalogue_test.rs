@@ -16,7 +16,7 @@ use symfony_translation::{Class, MessageCatalogue};
 struct Stub(&'static str);
 
 impl ResourceInterface for Stub {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Stub"
     }
 

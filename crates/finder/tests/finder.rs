@@ -1,12 +1,12 @@
 //! FinderTest.php at symfony/finder
-//! 2f4c0f26106520d82e1b71759d2fb8d32d8b7a43, and the four GlobTest tests
+//! 2f4c0f26106520d82e1b71759d2fb8d32d8b7a43, and the four `GlobTest` tests
 //! that walk directories. Names and assertions are PHPUnit's;
 //! testContains, testPath and testRegexName replay their recorded
-//! providers. RealIteratorTestCase's tree is built once in
+//! providers. `RealIteratorTestCase`'s tree is built once in
 //! `<temp>/symfony_finder_FinderTest`; the tests that change it (symbolic
 //! links, permissions) work on a copy of their own, since Rust runs tests
 //! in parallel. `__DIR__` is the upstream Tests directory, read only.
-//! VfsIteratorTestTrait's stream wrapper is `Vfs` below, registered with
+//! `VfsIteratorTestTrait`'s stream wrapper is `Vfs` below, registered with
 //! `fs::stream_wrapper_register()`.
 //!
 //! Tests that need symbolic links do not run where the system refuses
@@ -62,7 +62,7 @@ fn fixtures(files: &[&str]) -> Vec<String> {
         .collect()
 }
 
-/// buildFinder(): `Finder::create()->exclude('gitignore')`.
+/// `buildFinder()`: `Finder::create()->exclude('gitignore')`.
 fn build_finder() -> Finder {
     let mut finder = Finder::create();
     finder.exclude("gitignore");
@@ -146,7 +146,7 @@ fn testCreate() {
 #[test]
 fn testDirectories() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.directories());
     assert_iterator(
         abs(&["foo", "qux", "toto"]),
@@ -167,7 +167,7 @@ fn testDirectories() -> TestResult {
 #[test]
 fn testFiles() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.files());
     assert_iterator(abs(&FILES_ONLY), finder.r#in(tmp())?.get_iterator()?);
 
@@ -226,17 +226,17 @@ fn testBackPathNotNormalized() -> TestResult {
 fn testDepth() -> TestResult {
     let depth0: Vec<&str> = ALL.iter().copied().filter(|f| !f.contains('/')).collect();
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.depth("< 1")?);
     assert_iterator(abs(&depth0), finder.r#in(tmp())?.get_iterator()?);
 
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.depth("<= 0")?);
     assert_iterator(abs(&depth0), finder.r#in(tmp())?.get_iterator()?);
 
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.depth(">= 1")?);
     assert_iterator(
         abs(&["foo/bar.tmp", "qux/baz_100_1.py", "qux/baz_1_2.py"]),
@@ -263,7 +263,7 @@ fn testDepthWithArrayParam() -> TestResult {
 #[test]
 fn testName() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.name("*.php"));
     assert_iterator(abs(&PHP_FILES), finder.r#in(tmp())?.get_iterator()?);
 
@@ -309,7 +309,7 @@ fn testNameWithArrayParam() -> TestResult {
 #[test]
 fn testNotName() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.not_name("*.php"));
     assert_iterator(
         abs(&[
@@ -377,7 +377,7 @@ fn testRegexName() -> TestResult {
 #[test]
 fn testSize() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.files().size("< 1K")?.size("> 500")?);
     assert_iterator(abs(&["test.php"]), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -386,7 +386,7 @@ fn testSize() -> TestResult {
 #[test]
 fn testSizeWithArrayParam() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.files().size(["< 1K", "> 500"])?);
     assert_iterator(abs(&["test.php"]), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -395,7 +395,7 @@ fn testSizeWithArrayParam() -> TestResult {
 #[test]
 fn testDate() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.files().date("until last month")?);
     assert_iterator(
         abs(&["foo/bar.tmp", "test.php"]),
@@ -407,7 +407,7 @@ fn testDate() -> TestResult {
 #[test]
 fn testDateWithArrayParam() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(
         p,
         finder.files().date([">= 2005-10-15", "until last month"])?,
@@ -422,7 +422,7 @@ fn testDateWithArrayParam() -> TestResult {
 #[test]
 fn testExclude() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.exclude("foo"));
     let expected: Vec<&str> = ALL
         .iter()
@@ -436,7 +436,7 @@ fn testExclude() -> TestResult {
 #[test]
 fn testIgnoreVCS() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.ignore_vcs(false).ignore_dot_files(false));
     let everything: Vec<&str> = ALL
         .iter()
@@ -454,7 +454,7 @@ fn testIgnoreVCS() -> TestResult {
     assert_iterator(abs(&everything), finder.r#in(tmp())?.get_iterator()?);
 
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.ignore_vcs(true).ignore_dot_files(false));
     assert_iterator(with(&ALL, &DOTS), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -463,7 +463,7 @@ fn testIgnoreVCS() -> TestResult {
 #[test]
 fn testIgnoreVCSIgnored() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(
         p,
         finder
@@ -487,7 +487,7 @@ fn testIgnoreVCSIgnored() -> TestResult {
 #[test]
 fn testIgnoreVCSIgnoredUpToFirstGitRepositoryRoot() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(
         p,
         finder
@@ -537,7 +537,7 @@ fn testIgnoreDotFiles() -> TestResult {
         .copied()
         .collect();
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.ignore_dot_files(false).ignore_vcs(false));
     assert_iterator(abs(&everything), finder.r#in(tmp())?.get_iterator()?);
 
@@ -549,7 +549,7 @@ fn testIgnoreDotFiles() -> TestResult {
     assert_iterator(abs(&everything), finder.r#in(tmp())?.get_iterator()?);
 
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.ignore_dot_files(true).ignore_vcs(false));
     assert_iterator(abs(&ALL), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -589,7 +589,7 @@ const BY_NAME: [&str; 17] = [
 #[test]
 fn testSortByName() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_name(false));
     assert_ordered_iterator(abs(&BY_NAME), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -598,7 +598,7 @@ fn testSortByName() -> TestResult {
 #[test]
 fn testSortByType() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_type());
     assert_ordered_iterator(
         abs(&[
@@ -628,7 +628,7 @@ fn testSortByType() -> TestResult {
 #[test]
 fn testSortByAccessedTime() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_accessed_time());
     assert_iterator(abs(&ALL), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -637,7 +637,7 @@ fn testSortByAccessedTime() -> TestResult {
 #[test]
 fn testSortByChangedTime() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_changed_time());
     assert_iterator(abs(&ALL), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -646,7 +646,7 @@ fn testSortByChangedTime() -> TestResult {
 #[test]
 fn testSortByModifiedTime() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_modified_time());
     assert_iterator(abs(&ALL), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -655,7 +655,7 @@ fn testSortByModifiedTime() -> TestResult {
 #[test]
 fn testReverseSorting() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_name(false));
     same(p, finder.reverse_sorting());
     let mut expected = BY_NAME.to_vec();
@@ -668,7 +668,7 @@ fn testReverseSorting() -> TestResult {
 #[test]
 fn testSortByNameNatural() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_name(true));
     assert_ordered_iterator(
         abs(&[
@@ -694,7 +694,7 @@ fn testSortByNameNatural() -> TestResult {
     );
 
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_name(false));
     assert_ordered_iterator(abs(&BY_NAME), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -703,7 +703,7 @@ fn testSortByNameNatural() -> TestResult {
 #[test]
 fn testSortByNameCaseInsensitive() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_case_insensitive_name(true));
     // the separator is "/" (Linux behaviour is canonical)
     assert_ordered_iterator(
@@ -730,7 +730,7 @@ fn testSortByNameCaseInsensitive() -> TestResult {
     );
 
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort_by_case_insensitive_name(false));
     assert_ordered_iterator(
         abs(&[
@@ -764,7 +764,7 @@ fn real(f: &SplFileInfo) -> Vec<u8> {
 #[test]
 fn testSort() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.sort(|a, b| strcmp(&real(a), &real(b))));
     assert_ordered_iterator(abs(&BY_NAME), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -810,7 +810,7 @@ fn testSortAcrossDirectories() -> TestResult {
 #[test]
 fn testFilter() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(
         p,
         finder.filter(|f| f.get_pathname().windows(4).any(|w| w == b"test"), false),
@@ -842,8 +842,8 @@ enum Res {
 
 type Log = Arc<Mutex<Vec<(String, String, Res)>>>;
 
-/// The anonymous stream wrapper class of VfsIteratorTestTrait, with the
-/// provider setupVfsProvider() installs.
+/// The anonymous stream wrapper class of `VfsIteratorTestTrait`, with the
+/// provider `setupVfsProvider()` installs.
 struct Vfs {
     data: Node,
     log: Log,
@@ -868,11 +868,10 @@ impl Vfs {
     }
 
     fn log(&self, path: &str, op: &str, res: Res) {
-        self.log.lock().unwrap_or_else(|e| e.into_inner()).push((
-            path.to_string(),
-            op.to_string(),
-            res,
-        ));
+        self.log
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .push((path.to_string(), op.to_string(), res));
     }
 }
 
@@ -930,7 +929,10 @@ impl VfsScheme {
     }
 
     fn log(&self) -> Vec<(String, String, Res)> {
-        self.log.lock().unwrap_or_else(|e| e.into_inner()).clone()
+        self.log
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .clone()
     }
 
     fn assert_same_vfs_iterator(&self, expected: &[&str], finder: &Finder) -> TestResult {
@@ -954,7 +956,7 @@ fn log_entry(path: &str, op: &str, res: Res) -> (String, String, Res) {
 }
 
 fn list(names: &[&str]) -> Res {
-    Res::List(names.iter().map(|s| s.to_string()).collect())
+    Res::List(names.iter().map(std::string::ToString::to_string).collect())
 }
 
 #[test]
@@ -980,11 +982,9 @@ fn testFilterPrune() -> TestResult {
             move |file| {
                 let path = Vfs::parse(file.get_pathname());
                 let res = path != "x/d";
-                log.lock().unwrap_or_else(|e| e.into_inner()).push((
-                    path,
-                    "exclude_filter".into(),
-                    Res::Bool(res),
-                ));
+                log.lock()
+                    .unwrap_or_else(std::sync::PoisonError::into_inner)
+                    .push((path, "exclude_filter".into(), Res::Bool(res)));
                 res
             },
             true,
@@ -1073,7 +1073,7 @@ fn testFilterPruneWithExcludedPath() -> TestResult {
 #[test]
 fn testFollowLinks() -> TestResult {
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.follow_links());
     assert_iterator(abs(&ALL), finder.r#in(tmp())?.get_iterator()?);
     Ok(())
@@ -1083,7 +1083,7 @@ fn testFollowLinks() -> TestResult {
 fn testUseUnixPaths() -> TestResult {
     let fixtures_directory = format!("{}/Fixtures", upstream_tests()).replace('\\', "/");
     let mut finder = build_finder();
-    let p: *const Finder = &finder;
+    let p: *const Finder = &raw const finder;
     same(p, finder.use_unix_paths());
     let mut saw_subdirectory_entry = false;
     for file in finder.r#in(fixtures_directory.as_str())?.get_iterator()? {
@@ -1301,7 +1301,7 @@ fn testRelativePath() -> TestResult {
         "", "", "", "", "", "", "", "", "", "", "", "", "", "foo", "qux", "qux", "",
     ]
     .iter()
-    .map(|s| s.to_string())
+    .map(std::string::ToString::to_string)
     .collect();
     r#ref.sort();
     paths.sort();
@@ -1317,7 +1317,7 @@ fn testRelativePathname() -> TestResult {
         .get_iterator()?
         .map(|f| f.map(|f| String::from_utf8_lossy(f.get_relative_pathname()).into_owned()))
         .collect::<Result<_, _>>()?;
-    let mut r#ref: Vec<String> = ALL.iter().map(|s| s.to_string()).collect();
+    let mut r#ref: Vec<String> = ALL.iter().map(std::string::ToString::to_string).collect();
     paths.sort();
     r#ref.sort();
     assert_eq!(r#ref, paths);
@@ -1354,7 +1354,7 @@ fn testGetFilenameWithoutExtension() -> TestResult {
         "zebulon",
     ]
     .iter()
-    .map(|s| s.to_string())
+    .map(std::string::ToString::to_string)
     .collect();
     file_names.sort();
     r#ref.sort();

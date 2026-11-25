@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\ConfigurationInterface.php:
-//! a configuration gives the TreeBuilder of its tree.
+//! a configuration gives the `TreeBuilder` of its tree.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -7,7 +7,7 @@
 
 use crate::definition::{builder::TreeBuilder, exception::Error};
 
-/// ConfigurationInterface.
+/// `ConfigurationInterface`.
 pub trait ConfigurationInterface {
     /// `getConfigTreeBuilder()`. Building the tree can fail where PHP
     /// throws, so it returns a `Result`.

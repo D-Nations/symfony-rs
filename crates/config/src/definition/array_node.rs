@@ -24,7 +24,7 @@ use crate::{
 
 pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\ArrayNode";
 
-/// ArrayNode's properties (PrototypedArrayNode has them too).
+/// `ArrayNode`'s properties (`PrototypedArrayNode` has them too).
 #[derive(Clone)]
 pub(crate) struct ArrayData {
     pub(crate) xml_remappings: Vec<(PhpString, PhpString)>,
@@ -83,8 +83,8 @@ impl ArrayNode {
 }
 
 impl Node {
-    /// Changes the ArrayNode properties of an ArrayNode or a
-    /// PrototypedArrayNode, or fails as calling `method` on another class.
+    /// Changes the `ArrayNode` properties of an `ArrayNode` or a
+    /// `PrototypedArrayNode`, or fails as calling `method` on another class.
     pub(crate) fn with_array_data<R>(
         &self,
         method: &str,
@@ -147,7 +147,7 @@ impl Node {
         self.with_array_data("shouldIgnoreExtraKeys", |d| d.ignore_extra_keys)
     }
 
-    /// `addChild()`. A PrototypedArrayNode has no concrete children.
+    /// `addChild()`. A `PrototypedArrayNode` has no concrete children.
     pub fn add_child(&self, node: &Node) -> Result<(), Error> {
         match self.kind() {
             Kind::Array(_) => {}
@@ -187,8 +187,8 @@ impl Node {
     }
 }
 
-/// `preNormalize()`: "foo-bar" becomes "foo_bar" when the key has no
-/// underscore and "foo_bar" is not a key already.
+/// `preNormalize()`: "foo-bar" becomes "`foo_bar`" when the key has no
+/// underscore and "`foo_bar`" is not a key already.
 pub(crate) fn pre_normalize(data: &ArrayData, value: Value) -> Value {
     let Value::Array(array) = &value else {
         return value;
@@ -215,7 +215,7 @@ pub(crate) fn pre_normalize(data: &ArrayData, value: Value) -> Value {
     Value::Array(normalized)
 }
 
-/// ArrayNode's `getDefaultValue()`.
+/// `ArrayNode`'s `getDefaultValue()`.
 pub(crate) fn get_default_value(node: &Node, data: &ArrayData) -> Result<Value, Error> {
     if !data.add_if_not_set {
         return Err(Error::new(
@@ -258,7 +258,7 @@ pub(crate) fn expect_array(value: Value, function: &str) -> Result<PhpArray, Err
     }
 }
 
-/// ArrayNode's `finalizeValue()`.
+/// `ArrayNode`'s `finalizeValue()`.
 pub(crate) fn finalize_value(node: &Node, data: &ArrayData, value: Value) -> Result<Value, Error> {
     if matches!(value, Value::Bool(false)) {
         return Err(unset_key_for_false(node));
@@ -297,7 +297,7 @@ pub(crate) fn finalize_value(node: &Node, data: &ArrayData, value: Value) -> Res
     Ok(Value::Array(value))
 }
 
-/// ArrayNode's `validateType()`: an array, or `false` when allowed.
+/// `ArrayNode`'s `validateType()`: an array, or `false` when allowed.
 pub(crate) fn validate_type(node: &Node, data: &ArrayData, value: &Value) -> Result<(), Error> {
     match value {
         Value::Array(_) => Ok(()),
@@ -329,7 +329,7 @@ pub(crate) fn remap_xml(data: &ArrayData, mut value: PhpArray) -> Result<PhpArra
     Ok(value)
 }
 
-/// ArrayNode's `normalizeValue()`.
+/// `ArrayNode`'s `normalizeValue()`.
 pub(crate) fn normalize_value(node: &Node, data: &ArrayData, value: Value) -> Result<Value, Error> {
     if matches!(value, Value::Bool(false)) {
         return Ok(value);
@@ -410,7 +410,7 @@ fn unrecognized_options(node: &Node, data: &ArrayData, extra: &PhpArray) -> Erro
     node.config_error(Class::InvalidConfiguration, message, false)
 }
 
-/// ArrayNode's `mergeValues()`.
+/// `ArrayNode`'s `mergeValues()`.
 pub(crate) fn merge_values(
     node: &Node,
     data: &ArrayData,

@@ -4,6 +4,12 @@
 //! stand in (the cache is per thread here, so each test sees its own).
 //!
 //! Upstream: symfony/css-selector Tests/CssSelectorConverterTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 mod common;

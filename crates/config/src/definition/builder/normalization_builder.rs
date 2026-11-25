@@ -15,7 +15,7 @@ use crate::definition::{
     builder::expr_builder::{Expr, ExprRef, ExprType},
 };
 
-/// NormalizationBuilder's properties.
+/// `NormalizationBuilder`'s properties.
 #[derive(Clone, Default)]
 pub(crate) struct NormalizationBuilder {
     pub(crate) before: Vec<Expr>,

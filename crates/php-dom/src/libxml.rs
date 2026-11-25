@@ -2,7 +2,7 @@
 //! errors in its buffer instead of raising PHP warnings. Nothing in this
 //! crate raises warnings or keeps a global buffer (every load and
 //! validation returns its errors), so the setting is only what callers
-//! read back: Symfony's XmlUtils sets it around its work, restores the
+//! read back: Symfony's `XmlUtils` sets it around its work, restores the
 //! caller's value and hands that value to a validation callable. PHP keeps
 //! it per request; here it is per thread.
 //!

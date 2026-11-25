@@ -1,6 +1,6 @@
-//! CompiledUrlGeneratorDumper and CompiledUrlGenerator against PHP 8.4.27
+//! `CompiledUrlGeneratorDumper` and `CompiledUrlGenerator` against PHP 8.4.27
 //! running the pinned symfony/routing, recorded by
-//! oracle/recorders/routing_compiled_url_generator.php (`scripts/record.sh
+//! `oracle/recorders/routing_compiled_url_generator.php` (`scripts/record.sh
 //! routing-compiled-url-generator`): 1,500 generated collections of routes
 //! and aliases (chains, cycles, missing targets, deprecations, localized
 //! names, name prefixes), each dumped and read back with `require` in PHP,

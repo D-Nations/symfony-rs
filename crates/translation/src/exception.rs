@@ -1,6 +1,6 @@
 //! Port of Symfony\Component\Translation\Exception's classes that the
-//! ported files throw: InvalidResourceException, NotFoundResourceException,
-//! InvalidArgumentException, LogicException and RuntimeException, as
+//! ported files throw: `InvalidResourceException`, `NotFoundResourceException`,
+//! `InvalidArgumentException`, `LogicException` and `RuntimeException`, as
 //! classes of the crate's one [`Error`]. PHP's own errors that the loader
 //! lets through (`ValueError`, `TypeError`) are classes too, and so is
 //! symfony/config's exception a loader wraps (the previous exception).
@@ -23,7 +23,7 @@ pub enum Class {
     /// `Exception\InvalidArgumentException` (extends
     /// `\InvalidArgumentException`).
     InvalidArgument,
-    /// PHP native \InvalidArgumentException (invalid catalogue batch).
+    /// PHP native \`InvalidArgumentException` (invalid catalogue batch).
     NativeInvalidArgument,
     /// `Exception\LogicException` (extends `\LogicException`).
     Logic,
@@ -40,7 +40,7 @@ pub enum Class {
     /// would (a `phar://` archive): no PHP class, stated in README.md.
     Refused,
     /// An exception of symfony/config that upstream lets through
-    /// unwrapped (Filesystem's IOException when a file cannot be read).
+    /// unwrapped (Filesystem's `IOException` when a file cannot be read).
     Config(Box<symfony_config::Error>),
 }
 
@@ -96,7 +96,7 @@ impl Class {
 #[derive(Clone, Debug, PartialEq)]
 pub enum Previous {
     Translation(Box<Error>),
-    /// symfony/config's XmlUtils exceptions, which the XLIFF loader wraps.
+    /// symfony/config's `XmlUtils` exceptions, which the XLIFF loader wraps.
     Config(symfony_config::Error),
 }
 

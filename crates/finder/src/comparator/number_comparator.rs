@@ -1,7 +1,7 @@
 //! Port of Symfony\Component\Finder\Comparator\NumberComparator.php.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
-//! The magnitudes follow Richard Clamp's Perl Number::Compare.
+//! The magnitudes follow Richard Clamp's Perl `Number::Compare`.
 //!
 //! Upstream: symfony/finder Comparator/NumberComparator.php
 

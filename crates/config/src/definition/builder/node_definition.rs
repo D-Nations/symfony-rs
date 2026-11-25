@@ -13,7 +13,7 @@
 //!
 //! `getNode()` creates nodes with the definition's runtime parent, which
 //! upstream sets to the node being built (`$child->parent = $node`). A
-//! definition still parented by a builder fails there with the TypeError
+//! definition still parented by a builder fails there with the `TypeError`
 //! of the node's constructor, as in PHP, without PHP's ", called in
 //! <file> on line <n>".
 //!
@@ -71,7 +71,7 @@ pub enum Builtin {
 }
 
 impl Builtin {
-    /// In NodeBuilder's mapping order.
+    /// In `NodeBuilder`'s mapping order.
     pub const ALL: [Self; 8] = [
         Self::Array,
         Self::Variable,
@@ -103,7 +103,7 @@ impl Builtin {
         }
     }
 
-    /// The type NodeBuilder maps to it.
+    /// The type `NodeBuilder` maps to it.
     pub fn type_name(self) -> &'static str {
         match self {
             Self::Array => "array",
@@ -148,7 +148,7 @@ impl Builtin {
     }
 }
 
-/// A class NodeBuilder can map a type to (`setNodeClass($type, $class)`).
+/// A class `NodeBuilder` can map a type to (`setNodeClass($type, $class)`).
 #[derive(Clone)]
 pub enum NodeClass {
     /// A class name. It names one of the [`Builtin`]s (in any case, with
@@ -160,7 +160,7 @@ pub enum NodeClass {
         class: Arc<str>,
         of: Builtin,
     },
-    /// A PHP class that extends NodeDefinition with its own
+    /// A PHP class that extends `NodeDefinition` with its own
     /// `createNode()`.
     Custom(Arc<dyn CustomDefinition>),
 }
@@ -192,9 +192,10 @@ impl NodeClass {
     /// `new $class($name)`.
     pub(crate) fn instantiate(&self, name: Option<PhpString>) -> Result<Def, Error> {
         let class = match self {
-            Self::Name(n) => match Builtin::from_class(n) {
-                Some(b) => DefClass::Builtin(b),
-                None => {
+            Self::Name(n) => {
+                if let Some(b) = Builtin::from_class(n) {
+                    DefClass::Builtin(b)
+                } else {
                     let key = php::class_name_key(n);
                     if let Some(abstract_class) = [NODE_DEFINITION, NUMERIC_NODE_DEFINITION]
                         .into_iter()
@@ -210,7 +211,7 @@ impl NodeClass {
                         format!("Class \"{}\" not found", n.strip_prefix('\\').unwrap_or(n)),
                     ));
                 }
-            },
+            }
             Self::Builtin(b) => DefClass::Builtin(*b),
             Self::Subclass { class, of } => DefClass::Subclass {
                 class: class.clone(),
@@ -240,10 +241,10 @@ impl From<Builtin> for NodeClass {
     }
 }
 
-/// Whether an override replaced NodeDefinition's own method.
+/// Whether an override replaced `NodeDefinition`'s own method.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Call {
-    /// Run NodeDefinition's method (`parent::method()`).
+    /// Run `NodeDefinition`'s method (`parent::method()`).
     Parent,
     /// The override did all there is to do.
     Done,
@@ -254,20 +255,20 @@ pub enum Call {
 #[derive(Debug, Clone)]
 pub enum Parent {
     None,
-    /// A node definition (an ArrayNodeDefinition).
+    /// A node definition (an `ArrayNodeDefinition`).
     Definition(NodeDefinition),
-    /// Another object: a NodeBuilder or a TreeBuilder, by class.
+    /// Another object: a `NodeBuilder` or a `TreeBuilder`, by class.
     Object(String),
 }
 
-/// A PHP class that extends NodeDefinition directly: its `createNode()`,
+/// A PHP class that extends `NodeDefinition` directly: its `createNode()`,
 /// and the public methods it overrides.
 pub trait CustomDefinition: Send + Sync {
     /// `static::class`.
     fn class(&self) -> &str;
 
-    /// Classes and interfaces it is an instance of, besides NodeDefinition
-    /// and NodeParentInterface.
+    /// Classes and interfaces it is an instance of, besides `NodeDefinition`
+    /// and `NodeParentInterface`.
     fn ancestors(&self) -> Vec<String> {
         Vec::new()
     }
@@ -342,7 +343,7 @@ pub mod class {
         /// The class a return type names.
         const CLASS: &'static str;
         /// Whether a definition of this built-in class (or of a subclass
-        /// of it; `None` for a CustomDefinition) is an instance.
+        /// of it; `None` for a `CustomDefinition`) is an instance.
         fn accepts(builtin: Option<Builtin>) -> bool;
     }
 
@@ -351,10 +352,10 @@ pub mod class {
         const BUILTIN: Builtin;
     }
 
-    /// IntegerNodeDefinition and FloatNodeDefinition.
+    /// `IntegerNodeDefinition` and `FloatNodeDefinition`.
     pub trait Numeric: Marker {}
 
-    /// NodeDefinition: any definition.
+    /// `NodeDefinition`: any definition.
     pub enum Any {}
     pub enum Array {}
     pub enum Variable {}
@@ -472,7 +473,7 @@ impl DefClass {
 pub(crate) enum RuntimeParent {
     None,
     Node(Node),
-    /// A builder or a definition, by class: not a NodeInterface.
+    /// A builder or a definition, by class: not a `NodeInterface`.
     Object(String),
 }
 
@@ -486,14 +487,14 @@ impl RuntimeParent {
     }
 }
 
-/// NumericNodeDefinition's properties.
+/// `NumericNodeDefinition`'s properties.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub(crate) struct NumericState {
     pub(crate) min: Option<Number>,
     pub(crate) max: Option<Number>,
 }
 
-/// EnumNodeDefinition's properties.
+/// `EnumNodeDefinition`'s properties.
 #[derive(Clone, Default)]
 pub(crate) struct EnumState {
     pub(crate) values: Option<Vec<Value>>,
@@ -501,7 +502,7 @@ pub(crate) struct EnumState {
     pub(crate) enum_fqcn: Option<(String, Registry)>,
 }
 
-/// NodeDefinition's properties, and those of its subclasses.
+/// `NodeDefinition`'s properties, and those of its subclasses.
 pub(crate) struct State {
     pub(crate) class: DefClass,
     pub(crate) name: Option<PhpString>,
@@ -521,7 +522,7 @@ pub(crate) struct State {
     pub(crate) false_equivalent: Value,
     pub(crate) path_separator: PhpString,
     pub(crate) attributes: PhpArray,
-    /// ArrayNodeDefinition's properties.
+    /// `ArrayNodeDefinition`'s properties.
     pub(crate) array: Option<Box<ArrayState>>,
     pub(crate) numeric: NumericState,
     pub(crate) enumeration: EnumState,
@@ -532,7 +533,7 @@ pub(crate) struct State {
 pub(crate) struct Def(Arc<Mutex<State>>);
 
 impl Def {
-    /// `new $class($name)`: NodeDefinition's constructor and those of the
+    /// `new $class($name)`: `NodeDefinition`'s constructor and those of the
     /// subclasses that set equivalent values.
     pub(crate) fn new(class: DefClass, name: Option<PhpString>) -> Self {
         let builtin = class.builtin();
@@ -630,7 +631,7 @@ impl Def {
     }
 
     /// `setPathSeparator($separator)`: on the children first, for a
-    /// ParentNodeDefinitionInterface.
+    /// `ParentNodeDefinitionInterface`.
     pub(crate) fn set_path_separator(&self, separator: &[u8]) {
         if let Some(c) = self.custom()
             && c.set_path_separator(&NodeDefinition::from_def(self.clone(), ()), separator)
@@ -652,7 +653,7 @@ impl Def {
         self.write(|s| s.path_separator = PhpString::from(separator));
     }
 
-    /// The runtime parent as `?NodeInterface`, or the TypeError of
+    /// The runtime parent as `?NodeInterface`, or the `TypeError` of
     /// `constructor` (the node class whose constructor declares
     /// `$parent`).
     pub(crate) fn parent_node(&self, constructor: &str) -> Result<Option<Node>, Error> {
@@ -770,7 +771,7 @@ fn closures(exprs: &[Expr]) -> Vec<crate::definition::Closure> {
         .collect()
 }
 
-/// A handle that can be a definition's parent (NodeParentInterface).
+/// A handle that can be a definition's parent (`NodeParentInterface`).
 pub trait ParentHandle: Clone {
     /// What the parent is, as [`Parent`].
     fn as_parent(&self) -> Parent;
@@ -795,7 +796,7 @@ pub struct Definition<C, P = ()> {
     class: PhantomData<fn() -> C>,
 }
 
-/// NodeDefinition: a definition of any class.
+/// `NodeDefinition`: a definition of any class.
 pub type NodeDefinition<P = ()> = Definition<class::Any, P>;
 
 impl<C, P: Clone> Clone for Definition<C, P> {
@@ -921,8 +922,8 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
         self.def.get_node(force_root_node)
     }
 
-    /// `defaultValue($value)`. ArrayNodeDefinition and
-    /// BooleanNodeDefinition first set the null equivalent from it.
+    /// `defaultValue($value)`. `ArrayNodeDefinition` and
+    /// `BooleanNodeDefinition` first set the null equivalent from it.
     pub fn default_value(&self, value: impl Into<DefaultValue>) -> Result<Self, Error> {
         let value = value.into();
         let is_null = matches!(&value, DefaultValue::Value(Value::Null));
@@ -1028,8 +1029,8 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
         ExprBuilder::new(expr, self.clone())
     }
 
-    /// `cannotBeEmpty()`, which BooleanNodeDefinition and
-    /// NumericNodeDefinition refuse.
+    /// `cannotBeEmpty()`, which `BooleanNodeDefinition` and
+    /// `NumericNodeDefinition` refuse.
     pub fn cannot_be_empty(&self) -> Result<Self, Error> {
         match self.def.builtin() {
             Some(Builtin::Boolean) => Err(invalid_definition(
@@ -1058,7 +1059,7 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
         self.def.write(|s| {
             s.merge
                 .get_or_insert_with(Default::default)
-                .deny_overwrite(deny)
+                .deny_overwrite(deny);
         });
         self.clone()
     }
@@ -1106,7 +1107,7 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
         self.def.parent_node(constructor)
     }
 
-    /// The same definition as a NodeDefinition.
+    /// The same definition as a `NodeDefinition`.
     pub fn erase(&self) -> NodeDefinition<P> {
         Definition::from_def(self.def.clone(), self.parent.clone())
     }
@@ -1118,7 +1119,7 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
     }
 
     /// The same definition as the return type `D` of `method`, or PHP's
-    /// TypeError for it.
+    /// `TypeError` for it.
     pub(crate) fn returned<D: class::Marker>(
         &self,
         method: &str,
@@ -1194,7 +1195,7 @@ impl Def {
         };
         self.read(|s| {
             let common = match name {
-                "name" => Some(s.name.as_ref().map(bytes).unwrap_or(Value::Null)),
+                "name" => Some(s.name.as_ref().map_or(Value::Null, bytes)),
                 "default" => Some(Value::Bool(s.default)),
                 "required" => Some(Value::Bool(s.required)),
                 "allowEmptyValue" => Some(Value::Bool(s.allow_empty_value)),
@@ -1277,7 +1278,7 @@ pub(crate) fn defs_equal(a: &Def, b: &Def) -> bool {
             x.name == y.name
                 && parents_equal(&x.parent, &y.parent)
                 && x.default == y.default
-                && default_values_equal(&x.default_value, &y.default_value)
+                && default_values_equal(x.default_value.as_ref(), y.default_value.as_ref())
                 && x.required == y.required
                 && x.deprecation == y.deprecation
                 && x.allow_empty_value == y.allow_empty_value
@@ -1315,7 +1316,7 @@ fn parents_equal(a: &RuntimeParent, b: &RuntimeParent) -> bool {
     }
 }
 
-fn default_values_equal(a: &Option<DefaultValue>, b: &Option<DefaultValue>) -> bool {
+fn default_values_equal(a: Option<&DefaultValue>, b: Option<&DefaultValue>) -> bool {
     match (a, b) {
         (None, None) => true,
         (Some(DefaultValue::Value(x)), Some(DefaultValue::Value(y))) => x.identical(y),

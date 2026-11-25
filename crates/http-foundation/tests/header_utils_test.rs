@@ -1,7 +1,7 @@
 //! HeaderUtilsTest.php at symfony/http-foundation
 //! 30fa3efe6e736b0d06f5331cc6abe813582c0a26. Names and assertions are
 //! PHPUnit's; a provider's cases run in a loop. `http_build_query()` is
-//! php_value::url's.
+//! `php_value::url`'s.
 //!
 //! Upstream: symfony/http-foundation Tests/HeaderUtilsTest.php
 #![allow(non_snake_case)]
@@ -335,8 +335,8 @@ fn testMakeDispositionFail() {
 }
 
 /// Not upstream here: v8.1.11's `/D` anchor, the fix that
-/// BinaryFileResponseTest's `testSetContentDispositionRejectsTrailingNewlineInFallback`
-/// pins through BinaryFileResponse (not ported). v8.1.10 accepted a
+/// `BinaryFileResponseTest`'s `testSetContentDispositionRejectsTrailingNewlineInFallback`
+/// pins through `BinaryFileResponse` (not ported). v8.1.10 accepted a
 /// fallback ending in one newline and put it into the header.
 #[test]
 fn make_disposition_rejects_a_fallback_ending_in_a_newline() {
@@ -416,7 +416,7 @@ fn testParseQueryIgnoreBrackets() -> TestResult {
     Ok(())
 }
 
-/// PHP's warning is not reproduced at all (php_value::vars::parse_str()),
+/// PHP's warning is not reproduced at all (`php_value::vars::parse_str()`),
 /// so only the result is compared.
 #[test]
 fn testParseQueryDoesNotWarnAboutKeysNestedBeyondMaxInputNestingLevel() -> TestResult {

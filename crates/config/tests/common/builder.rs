@@ -1,4 +1,4 @@
-//! Upstream's Tests/Fixtures for the Builder tests: BarNode (an ArrayNode
+//! Upstream's Tests/Fixtures for the Builder tests: `BarNode` (an `ArrayNode`
 //! subclass), Builder\BarNodeDefinition, Builder\NodeBuilder (maps "bar"
 //! and "variable" to the fixture classes) and Builder\VariableNodeDefinition.
 //!

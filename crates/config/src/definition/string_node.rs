@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\StringNode.php: a
-//! ScalarNode for strings.
+//! `ScalarNode` for strings.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -32,7 +32,7 @@ impl StringNode {
     }
 }
 
-/// StringNode's `validateType()`.
+/// `StringNode`'s `validateType()`.
 pub(crate) fn validate_type(node: &Node, value: &Value) -> Result<(), Error> {
     match value {
         Value::String(_) => Ok(()),

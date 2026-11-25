@@ -1,5 +1,5 @@
-//! RequestContext against PHP 8.4.27's answers recorded by
-//! oracle/recorders/routing_request_context.php (`scripts/record.sh
+//! `RequestContext` against PHP 8.4.27's answers recorded by
+//! `oracle/recorders/routing_request_context.php` (`scripts/record.sh
 //! routing-request-context`): `fromUri()` on 3,000 generated URIs with
 //! varied default hosts, schemes and ports, and `setBaseUrl()` on 10 base
 //! URLs. Contexts compare field by field with `===`.

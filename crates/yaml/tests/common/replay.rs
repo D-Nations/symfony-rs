@@ -69,7 +69,7 @@ pub fn environment() -> Arc<Environment> {
 }
 
 /// Reads a recording. The nesting-depth tests record values nested past
-/// serde_json's default limit.
+/// `serde_json`'s default limit.
 pub fn load(text: &str) -> Json {
     let mut reader = serde_json::Deserializer::from_str(text);
     reader.disable_recursion_limit();
@@ -96,7 +96,7 @@ pub fn localize(bytes: &[u8]) -> Vec<u8> {
 }
 
 /// A recorded value as the Rust port has it: `{tests}` replaced in its
-/// strings, and recorded TaggedValue objects as real ones.
+/// strings, and recorded `TaggedValue` objects as real ones.
 pub fn realize(value: Value) -> Value {
     match value {
         Value::String(s) => Value::String(localize(&s).as_slice().into()),
@@ -226,7 +226,10 @@ fn call(
             let contents = decode(&call["contents"])?;
             std::fs::write(
                 &path,
-                contents.as_string().map(|s| s.as_bytes()).unwrap_or(b""),
+                contents
+                    .as_string()
+                    .map(php_value::PhpString::as_bytes)
+                    .unwrap_or(b""),
             )?;
             let local = path.to_string_lossy().replace('\\', "/");
             let result = parser()?.parse_file(&local, flags());

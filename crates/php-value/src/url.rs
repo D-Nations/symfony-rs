@@ -59,19 +59,16 @@ fn decode(text: &[u8], plus_is_space: bool) -> Vec<u8> {
             (b'%', Some(&[high, low])) => hex(high).zip(hex(low)).map(|(h, l)| h << 4 | l),
             _ => None,
         };
-        match escaped {
-            Some(decoded) => {
-                out.push(decoded);
-                at += 3;
-            }
-            None => {
-                out.push(if plus_is_space && byte == b'+' {
-                    b' '
-                } else {
-                    byte
-                });
-                at += 1;
-            }
+        if let Some(decoded) = escaped {
+            out.push(decoded);
+            at += 3;
+        } else {
+            out.push(if plus_is_space && byte == b'+' {
+                b' '
+            } else {
+                byte
+            });
+            at += 1;
         }
     }
     out
@@ -103,7 +100,7 @@ pub fn http_build_query(data: &PhpArray, separator: &[u8]) -> Option<Vec<u8>> {
 /// `%5D`); `null` entries and empty arrays give no pair, `true` is `1`,
 /// `false` is `0`, a float is its `(string)` form (`1.0E+20`, `NAN`).
 /// `None` for an object entry, which this port does not reproduce. Checked
-/// against PHP 8.4.27 (oracle/recorders/php_value_http_build_query.php).
+/// against PHP 8.4.27 (`oracle/recorders/php_value_http_build_query.php`).
 pub fn http_build_query_with(
     data: &PhpArray,
     separator: &[u8],
@@ -352,7 +349,7 @@ fn clean(v: &mut Option<Vec<u8>>) {
 
 /// `parse_url($url)`: `None` where PHP returns `false`. Written from the
 /// PHP manual and 12,119 answers recorded from PHP 8.4.27
-/// (tests/data/parse_url.json), which fixed the rules the manual leaves
+/// (`tests/data/parse_url.json`), which fixed the rules the manual leaves
 /// open: a scheme is `[A-Za-z0-9+.-]+` before `:`, unless one to five
 /// digits and then the end or `/` follow, which makes it `host:port`; in a
 /// string without a scheme, a colon before any `?` or `#` followed by such

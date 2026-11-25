@@ -1,8 +1,14 @@
-//! DotenvDumpCommandTest, with upstream's names and assertions. Each test
+//! `DotenvDumpCommandTest`, with upstream's names and assertions. Each test
 //! works in a directory of its own (upstream's share theirs, one at a
 //! time), and `require` of the dumped file is `local_php::read()`.
 //!
 //! Upstream: symfony/dotenv Tests/Command/DotenvDumpCommandTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::sync::{Arc, Mutex};

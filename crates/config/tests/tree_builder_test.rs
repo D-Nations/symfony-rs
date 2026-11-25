@@ -27,8 +27,7 @@ fn child(children: &[(Key, Node)], name: &str) -> Node {
     children
         .iter()
         .find(|(k, _)| *k == Key::from(name))
-        .map(|(_, n)| n.clone())
-        .unwrap_or_else(|| panic!("no child {name}"))
+        .map_or_else(|| panic!("no child {name}"), |(_, n)| n.clone())
 }
 
 fn has_key(children: &[(Key, Node)], name: &str) -> bool {

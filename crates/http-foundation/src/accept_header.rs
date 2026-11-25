@@ -330,7 +330,7 @@ fn media_params(item: &AcceptHeaderItem) -> PhpArray {
     for (name, value) in item.attributes.iter() {
         let name = match name {
             Key::Str(s) => Key::Str(PhpString::from(s.as_bytes().to_ascii_lowercase())),
-            int => int.clone(),
+            int @ Key::Int(_) => int.clone(),
         };
         params.insert(name, value.clone());
     }
@@ -438,7 +438,7 @@ fn specificity(item: &AcceptHeaderItem, query: &AcceptHeaderItem) -> i64 {
     let query_value = query.value.to_ascii_lowercase();
     let param_count = media_params(item).len() as i64;
     if !query_value.contains(&b'/') && !range_value.contains(&b'/') {
-        return if range_value != b"*" { 2000 } else { 1000 } + param_count;
+        return if range_value == b"*" { 1000 } else { 2000 } + param_count;
     }
     let (range_type, range_subtype) = type_and_subtype(&range_value);
     let base = if range_subtype != b"*" {

@@ -272,7 +272,7 @@ impl<T: Clone> ExprBuilder<T> {
         self.set_then(Arc::new(|_| Ok(Value::Array(PhpArray::new()))))
     }
 
-    /// `thenInvalid($message)`: an InvalidArgumentException whose message
+    /// `thenInvalid($message)`: an `InvalidArgumentException` whose message
     /// is `sprintf($message, json_encode($v))`.
     pub fn then_invalid(&self, message: impl AsRef<[u8]>) -> Self {
         let message = message.as_ref().to_vec();
@@ -286,7 +286,7 @@ impl<T: Clone> ExprBuilder<T> {
         }))
     }
 
-    /// `thenUnset()`: an UnsetKeyException removes the key.
+    /// `thenUnset()`: an `UnsetKeyException` removes the key.
     pub fn then_unset(&self) -> Self {
         self.set_then(Arc::new(|_| {
             Err(Error::new(Class::UnsetKey, "Unsetting key."))

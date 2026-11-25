@@ -1,4 +1,4 @@
-//! TargetOperationTest and its seven inherited AbstractOperationTestCase tests.
+//! `TargetOperationTest` and its seven inherited `AbstractOperationTestCase` tests.
 //! Symfony tests copyright (c) Fabien Potencier; distributed under MIT.
 //!
 //! Upstream: symfony/translation Tests/Catalogue/TargetOperationTest.php Tests/Catalogue/AbstractOperationTestCase.php

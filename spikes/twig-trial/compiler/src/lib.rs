@@ -84,7 +84,7 @@ impl Callable {
 
 /// The compile-time view of a Twig `Environment`: the extensions'
 /// functions and filters, and whether the `<twig:...>` pre-lexer of
-/// symfony/ux-twig-component runs (ComponentLexer).
+/// symfony/ux-twig-component runs (`ComponentLexer`).
 #[derive(Debug, Clone, Default)]
 pub struct Environment {
     pub functions: Vec<Callable>,
@@ -102,8 +102,8 @@ impl Environment {
     }
 }
 
-/// FileExtensionEscapingStrategy::guess(), the `autoescape: name`
-/// default of TwigBundle; `None` means no escaping (`.txt`).
+/// `FileExtensionEscapingStrategy::guess()`, the `autoescape: name`
+/// default of `TwigBundle`; `None` means no escaping (`.txt`).
 pub fn escaping_strategy(name: &str) -> Option<&'static str> {
     if name.ends_with('/') || name.ends_with('\\') {
         return Some("html");

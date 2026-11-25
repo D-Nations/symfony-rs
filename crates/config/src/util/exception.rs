@@ -3,7 +3,7 @@
 //!
 //! Both are classes of the crate's one [`Error`]: [`Class::XmlParsing`]
 //! (extends `\InvalidArgumentException`, so `is_a(&Class::InvalidArgument)`
-//! holds) and [`Class::InvalidXml`] (extends XmlParsingException), for when
+//! holds) and [`Class::InvalidXml`] (extends `XmlParsingException`), for when
 //! XML parsed with a schema file or a callable fails without libxml errors
 //! of its own.
 //!

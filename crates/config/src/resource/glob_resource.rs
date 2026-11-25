@@ -243,7 +243,7 @@ impl GlobResource {
             } else {
                 b"(/|$)"
             };
-            regex.splice(at..at + 1, with.iter().copied());
+            regex.splice(at..=at, with.iter().copied());
         }
 
         let prefix_len = prefix.len();
@@ -441,13 +441,12 @@ impl ResourceInterface for GlobResource {
     }
 
     fn serialize(&self) -> Result<PhpArray, Error> {
-        let hash = match self.hash.get() {
-            Some(h) => h.clone(),
-            None => {
-                let h = self.compute_hash()?;
-                let _ = self.hash.set(h.clone());
-                h
-            }
+        let hash = if let Some(h) = self.hash.get() {
+            h.clone()
+        } else {
+            let h = self.compute_hash()?;
+            let _ = self.hash.set(h.clone());
+            h
         };
         Ok(php_array![
             "prefix" => Value::string(self.prefix.clone()),
@@ -550,7 +549,7 @@ fn expand_glob(pattern: &[u8]) -> Vec<Vec<u8>> {
             }
         }
 
-        paths = patterns.clone();
+        paths.clone_from(&patterns);
         i += 2;
     }
 

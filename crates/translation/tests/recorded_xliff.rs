@@ -1,6 +1,6 @@
-//! Replays tests/data/xliff.json, recorded from XliffFileLoader and
-//! XliffUtils on PHP 8.4.27 and libxml 2.9.14 (`scripts/record.sh
-//! translation-xliff`, oracle/recorders/translation_xliff.php): `load()` of
+//! Replays tests/data/xliff.json, recorded from `XliffFileLoader` and
+//! `XliffUtils` on PHP 8.4.27 and libxml 2.9.14 (`scripts/record.sh
+//! translation-xliff`, `oracle/recorders/translation_xliff.php`): `load()` of
 //! upstream's fixtures and of written documents, as files and strings, and
 //! of resources that are not XML; `getFileUrl()`; `getVersionNumber()`;
 //! `validateSchema()` on a document declaring an external entity.
@@ -8,7 +8,7 @@
 //! For each load: the catalogue's locale, messages, metadata and catalogue
 //! metadata, or the exception chain (class, message, code), and
 //! `libxml_use_internal_errors()` afterwards. Resources are compared as
-//! their `__toString()` (the FileResource of a file).
+//! their `__toString()` (the `FileResource` of a file).
 //!
 //! The recorder wrote its files under /tmp/xliff and ran there; this test
 //! writes the same files to a temporary directory, runs there, and reads
