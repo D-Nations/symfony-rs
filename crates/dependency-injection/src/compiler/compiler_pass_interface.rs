@@ -24,33 +24,41 @@ pub trait CompilerPassInterface: Any + Send {
     fn process(&mut self, container: &mut ContainerBuilder) -> Result<()>;
 }
 
-/// A shared handle to a compiler pass.
+/// A shared handle to a compiler pass. Its class name is read once, so
+/// a running pass (whose handle is locked) can still be named.
 #[derive(Clone)]
-pub struct Pass(Arc<Mutex<dyn CompilerPassInterface>>);
+pub struct Pass {
+    pass: Arc<Mutex<dyn CompilerPassInterface>>,
+    class: Arc<str>,
+}
 
 impl fmt::Debug for Pass {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "{}#{:p}",
-            self.class(),
-            Arc::as_ptr(&self.0).cast::<()>()
+            self.class,
+            Arc::as_ptr(&self.pass).cast::<()>()
         )
     }
 }
 
 impl Pass {
     pub fn new(pass: impl CompilerPassInterface) -> Self {
-        Self(Arc::new(Mutex::new(pass)))
+        let class = Arc::from(pass.class());
+        Self {
+            pass: Arc::new(Mutex::new(pass)),
+            class,
+        }
     }
 
     fn lock(&self) -> MutexGuard<'_, dyn CompilerPassInterface + 'static> {
-        self.0.lock().unwrap_or_else(PoisonError::into_inner)
+        self.pass.lock().unwrap_or_else(PoisonError::into_inner)
     }
 
     /// `$pass::class`.
     pub fn class(&self) -> String {
-        self.lock().class().to_string()
+        self.class.to_string()
     }
 
     /// `$pass->process($container)`.
@@ -60,7 +68,7 @@ impl Pass {
 
     /// `$a === $b`.
     pub fn ptr_eq(&self, other: &Self) -> bool {
-        std::ptr::addr_eq(Arc::as_ptr(&self.0), Arc::as_ptr(&other.0))
+        std::ptr::addr_eq(Arc::as_ptr(&self.pass), Arc::as_ptr(&other.pass))
     }
 
     /// Calls `f` with the pass, when it is a `T` (`instanceof`).
