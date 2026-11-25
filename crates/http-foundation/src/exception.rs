@@ -1,5 +1,7 @@
 //! Port of Symfony\Component\HttpFoundation\Exception\BadRequestException.php,
-//! UnexpectedValueException.php and RequestExceptionInterface.php, with
+//! UnexpectedValueException.php, RequestExceptionInterface.php,
+//! SuspiciousOperationException.php, ConflictingHeadersException.php and
+//! JsonException.php, with
 //! the PHP exceptions the bags throw (`\UnexpectedValueException`,
 //! `\InvalidArgumentException`) and PHP's `\Error` for an enum class that
 //! has no `from()`; and the File exceptions (`File/Exception/*.php`)
@@ -12,7 +14,7 @@
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
-//! Upstream: symfony/http-foundation Exception/BadRequestException.php Exception/UnexpectedValueException.php Exception/RequestExceptionInterface.php File/Exception/FileException.php File/Exception/FileNotFoundException.php File/Exception/AccessDeniedException.php File/Exception/CannotWriteFileException.php File/Exception/ExtensionFileException.php File/Exception/FormSizeFileException.php File/Exception/IniSizeFileException.php File/Exception/NoFileException.php File/Exception/NoTmpDirFileException.php File/Exception/PartialFileException.php File/Exception/UnexpectedTypeException.php File/Exception/UploadException.php
+//! Upstream: symfony/http-foundation Exception/BadRequestException.php Exception/UnexpectedValueException.php Exception/RequestExceptionInterface.php Exception/SuspiciousOperationException.php Exception/ConflictingHeadersException.php Exception/JsonException.php File/Exception/FileException.php File/Exception/FileNotFoundException.php File/Exception/AccessDeniedException.php File/Exception/CannotWriteFileException.php File/Exception/ExtensionFileException.php File/Exception/FormSizeFileException.php File/Exception/IniSizeFileException.php File/Exception/NoFileException.php File/Exception/NoTmpDirFileException.php File/Exception/PartialFileException.php File/Exception/UnexpectedTypeException.php File/Exception/UploadException.php
 
 use php_value::PhpString;
 
@@ -24,6 +26,19 @@ pub enum Class {
     BadRequest,
     /// `Symfony\Component\HttpFoundation\Exception\UnexpectedValueException`.
     UnexpectedValue,
+    /// `Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException`,
+    /// a `RequestExceptionInterface` (`HttpKernel` answers it with 400).
+    SuspiciousOperation,
+    /// `Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException`,
+    /// a `RequestExceptionInterface`.
+    ConflictingHeaders,
+    /// `Symfony\Component\HttpFoundation\Exception\JsonException`, a
+    /// `RequestExceptionInterface`.
+    Json,
+    /// PHP's `\JsonException` (`json_decode()` with `JSON_THROW_ON_ERROR`).
+    PhpJson,
+    /// PHP's `\LogicException`.
+    PhpLogic,
     /// PHP's `\UnexpectedValueException`.
     PhpUnexpectedValue,
     /// PHP's `\InvalidArgumentException`.
@@ -81,6 +96,15 @@ impl Class {
             Self::UnexpectedValue => {
                 "Symfony\\Component\\HttpFoundation\\Exception\\UnexpectedValueException"
             }
+            Self::SuspiciousOperation => {
+                "Symfony\\Component\\HttpFoundation\\Exception\\SuspiciousOperationException"
+            }
+            Self::ConflictingHeaders => {
+                "Symfony\\Component\\HttpFoundation\\Exception\\ConflictingHeadersException"
+            }
+            Self::Json => "Symfony\\Component\\HttpFoundation\\Exception\\JsonException",
+            Self::PhpJson => "JsonException",
+            Self::PhpLogic => "LogicException",
             Self::PhpUnexpectedValue => "UnexpectedValueException",
             Self::PhpInvalidArgument => "InvalidArgumentException",
             Self::PhpRuntime => "RuntimeException",
@@ -145,6 +169,35 @@ impl Class {
                 "Exception",
                 "Throwable",
             ],
+            Self::SuspiciousOperation => &[
+                "Symfony\\Component\\HttpFoundation\\Exception\\SuspiciousOperationException",
+                "Symfony\\Component\\HttpFoundation\\Exception\\RequestExceptionInterface",
+                "Symfony\\Component\\HttpFoundation\\Exception\\UnexpectedValueException",
+                "UnexpectedValueException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::ConflictingHeaders => &[
+                "Symfony\\Component\\HttpFoundation\\Exception\\ConflictingHeadersException",
+                "Symfony\\Component\\HttpFoundation\\Exception\\RequestExceptionInterface",
+                "Symfony\\Component\\HttpFoundation\\Exception\\UnexpectedValueException",
+                "UnexpectedValueException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::Json => &[
+                "Symfony\\Component\\HttpFoundation\\Exception\\JsonException",
+                "Symfony\\Component\\HttpFoundation\\Exception\\RequestExceptionInterface",
+                "Symfony\\Component\\HttpFoundation\\Exception\\UnexpectedValueException",
+                "UnexpectedValueException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::PhpJson => &["JsonException", "Exception", "Throwable"],
+            Self::PhpLogic => &["LogicException", "Exception", "Throwable"],
             Self::PhpUnexpectedValue => &[
                 "UnexpectedValueException",
                 "RuntimeException",
@@ -276,6 +329,8 @@ impl Class {
 pub struct Error {
     class: Class,
     message: PhpString,
+    code: i64,
+    previous: Option<Box<Error>>,
 }
 
 impl Error {
@@ -283,7 +338,39 @@ impl Error {
         Self {
             class,
             message: message.into(),
+            code: 0,
+            previous: None,
         }
+    }
+
+    /// `new $class($message, $code, $previous)`.
+    pub fn with_previous(
+        class: Class,
+        message: impl Into<PhpString>,
+        code: i64,
+        previous: Error,
+    ) -> Self {
+        Self {
+            code,
+            previous: Some(Box::new(previous)),
+            ..Self::new(class, message)
+        }
+    }
+
+    /// The same error with a code, as `new $class($message, $code)`.
+    #[must_use]
+    pub fn with_code(self, code: i64) -> Self {
+        Self { code, ..self }
+    }
+
+    /// `getCode()`.
+    pub fn code(&self) -> i64 {
+        self.code
+    }
+
+    /// `getPrevious()`.
+    pub fn previous(&self) -> Option<&Error> {
+        self.previous.as_deref()
     }
 
     pub fn class(&self) -> Class {

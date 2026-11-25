@@ -10,6 +10,7 @@ description = "A tested subset of Symfony HttpFoundation and PHP request semanti
 axum = "0.8.9"
 php-pcre = { path = "../php-pcre" }
 php-value = { path = "../php-value" }
+symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 symfony-filesystem = { path = "../filesystem" }
 symfony-finder = { path = "../finder" }
 symfony-mime = { path = "../mime" }

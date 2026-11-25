@@ -34,6 +34,7 @@
 #   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
 #   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag,ip_utils,accept_header}.json, crates/php-value/tests/data/dates.json
 #   scripts/record.sh http-foundation-files crates/http-foundation/tests/data/files.json (UploadedFile, FileBag)
+#   scripts/record.sh http-foundation-request crates/http-foundation/tests/data/request.json (Request)
 #   scripts/record.sh mime-fileinfo crates/mime/tests/data/fileinfo.json (FileinfoMimeTypeGuesser, needs upstream/)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")
@@ -219,6 +220,16 @@ php_value_decode() {
     python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "json_decode() cases")' "$tmp"
     mv "$tmp" "$out"
     echo "json_decode() vectors written to $out"
+}
+
+http_foundation_request() {
+    local out=crates/http-foundation/tests/data/request.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/http_foundation_request.php > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d["cases"]), "Request cases")' "$tmp"
+    mv "$tmp" "$out"
+    echo "Request vectors written to $out"
 }
 
 yaml_unreadable() {
@@ -631,9 +642,10 @@ case "${1:-}" in
     php-dom-schema) php_dom_schema ;;
     http-foundation) http_foundation ;;
     http-foundation-files) http_foundation_files ;;
+    http-foundation-request) http_foundation_request ;;
     mime-fileinfo) mime_fileinfo ;;
     http-foundation-releases) http_foundation_releases ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; php_value_decode; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|php-value-decode|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; php_value_decode; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; http_foundation_request; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|php-value-decode|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|http-foundation-request|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
 esac
