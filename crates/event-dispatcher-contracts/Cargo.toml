@@ -7,3 +7,6 @@ publish = false
 description = "Port of symfony/event-dispatcher-contracts: the base Event and the dispatch interface"
 
 [dependencies]
+
+[lints]
+workspace = true

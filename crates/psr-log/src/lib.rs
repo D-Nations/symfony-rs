@@ -3,7 +3,7 @@
 //! trait's provided methods.
 //!
 //! PSR-3's `$level` is any value and an unknown one throws
-//! InvalidArgumentException; here it is the closed `LogLevel` enum, so that
+//! `InvalidArgumentException`; here it is the closed `LogLevel` enum, so that
 //! error cannot occur. `$context` is an ordered list of named values; the
 //! `exception` key holds a `Throwable`, as PSR-3 specifies.
 //!

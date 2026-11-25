@@ -3,6 +3,12 @@
 //! Additional tests pin priority, propagation and explicit Rust error boundaries.
 //!
 //! Upstream: symfony/http-kernel Tests/HttpKernelTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use axum::{
@@ -281,12 +287,12 @@ enum Stage {
 
 struct Trace {
     id: &'static str,
-    trace: Arc<Mutex<Vec<String>>>,
+    log: Arc<Mutex<Vec<String>>>,
     stop: Option<Stage>,
 }
 impl Trace {
     fn record(&self, stage: Stage) {
-        self.trace
+        self.log
             .lock()
             .unwrap()
             .push(format!("{stage:?}:{}", self.id));
@@ -307,7 +313,7 @@ impl Listener<String> for Trace {
     }
     fn controller(&self, event: &mut ControllerEvent<'_, String>) -> Result<(), Exception> {
         self.record(Stage::Controller);
-        *event.controller = "replacement".to_owned();
+        "replacement".clone_into(event.controller);
         if matches!(self.stop, Some(Stage::Controller)) {
             event.propagation.stop();
         }
@@ -332,7 +338,7 @@ async fn priority_ties_keep_registration_order_and_controller_replacement_runs()
             priority,
             Trace {
                 id,
-                trace: Arc::clone(&trace),
+                log: Arc::clone(&trace),
                 stop: None,
             },
         );
@@ -387,7 +393,7 @@ async fn stopping_propagation_only_stops_the_current_event() -> TestResult {
             10,
             Trace {
                 id: "first",
-                trace: Arc::clone(&trace),
+                log: Arc::clone(&trace),
                 stop: Some(stage),
             },
         );
@@ -395,7 +401,7 @@ async fn stopping_propagation_only_stops_the_current_event() -> TestResult {
             0,
             Trace {
                 id: "second",
-                trace: Arc::clone(&trace),
+                log: Arc::clone(&trace),
                 stop: None,
             },
         );

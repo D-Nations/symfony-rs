@@ -33,6 +33,29 @@ members = [
 ]
 resolver = "3"
 
+# Lints for every member that sets `[lints] workspace = true`. Members opt in
+# one at a time, once they pass with `-D warnings`; see PLAN.md
+# ("Clippy rule set"). Raise strictness in steps, never as a whole
+# `nursery` or `restriction` group.
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# Pedantic lints that only add noise to a port.
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+# Port rules (AGENTS.md): no panics on external input, no stubs or debug
+# output left behind. Tests may unwrap (clippy.toml).
+unwrap_used = "warn"
+expect_used = "warn"
+todo = "warn"
+unimplemented = "warn"
+dbg_macro = "deny"
+print_stdout = "warn"
+# Converter contract 0.1, section 3: never hold a lock across `.await`.
+await_holding_lock = "deny"
+
 # Keep source locations for normal development without full debug symbols.
 [profile.dev]
 debug = "line-tables-only"
