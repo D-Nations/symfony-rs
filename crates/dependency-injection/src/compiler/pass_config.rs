@@ -18,6 +18,7 @@ use super::check_exception_on_invalid_reference_behavior_pass::CheckExceptionOnI
 use super::check_factory_builder_circular_reference_pass::CheckFactoryBuilderCircularReferencePass;
 use super::check_reference_validity_pass::CheckReferenceValidityPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
+use super::decorator_service_pass::DecoratorServicePass;
 use super::definition_error_exception_pass::DefinitionErrorExceptionPass;
 use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
 use super::remove_abstract_definitions_pass::RemoveAbstractDefinitionsPass;
@@ -170,7 +171,7 @@ impl PassConfig {
                 pending("ResolveBindingsPass"),
                 pending("ServiceLocatorTagPass"),
                 pending("TagDecoratorPass"),
-                pending("DecoratorServicePass"),
+                Pass::new(DecoratorServicePass::new()),
                 Pass::new(CheckDefinitionValidityPass),
                 pending_with("AutowirePass", "false"),
                 pending("ServiceLocatorTagPass"),
