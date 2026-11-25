@@ -53,7 +53,10 @@ fn expected(json: &Json) -> Outcome {
 }
 
 fn thrown(e: &Exception) -> Outcome {
-    Outcome::Throws(e.class().to_owned(), e.message().to_owned())
+    Outcome::Throws(
+        e.class().to_owned(),
+        String::from_utf8_lossy(e.message().as_bytes()).into_owned(),
+    )
 }
 
 fn str_arg(json: &Json) -> &str {

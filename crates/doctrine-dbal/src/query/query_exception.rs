@@ -38,6 +38,15 @@ pub struct QueryException {
 }
 
 impl QueryException {
+    /// An exception of this `kind` with this message, as read back from a
+    /// [`crate::Exception`].
+    pub fn with_kind(kind: QueryExceptionKind, message: impl Into<String>) -> Self {
+        Self {
+            kind,
+            message: message.into(),
+        }
+    }
+
     /// `new QueryException($message)`.
     pub fn new(message: impl Into<String>) -> Self {
         Self {

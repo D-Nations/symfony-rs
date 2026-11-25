@@ -35,6 +35,12 @@ behaviour and checked against vectors recorded in the oracle container
 | `vars::{register, parse_str, top_level_key}`: PHP's input-variable rules (NUL ends a name, leading spaces dropped, `.`/space/unclosed `[` to `_`, `[...]` groups, int keys, `[]` appends, `max_input_nesting_level` 64) and `parse_str()` (`max_input_vars` 1000, stops at a raw NUL byte); PHP's warnings are not reproduced | 254 recorded `parse_str()` inputs (`tests/data/parse_str.json`, oracle/recorders/php_value_parse_str.php); symfony-http-foundation's 160 query, 54 cookie and 274 multipart vectors |
 | `base64::decode()` (non-strict `base64_decode()`: bytes outside the alphabet skipped, trailing bits dropped) | 15 recorded answers |
 | `PhpArray::ksort()`, `array::compare_keys()` (PHP 8's `<=>` on keys) | symfony-http-foundation's header-bag vectors |
+| `datetime::DateTime` (mutable, a handle), `DateTimeImmutable::now()`, `set_timezone()`, `offset()` | doctrine-dbal's date type tests |
+| `date_create::create_from_format()`: `DateTime::createFromFormat()` for `d j m n Y H G i s u v T e O P`, `!`, `\|`, `\\` escapes, separators and spaces; `false` for text left over; other formats refused (`Unsupported`) | 12,036 recorded answers, 42 refused (doctrine-dbal's `tests/data/php.json`, key `create_from_format`, `tests/date_vectors.rs`) |
+| `date_create::date_create()`: `new DateTime($text)` for `""`, `now`, ISO dates with an optional time and zone, and PHP's message for a leading unknown word; other texts refused | 89 recorded answers, 606 refused (same file, key `date_create`) |
+| `date_interval::DateInterval`: `new DateInterval($duration)` for ISO 8601 durations, PHP's "Unknown or bad format" message, `format()` | 1,602 recorded answers, 419 refused (same file, key `date_interval`) |
+| `bcmath::BcNumber`: `new BcMath\Number($num)` (string or int), its `ValueError`/`TypeError`, string form, `scale`, `<=>` | Unit tests from PHP 8.4.27 with bcmath (not in the oracle image) |
+| `numeric::{float_to_int, int_cast, float_cast}`: `(int)` of a float (modular wrap past the int range) and of any value, `(float)` of any value | doctrine-dbal's integer and float type tests |
 | `object::Closure` (a `\Closure` over a Rust function), `StringableObject`, `PhpObject::to_php_string()` (`\Stringable`), `numeric::numeric_value()` | Unit use in dependants |
 
 Arrays have value semantics: a clone shares storage until one side is

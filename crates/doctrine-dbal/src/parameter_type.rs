@@ -6,9 +6,11 @@
 //!
 //! Upstream: doctrine/dbal src/ParameterType.php
 
+use std::sync::Arc;
+
 use php_value::PhpString;
 
-use crate::ArrayParameterType;
+use crate::{ArrayParameterType, types::Type};
 
 /// Statement parameter type.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -62,14 +64,34 @@ impl ParameterType {
 
 /// The type of one parameter passed to `Connection` methods:
 /// `string|ParameterType|Type|ArrayParameterType`. A string names a
-/// registered DBAL type (`'string'`, `'datetime_immutable'`, ...).
-///
-/// The `Type` object form is added with the Types port.
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// registered DBAL type (`'string'`, `'datetime_immutable'`, ...); a
+/// `Type` object is compared by identity, as PHP's `===` does.
+#[derive(Debug, Clone)]
 pub enum WrapperParameterType {
     Parameter(ParameterType),
     Array(ArrayParameterType),
     Name(PhpString),
+    Type(Arc<dyn Type>),
+}
+
+impl PartialEq for WrapperParameterType {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Parameter(a), Self::Parameter(b)) => a == b,
+            (Self::Array(a), Self::Array(b)) => a == b,
+            (Self::Name(a), Self::Name(b)) => a == b,
+            (Self::Type(a), Self::Type(b)) => Arc::ptr_eq(a, b),
+            _ => false,
+        }
+    }
+}
+
+impl Eq for WrapperParameterType {}
+
+impl From<Arc<dyn Type>> for WrapperParameterType {
+    fn from(value: Arc<dyn Type>) -> Self {
+        Self::Type(value)
+    }
 }
 
 impl From<ParameterType> for WrapperParameterType {
