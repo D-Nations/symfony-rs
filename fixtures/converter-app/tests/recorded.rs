@@ -1,13 +1,17 @@
 //! Replays every request recorded from the PHP app
 //! (oracle/apps/converter-fixture/responses.json, `scripts/record.sh
-//! converter-fixture`) through the Rust fixture and compares status,
-//! headers and body.
+//! converter-fixture`) through the Rust fixture's front controller and
+//! compares status, headers and body.
 //!
 //! Headers are compared as a multiset of (lowercased name, value): their
 //! order is not behaviour. Left out: the headers PHP's built-in server adds
-//! (`server_headers` in the recording) and `Date`, whose value is masked in
-//! the recording and which the HTTP server, not the application, writes in
-//! Rust.
+//! (`server_headers` in the recording: `Host`, `Connection`, `X-Powered-By`,
+//! which PHP-FPM also sends) and `Date`, whose value is masked in the
+//! recording and which the HTTP server, not the application, writes in
+//! Rust. `Content-Length` is framing too: axum writes it for a body of
+//! known size, where PHP's built-in server closed the connection instead
+//! (`Connection: close`), so the recording has none. It is taken out of the
+//! comparison only after checking that it is the body's length.
 //!
 //! Upstream: none
 
@@ -16,8 +20,9 @@ use axum::{
     extract::Request,
     http::Method,
 };
-use converter_fixture_app::{App, Server};
+use converter_fixture_app::router;
 use serde_json::Value;
+use tower::ServiceExt;
 
 type TestResult = Result<(), Box<dyn std::error::Error>>;
 
@@ -47,6 +52,45 @@ fn headers_of(case: &Value, ignored: &[String]) -> Result<Vec<(String, String)>,
     Ok(headers)
 }
 
+/// One request through the front controller: status, headers (lowercased
+/// names, `ignored` and `Date` left out, sorted) and body.
+async fn send(
+    request: Request,
+    ignored: &[String],
+) -> Result<(u16, Vec<(String, String)>, String), Box<dyn std::error::Error>> {
+    let response = router().oneshot(request).await?;
+    let status = response.status().as_u16();
+    let mut headers: Vec<(String, String)> = response
+        .headers()
+        .iter()
+        .map(|(n, v)| {
+            (
+                n.as_str().to_owned(),
+                String::from_utf8_lossy(v.as_bytes()).into_owned(),
+            )
+        })
+        .filter(|(n, _)| n != "date" && !ignored.contains(n))
+        .collect();
+    headers.sort();
+    let body = String::from_utf8(to_bytes(response.into_body(), 1 << 20).await?.to_vec())?;
+    let lengths: Vec<&String> = headers
+        .iter()
+        .filter(|(n, _)| n == "content-length")
+        .map(|(_, v)| v)
+        .collect();
+    if let [length] = lengths.as_slice() {
+        if **length != body.len().to_string() {
+            return Err(
+                format!("Content-Length {length} for a body of {} bytes", body.len()).into(),
+            );
+        }
+    } else if lengths.len() > 1 {
+        return Err(format!("{} Content-Length headers", lengths.len()).into());
+    }
+    headers.retain(|(n, _)| n != "content-length");
+    Ok((status, headers, body))
+}
+
 #[tokio::test]
 async fn every_recorded_response_matches() -> TestResult {
     let recording = recording()?;
@@ -57,10 +101,6 @@ async fn every_recorded_response_matches() -> TestResult {
         .iter()
         .map(|h| text(h).map(str::to_ascii_lowercase))
         .collect::<Result<_, _>>()?;
-    let app = App::new(Server {
-        name: "0.0.0.0".to_owned(),
-        port: 8000,
-    });
     let cases = recording["cases"].as_array().ok_or("cases")?;
     assert_eq!(cases.len(), 16);
     let mut failures = Vec::new();
@@ -73,20 +113,7 @@ async fn every_recorded_response_matches() -> TestResult {
         for (header, value) in sent["headers"].as_object().ok_or("request headers")? {
             request = request.header(header, text(value)?);
         }
-        let response = app.handle(request.body(Body::empty())?).await;
-        let status = response.status().as_u16();
-        let mut headers: Vec<(String, String)> = response
-            .headers()
-            .iter()
-            .map(|(n, v)| {
-                (
-                    n.as_str().to_owned(),
-                    String::from_utf8_lossy(v.as_bytes()).into_owned(),
-                )
-            })
-            .collect();
-        headers.sort();
-        let body = String::from_utf8(to_bytes(response.into_body(), 1 << 20).await?.to_vec())?;
+        let (status, headers, body) = send(request.body(Body::empty())?, &ignored).await?;
 
         let expected_status = case["status"].as_u64().ok_or("status")?;
         let expected_headers = headers_of(case, &ignored)?;
@@ -112,40 +139,28 @@ async fn every_recorded_response_matches() -> TestResult {
     Ok(())
 }
 
-/// Two requests in one process each see a fresh `VisitCounter`, as each
+/// Three requests in one process each see a fresh `VisitCounter`, as each
 /// PHP request does (the recording's `greet` and `greet-again`).
 #[tokio::test]
 async fn request_scoped_state_is_not_shared() -> TestResult {
-    let app = App::new(Server {
-        name: "0.0.0.0".to_owned(),
-        port: 8000,
-    });
     for _ in 0..3 {
         let request = Request::builder()
             .uri("/greet/world")
             .header("Host", "localhost")
             .body(Body::empty())?;
-        let response = app.handle(request).await;
-        let body = String::from_utf8(to_bytes(response.into_body(), 1 << 20).await?.to_vec())?;
+        let (_, _, body) = send(request, &[]).await?;
         assert!(body.ends_with("visits: 1\n"), "{body}");
     }
     Ok(())
 }
 
-/// Converter contract 0.2, section 7.
+/// Converter contract 0.3, section 7.
 #[test]
 fn concurrency_bounds_hold() {
-    fn send<T: Send>(_: &T) {}
     fn send_sync<T: Send + Sync>() {}
-    fn scope_is_send<T: Send>() {}
     send_sync::<converter_fixture_app::container::Container>();
-    send_sync::<App>();
+    send_sync::<converter_fixture_app::container::ServiceContainer>();
     send_sync::<converter_fixture_app::app::error_subscriber::ErrorSubscriber>();
-    scope_is_send::<converter_fixture_app::container::RequestScope>();
-    let app = App::new(Server {
-        name: "0.0.0.0".to_owned(),
-        port: 8000,
-    });
-    let future = app.handle(Request::new(Body::empty()));
-    send(&future);
+    send_sync::<converter_fixture_app::app::greet_controller::GreetController>();
+    send_sync::<axum::Router>();
 }

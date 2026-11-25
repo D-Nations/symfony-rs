@@ -10,7 +10,10 @@
 //! subclass is `Response` itself (it overrides nothing).
 //!
 //! Upstream: symfony/http-foundation Tests/ResponseTest.php Tests/ResponseTestCase.php
-
+#![allow(
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,
@@ -1580,7 +1583,10 @@ fn testNoDeprecationsAreTriggered() {
 
     // we just need to ensure that subclasses of Response can be created without any deprecations
     // being triggered if the subclass does not override any final methods
-    assert!(deprecations.is_empty());
+    assert_eq!(
+        deprecations,
+        [] as [symfony_deprecation_contracts::Deprecation; 0]
+    );
 }
 
 /// `ianaCodesReasonPhrasesProvider()`: the records of upstream's
@@ -1627,7 +1633,7 @@ fn testReasonPhraseDefaultsAgainstIana() {
         eprintln!("skipped: the IANA fixture (run scripts/fetch-upstream.sh)");
         return;
     };
-    assert!(!phrases.is_empty());
+    assert_ne!(phrases, [] as [(i64, std::string::String); 0]);
     for (code, reason_phrase) in phrases {
         assert_eq!(Some(reason_phrase.as_str()), status_text(code), "{code}");
     }

@@ -728,7 +728,7 @@ impl Response {
         Ok(self.get_ttl()?.is_some_and(|ttl| ttl > 0))
     }
 
-    /// `isValidateable()`: a Last-Modified or ETag header is present.
+    /// `isValidateable()`: a Last-Modified or `ETag` header is present.
     pub fn is_validateable(&self) -> bool {
         self.headers.has("Last-Modified") || self.headers.has("ETag")
     }
@@ -940,7 +940,7 @@ impl Response {
             None => self.headers.remove("Last-Modified"),
             Some(date) => {
                 self.headers
-                    .set(b"Last-Modified", Self::http_date(date).as_str(), true)?
+                    .set(b"Last-Modified", Self::http_date(date).as_str(), true)?;
             }
         }
         Ok(self)
@@ -970,10 +970,10 @@ impl Response {
         Ok(self)
     }
 
-    /// `setCache($options)`: must_revalidate, no_cache, no_store,
-    /// no_transform, public, private, proxy_revalidate, max_age,
-    /// s_maxage, stale_if_error, stale_while_revalidate, immutable,
-    /// last_modified and etag. Any other key is an
+    /// `setCache($options)`: `must_revalidate`, `no_cache`, `no_store`,
+    /// `no_transform`, public, private, `proxy_revalidate`, `max_age`,
+    /// `s_maxage`, `stale_if_error`, `stale_while_revalidate`, immutable,
+    /// `last_modified` and etag. Any other key is an
     /// `\InvalidArgumentException`; a value of the wrong type a
     /// `\TypeError`.
     pub fn set_cache(&mut self, options: &PhpArray) -> Result<&mut Self> {

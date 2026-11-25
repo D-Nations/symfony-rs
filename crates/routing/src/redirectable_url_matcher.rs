@@ -47,6 +47,22 @@ pub trait RedirectableUrlMatcherInterface {
         route: &PhpString,
         scheme: Option<&[u8]>,
     ) -> Result<PhpArray, Error>;
+
+    /// `redirect()` for an implementation that reads `$this->context`
+    /// (`FrameworkBundle`'s `RedirectableCompiledUrlMatcher` reads its
+    /// ports): the context the match ran in, with the scheme changed on a
+    /// scheme retry, as PHP's is while `redirect()` runs. By default,
+    /// [`Self::redirect`].
+    fn redirect_in(
+        &self,
+        path: &[u8],
+        route: &PhpString,
+        scheme: Option<&[u8]>,
+        context: &RequestContext,
+    ) -> Result<PhpArray, Error> {
+        let _ = context;
+        self.redirect(path, route, scheme)
+    }
 }
 
 /// `RedirectableUrlMatcher`, the abstract class, with its `redirect()`.
@@ -105,7 +121,7 @@ impl<R: RedirectableUrlMatcherInterface> RedirectableUrlMatcher<R> {
         self.match_in(pathinfo, self.matcher.context())
     }
 
-    /// `matchRequest($request)`, inherited from UrlMatcher: this class's
+    /// `matchRequest($request)`, inherited from `UrlMatcher`: this class's
     /// `match($request->getPathInfo())` in the context of the request.
     pub fn match_request(&self, request: &mut Request) -> Result<PhpArray, Error> {
         let context = self.matcher.request_context(request)?;
@@ -146,7 +162,8 @@ impl<R: RedirectableUrlMatcherInterface> RedirectableUrlMatcher<R> {
                         .matcher
                         .match_in(&pathinfo, &redirected, &mut state, true)
                         .and_then(|ret| {
-                            self.redirect(&pathinfo, &ret, Some(redirected.scheme().as_bytes()))
+                            let scheme = redirected.scheme().as_bytes();
+                            self.redirect(&pathinfo, &ret, Some(scheme), &redirected)
                         });
                     return match result {
                         Ok(ret) => Ok(ret),
@@ -165,7 +182,7 @@ impl<R: RedirectableUrlMatcherInterface> RedirectableUrlMatcher<R> {
                     let result = self
                         .matcher
                         .match_in(&slashed, context, &mut state, true)
-                        .and_then(|ret| self.redirect(&slashed, &ret, None));
+                        .and_then(|ret| self.redirect(&slashed, &ret, None, context));
                     match result {
                         Ok(ret) => return Ok(ret),
                         Err(err) if err.is_a(EXCEPTION_INTERFACE) => {}
@@ -193,13 +210,16 @@ impl<R: RedirectableUrlMatcherInterface> RedirectableUrlMatcher<R> {
         pathinfo: &[u8],
         ret: &PhpArray,
         scheme: Option<&[u8]>,
+        context: &RequestContext,
     ) -> Result<PhpArray, Error> {
         let route = ret
             .get(&Key::from_bytes(b"_route"))
             .cloned()
             .unwrap_or(Value::Null);
         let route = string_argument(&route, REDIRECT, 2, "route")?;
-        let mut redirect = self.redirector.redirect(pathinfo, &route, scheme)?;
+        let mut redirect = self
+            .redirector
+            .redirect_in(pathinfo, &route, scheme, context)?;
         redirect.union(ret);
         Ok(redirect)
     }

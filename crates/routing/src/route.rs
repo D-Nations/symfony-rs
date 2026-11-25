@@ -127,6 +127,7 @@ pub(crate) fn pcre(
         .map_err(|e| Error::new(Class::NotPorted, e.to_string()))
 }
 
+#[expect(clippy::needless_pass_by_value, reason = "a map_err() callback")]
 pub(crate) fn match_error(e: php_pcre::MatchError) -> Error {
     Error::new(Class::NotPorted, format!("preg_* returned false: {e}"))
 }

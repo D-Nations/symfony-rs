@@ -29,13 +29,7 @@ fn answer(item: &AcceptHeaderItem) -> Result<Json, Error> {
     let encode = |b: &[u8]| -> Json { Json::String(php_value::base64::encode(b)) };
     Ok(Json::Array(vec![
         encode(item.value()),
-        Json::String(
-            item.quality()
-                .to_be_bytes()
-                .iter()
-                .map(|b| format!("{b:02x}"))
-                .collect(),
-        ),
+        Json::String(format!("{:016x}", item.quality().to_bits())),
         Json::from(item.index()),
         Json::Null, // attributes: compared separately
         encode(item.to_php_string().map_err(|e| e.to_string())?.as_bytes()),

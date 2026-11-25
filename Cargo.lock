@@ -179,11 +179,15 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "php-value",
+ "psr-container",
  "serde_json",
+ "symfony-event-dispatcher",
  "symfony-http-foundation",
  "symfony-http-kernel",
  "symfony-routing",
+ "symfony-runtime",
  "tokio",
+ "tower",
 ]
 
 [[package]]
@@ -816,6 +820,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "psr-container"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+]
+
+[[package]]
 name = "psr-log"
 version = "0.1.0"
 dependencies = [
@@ -1153,6 +1164,7 @@ dependencies = [
  "axum",
  "base64",
  "php-value",
+ "psr-container",
  "psr-log",
  "serde_json",
  "symfony-deprecation-contracts",

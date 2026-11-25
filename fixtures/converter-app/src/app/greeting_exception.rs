@@ -1,12 +1,10 @@
 //! `Fixture\Service\GreetingException` (oracle/apps/converter-fixture/src/Service/GreetingException.php).
 //!
 //! An exception class: name, message, code and previous exception
-//! (converter contract 0.1, section 5). Not an HTTP exception, so it reaches
-//! the kernel through `Exception::from_throwable`.
+//! (converter contract 0.3, section 5). Thrown as a shared `Throwable`;
+//! `instanceof GreetingException` is a downcast.
 //!
 //! Upstream: none
-
-use symfony_http_kernel::Exception;
 
 #[derive(Debug)]
 pub struct GreetingException {
@@ -38,11 +36,5 @@ impl std::error::Error for GreetingException {
         self.previous
             .as_deref()
             .map(|e| e as &(dyn std::error::Error + 'static))
-    }
-}
-
-impl From<GreetingException> for Exception {
-    fn from(error: GreetingException) -> Self {
-        Exception::from_throwable(error)
     }
 }

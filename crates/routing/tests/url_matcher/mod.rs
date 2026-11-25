@@ -6,7 +6,7 @@
 //! does not.
 //!
 //! Not here (pending in the manifest): the tests of route conditions,
-//! which need ExpressionLanguage (testCondition, testZeroCondition,
+//! which need `ExpressionLanguage` (testCondition, testZeroCondition,
 //! testZeroConditionNextToOtherConditions, testRequestCondition,
 //! testRouteParametersCondition, testSiblingRoutes).
 //!
@@ -16,6 +16,10 @@
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
 //! Upstream: symfony/routing Tests/Matcher/UrlMatcherTest.php
+#![allow(
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(dead_code, non_snake_case)]
 
 use php_pcre::preg_quote;

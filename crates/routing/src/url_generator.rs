@@ -383,6 +383,7 @@ impl UrlGenerator {
     /// `doGenerate()`: `Ok('')` when a parameter fails its requirement and
     /// requirements are not strict.
     #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     pub fn do_generate(
         &self,
         variables: &PhpArray,

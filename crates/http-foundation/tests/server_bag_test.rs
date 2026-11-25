@@ -231,7 +231,7 @@ fn testItDoesNotOverwriteTheAuthorizationHeaderIfItIsAlreadySet() -> TestResult 
 }
 
 /// An HTTP request without content-type and content-length will result in
-/// the variables $_SERVER['`CONTENT_TYPE`'] and $_SERVER['`CONTENT_LENGTH`']
+/// the variables `$_SERVER['CONTENT_TYPE']` and `$_SERVER['CONTENT_LENGTH']`
 /// containing an empty string in PHP.
 #[test]
 fn testRequestWithoutContentTypeAndContentLength() -> TestResult {

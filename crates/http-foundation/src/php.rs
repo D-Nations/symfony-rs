@@ -182,6 +182,10 @@ pub fn nullable_string_argument(n: usize, name: &str, value: &Value) -> Result<O
 
 /// A value passed to a `?int` parameter: a float or numeric string is
 /// truncated if it fits (PHP 8.1+ deprecates a fraction).
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's (int) on a float in range"
+)]
 pub fn nullable_int_argument(n: usize, name: &str, value: &Value) -> Result<Option<i64>> {
     const LIMIT: f64 = 9_223_372_036_854_775_808.0; // 2^63
     match value {
@@ -251,7 +255,7 @@ pub enum FinishRequest {
     None,
     /// `fastcgi_finish_request()` (PHP-FPM).
     FastCgi,
-    /// `litespeed_finish_request()` (LiteSpeed).
+    /// `litespeed_finish_request()` (`LiteSpeed`).
     LiteSpeed,
 }
 
@@ -266,7 +270,7 @@ pub enum OutputCall {
     },
     /// `header_remove($name)`.
     HeaderRemove(PhpString),
-    /// `headers_send($statusCode)` (FrankenPHP: sends a 1xx response).
+    /// `headers_send($statusCode)` (`FrankenPHP`: sends a 1xx response).
     HeadersSend(i64),
     /// `echo $content`.
     Echo(PhpString),

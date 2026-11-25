@@ -70,6 +70,7 @@ impl PhpObject for UploadedFile {
 
 /// `UploadedFile::parseFilesize($size)`: an ini quantity in bytes; it
 /// becomes a float when the multiplication passes `PHP_INT_MAX`.
+#[expect(clippy::cast_precision_loss, reason = "PHP's int to float overflow")]
 pub fn parse_filesize(size: &[u8]) -> Number {
     if size.is_empty() {
         return Number::Int(0);
@@ -106,8 +107,7 @@ pub fn parse_filesize(size: &[u8]) -> Number {
 /// `$size ?: PHP_INT_MAX`.
 fn or_max(size: Number) -> Number {
     match size {
-        Number::Int(0) => Number::Int(i64::MAX),
-        Number::Float(0.0) => Number::Int(i64::MAX),
+        Number::Int(0) | Number::Float(0.0) => Number::Int(i64::MAX),
         other => other,
     }
 }
@@ -127,6 +127,11 @@ pub fn max_filesize(post_max_size: &[u8], upload_max_filesize: &[u8]) -> Number 
 }
 
 /// `$number / 1024`, then `sprintf('%d', ...)`.
+#[expect(
+    clippy::cast_precision_loss,
+    clippy::cast_possible_truncation,
+    reason = "PHP's int/float division and %d"
+)]
 fn kib(size: Number) -> i64 {
     let divided = match size {
         Number::Int(i) if i % 1024 == 0 => return i / 1024,

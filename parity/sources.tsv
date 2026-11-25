@@ -465,6 +465,7 @@ crates/http-foundation/tests/uploaded_file_test.rs	symfony/http-foundation	Tests
 crates/http-kernel/src/argument_resolver.rs	symfony/http-kernel	Controller/ArgumentResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/argument_resolver.rs	symfony/http-kernel	Controller/ValueResolverInterface.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/argument_resolver.rs	symfony/http-kernel	Attribute/ValueResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/src/container_controller_resolver.rs	symfony/http-kernel	Controller/ContainerControllerResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller.rs	symfony/http-kernel	Controller/ControllerResolverInterface.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller.rs	symfony/http-kernel	Controller/ArgumentResolverInterface.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller_metadata.rs	symfony/http-kernel	ControllerMetadata/ArgumentMetadata.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
@@ -515,6 +516,7 @@ crates/http-kernel/src/lib.rs	symfony/http-kernel	Event/ResponseEvent.php	460658
 crates/http-kernel/src/lib.rs	symfony/http-kernel	Event/ExceptionEvent.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/lib.rs	symfony/event-dispatcher	EventDispatcher.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/http-kernel/src/lib.rs	symfony/http-foundation	Response.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-kernel/src/response_listener.rs	symfony/http-kernel	EventListener/ResponseListener.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/router_listener.rs	symfony/http-kernel	EventListener/RouterListener.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/router_listener.rs	symfony/http-kernel	Resources/welcome.html.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/value_resolver.rs	symfony/http-kernel	Controller/ArgumentResolver/RequestAttributeValueResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
@@ -525,6 +527,8 @@ crates/http-kernel/src/value_resolver.rs	symfony/http-kernel	Controller/Argument
 crates/http-kernel/tests/argument_metadata_factory_test.rs	symfony/http-kernel	Tests/ControllerMetadata/ArgumentMetadataFactoryTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/argument_metadata_test.rs	symfony/http-kernel	Tests/ControllerMetadata/ArgumentMetadataTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/argument_resolver_test.rs	symfony/http-kernel	Tests/Controller/ArgumentResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/tests/common/controller_resolver_test_class.rs	symfony/http-kernel	Tests/Controller/ControllerResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/tests/container_controller_resolver_test.rs	symfony/http-kernel	Tests/Controller/ContainerControllerResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/controller_resolver_test.rs	symfony/http-kernel	Tests/Controller/ControllerResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Exception/HttpExceptionTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Exception/AccessDeniedHttpExceptionTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
@@ -546,6 +550,7 @@ crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Except
 crates/http-kernel/tests/http_kernel_test.rs	symfony/http-kernel	Tests/HttpKernelTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/request_attribute_value_resolver_test.rs	symfony/http-kernel	Tests/Controller/ArgumentResolver/RequestAttributeValueResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/request_value_resolver_test.rs	symfony/http-kernel	Tests/Controller/ArgumentResolver/RequestValueResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/tests/response_listener_test.rs	symfony/http-kernel	Tests/EventListener/ResponseListenerTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/router_listener_test.rs	symfony/http-kernel	Tests/EventListener/RouterListenerTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/mime/src/exception.rs	symfony/mime	Exception/ExceptionInterface.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/exception.rs	symfony/mime	Exception/LogicException.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
@@ -576,6 +581,9 @@ crates/options-resolver/src/options_resolver.rs	symfony/options-resolver	Options
 crates/options-resolver/src/options_resolver.rs	symfony/options-resolver	Options.php	88f9c561f678a02d54b897014049fa839e33ff82
 crates/options-resolver/tests/options_resolver.rs	symfony/options-resolver	Tests/OptionsResolverTest.php	88f9c561f678a02d54b897014049fa839e33ff82
 crates/options-resolver/tests/options_resolver_introspector.rs	symfony/options-resolver	Tests/Debug/OptionsResolverIntrospectorTest.php	88f9c561f678a02d54b897014049fa839e33ff82
+crates/psr-container/src/lib.rs	psr/container	src/ContainerInterface.php	c71ecc56dfe541dbd90c5360474fbc405f8d5963
+crates/psr-container/src/lib.rs	psr/container	src/ContainerExceptionInterface.php	c71ecc56dfe541dbd90c5360474fbc405f8d5963
+crates/psr-container/src/lib.rs	psr/container	src/NotFoundExceptionInterface.php	c71ecc56dfe541dbd90c5360474fbc405f8d5963
 crates/psr-log/src/lib.rs	psr/log	src/LoggerInterface.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
 crates/psr-log/src/lib.rs	psr/log	src/LogLevel.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
 crates/psr-log/src/lib.rs	psr/log	src/NullLogger.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
@@ -846,14 +854,5 @@ crates/yaml/tests/parse_exception.rs	symfony/yaml	Tests/ParseExceptionTest.php	6
 crates/yaml/tests/parser_test.rs	symfony/yaml	Tests/ParserTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/yaml_test.rs	symfony/yaml	Tests/YamlTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/tests/yaml_test_suite_test.rs	symfony/yaml	Tests/YamlTestSuiteTest.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
-fixtures/converter-app/src/runtime/framework_bundle.rs	symfony/framework-bundle	Controller/RedirectController.php	2332352f43f6689c3b1289ca0bb324c006f906c3
 fixtures/converter-app/src/runtime/framework_bundle.rs	symfony/framework-bundle	Routing/RedirectableCompiledUrlMatcher.php	2332352f43f6689c3b1289ca0bb324c006f906c3
-fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	Request.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
-fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	InputBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
-fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	Response.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
-fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	ResponseHeaderBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
-fixtures/converter-app/src/runtime/http_foundation.rs	symfony/http-foundation	RedirectResponse.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
-fixtures/converter-app/src/runtime/listeners.rs	symfony/http-kernel	EventListener/RouterListener.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
-fixtures/converter-app/src/runtime/listeners.rs	symfony/http-kernel	EventListener/ResponseListener.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
-fixtures/converter-app/src/runtime/listeners.rs	symfony/http-kernel	Exception/MethodNotAllowedHttpException.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
-fixtures/converter-app/src/runtime/listeners.rs	symfony/routing	RequestContext.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+fixtures/converter-app/src/runtime/framework_bundle.rs	symfony/framework-bundle	Controller/RedirectController.php	2332352f43f6689c3b1289ca0bb324c006f906c3

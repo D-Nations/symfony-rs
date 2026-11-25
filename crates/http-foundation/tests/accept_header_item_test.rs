@@ -6,6 +6,10 @@
 //!
 //! Upstream: symfony/http-foundation Tests/AcceptHeaderItemTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::float_cmp,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use php_value::{PhpArray, Value, php_array};
 use symfony_http_foundation::accept_header::AcceptHeaderItem;

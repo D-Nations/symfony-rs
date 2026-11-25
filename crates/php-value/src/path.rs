@@ -70,7 +70,11 @@ pub fn from_os_string(s: OsString) -> Vec<u8> {
     }
     #[cfg(not(unix))]
     {
-        from_os_str(&s)
+        // Valid Unicode without a copy; otherwise as `from_os_str`.
+        match s.into_string() {
+            Ok(text) => text.into_bytes(),
+            Err(s) => from_os_str(&s),
+        }
     }
 }
 

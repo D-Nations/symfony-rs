@@ -201,6 +201,10 @@ fn compare(
 }
 
 #[test]
+#[expect(
+    clippy::too_many_lines,
+    reason = "one replay loop over the recorded calls"
+)]
 fn matches_recorded_requests() -> Result<(), TestError> {
     let data: Json = serde_json::from_str(DATA)?;
     let cases = data["cases"].as_array().ok_or("cases")?;

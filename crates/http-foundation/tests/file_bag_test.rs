@@ -6,7 +6,10 @@
 //! properties, as `==` on the Rust values does.
 //!
 //! Upstream: symfony/http-foundation Tests/FileBagTest.php
-
+#![allow(
+    clippy::similar_names,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,

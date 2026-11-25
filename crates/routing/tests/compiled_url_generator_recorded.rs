@@ -142,6 +142,10 @@ fn reference_type(json: &Json) -> Result<ReferenceType, TestError> {
 }
 
 #[test]
+#[expect(
+    clippy::too_many_lines,
+    reason = "one replay loop over the recorded cases"
+)]
 fn dump_and_generate_match_php() -> Result<(), TestError> {
     let cases: Vec<Json> = serde_json::from_str(include_str!("data/compiled_url_generator.json"))?;
     assert_eq!(cases.len(), 1500);

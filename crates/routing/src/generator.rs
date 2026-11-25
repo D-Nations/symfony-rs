@@ -1,6 +1,8 @@
 //! Ports the existing subset of Symfony Routing Generator/UrlGenerator.php.
 //!
 //! Upstream: symfony/routing Generator/UrlGenerator.php Tests/Generator/UrlGeneratorTest.php
+use std::fmt::Write as _;
+
 use symfony_http_foundation::query::QueryValue;
 
 /// Characters Symfony's `UrlGenerator` leaves unencoded after
@@ -40,7 +42,7 @@ pub fn rawurlencode(text: &str) -> String {
         if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
             out.push(char::from(byte));
         } else {
-            out.push_str(&format!("%{byte:02X}"));
+            let _ = write!(out, "%{byte:02X}");
         }
     }
     out

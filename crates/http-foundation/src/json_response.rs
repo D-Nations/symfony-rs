@@ -47,7 +47,7 @@ const DEPTH: usize = 512;
 /// The JSONP callback pattern, partially taken from
 /// <https://geekality.net/2011/08/03/valid-javascript-identifier/> and
 /// from <https://github.com/willdurand/JsonpCallbackValidator>
-/// (JsonpCallbackValidator is released under the MIT License, (c) William
+/// (`JsonpCallbackValidator` is released under the MIT License, (c) William
 /// Durand), as PHP reads upstream's single-quoted literal.
 const CALLBACK_PATTERN: &[u8] = br#"/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*(?:\[(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\d+)\])*?$/u"#;
 

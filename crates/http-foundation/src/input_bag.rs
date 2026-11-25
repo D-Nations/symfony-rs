@@ -79,6 +79,7 @@ impl InputBag {
     }
 
     /// `add($inputs)`: `set()` for each.
+    #[expect(clippy::needless_pass_by_value, reason = "upstream's signature")]
     pub fn add(&mut self, inputs: PhpArray) -> Result<()> {
         for (key, value) in inputs.iter() {
             self.set_key(key.clone(), value.clone())?;

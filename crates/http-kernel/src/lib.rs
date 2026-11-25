@@ -12,12 +12,14 @@
 #![forbid(unsafe_code)]
 
 pub mod argument_resolver;
+pub mod container_controller_resolver;
 pub mod controller;
 pub mod controller_metadata;
 pub mod controller_resolver;
 pub mod event;
 pub mod exception;
 pub mod http_kernel;
+pub mod response_listener;
 pub mod router_listener;
 pub mod value_resolver;
 

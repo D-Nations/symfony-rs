@@ -15,7 +15,7 @@
 //!
 //! Not ported: the session methods (`getSession()`, `hasSession()`,
 //! `hasPreviousSession()`, `setSession()`, `setSessionFactory()`), which
-//! need HttpFoundation's Session classes, and `setPhpDefaultLocale()`'s
+//! need `HttpFoundation`'s Session classes, and `setPhpDefaultLocale()`'s
 //! `\Locale::setDefault()` (intl has no port: setting a locale does not
 //! change a process-wide ICU default here).
 //!
@@ -389,12 +389,12 @@ fn check_ip(ip: &[u8], proxies: &[PhpString]) -> Result<bool> {
 /// host ends like one (`/\.[0-9]++\.?$/D`); else labels of
 /// `[-a-zA-Z0-9_]`, each followed by at most one dot
 /// (`preg_replace('/[-a-zA-Z0-9_]++\.?/', '', $host)` leaving nothing).
-fn is_host_valid(host: &[u8]) -> Result<bool> {
+fn is_host_valid(host: &[u8]) -> bool {
     if host.first() == Some(&b'[') {
         if host.last() != Some(&b']') || host.len() < 2 {
-            return Ok(false);
+            return false;
         }
-        return Ok(validate_ip(&host[1..host.len() - 1], false, true));
+        return validate_ip(&host[1..host.len() - 1], false, true);
     }
     let unterminated = host.strip_suffix(b".").unwrap_or(host);
     let digits = unterminated
@@ -406,20 +406,20 @@ fn is_host_valid(host: &[u8]) -> Result<bool> {
         && unterminated.len() > digits
         && unterminated[unterminated.len() - digits - 1] == b'.'
     {
-        return Ok(validate_ip(host, true, false));
+        return validate_ip(host, true, false);
     }
     let label = |c: &u8| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_');
     let mut i = 0;
     while i < host.len() {
         if !label(&host[i]) {
-            return Ok(false);
+            return false;
         }
         i += host[i..].iter().take_while(|c| label(c)).count();
         if host.get(i) == Some(&b'.') {
             i += 1;
         }
     }
-    Ok(true)
+    true
 }
 
 /// A host pattern that is a constant (`^literal$`, escapes only before
@@ -586,6 +586,7 @@ macro_rules! bag {
 }
 
 /// `Symfony\Component\HttpFoundation\Request`.
+#[expect(clippy::struct_field_names, reason = "upstream's property names")]
 #[derive(Debug, Clone)]
 pub struct Request {
     attributes: ParameterBag,
@@ -829,6 +830,7 @@ impl Request {
 
     /// `create($uri, $method, $parameters, $cookies, $files, $server,
     /// $content)`.
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     pub fn create_with(uri: impl AsRef<[u8]>, args: Create) -> Result<Self> {
         let uri = uri.as_ref();
         let method = strtoupper(
@@ -878,7 +880,7 @@ impl Request {
         }
         if let Some(host) = components.host.as_deref()
             && truthy(host)
-            && !is_host_valid(host)?
+            && !is_host_valid(host)
         {
             return Err(bad("Invalid URI: Host is malformed."));
         }
@@ -1647,7 +1649,7 @@ impl Request {
         };
         let host = strtolower(host);
 
-        if truthy(&host) && !is_host_valid(&host)? {
+        if truthy(&host) && !is_host_valid(&host) {
             if !self.is_host_valid {
                 return Ok(PhpString::default());
             }
@@ -1708,8 +1710,7 @@ impl Request {
         let mut overridden = self
             .headers
             .get("X-HTTP-METHOD-OVERRIDE", None)
-            .map(Value::String)
-            .unwrap_or(Value::Null);
+            .map_or(Value::Null, Value::String);
         if !overridden.is_truthy() && Self::get_http_method_parameter_override() {
             let default = self.query.get("_method", Value::string("POST"))?;
             overridden = self.request.get("_method", default)?;
@@ -2553,7 +2554,7 @@ impl Request {
                 .iter()
                 .position(|&c| c == b'.')
                 .is_some_and(|p| p > 0)
-                && client_ip.iter().filter(|&&c| c == b':').count() == 1
+                && client_ip.split(|&c| c == b':').count() == 2
             {
                 // strip :port from IPv4 addresses; an IPv6 address with an
                 // embedded IPv4 one has two colons at least and is kept
@@ -2595,6 +2596,10 @@ impl Request {
 /// notice this does not print), any other float is its `precision = 14`
 /// string (`"1.0E+30"`, `"NAN"`), a `\Stringable` object its string; an
 /// array or other object is a `\TypeError`.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's (int) on a float in range"
+)]
 fn port_return(value: Value) -> Result<Value> {
     const LIMIT: f64 = 9_223_372_036_854_775_808.0; // 2^63
     match value {

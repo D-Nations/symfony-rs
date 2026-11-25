@@ -68,7 +68,7 @@ impl CompiledRoutes {
     pub fn insert(&mut self, name: impl Into<PhpString>, route: CompiledRoute) {
         let name = name.into();
         if let Some(&i) = self.index.get(name.as_bytes()) {
-            self.entries[i].1 = route
+            self.entries[i].1 = route;
         } else {
             self.index
                 .insert(name.as_bytes().to_vec(), self.entries.len());

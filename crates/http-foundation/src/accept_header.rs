@@ -23,13 +23,7 @@ use crate::header_utils::{combine, split, to_string};
 
 /// PHP's `<=>` on two floats: -1, 0 or 1, and 1 when either is NAN.
 fn spaceship(a: f64, b: f64) -> Ordering {
-    if a < b {
-        Ordering::Less
-    } else if a == b {
-        Ordering::Equal
-    } else {
-        Ordering::Greater
-    }
+    a.partial_cmp(&b).unwrap_or(Ordering::Greater)
 }
 
 fn key_bytes(key: &Key) -> Vec<u8> {
@@ -218,7 +212,7 @@ impl AcceptHeader {
                 let Ok(mut item) = AcceptHeaderItem::new(value, &attributes) else {
                     continue;
                 };
-                item.set_index(i as i64);
+                item.set_index(i64::try_from(i).unwrap_or(i64::MAX));
                 items.push(item);
             }
         }
@@ -436,7 +430,7 @@ fn range_parameters_match(range: &AcceptHeaderItem, query: &AcceptHeaderItem) ->
 fn specificity(item: &AcceptHeaderItem, query: &AcceptHeaderItem) -> i64 {
     let range_value = item.value.to_ascii_lowercase();
     let query_value = query.value.to_ascii_lowercase();
-    let param_count = media_params(item).len() as i64;
+    let param_count = i64::try_from(media_params(item).len()).unwrap_or(i64::MAX);
     if !query_value.contains(&b'/') && !range_value.contains(&b'/') {
         return if range_value == b"*" { 1000 } else { 2000 } + param_count;
     }
