@@ -1,5 +1,5 @@
 //! M1-D converter fixture: the Symfony app in `oracle/apps/converter-fixture`
-//! as Rust, against converter contract 0.3 (docs/converter-contract.md), on
+//! as Rust, against converter contract 0.4 (docs/converter-contract.md), on
 //! the ported Symfony kernel served by `symfony-runtime`.
 //!
 //! **Hand-authored, not converter output.** It is written in the shape

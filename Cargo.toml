@@ -13,6 +13,7 @@ members = [
     "crates/deprecation-contracts",
     "crates/filesystem",
     "crates/config",
+    "crates/dependency-injection",
     "crates/translation",
     "crates/console",
     "crates/http-foundation",
@@ -21,11 +22,13 @@ members = [
     "crates/runtime",
     "crates/css-selector",
     "crates/options-resolver",
+    "crates/password-hasher",
     "crates/finder",
     "crates/php-dom",
     "crates/php-pcre",
     "crates/mime",
     "crates/twig",
+    "crates/doctrine-dbal",
     "examples/request-lab",
     "fixtures/converter-app",
     "spikes/twig-trial/compiler",
@@ -66,6 +69,33 @@ debug = "line-tables-only"
 
 [profile.test]
 debug = "line-tables-only"
+
+# Password hashing is slow on purpose, and much slower unoptimized: the
+# hash crates are optimized in development builds too (workspace code stays
+# a debug build), so that tests with upstream's default costs (bcrypt 13,
+# Argon2id 64 MiB) finish in seconds.
+[profile.dev.package.argon2]
+opt-level = 3
+[profile.dev.package.blake2]
+opt-level = 3
+[profile.dev.package.blowfish]
+opt-level = 3
+[profile.dev.package.bcrypt]
+opt-level = 3
+[profile.dev.package.sha2]
+opt-level = 3
+[profile.dev.package.sha-crypt]
+opt-level = 3
+[profile.dev.package.sha1]
+opt-level = 3
+[profile.dev.package.md-5]
+opt-level = 3
+[profile.dev.package.hmac]
+opt-level = 3
+[profile.dev.package.digest]
+opt-level = 3
+[profile.dev.package.block-buffer]
+opt-level = 3
 
 # Use cargo test --profile dev-full (or cargo build --profile dev-full)
 # when a debugger needs local variables and complete type information.

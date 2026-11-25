@@ -5,10 +5,10 @@ ContainerAwareInterface.php	ContainerAwareInterface	4	pending
 ContainerProviderInterface.php	ContainerProviderInterface	6	pending	
 ResetInterface.php	ResetInterface	5	pending	
 ServiceCollectionInterface.php	ServiceCollectionInterface	4	pending	
-ServiceLocatorTrait.php	ServiceLocatorTrait	76	pending	
+ServiceLocatorTrait.php	ServiceLocatorTrait	76	ported	crates/dependency-injection/src/service_locator.rs
 ServiceMethodsSubscriberTrait.php	ServiceMethodsSubscriberTrait	63	pending	
 ServiceProviderInterface.php	ServiceProviderInterface	8	pending	
 ServiceSubscriberInterface.php	ServiceSubscriberInterface	6	pending	
 ServiceSubscriberTrait.php	ServiceSubscriberTrait	46	pending	
 Test/ServiceLocatorTest.php	ServiceLocatorTest	4	pending	
-Test/ServiceLocatorTestCase.php	ServiceLocatorTestCase	68	pending	
+Test/ServiceLocatorTestCase.php	ServiceLocatorTestCase	68	ported	crates/dependency-injection/tests/service_locator_test.rs
