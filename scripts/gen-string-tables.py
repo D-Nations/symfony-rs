@@ -82,8 +82,8 @@ def case_source() -> str:
         "//! not edit. Single code points as the oracle maps them\n"
         f"//! ({versions}):\n"
         "//! mbstring's `mb_strtolower()`, `mb_strtoupper()` and `mb_convert_case()`\n"
-        "//! (title, fold, simple fold), ICU's `Normalizer::NFKC_CF`, and the Cased\n"
-        "//! and Case_Ignorable ranges of `mb_strtolower()`'s final sigma rule. A\n"
+        "//! (title, fold, simple fold), ICU's `Normalizer::NFKC_CF`, and the `Cased`\n"
+        "//! and `Case_Ignorable` ranges of `mb_strtolower()`'s final sigma rule. A\n"
         "//! code point missing from a table maps to itself.\n"
         "//!\n"
         "//! Upstream: none\n"
@@ -124,7 +124,8 @@ def main() -> int:
         "//! Symfony source copyright (c) Fabien Potencier; distributed under MIT.\n"
         f"//! `EXTPICT`: `\\p{{ExtPict}}` as the oracle's PCRE2 {pcre} matches it.\n"
         "//!\n"
-        "//! Upstream: symfony/string Resources/data/wcswidth_table_wide.php Resources/data/wcswidth_table_zero.php\n\n"
+        "//! Upstream: symfony/string Resources/data/wcswidth_table_wide.php Resources/data/wcswidth_table_zero.php\n"
+        "#![expect(clippy::doc_markdown, reason = \"the Upstream line lists file paths\")]\n\n"
         + rust_table("WIDE", wide) + "\n" + rust_table("ZERO", zero) + "\n" + rust_table("EXTPICT", extpict)
     )
     case = case_source()
