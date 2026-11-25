@@ -38,6 +38,8 @@
 #   scripts/record.sh http-foundation-request crates/http-foundation/tests/data/request.json (Request)
 #   scripts/record.sh http-foundation-response crates/http-foundation/tests/data/response.json (Response)
 #   scripts/record.sh http-kernel-lifecycle crates/http-kernel/tests/data/lifecycle.json (HttpKernel)
+#   scripts/record.sh http-kernel-router-listener crates/http-kernel/tests/data/router_listener.json (RouterListener)
+#   scripts/record.sh http-kernel-welcome crates/http-kernel/resources/welcome.html (RouterListener's welcome page)
 #   scripts/record.sh mime-fileinfo crates/mime/tests/data/fileinfo.json (FileinfoMimeTypeGuesser, needs upstream/)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")
@@ -52,7 +54,22 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$root"
 export MSYS_NO_PATHCONV=1
 
-oracle() { docker compose -f oracle/compose.yaml run --rm -T php "$@"; }
+# The oracle mounts the moved packages from upstream/ (oracle/compose.yaml):
+# refuse to record from a checkout that is not at its pinned commit.
+check_moved_pins() {
+    local moved package commit head
+    moved=$(sed -n 's/^# moved: \(.*\) (.*$/\1/p' parity/packages.tsv)
+    for package in $moved; do
+        commit=$(awk -F'\t' -v p="$package" '$1 == p { print $3 }' parity/packages.tsv)
+        head=$(git -C "upstream/$package" rev-parse HEAD 2>/dev/null || echo missing)
+        if [[ "$head" != "$commit" ]]; then
+            echo "upstream/$package is at $head, pinned at $commit: run scripts/fetch-upstream.sh $package" >&2
+            exit 1
+        fi
+    done
+}
+
+oracle() { check_moved_pins; docker compose -f oracle/compose.yaml run --rm -T php "$@"; }
 
 routing() {
     local out=crates/routing/tests/data/matcher.json tmp
@@ -145,6 +162,7 @@ di_trial() {
     tmp=$(mktemp -p oracle/out)
     # /demo is read-only; the php-kernel service puts a tmpfs on /demo/var
     # for the kernel's cache.
+    check_moved_pins
     docker compose -f oracle/compose.yaml run --rm -T php-kernel \
         oracle/recorders/di_container.php > "$tmp"
     mv "$tmp" "$out"
@@ -152,6 +170,7 @@ di_trial() {
     out=spikes/di-trial/demo/tests/data/php_classes.json
     mkdir -p "$(dirname "$out")"
     tmp=$(mktemp -p oracle/out)
+    check_moved_pins
     docker compose -f oracle/compose.yaml run --rm -T php-kernel \
         oracle/recorders/di_container.php classes > "$tmp"
     python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
@@ -263,6 +282,25 @@ http_kernel_lifecycle() {
     python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d["scripts"]), "HttpKernel scripts")' "$tmp"
     mv "$tmp" "$out"
     echo "HttpKernel vectors written to $out"
+}
+
+http_kernel_router_listener() {
+    local out=crates/http-kernel/tests/data/router_listener.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/http_kernel_router_listener.php > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d["scripts"]), "RouterListener scripts")' "$tmp"
+    mv "$tmp" "$out"
+    echo "RouterListener vectors written to $out"
+}
+
+http_kernel_welcome() {
+    local out=crates/http-kernel/resources/welcome.html tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/http_kernel_welcome.php > "$tmp"
+    mv "$tmp" "$out"
+    echo "Welcome page written to $out"
 }
 
 yaml_unreadable() {
@@ -679,9 +717,11 @@ case "${1:-}" in
     http-foundation-request) http_foundation_request ;;
     http-foundation-response) http_foundation_response ;;
     http-kernel-lifecycle) http_kernel_lifecycle ;;
+    http-kernel-router-listener) http_kernel_router_listener ;;
+    http-kernel-welcome) http_kernel_welcome ;;
     mime-fileinfo) mime_fileinfo ;;
     http-foundation-releases) http_foundation_releases ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; php_value_decode; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_kernel_lifecycle; routing_from_request; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|php-value-decode|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-kernel-lifecycle|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; php_value_decode; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; routing_from_request; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|php-value-decode|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
 esac

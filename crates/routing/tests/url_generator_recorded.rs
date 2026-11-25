@@ -77,6 +77,7 @@ impl LoggerInterface for Recorder {
             .map(|(_, v)| match v {
                 ContextValue::String(s) => s.clone(),
                 ContextValue::Exception(e) => e.to_string(),
+                ContextValue::Value(v) => format!("{v:?}"),
             })
             .unwrap_or_default();
         if let Ok(mut records) = self.0.lock() {

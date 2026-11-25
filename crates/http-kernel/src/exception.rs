@@ -11,8 +11,8 @@
 //! A [`Throwable`] is shared (`Arc`), as a PHP exception object is: the
 //! kernel can hand it to a listener, keep a reference (`$this->
 //! terminateException`) and rethrow the same object. [`instance_of`] is
-//! `instanceof` for the classes this crate and `HttpFoundation` throw: each
-//! reports its ancestry, a class name first. Any other Rust error is an
+//! `instanceof` for the classes this crate, `HttpFoundation` and `Routing`
+//! throw: each reports its ancestry, a class name first. Any other Rust error is an
 //! `\Exception` (never an `\Error`).
 //!
 //! `ControllerDoesNotReturnResponseException`'s file, line and trace (the
@@ -64,6 +64,9 @@ pub fn ancestry(e: &(dyn std::error::Error + 'static)) -> Vec<&'static str> {
         ];
     }
     if let Some(e) = e.downcast_ref::<symfony_http_foundation::exception::Error>() {
+        return e.class().ancestry().to_vec();
+    }
+    if let Some(e) = e.downcast_ref::<symfony_routing::exception::Error>() {
         return e.class().ancestry().to_vec();
     }
     vec!["Exception", "Throwable"]
@@ -571,6 +574,9 @@ pub fn message_of(e: &(dyn std::error::Error + 'static)) -> PhpString {
         return e.message.clone();
     }
     if let Some(e) = e.downcast_ref::<symfony_http_foundation::exception::Error>() {
+        return e.message().clone();
+    }
+    if let Some(e) = e.downcast_ref::<symfony_routing::exception::Error>() {
         return e.message().clone();
     }
     PhpString::from(e.to_string())
