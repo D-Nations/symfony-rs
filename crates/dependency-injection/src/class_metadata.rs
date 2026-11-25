@@ -95,6 +95,10 @@ pub struct MethodMetadata {
     pub return_type: Option<String>,
     pub doc_comment: Option<String>,
     pub attributes: Vec<AttributeMetadata>,
+    /// What calling it returns, for the static methods a compiler pass
+    /// calls at build time (`getDefaultName()`, `getSubscribedServices()`);
+    /// `None` when unknown, and the pass refuses to call it.
+    pub returns: Option<Value>,
 }
 
 impl MethodMetadata {
@@ -121,6 +125,13 @@ impl MethodMetadata {
     #[must_use]
     pub fn with_parameters(mut self, parameters: Vec<ParameterMetadata>) -> Self {
         self.parameters = parameters;
+        self
+    }
+
+    /// The same method, returning `value` when called.
+    #[must_use]
+    pub fn with_returns(mut self, value: Value) -> Self {
+        self.returns = Some(value);
         self
     }
 

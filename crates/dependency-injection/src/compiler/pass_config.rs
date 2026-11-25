@@ -160,7 +160,7 @@ impl PassConfig {
                 pending("CheckDefinitionValidityPass"),
                 pending_with("AutowirePass", "false"),
                 pending("ServiceLocatorTagPass"),
-                pending("ResolveTaggedIteratorArgumentPass"),
+                Pass::new(super::ResolveTaggedIteratorArgumentPass::new()),
                 pending("ResolveServiceSubscribersPass"),
                 pending("ResolveReferencesToAliasesPass"),
                 pending("ResolveInvalidReferencesPass"),
