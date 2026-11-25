@@ -11,6 +11,7 @@
 use std::collections::BTreeMap;
 
 use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
+use super::check_definition_validity_pass::CheckDefinitionValidityPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
 use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
 use super::remove_abstract_definitions_pass::RemoveAbstractDefinitionsPass;
@@ -164,7 +165,7 @@ impl PassConfig {
                 pending("ServiceLocatorTagPass"),
                 pending("TagDecoratorPass"),
                 pending("DecoratorServicePass"),
-                pending("CheckDefinitionValidityPass"),
+                Pass::new(CheckDefinitionValidityPass),
                 pending_with("AutowirePass", "false"),
                 pending("ServiceLocatorTagPass"),
                 pending("ResolveTaggedIteratorArgumentPass"),
