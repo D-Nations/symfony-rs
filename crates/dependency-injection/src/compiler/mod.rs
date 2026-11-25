@@ -34,8 +34,14 @@ pub use inline_service_definitions_pass::InlineServiceDefinitionsPass;
 mod remove_abstract_definitions_pass;
 pub use remove_abstract_definitions_pass::RemoveAbstractDefinitionsPass;
 
+mod remove_build_parameters_pass;
+pub use remove_build_parameters_pass::RemoveBuildParametersPass;
+
 mod remove_private_aliases_pass;
 pub use remove_private_aliases_pass::RemovePrivateAliasesPass;
+
+mod remove_unused_definitions_pass;
+pub use remove_unused_definitions_pass::RemoveUnusedDefinitionsPass;
 
 mod replace_alias_by_actual_definition_pass;
 pub use replace_alias_by_actual_definition_pass::ReplaceAliasByActualDefinitionPass;
