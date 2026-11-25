@@ -18,6 +18,7 @@ mod merge_extension_configuration_pass;
 mod pass_config;
 mod priority_tagged_service_trait;
 mod resolve_tagged_iterator_argument_pass;
+mod service_locator_tag_pass;
 mod service_reference_graph;
 
 pub use abstract_recursive_pass::{AbstractRecursivePass, RecursivePassState, recursive_process};
@@ -31,6 +32,7 @@ pub use priority_tagged_service_trait::{
     get_default,
 };
 pub use resolve_tagged_iterator_argument_pass::ResolveTaggedIteratorArgumentPass;
+pub use service_locator_tag_pass::ServiceLocatorTagPass;
 pub use service_reference_graph::{
     EdgeFlags, EdgeId, NodeId, ServiceReferenceGraph, ServiceReferenceGraphEdge,
     ServiceReferenceGraphNode,
