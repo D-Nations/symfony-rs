@@ -110,8 +110,13 @@ impl Scanner {
     }
 
     /// `loadValues($filePath)`.
-    fn load_values(&self, file_path: &str, globals: &Globals) -> Result<PhpArray> {
-        if file_path.ends_with(".php") {
+    fn load_values(file_path: &str, globals: &Globals) -> Result<PhpArray> {
+        #[expect(
+            clippy::case_sensitive_file_extension_comparisons,
+            reason = "PHP's str_ends_with() is case-sensitive"
+        )]
+        let php = file_path.ends_with(".php");
+        if php {
             return match local_php::read(file_path).map_err(console_error)? {
                 Some(values) => Ok(values),
                 None => Err(ConsoleError::Other {
@@ -131,7 +136,6 @@ impl Scanner {
 
     /// `getVariables($envFiles, $nameFilter)`: each variable's row.
     fn get_variables(
-        &self,
         env_files: &[String],
         name_filter: Option<&str>,
         globals: &Globals,
@@ -149,7 +153,7 @@ impl Scanner {
         let mut file_values: Vec<PhpArray> = Vec::with_capacity(env_files.len());
         let mut names: Vec<Key> = Vec::new();
         for env_file in env_files {
-            let values = self.load_values(env_file, globals)?;
+            let values = Self::load_values(env_file, globals)?;
             // $variables += $fileValues[$envFile]
             for key in values.keys() {
                 if !names.contains(key) {
@@ -223,8 +227,7 @@ impl Scanner {
             .into_iter()
             .filter(|f| is_file(f))
             .collect();
-        Ok(self
-            .get_variables(&env_files, None, globals, formatter)?
+        Ok(Self::get_variables(&env_files, None, globals, formatter)?
             .into_iter()
             .map(|(key, _)| key.to_value())
             .collect())
@@ -367,7 +370,7 @@ impl CommandHandler for DebugCommand {
             .collect();
         io.listing(&listing.iter().map(String::as_str).collect::<Vec<_>>())?;
 
-        let variables = scanner.get_variables(
+        let variables = Scanner::get_variables(
             &available_files,
             name_filter.as_deref(),
             &globals,

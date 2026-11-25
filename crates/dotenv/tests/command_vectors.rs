@@ -49,6 +49,7 @@ fn set_up(name: &str, files: &Json) -> std::io::Result<String> {
     Ok(dir)
 }
 
+#[expect(clippy::needless_pass_by_value, reason = "a map_err() callback")]
 fn dotenv_error(e: symfony_dotenv::Error) -> ConsoleError {
     ConsoleError::Other {
         class: e.class().to_owned(),

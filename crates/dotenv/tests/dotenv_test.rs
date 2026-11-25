@@ -445,6 +445,7 @@ fn testResolveLoadedVarsClearsStateOnCircularReferenceException() -> TestResult 
 }
 
 #[test]
+#[allow(clippy::too_many_lines, reason = "one upstream test")]
 fn testLoadEnv() -> TestResult {
     let mut g = Globals::new();
     let reset_context = |g: &mut Globals| {

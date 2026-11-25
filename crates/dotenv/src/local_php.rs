@@ -273,6 +273,10 @@ impl Reader<'_> {
                 .take_while(|b| (b'0'..=b'7').contains(*b))
                 .count();
             let text = std::str::from_utf8(&self.rest()[..digits]).unwrap_or("0");
+            #[expect(
+                clippy::cast_possible_truncation,
+                reason = "PHP keeps the low byte of an octal escape above \\377"
+            )]
             out.push(u32::from_str_radix(text, 8).unwrap_or(0) as u8);
             self.i += digits;
             return;

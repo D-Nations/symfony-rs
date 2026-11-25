@@ -178,11 +178,11 @@ fn filter_bool(value: &Value) -> bool {
 /// `(int) $value`.
 fn to_int(value: &Value) -> i64 {
     match value {
-        Value::Null => 0,
         Value::Bool(b) => i64::from(*b),
         Value::Int(i) => *i,
+        #[expect(clippy::cast_possible_truncation, reason = "PHP's (int) truncates")]
         Value::Float(f) if f.is_finite() => *f as i64,
-        Value::Float(_) => 0,
+        Value::Null | Value::Float(_) => 0,
         Value::String(s) => string_to_int(s),
         Value::Array(a) => i64::from(!a.is_empty()),
         Value::Object(_) => 1,
@@ -241,12 +241,14 @@ impl Dotenv {
     }
 
     /// `setProdEnvs()`.
+    #[must_use]
     pub fn set_prod_envs(mut self, prod_envs: &[&str]) -> Self {
         self.prod_envs = prod_envs.iter().map(|&e| e.to_owned()).collect();
         self
     }
 
     /// `usePutenv()`: whether `putenv()` defines the variables too.
+    #[must_use]
     pub fn use_putenv(mut self, use_putenv: bool) -> Self {
         self.use_putenv = use_putenv;
         self
@@ -609,6 +611,10 @@ impl Dotenv {
         }
     }
 
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one lexer state, as upstream's lexValue()"
+    )]
     fn lex_value(&mut self) -> Result<Vec<u8>, Error> {
         // /[ \t]*+(?:#.*)?$/Am: nothing but blanks and a comment
         let blanks = self.data[self.cursor..]
@@ -806,7 +812,7 @@ impl Dotenv {
             let name = string(&name.to_value());
             if loaded_vars.has(&name)
                 || (!isset(&g.env, &name)
-                    && !(isset(&g.server, &name) && !name.starts_with(b"HTTP_")))
+                    && (!isset(&g.server, &name) || name.starts_with(b"HTTP_")))
             {
                 env.push((name, string(value)));
             }
@@ -902,7 +908,7 @@ impl Dotenv {
         let mut out = Vec::new();
         let mut i = 0;
         while i < value.len() {
-            if let Some(m) = self.variable_at(value, i) {
+            if let Some(m) = Self::variable_at(value, i) {
                 out.extend(self.expand_variable(g, value, &m, loaded_vars)?);
                 i = m.end;
             } else {
@@ -915,7 +921,7 @@ impl Dotenv {
 
     /// `(?<!\\)(?P<backslashes>\\*)\$(?!\()(?P<opening_brace>\{)?(?P<name>VARNAME)?(?P<default_value>:[-=][^\}]*+)?(?P<closing_brace>\})?`
     /// at `i`.
-    fn variable_at(&self, s: &[u8], i: usize) -> Option<Variable> {
+    fn variable_at(s: &[u8], i: usize) -> Option<Variable> {
         if i > 0 && s[i - 1] == b'\\' {
             return None;
         }
@@ -1038,7 +1044,12 @@ impl Dotenv {
 
     fn move_cursor(&mut self, text: &[u8]) {
         self.cursor += text.len();
-        self.lineno += text.iter().filter(|&&b| b == b'\n').count() as i64;
+        #[expect(
+            clippy::naive_bytecount,
+            reason = "short slices; no bytecount dependency"
+        )]
+        let lines = text.iter().filter(|&&b| b == b'\n').count();
+        self.lineno += i64::try_from(lines).unwrap_or(i64::MAX);
     }
 
     fn format_exception(&self, message: impl AsRef<[u8]>) -> Error {
