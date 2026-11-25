@@ -19,6 +19,7 @@ fn error(result: Result<Value, php_value::Thrown>) -> String {
     e.unwrap_or_default()
 }
 
+#[allow(clippy::needless_pass_by_value, reason = "takes the call result as is")]
 fn int(result: Result<Value, php_value::Thrown>) -> Option<i64> {
     match result {
         Ok(Value::Int(i)) => Some(i),
@@ -26,6 +27,7 @@ fn int(result: Result<Value, php_value::Thrown>) -> Option<i64> {
     }
 }
 
+#[allow(clippy::needless_pass_by_value, reason = "takes the call result as is")]
 fn float(result: Result<Value, php_value::Thrown>) -> Option<f64> {
     match result {
         Ok(Value::Float(f)) => Some(f),

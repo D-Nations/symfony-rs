@@ -26,7 +26,10 @@
 //!
 //! Upstream: none
 
-#![allow(clippy::many_single_char_names, reason = "operands are a and b, as in the PHP manual")]
+#![allow(
+    clippy::many_single_char_names,
+    reason = "operands are a and b, as in the PHP manual"
+)]
 
 use std::cmp::Ordering;
 
