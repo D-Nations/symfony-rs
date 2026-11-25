@@ -11,6 +11,7 @@
 use std::collections::BTreeMap;
 
 use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
+use super::check_arguments_validity_pass::CheckArgumentsValidityPass;
 use super::check_circular_references_pass::CheckCircularReferencesPass;
 use super::check_definition_validity_pass::CheckDefinitionValidityPass;
 use super::check_exception_on_invalid_reference_behavior_pass::CheckExceptionOnInvalidReferenceBehaviorPass;
@@ -179,7 +180,7 @@ impl PassConfig {
                 Pass::new(AnalyzeServiceReferencesPass::new(true, true)),
                 Pass::new(CheckCircularReferencesPass::new()),
                 Pass::new(CheckReferenceValidityPass::new()),
-                pending_with("CheckArgumentsValidityPass", "false"),
+                Pass::new(CheckArgumentsValidityPass::new(false)),
             ],
         )]);
         let removing = BTreeMap::from([(
