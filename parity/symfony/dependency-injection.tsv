@@ -870,8 +870,8 @@ Tests/ContainerTest.php	ContainerTest::testCompile	ported	crates/dependency-inje
 Tests/ContainerTest.php	ContainerTest::testConstructor	ported	crates/dependency-injection/tests/container_test.rs::testConstructor
 Tests/ContainerTest.php	ContainerTest::testGet	ported	crates/dependency-injection/tests/container_test.rs::testGet
 Tests/ContainerTest.php	ContainerTest::testGetCircularReference	ported	crates/dependency-injection/tests/container_test.rs::testGetCircularReference
-Tests/ContainerTest.php	ContainerTest::testGetEnvDoesNotAutoCastNullWithDefaultEnvVarProcessor	pending	
-Tests/ContainerTest.php	ContainerTest::testGetEnvDoesNotAutoCastNullWithEnvVarProcessorsLocatorReturningDefaultEnvVarProcessor	pending	
+Tests/ContainerTest.php	ContainerTest::testGetEnvDoesNotAutoCastNullWithDefaultEnvVarProcessor	ported	crates/dependency-injection/tests/container_test.rs::testGetEnvDoesNotAutoCastNullWithDefaultEnvVarProcessor
+Tests/ContainerTest.php	ContainerTest::testGetEnvDoesNotAutoCastNullWithEnvVarProcessorsLocatorReturningDefaultEnvVarProcessor	ported	crates/dependency-injection/tests/container_test.rs::testGetEnvDoesNotAutoCastNullWithEnvVarProcessorsLocatorReturningDefaultEnvVarProcessor
 Tests/ContainerTest.php	ContainerTest::testGetParameterBag	ported	crates/dependency-injection/tests/container_test.rs::testGetParameterBag
 Tests/ContainerTest.php	ContainerTest::testGetRemovedServiceThrows	ported	crates/dependency-injection/tests/container_test.rs::testGetRemovedServiceThrows
 Tests/ContainerTest.php	ContainerTest::testGetServiceIds	ported	crates/dependency-injection/tests/container_test.rs::testGetServiceIds
@@ -1104,57 +1104,57 @@ Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testInlineServices	pending
 Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testServiceClosure	pending	
 Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testTaggedArguments	pending	
 Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testTaggedArgumentsOmitsAutoDerivedDefaultMethods	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testCircularEnvLoader	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testEnvLoader	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvBadUrl	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvBase64	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvBool	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvCachesEnv	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvCastsNullBehavior	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvConst	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvConstInvalid	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvCsv	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvDefined	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnum	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidArg	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidBackedValue	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidEnum	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidResolvedValue	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvFloat	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvFloatInvalid	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvInt	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvIntInvalid	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvInvalidJson	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvInvalidPrefixWithDefault	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvJson	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvJsonOther	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKey	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyArrayKeyNotFound	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyChained	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyInvalidKey	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyNoArrayResult	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvNot	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvNullable	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvRealEnv	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvRealEnvInvalid	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvRealEnvNonScalar	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolve	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNestedEnv	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNestedRealEnv	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNoMatch	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNotScalar	pending	
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testCircularEnvLoader	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testCircularEnvLoader
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testEnvLoader	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testEnvLoader
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvBadUrl	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvBadUrl
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvBase64	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvBase64
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvBool	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvBool
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvCachesEnv	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvCachesEnv
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvCastsNullBehavior	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvCastsNullBehavior
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvConst	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvConst
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvConstInvalid	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvConstInvalid
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvCsv	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvCsv
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvDefined	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvDefined
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnum	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvEnum
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidArg	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvEnumInvalidArg
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidBackedValue	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvEnumInvalidBackedValue
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidEnum	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvEnumInvalidEnum
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvEnumInvalidResolvedValue	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvEnumInvalidResolvedValue
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvFloat	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvFloat
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvFloatInvalid	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvFloatInvalid
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvInt	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvInt
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvIntInvalid	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvIntInvalid
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvInvalidJson	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvInvalidJson
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvInvalidPrefixWithDefault	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvInvalidPrefixWithDefault
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvJson	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvJson
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvJsonOther	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvJsonOther
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKey	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvKey
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyArrayKeyNotFound	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvKeyArrayKeyNotFound
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyChained	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvKeyChained
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyInvalidKey	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvKeyInvalidKey
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvKeyNoArrayResult	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvKeyNoArrayResult
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvNot	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvNot
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvNullable	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvNullable
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvRealEnv	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvRealEnv
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvRealEnvInvalid	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvRealEnvInvalid
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvRealEnvNonScalar	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvRealEnvNonScalar
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolve	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvResolve
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNestedEnv	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvResolveNestedEnv
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNestedRealEnv	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvResolveNestedRealEnv
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNoMatch	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvResolveNoMatch
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvResolveNotScalar	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvResolveNotScalar
 Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvShuffle	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvShuffleInvalid	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvString	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvTrim	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvUnknown	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvUrlPath	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvUrlencode	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvWithEmptyStringPrefixCastsToString	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testQueryStringEnvVarProcessor	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testRequireFile	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testRequireMissingFile	pending	
-Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testReset	pending	
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvShuffleInvalid	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvShuffleInvalid
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvString	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvString
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvTrim	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvTrim
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvUnknown	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvUnknown
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvUrlPath	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvUrlPath
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvUrlencode	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvUrlencode
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvWithEmptyStringPrefixCastsToString	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvWithEmptyStringPrefixCastsToString
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testQueryStringEnvVarProcessor	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testQueryStringEnvVarProcessor
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testRequireFile	n/a: the require: prefix runs a PHP file; the port refuses it with a RuntimeException	
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testRequireMissingFile	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testRequireMissingFile
+Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testReset	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testReset
 Tests/Exception/AutowiringFailedExceptionTest.php	AutowiringFailedExceptionTest::testGetMessageCallbackWhenMessageIsNotANotClosure	pending	
 Tests/Exception/AutowiringFailedExceptionTest.php	AutowiringFailedExceptionTest::testLazyness	pending	
 Tests/Exception/InvalidParameterTypeExceptionTest.php	InvalidParameterTypeExceptionTest::testExceptionMessage	pending	
@@ -1434,4 +1434,4 @@ Tests/ServicesResetterTest.php	ServicesResetterTest::testResetNonSharedServices	
 Tests/ServicesResetterTest.php	ServicesResetterTest::testResetNonSharedWithOptionalMethod	ported	crates/dependency-injection/tests/services_resetter_test.rs::testResetNonSharedWithOptionalMethod
 Tests/ServicesResetterTest.php	ServicesResetterTest::testResetServices	ported	crates/dependency-injection/tests/services_resetter_test.rs::testResetServices
 Tests/ServicesResetterTest.php	ServicesResetterTest::testResetThrowingServiceDoesNotPreventLaterServicesReset	ported	crates/dependency-injection/tests/services_resetter_test.rs::testResetThrowingServiceDoesNotPreventLaterServicesReset
-Tests/StaticEnvVarLoaderTest.php	StaticEnvVarLoaderTest::testLoadEnvVarsCachesInnerLoaderEnvVars	pending	
+Tests/StaticEnvVarLoaderTest.php	StaticEnvVarLoaderTest::testLoadEnvVarsCachesInnerLoaderEnvVars	ported	crates/dependency-injection/tests/static_env_var_loader_test.rs::testLoadEnvVarsCachesInnerLoaderEnvVars

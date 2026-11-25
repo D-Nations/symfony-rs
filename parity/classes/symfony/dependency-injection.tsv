@@ -4,7 +4,7 @@ Argument/AbstractArgument.php	AbstractArgument	23	ported	crates/dependency-injec
 Argument/ArgumentInterface.php	ArgumentInterface	6	ported	crates/dependency-injection/src/argument/mod.rs
 Argument/ArgumentTrait.php	ArgumentTrait	18	ported	crates/dependency-injection/src/argument/abstract_argument.rs
 Argument/BoundArgument.php	BoundArgument	41	ported	crates/dependency-injection/src/argument/bound_argument.rs
-Argument/EnvClosure.php	EnvClosure	22	pending	
+Argument/EnvClosure.php	EnvClosure	22	ported	crates/dependency-injection/src/argument/env_closure.rs
 Argument/EnvClosureArgument.php	EnvClosureArgument	39	ported	crates/dependency-injection/src/argument/env_closure_argument.rs
 Argument/IteratorArgument.php	IteratorArgument	18	ported	crates/dependency-injection/src/argument/iterator_argument.rs
 Argument/LazyClosure.php	LazyClosure	69	pending	
@@ -106,9 +106,9 @@ Dumper/PhpDumper.php	PhpDumper	2046	pending
 Dumper/Preloader.php	Preloader	91	pending	
 Dumper/XmlDumper.php	XmlDumper	385	pending	
 Dumper/YamlDumper.php	YamlDumper	303	pending	
-EnvVarLoaderInterface.php	EnvVarLoaderInterface	5	pending	
-EnvVarProcessor.php	EnvVarProcessor	298	pending	
-EnvVarProcessorInterface.php	EnvVarProcessorInterface	7	pending	
+EnvVarLoaderInterface.php	EnvVarLoaderInterface	5	ported	crates/dependency-injection/src/env_var_loader_interface.rs
+EnvVarProcessor.php	EnvVarProcessor	298	ported	crates/dependency-injection/src/env_var_processor.rs
+EnvVarProcessorInterface.php	EnvVarProcessorInterface	7	ported	crates/dependency-injection/src/env_var_processor_interface.rs
 Exception/AutoconfigureFailedException.php	AutoconfigureFailedException	4	ported	crates/dependency-injection/src/exception.rs
 Exception/AutowiringFailedException.php	AutowiringFailedException	48	ported	crates/dependency-injection/src/exception.rs
 Exception/BadMethodCallException.php	BadMethodCallException	4	ported	crates/dependency-injection/src/exception.rs
@@ -210,7 +210,7 @@ ReverseContainer.php	ReverseContainer	37	ported	crates/dependency-injection/src/
 ServiceLocator.php	ServiceLocator	112	ported	crates/dependency-injection/src/service_locator.rs
 ServicesResetter.php	ServicesResetter	53	ported	crates/dependency-injection/src/services_resetter.rs
 ServicesResetterInterface.php	ServicesResetterInterface	5	ported	crates/dependency-injection/src/services_resetter.rs
-StaticEnvVarLoader.php	StaticEnvVarLoader	12	pending	
+StaticEnvVarLoader.php	StaticEnvVarLoader	12	ported	crates/dependency-injection/src/static_env_var_loader.rs
 TaggedContainerInterface.php	TaggedContainerInterface	5	ported	crates/dependency-injection/src/tagged_container_interface.rs
 TypedReference.php	TypedReference	27	ported	crates/dependency-injection/src/reference.rs
 Variable.php	Variable	12	ported	crates/dependency-injection/src/reference.rs

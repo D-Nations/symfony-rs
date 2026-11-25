@@ -16,9 +16,6 @@
 //! Pending:
 //! - `testResetDoesNotInitializeLazyServices`: needs `ContainerBuilder`
 //!   (`register()`, `setLazy()`, `compile()`), ported separately.
-//! - `testGetEnvDoesNotAutoCastNullWithDefaultEnvVarProcessor` and
-//!   `testGetEnvDoesNotAutoCastNullWithEnvVarProcessorsLocatorReturningDefaultEnvVarProcessor`:
-//!   need `EnvVarProcessor`, ported separately.
 //!
 //! Upstream: symfony/dependency-injection Tests/ContainerTest.php
 #![allow(
@@ -700,6 +697,10 @@ impl EnvProcessor for EnvStandIn {
                 Error::env_not_found(format!("Environment variable not found: \"{name}\"."))
             })
     }
+
+    fn get_provided_types() -> Vec<(String, String)> {
+        vec![("string".to_owned(), "string".to_owned())]
+    }
 }
 
 #[test]
@@ -858,4 +859,43 @@ fn testRequestAnInternalSharedPrivateService() {
         e.message()
             .contains("You have requested a non-existent service \"internal\".")
     );
+}
+
+#[test]
+fn testGetEnvDoesNotAutoCastNullWithDefaultEnvVarProcessor() {
+    let container = Container::new(None);
+    container.set_parameter("env(FOO)", Value::Null).unwrap();
+    container.compile().unwrap();
+
+    assert!(container.get_env("FOO").unwrap().is_null());
+}
+
+#[test]
+fn testGetEnvDoesNotAutoCastNullWithEnvVarProcessorsLocatorReturningDefaultEnvVarProcessor() {
+    use symfony_dependency_injection::container::EnvProcessorObject;
+    use symfony_dependency_injection::env_var_processor::EnvVarProcessor;
+    use symfony_dependency_injection::service_locator::{LocatorEntry, ServiceLocator};
+
+    let container = Container::new(None);
+    container.set_parameter("env(FOO)", Value::Null).unwrap();
+    let weak: Weak<Container> = Arc::downgrade(&container);
+    let locator = ServiceLocator::new(vec![(
+        "string".to_owned(),
+        LocatorEntry::new(move |_| {
+            let container = weak.upgrade().unwrap();
+            Ok(Value::Object(Arc::new(EnvProcessorObject::new(
+                "Symfony\\Component\\DependencyInjection\\EnvVarProcessor",
+                Arc::new(EnvVarProcessor::new(container, None)),
+            ))))
+        }),
+    )]);
+    container
+        .set(
+            "container.env_var_processors_locator",
+            Some(Value::Object(Arc::new(locator))),
+        )
+        .unwrap();
+    container.compile().unwrap();
+
+    assert!(container.get_env("FOO").unwrap().is_null());
 }

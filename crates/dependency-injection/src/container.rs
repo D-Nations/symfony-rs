@@ -24,8 +24,8 @@
 //! `container.env_var_processors_locator` service, a [`ServiceLocator`]
 //! whose entries are [`EnvProcessorObject`]s (an [`EnvProcessor`] as a
 //! service). The fallback `new EnvVarProcessor($this)` is the factory set
-//! with [`Container::set_default_env_var_processor`]; without one, the
-//! lookup fails with PHP's error for a missing class.
+//! with [`Container::set_default_env_var_processor`]; without one, it is
+//! an [`crate::env_var_processor::EnvVarProcessor`] on this container.
 //!
 //! Differences that cannot be kept: `$loading` and `$resolving` are kept
 //! per thread, so two threads creating the same service are not a
@@ -74,16 +74,8 @@ pub type DefaultEnvProcessor = Arc<dyn Fn(&Container) -> Arc<dyn EnvProcessor> +
 
 /// An env var processor as `getEnv()` calls it:
 /// `$processor->getEnv($prefix, $name, $getEnv)`.
-pub trait EnvProcessor: Send + Sync {
-    /// `getEnv($prefix, $name, $getEnv)`. `get_env` is the container's
-    /// `getEnv()` closure.
-    fn get_env(
-        &self,
-        prefix: &str,
-        name: &str,
-        get_env: &dyn Fn(&str) -> Result<Value>,
-    ) -> Result<Value>;
-}
+/// The processor interface the container calls (`EnvVarProcessorInterface`).
+pub use crate::env_var_processor_interface::EnvVarProcessorInterface as EnvProcessor;
 
 /// An [`EnvProcessor`] as a service object.
 pub struct EnvProcessorObject {
@@ -719,12 +711,18 @@ impl Container {
                 .clone();
             match default {
                 Some(make) => make(self),
-                None => {
-                    return Err(Error::new(
-                        ErrorKind::Other("Error".to_owned()),
-                        "Class \"Symfony\\Component\\DependencyInjection\\EnvVarProcessor\" not found",
-                    ));
-                }
+                // `new EnvVarProcessor($this)`.
+                None => match self.this.upgrade() {
+                    Some(this) => {
+                        Arc::new(crate::env_var_processor::EnvVarProcessor::new(this, None))
+                    }
+                    None => {
+                        return Err(Error::new(
+                            ErrorKind::Other("Error".to_owned()),
+                            "Class \"Symfony\\Component\\DependencyInjection\\EnvVarProcessor\" not found",
+                        ));
+                    }
+                },
             }
         };
         if !has_prefix {
@@ -946,6 +944,10 @@ mod tests {
             }
             Ok(Value::from(format!("{prefix}|{name}")))
         }
+
+        fn get_provided_types() -> Vec<(String, String)> {
+            vec![("echo".to_owned(), "string".to_owned())]
+        }
     }
 
     fn container_with_echo(calls: &Arc<AtomicUsize>) -> Arc<Container> {
@@ -997,11 +999,11 @@ mod tests {
     }
 
     #[test]
-    fn get_env_without_the_default_processor() {
+    fn get_env_with_the_default_processor() {
         let c = Container::new(None);
-        let e = c.get_env("FOO").unwrap_err();
+        let e = c.get_env("SYMFONY_RS_SURELY_NOT_SET").unwrap_err();
         assert_eq!(
-            "Class \"Symfony\\Component\\DependencyInjection\\EnvVarProcessor\" not found",
+            "Environment variable not found: \"SYMFONY_RS_SURELY_NOT_SET\".",
             e.message()
         );
         // The empty locator was set on the way.

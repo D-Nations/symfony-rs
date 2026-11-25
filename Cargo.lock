@@ -1109,8 +1109,10 @@ version = "0.1.0"
 dependencies = [
  "php-value",
  "psr-container",
+ "serde_json",
  "symfony-config",
  "symfony-deprecation-contracts",
+ "symfony-dotenv",
 ]
 
 [[package]]
