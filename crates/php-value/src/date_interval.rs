@@ -6,7 +6,8 @@
 //! does) with spaces and tabs around it; any other text is PHP's
 //! `DateMalformedIntervalStringException` "Unknown or bad format (...)",
 //! except texts PHP reads in other ways (`R` recurrences, `/` periods, the
-//! `P0001-02-03T04:05:06` form) and numbers of more than nine digits, which
+//! `P0001-02-03T04:05:06` form), texts of only blanks and dots (PHP: "Failed
+//! to parse interval") and numbers of more than nine digits, which
 //! are refused ([`Unsupported`]). Written from the PHP manual and checked on
 //! the answers PHP 8.4.27 gave in the oracle (doctrine-dbal's
 //! tests/data/php.json, key `date_interval`).
@@ -48,6 +49,10 @@ impl DateInterval {
         if duration.iter().any(|&b| {
             b == b'/' || b == 0 || !b.is_ascii() || matches!(b, b'\n' | b'\r' | 0x0b | 0x0c)
         }) {
+            return Err(refused());
+        }
+        // Only blanks and dots: "Failed to parse interval" (not ported).
+        if !duration.is_empty() && duration.iter().all(|b| matches!(b, b' ' | b'\t' | b'.')) {
             return Err(refused());
         }
         let blank = |b: &u8| matches!(b, b' ' | b'\t');

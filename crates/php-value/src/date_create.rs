@@ -343,6 +343,10 @@ pub fn date_create(text: &[u8], zone_argument: Option<TimeZone>) -> Created {
             .take_while(|&&b| matches!(b, b' ' | b'\t'))
             .count();
     let trimmed = &text[start..end];
+    // Blanks alone: "Empty string" (not ported).
+    if trimmed.is_empty() && !text.is_empty() {
+        return Err(unsupported(text));
+    }
     if trimmed.is_empty() || trimmed.eq_ignore_ascii_case(b"now") {
         return Ok(Ok(DateTimeImmutable::now(default_zone)));
     }
