@@ -176,6 +176,7 @@ impl Closure {
     }
 
     /// For `$object->method(...)`: the object's class and the method.
+    #[cfg(feature = "debug")]
     pub(crate) fn bound_method(&self) -> Option<(&'static str, &'static str)> {
         self.bound
             .as_ref()

@@ -11,6 +11,8 @@
 
 #![forbid(unsafe_code)]
 
+pub mod exception;
+
 use std::{cmp::Reverse, future::Future, sync::Arc};
 
 use axum::{

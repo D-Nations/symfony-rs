@@ -1432,7 +1432,7 @@ Stack rows (searched November 22):
       and attributes (what PHP reflects). The existing typed Axum subset
       (`Kernel<C>`) stays for request-lab and the converter fixture until
       they move. Steps: [x] `Handle<T>`; [x] RequestStack (RequestStackTest 5 of 5);
-      [ ] exceptions (HttpExceptionTest and its subclasses); [ ] events;
+      [x] exceptions (HttpExceptionTest and its 16 subclass tests, 86 of 86); [ ] events;
       [ ] HttpKernel (HttpKernelTest); [ ] recorded lifecycle vectors.
 
 ## Local development performance
