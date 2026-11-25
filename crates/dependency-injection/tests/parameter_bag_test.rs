@@ -92,7 +92,7 @@ fn testRemoveWithDeprecation() {
         bag.all(),
         "->remove() removes a parameter"
     );
-    assert!(bag.all_deprecated().is_empty());
+    assert_eq!(bag.all_deprecated(), []);
 }
 
 #[test]

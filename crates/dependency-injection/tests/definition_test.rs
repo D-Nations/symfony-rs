@@ -635,7 +635,7 @@ fn testAutowired() {
 #[test]
 fn testChangesNoChanges() {
     let def = Definition::default();
-    assert!(def.changes().is_empty());
+    assert_eq!(def.changes(), [] as [String; 0]);
 }
 
 #[test]
@@ -681,7 +681,7 @@ fn testGetChangesWithChanges() {
     );
 
     def.set_changes(Vec::new());
-    assert!(def.changes().is_empty());
+    assert_eq!(def.changes(), [] as [String; 0]);
 }
 
 #[test]
