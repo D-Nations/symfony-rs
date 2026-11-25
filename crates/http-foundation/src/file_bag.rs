@@ -222,6 +222,7 @@ impl FileBag {
     }
 
     /// `add($files)`.
+    #[expect(clippy::needless_pass_by_value, reason = "upstream's signature")]
     pub fn add(&mut self, files: PhpArray) -> Result<()> {
         for (key, file) in files.iter() {
             let key = match key {

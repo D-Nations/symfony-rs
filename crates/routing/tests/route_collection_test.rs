@@ -7,6 +7,10 @@
 //!
 //! Upstream: symfony/routing Tests/RouteCollectionTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::similar_names,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 mod common;
 

@@ -218,7 +218,10 @@ impl RouteCompiler {
         for (i, v) in variables.iter().enumerate() {
             if !seen.contains(&v.as_slice()) {
                 seen.push(v);
-                unique.insert(i as i64, Value::String(PhpString::from(v.as_slice())));
+                unique.insert(
+                    i64::try_from(i).unwrap_or(i64::MAX),
+                    Value::String(PhpString::from(v.as_slice())),
+                );
             }
         }
 
@@ -242,6 +245,7 @@ impl RouteCompiler {
     }
 }
 
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 fn compile_pattern(
     route: &Route,
     pattern: &[u8],

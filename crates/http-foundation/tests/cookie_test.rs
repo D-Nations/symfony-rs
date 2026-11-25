@@ -6,7 +6,11 @@
 //! cookies compares every property, as derived `PartialEq` does.
 //!
 //! Upstream: symfony/http-foundation Tests/CookieTest.php
-
+#![allow(
+    clippy::too_many_lines,
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,

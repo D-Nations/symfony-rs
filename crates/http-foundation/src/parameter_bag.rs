@@ -272,6 +272,7 @@ impl ParameterBag {
     }
 
     /// `add($parameters)`: `array_replace()`.
+    #[expect(clippy::needless_pass_by_value, reason = "upstream's signature")]
     pub fn add(&mut self, parameters: PhpArray) {
         for (key, value) in parameters.iter() {
             self.parameters.insert(key.clone(), value.clone());

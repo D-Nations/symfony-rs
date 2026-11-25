@@ -64,6 +64,7 @@ impl CompiledRoute {
     }
 
     /// The same data as an instance of a subclass.
+    #[must_use]
     pub fn with_class(mut self, class: impl Into<String>) -> Self {
         self.class = class.into();
         self

@@ -157,6 +157,7 @@ impl Class {
     }
 
     /// The classes and interfaces it is an instance of, itself first.
+    #[expect(clippy::too_many_lines, reason = "one arm for each upstream class")]
     pub const fn ancestry(self) -> &'static [&'static str] {
         match self {
             Self::BadRequest => &[

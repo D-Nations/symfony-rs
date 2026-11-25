@@ -2,7 +2,7 @@
 //! (v8.1.11), recorded by `oracle/recorders/http_foundation_response.php`
 //! (`scripts/record.sh http-foundation-response`): 1,200 generated
 //! scripts of up to ten calls each (status, content, headers, cache
-//! directives, dates, ETag, Vary, `setCache()` with values of every type,
+//! directives, dates, `ETag`, Vary, `setCache()` with values of every type,
 //! `prepare()` and `isNotModified()` against generated requests, and the
 //! send methods), each call's result and the process calls it made
 //! (`header()`, `header_remove()`, `headers_send()`, `echo`, `ini_set()`),
@@ -261,7 +261,7 @@ fn calls(output: &Output) -> Json {
                 response_code
             ])),
             OutputCall::HeaderRemove(name) => {
-                list.push(serde_json::json!(["header_remove", b64(name)]))
+                list.push(serde_json::json!(["header_remove", b64(name)]));
             }
             OutputCall::HeadersSend(code) => list.push(serde_json::json!(["headers_send", code])),
             OutputCall::Echo(text) => echo.extend_from_slice(text.as_bytes()),
@@ -269,7 +269,7 @@ fn calls(output: &Output) -> Json {
             OutputCall::ObEndClean => list.push(serde_json::json!(["ob_end_clean"])),
             OutputCall::Flush => list.push(serde_json::json!(["flush"])),
             OutputCall::FastcgiFinishRequest => {
-                list.push(serde_json::json!(["fastcgi_finish_request"]))
+                list.push(serde_json::json!(["fastcgi_finish_request"]));
             }
             OutputCall::LitespeedFinishRequest => {
                 list.push(serde_json::json!(["litespeed_finish_request"]));

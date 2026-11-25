@@ -116,6 +116,10 @@ fn typed_argument_error(
 /// it fits (PHP 8.1+ deprecates a fraction, a notice this does not
 /// print); anything else, a leading-numeric string included, is a
 /// `\TypeError`.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's (int) on a float in range"
+)]
 pub(crate) fn int_argument(
     value: &Value,
     function: &str,

@@ -5,6 +5,10 @@
 //!
 //! Upstream: symfony/http-foundation Tests/HeaderUtilsTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::needless_pass_by_value,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use php_value::{PhpArray, PhpString, Value, php_array, url};
 use symfony_http_foundation::header_utils::{

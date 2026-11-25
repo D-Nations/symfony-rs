@@ -1,5 +1,5 @@
 //! PHP-FPM, the SAPI a Symfony front controller runs under: what PHP makes
-//! of one FastCGI request (the superglobals, `php://input`, the uploaded
+//! of one `FastCGI` request (the superglobals, `php://input`, the uploaded
 //! files, `request_parse_body()`'s answer) and what it sends back for the
 //! output calls the script made (`header()`, `header_remove()`,
 //! `http_response_code()`, `setcookie()`, `echo`, output buffers,
@@ -14,7 +14,7 @@
 //! Requests ([`start`]):
 //!
 //! - `$_SERVER` holds the process environment PHP-FPM passes on, in order,
-//!   then the FastCGI parameters, last first; a parameter sent twice keeps
+//!   then the `FastCGI` parameters, last first; a parameter sent twice keeps
 //!   the place of its first sending and the later value; a parameter that
 //!   names an environment variable replaces it in place. PHP then sets
 //!   `FCGI_ROLE`, `PHP_SELF` (`SCRIPT_NAME` with `PATH_INFO`), the
@@ -170,14 +170,14 @@ impl Default for Ini {
     }
 }
 
-/// One FastCGI request as PHP-FPM receives it.
+/// One `FastCGI` request as PHP-FPM receives it.
 #[derive(Debug, Clone, Default)]
 pub struct CgiRequest {
     /// The environment PHP-FPM passes on (`clear_env = no`), in order.
     pub environment: Vec<(PhpString, PhpString)>,
-    /// The FastCGI parameters, in the order they were sent.
+    /// The `FastCGI` parameters, in the order they were sent.
     pub params: Vec<(PhpString, PhpString)>,
-    /// The body (FastCGI stdin).
+    /// The body (`FastCGI` stdin).
     pub stdin: Vec<u8>,
     /// When the request started (`microtime(true)`).
     pub time: f64,
@@ -194,6 +194,7 @@ pub struct Startup {
 
 /// Builds what PHP-FPM gives the script for `request`, writing uploaded
 /// files to `ini.upload_tmp_dir`.
+#[expect(clippy::too_many_lines, reason = "PHP-FPM's startup steps in order")]
 pub fn start(request: &CgiRequest, ini: &Ini) -> std::io::Result<Startup> {
     let mut warnings = Vec::new();
     let mut uploaded = Vec::new();
@@ -400,9 +401,9 @@ fn server(request: &CgiRequest) -> PhpArray {
             .map(|part| Value::String(PhpString::from(part)))
             .collect()
     };
-    let argc = i64::try_from(argv.len()).unwrap_or(i64::MAX);
+    let arg_count = i64::try_from(argv.len()).unwrap_or(i64::MAX);
     server.insert("argv", Value::Array(PhpArray::list(argv)));
-    server.insert("argc", Value::Int(argc));
+    server.insert("argc", Value::Int(arg_count));
     server
 }
 
@@ -620,7 +621,7 @@ pub struct CgiResponse {
 }
 
 impl CgiResponse {
-    /// The CGI response as PHP-FPM writes it to the FastCGI stdout stream.
+    /// The CGI response as PHP-FPM writes it to the `FastCGI` stdout stream.
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut out = Vec::new();
         for line in &self.headers {
@@ -658,6 +659,7 @@ impl std::fmt::Display for CookieError {
 impl std::error::Error for CookieError {}
 
 /// The SAPI's side of one request's output.
+#[expect(clippy::struct_excessive_bools, reason = "the SAPI's own flags")]
 #[derive(Debug, Clone)]
 pub struct Sapi {
     head: bool,
@@ -1146,6 +1148,7 @@ impl Sapi {
         // `header()` was given or from its code, unless (without a status
         // line) a `Status:` header gives it; the first `Status:` header is
         // written when PHP writes none.
+        #[expect(clippy::match_same_arms, reason = "PHP's cases, in order")]
         let own = match &self.status_line {
             Some(line) if self.code != 200 => Some(line.as_bytes().to_vec()),
             Some(_) => None,

@@ -116,6 +116,7 @@ impl Default for Options {
 }
 
 /// A cookie.
+#[expect(clippy::struct_excessive_bools, reason = "upstream's fields")]
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cookie {
     name: PhpString,
@@ -316,7 +317,7 @@ impl Cookie {
                     } else {
                         match strtotime(&unquoted, time()) {
                             Ok(Some(timestamp)) => expires = timestamp.max(1),
-                            Ok(None) => continue,
+                            Ok(None) => {}
                             Err(unsupported) => {
                                 return Err(Error::new(Class::NotPorted, unsupported.to_string()));
                             }
@@ -332,10 +333,12 @@ impl Cookie {
                     }
                     max_age = Some(attribute_value.to_vec());
                 }
-                b"samesite" => match SameSite::from_lower(&attribute_value.to_ascii_lowercase()) {
-                    Some(found) => same_site_value = Some(found),
-                    None => continue,
-                },
+                b"samesite" => {
+                    if let Some(found) = SameSite::from_lower(&attribute_value.to_ascii_lowercase())
+                    {
+                        same_site_value = Some(found);
+                    }
+                }
                 b"path" => path = attribute_value.to_vec(),
                 b"domain" => domain = Some(attribute_value.to_vec()),
                 // 'raw' and unknown attributes are ignored

@@ -275,10 +275,8 @@ warnings`, so a warning fails it.
   lint is fixed.
 - Generated files are fixed in their generator (`scripts/gen-*.py`,
   `build.rs`), never by hand.
-- Opted in (November 25): every member except http-foundation and
-  routing. Those two belong to the HTTP path (M2-A), which the owner
-  changes in a separate tree; they opt in there (about 99 and 38
-  warnings on November 25, mostly casts and long functions).
+- Opted in (November 25): every member. http-foundation and routing
+  (the HTTP path, M2-A) opted in last, on the owner's request.
 - PHP-shaped code silences a lint at the function with `#[expect]` and a
   reason (PHP's int/float conversions, offsets and lengths, upstream
   signatures and flags, upstream-length functions). Test files that port

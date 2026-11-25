@@ -10,7 +10,10 @@
 //! subclass is `Response` itself (it overrides nothing).
 //!
 //! Upstream: symfony/http-foundation Tests/ResponseTest.php Tests/ResponseTestCase.php
-
+#![allow(
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,

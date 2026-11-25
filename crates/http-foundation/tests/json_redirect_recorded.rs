@@ -158,7 +158,8 @@ fn json_scripts(data: &Json, failures: &mut Vec<String>) -> Result<usize, TestEr
                     let callback = nullable_bytes(&op[1])?;
                     same_result(
                         result,
-                        &response.set_callback(callback.as_ref().map(|c| c.as_bytes())),
+                        &response
+                            .set_callback(callback.as_ref().map(php_value::PhpString::as_bytes)),
                     )
                 }
                 "options" => same_result(result, &response.set_encoding_options(int(&op[1])?)),

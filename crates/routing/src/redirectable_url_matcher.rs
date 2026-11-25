@@ -105,7 +105,7 @@ impl<R: RedirectableUrlMatcherInterface> RedirectableUrlMatcher<R> {
         self.match_in(pathinfo, self.matcher.context())
     }
 
-    /// `matchRequest($request)`, inherited from UrlMatcher: this class's
+    /// `matchRequest($request)`, inherited from `UrlMatcher`: this class's
     /// `match($request->getPathInfo())` in the context of the request.
     pub fn match_request(&self, request: &mut Request) -> Result<PhpArray, Error> {
         let context = self.matcher.request_context(request)?;

@@ -20,3 +20,6 @@ php-value = { path = "../php-value", features = ["vectors"] }
 base64 = "0.23.1"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.154", features = ["preserve_order", "unbounded_depth"] }
+
+[lints]
+workspace = true

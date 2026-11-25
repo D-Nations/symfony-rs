@@ -76,6 +76,7 @@ enum Times {
 struct With {
     path: Option<&'static str>,
     route: Option<&'static str>,
+    #[expect(clippy::option_option, reason = "not checked, or PHP's null")]
     scheme: Option<Option<&'static str>>,
 }
 

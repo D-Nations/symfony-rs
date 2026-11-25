@@ -55,7 +55,7 @@ impl<T> Ordered<T> {
     /// `$array[$name] = $value`: in place for an existing name, else last.
     pub(crate) fn set(&mut self, name: PhpString, value: T) {
         if let Some(&i) = self.index.get(name.as_bytes()) {
-            self.slots[i] = Some((name, value))
+            self.slots[i] = Some((name, value));
         } else {
             self.index
                 .insert(name.as_bytes().to_vec(), self.slots.len());
