@@ -34,6 +34,9 @@ pub use check_circular_references_pass::CheckCircularReferencesPass;
 mod check_definition_validity_pass;
 pub use check_definition_validity_pass::CheckDefinitionValidityPass;
 
+mod check_exception_on_invalid_reference_behavior_pass;
+pub use check_exception_on_invalid_reference_behavior_pass::CheckExceptionOnInvalidReferenceBehaviorPass;
+
 mod check_reference_validity_pass;
 pub use check_reference_validity_pass::CheckReferenceValidityPass;
 

@@ -13,6 +13,7 @@ use std::collections::BTreeMap;
 use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
 use super::check_circular_references_pass::CheckCircularReferencesPass;
 use super::check_definition_validity_pass::CheckDefinitionValidityPass;
+use super::check_exception_on_invalid_reference_behavior_pass::CheckExceptionOnInvalidReferenceBehaviorPass;
 use super::check_reference_validity_pass::CheckReferenceValidityPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
 use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
@@ -188,7 +189,7 @@ impl PassConfig {
                 Pass::new(RemoveAbstractDefinitionsPass),
                 Pass::new(RemoveUnusedDefinitionsPass::new()),
                 Pass::new(AnalyzeServiceReferencesPass::default()),
-                pending("CheckExceptionOnInvalidReferenceBehaviorPass"),
+                Pass::new(CheckExceptionOnInvalidReferenceBehaviorPass::new()),
                 Pass::new(InlineServiceDefinitionsPass::new(Some(
                     AnalyzeServiceReferencesPass::default(),
                 ))),
