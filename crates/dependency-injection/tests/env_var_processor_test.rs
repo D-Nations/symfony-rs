@@ -9,7 +9,7 @@
 //! - testRequireFile: n/a, `require:` would run a PHP file (refused).
 //! - testGetEnvShuffle: pending, the order for `srand(2)` needs PHP's
 //!   Mt19937 `shuffle()`, which php-value does not have.
-//!   `testGetEnvShuffleOrder` checks that the values are kept.
+//!   `shuffle_keeps_the_values` checks that the values are kept.
 //!
 //! Upstream: symfony/dependency-injection Tests/EnvVarProcessorTest.php
 #![allow(
@@ -704,7 +704,7 @@ fn testGetEnvCsv() {
 /// Not upstream: what testGetEnvShuffle checks apart from the seeded
 /// order (pending).
 #[test]
-fn testGetEnvShuffleOrder() {
+fn shuffle_keeps_the_values() {
     let result = processor()
         .get_env("shuffle", "", &|_| Ok(list(&["foo", "bar"])))
         .unwrap();
