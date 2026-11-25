@@ -134,7 +134,7 @@ impl PassConfig {
                     pending("AutowireAsDecoratorPass"),
                     pending("AttributeAutoconfigurationPass"),
                     pending("ResolveInstanceofConditionalsPass"),
-                    pending("RegisterEnvVarProcessorsPass"),
+                    Pass::new(super::RegisterEnvVarProcessorsPass),
                 ],
             ),
             (-1000, vec![Pass::new(super::ExtensionCompilerPass)]),
