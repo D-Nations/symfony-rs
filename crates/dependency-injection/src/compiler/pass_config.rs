@@ -129,7 +129,7 @@ impl PassConfig {
             (
                 100,
                 vec![
-                    pending("ResolveClassPass"),
+                    Pass::new(super::ResolveClassPass::new()),
                     pending("RegisterAutoconfigureAttributesPass"),
                     pending("AutowireAsDecoratorPass"),
                     pending("AttributeAutoconfigurationPass"),
