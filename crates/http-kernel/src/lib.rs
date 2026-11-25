@@ -11,11 +11,14 @@
 
 #![forbid(unsafe_code)]
 
+pub mod argument_resolver;
 pub mod controller;
+pub mod controller_metadata;
 pub mod event;
 pub mod exception;
 pub mod http_kernel;
 pub mod router_listener;
+pub mod value_resolver;
 
 use std::{cmp::Reverse, future::Future, sync::Arc};
 

@@ -20,7 +20,7 @@
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
-//! Upstream: symfony/http-kernel Exception/HttpException.php Exception/HttpExceptionInterface.php Exception/AccessDeniedHttpException.php Exception/BadRequestHttpException.php Exception/ConflictHttpException.php Exception/GoneHttpException.php Exception/LengthRequiredHttpException.php Exception/LockedHttpException.php Exception/MethodNotAllowedHttpException.php Exception/NotAcceptableHttpException.php Exception/NotFoundHttpException.php Exception/PreconditionFailedHttpException.php Exception/PreconditionRequiredHttpException.php Exception/ServiceUnavailableHttpException.php Exception/TooManyRequestsHttpException.php Exception/UnauthorizedHttpException.php Exception/UnprocessableEntityHttpException.php Exception/UnsupportedMediaTypeHttpException.php Exception/ControllerDoesNotReturnResponseException.php
+//! Upstream: symfony/http-kernel Exception/HttpException.php Exception/HttpExceptionInterface.php Exception/AccessDeniedHttpException.php Exception/BadRequestHttpException.php Exception/ConflictHttpException.php Exception/GoneHttpException.php Exception/LengthRequiredHttpException.php Exception/LockedHttpException.php Exception/MethodNotAllowedHttpException.php Exception/NotAcceptableHttpException.php Exception/NotFoundHttpException.php Exception/PreconditionFailedHttpException.php Exception/PreconditionRequiredHttpException.php Exception/ServiceUnavailableHttpException.php Exception/TooManyRequestsHttpException.php Exception/UnauthorizedHttpException.php Exception/UnprocessableEntityHttpException.php Exception/UnsupportedMediaTypeHttpException.php Exception/ControllerDoesNotReturnResponseException.php Exception/NearMissValueResolverException.php Exception/ResolverNotFoundException.php
 
 use std::{fmt, sync::Arc};
 
@@ -91,7 +91,7 @@ pub const REQUEST_EXCEPTION_INTERFACE: &str =
     "Symfony\\Component\\HttpFoundation\\Exception\\RequestExceptionInterface";
 
 /// The PHP throwables an application or a test throws that are not
-/// Symfony classes.
+/// Symfony classes, and `HttpKernel`'s two plain exceptions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PhpClass {
     Exception,
@@ -102,6 +102,12 @@ pub enum PhpClass {
     Error,
     TypeError,
     ValueError,
+    /// `Symfony\Component\HttpKernel\Exception\NearMissValueResolverException`:
+    /// a value resolver that could almost resolve an argument, with the
+    /// reason.
+    NearMissValueResolverException,
+    /// `Symfony\Component\HttpKernel\Exception\ResolverNotFoundException`.
+    ResolverNotFoundException,
 }
 
 impl PhpClass {
@@ -126,6 +132,18 @@ impl PhpClass {
             Self::Error => &["Error", "Throwable"],
             Self::TypeError => &["TypeError", "Error", "Throwable"],
             Self::ValueError => &["ValueError", "Error", "Throwable"],
+            Self::NearMissValueResolverException => &[
+                "Symfony\\Component\\HttpKernel\\Exception\\NearMissValueResolverException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::ResolverNotFoundException => &[
+                "Symfony\\Component\\HttpKernel\\Exception\\ResolverNotFoundException",
+                "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
         }
     }
 }

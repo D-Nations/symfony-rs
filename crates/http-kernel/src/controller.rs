@@ -11,8 +11,8 @@
 //! [`ControllerResult`]: a response, or any other value for the view
 //! event.
 //!
-//! The default `ArgumentResolver` (and its value resolvers) is not
-//! ported; a kernel is given an argument resolver.
+//! The default `ArgumentResolver` and its value resolvers are in
+//! [`crate::argument_resolver`].
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -44,6 +44,15 @@ pub struct Parameter {
     pub variadic: bool,
     /// The default value, when one is available.
     pub default: Option<Value>,
+    /// The declared type as reflection prints it (`string`, `int|string`,
+    /// a class name; `?string` is `string` with [`Parameter::nullable`]);
+    /// `None` without a type declaration.
+    pub type_name: Option<String>,
+    /// A nullable type: `?T`, `T|null`, or a `null` default.
+    pub nullable: bool,
+    /// The parameter's attributes, as objects (`getAttributes()` then
+    /// `newInstance()`).
+    pub attributes: Vec<Value>,
 }
 
 impl Parameter {
@@ -53,7 +62,36 @@ impl Parameter {
             name: name.into(),
             variadic: false,
             default: None,
+            type_name: None,
+            nullable: false,
+            attributes: Vec::new(),
         }
+    }
+
+    /// With a declared type.
+    #[must_use]
+    pub fn typed(mut self, type_name: impl Into<String>) -> Self {
+        self.type_name = Some(type_name.into());
+        self
+    }
+
+    /// With a nullable type (`?T`).
+    #[must_use]
+    pub fn nullable(mut self) -> Self {
+        self.nullable = true;
+        self
+    }
+
+    /// With attributes.
+    #[must_use]
+    pub fn with_attributes(mut self, attributes: impl IntoIterator<Item = Value>) -> Self {
+        self.attributes = attributes.into_iter().collect();
+        self
+    }
+
+    /// `allowsNull()`: no type, a nullable type, or a `null` default.
+    pub fn allows_null(&self) -> bool {
+        self.type_name.is_none() || self.nullable || matches!(self.default, Some(Value::Null))
     }
 
     /// With a default value.
@@ -71,6 +109,42 @@ impl Parameter {
     }
 }
 
+/// The name of a closure that declares none. PHP 8.4 names closures
+/// `{closure:file:line}`; a Rust closure has no such name, so a
+/// controller is given one with [`Controller::with_name`].
+pub const CLOSURE_NAME: &str = "{closure}";
+
+/// `Symfony\Component\HttpFoundation\Request`.
+pub const REQUEST_CLASS: &str = "Symfony\\Component\\HttpFoundation\\Request";
+
+/// A `Request` passed as a PHP value (a controller argument): the same
+/// object as the handle.
+#[derive(Debug)]
+pub struct RequestObject(pub RequestHandle);
+
+impl php_value::PhpObject for RequestObject {
+    fn class(&self) -> &str {
+        REQUEST_CLASS
+    }
+
+    fn properties(&self) -> php_value::PhpArray {
+        php_value::PhpArray::new()
+    }
+}
+
+/// The request as a controller argument.
+pub fn request_value(request: &RequestHandle) -> Value {
+    Value::Object(Arc::new(RequestObject(request.clone())))
+}
+
+/// The request a controller argument holds, if it is one.
+pub fn as_request(value: &Value) -> Option<RequestHandle> {
+    match value {
+        Value::Object(o) => o.downcast_ref::<RequestObject>().map(|r| r.0.clone()),
+        _ => None,
+    }
+}
+
 type Callable = dyn Fn(&[Value]) -> Result<ControllerResult, Throwable> + Send + Sync;
 
 /// A PHP controller callable.
@@ -79,6 +153,7 @@ pub struct Controller {
     function: Arc<Callable>,
     parameters: Arc<[Parameter]>,
     attributes: Arc<[Value]>,
+    name: Arc<str>,
 }
 
 impl Controller {
@@ -90,7 +165,21 @@ impl Controller {
             function: Arc::new(function),
             parameters: Arc::from(Vec::new()),
             attributes: Arc::from(Vec::new()),
+            name: Arc::from(CLOSURE_NAME),
         }
+    }
+
+    /// With the name `ArgumentMetadataFactory` reports in messages:
+    /// `Class::method` for a method, the function's name, or a closure's.
+    #[must_use]
+    pub fn with_name(mut self, name: impl AsRef<str>) -> Self {
+        self.name = Arc::from(name.as_ref());
+        self
+    }
+
+    /// The controller's name (`getPrettyName()`).
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
     /// With its parameters (`\ReflectionFunctionAbstract::getParameters()`).
@@ -135,6 +224,7 @@ impl fmt::Debug for Controller {
         f.debug_struct("Controller")
             .field("parameters", &self.parameters)
             .field("attributes", &self.attributes)
+            .field("name", &self.name)
             .finish_non_exhaustive()
     }
 }
