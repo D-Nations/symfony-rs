@@ -94,7 +94,6 @@ const REFUSED_RFC2822: &[&str] = &[
     "Fri, 20 May 2011 15:25:52 GMTx",
     "Tue, 4 Sep 2012 20:00:00 EST",
     "Tue, 4 Sep 2012 20:00:00 Europe/Paris",
-    "Xyz, 4 Sep 2012 20:00:00 +0200",
     "Tue, 4 Sep 2012 20:00:00 a",
 ];
 

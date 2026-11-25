@@ -729,7 +729,12 @@ pub fn create_from_format_rfc2822(text: &[u8]) -> Parsed<DateTimeImmutable> {
         return Ok(None);
     }
     let Some(day) = day_name(word) else {
-        return unsupported(text);
+        // `D` finds no day in a word PHP does not know; a word its date
+        // parser knows (a month, a keyword, a zone) is refused.
+        if known_word(word) {
+            return unsupported(text);
+        }
+        return Ok(None);
     };
     if !scanner.eat(b',') {
         return Ok(None);
