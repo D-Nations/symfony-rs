@@ -8,7 +8,7 @@
 //! and `\Closure::fromCallable` of the static method) have no Rust form:
 //! string callables are not ported (README, "Not ported yet").
 //! testStopwatchEventIsStoppedWhenListenerThrows checks a real Stopwatch
-//! instead of a mocked StopwatchEvent.
+//! instead of a mocked `StopwatchEvent`.
 //!
 //! Upstream: symfony/event-dispatcher Tests/Debug/WrappedListenerTest.php
 #![allow(non_snake_case)]

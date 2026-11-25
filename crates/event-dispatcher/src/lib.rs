@@ -1,5 +1,5 @@
-//! Port of the symfony/event-dispatcher component: EventDispatcher,
-//! GenericEvent, ImmutableEventDispatcher, the two interfaces and, with
+//! Port of the symfony/event-dispatcher component: `EventDispatcher`,
+//! `GenericEvent`, `ImmutableEventDispatcher`, the two interfaces and, with
 //! the `debug` feature, the Debug namespace. See README.md for the
 //! contract and what is not ported yet.
 //!

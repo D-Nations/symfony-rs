@@ -17,7 +17,5 @@ tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread"] }
 [dev-dependencies]
 serde_json = "1.0.154"
 
-# Converter contract 0.1, section 3: generated code never holds a lock
-# across `.await`.
-[lints.clippy]
-await_holding_lock = "deny"
+[lints]
+workspace = true

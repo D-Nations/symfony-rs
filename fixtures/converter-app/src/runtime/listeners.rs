@@ -6,6 +6,7 @@
 //! Upstream: symfony/http-kernel EventListener/RouterListener.php EventListener/ResponseListener.php Exception/MethodNotAllowedHttpException.php
 //! Upstream: symfony/routing RequestContext.php
 
+use std::fmt::Write as _;
 use std::sync::Arc;
 
 use axum::http::{HeaderValue, StatusCode, header};
@@ -61,7 +62,7 @@ impl<C> Listener<C> for RouterListener {
                     info.uri_for_path(&info.path_info)
                 );
                 if let Some(referer) = &info.referer {
-                    message.push_str(&format!(" (from \"{referer}\")"));
+                    let _ = write!(message, " (from \"{referer}\")");
                 }
                 return Err(Exception::new(StatusCode::NOT_FOUND, message));
             }

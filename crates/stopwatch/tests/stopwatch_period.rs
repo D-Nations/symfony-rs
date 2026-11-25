@@ -29,7 +29,7 @@ fn provide_duration_values() -> [(Number, Number, bool, Number); 9] {
         (Float(0.0), Float(0.0), false, Int(0)),
         (Float(0.0), Float(0.0), true, Float(0.0)),
         (Int(2), Float(3.14), false, Int(1)),
-        (Int(2), Float(3.14), true, Float(1.1400000000000001)),
+        (Int(2), Float(3.14), true, Float(1.140_000_000_000_000_1)),
         (Int(2), Float(3.13), true, Float(1.13)),
         (Float(2.71), Float(3.14), false, Int(1)),
         (Float(2.71), Float(3.14), true, Float(0.43)),

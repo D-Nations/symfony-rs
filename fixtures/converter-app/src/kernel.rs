@@ -61,7 +61,7 @@ impl App {
     }
 
     /// One request, with a fresh request scope. An exception no listener
-    /// handles would reach Symfony's ErrorListener and its error page,
+    /// handles would reach Symfony's `ErrorListener` and its error page,
     /// which the fixture does not port: it answers a bare 500 instead,
     /// and no recorded case reaches it.
     pub async fn handle(&self, request: Request) -> Response {
@@ -73,11 +73,11 @@ impl App {
                 invoke(container, scope, request, controller)
             })
             .await;
-        result.unwrap_or_else(unhandled)
+        result.unwrap_or_else(|exception| unhandled(&exception))
     }
 }
 
-/// ControllerResolver: the controller the router chose.
+/// `ControllerResolver`: the controller the router chose.
 fn resolve(request: &mut Request) -> Result<Controller, Exception> {
     let Some(Routed { info, matched }) = request.extensions_mut().remove::<Routed>() else {
         return Err(Exception::new(
@@ -111,7 +111,7 @@ async fn invoke(
     }
 }
 
-fn unhandled(exception: Exception) -> Response {
+fn unhandled(exception: &Exception) -> Response {
     let mut response = Response::new(Body::from("500 Internal Server Error\n"));
     *response.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
     response.headers_mut().insert(

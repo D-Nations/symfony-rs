@@ -2,9 +2,15 @@
 //! 7458da64220376b2e0dc2d8451bf43382c1ad297. Names and assertions are
 //! PHPUnit's. `assertArrayHasKey('stub', ...)` holds by construction (the
 //! info is a struct). The four tests that read private properties by
-//! reflection are unit tests in src/debug/traceable_event_dispatcher.rs.
+//! reflection are unit tests in `src/debug/traceable_event_dispatcher.rs`.
 //!
 //! Upstream: symfony/event-dispatcher Tests/Debug/TraceableEventDispatcherTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::sync::{
@@ -60,7 +66,7 @@ fn without_stub(listeners: &[ListenerInfo]) -> Vec<(String, String, Option<i64>)
     listeners
         .iter()
         .map(|l| {
-            assert!(!l.stub.is_empty());
+            assert_ne!(l.stub, "");
             (l.event.clone(), l.pretty.clone(), l.priority)
         })
         .collect()
@@ -276,7 +282,7 @@ fn testDispatchAfterReset() -> TestResult {
     tdispatcher.dispatch(&mut Event::new(), Some("foo"))?;
 
     let listeners = tdispatcher.get_called_listeners(None);
-    assert!(!listeners[0].stub.is_empty());
+    assert_ne!(listeners[0].stub, "");
     Ok(())
 }
 
@@ -333,7 +339,7 @@ fn testItDoesNotReturnHandledEvents() -> TestResult {
 /// One `[level, message, context]` record.
 type Record = (LogLevel, String, Vec<(String, ContextValue)>);
 
-/// ErrorHandler's BufferingLogger: keeps the records.
+/// `ErrorHandler`'s `BufferingLogger`: keeps the records.
 #[derive(Default)]
 struct BufferingLogger(Mutex<Vec<Record>>);
 

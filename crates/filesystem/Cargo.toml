@@ -16,3 +16,6 @@ php-value = { path = "../php-value" }
 symfony-finder = { path = "../finder" }
 
 [dev-dependencies]
+
+[lints]
+workspace = true

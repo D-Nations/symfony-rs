@@ -1,5 +1,5 @@
-//! The Debug namespace (feature `debug`): TraceableEventDispatcher and
-//! WrappedListener, which need Stopwatch and a PSR-3 logger.
+//! The Debug namespace (feature `debug`): `TraceableEventDispatcher` and
+//! `WrappedListener`, which need Stopwatch and a PSR-3 logger.
 //!
 //! Upstream: none
 

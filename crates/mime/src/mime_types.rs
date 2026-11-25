@@ -45,7 +45,7 @@ pub trait MimeTypeGuesser: Send + Sync + std::fmt::Debug {
 #[derive(Debug)]
 pub struct MimeTypes {
     extensions: HashMap<String, Vec<String>>,
-    mime_types: HashMap<String, Vec<String>>,
+    types: HashMap<String, Vec<String>>,
     /// Most recently registered first.
     guessers: Vec<Arc<dyn MimeTypeGuesser>>,
 }
@@ -121,7 +121,7 @@ impl MimeTypes {
         }
         let mut types = Self {
             extensions,
-            mime_types,
+            types: mime_types,
             guessers: Vec::new(),
         };
         types.register_guesser(Arc::new(FileBinaryMimeTypeGuesser::new()));
@@ -131,17 +131,25 @@ impl MimeTypes {
 
     /// `MimeTypes::setDefault($default)`.
     pub fn set_default(default: Arc<MimeTypes>) {
-        let mut slot = DEFAULT.write().unwrap_or_else(|e| e.into_inner());
+        let mut slot = DEFAULT
+            .write()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
         *slot = Some(default);
     }
 
     /// `MimeTypes::getDefault()`: the shared instance, created on first
     /// use.
     pub fn get_default() -> Arc<MimeTypes> {
-        if let Some(default) = DEFAULT.read().unwrap_or_else(|e| e.into_inner()).as_ref() {
+        if let Some(default) = DEFAULT
+            .read()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .as_ref()
+        {
             return default.clone();
         }
-        let mut slot = DEFAULT.write().unwrap_or_else(|e| e.into_inner());
+        let mut slot = DEFAULT
+            .write()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
         slot.get_or_insert_with(|| Arc::new(MimeTypes::default()))
             .clone()
     }
@@ -159,7 +167,7 @@ impl MimeTypes {
 
     /// `getMimeTypes($ext)`: the MIME types, most common first.
     pub fn get_mime_types(&self, ext: &str) -> Vec<String> {
-        lookup(&self.mime_types, reverse(), ext)
+        lookup(&self.types, reverse(), ext)
     }
 }
 

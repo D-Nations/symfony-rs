@@ -8,3 +8,6 @@ description = "PHP's preg_* patterns translated to fancy-regex, written from PHP
 
 [dependencies]
 fancy-regex = "0.20.2"
+
+[lints]
+workspace = true

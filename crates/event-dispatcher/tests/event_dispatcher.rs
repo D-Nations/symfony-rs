@@ -1,13 +1,19 @@
 //! EventDispatcherTest.php and ChildEventDispatcherTest.php at
 //! symfony/event-dispatcher 7458da64220376b2e0dc2d8451bf43382c1ad297.
-//! Names and assertions are PHPUnit's. ChildEventDispatcherTest runs the
+//! Names and assertions are PHPUnit's. `ChildEventDispatcherTest` runs the
 //! same tests on a subclass, here `EventDispatcher::with_call_listeners`.
 //!
 //! The tests below the upstream ones pin behaviour checked against PHP
-//! 8.4.27 by oracle/recorders/event_dispatcher_edges.php, whose output is
+//! 8.4.27 by `oracle/recorders/event_dispatcher_edges.php`, whose output is
 //! tests/data/edges.txt.
 //!
 //! Upstream: symfony/event-dispatcher Tests/EventDispatcherTest.php Tests/ChildEventDispatcherTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::sync::{
@@ -67,7 +73,7 @@ struct TestEventListener {
 impl TestEventListener {
     fn named(name: &str) -> Arc<Self> {
         let listener = Arc::new(Self::default());
-        *listener.name.lock().unwrap() = name.to_owned();
+        name.clone_into(&mut listener.name.lock().unwrap());
         listener
     }
     fn pre_foo(&self) {
@@ -513,7 +519,7 @@ macro_rules! event_dispatcher_tests {
             Ok(())
         }
 
-        /// @see https://bugs.php.net/62976
+        /// @see <https://bugs.php.net/62976>
         #[test]
         fn testWorkaroundForPhpBug62976() -> Result<(), Throwable> {
             let dispatcher = create_event_dispatcher();

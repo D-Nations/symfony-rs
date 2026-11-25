@@ -1,7 +1,7 @@
 //! Port of Symfony\Component\EventDispatcher\Debug\WrappedListener.php.
 //!
-//! The `stub` of `getInfo()` is VarDumper's `ClassStub` when VarDumper is
-//! installed, else the string `pretty()`. VarDumper is not ported, so it is
+//! The `stub` of `getInfo()` is `VarDumper`'s `ClassStub` when `VarDumper` is
+//! installed, else the string `pretty()`. `VarDumper` is not ported, so it is
 //! always the string.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.

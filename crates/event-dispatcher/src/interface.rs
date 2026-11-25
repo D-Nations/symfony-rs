@@ -76,7 +76,7 @@ pub trait EventDispatcherInterface: ContractsEventDispatcherInterface {
     fn has_listeners(&self, event_name: Option<&str>) -> bool;
 
     /// PHP's `$dispatcher instanceof EventDispatcher`, which
-    /// TraceableEventDispatcher checks before reading the listener table.
+    /// `TraceableEventDispatcher` checks before reading the listener table.
     fn as_event_dispatcher(&self) -> Option<&EventDispatcher> {
         None
     }

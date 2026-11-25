@@ -156,7 +156,7 @@ impl EventDispatcher {
         lock(&self.state)
     }
 
-    /// The private `$listeners` table, which TraceableEventDispatcher reads
+    /// The private `$listeners` table, which `TraceableEventDispatcher` reads
     /// by reflection: events in first-added order (events without
     /// listeners left out), priority buckets in their current order, lazy
     /// listeners as stored (unresolved unless something resolved them).
@@ -204,13 +204,12 @@ impl EventDispatcher {
                 continue;
             }
             let next = state.next_sorted;
-            match state.sorted.get_mut(name) {
+            if let Some(entry) = state.sorted.get_mut(name) {
                 // Assigning an existing PHP array key keeps its position.
-                Some(entry) => entry.1 = sorted.clone(),
-                None => {
-                    state.next_sorted += 1;
-                    state.sorted.insert(name.to_owned(), (next, sorted.clone()));
-                }
+                entry.1.clone_from(&sorted);
+            } else {
+                state.next_sorted += 1;
+                state.sorted.insert(name.to_owned(), (next, sorted.clone()));
             }
             return sorted;
         }
@@ -316,18 +315,17 @@ impl EventDispatcherInterface for EventDispatcher {
         priority: i64,
     ) -> Result<(), BadMethodCallException> {
         let mut state = self.lock();
-        let index = match state.index.get(event_name) {
-            Some(&index) => index,
-            None => {
-                let index = state.listeners.len();
-                state.listeners.push(EventListeners {
-                    name: event_name.to_owned(),
-                    buckets: Vec::new(),
-                    generation: 0,
-                });
-                state.index.insert(event_name.to_owned(), index);
-                index
-            }
+        let index = if let Some(&index) = state.index.get(event_name) {
+            index
+        } else {
+            let index = state.listeners.len();
+            state.listeners.push(EventListeners {
+                name: event_name.to_owned(),
+                buckets: Vec::new(),
+                generation: 0,
+            });
+            state.index.insert(event_name.to_owned(), index);
+            index
         };
         let buckets = &mut state.listeners[index].buckets;
         let slot = Arc::new(Mutex::new(listener));

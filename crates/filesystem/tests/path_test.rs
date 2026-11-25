@@ -1,6 +1,6 @@
 //! PathTest.php at symfony/filesystem v8.1.9: the tests of the ported
 //! methods, with the rows upstream gives when `DIRECTORY_SEPARATOR` is
-//! `/`. setUp()'s `putenv('HOME=/home/webmozart')` is an [`Env`] passed to
+//! `/`. `setUp()`'s `putenv('HOME=/home/webmozart')` is an [`Env`] passed to
 //! the `_in` variants (Rust cannot change its environment safely).
 //!
 //! Upstream: symfony/filesystem Tests/PathTest.php

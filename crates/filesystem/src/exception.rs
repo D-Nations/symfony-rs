@@ -38,7 +38,7 @@ impl Class {
     }
 }
 
-/// A thrown exception: its class, message and, for an IOException, the
+/// A thrown exception: its class, message and, for an `IOException`, the
 /// path (`getPath()`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Error {

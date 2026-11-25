@@ -137,10 +137,10 @@ async fn request_scoped_state_is_not_shared() -> TestResult {
 fn concurrency_bounds_hold() {
     fn send<T: Send>(_: &T) {}
     fn send_sync<T: Send + Sync>() {}
+    fn scope_is_send<T: Send>() {}
     send_sync::<converter_fixture_app::container::Container>();
     send_sync::<App>();
     send_sync::<converter_fixture_app::app::error_subscriber::ErrorSubscriber>();
-    fn scope_is_send<T: Send>() {}
     scope_is_send::<converter_fixture_app::container::RequestScope>();
     let app = App::new(Server {
         name: "0.0.0.0".to_owned(),

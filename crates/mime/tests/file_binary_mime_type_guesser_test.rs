@@ -1,10 +1,16 @@
 //! FileBinaryMimeTypeGuesserTest.php at symfony/mime
 //! 8d1232052c9cdef170ed9608b3147bca4f61ff69: the tests it inherits from
-//! AbstractMimeTypeGuesserTestCase (`common`), on the `file` command.
+//! `AbstractMimeTypeGuesserTestCase` (`common`), on the `file` command.
 //! Upstream skips `testGuessWithDuplicatedFileType` for this guesser
 //! (the result varies by system); its manifest row is `n/a`.
 //!
 //! Upstream: symfony/mime Tests/FileBinaryMimeTypeGuesserTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 mod common;
@@ -28,7 +34,7 @@ fn testGuessImageWithoutExtension() -> TestResult {
 
 #[test]
 fn testGuessImageWithDirectory() {
-    common::guess_image_with_directory(&guesser())
+    common::guess_image_with_directory(&guesser());
 }
 
 #[test]
@@ -43,7 +49,7 @@ fn testGuessFileWithUnknownExtension() -> TestResult {
 
 #[test]
 fn testGuessWithIncorrectPath() {
-    common::guess_with_incorrect_path(&guesser())
+    common::guess_with_incorrect_path(&guesser());
 }
 
 #[test]

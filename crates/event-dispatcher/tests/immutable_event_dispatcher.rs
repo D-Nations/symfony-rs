@@ -7,6 +7,12 @@
 //! event and name reach the inner dispatcher exactly once.
 //!
 //! Upstream: symfony/event-dispatcher Tests/ImmutableEventDispatcherTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::sync::{Arc, Mutex};

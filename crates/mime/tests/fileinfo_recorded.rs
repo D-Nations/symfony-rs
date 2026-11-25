@@ -1,4 +1,4 @@
-//! FileinfoMimeTypeGuesser against PHP 8.4's own answers
+//! `FileinfoMimeTypeGuesser` against PHP 8.4's own answers
 //! (`tests/data/fileinfo.json`, `oracle/recorders/mime_fileinfo.php`,
 //! `scripts/record.sh mime-fileinfo`).
 //!
@@ -14,6 +14,13 @@
 //!
 //! Upstream: none
 
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
+
+use std::fmt::Write as _;
 use std::{collections::BTreeMap, path::Path};
 
 use serde_json::Value;
@@ -69,10 +76,10 @@ fn write(differences: &Differences, counts: &BTreeMap<String, (usize, usize)>) {
          # set\tpath\tPHP finfo\tport\n",
     );
     for (set, (same, all)) in counts {
-        out.push_str(&format!("# {set}: {same} of {all} files match\n"));
+        let _ = writeln!(out, "# {set}: {same} of {all} files match");
     }
     for ((set, path), (php, port)) in differences {
-        out.push_str(&format!("{set}\t{path}\t{php}\t{port}\n"));
+        let _ = writeln!(out, "{set}\t{path}\t{php}\t{port}");
     }
     std::fs::write(DIFFERENCES, out).expect("write the differences");
 }

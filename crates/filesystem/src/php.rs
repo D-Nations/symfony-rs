@@ -144,12 +144,16 @@ fn random_suffix() -> Vec<u8> {
         // O_EXCL keeps safe (a taken name is retried)
         use std::sync::atomic::{AtomicU64, Ordering};
         static COUNTER: AtomicU64 = AtomicU64::new(0);
+        #[expect(
+            clippy::cast_possible_truncation,
+            reason = "only the low bits are mixed into the fallback name"
+        )]
         let now = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map_or(0, |d| d.as_nanos() as u64);
         let mixed = now ^ COUNTER.fetch_add(0x9e37_79b9_7f4a_7c15, Ordering::Relaxed);
         for (i, b) in bytes.iter_mut().enumerate() {
-            *b = mixed.rotate_left(u32::try_from(i * 7).unwrap_or(0)) as u8;
+            *b = mixed.rotate_left(u32::try_from(i * 7).unwrap_or(0)).to_le_bytes()[0];
         }
     }
     let lower = &ALPHABET[..26];
@@ -198,7 +202,7 @@ pub fn tempnam(dir: &[u8], prefix: &[u8]) -> Boxed<Option<Vec<u8>>> {
             let path = local_path(&name)?;
             match create_private(&path) {
                 Ok(()) => return Some(name),
-                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
                 Err(_) => return None,
             }
         }

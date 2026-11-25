@@ -19,6 +19,7 @@
 mod nesting;
 
 use std::fmt;
+use std::fmt::Write as _;
 
 use fancy_regex::{BytesMode, RegexBuilder};
 
@@ -391,6 +392,10 @@ fn count_groups(p: &[u8]) -> usize {
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "one field per PCRE modifier letter"
+)]
 struct Flags {
     i: bool,
     m: bool,
@@ -574,14 +579,15 @@ impl Translator<'_> {
                     let q = (c as char).to_string();
                     self.quantifier(&q)?;
                 }
-                b'{' => match self.brace_quantifier()? {
-                    Some(q) => self.quantifier(&q)?,
-                    None => {
+                b'{' => {
+                    if let Some(q) = self.brace_quantifier()? {
+                        self.quantifier(&q)?;
+                    } else {
                         self.pos += 1;
                         self.out.push_str(r"\x7B");
                         self.prev = Prev::Atom;
                     }
-                },
+                }
                 _ => {
                     let ch = self.take_char();
                     let l = self.lit(ch);
@@ -761,7 +767,9 @@ impl Translator<'_> {
     }
 
     fn check_code_point(&self, v: u32) -> Result<u32, PcreError> {
-        if (!self.utf8 && v > 0xff) || v > 0x10ffff || (self.utf8 && (0xd800..=0xdfff).contains(&v))
+        if (!self.utf8 && v > 0xff)
+            || v > 0x0010_ffff
+            || (self.utf8 && (0xd800..=0xdfff).contains(&v))
         {
             return compile_err("character code point value in \\x{} or \\o{} is too large");
         }
@@ -770,10 +778,9 @@ impl Translator<'_> {
 
     fn shorthand(&self, c: u8) -> Option<String> {
         Some(match c {
-            b'd' | b'D' | b'w' | b'W' => format!("\\{}", c as char),
             b's' if self.utf8 => format!("[{SPACE_U}]"),
             b'S' if self.utf8 => format!("[^{SPACE_U}]"),
-            b's' | b'S' => format!("\\{}", c as char),
+            b'd' | b'D' | b'w' | b'W' | b's' | b'S' => format!("\\{}", c as char),
             b'h' => format!("[{}]", if self.utf8 { HSPACE_U } else { HSPACE_B }),
             b'H' => format!("[^{}]", if self.utf8 { HSPACE_U } else { HSPACE_B }),
             b'v' => format!("[{}]", if self.utf8 { VSPACE_U } else { VSPACE_B }),
@@ -784,15 +791,14 @@ impl Translator<'_> {
 
     /// The contents to put in a class for a shorthand (`\d` or `[...]`).
     fn class_shorthand(&self, c: u8) -> Option<String> {
-        let s = self.shorthand(c)?;
-        Some(if s.starts_with('[') {
-            // a negated set cannot be nested as a range list; keep it a class
-            s
-        } else {
-            s
-        })
+        // a negated set cannot be nested as a range list; it stays a class
+        self.shorthand(c)
     }
 
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one arm per PCRE escape letter, kept as a single table"
+    )]
     fn escape(&mut self) -> Result<(), PcreError> {
         self.pos += 1;
         let Some(c) = self.peek() else {
@@ -880,13 +886,13 @@ impl Translator<'_> {
                     let l = self.lit(v);
                     self.out.push_str(&l);
                 } else {
-                    self.out.push_str(&format!("\\{n}"));
+                    let _ = write!(self.out, "\\{n}");
                 }
                 self.prev = Prev::Atom;
             }
             b'g' => {
                 let n = self.group_reference()?;
-                self.out.push_str(&format!("\\{n}"));
+                let _ = write!(self.out, "\\{n}");
                 self.prev = Prev::Atom;
             }
             b'k' => {
@@ -898,8 +904,7 @@ impl Translator<'_> {
                 };
                 self.pos += 1;
                 let name = self.group_name(close)?;
-                self.out
-                    .push_str(&format!("\\k<{}>", String::from_utf8_lossy(&name)));
+                let _ = write!(self.out, "\\k<{}>", String::from_utf8_lossy(&name));
                 self.prev = Prev::Atom;
             }
             b'p' | b'P' => {
@@ -916,7 +921,7 @@ impl Translator<'_> {
                     self.pos += 1;
                 }
                 let prop = String::from_utf8_lossy(&self.p[start..self.pos.min(self.p.len())]);
-                self.out.push_str(&format!("\\{}{}", c as char, prop));
+                let _ = write!(self.out, "\\{}{}", c as char, prop);
                 self.prev = Prev::Atom;
             }
             b'K' | b'X' | b'C' => return unsupported(&format!("\\{}", c as char)),
@@ -1082,8 +1087,7 @@ impl Translator<'_> {
                 Some(b'=') => {
                     self.pos += 2;
                     let name = self.group_name(b')')?;
-                    self.out
-                        .push_str(&format!("\\k<{}>", String::from_utf8_lossy(&name)));
+                    let _ = write!(self.out, "\\k<{}>", String::from_utf8_lossy(&name));
                     self.prev = Prev::Atom;
                 }
                 Some(b'>') => return unsupported("recursion"),
@@ -1149,7 +1153,7 @@ impl Translator<'_> {
                     }
                     if c == b')' {
                         if !spec.is_empty() {
-                            self.out.push_str(&format!("(?{spec})"));
+                            let _ = write!(self.out, "(?{spec})");
                         }
                         self.flags = flags;
                         // an option setting leaves nothing to repeat
@@ -1248,7 +1252,15 @@ impl Translator<'_> {
 
     /// One item inside `[...]`, or None for something that adds nothing
     /// (`\E`).
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one arm per class item kind, kept as a single table"
+    )]
     fn class_item(&mut self) -> Result<Option<ClassItem>, PcreError> {
+        const NAMES: [&[u8]; 14] = [
+            b"alpha", b"lower", b"upper", b"alnum", b"ascii", b"blank", b"cntrl", b"digit",
+            b"graph", b"print", b"punct", b"space", b"word", b"xdigit",
+        ];
         let c = self.p[self.pos];
         if c == b'[' {
             if let Some(next @ (b':' | b'.' | b'=')) = self.peek_at(1) {
@@ -1265,10 +1277,6 @@ impl Translator<'_> {
                     if negate {
                         name = &name[1..];
                     }
-                    const NAMES: [&[u8]; 14] = [
-                        b"alpha", b"lower", b"upper", b"alnum", b"ascii", b"blank", b"cntrl",
-                        b"digit", b"graph", b"print", b"punct", b"space", b"word", b"xdigit",
-                    ];
                     if !NAMES.contains(&name) {
                         return compile_err("unknown POSIX class name");
                     }

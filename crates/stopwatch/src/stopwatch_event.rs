@@ -230,7 +230,7 @@ impl fmt::Display for StopwatchEvent {
             "{}/{}: {} MiB - {} ms",
             state.category,
             state.name,
-            Fixed2(memory as f64 / 1024.0 / 1024.0),
+            Fixed2(Number::Int(memory).as_f64() / 1024.0 / 1024.0),
             Decimal(duration)
         )
     }
