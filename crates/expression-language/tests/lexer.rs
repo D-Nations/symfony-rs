@@ -1,5 +1,9 @@
-//! Port of symfony/expression-language Tests/LexerTest.php.
-#![allow(non_snake_case)]
+//! LexerTest.php at symfony/expression-language v8.1.9. Names and
+//! assertions are PHPUnit's; `assertEquals` on tokens compares numbers as
+//! PHPUnit does (`phpunit_equals`).
+//!
+//! Upstream: symfony/expression-language Tests/LexerTest.php
+#![allow(non_snake_case, clippy::unwrap_used, clippy::expect_used)]
 
 use php_value::{Value, vectors::phpunit_equals};
 use symfony_expression_language::{
