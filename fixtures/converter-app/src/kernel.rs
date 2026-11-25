@@ -10,6 +10,11 @@
 //! `ResponseListener`) and the app's `ErrorSubscriber`, the
 //! `ContainerControllerResolver` and `HttpKernel`.
 //!
+//! The dispatcher is the listener seam's `CompiledEventDispatcher`: the
+//! listener set is closed, so it is compiled into a `ListenerMap` with the
+//! subscribers' own `addSubscriber()` expansion. No listener of the app
+//! reads or changes the dispatcher, so it never thaws.
+//!
 //! Not registered: `FrameworkBundle`'s other listeners, none of which
 //! changes a recorded response, and `ErrorListener` with its error page,
 //! which no recorded case reaches (an unhandled throwable is the runtime's
@@ -24,7 +29,7 @@ use std::{
 
 use axum::Router;
 use php_value::Handle;
-use symfony_event_dispatcher::{EventDispatcher, EventDispatcherInterface};
+use symfony_event_dispatcher::{CompiledEventDispatcher, EventSubscriber, ListenerMap};
 use symfony_http_foundation::{request_stack::RequestStack, sapi::Ini};
 use symfony_http_kernel::{
     argument_resolver::ArgumentResolver,
@@ -92,7 +97,7 @@ pub fn kernel() -> Result<Arc<dyn RunnableKernel>, Throwable> {
         .map_err(|_| throwable(NotPorted("the app failed to build")))?;
     let services = Arc::new(ServiceContainer::new(app.container.clone()));
     let request_stack = RequestStack::default();
-    let dispatcher = Arc::new(EventDispatcher::new());
+    let mut listeners = ListenerMap::new();
     // `router.request_context`: http_port 80, https_port 443.
     let listener = RouterListener::new(
         Matcher::Request(app.matcher.clone()),
@@ -103,16 +108,16 @@ pub fn kernel() -> Result<Arc<dyn RunnableKernel>, Throwable> {
             ..RouterOptions::default()
         },
     )?;
-    dispatcher
-        .add_subscriber(Arc::new(listener))
-        .map_err(throwable)?;
-    // `kernel.charset`; `set_content_language_from_locale` is off.
-    dispatcher
-        .add_subscriber(Arc::new(ResponseListener::new("UTF-8", false)))
-        .map_err(throwable)?;
-    dispatcher
-        .add_subscriber(Arc::new(app.container.error_subscriber()))
-        .map_err(throwable)?;
+    let subscribers: [Arc<dyn EventSubscriber>; 3] = [
+        Arc::new(listener),
+        // `kernel.charset`; `set_content_language_from_locale` is off.
+        Arc::new(ResponseListener::new("UTF-8", false)),
+        Arc::new(app.container.error_subscriber()),
+    ];
+    for subscriber in &subscribers {
+        listeners.add_subscriber(subscriber);
+    }
+    let dispatcher = Arc::new(CompiledEventDispatcher::from(listeners));
     let resolver = ContainerControllerResolver::new(
         ControllerContainer::DependencyInjection(services),
         app.classes.clone(),
