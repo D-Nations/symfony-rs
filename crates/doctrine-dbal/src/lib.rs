@@ -12,10 +12,12 @@
 struct ReadmeExample;
 
 mod array_parameter_type;
+pub mod exception;
 mod expand_array_parameters;
 mod parameter_type;
 pub mod platforms;
 pub mod sql;
+pub mod types;
 
 pub use array_parameter_type::ArrayParameterType;
 pub use expand_array_parameters::{ArrayParametersException, ExpandArrayParameters};
