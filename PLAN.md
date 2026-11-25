@@ -275,14 +275,15 @@ warnings`, so a warning fails it.
   lint is fixed.
 - Generated files are fixed in their generator (`scripts/gen-*.py`,
   `build.rs`), never by hand.
-- Opted in (November 25): psr-log, event-dispatcher-contracts,
-  deprecation-contracts, http-kernel, request-lab, runtime, php-pcre, filesystem,
-  mime, event-dispatcher, stopwatch, converter-app fixture. Still to opt
-  in, each needing hand review (mostly `usize`/`i64` casts for PHP offsets
-  and lengths): string, console, config, yaml, http-foundation,
-  css-selector, php-value, php-dom, finder, options-resolver, routing,
-  dotenv, translation, and the twig/di spikes (whose generated templates
-  need their generators fixed).
+- Opted in (November 25): every member except http-foundation and
+  routing. Those two belong to the HTTP path (M2-A), which the owner
+  changes in a separate tree; they opt in there (about 99 and 38
+  warnings on November 25, mostly casts and long functions).
+- PHP-shaped code silences a lint at the function with `#[expect]` and a
+  reason (PHP's int/float conversions, offsets and lengths, upstream
+  signatures and flags, upstream-length functions). Test files that port
+  PHPUnit tests allow the pedantic lints they trigger with a file-level
+  `allow` and a reason.
 
 **Scheduling and exit gates:**
 
