@@ -1108,6 +1108,7 @@ name = "symfony-dependency-injection"
 version = "0.1.0"
 dependencies = [
  "php-value",
+ "psr-container",
  "symfony-config",
  "symfony-deprecation-contracts",
 ]

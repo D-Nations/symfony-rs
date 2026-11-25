@@ -12,6 +12,8 @@ symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 # sprintf() for the parameter deprecation messages; the loaders, resources
 # and configuration processing of later slices use the rest.
 symfony-config = { path = "../config" }
+# PSR-11 for ServiceLocator, ContainerBag and ReverseContainer.
+psr-container = { path = "../psr-container" }
 
 [lints]
 workspace = true

@@ -1,9 +1,10 @@
 //! Port of Symfony\Component\DependencyInjection\Argument\ArgumentInterface.php:
 //! the argument objects whose values compiler passes read and replace.
 //!
-//! Not yet ported: `EnvClosure`, `LazyClosure`, `RewindableGenerator` and
-//! `Argument\ServiceLocator`, the run-time halves that the compiled
-//! container uses.
+//! Not yet ported: `EnvClosure` and `LazyClosure`, run-time halves that
+//! the compiled container uses. `RewindableGenerator` is
+//! [`rewindable_generator`]; `Argument\ServiceLocator` is in
+//! [`crate::service_locator`].
 //!
 //! Upstream: symfony/dependency-injection Argument/ArgumentInterface.php
 
@@ -11,6 +12,7 @@ mod abstract_argument;
 mod bound_argument;
 mod env_closure_argument;
 mod iterator_argument;
+pub mod rewindable_generator;
 mod service_closure_argument;
 mod service_locator_argument;
 
@@ -18,6 +20,7 @@ pub use abstract_argument::AbstractArgument;
 pub use bound_argument::{BoundArgument, DEFAULTS_BINDING, INSTANCEOF_BINDING, SERVICE_BINDING};
 pub use env_closure_argument::EnvClosureArgument;
 pub use iterator_argument::{IteratorArgument, TaggedData};
+pub use rewindable_generator::RewindableGenerator;
 pub use service_closure_argument::ServiceClosureArgument;
 pub use service_locator_argument::ServiceLocatorArgument;
 
