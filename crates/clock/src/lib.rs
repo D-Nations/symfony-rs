@@ -6,6 +6,10 @@
 
 #![forbid(unsafe_code)]
 
+#[cfg(doctest)]
+#[doc = include_str!("../README.md")]
+struct ReadmeExample;
+
 mod clock;
 mod clock_aware_trait;
 mod clock_interface;

@@ -1069,6 +1069,16 @@ Stack rows (searched November 19):
       shortest decimal form (3,270 differ, from 7e13) and php2rust's
       `php-rt` `round()` (14,571 differ, from 2.35: it implements the
       pre-8.4 15-digit pre-rounding, a php2rust bug to report).
+- [x] Clock (`symfony-clock`): all 36 upstream tests; in
+      `parity/done.txt`. Every file is ported, including `Resources/now.php`
+      and `Test/ClockSensitiveTrait.php`. The crate has its own subset of
+      PHP's `DateTimeImmutable` and `DateTimeZone` (`symfony_clock::php`),
+      written from the manual and checked against about 9,800 recorded
+      answers (`scripts/record.sh clock`). jiff gives the zone data only.
+      Date texts outside the recorded grammar are refused, not answered
+      differently. php-value's dates have no named zones and its zone
+      abbreviation and keyword lists are private, so the crate has its own
+      copy: a later step can move one shared date layer into php-value.
 - [x] Yaml (`symfony-yaml`, values in `php-value`). Ported: every file,
       `Command/LintCommand.php` behind the `console` feature: 341 of 342
       upstream tests, 1 `n/a` with its reason in the manifest, plus
