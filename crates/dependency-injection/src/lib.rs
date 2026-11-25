@@ -27,9 +27,11 @@ pub mod reference;
 // The run-time container.
 pub mod container;
 mod ordered_map;
+pub mod reverse_container;
 pub mod service_locator;
 pub mod service_object;
 pub mod services_resetter;
+pub mod tagged_container_interface;
 
 pub use alias::{Alias, Deprecation};
 pub use container_interface::{ContainerInterface, InvalidBehavior};
@@ -39,6 +41,8 @@ pub use parameter_bag::ParameterBag;
 pub use reference::{Parameter, Reference, Variable};
 
 pub use container::{Container, ContainerClass, EnvProcessor, EnvProcessorObject, ServiceFactory};
+pub use reverse_container::ReverseContainer;
 pub use service_locator::{Caller, LocatorEntry, ServiceLocator};
 pub use service_object::ServiceObject;
 pub use services_resetter::{ResetMap, ServicesResetter, ServicesResetterInterface};
+pub use tagged_container_interface::TaggedContainerInterface;
