@@ -146,6 +146,27 @@ each package at its `composer.lock` reference, then `composer install
 oracle with `scripts/record.sh di-trial`; `git diff` must then show no
 change.
 
+**Re-recorded in the real oracle, November 25:** `symfony-rs-oracle:8.4.27`
+(image `sha256:6593774a…`, with `intl`), `../symfony-demo` at `f42980c`
+(LF checkout) and the pinned packages mounted from `upstream/`. Both files
+are byte-identical to the committed ones (770 service definitions). Three
+recorder fixes were needed first:
+
+- `docker compose run` has no `--tmpfs` flag, so `record.sh di-trial`
+  could not start; a `php-kernel` compose service declares the tmpfs on
+  `/demo/var`.
+- The oracle's demo `vendor/` holds the dev packages, which add services to
+  the prod container (`nikic/php-parser` enables three
+  `translation.extractor.visitor.*` services, `symfony/stopwatch` adds
+  `debug.stopwatch` arguments). The recorder now loads classes as
+  `composer install --no-dev` would (`oracle/recorders/lib/no_dev_autoload.php`,
+  which also hides the dev packages from `InstalledVersions`), so the dump
+  is a production container (owner, November 25).
+- A CRLF checkout of the demo (`core.autocrlf=true` on Windows) puts
+  carriage returns into the console commands' help texts and changes the
+  container's class hash. The demo checkout must be LF; the host now uses
+  `core.autocrlf=input` (owner, November 25).
+
 ## New dependency
 
 None beyond the twig trial's: `quote`, `syn`, `proc-macro2` and

@@ -16,8 +16,13 @@
 // to (sorted by priority, keyed by index-by). Before dumping, each one is
 // replaced by a plain iterator or locator of those resolved values, so the
 // file is the whole graph.
+//
+// The container is the one a production install builds: classes load as
+// after `composer install --no-dev` (lib/no_dev_autoload.php), although the
+// demo's vendor/ also holds its dev packages.
 
-require '/demo/vendor/autoload.php';
+require __DIR__.'/lib/no_dev_autoload.php';
+no_dev_autoload('/demo');
 
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
