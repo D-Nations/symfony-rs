@@ -1,0 +1,117 @@
+# symfony/http-foundation at 30fa3efe6e736b0d06f5331cc6abe813582c0a26: upstream file	classes	code lines	status	rust files
+AcceptHeader.php	AcceptHeader	162	ported	crates/http-foundation/src/accept_header.rs
+AcceptHeaderItem.php	AcceptHeaderItem	78	ported	crates/http-foundation/src/accept_header.rs
+BinaryFileResponse.php	BinaryFileResponse	260	pending	
+ChainRequestMatcher.php	ChainRequestMatcher	16	pending	
+Cookie.php	Cookie	278	ported	crates/http-foundation/src/cookie.rs crates/http-foundation/tests/cookie_recorded.rs
+EventStreamResponse.php	EventStreamResponse	59	pending	
+Exception/BadRequestException.php	BadRequestException	4	ported	crates/http-foundation/src/exception.rs
+Exception/ConflictingHeadersException.php	ConflictingHeadersException	4	ported	crates/http-foundation/src/exception.rs
+Exception/ExceptionInterface.php	ExceptionInterface	4	pending	
+Exception/ExpiredSignedUriException.php	ExpiredSignedUriException	10	pending	
+Exception/JsonException.php	JsonException	4	ported	crates/http-foundation/src/exception.rs
+Exception/LogicException.php	LogicException	4	pending	
+Exception/RequestExceptionInterface.php	RequestExceptionInterface	4	ported	crates/http-foundation/src/exception.rs
+Exception/SessionNotFoundException.php	SessionNotFoundException	8	ported	crates/http-foundation/src/exception.rs
+Exception/SignedUriException.php	SignedUriException	6	pending	
+Exception/SuspiciousOperationException.php	SuspiciousOperationException	4	ported	crates/http-foundation/src/exception.rs
+Exception/UnexpectedValueException.php	UnexpectedValueException	4	ported	crates/http-foundation/src/exception.rs
+Exception/UnsignedUriException.php	UnsignedUriException	8	pending	
+Exception/UnverifiedSignedUriException.php	UnverifiedSignedUriException	8	pending	
+File/Exception/AccessDeniedException.php	AccessDeniedException	8	ported	crates/http-foundation/src/exception.rs
+File/Exception/CannotWriteFileException.php	CannotWriteFileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/ExtensionFileException.php	ExtensionFileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/FileException.php	FileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/FileNotFoundException.php	FileNotFoundException	8	ported	crates/http-foundation/src/exception.rs
+File/Exception/FormSizeFileException.php	FormSizeFileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/IniSizeFileException.php	IniSizeFileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/NoFileException.php	NoFileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/NoTmpDirFileException.php	NoTmpDirFileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/PartialFileException.php	PartialFileException	4	ported	crates/http-foundation/src/exception.rs
+File/Exception/UnexpectedTypeException.php	UnexpectedTypeException	8	ported	crates/http-foundation/src/exception.rs
+File/Exception/UploadException.php	UploadException	4	ported	crates/http-foundation/src/exception.rs
+File/File.php	File	70	ported	crates/http-foundation/src/file.rs
+File/Stream.php	Stream	8	pending	
+File/UploadedFile.php	UploadedFile	148	ported	crates/http-foundation/src/uploaded_file.rs crates/http-foundation/tests/files_recorded.rs
+FileBag.php	FileBag	74	ported	crates/http-foundation/src/file_bag.rs crates/http-foundation/tests/files_recorded.rs
+HeaderBag.php	HeaderBag	146	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs
+HeaderUtils.php	HeaderUtils	170	ported	crates/http-foundation/src/header_utils.rs
+InputBag.php	InputBag	112	ported	crates/http-foundation/src/input_bag.rs crates/http-foundation/src/query.rs fixtures/converter-app/src/runtime/http_foundation.rs
+IpUtils.php	IpUtils	198	ported	crates/http-foundation/src/ip_utils.rs
+JsonResponse.php	JsonResponse	83	ported	crates/http-foundation/src/json_response.rs
+ParameterBag.php	ParameterBag	155	ported	crates/http-foundation/src/parameter_bag.rs
+RateLimiter/AbstractRequestRateLimiter.php	AbstractRequestRateLimiter	48	pending	
+RateLimiter/PeekableRequestRateLimiterInterface.php	PeekableRequestRateLimiterInterface	7	pending	
+RateLimiter/RequestRateLimiterInterface.php	RequestRateLimiterInterface	8	pending	
+RedirectResponse.php	RedirectResponse	43	ported	crates/http-foundation/src/redirect_response.rs fixtures/converter-app/src/runtime/http_foundation.rs
+Request.php	Request	1267	ported	crates/http-foundation/src/accept_language.rs crates/http-foundation/src/lib.rs crates/http-foundation/src/request.rs crates/http-foundation/src/scheme.rs fixtures/converter-app/src/runtime/http_foundation.rs
+RequestMatcher/AttributesRequestMatcher.php	AttributesRequestMatcher	22	pending	
+RequestMatcher/ExpressionRequestMatcher.php	ExpressionRequestMatcher	24	pending	
+RequestMatcher/HeaderRequestMatcher.php	HeaderRequestMatcher	23	pending	
+RequestMatcher/HostRequestMatcher.php	HostRequestMatcher	13	pending	
+RequestMatcher/IpsRequestMatcher.php	IpsRequestMatcher	19	pending	
+RequestMatcher/IsJsonRequestMatcher.php	IsJsonRequestMatcher	10	pending	
+RequestMatcher/MethodRequestMatcher.php	MethodRequestMatcher	21	pending	
+RequestMatcher/PathRequestMatcher.php	PathRequestMatcher	13	pending	
+RequestMatcher/PortRequestMatcher.php	PortRequestMatcher	13	pending	
+RequestMatcher/QueryParameterRequestMatcher.php	QueryParameterRequestMatcher	18	pending	
+RequestMatcher/SchemeRequestMatcher.php	SchemeRequestMatcher	18	pending	
+RequestMatcherInterface.php	RequestMatcherInterface	5	pending	
+RequestStack.php	RequestStack	53	ported	crates/http-foundation/src/request_stack.rs
+Response.php	Response	689	ported	crates/http-foundation/src/response.rs crates/http-kernel/src/lib.rs fixtures/converter-app/src/runtime/http_foundation.rs
+ResponseHeaderBag.php	ResponseHeaderBag	171	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs fixtures/converter-app/src/runtime/http_foundation.rs
+ServerBag.php	ServerBag	48	ported	crates/http-foundation/src/server_bag.rs crates/http-foundation/tests/server_bag_recorded.rs
+ServerEvent.php	ServerEvent	90	pending	
+Session/Attribute/AttributeBag.php	AttributeBag	72	pending	
+Session/Attribute/AttributeBagInterface.php	AttributeBagInterface	11	pending	
+Session/Flash/AutoExpireFlashBag.php	AutoExpireFlashBag	78	pending	
+Session/Flash/FlashBag.php	FlashBag	73	pending	
+Session/Flash/FlashBagInterface.php	FlashBagInterface	14	pending	
+Session/FlashBagAwareSessionInterface.php	FlashBagAwareSessionInterface	6	pending	
+Session/Session.php	Session	150	pending	
+Session/SessionBagInterface.php	SessionBagInterface	8	pending	
+Session/SessionBagProxy.php	SessionBagProxy	58	pending	
+Session/SessionFactory.php	SessionFactory	19	pending	
+Session/SessionFactoryInterface.php	SessionFactoryInterface	5	pending	
+Session/SessionInterface.php	SessionInterface	24	pending	
+Session/SessionUtils.php	SessionUtils	32	pending	
+Session/Storage/Handler/AbstractSessionHandler.php	AbstractSessionHandler	99	pending	
+Session/Storage/Handler/IdentityMarshaller.php	IdentityMarshaller	18	pending	
+Session/Storage/Handler/MarshallingSessionHandler.php	MarshallingSessionHandler	69	pending	
+Session/Storage/Handler/MemcachedSessionHandler.php	MemcachedSessionHandler	61	pending	
+Session/Storage/Handler/MigratingSessionHandler.php	MigratingSessionHandler	73	pending	
+Session/Storage/Handler/MongoDbSessionHandler.php	MongoDbSessionHandler	113	pending	
+Session/Storage/Handler/NativeFileSessionHandler.php	NativeFileSessionHandler	23	pending	
+Session/Storage/Handler/NullSessionHandler.php	NullSessionHandler	28	pending	
+Session/Storage/Handler/PdoSessionHandler.php	PdoSessionHandler	615	pending	
+Session/Storage/Handler/RedisSessionHandler.php	RedisSessionHandler	61	pending	
+Session/Storage/Handler/SessionHandlerFactory.php	SessionHandlerFactory	69	pending	
+Session/Storage/Handler/StrictSessionHandler.php	StrictSessionHandler	52	pending	
+Session/Storage/MetadataBag.php	MetadataBag	68	pending	
+Session/Storage/MockArraySessionStorage.php	MockArraySessionStorage	117	pending	
+Session/Storage/MockFileSessionStorage.php	MockFileSessionStorage	95	pending	
+Session/Storage/MockFileSessionStorageFactory.php	MockFileSessionStorageFactory	16	pending	
+Session/Storage/NativeSessionStorage.php	NativeSessionStorage	214	pending	
+Session/Storage/NativeSessionStorageFactory.php	NativeSessionStorageFactory	22	pending	
+Session/Storage/PhpBridgeSessionStorage.php	PhpBridgeSessionStorage	28	pending	
+Session/Storage/PhpBridgeSessionStorageFactory.php	PhpBridgeSessionStorageFactory	21	pending	
+Session/Storage/Proxy/AbstractProxy.php	AbstractProxy	44	pending	
+Session/Storage/Proxy/SessionHandlerProxy.php	SessionHandlerProxy	51	pending	
+Session/Storage/SessionStorageFactoryInterface.php	SessionStorageFactoryInterface	6	pending	
+Session/Storage/SessionStorageInterface.php	SessionStorageInterface	17	pending	
+StreamedJsonResponse.php	StreamedJsonResponse	79	pending	
+StreamedResponse.php	StreamedResponse	75	pending	
+Test/Constraint/RequestAttributeValueSame.php	RequestAttributeValueSame	23	pending	
+Test/Constraint/ResponseCookieValueSame.php	ResponseCookieValueSame	43	pending	
+Test/Constraint/ResponseFormatSame.php	ResponseFormatSame	29	pending	
+Test/Constraint/ResponseHasCookie.php	ResponseHasCookie	38	pending	
+Test/Constraint/ResponseHasHeader.php	ResponseHasHeader	22	pending	
+Test/Constraint/ResponseHeaderLocationSame.php	ResponseHeaderLocationSame	42	pending	
+Test/Constraint/ResponseHeaderSame.php	ResponseHeaderSame	23	pending	
+Test/Constraint/ResponseIsRedirected.php	ResponseIsRedirected	25	pending	
+Test/Constraint/ResponseIsSuccessful.php	ResponseIsSuccessful	25	pending	
+Test/Constraint/ResponseIsUnprocessable.php	ResponseIsUnprocessable	25	pending	
+Test/Constraint/ResponseStatusCodeSame.php	ResponseStatusCodeSame	27	pending	
+Test/Constraint/SessionHasFlashMessage.php	SessionHasFlashMessage	52	pending	
+UriSigner.php	UriSigner	126	pending	
+UrlHelper.php	UrlHelper	82	pending	

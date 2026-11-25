@@ -1,0 +1,5 @@
+# symfony/stopwatch at 21c07b026905d596e8379caeb115d87aa479499d: upstream file	classes	code lines	status	rust files
+Section.php	Section	70	ported	crates/stopwatch/src/section.rs
+Stopwatch.php	Stopwatch	69	ported	crates/stopwatch/src/stopwatch.rs
+StopwatchEvent.php	StopwatchEvent	119	ported	crates/stopwatch/src/stopwatch_event.rs
+StopwatchPeriod.php	StopwatchPeriod	33	ported	crates/stopwatch/src/stopwatch_period.rs

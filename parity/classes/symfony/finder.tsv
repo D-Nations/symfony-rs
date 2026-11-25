@@ -1,0 +1,24 @@
+# symfony/finder at 2f4c0f26106520d82e1b71759d2fb8d32d8b7a43: upstream file	classes	code lines	status	rust files
+Comparator/Comparator.php	Comparator	33	ported	crates/finder/src/comparator/mod.rs
+Comparator/DateComparator.php	DateComparator	24	ported	crates/finder/src/comparator/date_comparator.rs
+Comparator/NumberComparator.php	NumberComparator	37	ported	crates/finder/src/comparator/number_comparator.rs
+Exception/AccessDeniedException.php	AccessDeniedException	4	ported	crates/finder/src/exception.rs
+Exception/DirectoryNotFoundException.php	DirectoryNotFoundException	4	ported	crates/finder/src/exception.rs
+Finder.php	Finder	371	ported	crates/finder/src/finder.rs
+Gitignore.php	Gitignore	84	ported	crates/finder/src/gitignore.rs
+Glob.php	Glob	121	ported	crates/finder/src/glob.rs
+Iterator/CustomFilterIterator.php	CustomFilterIterator	25	ported	crates/finder/src/iterator/custom_filter_iterator.rs
+Iterator/DateRangeFilterIterator.php	DateRangeFilterIterator	25	ported	crates/finder/src/iterator/date_range_filter_iterator.rs
+Iterator/DepthRangeFilterIterator.php	DepthRangeFilterIterator	15	ported	crates/finder/src/iterator/depth_range_filter_iterator.rs
+Iterator/ExcludeDirectoryFilterIterator.php	ExcludeDirectoryFilterIterator	68	ported	crates/finder/src/iterator/exclude_directory_filter_iterator.rs
+Iterator/FileTypeFilterIterator.php	FileTypeFilterIterator	22	ported	crates/finder/src/iterator/file_type_filter_iterator.rs
+Iterator/FilecontentFilterIterator.php	FilecontentFilterIterator	24	ported	crates/finder/src/iterator/filecontent_filter_iterator.rs
+Iterator/FilenameFilterIterator.php	FilenameFilterIterator	13	ported	crates/finder/src/iterator/filename_filter_iterator.rs
+Iterator/LazyIterator.php	LazyIterator	13	ported	crates/finder/src/iterator/lazy_iterator.rs
+Iterator/MultiplePcreFilterIterator.php	MultiplePcreFilterIterator	51	ported	crates/finder/src/iterator/multiple_pcre_filter_iterator.rs
+Iterator/PathFilterIterator.php	PathFilterIterator	17	ported	crates/finder/src/iterator/path_filter_iterator.rs
+Iterator/RecursiveDirectoryIterator.php	RecursiveDirectoryIterator	86	ported	crates/finder/src/iterator/recursive_directory_iterator.rs
+Iterator/SizeRangeFilterIterator.php	SizeRangeFilterIterator	25	ported	crates/finder/src/iterator/size_range_filter_iterator.rs
+Iterator/SortableIterator.php	SortableIterator	78	ported	crates/finder/src/iterator/sortable_iterator.rs
+Iterator/VcsIgnoredFilterIterator.php	VcsIgnoredFilterIterator	154	ported	crates/finder/src/iterator/vcs_ignored_filter_iterator.rs
+SplFileInfo.php	SplFileInfo	37	ported	crates/finder/src/spl_file_info.rs

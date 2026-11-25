@@ -1,0 +1,14 @@
+# symfony/yaml at 6107ee26a25215c3df3af0a3315e56bb4fd0b7db: upstream file	classes	code lines	status	rust files
+Command/LintCommand.php	LintCommand	214	ported	crates/yaml/src/command/lint_command.rs
+Dumper.php	Dumper	120	ported	crates/yaml/src/dumper.rs
+Escaper.php	Escaper	42	ported	crates/yaml/src/escaper.rs
+Exception/DumpException.php	DumpException	4	ported	crates/yaml/src/exception.rs
+Exception/ExceptionInterface.php	ExceptionInterface	4	pending	
+Exception/ParseException.php	ParseException	62	ported	crates/yaml/src/exception.rs
+Exception/RuntimeException.php	RuntimeException	4	ported	crates/yaml/src/exception.rs
+Inline.php	Inline	749	ported	crates/yaml/src/inline.rs crates/yaml/src/timestamp.rs
+Parser.php	Parser	1035	ported	crates/yaml/src/parser.rs
+ParserState.php	ParserState	45	ported	crates/yaml/src/parser_state.rs
+Tag/TaggedValue.php	TaggedValue	17	ported	crates/yaml/src/tag.rs
+Unescaper.php	Unescaper	55	ported	crates/yaml/src/unescaper.rs
+Yaml.php	Yaml	37	ported	crates/yaml/src/lib.rs

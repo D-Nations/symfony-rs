@@ -1,0 +1,9 @@
+# symfony/dotenv at 4ea87b35c75f7052309ec9735c0eb5c1fd7d2182: upstream file	classes	code lines	status	rust files
+Command/DebugCommand.php	DebugCommand	160	ported	crates/dotenv/src/command/debug_command.rs
+Command/DotenvDumpCommand.php	DotenvDumpCommand	90	ported	crates/dotenv/src/command/dotenv_dump_command.rs
+Dotenv.php	Dotenv	634	ported	crates/dotenv/src/dotenv.rs
+Exception/ExceptionInterface.php	ExceptionInterface	4	ported	crates/dotenv/src/exception.rs
+Exception/FormatException.php	FormatException	16	ported	crates/dotenv/src/exception.rs
+Exception/FormatExceptionContext.php	FormatExceptionContext	25	ported	crates/dotenv/src/exception.rs
+Exception/PathException.php	PathException	8	ported	crates/dotenv/src/exception.rs
+Exception/VariableCircularReferenceException.php	VariableCircularReferenceException	4	ported	crates/dotenv/src/exception.rs

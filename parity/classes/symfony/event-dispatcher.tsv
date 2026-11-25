@@ -1,0 +1,11 @@
+# symfony/event-dispatcher at 7458da64220376b2e0dc2d8451bf43382c1ad297: upstream file	classes	code lines	status	rust files
+Attribute/AsEventListener.php	AsEventListener	12	pending	
+Debug/TraceableEventDispatcher.php	TraceableEventDispatcher	300	ported	crates/event-dispatcher/src/debug/traceable_event_dispatcher.rs
+Debug/WrappedListener.php	WrappedListener	109	ported	crates/event-dispatcher/src/debug/wrapped_listener.rs
+DependencyInjection/AddEventAliasesPass.php	AddEventAliasesPass	27	pending	
+DependencyInjection/RegisterListenersPass.php	RegisterListenersPass ExtractingEventDispatcher	180	pending	
+EventDispatcher.php	EventDispatcher	186	ported	crates/event-dispatcher/src/event_dispatcher.rs crates/event-dispatcher/src/listener.rs crates/http-kernel/src/lib.rs
+EventDispatcherInterface.php	EventDispatcherInterface	12	ported	crates/event-dispatcher/src/interface.rs
+EventSubscriberInterface.php	EventSubscriberInterface	5	ported	crates/event-dispatcher/src/interface.rs
+GenericEvent.php	GenericEvent	61	ported	crates/event-dispatcher/src/generic_event.rs
+ImmutableEventDispatcher.php	ImmutableEventDispatcher	40	ported	crates/event-dispatcher/src/immutable_event_dispatcher.rs

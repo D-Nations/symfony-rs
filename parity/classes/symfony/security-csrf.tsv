@@ -1,0 +1,13 @@
+# symfony/security-csrf at c865a8ee0d30b14545d7e5349b8e443f4fa9dc3f: upstream file	classes	code lines	status	rust files
+CsrfToken.php	CsrfToken	23	pending	
+CsrfTokenManager.php	CsrfTokenManager	95	pending	
+CsrfTokenManagerInterface.php	CsrfTokenManagerInterface	8	pending	
+Exception/TokenNotFoundException.php	TokenNotFoundException	5	pending	
+SameOriginCsrfListener.php	SameOriginCsrfListener	51	pending	
+SameOriginCsrfTokenManager.php	SameOriginCsrfTokenManager	191	pending	
+TokenGenerator/TokenGeneratorInterface.php	TokenGeneratorInterface	5	pending	
+TokenGenerator/UriSafeTokenGenerator.php	UriSafeTokenGenerator	16	pending	
+TokenStorage/ClearableTokenStorageInterface.php	ClearableTokenStorageInterface	5	pending	
+TokenStorage/NativeSessionTokenStorage.php	NativeSessionTokenStorage	61	pending	
+TokenStorage/SessionTokenStorage.php	SessionTokenStorage	62	pending	
+TokenStorage/TokenStorageInterface.php	TokenStorageInterface	9	pending	

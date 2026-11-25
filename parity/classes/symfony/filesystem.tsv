@@ -1,0 +1,9 @@
+# symfony/filesystem at 43d109c803d22c00bb820ed45df250b6a8792ca2: upstream file	classes	code lines	status	rust files
+Exception/ExceptionInterface.php	ExceptionInterface	4	pending	
+Exception/FileNotFoundException.php	FileNotFoundException	15	pending	
+Exception/IOException.php	IOException	16	ported	crates/filesystem/src/exception.rs
+Exception/IOExceptionInterface.php	IOExceptionInterface	5	pending	
+Exception/InvalidArgumentException.php	InvalidArgumentException	4	ported	crates/filesystem/src/exception.rs
+Exception/RuntimeException.php	RuntimeException	4	ported	crates/filesystem/src/exception.rs
+Filesystem.php	Filesystem	464	ported	crates/filesystem/src/filesystem.rs
+Path.php	Path	356	ported	crates/filesystem/src/path.rs

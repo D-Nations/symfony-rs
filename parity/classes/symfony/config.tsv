@@ -1,0 +1,85 @@
+# symfony/config at 4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec: upstream file	classes	code lines	status	rust files
+ConfigCache.php	ConfigCache	29	ported	crates/config/src/config_cache.rs
+ConfigCacheFactory.php	ConfigCacheFactory	16	ported	crates/config/src/config_cache_factory.rs
+ConfigCacheFactoryInterface.php	ConfigCacheFactoryInterface	5	ported	crates/config/src/config_cache_factory.rs
+ConfigCacheInterface.php	ConfigCacheInterface	8	ported	crates/config/src/config_cache.rs
+Definition/ArrayNode.php	ArrayNode	253	ported	crates/config/src/definition/array_node.rs
+Definition/ArrayShapeGenerator.php	ArrayShapeGenerator	101	ported	crates/config/src/definition/array_shape_generator.rs
+Definition/BaseNode.php	BaseNode	318	ported	crates/config/src/definition/base_node.rs
+Definition/BooleanNode.php	BooleanNode	35	ported	crates/config/src/definition/boolean_node.rs
+Definition/Builder/ArrayNodeDefinition.php	ArrayNodeDefinition	318	ported	crates/config/src/definition/builder/array_node_definition.rs
+Definition/Builder/BooleanNodeDefinition.php	BooleanNodeDefinition	24	ported	crates/config/src/definition/builder/boolean_node_definition.rs
+Definition/Builder/BuilderAwareInterface.php	BuilderAwareInterface	5	ported	crates/config/src/definition/builder/array_node_definition.rs
+Definition/Builder/EnumNodeDefinition.php	EnumNodeDefinition	33	ported	crates/config/src/definition/builder/enum_node_definition.rs
+Definition/Builder/ExprBuilder.php	ExprBuilder	124	ported	crates/config/src/definition/builder/expr_builder.rs
+Definition/Builder/FloatNodeDefinition.php	FloatNodeDefinition	9	ported	crates/config/src/definition/builder/float_node_definition.rs
+Definition/Builder/IntegerNodeDefinition.php	IntegerNodeDefinition	9	ported	crates/config/src/definition/builder/integer_node_definition.rs
+Definition/Builder/MergeBuilder.php	MergeBuilder	24	ported	crates/config/src/definition/builder/merge_builder.rs
+Definition/Builder/NodeBuilder.php	NodeBuilder	103	ported	crates/config/src/definition/builder/node_builder.rs
+Definition/Builder/NodeDefinition.php	NodeDefinition	178	ported	crates/config/src/definition/builder/node_definition.rs
+Definition/Builder/NodeParentInterface.php	NodeParentInterface	4	ported	crates/config/src/definition/builder/node_definition.rs
+Definition/Builder/NormalizationBuilder.php	NormalizationBuilder	24	ported	crates/config/src/definition/builder/normalization_builder.rs
+Definition/Builder/NumericNodeDefinition.php	NumericNodeDefinition	27	ported	crates/config/src/definition/builder/numeric_node_definition.rs
+Definition/Builder/ParentNodeDefinitionInterface.php	ParentNodeDefinitionInterface	7	ported	crates/config/src/definition/builder/array_node_definition.rs
+Definition/Builder/ScalarNodeDefinition.php	ScalarNodeDefinition	9	ported	crates/config/src/definition/builder/scalar_node_definition.rs
+Definition/Builder/StringNodeDefinition.php	StringNodeDefinition	14	ported	crates/config/src/definition/builder/string_node_definition.rs
+Definition/Builder/TreeBuilder.php	TreeBuilder	25	ported	crates/config/src/definition/builder/tree_builder.rs
+Definition/Builder/ValidationBuilder.php	ValidationBuilder	17	ported	crates/config/src/definition/builder/validation_builder.rs
+Definition/Builder/VariableNodeDefinition.php	VariableNodeDefinition	35	ported	crates/config/src/definition/builder/variable_node_definition.rs
+Definition/ConfigurableInterface.php	ConfigurableInterface	6	pending	
+Definition/Configuration.php	Configuration	24	pending	
+Definition/ConfigurationInterface.php	ConfigurationInterface	6	ported	crates/config/src/definition/configuration_interface.rs
+Definition/Configurator/DefinitionConfigurator.php	DefinitionConfigurator	35	pending	
+Definition/Dumper/XmlReferenceDumper.php	XmlReferenceDumper	200	ported	crates/config/src/definition/dumper/xml_reference_dumper.rs
+Definition/Dumper/YamlReferenceDumper.php	YamlReferenceDumper	171	ported	crates/config/src/definition/dumper/yaml_reference_dumper.rs
+Definition/EnumNode.php	EnumNode	112	ported	crates/config/src/definition/enum_node.rs
+Definition/Exception/DuplicateKeyException.php	DuplicateKeyException	4	ported	crates/config/src/definition/exception.rs
+Definition/Exception/Exception.php	Exception	4	ported	crates/config/src/definition/exception.rs
+Definition/Exception/ForbiddenOverwriteException.php	ForbiddenOverwriteException	4	ported	crates/config/src/definition/exception.rs
+Definition/Exception/InvalidConfigurationException.php	InvalidConfigurationException	23	ported	crates/config/src/definition/exception.rs
+Definition/Exception/InvalidDefinitionException.php	InvalidDefinitionException	4	ported	crates/config/src/definition/exception.rs
+Definition/Exception/InvalidTypeException.php	InvalidTypeException	4	ported	crates/config/src/definition/exception.rs
+Definition/Exception/UnsetKeyException.php	UnsetKeyException	4	ported	crates/config/src/definition/exception.rs
+Definition/FloatNode.php	FloatNode	23	ported	crates/config/src/definition/float_node.rs
+Definition/IntegerNode.php	IntegerNode	20	ported	crates/config/src/definition/integer_node.rs
+Definition/Loader/DefinitionFileLoader.php	DefinitionFileLoader ProtectedDefinitionFileLoader	62	pending	
+Definition/NodeInterface.php	NodeInterface	15	ported	crates/config/src/definition/base_node.rs
+Definition/NumericNode.php	NumericNode	46	ported	crates/config/src/definition/numeric_node.rs
+Definition/Processor.php	Processor	31	ported	crates/config/src/definition/processor.rs
+Definition/PrototypeNodeInterface.php	PrototypeNodeInterface	5	ported	crates/config/src/definition/base_node.rs
+Definition/PrototypedArrayNode.php	PrototypedArrayNode	187	ported	crates/config/src/definition/prototyped_array_node.rs
+Definition/ScalarNode.php	ScalarNode	27	ported	crates/config/src/definition/scalar_node.rs
+Definition/StringNode.php	StringNode	20	ported	crates/config/src/definition/string_node.rs
+Definition/VariableNode.php	VariableNode	65	ported	crates/config/src/definition/variable_node.rs
+Exception/FileLoaderImportCircularReferenceException.php	FileLoaderImportCircularReferenceException	9	ported	crates/config/src/exception.rs
+Exception/FileLocatorFileNotFoundException.php	FileLocatorFileNotFoundException	16	ported	crates/config/src/exception.rs
+Exception/LoaderLoadException.php	LoaderLoadException	69	ported	crates/config/src/exception.rs
+Exception/LogicException.php	LogicException	4	ported	crates/config/src/definition/exception.rs
+FileLocator.php	FileLocator	56	ported	crates/config/src/file_locator.rs
+FileLocatorInterface.php	FileLocatorInterface	6	ported	crates/config/src/file_locator.rs
+Loader/DelegatingLoader.php	DelegatingLoader	20	ported	crates/config/src/loader/delegating_loader.rs
+Loader/DirectoryAwareLoaderInterface.php	DirectoryAwareLoaderInterface	5	ported	crates/config/src/loader/mod.rs
+Loader/FileLoader.php	FileLoader	130	ported	crates/config/src/loader/file_loader.rs
+Loader/GlobFileLoader.php	GlobFileLoader	12	ported	crates/config/src/loader/glob_file_loader.rs
+Loader/Loader.php	Loader	37	ported	crates/config/src/loader/loader.rs
+Loader/LoaderInterface.php	LoaderInterface	8	ported	crates/config/src/loader/mod.rs
+Loader/LoaderResolver.php	LoaderResolver	29	ported	crates/config/src/loader/loader_resolver.rs
+Loader/LoaderResolverInterface.php	LoaderResolverInterface	5	ported	crates/config/src/loader/mod.rs
+Loader/ParamConfigurator.php	ParamConfigurator	12	ported	crates/config/src/loader/mod.rs
+Resource/ClassExistenceResource.php	ClassExistenceResource	156	pending	
+Resource/ComposerResource.php	ComposerResource	43	pending	
+Resource/DirectoryResource.php	DirectoryResource	60	ported	crates/config/src/resource/directory_resource.rs
+Resource/FileExistenceResource.php	FileExistenceResource	29	ported	crates/config/src/resource/file_existence_resource.rs
+Resource/FileResource.php	FileResource	31	ported	crates/config/src/resource/file_resource.rs
+Resource/GlobResource.php	GlobResource	199	ported	crates/config/src/resource/glob_resource.rs
+Resource/ReflectionClassResource.php	ReflectionClassResource	174	pending	
+Resource/ResourceInterface.php	ResourceInterface	5	ported	crates/config/src/resource/mod.rs
+Resource/SelfCheckingResourceChecker.php	SelfCheckingResourceChecker	15	ported	crates/config/src/resource/self_checking_resource_checker.rs
+Resource/SelfCheckingResourceInterface.php	SelfCheckingResourceInterface	5	ported	crates/config/src/resource/mod.rs
+Resource/SkippingResourceChecker.php	SkippingResourceChecker	24	ported	crates/config/src/resource/skipping_resource_checker.rs
+ResourceCheckerConfigCache.php	ResourceCheckerConfigCache	112	ported	crates/config/src/config_cache.rs
+ResourceCheckerConfigCacheFactory.php	ResourceCheckerConfigCacheFactory	16	ported	crates/config/src/config_cache_factory.rs
+ResourceCheckerInterface.php	ResourceCheckerInterface	7	ported	crates/config/src/config_cache.rs
+Util/Exception/InvalidXmlException.php	InvalidXmlException	4	ported	crates/config/src/util/exception.rs
+Util/Exception/XmlParsingException.php	XmlParsingException	4	ported	crates/config/src/util/exception.rs
+Util/XmlUtils.php	XmlUtils	173	ported	crates/config/src/util/xml_utils.rs

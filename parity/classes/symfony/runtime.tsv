@@ -1,0 +1,24 @@
+# symfony/runtime at 8670c7b20dacb5b1bcc07891dc35546376685af1: upstream file	classes	code lines	status	rust files
+GenericRuntime.php	GenericRuntime	141	pending	
+Internal/BasicErrorHandler.php	BasicErrorHandler	29	pending	
+Internal/ComposerPlugin.php	ComposerPlugin	82	pending	
+Internal/Console/ApplicationRuntime.php	ApplicationRuntime	5	pending	
+Internal/Console/Command/CommandRuntime.php	CommandRuntime	5	pending	
+Internal/Console/Input/InputInterfaceRuntime.php	InputInterfaceRuntime	5	pending	
+Internal/Console/Output/OutputInterfaceRuntime.php	OutputInterfaceRuntime	5	pending	
+Internal/HttpFoundation/RequestRuntime.php	RequestRuntime	5	pending	
+Internal/HttpFoundation/ResponseRuntime.php	ResponseRuntime	5	pending	
+Internal/HttpKernel/HttpKernelInterfaceRuntime.php	HttpKernelInterfaceRuntime	5	pending	
+Internal/MissingDotenv.php	MissingDotenv	4	pending	
+Internal/SymfonyErrorHandler.php	SymfonyErrorHandler	29	pending	
+Resolver/ClosureResolver.php	ClosureResolver	14	pending	
+Resolver/DebugClosureResolver.php	DebugClosureResolver	18	pending	
+ResolverInterface.php	ResolverInterface	5	pending	
+Runner/ClosureRunner.php	ClosureRunner	22	pending	
+Runner/FrankenPhpWorkerRunner.php	FrankenPhpWorkerRunner	46	pending	
+Runner/Symfony/ConsoleApplicationRunner.php	ConsoleApplicationRunner	30	pending	
+Runner/Symfony/HttpKernelRunner.php	HttpKernelRunner	32	ported	crates/runtime/src/http_kernel_runner.rs
+Runner/Symfony/ResponseRunner.php	ResponseRunner	15	pending	
+RunnerInterface.php	RunnerInterface	5	pending	
+RuntimeInterface.php	RuntimeInterface	6	pending	
+SymfonyRuntime.php	SymfonyRuntime	180	pending	

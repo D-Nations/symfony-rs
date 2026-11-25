@@ -1,0 +1,15 @@
+# symfony/stimulus-bundle at 3a042de9aff0ce706990c8cccd70661222c06e9e: upstream file	classes	code lines	status	rust files
+config/services.php	-	48	pending	
+src/AssetMapper/AutoImportLocator.php	AutoImportLocator	45	pending	
+src/AssetMapper/ControllersMapGenerator.php	ControllersMapGenerator	116	pending	
+src/AssetMapper/MappedControllerAsset.php	MappedControllerAsset	11	pending	
+src/AssetMapper/MappedControllerAutoImport.php	MappedControllerAutoImport	9	pending	
+src/AssetMapper/StimulusLoaderJavaScriptCompiler.php	StimulusLoaderJavaScriptCompiler	86	pending	
+src/DependencyInjection/Compiler/RemoveAssetMapperServicesCompiler.php	RemoveAssetMapperServicesCompiler	13	pending	
+src/DependencyInjection/StimulusExtension.php	StimulusExtension	72	pending	
+src/Dto/StimulusAttributes.php	StimulusAttributes	160	pending	
+src/Helper/StimulusHelper.php	StimulusHelper	16	pending	
+src/StimulusBundle.php	StimulusBundle	15	pending	
+src/Twig/StimulusTwigExtension.php	StimulusTwigExtension	61	pending	
+src/Ux/UxPackageMetadata.php	UxPackageMetadata	10	pending	
+src/Ux/UxPackageReader.php	UxPackageReader	34	pending	
