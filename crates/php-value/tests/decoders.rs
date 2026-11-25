@@ -12,7 +12,7 @@ use php_value::{
 };
 use serde_json::Value as Json;
 
-/// Reads a vector file whose values nest past serde_json's default limit.
+/// Reads a vector file whose values nest past `serde_json`'s default limit.
 fn cases(text: &str) -> Result<Vec<Json>, vectors::Error> {
     let mut reader = serde_json::Deserializer::from_str(text);
     reader.disable_recursion_limit();

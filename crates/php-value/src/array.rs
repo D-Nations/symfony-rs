@@ -284,7 +284,7 @@ impl PhpArray {
             .entries
             .iter()
             .enumerate()
-            .all(|(i, (k, _))| *k == Key::Int(i as i64))
+            .all(|(i, (k, _))| i64::try_from(i).is_ok_and(|i| *k == Key::Int(i)))
     }
 
     /// `$this += $other`: the keys of `other` not in `self`, appended in
@@ -319,6 +319,11 @@ impl PhpArray {
 /// otherwise byte by byte; an int and a numeric string by value, an int
 /// and a non-numeric string as the int's decimal text against the string
 /// (PHP manual, "Comparison Operators").
+#[expect(
+    clippy::many_single_char_names,
+    clippy::cast_precision_loss,
+    reason = "short names for the compared keys and values"
+)]
 pub fn compare_keys(a: &Key, b: &Key) -> std::cmp::Ordering {
     use crate::numeric::numeric_value;
     let number = |s: &PhpString| numeric_value(s.as_bytes()).map(crate::numeric::Number::as_f64);

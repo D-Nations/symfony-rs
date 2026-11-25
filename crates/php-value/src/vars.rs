@@ -116,8 +116,7 @@ impl Group {
     /// included (`[ b]`, `[  ]`).
     fn of(inside: &[u8]) -> Self {
         match inside {
-            [] => Self::Append,
-            [b' ' | b'\t' | b'\n' | b'\r' | 0x0b | 0x0c] => Self::Append,
+            [] | [b' ' | b'\t' | b'\n' | b'\r' | 0x0b | 0x0c] => Self::Append,
             key => Self::Key(key.to_vec()),
         }
     }
@@ -171,7 +170,7 @@ pub fn register_value(
     // A new or replaced array stays even when the value itself cannot be
     // appended.
     let replaced = !matches!(vars.get(&base), Some(Value::Array(_)));
-    let Some(map) = array_at(vars, base) else {
+    let Some(map) = array_at(vars, &base) else {
         return Registered::default();
     };
     Registered {
@@ -182,11 +181,11 @@ pub fn register_value(
 
 /// The array stored under `key`, created at the end if absent and
 /// replacing any other value in place.
-fn array_at(vars: &mut PhpArray, key: Key) -> Option<&mut PhpArray> {
-    if !matches!(vars.get(&key), Some(Value::Array(_))) {
+fn array_at<'a>(vars: &'a mut PhpArray, key: &Key) -> Option<&'a mut PhpArray> {
+    if !matches!(vars.get(key), Some(Value::Array(_))) {
         vars.insert(key.clone(), Value::Array(PhpArray::new()));
     }
-    match vars.get_mut(&key)? {
+    match vars.get_mut(key)? {
         Value::Array(array) => Some(array),
         _ => None,
     }
@@ -203,7 +202,7 @@ fn store(mut map: &mut PhpArray, groups: &[Group], value: Value) -> bool {
         let Some(key) = key_for(map, group) else {
             return false;
         };
-        let Some(child) = array_at(map, key) else {
+        let Some(child) = array_at(map, &key) else {
             return false;
         };
         map = child;

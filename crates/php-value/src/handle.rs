@@ -61,6 +61,7 @@ impl<T> Handle<T> {
 
 impl<T: Clone> Handle<T> {
     /// `clone $object`: a new object with a copy of the value.
+    #[must_use]
     pub fn deep_clone(&self) -> Self {
         Self::new(self.with(T::clone))
     }

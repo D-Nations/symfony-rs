@@ -2,6 +2,10 @@
 //! (`scripts/record.sh php-value`).
 //!
 //! Upstream: none
+#![allow(
+    clippy::cast_possible_truncation,
+    reason = "the tests build bytes and code points from known small values"
+)]
 
 use php_value::{
     Key, PhpArray, Value,

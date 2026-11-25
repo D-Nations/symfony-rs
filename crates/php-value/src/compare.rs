@@ -31,6 +31,10 @@ use crate::{
     value::Value,
 };
 
+#[expect(
+    clippy::float_cmp,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 fn numbers_equal(a: Number, b: Number) -> bool {
     match (a, b) {
         (Number::Int(a), Number::Int(b)) => a == b,
