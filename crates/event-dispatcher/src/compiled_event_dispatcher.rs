@@ -1,7 +1,8 @@
 //! A dispatcher whose listeners are settled before the first request: the
 //! listener execution seam of the PLAN (M2-A). It behaves as the pinned
 //! EventDispatcher.php given the same `addListener()` calls, and
-//! dispatches without a lock, a sort or a copy of the listener list.
+//! dispatches without the table lock, a sort or a copy of the listener
+//! list (each stored listener is still read through its own slot).
 //!
 //! The design is upstream's own, from a later release than the one pinned
 //! (symfony/symfony#66122, `CompiledEventDispatcher`, Symfony 8.2): the
