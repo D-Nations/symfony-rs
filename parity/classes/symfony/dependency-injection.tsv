@@ -1,18 +1,18 @@
 # symfony/dependency-injection at 9b34cad844bcbc878a05056e3ffac5377e0e140a: upstream file	classes	code lines	status	rust files
-Alias.php	Alias	70	pending	
-Argument/AbstractArgument.php	AbstractArgument	23	pending	
-Argument/ArgumentInterface.php	ArgumentInterface	6	pending	
-Argument/ArgumentTrait.php	ArgumentTrait	18	pending	
-Argument/BoundArgument.php	BoundArgument	41	pending	
+Alias.php	Alias	70	ported	crates/dependency-injection/src/alias.rs
+Argument/AbstractArgument.php	AbstractArgument	23	ported	crates/dependency-injection/src/argument/abstract_argument.rs
+Argument/ArgumentInterface.php	ArgumentInterface	6	ported	crates/dependency-injection/src/argument/mod.rs
+Argument/ArgumentTrait.php	ArgumentTrait	18	ported	crates/dependency-injection/src/argument/abstract_argument.rs
+Argument/BoundArgument.php	BoundArgument	41	ported	crates/dependency-injection/src/argument/bound_argument.rs
 Argument/EnvClosure.php	EnvClosure	22	pending	
-Argument/EnvClosureArgument.php	EnvClosureArgument	39	pending	
-Argument/IteratorArgument.php	IteratorArgument	18	pending	
+Argument/EnvClosureArgument.php	EnvClosureArgument	39	ported	crates/dependency-injection/src/argument/env_closure_argument.rs
+Argument/IteratorArgument.php	IteratorArgument	18	ported	crates/dependency-injection/src/argument/iterator_argument.rs
 Argument/LazyClosure.php	LazyClosure	69	pending	
 Argument/RewindableGenerator.php	RewindableGenerator	23	pending	
-Argument/ServiceClosureArgument.php	ServiceClosureArgument	22	pending	
+Argument/ServiceClosureArgument.php	ServiceClosureArgument	22	ported	crates/dependency-injection/src/argument/service_closure_argument.rs
 Argument/ServiceLocator.php	ServiceLocator	24	pending	
-Argument/ServiceLocatorArgument.php	ServiceLocatorArgument	27	pending	
-Argument/TaggedIteratorArgument.php	TaggedIteratorArgument	68	pending	
+Argument/ServiceLocatorArgument.php	ServiceLocatorArgument	27	ported	crates/dependency-injection/src/argument/service_locator_argument.rs
+Argument/TaggedIteratorArgument.php	TaggedIteratorArgument	68	ported	crates/dependency-injection/src/argument/iterator_argument.rs
 Attribute/AsAlias.php	AsAlias	14	pending	
 Attribute/AsDecorator.php	AsDecorator	12	pending	
 Attribute/AsTagDecorator.php	AsTagDecorator	12	pending	
@@ -33,7 +33,7 @@ Attribute/Lazy.php	Lazy	9	pending
 Attribute/Target.php	Target	37	pending	
 Attribute/When.php	When	8	pending	
 Attribute/WhenNot.php	WhenNot	9	pending	
-ChildDefinition.php	ChildDefinition	37	pending	
+ChildDefinition.php	ChildDefinition	37	ported	crates/dependency-injection/src/definition.rs
 Compiler/AbstractRecursivePass.php	AbstractRecursivePass	197	pending	
 Compiler/AddBehaviorDescribingTagsPass.php	AddBehaviorDescribingTagsPass	24	pending	
 Compiler/AliasDeprecatedPublicServicesPass.php	AliasDeprecatedPublicServicesPass	38	pending	
@@ -97,8 +97,8 @@ Config/ContainerParametersResource.php	ContainerParametersResource	17	pending
 Config/ContainerParametersResourceChecker.php	ContainerParametersResourceChecker	24	pending	
 Container.php	Container	284	pending	
 ContainerBuilder.php	ContainerBuilder	1155	pending	
-ContainerInterface.php	ContainerInterface	20	pending	
-Definition.php	Definition	410	pending	
+ContainerInterface.php	ContainerInterface	20	ported	crates/dependency-injection/src/container_interface.rs
+Definition.php	Definition	410	ported	crates/dependency-injection/src/definition.rs
 Dumper/Dumper.php	Dumper	9	pending	
 Dumper/DumperInterface.php	DumperInterface	5	pending	
 Dumper/GraphvizDumper.php	GraphvizDumper	174	pending	
@@ -109,22 +109,22 @@ Dumper/YamlDumper.php	YamlDumper	303	pending
 EnvVarLoaderInterface.php	EnvVarLoaderInterface	5	pending	
 EnvVarProcessor.php	EnvVarProcessor	298	pending	
 EnvVarProcessorInterface.php	EnvVarProcessorInterface	7	pending	
-Exception/AutoconfigureFailedException.php	AutoconfigureFailedException	4	pending	
-Exception/AutowiringFailedException.php	AutowiringFailedException	48	pending	
-Exception/BadMethodCallException.php	BadMethodCallException	4	pending	
-Exception/EmptyParameterValueException.php	EmptyParameterValueException	5	pending	
-Exception/EnvNotFoundException.php	EnvNotFoundException	4	pending	
-Exception/EnvParameterException.php	EnvParameterException	8	pending	
-Exception/ExceptionInterface.php	ExceptionInterface	5	pending	
-Exception/InvalidArgumentException.php	InvalidArgumentException	4	pending	
-Exception/InvalidParameterTypeException.php	InvalidParameterTypeException	15	pending	
-Exception/LogicException.php	LogicException	4	pending	
-Exception/OutOfBoundsException.php	OutOfBoundsException	4	pending	
-Exception/ParameterCircularReferenceException.php	ParameterCircularReferenceException	14	pending	
-Exception/ParameterNotFoundException.php	ParameterNotFoundException	81	pending	
-Exception/RuntimeException.php	RuntimeException	4	pending	
-Exception/ServiceCircularReferenceException.php	ServiceCircularReferenceException	19	pending	
-Exception/ServiceNotFoundException.php	ServiceNotFoundException	40	pending	
+Exception/AutoconfigureFailedException.php	AutoconfigureFailedException	4	ported	crates/dependency-injection/src/exception.rs
+Exception/AutowiringFailedException.php	AutowiringFailedException	48	ported	crates/dependency-injection/src/exception.rs
+Exception/BadMethodCallException.php	BadMethodCallException	4	ported	crates/dependency-injection/src/exception.rs
+Exception/EmptyParameterValueException.php	EmptyParameterValueException	5	ported	crates/dependency-injection/src/exception.rs
+Exception/EnvNotFoundException.php	EnvNotFoundException	4	ported	crates/dependency-injection/src/exception.rs
+Exception/EnvParameterException.php	EnvParameterException	8	ported	crates/dependency-injection/src/exception.rs
+Exception/ExceptionInterface.php	ExceptionInterface	5	ported	crates/dependency-injection/src/exception.rs
+Exception/InvalidArgumentException.php	InvalidArgumentException	4	ported	crates/dependency-injection/src/exception.rs
+Exception/InvalidParameterTypeException.php	InvalidParameterTypeException	15	ported	crates/dependency-injection/src/exception.rs
+Exception/LogicException.php	LogicException	4	ported	crates/dependency-injection/src/exception.rs
+Exception/OutOfBoundsException.php	OutOfBoundsException	4	ported	crates/dependency-injection/src/exception.rs
+Exception/ParameterCircularReferenceException.php	ParameterCircularReferenceException	14	ported	crates/dependency-injection/src/exception.rs
+Exception/ParameterNotFoundException.php	ParameterNotFoundException	81	ported	crates/dependency-injection/src/exception.rs
+Exception/RuntimeException.php	RuntimeException	4	ported	crates/dependency-injection/src/exception.rs
+Exception/ServiceCircularReferenceException.php	ServiceCircularReferenceException	19	ported	crates/dependency-injection/src/exception.rs
+Exception/ServiceNotFoundException.php	ServiceNotFoundException	40	ported	crates/dependency-injection/src/exception.rs
 ExpressionLanguage.php	ExpressionLanguage	17	pending	
 ExpressionLanguageProvider.php	ExpressionLanguageProvider	28	pending	
 Extension/AbstractExtension.php	AbstractExtension	38	pending	
@@ -198,19 +198,19 @@ Loader/IniFileLoader.php	IniFileLoader	61	pending
 Loader/PhpFileLoader.php	PhpFileLoader	158	pending	
 Loader/UndefinedExtensionHandler.php	UndefinedExtensionHandler	29	pending	
 Loader/YamlFileLoader.php	YamlFileLoader	84	pending	
-Parameter.php	Parameter	12	pending	
+Parameter.php	Parameter	12	ported	crates/dependency-injection/src/reference.rs
 ParameterBag/ContainerBag.php	ContainerBag	21	pending	
 ParameterBag/ContainerBagInterface.php	ContainerBagInterface	10	pending	
 ParameterBag/EnvPlaceholderParameterBag.php	EnvPlaceholderParameterBag	94	pending	
-ParameterBag/FrozenParameterBag.php	FrozenParameterBag	37	pending	
-ParameterBag/ParameterBag.php	ParameterBag	202	pending	
-ParameterBag/ParameterBagInterface.php	ParameterBagInterface	17	pending	
-Reference.php	Reference	31	pending	
+ParameterBag/FrozenParameterBag.php	FrozenParameterBag	37	ported	crates/dependency-injection/src/parameter_bag/parameter_bag.rs
+ParameterBag/ParameterBag.php	ParameterBag	202	ported	crates/dependency-injection/src/parameter_bag/parameter_bag.rs
+ParameterBag/ParameterBagInterface.php	ParameterBagInterface	17	ported	crates/dependency-injection/src/parameter_bag/parameter_bag.rs
+Reference.php	Reference	31	ported	crates/dependency-injection/src/reference.rs
 ReverseContainer.php	ReverseContainer	37	pending	
 ServiceLocator.php	ServiceLocator	112	pending	
 ServicesResetter.php	ServicesResetter	53	pending	
 ServicesResetterInterface.php	ServicesResetterInterface	5	pending	
 StaticEnvVarLoader.php	StaticEnvVarLoader	12	pending	
 TaggedContainerInterface.php	TaggedContainerInterface	5	pending	
-TypedReference.php	TypedReference	27	pending	
-Variable.php	Variable	12	pending	
+TypedReference.php	TypedReference	27	ported	crates/dependency-injection/src/reference.rs
+Variable.php	Variable	12	ported	crates/dependency-injection/src/reference.rs

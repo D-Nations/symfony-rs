@@ -42,13 +42,13 @@ Tests/AbstractKernelTest.php	AbstractKernelTest::testShutdownCallsShutdownOnBund
 Tests/AbstractKernelTest.php	AbstractKernelTest::testShutdownClearsContainer	pending	
 Tests/AbstractKernelTest.php	AbstractKernelTest::testShutdownDoesNotCollectCycles	pending	
 Tests/AbstractKernelTest.php	AbstractKernelTest::testTwoRequiredBundlesWithSameChild	pending	
-Tests/AliasTest.php	AliasTest::testCanConstructANonPublicAlias	pending	
-Tests/AliasTest.php	AliasTest::testCanConstructAPrivateAlias	pending	
-Tests/AliasTest.php	AliasTest::testCanDeprecateAnAlias	pending	
-Tests/AliasTest.php	AliasTest::testCanSetPublic	pending	
-Tests/AliasTest.php	AliasTest::testCannotDeprecateWithAnInvalidTemplate	pending	
-Tests/AliasTest.php	AliasTest::testConstructor	pending	
-Tests/AliasTest.php	AliasTest::testReturnsCorrectDeprecation	pending	
+Tests/AliasTest.php	AliasTest::testCanConstructANonPublicAlias	ported	crates/dependency-injection/tests/alias_test.rs::testCanConstructANonPublicAlias
+Tests/AliasTest.php	AliasTest::testCanConstructAPrivateAlias	ported	crates/dependency-injection/tests/alias_test.rs::testCanConstructAPrivateAlias
+Tests/AliasTest.php	AliasTest::testCanDeprecateAnAlias	ported	crates/dependency-injection/tests/alias_test.rs::testCanDeprecateAnAlias
+Tests/AliasTest.php	AliasTest::testCanSetPublic	ported	crates/dependency-injection/tests/alias_test.rs::testCanSetPublic
+Tests/AliasTest.php	AliasTest::testCannotDeprecateWithAnInvalidTemplate	ported	crates/dependency-injection/tests/alias_test.rs::testCannotDeprecateWithAnInvalidTemplate
+Tests/AliasTest.php	AliasTest::testConstructor	ported	crates/dependency-injection/tests/alias_test.rs::testConstructor
+Tests/AliasTest.php	AliasTest::testReturnsCorrectDeprecation	ported	crates/dependency-injection/tests/alias_test.rs::testReturnsCorrectDeprecation
 Tests/Argument/AbstractArgumentTest.php	AbstractArgumentTest::testAbstractArgumentGetters	pending	
 Tests/Argument/EnvClosureArgumentTest.php	EnvClosureArgumentTest::testSerializationWithDefault	pending	
 Tests/Argument/EnvClosureArgumentTest.php	EnvClosureArgumentTest::testSerializationWithoutDefault	pending	
@@ -62,12 +62,12 @@ Tests/Argument/LazyClosureTest.php	LazyClosureTest::testThrowsWhenNotUsingInterf
 Tests/Argument/RewindableGeneratorTest.php	RewindableGeneratorTest::testCountUsesProvidedValue	pending	
 Tests/Argument/RewindableGeneratorTest.php	RewindableGeneratorTest::testCountUsesProvidedValueAsCallback	pending	
 Tests/Argument/RewindableGeneratorTest.php	RewindableGeneratorTest::testImplementsCountable	pending	
-Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testDefaultIndexMethod	pending	
-Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testDefaultPriorityIndexMethod	pending	
-Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testOnlyTagWithNeedsIndexes	pending	
-Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testOnlyTagWithNeedsIndexesAndDotTag	pending	
-Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testOnlyTagWithNeedsIndexesAndDotsTag	pending	
-Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testWithTagOnly	pending	
+Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testDefaultIndexMethod	ported	crates/dependency-injection/tests/tagged_iterator_argument_test.rs::testDefaultIndexMethod
+Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testDefaultPriorityIndexMethod	ported	crates/dependency-injection/tests/tagged_iterator_argument_test.rs::testDefaultPriorityIndexMethod
+Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testOnlyTagWithNeedsIndexes	ported	crates/dependency-injection/tests/tagged_iterator_argument_test.rs::testOnlyTagWithNeedsIndexes
+Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testOnlyTagWithNeedsIndexesAndDotTag	ported	crates/dependency-injection/tests/tagged_iterator_argument_test.rs::testOnlyTagWithNeedsIndexesAndDotTag
+Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testOnlyTagWithNeedsIndexesAndDotsTag	ported	crates/dependency-injection/tests/tagged_iterator_argument_test.rs::testOnlyTagWithNeedsIndexesAndDotsTag
+Tests/Argument/TaggedIteratorArgumentTest.php	TaggedIteratorArgumentTest::testWithTagOnly	ported	crates/dependency-injection/tests/tagged_iterator_argument_test.rs::testWithTagOnly
 Tests/Attribute/AutowireCallableTest.php	AutowireCallableTest::testArrayCallable	pending	
 Tests/Attribute/AutowireCallableTest.php	AutowireCallableTest::testArrayCallableWithReferenceAndMethod	pending	
 Tests/Attribute/AutowireCallableTest.php	AutowireCallableTest::testArrayCallableWithReferenceOnly	pending	
@@ -104,17 +104,17 @@ Tests/Attribute/AutowireTest.php	AutowireTest::testCanUseValueWithDoubleAtSign	p
 Tests/Attribute/AutowireTest.php	AutowireTest::testCanUseZeroForValue	pending	
 Tests/Attribute/AutowireTest.php	AutowireTest::testConstructThrowsOnMutuallyExclusiveOptions	pending	
 Tests/Attribute/AutowireTest.php	AutowireTest::testMustSetOneParameter	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testAutoconfigured	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testConstructor	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testGetArgumentShouldCheckBounds	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testInstanceofConditionals	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testReplaceArgument	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testReplaceArgumentShouldRequireIntegerIndex	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetArgument	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetAutowired	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetLazy	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetProperty	pending	
-Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetPublic	pending	
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testAutoconfigured	ported	crates/dependency-injection/tests/child_definition_test.rs::testAutoconfigured
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testConstructor	ported	crates/dependency-injection/tests/child_definition_test.rs::testConstructor
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testGetArgumentShouldCheckBounds	ported	crates/dependency-injection/tests/child_definition_test.rs::testGetArgumentShouldCheckBounds
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testInstanceofConditionals	ported	crates/dependency-injection/tests/child_definition_test.rs::testInstanceofConditionals
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testReplaceArgument	ported	crates/dependency-injection/tests/child_definition_test.rs::testReplaceArgument
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testReplaceArgumentShouldRequireIntegerIndex	ported	crates/dependency-injection/tests/child_definition_test.rs::testReplaceArgumentShouldRequireIntegerIndex
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetArgument	ported	crates/dependency-injection/tests/child_definition_test.rs::testSetArgument
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetAutowired	ported	crates/dependency-injection/tests/child_definition_test.rs::testSetAutowired
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetLazy	ported	crates/dependency-injection/tests/child_definition_test.rs::testSetLazy
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetProperty	ported	crates/dependency-injection/tests/child_definition_test.rs::testSetProperty
+Tests/ChildDefinitionTest.php	ChildDefinitionTest::testSetPublic	ported	crates/dependency-injection/tests/child_definition_test.rs::testSetPublic
 Tests/Compiler/AbstractRecursivePassTest.php	AbstractRecursivePassTest::testGetConstructorDefinitionNoClass	pending	
 Tests/Compiler/AbstractRecursivePassTest.php	AbstractRecursivePassTest::testGetConstructorResolvesChildDefinitionsClass	pending	
 Tests/Compiler/AbstractRecursivePassTest.php	AbstractRecursivePassTest::testGetConstructorResolvesFactoryChildDefinitionsClass	pending	
@@ -900,39 +900,39 @@ Tests/ContainerTest.php	ContainerTest::testSetWithNullResetTheService	pending
 Tests/ContainerTest.php	ContainerTest::testThatCloningIsNotSupported	pending	
 Tests/ContainerTest.php	ContainerTest::testUnderscore	pending	
 Tests/CrossCheckTest.php	CrossCheckTest::testYamlCrossCheck	pending	
-Tests/DefinitionTest.php	DefinitionTest::testAddError	pending	
-Tests/DefinitionTest.php	DefinitionTest::testAddResourceTag	pending	
-Tests/DefinitionTest.php	DefinitionTest::testArguments	pending	
-Tests/DefinitionTest.php	DefinitionTest::testAutowired	pending	
-Tests/DefinitionTest.php	DefinitionTest::testChangesNoChanges	pending	
-Tests/DefinitionTest.php	DefinitionTest::testClearTag	pending	
-Tests/DefinitionTest.php	DefinitionTest::testClearTags	pending	
-Tests/DefinitionTest.php	DefinitionTest::testConstructor	pending	
-Tests/DefinitionTest.php	DefinitionTest::testExceptionOnEmptyMethodCall	pending	
-Tests/DefinitionTest.php	DefinitionTest::testGetArgumentShouldCheckBounds	pending	
-Tests/DefinitionTest.php	DefinitionTest::testGetChangesWithChanges	pending	
-Tests/DefinitionTest.php	DefinitionTest::testMethodCalls	pending	
-Tests/DefinitionTest.php	DefinitionTest::testMultipleMethodCalls	pending	
-Tests/DefinitionTest.php	DefinitionTest::testReplaceArgumentShouldCheckBounds	pending	
-Tests/DefinitionTest.php	DefinitionTest::testReplaceArgumentWithNonConsecutiveIntIndex	pending	
-Tests/DefinitionTest.php	DefinitionTest::testReplaceArgumentWithoutExistingArgumentsShouldCheckBounds	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetArgument	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetDeprecatedWithInvalidDeprecationTemplate	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetGetClass	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetGetConfigurator	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetGetDecoratedService	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetGetFactory	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetGetFile	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetGetProperties	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetIsAbstract	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetIsDeprecated	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetIsLazy	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetIsPublic	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetIsShared	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetIsSynthetic	pending	
-Tests/DefinitionTest.php	DefinitionTest::testSetProperty	pending	
-Tests/DefinitionTest.php	DefinitionTest::testShouldAutoconfigure	pending	
-Tests/DefinitionTest.php	DefinitionTest::testTags	pending	
+Tests/DefinitionTest.php	DefinitionTest::testAddError	ported	crates/dependency-injection/tests/definition_test.rs::testAddError
+Tests/DefinitionTest.php	DefinitionTest::testAddResourceTag	ported	crates/dependency-injection/tests/definition_test.rs::testAddResourceTag
+Tests/DefinitionTest.php	DefinitionTest::testArguments	ported	crates/dependency-injection/tests/definition_test.rs::testArguments
+Tests/DefinitionTest.php	DefinitionTest::testAutowired	ported	crates/dependency-injection/tests/definition_test.rs::testAutowired
+Tests/DefinitionTest.php	DefinitionTest::testChangesNoChanges	ported	crates/dependency-injection/tests/definition_test.rs::testChangesNoChanges
+Tests/DefinitionTest.php	DefinitionTest::testClearTag	ported	crates/dependency-injection/tests/definition_test.rs::testClearTag
+Tests/DefinitionTest.php	DefinitionTest::testClearTags	ported	crates/dependency-injection/tests/definition_test.rs::testClearTags
+Tests/DefinitionTest.php	DefinitionTest::testConstructor	ported	crates/dependency-injection/tests/definition_test.rs::testConstructor
+Tests/DefinitionTest.php	DefinitionTest::testExceptionOnEmptyMethodCall	ported	crates/dependency-injection/tests/definition_test.rs::testExceptionOnEmptyMethodCall
+Tests/DefinitionTest.php	DefinitionTest::testGetArgumentShouldCheckBounds	ported	crates/dependency-injection/tests/definition_test.rs::testGetArgumentShouldCheckBounds
+Tests/DefinitionTest.php	DefinitionTest::testGetChangesWithChanges	ported	crates/dependency-injection/tests/definition_test.rs::testGetChangesWithChanges
+Tests/DefinitionTest.php	DefinitionTest::testMethodCalls	ported	crates/dependency-injection/tests/definition_test.rs::testMethodCalls
+Tests/DefinitionTest.php	DefinitionTest::testMultipleMethodCalls	ported	crates/dependency-injection/tests/definition_test.rs::testMultipleMethodCalls
+Tests/DefinitionTest.php	DefinitionTest::testReplaceArgumentShouldCheckBounds	ported	crates/dependency-injection/tests/definition_test.rs::testReplaceArgumentShouldCheckBounds
+Tests/DefinitionTest.php	DefinitionTest::testReplaceArgumentWithNonConsecutiveIntIndex	ported	crates/dependency-injection/tests/definition_test.rs::testReplaceArgumentWithNonConsecutiveIntIndex
+Tests/DefinitionTest.php	DefinitionTest::testReplaceArgumentWithoutExistingArgumentsShouldCheckBounds	ported	crates/dependency-injection/tests/definition_test.rs::testReplaceArgumentWithoutExistingArgumentsShouldCheckBounds
+Tests/DefinitionTest.php	DefinitionTest::testSetArgument	ported	crates/dependency-injection/tests/definition_test.rs::testSetArgument
+Tests/DefinitionTest.php	DefinitionTest::testSetDeprecatedWithInvalidDeprecationTemplate	ported	crates/dependency-injection/tests/definition_test.rs::testSetDeprecatedWithInvalidDeprecationTemplate
+Tests/DefinitionTest.php	DefinitionTest::testSetGetClass	ported	crates/dependency-injection/tests/definition_test.rs::testSetGetClass
+Tests/DefinitionTest.php	DefinitionTest::testSetGetConfigurator	ported	crates/dependency-injection/tests/definition_test.rs::testSetGetConfigurator
+Tests/DefinitionTest.php	DefinitionTest::testSetGetDecoratedService	ported	crates/dependency-injection/tests/definition_test.rs::testSetGetDecoratedService
+Tests/DefinitionTest.php	DefinitionTest::testSetGetFactory	ported	crates/dependency-injection/tests/definition_test.rs::testSetGetFactory
+Tests/DefinitionTest.php	DefinitionTest::testSetGetFile	ported	crates/dependency-injection/tests/definition_test.rs::testSetGetFile
+Tests/DefinitionTest.php	DefinitionTest::testSetGetProperties	ported	crates/dependency-injection/tests/definition_test.rs::testSetGetProperties
+Tests/DefinitionTest.php	DefinitionTest::testSetIsAbstract	ported	crates/dependency-injection/tests/definition_test.rs::testSetIsAbstract
+Tests/DefinitionTest.php	DefinitionTest::testSetIsDeprecated	ported	crates/dependency-injection/tests/definition_test.rs::testSetIsDeprecated
+Tests/DefinitionTest.php	DefinitionTest::testSetIsLazy	ported	crates/dependency-injection/tests/definition_test.rs::testSetIsLazy
+Tests/DefinitionTest.php	DefinitionTest::testSetIsPublic	ported	crates/dependency-injection/tests/definition_test.rs::testSetIsPublic
+Tests/DefinitionTest.php	DefinitionTest::testSetIsShared	ported	crates/dependency-injection/tests/definition_test.rs::testSetIsShared
+Tests/DefinitionTest.php	DefinitionTest::testSetIsSynthetic	ported	crates/dependency-injection/tests/definition_test.rs::testSetIsSynthetic
+Tests/DefinitionTest.php	DefinitionTest::testSetProperty	ported	crates/dependency-injection/tests/definition_test.rs::testSetProperty
+Tests/DefinitionTest.php	DefinitionTest::testShouldAutoconfigure	ported	crates/dependency-injection/tests/definition_test.rs::testShouldAutoconfigure
+Tests/DefinitionTest.php	DefinitionTest::testTags	ported	crates/dependency-injection/tests/definition_test.rs::testTags
 Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDump	pending	
 Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithFrozenContainer	pending	
 Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithFrozenCustomClassContainer	pending	
@@ -1382,39 +1382,39 @@ Tests/ParameterBag/EnvPlaceholderParameterBagTest.php	EnvPlaceholderParameterBag
 Tests/ParameterBag/EnvPlaceholderParameterBagTest.php	EnvPlaceholderParameterBagTest::testResolveEnvAllowsNull	pending	
 Tests/ParameterBag/EnvPlaceholderParameterBagTest.php	EnvPlaceholderParameterBagTest::testResolveEnvRequiresStrings	pending	
 Tests/ParameterBag/EnvPlaceholderParameterBagTest.php	EnvPlaceholderParameterBagTest::testResolveThrowsOnBadDefaultValue	pending	
-Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testAdd	pending	
-Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testClear	pending	
-Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testConstructor	pending	
-Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testDeprecate	pending	
-Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testGetDeprecated	pending	
-Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testRemove	pending	
-Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testSet	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testClear	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testConstructor	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testConstructorNumericName	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecate	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecateThrowsWhenParameterIsUndefined	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecateWithMessage	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecationIsTriggeredWhenResolved	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testEscapeValue	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetMissingRequiredParameter	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetNonEmptyParameterThrowsWhenEmptyArrayValue	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetNonEmptyParameterThrowsWhenEmptyStringValue	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetNonEmptyParameterThrowsWhenNullValue	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetSet	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetThrowParameterNotFoundException	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testHas	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testMixedCase	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testRemove	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testRemoveWithDeprecation	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveIndicatesWhyAParameterIsNeeded	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveStringWithSpacesReturnsString	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveUnescapesValue	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveValue	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveValueKeepsEscapingOnAResolvedBag	pending	
-Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testSetNumericName	pending	
-Tests/ParameterTest.php	ParameterTest::testConstructor	pending	
-Tests/ReferenceTest.php	ReferenceTest::testConstructor	pending	
+Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testAdd	ported	crates/dependency-injection/tests/frozen_parameter_bag_test.rs::testAdd
+Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testClear	ported	crates/dependency-injection/tests/frozen_parameter_bag_test.rs::testClear
+Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testConstructor	ported	crates/dependency-injection/tests/frozen_parameter_bag_test.rs::testConstructor
+Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testDeprecate	ported	crates/dependency-injection/tests/frozen_parameter_bag_test.rs::testDeprecate
+Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testGetDeprecated	ported	crates/dependency-injection/tests/frozen_parameter_bag_test.rs::testGetDeprecated
+Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testRemove	ported	crates/dependency-injection/tests/frozen_parameter_bag_test.rs::testRemove
+Tests/ParameterBag/FrozenParameterBagTest.php	FrozenParameterBagTest::testSet	ported	crates/dependency-injection/tests/frozen_parameter_bag_test.rs::testSet
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testClear	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testClear
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testConstructor	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testConstructor
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testConstructorNumericName	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testConstructorNumericName
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecate	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testDeprecate
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecateThrowsWhenParameterIsUndefined	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testDeprecateThrowsWhenParameterIsUndefined
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecateWithMessage	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testDeprecateWithMessage
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testDeprecationIsTriggeredWhenResolved	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testDeprecationIsTriggeredWhenResolved
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testEscapeValue	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testEscapeValue
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetMissingRequiredParameter	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testGetMissingRequiredParameter
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetNonEmptyParameterThrowsWhenEmptyArrayValue	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testGetNonEmptyParameterThrowsWhenEmptyArrayValue
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetNonEmptyParameterThrowsWhenEmptyStringValue	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testGetNonEmptyParameterThrowsWhenEmptyStringValue
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetNonEmptyParameterThrowsWhenNullValue	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testGetNonEmptyParameterThrowsWhenNullValue
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetSet	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testGetSet
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testGetThrowParameterNotFoundException	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testGetThrowParameterNotFoundException
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testHas	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testHas
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testMixedCase	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testMixedCase
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testRemove	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testRemove
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testRemoveWithDeprecation	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testRemoveWithDeprecation
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveIndicatesWhyAParameterIsNeeded	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testResolveIndicatesWhyAParameterIsNeeded
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveStringWithSpacesReturnsString	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testResolveStringWithSpacesReturnsString
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveUnescapesValue	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testResolveUnescapesValue
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveValue	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testResolveValue
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testResolveValueKeepsEscapingOnAResolvedBag	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testResolveValueKeepsEscapingOnAResolvedBag
+Tests/ParameterBag/ParameterBagTest.php	ParameterBagTest::testSetNumericName	ported	crates/dependency-injection/tests/parameter_bag_test.rs::testSetNumericName
+Tests/ParameterTest.php	ParameterTest::testConstructor	ported	crates/dependency-injection/tests/parameter_test.rs::testConstructor
+Tests/ReferenceTest.php	ReferenceTest::testConstructor	ported	crates/dependency-injection/tests/reference_test.rs::testConstructor
 Tests/ServiceLocatorTest.php	ServiceLocatorTest::testGet	pending	
 Tests/ServiceLocatorTest.php	ServiceLocatorTest::testGetDoesNotMemoize	pending	
 Tests/ServiceLocatorTest.php	ServiceLocatorTest::testGetThrowsOnUndefinedService	pending	
