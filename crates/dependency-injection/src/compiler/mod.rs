@@ -37,11 +37,17 @@ pub use resolve_factory_class_pass::ResolveFactoryClassPass;
 mod resolve_hot_path_pass;
 pub use resolve_hot_path_pass::ResolveHotPathPass;
 
+mod resolve_invalid_references_pass;
+pub use resolve_invalid_references_pass::ResolveInvalidReferencesPass;
+
 mod resolve_no_preload_pass;
 pub use resolve_no_preload_pass::ResolveNoPreloadPass;
 
 mod resolve_parameter_place_holders_pass;
 pub use resolve_parameter_place_holders_pass::ResolveParameterPlaceHoldersPass;
+
+mod resolve_references_to_aliases_pass;
+pub use resolve_references_to_aliases_pass::ResolveReferencesToAliasesPass;
 
 mod resolve_service_subscribers_pass;
 pub use resolve_service_subscribers_pass::ResolveServiceSubscribersPass;
