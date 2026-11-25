@@ -515,6 +515,7 @@ crates/http-kernel/src/lib.rs	symfony/http-kernel	Event/ResponseEvent.php	460658
 crates/http-kernel/src/lib.rs	symfony/http-kernel	Event/ExceptionEvent.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/lib.rs	symfony/event-dispatcher	EventDispatcher.php	7458da64220376b2e0dc2d8451bf43382c1ad297
 crates/http-kernel/src/lib.rs	symfony/http-foundation	Response.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-kernel/src/response_listener.rs	symfony/http-kernel	EventListener/ResponseListener.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/router_listener.rs	symfony/http-kernel	EventListener/RouterListener.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/router_listener.rs	symfony/http-kernel	Resources/welcome.html.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/value_resolver.rs	symfony/http-kernel	Controller/ArgumentResolver/RequestAttributeValueResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
@@ -546,6 +547,7 @@ crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Except
 crates/http-kernel/tests/http_kernel_test.rs	symfony/http-kernel	Tests/HttpKernelTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/request_attribute_value_resolver_test.rs	symfony/http-kernel	Tests/Controller/ArgumentResolver/RequestAttributeValueResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/request_value_resolver_test.rs	symfony/http-kernel	Tests/Controller/ArgumentResolver/RequestValueResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/tests/response_listener_test.rs	symfony/http-kernel	Tests/EventListener/ResponseListenerTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/router_listener_test.rs	symfony/http-kernel	Tests/EventListener/RouterListenerTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/mime/src/exception.rs	symfony/mime	Exception/ExceptionInterface.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
 crates/mime/src/exception.rs	symfony/mime	Exception/LogicException.php	8d1232052c9cdef170ed9608b3147bca4f61ff69
