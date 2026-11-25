@@ -40,8 +40,10 @@ stays as it is until this crate's compiler and Rust emitter replace it.
 | `ChildDefinition`: parent, `index_N` arguments, `$name` arguments | `ChildDefinition.php` | ChildDefinitionTest (11) |
 | Arguments: `AbstractArgument`, `BoundArgument` (process-wide usage sequence), `EnvClosureArgument`, `IteratorArgument`, `TaggedIteratorArgument` (both constructor shapes, default method names, deprecations), `ServiceClosureArgument`, `ServiceLocatorArgument`; `ArgumentInterface` values | `Argument/*.php` (not the run-time classes) | TaggedIteratorArgumentTest (6) |
 | `ParameterBag` and `FrozenParameterBag`: add/set (numeric names refused), get with alternatives and the nested-array hint, deprecations, non-empty parameters, resolve, `resolveValue()` (keys too), `resolveString()` (`%%`, whole-value placeholders, circular references), escape/unescape | `ParameterBag/ParameterBag.php`, `FrozenParameterBag.php`, `ParameterBagInterface.php` | ParameterBagTest (24), FrozenParameterBagTest (7) |
+| `Container`: a compiled container as a `ContainerClass` factory table (method map, file map, aliases, synthetic and removed ids, privates), get/has/set/initialized/reset, circular-load detection, not-found alternatives, `camelize()`/`underscore()`, `getEnv()` through `container.env_var_processors_locator` | `Container.php` | ContainerTest (34; 3 pending on ContainerBuilder and EnvVarProcessor) |
+| `ServiceLocator` (and `Argument\ServiceLocator`), with the caller class passed explicitly in place of `debug_backtrace()` | `ServiceLocator.php`, `Argument/ServiceLocator.php`, service-contracts `ServiceLocatorTrait.php` | ServiceLocatorTest (11) |
+| `RewindableGenerator`, `ServicesResetter`, `ReverseContainer`, `TaggedContainerInterface`, `ContainerBag` | their files | RewindableGeneratorTest (3), ServicesResetterTest (8), ContainerBagTest (5) |
 
-Not yet ported: `EnvPlaceholderParameterBag`, `ContainerBag`, `Container`,
-`ServiceLocator`, `ContainerBuilder`, the compiler passes, the loaders,
+Not yet ported: `EnvPlaceholderParameterBag`, `ContainerBuilder`, the compiler passes, the loaders,
 the dumpers (the Rust emitter replaces `PhpDumper`), `EnvVarProcessor`,
 the attributes and the kernel classes.
