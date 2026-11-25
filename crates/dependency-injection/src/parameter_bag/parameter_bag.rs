@@ -4,7 +4,10 @@
 //! One [`ParameterBag`] type: [`ParameterBag::frozen`] builds the frozen
 //! subclass, whose mutators fail with upstream's `LogicException`s.
 //! Parameter names are `String`s (a numeric name is refused, as
-//! upstream), values are PHP values.
+//! upstream), values are PHP values. The names `add()` takes (array keys)
+//! and those inside placeholders keep their bytes, so a name that is not
+//! UTF-8 is found and suggested as PHP does (recorded:
+//! `tests/data/parameter_bag.json`); messages show it lossily.
 //!
 //! `resolveString()`'s patterns are matched by hand: `^%([^%\s]+)%$`
 //! (PCRE's `$` also matches before a final newline) and
@@ -43,6 +46,11 @@ fn key_name(key: &Key) -> String {
         Key::Int(i) => i.to_string(),
         Key::Str(s) => s.to_string_lossy().into_owned(),
     }
+}
+
+/// `str_contains($haystack, $needle)`.
+fn contains(haystack: &[u8], needle: &[u8]) -> bool {
+    needle.is_empty() || haystack.windows(needle.len()).any(|w| w == needle)
 }
 
 /// `\s` in a PCRE pattern without Unicode mode.
@@ -115,7 +123,7 @@ impl ParameterBag {
     pub fn add(&mut self, parameters: &PhpArray) -> Result<()> {
         self.refuse("add")?;
         for (key, value) in parameters.iter() {
-            self.set(&key_name(key), value.clone())?;
+            self.set_bytes(&key.bytes(), value.clone())?;
         }
         Ok(())
     }
@@ -145,9 +153,15 @@ impl ParameterBag {
 
     /// `get($name)`.
     pub fn get(&self, name: &str) -> Result<Value> {
-        let Some(value) = self.parameters.get(&Key::from(name)) else {
-            return Err(self.not_found(name));
+        self.get_bytes(name.as_bytes())
+    }
+
+    /// `get($name)` for a name of any bytes (names in placeholders).
+    fn get_bytes(&self, name_bytes: &[u8]) -> Result<Value> {
+        let Some(value) = self.parameters.get(&Key::from_bytes(name_bytes)) else {
+            return Err(self.not_found(name_bytes));
         };
+        let name = &*String::from_utf8_lossy(name_bytes);
         if let Some((_, deprecation)) = self.deprecated.iter().find(|(n, _)| n == name) {
             trigger_parameter_deprecation(deprecation)?;
         }
@@ -166,7 +180,8 @@ impl ParameterBag {
     }
 
     /// The `ParameterNotFoundException` of `get($name)` for a missing name.
-    fn not_found(&self, name: &str) -> Error {
+    fn not_found(&self, name_bytes: &[u8]) -> Error {
+        let name = &*String::from_utf8_lossy(name_bytes);
         // `if (!$name)`: "" and "0".
         if name.is_empty() || name == "0" {
             return Error::parameter_not_found(ParameterNotFound::new(name));
@@ -179,31 +194,32 @@ impl ParameterBag {
         }
         let mut alternatives = Vec::new();
         for key in self.parameters.keys() {
-            let key = key_name(key);
-            let lev = levenshtein(name.as_bytes(), key.as_bytes());
+            let key = key.bytes();
+            let lev = levenshtein(name_bytes, &key);
             #[expect(clippy::cast_precision_loss, reason = "PHP's `strlen($name) / 3`")]
-            let limit = name.len() as f64 / 3.0;
+            let limit = name_bytes.len() as f64 / 3.0;
             #[expect(clippy::cast_precision_loss, reason = "PHP's int and float comparison")]
-            if lev as f64 <= limit || key.contains(name) {
-                alternatives.push(key);
+            if lev as f64 <= limit || contains(&key, name_bytes) {
+                alternatives.push(String::from_utf8_lossy(&key).into_owned());
             }
         }
         let mut non_nested = None;
-        if alternatives.is_empty() && name.contains('.') {
-            let mut lengths: Vec<usize> = name.split('.').map(str::len).collect();
-            let cut = |s: &str, n: usize| -> String {
+        if alternatives.is_empty() && name_bytes.contains(&b'.') {
+            let mut lengths: Vec<usize> =
+                name_bytes.split(|&b| b == b'.').map(<[u8]>::len).collect();
+            let cut = |s: &[u8], n: usize| -> Vec<u8> {
                 if n >= s.len() {
-                    String::new()
+                    Vec::new()
                 } else {
-                    s[..s.len() - n].to_string()
+                    s[..s.len() - n].to_vec()
                 }
             };
             let last = lengths.pop().unwrap_or(0);
-            let mut key = cut(name, 1 + last);
+            let mut key = cut(name_bytes, 1 + last);
             while !lengths.is_empty() {
-                if self.has(&key) {
-                    if matches!(self.get(&key), Ok(Value::Array(_))) {
-                        non_nested = Some(key);
+                if self.parameters.contains_key(&Key::from_bytes(&key)) {
+                    if matches!(self.get_bytes(&key), Ok(Value::Array(_))) {
+                        non_nested = Some(String::from_utf8_lossy(&key).into_owned());
                     }
                     break;
                 }
@@ -220,13 +236,19 @@ impl ParameterBag {
 
     /// `set($name, $value)`.
     pub fn set(&mut self, name: &str, value: Value) -> Result<()> {
+        self.set_bytes(name.as_bytes(), value)
+    }
+
+    /// `set($name, $value)` for a name of any bytes (`add()`'s keys).
+    fn set_bytes(&mut self, name: &[u8], value: Value) -> Result<()> {
         self.refuse("set")?;
-        if is_numeric(name.as_bytes()) {
+        if is_numeric(name) {
             return Err(Error::invalid_argument(format!(
-                "The parameter name \"{name}\" cannot be numeric."
+                "The parameter name \"{}\" cannot be numeric.",
+                String::from_utf8_lossy(name)
             )));
         }
-        self.parameters.insert(name, value);
+        self.parameters.insert(Key::from_bytes(name), value);
         Ok(())
     }
 
@@ -367,7 +389,7 @@ impl ParameterBag {
             }
             let mut resolving = resolving.to_vec();
             resolving.push(key.clone());
-            let found = self.get(&key)?;
+            let found = self.get_bytes(name)?;
             return if self.resolved {
                 Ok(escape_value(&found))
             } else {
@@ -391,7 +413,7 @@ impl ParameterBag {
             if resolving.contains(&key) {
                 return Err(Error::parameter_circular_reference(resolving.to_vec()));
             }
-            let resolved = self.get(&key)?;
+            let resolved = self.get_bytes(name)?;
             let text = match &resolved {
                 Value::String(s) => s.clone(),
                 Value::Int(_) | Value::Float(_) => resolved.to_php_string().unwrap_or_default(),
