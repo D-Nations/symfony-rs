@@ -871,7 +871,8 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     `Closure::bind()`, `bindTo()`, `call()` and `fromCallable()` used as
     controllers resolve as in PHP and give PHP's `ArgumentCountError`
     without enough arguments, but otherwise throw a `LogicException`
-    (no app routes to them).
+    (no app routes to them). **Owner, November 25: both kept as
+    described.**
 
 ## M0 progress
 
