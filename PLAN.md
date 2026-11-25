@@ -139,7 +139,7 @@ parameters or trait objects as a performance metric.
       existing concrete container, typed controller enum, typed routes and
       generic `Kernel<C>::handle<R, I, F>`. Prefer declared scalar, nullable
       and class types; keep PHP coercion and error handling at boundaries.
-- [ ] During the next HttpKernel stage (M2-A), introduce a minimal listener
+- [x] During the next HttpKernel stage (M2-A), introduce a minimal listener
       execution seam, e.g. `Kernel<C, L = DynamicListeners<C>>` with a
       listener pipeline trait. Keep the existing dynamic registration API
       and default behaviour; prove the seam with a small static fixture.
@@ -152,9 +152,17 @@ parameters or trait objects as a performance metric.
       moves, M2-A next stage.)
       Test priority, equal-priority order, propagation, controller replacement,
       early response, exceptions and response filtering in both modes.
-- [ ] Keep the general EventDispatcher's dynamic API and observable mutation,
+      (November 26, done: `CompiledEventDispatcher` with the
+      `ListenerPipeline` trait in event-dispatcher, after upstream's 8.2
+      design; the 1,500 recorded lifecycles pass in both modes and the
+      converter fixture runs on it. Stage log
+      docs/milestones/m2-a-listener-seam.md.)
+- [x] Keep the general EventDispatcher's dynamic API and observable mutation,
       lazy loading and identity semantics. Document a typed alternative
       boundary, but do not rewrite that component or duplicate its logic now.
+      (November 26: `EventDispatcher` is unchanged but for two crate-private
+      hooks; the boundary is documented in the crate README and converter
+      contract 0.4 section 6.)
 - [ ] Inventory dynamic `Value`, `PhpArray`, `Arc<dyn ...>`, boxed futures,
       locks and allocations on fixture request paths. Record why each is
       required or a candidate for later removal; no blanket rewrite.
@@ -1331,6 +1339,7 @@ Stack rows (searched November 22):
 | PHP's `parse_url()` (RequestContext::fromUri(), searched November 24) | [url](https://docs.rs/url) (WHATWG URL Standard: normalizes, lowercases, percent-encodes, other failures), [http::Uri](https://docs.rs/http) and [fluent-uri](https://docs.rs/fluent-uri) (strict RFC 3986: reject control bytes, spaces and `[` hosts PHP accepts), symfony-filesystem's scheme-only `parse_url_scheme()` | Written in `php-value::url` from the PHP manual and recorded answers, no dependency | PHP's components for malformed input (`host:port` without `//`, `false` for empty hosts and long ports, control bytes as `_`, `file:///`) are what `fromUri()` reads; 12,119 calls recorded from PHP 8.4.27 pin them |
 | PHP's loose equality `==` (UrlGenerator's `array_udiff_assoc()` against defaults; searched November 24) | No Rust crate implements it: [ext-php-rs](https://docs.rs/ext-php-rs) and [phper](https://docs.rs/phper) bind the PHP engine through FFI (needs libphp and `unsafe`); symfony-console's `loose_equals_str()` and symfony-finder's `loose_eq()` cover a string or scalar operand only | Written in `php-value::compare` from the PHP manual's comparison table, no dependency | Every PHP type is compared (arrays by key, objects by class and properties, numeric strings, big integer strings as bytes, NAN); 8,649 pairs recorded from PHP 8.4.27 pin it. The two crate copies can move to it later |
 | RouteCollection's name-keyed arrays (routes, aliases, priorities, resources; November 24) | [indexmap](https://docs.rs/indexmap) (already in the lock as a transitive dependency: O(1) lookup, but `shift_remove()`, the removal that keeps order, is O(n), and `swap_remove()` breaks PHP's order), [hashlink](https://docs.rs/hashlink)'s `LinkedHashMap` (O(1) ordered removal; a new dependency), `php_value::PhpArray` (its `remove()` shifts and reindexes, O(n)), a vector with holes and a hash index | The vector with holes and a hash index (`routing::ordered`, private), no dependency | It is how PHP keeps an array: insertion order, assignment in place, `unset()` then append, all O(1); compacted when holes outnumber entries. About 150 lines with its tests, against a dependency for one internal structure |
+| The listener execution seam: `CompiledEventDispatcher` (event-dispatcher; November 26) | Upstream's own [`CompiledEventDispatcher`](https://github.com/symfony/symfony/pull/66122) (Symfony 8.2, after the pinned 8.1: an ordered listener map built by the container, dispatch from it, thaw into a plain `EventDispatcher` on anything but `dispatch()`/`hasListeners()`); its rejected alternative [#66121](https://github.com/symfony/symfony/pull/66121) (the `addListener()` calls folded into `EventDispatcher`'s constructor, closures kept); Drupal's `ContainerAwareEventDispatcher` (a precompiled array changed in place, no fallback); on crates.io, [mod-events](https://docs.rs/crate/mod-events) (run-time registration behind a lock, typed handlers, no PHP identity or ordering semantics). The PLAN's `Kernel<C, L>` shape no longer applies: the ported kernel takes a dispatcher | 8.2's design, adapted to 8.1's behaviour: `ListenerMap` (sorted once; a dispatch takes no table lock and copies no list), `CompiledEventDispatcher<P: ListenerPipeline = ListenerMap>`, a thaw that shares the stored listener slots and re-sorts dispatched events' buckets; no deprecation notices; no new dependency | Upstream took this path, so M3's container output maps onto it; the fallback keeps every dynamic call exact without a second implementation of the table; the trait is where M3-A's generated per-event pipelines go |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1660,6 +1669,15 @@ Stack rows (searched November 22):
       `Content-Length` is checked against the body, then left out of the
       fixture's header comparison (PHP's built-in server closed the
       connection instead). Next: the listener seam; StreamedResponse.
+- [x] The listener seam (November 26): `CompiledEventDispatcher` and
+      `ListenerPipeline` in event-dispatcher, after upstream's own 8.2
+      design (symfony/symfony#66122) with the pinned 8.1 behaviour: it
+      dispatches from a `ListenerMap` sorted once, and thaws into a plain
+      `EventDispatcher` in the state the pinned one would have for anything
+      else. 20,000 generated scripts against the plain dispatcher; the
+      1,500 recorded lifecycles in both modes; the converter fixture on it
+      (converter contract 0.4); eight mutations, each caught. Next:
+      StreamedResponse.
 
 ## M6 progress
 
