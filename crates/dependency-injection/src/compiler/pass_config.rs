@@ -149,7 +149,7 @@ impl PassConfig {
                 pending("ResolveChildDefinitionsPass"),
                 pending("RegisterServiceSubscribersPass"),
                 pending_with("ResolveParameterPlaceHoldersPass", "false, false"),
-                pending("ResolveFactoryClassPass"),
+                Pass::new(super::ResolveFactoryClassPass::new()),
                 pending("ResolveNamedArgumentsPass"),
                 pending("AutowireRequiredMethodsPass"),
                 pending("AutowireRequiredPropertiesPass"),
@@ -161,7 +161,7 @@ impl PassConfig {
                 pending_with("AutowirePass", "false"),
                 pending("ServiceLocatorTagPass"),
                 pending("ResolveTaggedIteratorArgumentPass"),
-                pending("ResolveServiceSubscribersPass"),
+                Pass::new(super::ResolveServiceSubscribersPass::new()),
                 pending("ResolveReferencesToAliasesPass"),
                 pending("ResolveInvalidReferencesPass"),
                 pending_with("AnalyzeServiceReferencesPass", "true"),
@@ -192,8 +192,8 @@ impl PassConfig {
             (
                 0,
                 vec![
-                    pending("ResolveHotPathPass"),
-                    pending("ResolveNoPreloadPass"),
+                    Pass::new(super::ResolveHotPathPass::new()),
+                    Pass::new(super::ResolveNoPreloadPass::new()),
                     pending("AliasDeprecatedPublicServicesPass"),
                 ],
             ),
