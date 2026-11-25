@@ -14,6 +14,7 @@ mod analyze_service_references_pass;
 #[expect(clippy::module_inception, reason = "one module per upstream file")]
 mod compiler;
 mod compiler_pass_interface;
+mod inline_service_definitions_pass;
 mod pass_config;
 mod service_reference_graph;
 
@@ -21,6 +22,7 @@ pub use abstract_recursive_pass::{AbstractRecursivePass, RecursivePassState, rec
 pub use analyze_service_references_pass::AnalyzeServiceReferencesPass;
 pub use compiler::Compiler;
 pub use compiler_pass_interface::{CompilerPassInterface, Pass};
+pub use inline_service_definitions_pass::InlineServiceDefinitionsPass;
 pub use pass_config::{PassConfig, PassType, PendingPass};
 pub use service_reference_graph::{
     EdgeFlags, EdgeId, NodeId, ServiceReferenceGraph, ServiceReferenceGraphEdge,

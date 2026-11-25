@@ -12,6 +12,7 @@ use std::collections::BTreeMap;
 
 use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
+use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
 use crate::container_builder::ContainerBuilder;
 use crate::exception::{Error, Result};
 
@@ -180,10 +181,9 @@ impl PassConfig {
                 pending("RemoveUnusedDefinitionsPass"),
                 Pass::new(AnalyzeServiceReferencesPass::default()),
                 pending("CheckExceptionOnInvalidReferenceBehaviorPass"),
-                pending_with(
-                    "InlineServiceDefinitionsPass",
-                    "new AnalyzeServiceReferencesPass()",
-                ),
+                Pass::new(InlineServiceDefinitionsPass::new(Some(
+                    AnalyzeServiceReferencesPass::default(),
+                ))),
                 Pass::new(AnalyzeServiceReferencesPass::default()),
                 pending("CheckFactoryBuilderCircularReferencePass"),
                 pending("DefinitionErrorExceptionPass"),
