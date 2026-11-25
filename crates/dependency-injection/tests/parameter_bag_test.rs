@@ -4,7 +4,12 @@
 //! to strings (`1001`, `10.0` as "10").
 //!
 //! Upstream: symfony/dependency-injection Tests/ParameterBag/ParameterBagTest.php
-#![allow(non_snake_case, clippy::unwrap_used, clippy::needless_pass_by_value, clippy::too_many_lines)]
+#![allow(
+    non_snake_case,
+    clippy::unwrap_used,
+    clippy::needless_pass_by_value,
+    clippy::too_many_lines
+)]
 
 use php_value::{PhpArray, Value, php_array};
 use symfony_dependency_injection::{ErrorKind, ParameterBag};
