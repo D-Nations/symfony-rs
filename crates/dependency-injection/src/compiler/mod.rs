@@ -14,6 +14,7 @@ mod abstract_recursive_pass;
 mod compiler;
 mod compiler_pass_interface;
 mod deep_clone;
+mod export_type;
 mod pass_config;
 mod service_reference_graph;
 
@@ -46,6 +47,9 @@ pub use resolve_hot_path_pass::ResolveHotPathPass;
 
 mod resolve_invalid_references_pass;
 pub use resolve_invalid_references_pass::ResolveInvalidReferencesPass;
+
+mod resolve_named_arguments_pass;
+pub use resolve_named_arguments_pass::ResolveNamedArgumentsPass;
 
 mod resolve_no_preload_pass;
 pub use resolve_no_preload_pass::ResolveNoPreloadPass;

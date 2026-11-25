@@ -150,7 +150,7 @@ impl PassConfig {
                 pending("RegisterServiceSubscribersPass"),
                 Pass::new(super::ResolveParameterPlaceHoldersPass::new(false, false)),
                 Pass::new(super::ResolveFactoryClassPass::new()),
-                pending("ResolveNamedArgumentsPass"),
+                Pass::new(super::ResolveNamedArgumentsPass::new()),
                 pending("AutowireRequiredMethodsPass"),
                 pending("AutowireRequiredPropertiesPass"),
                 pending("ResolveBindingsPass"),
