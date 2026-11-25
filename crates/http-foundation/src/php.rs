@@ -21,7 +21,11 @@
 //! - what `Request` reads from the PHP process: the superglobals,
 //!   `php://input`, `request_parse_body()`'s answer and two ini settings
 //!   ([`Globals`]), kept per thread as PHP keeps them per request; and the
-//!   streams `getContent(true)` returns ([`Stream`]).
+//!   streams `getContent(true)` returns ([`Stream`]);
+//! - what `Response` sends: its `header()`, `header_remove()`, `echo`,
+//!   output-buffer and finish-request calls, recorded in order with the
+//!   SAPI facts it asks about (`PHP_SAPI`, `headers_sent()`, which
+//!   functions exist, `ob_get_status()`) ([`Output`]).
 //!
 //! Upstream: none
 
@@ -215,6 +219,107 @@ pub struct Globals {
     pub request_order: PhpString,
     /// `ini_get('variables_order')`.
     pub variables_order: PhpString,
+    /// What `Response` sends, and the SAPI it sends it to.
+    pub output: Output,
+}
+
+/// `ob_get_status(true)`'s entry for one output buffer, as far as
+/// `Response::closeOutputBuffers()` reads it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct OutputBuffer {
+    /// `flags` (`PHP_OUTPUT_HANDLER_*`), when the entry has it.
+    pub flags: Option<i64>,
+    /// `del`, when the entry has it (PHP before 5.4 gave it).
+    pub del: Option<bool>,
+}
+
+/// `PHP_OUTPUT_HANDLER_CLEANABLE`.
+pub const PHP_OUTPUT_HANDLER_CLEANABLE: i64 = 16;
+/// `PHP_OUTPUT_HANDLER_FLUSHABLE`.
+pub const PHP_OUTPUT_HANDLER_FLUSHABLE: i64 = 32;
+/// `PHP_OUTPUT_HANDLER_REMOVABLE`.
+pub const PHP_OUTPUT_HANDLER_REMOVABLE: i64 = 64;
+
+/// The function the SAPI gives to end the request early, as
+/// `Response::send()` looks for them.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum FinishRequest {
+    /// Neither exists (the CLI, Apache's module).
+    #[default]
+    None,
+    /// `fastcgi_finish_request()` (PHP-FPM).
+    FastCgi,
+    /// `litespeed_finish_request()` (LiteSpeed).
+    LiteSpeed,
+}
+
+/// A call `Response` made to send itself, in order.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum OutputCall {
+    /// `header($line, $replace, $responseCode)`.
+    Header {
+        line: PhpString,
+        replace: bool,
+        response_code: i64,
+    },
+    /// `header_remove($name)`.
+    HeaderRemove(PhpString),
+    /// `headers_send($statusCode)` (FrankenPHP: sends a 1xx response).
+    HeadersSend(i64),
+    /// `echo $content`.
+    Echo(PhpString),
+    /// `fastcgi_finish_request()`.
+    FastcgiFinishRequest,
+    /// `litespeed_finish_request()`.
+    LitespeedFinishRequest,
+    /// `ob_end_flush()`.
+    ObEndFlush,
+    /// `ob_end_clean()`.
+    ObEndClean,
+    /// `flush()`.
+    Flush,
+}
+
+/// The SAPI as `Response` sees it, and the calls it made. Nothing here
+/// applies a call as PHP's SAPI would (status lines, `Location`'s 302,
+/// replacing a header); the HTTP adapter does that from [`Output::calls`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Output {
+    /// `PHP_SAPI`.
+    pub sapi: PhpString,
+    /// What `headers_sent()` answers.
+    pub headers_sent: bool,
+    /// `function_exists('headers_send')`.
+    pub headers_send_exists: bool,
+    pub finish_request: FinishRequest,
+    /// `ob_get_status(true)`, innermost buffer last; `ob_end_*()` removes
+    /// the last.
+    pub buffers: Vec<OutputBuffer>,
+    /// `ini_get('default_mimetype')`, which `Response::prepare()` empties
+    /// for a response without a body.
+    pub default_mimetype: PhpString,
+    pub calls: Vec<OutputCall>,
+}
+
+impl Default for Output {
+    /// The CLI's, before anything is sent; `default_mimetype` is PHP's
+    /// default.
+    fn default() -> Self {
+        Self {
+            sapi: PhpString::from("cli"),
+            headers_sent: false,
+            headers_send_exists: false,
+            finish_request: FinishRequest::None,
+            buffers: Vec::new(),
+            default_mimetype: PhpString::from("text/html"),
+            calls: Vec::new(),
+        }
+    }
+}
+
+/// Reads or changes this thread's output.
+pub fn with_output<R>(f: impl FnOnce(&mut Output) -> R) -> R {
+    with_globals(|g| f(&mut g.output))
 }
 
 impl Default for Globals {
@@ -232,6 +337,7 @@ impl Default for Globals {
             parsed_body: None,
             request_order: PhpString::default(),
             variables_order: PhpString::from("EGPCS"),
+            output: Output::default(),
         }
     }
 }

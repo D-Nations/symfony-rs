@@ -426,6 +426,7 @@ crates/http-foundation/src/lib.rs	symfony/http-foundation	Request.php	30fa3efe6e
 crates/http-foundation/src/parameter_bag.rs	symfony/http-foundation	ParameterBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/query.rs	symfony/http-foundation	InputBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/request.rs	symfony/http-foundation	Request.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/src/response.rs	symfony/http-foundation	Response.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/scheme.rs	symfony/http-foundation	Request.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/server_bag.rs	symfony/http-foundation	ServerBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/uploaded_file.rs	symfony/http-foundation	File/UploadedFile.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
@@ -447,6 +448,8 @@ crates/http-foundation/tests/ip_utils_test.rs	symfony/http-foundation	Tests/IpUt
 crates/http-foundation/tests/parameter_bag_test.rs	symfony/http-foundation	Tests/ParameterBagTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/request_test.rs	symfony/http-foundation	Tests/RequestTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/response_header_bag_test.rs	symfony/http-foundation	Tests/ResponseHeaderBagTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/tests/response_test.rs	symfony/http-foundation	Tests/ResponseTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/tests/response_test.rs	symfony/http-foundation	Tests/ResponseTestCase.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/server_bag_recorded.rs	symfony/http-foundation	ServerBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/server_bag_test.rs	symfony/http-foundation	Tests/ServerBagTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/uploaded_file_test.rs	symfony/http-foundation	Tests/File/UploadedFileTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
