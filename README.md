@@ -164,11 +164,14 @@ percentage; later changes are authoritative in `parity/`):
 
 | Package | Upstream tests | Ported | N/A | Pending |
 |---|---:|---:|---:|---:|
+| psr/log | 0 | 0 | 0 | 0 |
 | symfony/config | 334 | 307 | 2 | 25 |
 | symfony/console | 1,152 | 320 | 11 | 821 |
 | symfony/css-selector | 85 | 80 | 5 | 0 |
+| symfony/deprecation-contracts | 0 | 0 | 0 | 0 |
 | symfony/dotenv | 57 | 57 | 0 | 0 |
 | symfony/event-dispatcher | 140 | 114 | 0 | 26 |
+| symfony/event-dispatcher-contracts | 0 | 0 | 0 | 0 |
 | symfony/filesystem | 157 | 27 | 0 | 130 |
 | symfony/finder | 143 | 139 | 4 | 0 |
 | symfony/http-foundation | 959 | 477 | 10 | 472 |
@@ -183,7 +186,9 @@ percentage; later changes are authoritative in `parity/`):
 | **Total** | **6,583** | **3,045** | **46** | **3,492** |
 
 Six packages have no pending rows and are listed in `parity/done.txt`:
-Stopwatch, Yaml, Dotenv, CssSelector, OptionsResolver and Finder. M1 is
+Stopwatch, Yaml, Dotenv, CssSelector, OptionsResolver and Finder. psr/log, symfony/deprecation-contracts and
+symfony/event-dispatcher-contracts ship no PHPUnit tests upstream, so their
+manifests hold only the header line. M1 is
 underway: Config has its Definition, Builder, dumpers, XmlUtils, loaders,
 filesystem resources and ConfigCache ported (the reflection-based
 resources, decision 17, are a later stage); String, Console (the subset the Yaml and
