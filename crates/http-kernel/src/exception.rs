@@ -99,8 +99,13 @@ pub enum PhpClass {
     LogicException,
     InvalidArgumentException,
     UnexpectedValueException,
+    BadMethodCallException,
+    /// `\ReflectionException`.
+    ReflectionException,
     Error,
     TypeError,
+    /// `\ArgumentCountError`, a `\TypeError`.
+    ArgumentCountError,
     ValueError,
     /// `Symfony\Component\HttpKernel\Exception\NearMissValueResolverException`:
     /// a value resolver that could almost resolve an argument, with the
@@ -129,8 +134,17 @@ impl PhpClass {
                 "Exception",
                 "Throwable",
             ],
+            Self::BadMethodCallException => &[
+                "BadMethodCallException",
+                "BadFunctionCallException",
+                "LogicException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::ReflectionException => &["ReflectionException", "Exception", "Throwable"],
             Self::Error => &["Error", "Throwable"],
             Self::TypeError => &["TypeError", "Error", "Throwable"],
+            Self::ArgumentCountError => &["ArgumentCountError", "TypeError", "Error", "Throwable"],
             Self::ValueError => &["ValueError", "Error", "Throwable"],
             Self::NearMissValueResolverException => &[
                 "Symfony\\Component\\HttpKernel\\Exception\\NearMissValueResolverException",
