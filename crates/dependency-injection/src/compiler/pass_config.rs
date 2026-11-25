@@ -13,6 +13,9 @@ use std::collections::BTreeMap;
 use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
 use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
+use super::remove_abstract_definitions_pass::RemoveAbstractDefinitionsPass;
+use super::remove_private_aliases_pass::RemovePrivateAliasesPass;
+use super::replace_alias_by_actual_definition_pass::ReplaceAliasByActualDefinitionPass;
 use crate::container_builder::ContainerBuilder;
 use crate::exception::{Error, Result};
 
@@ -175,9 +178,9 @@ impl PassConfig {
         let removing = BTreeMap::from([(
             0,
             vec![
-                pending("RemovePrivateAliasesPass"),
-                pending("ReplaceAliasByActualDefinitionPass"),
-                pending("RemoveAbstractDefinitionsPass"),
+                Pass::new(RemovePrivateAliasesPass),
+                Pass::new(ReplaceAliasByActualDefinitionPass::new()),
+                Pass::new(RemoveAbstractDefinitionsPass),
                 pending("RemoveUnusedDefinitionsPass"),
                 Pass::new(AnalyzeServiceReferencesPass::default()),
                 pending("CheckExceptionOnInvalidReferenceBehaviorPass"),
