@@ -492,7 +492,7 @@ enum Mode {
 }
 
 #[allow(clippy::too_many_lines, reason = "one replay, in the recorder's order")]
-fn replay(mode: Mode) -> Result<(), TestError> {
+fn replay(kind: Mode) -> Result<(), TestError> {
     let data: Json = serde_json::from_str(DATA)?;
     let values: Vec<Value> = data["values"]
         .as_array()
@@ -532,7 +532,7 @@ fn replay(mode: Mode) -> Result<(), TestError> {
             ));
         }
         let mut compiled = None;
-        let dispatcher: Arc<dyn ContractsEventDispatcherInterface> = match mode {
+        let dispatcher: Arc<dyn ContractsEventDispatcherInterface> = match kind {
             Mode::Plain => {
                 let dispatcher = EventDispatcher::new();
                 for (name, listener, priority) in registrations {
