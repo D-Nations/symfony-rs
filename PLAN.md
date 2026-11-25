@@ -1628,6 +1628,23 @@ Stack rows (searched November 22):
       `not-ported`. The listener seam (above) moves to the ported kernel.
       Next: the converter fixture on this adapter and kernel, then the
       listener seam; StreamedResponse.
+- [ ] The converter fixture on the ported kernel (November 25;
+      [docs/milestones/m2-a-converter-fixture-kernel.md](docs/milestones/m2-a-converter-fixture-kernel.md)):
+      `EventListener/ResponseListener.php` (ResponseListenerTest 7 of 7,
+      1,500 recorded scripts) and `Controller/ContainerControllerResolver.php`
+      (ContainerControllerResolverTest 21 of 21, its 15 inherited methods
+      run on it; 2,000 scripts recorded with DI and PSR-11 containers, all
+      matching), on a new `psr-container` crate (psr/container 2.0.2).
+      Declared methods can see `$this` (`Method::with_this`), and
+      routing's `redirect_in()` gets the context PHP's `redirect()` reads.
+      The fixture now runs on `symfony-runtime`'s front controller and the
+      ported `HttpKernel` (RouterListener, ResponseListener, its
+      subscriber, the ContainerControllerResolver); all 16 recorded
+      responses match. Recording found that `method_exists()` sees
+      `Closure`'s private `__construct` (fixed). Converter contract 0.3.
+      `Content-Length` is checked against the body, then left out of the
+      fixture's header comparison (PHP's built-in server closed the
+      connection instead). Next: the listener seam; StreamedResponse.
 
 ## Local development performance
 
