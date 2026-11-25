@@ -12,6 +12,7 @@ members = [
     "crates/deprecation-contracts",
     "crates/filesystem",
     "crates/config",
+    "crates/dependency-injection",
     "crates/translation",
     "crates/console",
     "crates/http-foundation",

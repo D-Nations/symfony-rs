@@ -1,0 +1,514 @@
+//! Port of Symfony\Component\DependencyInjection\ParameterBag\ParameterBag.php,
+//! FrozenParameterBag.php and ParameterBagInterface.php.
+//!
+//! One [`ParameterBag`] type: [`ParameterBag::frozen`] builds the frozen
+//! subclass, whose mutators fail with upstream's `LogicException`s.
+//! Parameter names are `String`s (a numeric name is refused, as
+//! upstream), values are PHP values.
+//!
+//! `resolveString()`'s patterns are matched by hand: `^%([^%\s]+)%$`
+//! (PCRE's `$` also matches before a final newline) and
+//! `%%|%([^%\s]+)%`, with `\s` the six ASCII spaces PCRE uses without
+//! Unicode mode.
+//!
+//! Upstream: symfony/dependency-injection ParameterBag/ParameterBag.php ParameterBag/FrozenParameterBag.php ParameterBag/ParameterBagInterface.php
+
+use php_value::{PhpArray, PhpString, Value, array::Key, numeric::is_numeric, string::levenshtein};
+use symfony_deprecation_contracts::trigger_deprecation;
+
+use crate::exception::{Error, ErrorKind, ParameterNotFound, Result};
+
+/// A parameter deprecation: the arguments of `trigger_deprecation()`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ParameterDeprecation {
+    pub package: String,
+    pub version: String,
+    pub message: String,
+    /// The `...$args` of the message (upstream passes the name).
+    pub args: Vec<Value>,
+}
+
+/// `ParameterBag` (and `FrozenParameterBag`).
+#[derive(Debug, Clone, Default)]
+pub struct ParameterBag {
+    parameters: PhpArray,
+    resolved: bool,
+    deprecated: Vec<(String, ParameterDeprecation)>,
+    non_empty: Vec<(String, String)>,
+    frozen: bool,
+}
+
+fn key_name(key: &Key) -> String {
+    match key {
+        Key::Int(i) => i.to_string(),
+        Key::Str(s) => s.to_string_lossy().into_owned(),
+    }
+}
+
+/// `\s` in a PCRE pattern without Unicode mode.
+fn is_space(b: u8) -> bool {
+    matches!(b, b'\t' | b'\n' | 0x0b | 0x0c | b'\r' | b' ')
+}
+
+/// The name of a `%name%` placeholder at the start of `s` (after its
+/// first `%`), with the length matched, for `%([^%\s]+)%`.
+fn placeholder_at(s: &[u8]) -> Option<(&[u8], usize)> {
+    if s.first() != Some(&b'%') {
+        return None;
+    }
+    let end = s[1..].iter().position(|&b| b == b'%' || is_space(b))?;
+    if end == 0 || s[1 + end] != b'%' {
+        return None;
+    }
+    Some((&s[1..=end], end + 2))
+}
+
+impl ParameterBag {
+    /// `new ParameterBag($parameters)`.
+    pub fn new(parameters: &PhpArray) -> Result<Self> {
+        let mut bag = Self::default();
+        bag.add(parameters)?;
+        Ok(bag)
+    }
+
+    /// `new FrozenParameterBag($parameters, $deprecatedParameters,
+    /// $nonEmptyParameters)`: resolved, and closed to changes.
+    pub fn frozen(
+        parameters: PhpArray,
+        deprecated: Vec<(String, ParameterDeprecation)>,
+        non_empty: Vec<(String, String)>,
+    ) -> Self {
+        Self {
+            parameters,
+            resolved: true,
+            deprecated,
+            non_empty,
+            frozen: true,
+        }
+    }
+
+    /// `$bag instanceof FrozenParameterBag`.
+    pub fn is_frozen(&self) -> bool {
+        self.frozen
+    }
+
+    fn refuse(&self, method: &str) -> Result<()> {
+        if self.frozen {
+            Err(Error::logic(format!(
+                "Impossible to call {method}() on a frozen ParameterBag."
+            )))
+        } else {
+            Ok(())
+        }
+    }
+
+    /// `clear()`.
+    pub fn clear(&mut self) -> Result<()> {
+        self.refuse("clear")?;
+        self.parameters = PhpArray::new();
+        self.deprecated.clear();
+        self.resolved = false;
+        Ok(())
+    }
+
+    /// `add($parameters)`.
+    pub fn add(&mut self, parameters: &PhpArray) -> Result<()> {
+        self.refuse("add")?;
+        for (key, value) in parameters.iter() {
+            self.set(&key_name(key), value.clone())?;
+        }
+        Ok(())
+    }
+
+    /// `all()`.
+    pub fn all(&self) -> &PhpArray {
+        &self.parameters
+    }
+
+    /// `allDeprecated()`.
+    pub fn all_deprecated(&self) -> &[(String, ParameterDeprecation)] {
+        &self.deprecated
+    }
+
+    /// `allNonEmpty()`: the message for each parameter that must not be
+    /// empty.
+    pub fn all_non_empty(&self) -> &[(String, String)] {
+        &self.non_empty
+    }
+
+    fn non_empty_message(&self, name: &str) -> Option<&str> {
+        self.non_empty
+            .iter()
+            .find(|(n, _)| n == name)
+            .map(|(_, m)| m.as_str())
+    }
+
+    /// `get($name)`.
+    pub fn get(&self, name: &str) -> Result<Value> {
+        let Some(value) = self.parameters.get(&Key::from(name)) else {
+            return Err(self.not_found(name));
+        };
+        if let Some((_, deprecation)) = self.deprecated.iter().find(|(n, _)| n == name) {
+            trigger_parameter_deprecation(deprecation)?;
+        }
+        if let Some(message) = self.non_empty_message(name) {
+            let empty = match value {
+                Value::Null => true,
+                Value::String(s) => s.is_empty(),
+                Value::Array(a) => a.is_empty(),
+                _ => false,
+            };
+            if empty {
+                return Err(Error::empty_parameter_value(message));
+            }
+        }
+        Ok(value.clone())
+    }
+
+    /// The `ParameterNotFoundException` of `get($name)` for a missing name.
+    fn not_found(&self, name: &str) -> Error {
+        // `if (!$name)`: "" and "0".
+        if name.is_empty() || name == "0" {
+            return Error::parameter_not_found(ParameterNotFound::new(name));
+        }
+        if let Some(message) = self.non_empty_message(name) {
+            return Error::parameter_not_found(ParameterNotFound {
+                extra_message: Some(message.to_string()),
+                ..ParameterNotFound::new(name)
+            });
+        }
+        let mut alternatives = Vec::new();
+        for key in self.parameters.keys() {
+            let key = key_name(key);
+            let lev = levenshtein(name.as_bytes(), key.as_bytes());
+            #[expect(clippy::cast_precision_loss, reason = "PHP's `strlen($name) / 3`")]
+            let limit = name.len() as f64 / 3.0;
+            #[expect(clippy::cast_precision_loss, reason = "PHP's int and float comparison")]
+            if lev as f64 <= limit || key.contains(name) {
+                alternatives.push(key);
+            }
+        }
+        let mut non_nested = None;
+        if alternatives.is_empty() && name.contains('.') {
+            let mut lengths: Vec<usize> = name.split('.').map(str::len).collect();
+            let cut = |s: &str, n: usize| -> String {
+                if n >= s.len() {
+                    String::new()
+                } else {
+                    s[..s.len() - n].to_string()
+                }
+            };
+            let last = lengths.pop().unwrap_or(0);
+            let mut key = cut(name, 1 + last);
+            while !lengths.is_empty() {
+                if self.has(&key) {
+                    if matches!(self.get(&key), Ok(Value::Array(_))) {
+                        non_nested = Some(key);
+                    }
+                    break;
+                }
+                let last = lengths.pop().unwrap_or(0);
+                key = cut(&key, 1 + last);
+            }
+        }
+        Error::parameter_not_found(ParameterNotFound {
+            alternatives,
+            non_nested_alternative: non_nested,
+            ..ParameterNotFound::new(name)
+        })
+    }
+
+    /// `set($name, $value)`.
+    pub fn set(&mut self, name: &str, value: Value) -> Result<()> {
+        self.refuse("set")?;
+        if is_numeric(name.as_bytes()) {
+            return Err(Error::invalid_argument(format!(
+                "The parameter name \"{name}\" cannot be numeric."
+            )));
+        }
+        self.parameters.insert(name, value);
+        Ok(())
+    }
+
+    /// `deprecate($name, $package, $version, $message)`; upstream's
+    /// default message is `'The parameter "%s" is deprecated.'`.
+    pub fn deprecate(
+        &mut self,
+        name: &str,
+        package: &str,
+        version: &str,
+        message: Option<&str>,
+    ) -> Result<()> {
+        self.refuse("deprecate")?;
+        if !self.has(name) {
+            return Err(Error::parameter_not_found(ParameterNotFound::new(name)));
+        }
+        let deprecation = ParameterDeprecation {
+            package: package.to_string(),
+            version: version.to_string(),
+            message: message
+                .unwrap_or("The parameter \"%s\" is deprecated.")
+                .to_string(),
+            args: vec![Value::from(name)],
+        };
+        if let Some(entry) = self.deprecated.iter_mut().find(|(n, _)| n == name) {
+            entry.1 = deprecation;
+        } else {
+            self.deprecated.push((name.to_string(), deprecation));
+        }
+        Ok(())
+    }
+
+    /// `cannotBeEmpty($name, $message)`.
+    pub fn cannot_be_empty(&mut self, name: &str, message: &str) -> Result<()> {
+        self.refuse("cannotBeEmpty")?;
+        if let Some(entry) = self.non_empty.iter_mut().find(|(n, _)| n == name) {
+            entry.1 = message.to_string();
+        } else {
+            self.non_empty.push((name.to_string(), message.to_string()));
+        }
+        Ok(())
+    }
+
+    /// `has($name)`.
+    pub fn has(&self, name: &str) -> bool {
+        self.parameters.contains_key(&Key::from(name))
+    }
+
+    /// `remove($name)`.
+    pub fn remove(&mut self, name: &str) -> Result<()> {
+        self.refuse("remove")?;
+        self.parameters.remove(&Key::from(name));
+        self.deprecated.retain(|(n, _)| n != name);
+        self.non_empty.retain(|(n, _)| n != name);
+        Ok(())
+    }
+
+    /// `resolve()`: every value resolved and unescaped once.
+    pub fn resolve(&mut self) -> Result<()> {
+        if self.resolved {
+            return Ok(());
+        }
+        let mut parameters = PhpArray::new();
+        for (key, value) in self.parameters.iter() {
+            match self.resolve_value(value, &[]) {
+                Ok(value) => parameters.insert(key.clone(), unescape_value(&value)),
+                Err(mut e) => {
+                    if e.is(&ErrorKind::ParameterNotFound) {
+                        let source = key_name(key);
+                        e.update_parameter_not_found(|f| f.source_key = Some(source));
+                    }
+                    return Err(e);
+                }
+            }
+        }
+        self.parameters = parameters;
+        self.resolved = true;
+        Ok(())
+    }
+
+    /// `resolveValue($value, $resolving)`: placeholders in strings, and in
+    /// array keys and values.
+    pub fn resolve_value(&self, value: &Value, resolving: &[String]) -> Result<Value> {
+        match value {
+            Value::Array(array) => {
+                let mut args = PhpArray::new();
+                for (key, v) in array.iter() {
+                    let resolved_key = match key {
+                        Key::Str(s) => {
+                            let resolved =
+                                self.resolve_value(&Value::String(s.clone()), resolving)?;
+                            let scalar_or_stringable = match &resolved {
+                                Value::Bool(_)
+                                | Value::Int(_)
+                                | Value::Float(_)
+                                | Value::String(_) => true,
+                                Value::Object(o) => o.is_stringable(),
+                                Value::Null | Value::Array(_) => false,
+                            };
+                            if !scalar_or_stringable {
+                                return Err(Error::runtime(format!(
+                                    "Array keys must be a scalar-value, but found key \"{}\" to resolve to type \"{}\".",
+                                    s.to_string_lossy(),
+                                    resolved.debug_type()
+                                )));
+                            }
+                            match &resolved {
+                                Value::Object(o) => {
+                                    Key::from(o.to_php_string().unwrap_or_default())
+                                }
+                                other => Key::from_value(other).unwrap_or_else(|| key.clone()),
+                            }
+                        }
+                        Key::Int(_) => key.clone(),
+                    };
+                    args.insert(resolved_key, self.resolve_value(v, resolving)?);
+                }
+                Ok(Value::Array(args))
+            }
+            Value::String(s) if !s.is_empty() && s.as_bytes().contains(&b'%') => {
+                self.resolve_string(s, resolving)
+            }
+            other => Ok(other.clone()),
+        }
+    }
+
+    /// `resolveString($value, $resolving)`.
+    pub fn resolve_string(&self, value: &PhpString, resolving: &[String]) -> Result<Value> {
+        let bytes = value.as_bytes();
+        // `/^%([^%\s]+)%$/`: `$` also matches before a final "\n".
+        let body = bytes.strip_suffix(b"\n").unwrap_or(bytes);
+        if let Some((name, len)) = placeholder_at(body)
+            && len == body.len()
+        {
+            let key = String::from_utf8_lossy(name).into_owned();
+            if resolving.contains(&key) {
+                return Err(Error::parameter_circular_reference(resolving.to_vec()));
+            }
+            let mut resolving = resolving.to_vec();
+            resolving.push(key.clone());
+            let found = self.get(&key)?;
+            return if self.resolved {
+                Ok(escape_value(&found))
+            } else {
+                self.resolve_value(&found, &resolving)
+            };
+        }
+        let mut out = Vec::with_capacity(bytes.len());
+        let mut i = 0;
+        while i < bytes.len() {
+            if bytes[i..].starts_with(b"%%") {
+                out.extend_from_slice(b"%%");
+                i += 2;
+                continue;
+            }
+            let Some((name, len)) = placeholder_at(&bytes[i..]) else {
+                out.push(bytes[i]);
+                i += 1;
+                continue;
+            };
+            let key = String::from_utf8_lossy(name).into_owned();
+            if resolving.contains(&key) {
+                return Err(Error::parameter_circular_reference(resolving.to_vec()));
+            }
+            let resolved = self.get(&key)?;
+            let text = match &resolved {
+                Value::String(s) => s.clone(),
+                Value::Int(_) | Value::Float(_) => resolved.to_php_string().unwrap_or_default(),
+                other => {
+                    return Err(Error::runtime(format!(
+                        "A string value must be composed of strings and/or numbers, but found parameter \"{key}\" of type \"{}\" inside string value \"{}\".",
+                        other.debug_type(),
+                        value.to_string_lossy()
+                    )));
+                }
+            };
+            let mut inner = resolving.to_vec();
+            inner.push(key);
+            let replacement = if self.resolved {
+                escape_value(&Value::String(text))
+            } else {
+                self.resolve_string(&text, &inner)?
+            };
+            // preg_replace_callback() casts the callback's result to string.
+            out.extend_from_slice(callback_string(&replacement).as_bytes());
+            i += len;
+        }
+        Ok(Value::String(PhpString::from(out)))
+    }
+
+    /// `isResolved()`.
+    pub fn is_resolved(&self) -> bool {
+        self.resolved
+    }
+
+    /// `escapeValue($value)`.
+    pub fn escape_value(&self, value: &Value) -> Value {
+        escape_value(value)
+    }
+
+    /// `unescapeValue($value)`.
+    pub fn unescape_value(&self, value: &Value) -> Value {
+        unescape_value(value)
+    }
+
+    /// Sets the resolved flag, for subclasses that resolve on their own
+    /// terms (`$this->resolved = …`).
+    pub fn set_resolved(&mut self, resolved: bool) {
+        self.resolved = resolved;
+    }
+
+    /// The parameters array, for subclasses (`$this->parameters`).
+    pub fn parameters_mut(&mut self) -> &mut PhpArray {
+        &mut self.parameters
+    }
+}
+
+/// `(string)` of a `preg_replace_callback()` callback's result.
+fn callback_string(value: &Value) -> PhpString {
+    match value {
+        Value::Array(_) => PhpString::from("Array"),
+        other => other.to_php_string_or_stringable().unwrap_or_default(),
+    }
+}
+
+fn map_strings(value: &Value, f: &dyn Fn(&[u8]) -> Vec<u8>) -> Value {
+    match value {
+        Value::String(s) => Value::String(PhpString::from(f(s.as_bytes()))),
+        Value::Array(array) => {
+            let mut result = PhpArray::new();
+            for (k, v) in array.iter() {
+                result.insert(k.clone(), map_strings(v, f));
+            }
+            Value::Array(result)
+        }
+        other => other.clone(),
+    }
+}
+
+fn replace(haystack: &[u8], from: &[u8], to: &[u8]) -> Vec<u8> {
+    let mut out = Vec::with_capacity(haystack.len());
+    let mut i = 0;
+    while i < haystack.len() {
+        if haystack[i..].starts_with(from) {
+            out.extend_from_slice(to);
+            i += from.len();
+        } else {
+            out.push(haystack[i]);
+            i += 1;
+        }
+    }
+    out
+}
+
+/// `escapeValue()`: `%` doubled in strings, recursively in arrays.
+pub fn escape_value(value: &Value) -> Value {
+    map_strings(value, &|s| replace(s, b"%", b"%%"))
+}
+
+/// `unescapeValue()`: `%%` back to `%` in strings, recursively in arrays.
+pub fn unescape_value(value: &Value) -> Value {
+    map_strings(value, &|s| replace(s, b"%%", b"%"))
+}
+
+/// `trigger_deprecation(...$deprecation)`.
+pub(crate) fn trigger_parameter_deprecation(deprecation: &ParameterDeprecation) -> Result<()> {
+    let message = if deprecation.args.is_empty() {
+        deprecation.message.as_bytes().to_vec()
+    } else {
+        symfony_config::php::sprintf(deprecation.message.as_bytes(), &deprecation.args).map_err(
+            |e| {
+                Error::new(
+                    ErrorKind::Other(e.class().name().to_string()),
+                    String::from_utf8_lossy(e.get_message()).into_owned(),
+                )
+            },
+        )?
+    };
+    trigger_deprecation(
+        deprecation.package.as_bytes(),
+        deprecation.version.as_bytes(),
+        &message,
+    );
+    Ok(())
+}

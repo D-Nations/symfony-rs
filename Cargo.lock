@@ -1104,6 +1104,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "symfony-dependency-injection"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "symfony-config",
+ "symfony-deprecation-contracts",
+]
+
+[[package]]
 name = "symfony-deprecation-contracts"
 version = "0.1.0"
 
