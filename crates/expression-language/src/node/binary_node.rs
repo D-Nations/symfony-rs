@@ -196,7 +196,7 @@ fn matches_argument(
         Error::type_error(format!(
             "Symfony\\Component\\ExpressionLanguage\\Node\\BinaryNode::evaluateMatches(): Argument #{position} (${name}) must be of type {}string, {} given",
             if nullable { "?" } else { "" },
-            value.debug_type()
+            crate::php::value_name(value)
         ))
     };
     match value {

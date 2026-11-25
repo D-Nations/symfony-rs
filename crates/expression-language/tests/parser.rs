@@ -114,7 +114,11 @@ fn get_parse_data() -> Vec<(Node, &'static str, PhpArray)> {
         (c(true), "true", none()),
         (c(Value::Null), "null", none()),
         (Node::Unary(UnaryNode::new("-", c(3))), "-3", none()),
-        (Node::Binary(BinaryNode::new("-", c(3), c(3))), "3 - 3", none()),
+        (
+            Node::Binary(BinaryNode::new("-", c(3), c(3))),
+            "3 - 3",
+            none(),
+        ),
         (
             Node::Binary(BinaryNode::new(
                 "*",
@@ -124,29 +128,94 @@ fn get_parse_data() -> Vec<(Node, &'static str, PhpArray)> {
             "(3 - 3) * 2",
             none(),
         ),
-        (attr(name("foo"), id("bar"), args(), GetAttrType::Property), "foo.bar", names(&["foo"])),
-        (attr(name("foo"), id("bar"), args(), GetAttrType::Method), "foo.bar()", names(&["foo"])),
-        (attr(name("foo"), id("not"), args(), GetAttrType::Method), "foo.not()", names(&["foo"])),
+        (
+            attr(name("foo"), id("bar"), args(), GetAttrType::Property),
+            "foo.bar",
+            names(&["foo"]),
+        ),
+        (
+            attr(name("foo"), id("bar"), args(), GetAttrType::Method),
+            "foo.bar()",
+            names(&["foo"]),
+        ),
+        (
+            attr(name("foo"), id("not"), args(), GetAttrType::Method),
+            "foo.not()",
+            names(&["foo"]),
+        ),
         (
             attr(name("foo"), id("bar"), arguments, GetAttrType::Method),
             "foo.bar(\"arg1\", 2, true)",
             names(&["foo"]),
         ),
-        (attr(name("foo"), c(3), args(), GetAttrType::Array), "foo[3]", names(&["foo"])),
+        (
+            attr(name("foo"), c(3), args(), GetAttrType::Array),
+            "foo[3]",
+            names(&["foo"]),
+        ),
         (
             Node::Conditional(ConditionalNode::new(c(true), c(true), c(false))),
             "true ? true : false",
             none(),
         ),
-        (Node::Binary(BinaryNode::new("matches", c("foo"), c("/foo/"))), "\"foo\" matches \"/foo/\"", none()),
-        (Node::Binary(BinaryNode::new("starts with", c("foo"), c("f"))), "\"foo\" starts with \"f\"", none()),
-        (Node::Binary(BinaryNode::new("ends with", c("foo"), c("f"))), "\"foo\" ends with \"f\"", none()),
-        (Node::Binary(BinaryNode::new("contains", c("foo"), c("f"))), "\"foo\" contains \"f\"", none()),
-        (attr(name("foo"), null_safe_id("bar"), args(), GetAttrType::Property), "foo?.bar", names(&["foo"])),
-        (attr(name("foo"), null_safe_id("bar"), args(), GetAttrType::Method), "foo?.bar()", names(&["foo"])),
-        (attr(name("foo"), null_safe_id("not"), args(), GetAttrType::Method), "foo?.not()", names(&["foo"])),
         (
-            Node::GetAttr(GetAttrNode::with_null_safe(name("foo"), c(0), args(), GetAttrType::Array, true)),
+            Node::Binary(BinaryNode::new("matches", c("foo"), c("/foo/"))),
+            "\"foo\" matches \"/foo/\"",
+            none(),
+        ),
+        (
+            Node::Binary(BinaryNode::new("starts with", c("foo"), c("f"))),
+            "\"foo\" starts with \"f\"",
+            none(),
+        ),
+        (
+            Node::Binary(BinaryNode::new("ends with", c("foo"), c("f"))),
+            "\"foo\" ends with \"f\"",
+            none(),
+        ),
+        (
+            Node::Binary(BinaryNode::new("contains", c("foo"), c("f"))),
+            "\"foo\" contains \"f\"",
+            none(),
+        ),
+        (
+            attr(
+                name("foo"),
+                null_safe_id("bar"),
+                args(),
+                GetAttrType::Property,
+            ),
+            "foo?.bar",
+            names(&["foo"]),
+        ),
+        (
+            attr(
+                name("foo"),
+                null_safe_id("bar"),
+                args(),
+                GetAttrType::Method,
+            ),
+            "foo?.bar()",
+            names(&["foo"]),
+        ),
+        (
+            attr(
+                name("foo"),
+                null_safe_id("not"),
+                args(),
+                GetAttrType::Method,
+            ),
+            "foo?.not()",
+            names(&["foo"]),
+        ),
+        (
+            Node::GetAttr(GetAttrNode::with_null_safe(
+                name("foo"),
+                c(0),
+                args(),
+                GetAttrType::Array,
+                true,
+            )),
             "foo?.[0]",
             names(&["foo"]),
         ),
@@ -209,8 +278,16 @@ fn get_parse_data() -> Vec<(Node, &'static str, PhpArray)> {
             "foo xor bar",
             names(&["foo", "bar"]),
         ),
-        (Node::Binary(BinaryNode::new("..", c(0), c(3))), "0..3", none()),
-        (Node::Binary(BinaryNode::new("+", c(0), c(0.1))), "0+.1", none()),
+        (
+            Node::Binary(BinaryNode::new("..", c(0), c(3))),
+            "0..3",
+            none(),
+        ),
+        (
+            Node::Binary(BinaryNode::new("+", c(0), c(0.1))),
+            "0+.1",
+            none(),
+        ),
     ]
 }
 
@@ -235,7 +312,10 @@ fn loosely_equal(expected: &Node, actual: &Node) -> bool {
 fn testParse() {
     for (node, expression, names) in get_parse_data() {
         let actual = parse(expression, &names).expect(expression);
-        assert!(loosely_equal(&node, &actual), "{expression}: {node} != {actual}");
+        assert!(
+            loosely_equal(&node, &actual),
+            "{expression}: {node} != {actual}"
+        );
     }
 }
 
@@ -256,19 +336,42 @@ fn testParseWithInvalidPostfixData() {
 
 #[test]
 fn testNameProposal() {
-    assert_syntax_error(parse("foo > bar", &names(&["foo", "baz"])), "Did you mean \"baz\"?");
+    assert_syntax_error(
+        parse("foo > bar", &names(&["foo", "baz"])),
+        "Did you mean \"baz\"?",
+    );
 }
 
 #[test]
 fn testLint() {
     let ok: &[(&str, &[&str], u32)] = &[
-        ("foo[\"some_key\"].callFunction(a ? b)", &["foo", "a", "b"], 0),
-        ("foo[\"some_key\"]?.callFunction(a ? b)", &["foo", "a", "b"], 0),
+        (
+            "foo[\"some_key\"].callFunction(a ? b)",
+            &["foo", "a", "b"],
+            0,
+        ),
+        (
+            "foo[\"some_key\"]?.callFunction(a ? b)",
+            &["foo", "a", "b"],
+            0,
+        ),
         ("foo.bar", &[], IGNORE_UNKNOWN_VARIABLES),
         ("foo()", &[], IGNORE_UNKNOWN_FUNCTIONS),
-        ("foo(bar)", &[], IGNORE_UNKNOWN_FUNCTIONS | IGNORE_UNKNOWN_VARIABLES),
-        ("[value1, value2, value3,]", &["value1", "value2", "value3"], 0),
-        ("{val1: value1, val2: value2, val3: value3,}", &["value1", "value2", "value3"], 0),
+        (
+            "foo(bar)",
+            &[],
+            IGNORE_UNKNOWN_FUNCTIONS | IGNORE_UNKNOWN_VARIABLES,
+        ),
+        (
+            "[value1, value2, value3,]",
+            &["value1", "value2", "value3"],
+            0,
+        ),
+        (
+            "{val1: value1, val2: value2, val3: value3,}",
+            &["value1", "value2", "value3"],
+            0,
+        ),
         ("foo.not in [bar]", &["foo", "bar"], 0),
     ];
     for &(expression, list, flags) in ok {
@@ -276,8 +379,16 @@ fn testLint() {
     }
 
     let failing: &[(&str, &[&str], &str)] = &[
-        ("foo.bar", &[], "Variable \"foo\" is not valid around position 1 for expression `foo.bar"),
-        ("foo()", &[], "The function \"foo\" does not exist around position 1 for expression `foo()"),
+        (
+            "foo.bar",
+            &[],
+            "Variable \"foo\" is not valid around position 1 for expression `foo.bar",
+        ),
+        (
+            "foo()",
+            &[],
+            "The function \"foo\" does not exist around position 1 for expression `foo()",
+        ),
         (
             "foo[\"a\"] foo[\"b\"]",
             &["foo"],
@@ -338,20 +449,37 @@ fn get_deeply_nested_expressions() -> Vec<(&'static str, String)> {
     vec![
         ("unary operators", format!("{}1", "!".repeat(300))),
         ("signs", format!("{}1", "-".repeat(300))),
-        ("parentheses", format!("{}1{}", "(".repeat(300), ")".repeat(300))),
+        (
+            "parentheses",
+            format!("{}1{}", "(".repeat(300), ")".repeat(300)),
+        ),
         ("arrays", format!("{}1{}", "[".repeat(300), "]".repeat(300))),
-        ("hashes", format!("{}1{}", "{a:".repeat(300), "}".repeat(300))),
+        (
+            "hashes",
+            format!("{}1{}", "{a:".repeat(300), "}".repeat(300)),
+        ),
         ("binary operators", format!("{}1", "1+".repeat(300))),
         ("properties", format!("a{}", ".b".repeat(300))),
         ("array accesses", format!("a{}", "[0]".repeat(300))),
-        ("ternaries", format!("{}1{}", "1?".repeat(300), ":1".repeat(300))),
+        (
+            "ternaries",
+            format!("{}1{}", "1?".repeat(300), ":1".repeat(300)),
+        ),
         (
             "binary operators in nested parentheses",
-            format!("{}1{}", "(".repeat(20), format!("{})", " + 1".repeat(20)).repeat(20)),
+            format!(
+                "{}1{}",
+                "(".repeat(20),
+                format!("{})", " + 1".repeat(20)).repeat(20)
+            ),
         ),
         (
             "properties in nested parentheses",
-            format!("{}a{}", "(".repeat(20), format!("{})", ".b".repeat(20)).repeat(20)),
+            format!(
+                "{}a{}",
+                "(".repeat(20),
+                format!("{})", ".b".repeat(20)).repeat(20)
+            ),
         ),
     ]
 }

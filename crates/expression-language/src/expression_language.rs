@@ -297,7 +297,7 @@ impl ExpressionLanguage {
                 let Some(str) = arguments.first() else {
                     return Err(Error::new(
                         Class::ArgumentCountError,
-                        "Too few arguments to function Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage::{closure}(), 0 passed and exactly 1 expected",
+                        "Too few arguments to function Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage::{closure:Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage::registerFunctions():149}(), 0 passed and exactly 1 expected",
                     ));
                 };
                 let mut out = ENUM_COMPILED.0.as_bytes().to_vec();
@@ -309,7 +309,7 @@ impl ExpressionLanguage {
                 let Some(str) = arguments.first() else {
                     return Err(Error::new(
                         Class::ArgumentCountError,
-                        "Too few arguments to function Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage::{closure}(), 1 passed and exactly 2 expected",
+                        "Too few arguments to function Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage::{closure:Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage::registerFunctions():150}(), 1 passed and exactly 2 expected",
                     ));
                 };
                 let name = php::string_argument("constant", 1, "name", str)?;

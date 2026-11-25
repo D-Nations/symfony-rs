@@ -268,6 +268,12 @@ pub(crate) fn constant(constants: &Registry, name: &[u8]) -> Result<Value, Error
         return Ok(value.clone());
     }
     if let Some(at) = text.find("::") {
+        if constants.enum_exists(&text[..at]) {
+            return Err(Error::new(
+                Class::Error,
+                format!("Undefined constant {text}"),
+            ));
+        }
         return Err(Error::new(
             Class::Error,
             format!("Class \"{}\" not found", &text[..at]),

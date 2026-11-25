@@ -3,6 +3,8 @@
 //! Upstream: symfony/expression-language Tests/Node/AbstractNodeTestCase.php
 #![allow(dead_code, clippy::unwrap_used, clippy::expect_used)]
 
+pub mod vectors;
+
 use php_value::{PhpArray, Value};
 use symfony_expression_language::{Compiler, Functions, Node};
 

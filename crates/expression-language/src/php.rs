@@ -17,7 +17,7 @@
 use std::cmp::Ordering;
 
 use php_value::{
-    Key, Number, PhpArray, PhpString, Value,
+    Key, Number, PhpArray, PhpObject, PhpString, Value,
     compare::loose_equals,
     numeric::{
         float_to_string, is_numeric, leading_numeric_value, numeric_value, var_export_float,
@@ -177,6 +177,15 @@ fn export(value: &Value, indent: usize, out: &mut Vec<u8>) {
     }
 }
 
+/// `zend_zval_value_name()`: the type name, with booleans by value, as
+/// argument type errors name a value.
+pub fn value_name(value: &Value) -> String {
+    match value {
+        Value::Bool(b) => b.to_string(),
+        other => other.debug_type(),
+    }
+}
+
 /// The type name of an operand in "Unsupported operand types" messages.
 fn operand_type(value: &Value) -> String {
     value.debug_type()
@@ -312,27 +321,45 @@ pub fn modulo(a: &Value, b: &Value) -> Result<Value, Error> {
 pub fn pow(a: &Value, b: &Value) -> Result<Value, Error> {
     let (x, y) = operands(a, "**", b)?;
     Ok(match (x, y) {
-        (Number::Int(base), Number::Int(exp)) if exp >= 0 => int_pow(base, exp).map_or_else(
-            || Value::Float(float_pow(as_float(base), as_float(exp))),
-            Value::Int,
-        ),
+        (Number::Int(base), Number::Int(exp)) if exp >= 0 => int_pow(base, exp),
         (x, y) => Value::Float(float_pow(x.as_f64(), y.as_f64())),
     })
 }
 
-/// `$base ** $exp` in ints, `None` when it overflows.
-fn int_pow(base: i64, exp: i64) -> Option<i64> {
-    let (mut result, mut b, mut e) = (1i64, base, exp);
-    while e > 0 {
-        if e & 1 == 1 {
-            result = result.checked_mul(b)?;
-        }
-        e >>= 1;
-        if e > 0 {
-            b = b.checked_mul(b)?;
+/// `pow_function_base()` for ints: square and multiply, and on overflow
+/// the float product times the rest of the power.
+fn int_pow(base: i64, exp: i64) -> Value {
+    if exp == 0 {
+        return Value::Int(1);
+    }
+    if base == 0 {
+        return Value::Int(0);
+    }
+    let (mut l1, mut l2, mut i) = (1i64, base, exp);
+    while i >= 1 {
+        if i % 2 == 1 {
+            i -= 1;
+            match l1.checked_mul(l2) {
+                Some(v) => l1 = v,
+                None => {
+                    return Value::Float(
+                        as_float(l1) * as_float(l2) * float_pow(as_float(l2), as_float(i)),
+                    );
+                }
+            }
+        } else {
+            i /= 2;
+            match l2.checked_mul(l2) {
+                Some(v) => l2 = v,
+                None => {
+                    return Value::Float(
+                        as_float(l1) * float_pow(as_float(l2) * as_float(l2), as_float(i)),
+                    );
+                }
+            }
         }
     }
-    Some(result)
+    Value::Int(l1)
 }
 
 fn float_pow(x: f64, y: f64) -> f64 {
@@ -419,7 +446,7 @@ pub fn bitwise_not(a: &Value) -> Result<Value, Error> {
         other => {
             return Err(Error::type_error(format!(
                 "Cannot perform bitwise not on {}",
-                other.debug_type()
+                value_name(other)
             )));
         }
     })
@@ -481,7 +508,7 @@ pub fn argument_type_error(
 ) -> Error {
     Error::type_error(format!(
         "{function}(): Argument #{position} (${parameter}) must be of type {expected}, {} given",
-        value.debug_type()
+        value_name(value)
     ))
 }
 
@@ -513,6 +540,7 @@ pub fn in_array_strict(needle: &Value, haystack: &Value) -> Result<bool, Error> 
 /// give 1, so that `<` and `>` are both false.
 pub fn compare(a: &Value, b: &Value) -> Result<i32, Error> {
     use Value::{Array, Bool, Float, Int, Null, Object, String};
+    let nan = |v: &Value| matches!(v, Float(f) if f.is_nan());
     Ok(match (a, b) {
         (Int(x), Int(y)) => ordering(x.cmp(y)),
         (Int(_) | Float(_), Int(_) | Float(_)) => {
@@ -520,6 +548,20 @@ pub fn compare(a: &Value, b: &Value) -> Result<i32, Error> {
         }
         (Array(x), Array(y)) => compare_arrays(x, y)?,
         (Null, Null) => 0,
+        (Object(x), Object(y)) => {
+            if a.identical(b) {
+                0
+            } else if is_enum(a) || is_enum(b) || x.class() != y.class() {
+                1
+            } else {
+                compare_arrays(&x.properties(), &y.properties())?
+            }
+        }
+        // null against an object compares as false against true
+        (Null, Object(_)) => -1,
+        (Object(_), Null) => 1,
+        (Object(o), other) => compare_object(o.as_ref(), a, other, true)?,
+        (other, Object(o)) => compare_object(o.as_ref(), b, other, false)?,
         (Null, Bool(y)) => ordering(false.cmp(y)),
         (Bool(x), Null) => ordering(x.cmp(&false)),
         (Bool(x), _) => ordering(x.cmp(&b.is_truthy())),
@@ -541,42 +583,47 @@ pub fn compare(a: &Value, b: &Value) -> Result<i32, Error> {
         }
         (_, Null) => i32::from(a.is_truthy()),
         (String(x), String(y)) => compare_strings(x.as_bytes(), y.as_bytes()),
+        // a NAN does not compare, on either side
+        (Int(_) | Float(_), String(_)) | (String(_), Int(_) | Float(_)) if nan(a) || nan(b) => 1,
         (Int(_) | Float(_), String(s)) => compare_number_string(number(a), s.as_bytes()),
         (String(s), Int(_) | Float(_)) => -compare_number_string(number(b), s.as_bytes()),
         (Array(_), _) => 1,
         (_, Array(_)) => -1,
-        (Object(x), Object(y)) => {
-            if a.identical(b) {
-                0
-            } else if x.downcast_ref::<EnumCase>().is_some()
-                || y.downcast_ref::<EnumCase>().is_some()
-                || x.class() != y.class()
-            {
-                1
-            } else {
-                compare_arrays(&x.properties(), &y.properties())?
-            }
-        }
-        (Object(o), String(s)) => match o.to_php_string() {
-            Some(text) => compare_strings(text.as_bytes(), s.as_bytes()),
-            None => {
-                return Err(to_string(a)
-                    .err()
-                    .unwrap_or_else(|| unsupported(a, "<=>", b)));
-            }
-        },
-        (String(s), Object(o)) => match o.to_php_string() {
-            Some(text) => compare_strings(s.as_bytes(), text.as_bytes()),
-            None => {
-                return Err(to_string(b)
-                    .err()
-                    .unwrap_or_else(|| unsupported(a, "<=>", b)));
-            }
-        },
-        // an object against a number counts as 1 (PHP warns)
-        (Object(_), _) => float_compare(1.0, number(b).as_f64()),
-        (_, Object(_)) => float_compare(number(a).as_f64(), 1.0),
     })
+}
+
+fn is_enum(value: &Value) -> bool {
+    matches!(value, Value::Object(o) if o.downcast_ref::<EnumCase>().is_some())
+}
+
+/// `zend_std_compare_objects()` with one object: the object is cast to
+/// the other operand's type. A cast that fails makes the object the
+/// greater, except to int or float, where it counts as 1 (PHP warns).
+/// Enum cases do not compare.
+fn compare_object(
+    object: &dyn PhpObject,
+    object_value: &Value,
+    other: &Value,
+    object_lhs: bool,
+) -> Result<i32, Error> {
+    if is_enum(object_value) {
+        return Ok(1);
+    }
+    let casted = match other {
+        Value::String(_) => object.to_php_string().map(Value::String),
+        Value::Bool(_) => Some(Value::Bool(true)),
+        Value::Int(_) => Some(Value::Int(1)),
+        Value::Float(_) => Some(Value::Float(1.0)),
+        _ => None,
+    };
+    let Some(casted) = casted else {
+        return Ok(if object_lhs { 1 } else { -1 });
+    };
+    if object_lhs {
+        compare(&casted, other)
+    } else {
+        compare(other, &casted)
+    }
 }
 
 fn ordering(o: Ordering) -> i32 {
@@ -692,6 +739,10 @@ pub fn greater_or_equal(a: &Value, b: &Value) -> Result<bool, Error> {
 
 /// `$a == $b`.
 pub fn equals(a: &Value, b: &Value) -> bool {
+    // an enum case is equal only to itself
+    if is_enum(a) || is_enum(b) {
+        return a.identical(b);
+    }
     loose_equals(a, b)
 }
 
@@ -779,6 +830,12 @@ pub fn range(start: &Value, end: &Value) -> Result<Value, Error> {
                 ));
             }
             let span = (x - y).abs();
+            if span > 0.0 && span < 1.0 {
+                return Err(Error::new(
+                    Class::ValueError,
+                    "range(): Argument #3 ($step) must be less than the range spanned by argument #1 ($start) and argument #2 ($end)",
+                ));
+            }
             if span >= as_float(i64::try_from(MAX_RANGE).unwrap_or(i64::MAX)) {
                 return Err(range_too_large());
             }
@@ -808,16 +865,10 @@ fn push(array: &mut PhpArray, value: Value) {
 fn range_number(value: &Value) -> Bound {
     match value {
         Value::Int(i) => Bound::Int(*i),
-        Value::Float(f) => {
-            if f.fract() == 0.0 && f.is_finite() && f.abs() < 9.0e18 {
-                Bound::Int(float_to_int(*f))
-            } else {
-                Bound::Float(*f)
-            }
-        }
+        Value::Float(f) => Bound::Float(*f),
         Value::String(s) => match leading_numeric_value(s.as_bytes()) {
             Some(Number::Int(i)) => Bound::Int(i),
-            Some(Number::Float(f)) => range_number(&Value::Float(f)),
+            Some(Number::Float(f)) => Bound::Float(f),
             None => Bound::Int(0),
         },
         _ => Bound::Int(0),
