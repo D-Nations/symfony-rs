@@ -423,9 +423,11 @@ crates/http-foundation/src/header_bag.rs	symfony/http-foundation	ResponseHeaderB
 crates/http-foundation/src/header_utils.rs	symfony/http-foundation	HeaderUtils.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/input_bag.rs	symfony/http-foundation	InputBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/ip_utils.rs	symfony/http-foundation	IpUtils.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/src/json_response.rs	symfony/http-foundation	JsonResponse.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/lib.rs	symfony/http-foundation	Request.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/parameter_bag.rs	symfony/http-foundation	ParameterBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/query.rs	symfony/http-foundation	InputBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/src/redirect_response.rs	symfony/http-foundation	RedirectResponse.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/request.rs	symfony/http-foundation	Request.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/request_stack.rs	symfony/http-foundation	RequestStack.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/response.rs	symfony/http-foundation	Response.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
@@ -447,7 +449,9 @@ crates/http-foundation/tests/header_bags_recorded.rs	symfony/http-foundation	Res
 crates/http-foundation/tests/header_utils_test.rs	symfony/http-foundation	Tests/HeaderUtilsTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/input_bag_test.rs	symfony/http-foundation	Tests/InputBagTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/ip_utils_test.rs	symfony/http-foundation	Tests/IpUtilsTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/tests/json_response_test.rs	symfony/http-foundation	Tests/JsonResponseTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/parameter_bag_test.rs	symfony/http-foundation	Tests/ParameterBagTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/tests/redirect_response_test.rs	symfony/http-foundation	Tests/RedirectResponseTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/request_stack_test.rs	symfony/http-foundation	Tests/RequestStackTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/request_test.rs	symfony/http-foundation	Tests/RequestTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/response_header_bag_test.rs	symfony/http-foundation	Tests/ResponseHeaderBagTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26

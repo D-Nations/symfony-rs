@@ -12,7 +12,32 @@
 //! - anything else, invalid UTF-8 included, is kept as it is, and decoding
 //!   is one pass (`&amp;lt;` gives `&lt;`).
 //!
+//! `htmlspecialchars($string, ENT_QUOTES, 'UTF-8')` ([`htmlspecialchars`])
+//! writes `& " ' < >` as `&amp; &quot; &#039; &lt; &gt;`, existing
+//! references included (`double_encode`), and gives `''` for a string
+//! that is not valid UTF-8 (no `ENT_SUBSTITUTE`); recorded through
+//! `RedirectResponse` (symfony-http-foundation's `json_redirect.json`).
+//!
 //! Upstream: none
+
+/// `htmlspecialchars($string, ENT_QUOTES, 'UTF-8')`.
+pub fn htmlspecialchars(s: &[u8]) -> Vec<u8> {
+    if std::str::from_utf8(s).is_err() {
+        return Vec::new();
+    }
+    let mut out = Vec::with_capacity(s.len());
+    for &b in s {
+        match b {
+            b'&' => out.extend_from_slice(b"&amp;"),
+            b'"' => out.extend_from_slice(b"&quot;"),
+            b'\'' => out.extend_from_slice(b"&#039;"),
+            b'<' => out.extend_from_slice(b"&lt;"),
+            b'>' => out.extend_from_slice(b"&gt;"),
+            b => out.push(b),
+        }
+    }
+    out
+}
 
 /// `html_entity_decode($string)`.
 pub fn html_entity_decode(s: &[u8]) -> Vec<u8> {

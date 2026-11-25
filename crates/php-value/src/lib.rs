@@ -36,4 +36,4 @@ pub use array::{Key, NextElementOccupied, PhpArray};
 pub use handle::Handle;
 pub use numeric::Number;
 pub use string::PhpString;
-pub use value::{Object, PhpObject, Value};
+pub use value::{Object, PhpObject, Thrown, Value};
