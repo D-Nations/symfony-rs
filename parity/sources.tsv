@@ -508,6 +508,8 @@ crates/routing/src/generator.rs	symfony/routing	Tests/Generator/UrlGeneratorTest
 crates/routing/src/lib.rs	symfony/routing	Matcher/UrlMatcher.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/lib.rs	symfony/routing	Matcher/RedirectableUrlMatcher.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/lib.rs	symfony/routing	Generator/UrlGenerator.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/redirectable_url_matcher.rs	symfony/routing	Matcher/RedirectableUrlMatcher.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/redirectable_url_matcher.rs	symfony/routing	Matcher/RedirectableUrlMatcherInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/request_context.rs	symfony/routing	RequestContext.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/route.rs	symfony/routing	Route.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/route_collection.rs	symfony/routing	RouteCollection.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
@@ -516,8 +518,11 @@ crates/routing/src/route_compiler.rs	symfony/routing	RouteCompilerInterface.php	
 crates/routing/src/url_generator.rs	symfony/routing	Generator/UrlGenerator.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/url_generator.rs	symfony/routing	Generator/UrlGeneratorInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/url_generator.rs	symfony/routing	Generator/ConfigurableRequirementsInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/url_matcher.rs	symfony/routing	Matcher/UrlMatcher.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/url_matcher.rs	symfony/routing	Matcher/UrlMatcherInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/compiled_route_test.rs	symfony/routing	Tests/CompiledRouteTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/compiled_url_generator_dumper_test.rs	symfony/routing	Tests/Generator/Dumper/CompiledUrlGeneratorDumperTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/tests/redirectable_url_matcher_test.rs	symfony/routing	Tests/Matcher/RedirectableUrlMatcherTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/request_context_test.rs	symfony/routing	Tests/RequestContextTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/route_collection_test.rs	symfony/routing	Tests/RouteCollectionTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/route_compiler_test.rs	symfony/routing	Tests/RouteCompilerTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
@@ -525,6 +530,8 @@ crates/routing/tests/route_test.rs	symfony/routing	Tests/RouteTest.php	f3fefc6ca
 crates/routing/tests/upstream.rs	symfony/routing	Tests/Matcher/UrlMatcherTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/upstream.rs	symfony/routing	Tests/Matcher/RedirectableUrlMatcherTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/url_generator_test.rs	symfony/routing	Tests/Generator/UrlGeneratorTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/tests/url_matcher/mod.rs	symfony/routing	Tests/Matcher/UrlMatcherTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/tests/url_matcher_test.rs	symfony/routing	Tests/Matcher/UrlMatcherTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/stopwatch/src/section.rs	symfony/stopwatch	Section.php	21c07b026905d596e8379caeb115d87aa479499d
 crates/stopwatch/src/stopwatch.rs	symfony/stopwatch	Stopwatch.php	21c07b026905d596e8379caeb115d87aa479499d
 crates/stopwatch/src/stopwatch_event.rs	symfony/stopwatch	StopwatchEvent.php	21c07b026905d596e8379caeb115d87aa479499d

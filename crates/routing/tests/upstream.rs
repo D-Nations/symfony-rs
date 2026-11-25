@@ -1,6 +1,9 @@
 //! Selected assertions from Symfony Routing's `UrlMatcherTest` and
 //! `RedirectableUrlMatcherTest` at f3fefc6cad3748d538be970ca81b71f06d7aa8b3.
-//! These tests cover the supported subset, not the omitted PCRE/host APIs.
+//! These tests cover the typed subset (`Definition`, `Segment`), not the
+//! omitted PCRE/host APIs. The full upstream test classes run on the ported
+//! matchers in `url_matcher_test.rs` and `redirectable_url_matcher_test.rs`;
+//! the functions here are named `typed_*` after the upstream tests they follow.
 //!
 //! Upstream: symfony/routing Tests/Matcher/UrlMatcherTest.php Tests/Matcher/RedirectableUrlMatcherTest.php
 
@@ -47,15 +50,15 @@ fn found(result: Match<Route>) -> Option<Route> {
 }
 
 #[test]
-fn test_zero() {
+fn typed_zero() {
     assert_eq!(foo(None).match_request("GET", "0"), Match::NotFound);
 }
 #[test]
-fn test_no_method_so_allowed() {
+fn typed_no_method_so_allowed() {
     assert!(found(foo(None).match_request("GET", "/foo")).is_some());
 }
 #[test]
-fn test_method_not_allowed() {
+fn typed_method_not_allowed() {
     assert_eq!(
         foo(Some(&["POST"])).match_request("GET", "/foo"),
         Match::MethodNotAllowed {
@@ -64,7 +67,7 @@ fn test_method_not_allowed() {
     );
 }
 #[test]
-fn test_method_not_allowed_on_root() {
+fn typed_method_not_allowed_on_root() {
     let mut routes = RouteCollection::default();
     routes.add(definition(
         "foo",
@@ -77,11 +80,11 @@ fn test_method_not_allowed_on_root() {
     );
 }
 #[test]
-fn test_head_allowed_when_requirement_contains_get() {
+fn typed_head_allowed_when_requirement_contains_get() {
     assert!(found(foo(Some(&["GET"])).match_request("HEAD", "/foo")).is_some());
 }
 #[test]
-fn test_head_allowed_when_requirement_contains_head() {
+fn typed_head_allowed_when_requirement_contains_head() {
     let routes = foo(Some(&["HEAD"]));
     assert_eq!(
         found(routes.match_request("HEAD", "/foo")).map(|r| r.name),
@@ -95,7 +98,7 @@ fn test_head_allowed_when_requirement_contains_head() {
     );
 }
 #[test]
-fn test_method_not_allowed_aggregates_allowed_methods() {
+fn typed_method_not_allowed_aggregates_allowed_methods() {
     let mut routes = foo(Some(&["POST"]));
     routes.add(definition(
         "foo2",
@@ -110,7 +113,7 @@ fn test_method_not_allowed_aggregates_allowed_methods() {
     );
 }
 #[test]
-fn test_pattern_match_and_parameter_return() {
+fn typed_pattern_match_and_parameter_return() {
     let mut routes = RouteCollection::default();
     routes.add(definition(
         "foo",
@@ -131,11 +134,11 @@ fn test_pattern_match_and_parameter_return() {
     );
 }
 #[test]
-fn test_trailing_encoded_newline_is_not_overlooked() {
+fn typed_trailing_encoded_newline_is_not_overlooked() {
     assert_eq!(foo(None).match_request("GET", "/foo%0a"), Match::NotFound);
 }
 #[test]
-fn test_decode_once() {
+fn typed_decode_once() {
     let mut routes = RouteCollection::default();
     routes.add(definition(
         "foo",
@@ -151,7 +154,7 @@ fn test_decode_once() {
     );
 }
 #[test]
-fn test_missing_trailing_slash() {
+fn typed_missing_trailing_slash() {
     let mut routes = RouteCollection::default();
     routes.add(definition(
         "foo",
@@ -163,13 +166,13 @@ fn test_missing_trailing_slash() {
     );
 }
 #[test]
-fn test_extra_trailing_slash() {
+fn typed_extra_trailing_slash() {
     assert!(
         matches!(foo(None).match_request("GET", "/foo/"), Match::TrailingSlashRedirect { path, .. } if path == "/foo")
     );
 }
 #[test]
-fn test_redirect_when_no_slash_for_non_safe_method() {
+fn typed_redirect_when_no_slash_for_non_safe_method() {
     let mut routes = RouteCollection::default();
     routes.add(definition(
         "foo",
@@ -179,7 +182,7 @@ fn test_redirect_when_no_slash_for_non_safe_method() {
     assert_eq!(routes.match_request("POST", "/foo"), Match::NotFound);
 }
 #[test]
-fn test_redirect_preserves_url_encoding() {
+fn typed_redirect_preserves_url_encoding() {
     let mut routes = RouteCollection::default();
     routes.add(definition(
         "foo",
@@ -191,7 +194,7 @@ fn test_redirect_preserves_url_encoding() {
     );
 }
 #[test]
-fn test_fallback_page() {
+fn typed_fallback_page() {
     for trailing in [false, true] {
         let mut routes = RouteCollection::default();
         let mut first = vec![Segment::Literal("foo")];
@@ -214,7 +217,7 @@ fn test_fallback_page() {
     }
 }
 #[test]
-fn test_extra_trailing_slash_for_head_only_route() {
+fn typed_extra_trailing_slash_for_head_only_route() {
     assert!(matches!(
         foo(Some(&["HEAD"])).match_request("HEAD", "/foo/"),
         Match::TrailingSlashRedirect {

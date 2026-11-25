@@ -4,9 +4,11 @@
 //! route-pattern or regular-expression compilation. See README for omissions.
 //!
 //! The modules [`route`], [`compiled_route`], [`route_compiler`], [`request_context`],
-//! [`route_collection`], [`alias`] and [`url_generator`] port Symfony's own Route,
-//! `CompiledRoute`, `RouteCompiler`, `RequestContext`, `RouteCollection`, Alias and
-//! `UrlGenerator` classes; the typed matcher and generator here do not use them yet.
+//! [`route_collection`], [`alias`], [`url_generator`], [`compiled_url_generator`],
+//! [`url_matcher`] and [`redirectable_url_matcher`] port Symfony's own Route,
+//! `CompiledRoute`, `RouteCompiler`, `RequestContext`, `RouteCollection`, Alias,
+//! `UrlGenerator`, `CompiledUrlGenerator`, `UrlMatcher` and `RedirectableUrlMatcher`
+//! classes; the typed matcher and generator here do not use them yet.
 //!
 //! Upstream: symfony/routing Matcher/UrlMatcher.php Matcher/RedirectableUrlMatcher.php Generator/UrlGenerator.php
 
@@ -20,11 +22,13 @@ pub mod exception;
 pub mod generator;
 mod ordered;
 mod php;
+pub mod redirectable_url_matcher;
 pub mod request_context;
 pub mod route;
 pub mod route_collection;
 pub mod route_compiler;
 pub mod url_generator;
+pub mod url_matcher;
 
 use symfony_http_foundation::query::rawurldecode;
 
