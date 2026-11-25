@@ -11,7 +11,7 @@ use symfony_dependency_injection::{Definition, ErrorKind};
 fn testConstructor() {
     let def = Definition::child("foo");
     assert_eq!(Some("foo".to_string()), def.parent());
-    assert!(def.changes().is_empty());
+    assert_eq!(def.changes(), [] as [String; 0]);
 }
 
 #[test]
