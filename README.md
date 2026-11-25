@@ -18,9 +18,10 @@ Nothing outside those tables is claimed.
 
 | Crate | Package | Contract |
 |---|---|---|
-| [`symfony-http-foundation`](crates/http-foundation/README.md) | `symfony/http-foundation` (+ PHP request parsing) | Query, cookie and multipart parsing; ParameterBag, InputBag, ServerBag, HeaderBag, HeaderUtils, Cookie, IpUtils, AcceptHeader; File, UploadedFile and FileBag; Request; Response (sending recorded for the HTTP adapter) |
+| [`symfony-http-foundation`](crates/http-foundation/README.md) | `symfony/http-foundation` (+ PHP request parsing) | Query, cookie and multipart parsing; ParameterBag, InputBag, ServerBag, HeaderBag, HeaderUtils, Cookie, IpUtils, AcceptHeader; File, UploadedFile and FileBag; Request; Response, JsonResponse, RedirectResponse; PHP-FPM's superglobals, uploads and output (`sapi`) |
 | [`symfony-routing`](crates/routing/README.md) | `symfony/routing` | Route, CompiledRoute, RouteCompiler, RouteCollection; typed registrations, matcher and redirectable matcher, URL escaping |
 | [`symfony-http-kernel`](crates/http-kernel/README.md) | `symfony/http-kernel` | HttpKernel's lifecycle on Request and Response (events, exceptions, terminate), the HttpException family, RouterListener, the ArgumentResolver, the ControllerResolver; the typed Axum hook subset |
+| [`symfony-runtime`](crates/runtime/README.md) | `symfony/runtime` | HttpKernelRunner; the Axum adapter serving a ported kernel as nginx and PHP-FPM serve a front controller |
 | [`symfony-mime`](crates/mime/README.md) | `symfony/mime` | MimeTypes and its guessers (the `file` command, and finfo on a pure-Rust libmagic) |
 | [`symfony-config`](crates/config/README.md) | `symfony/config` | Definition, Builder, dumpers, XmlUtils, loaders, resources, ConfigCache |
 | [`symfony-console`](crates/console/README.md) | `symfony/console` | The parts the Yaml and Dotenv commands use |
@@ -31,7 +32,7 @@ Nothing outside those tables is claimed.
 | [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
 | [`symfony-deprecation-contracts`](crates/deprecation-contracts/README.md), [`psr-log`](crates/psr-log/README.md) | `symfony/deprecation-contracts`, `psr/log` | The contracts |
 | [`php-value`](crates/php-value/README.md), [`php-dom`](crates/php-dom/README.md), [`php-pcre`](crates/php-pcre/README.md) | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source |
-| [`request-lab`](examples/request-lab/README.md) | — | Independent example application using HttpFoundation, Routing and HttpKernel |
+| [`request-lab`](examples/request-lab/README.md) | — | Independent example application on the ported kernel (RouterListener, ControllerResolver, ArgumentResolver, HttpKernel) through the HTTP adapter |
 
 Upstream pins are each package's exact version and reference from the demo's
 `composer.lock`, recorded in `parity/packages.tsv`; split Symfony packages
@@ -193,7 +194,7 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/html-sanitizer | 73 | 0 | 0 | 73 |
 | symfony/http-client-contracts | 0 | 0 | 0 | 0 |
 | symfony/http-client | 941 | 0 | 0 | 941 |
-| symfony/http-foundation | 959 | 477 | 10 | 472 |
+| symfony/http-foundation | 959 | 479 | 10 | 470 |
 | symfony/http-kernel | 1,045 | 200 | 8 | 837 |
 | symfony/intl | 209 | 0 | 0 | 209 |
 | symfony/mailer | 125 | 0 | 0 | 125 |
@@ -233,7 +234,7 @@ percentage; later changes are authoritative in `parity/`):
 | twig/intl-extra | 17 | 0 | 0 | 17 |
 | twig/markdown-extra | 6 | 0 | 0 | 6 |
 | twig/twig | 778 | 0 | 0 | 778 |
-| **Total** | **29,037** | **3,045** | **46** | **25,946** |
+| **Total** | **29,037** | **3,047** | **46** | **25,944** |
 
 Every package pinned in `parity/packages.tsv` has a manifest; those
 without a Rust port yet are all `pending`, and the contracts packages
@@ -249,6 +250,9 @@ JsonResponse, RedirectResponse and
 RequestStack, HttpKernel's lifecycle with its events and HTTP exceptions,
 RouterListener, the ArgumentResolver with its value resolvers and the
 ControllerResolver,
+the HTTP adapter (symfony/runtime's HttpKernelRunner, nginx's FastCGI
+parameters, PHP-FPM's superglobals, uploads and output recorded from
+PHP-FPM) with request-lab running on the ported kernel,
 symfony/mime's MIME types and guessers, and Routing's Route,
 RouteCompiler, RouteCollection, RequestContext, both URL generators and
 both matchers (route conditions wait for ExpressionLanguage).

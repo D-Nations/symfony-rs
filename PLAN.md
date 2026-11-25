@@ -145,6 +145,11 @@ parameters or trait objects as a performance metric.
       and default behaviour; prove the seam with a small static fixture.
       If the kernel interface is still changing, defer the seam until its
       lifecycle contract is stable rather than blocking the current port.
+      (November 25: request-lab now runs on the ported `HttpKernel`, whose
+      listeners are EventDispatcher listeners, so the seam no longer
+      belongs on `Kernel<C>`; only the converter fixture uses that subset.
+      It is to be built on the ported kernel's dispatch once the fixture
+      moves, M2-A next stage.)
       Test priority, equal-priority order, propagation, controller replacement,
       early response, exceptions and response filtering in both modes.
 - [ ] Keep the general EventDispatcher's dynamic API and observable mutation,
@@ -271,7 +276,7 @@ warnings`, so a warning fails it.
 - Generated files are fixed in their generator (`scripts/gen-*.py`,
   `build.rs`), never by hand.
 - Opted in (November 25): psr-log, event-dispatcher-contracts,
-  deprecation-contracts, http-kernel, request-lab, php-pcre, filesystem,
+  deprecation-contracts, http-kernel, request-lab, runtime, php-pcre, filesystem,
   mime, event-dispatcher, stopwatch, converter-app fixture. Still to opt
   in, each needing hand review (mostly `usize`/`i64` casts for PHP offsets
   and lengths): string, console, config, yaml, http-foundation,
@@ -873,6 +878,26 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     without enough arguments, but otherwise throw a `LogicException`
     (no app routes to them). **Owner, November 25: both kept as
     described.**
+20. **What the HTTP adapter cannot or does not reproduce (M2-A, November
+    25).** The adapter (`symfony-runtime`) serves a ported kernel as nginx
+    in front of PHP-FPM does; the PHP side is recorded from PHP-FPM, the
+    nginx side written from its documentation. Three points differ from a
+    real deployment and are recorded here rather than chosen silently:
+    (a) *reason phrases*: PHP-FPM sends `Status: 299 Custom Text` (a
+    status line from `header()` keeps its text), but Axum/hyper write the
+    `http` crate's canonical phrase. Keeping the text needs hyper's
+    `ext::ReasonPhrase` (a direct `hyper` dependency; it is already in the
+    lock through axum). Recommended: keep the canonical phrase until an
+    application depends on a custom one (no client should); (b)
+    *`expose_php`*: PHP's default (no php.ini) sends `X-Powered-By:
+    PHP/8.4.27`; the adapter sends none unless `Ini::x_powered_by` is set
+    (the replay tests set it). Recommended: keep it off; (c) *invalid CGI
+    header lines* (`NoColon`, a name with a space, a control byte), which
+    PHP passes on and nginx answers with 502 for some: the adapter drops
+    the line and logs it. Recommended: keep. Also documented, not
+    decided: warnings are logged, never displayed (`display_errors` off,
+    as in production); the web server's own 404 for `/index.php/...` and
+    `*.php` has an empty body where nginx sends its HTML page.
 
 ## M0 progress
 
@@ -1273,6 +1298,7 @@ Stack rows (searched November 22):
 | HttpKernel's `RouterListener.php` (November 25; no new search: the HttpKernel row above covers the component) | The HttpKernel row's search (no Rust port). For the shared routing context: change routing's matchers to hold a `Handle<RequestContext>` (touches every matcher and generator caller), or give the listener the handle and let routing's matchers match in a copy filled from the request, as their `matchRequest()` does | Ported in `router_listener.rs`; the listener holds a `Handle<RequestContext>`. In-workspace dependencies only: http-kernel gains `symfony-routing`, `psr-log` and `symfony-finder` (`realpath()`), and `psr-log` gains `php-value` for PSR-3's `mixed` context values | The matchers stay as recorded; what the listener shares (the context the URL generator also reads) is a PHP object handle, as in PHP |
 | HttpKernel's `ArgumentResolver.php`, its value resolvers and `ArgumentMetadata` (November 25; no new search: the HttpKernel row covers the component) | PHP reflects the controller at run time. Options: a proc-macro reading a Rust function's signature (types are Rust's, not PHP's: `?string`, unions and class names have no Rust spelling), or the controller declaring what reflection would report (name, type as PHP prints it, nullability, default, attributes), as the kernel's `Controller` already declares parameters and attributes | Declared `Parameter`s, read by the ported `ArgumentMetadataFactory`; no new dependency. A converter can generate the declarations from the PHP signature at build time | The resolvers see exactly the metadata PHP's reflection gives (pinned by 4,000 recorded signatures); nothing is reflected per request |
 | HttpKernel's `ControllerResolver.php` and `Attribute/AsController.php` (November 25; no new search: the HttpKernel row covers the component) | PHP instantiates classes and asks `is_callable()`, `method_exists()`, `get_class_methods()` and reflection at run time. Options: a proc-macro per Rust controller type (Rust has no PHP visibility, `__call`, inheritance or case-insensitive names to reflect), or declaring the PHP program: classes (kind, parent, interfaces, attribute names, methods with visibility, staticness and a `Controller` body), functions and closures | A `ClassRegistry` of declarations, answered by the ported resolver with PHP's lookup rules; no new dependency. A converter can generate the declarations from the PHP classes at build time | The callable, the error messages and `checkController()` are PHP's on 4,000 recorded programs; nothing is reflected per request |
+| The HTTP adapter: an Axum request to HttpFoundation's Request as PHP-FPM builds it, the Response's recorded sending applied as PHP-FPM and nginx apply it, and Runtime's `Runner/Symfony/HttpKernelRunner.php` (searched November 25: GitHub, crates.io, docs.rs) | Embedding real PHP: [ext-php-rs](https://docs.rs/ext-php-rs) (embed SAPI, `ServerContext` filling `$_SERVER`) and [ripht-php-sapi](https://docs.rs/ripht-php-sapi) (embed SAPI web mode, non-ZTS only) run php-src through FFI and `unsafe` (decision 8 and AGENTS exclude both); proxying to PHP-FPM: [fastcgi-client](https://docs.rs/fastcgi-client) (with an Axum example) still needs PHP; Symfony's own bridges as design references: [symfony/psr-http-message-bridge](https://symfony.com/doc/current/components/psr7.html)'s `HttpFoundationFactory` builds a Request from a PSR-7 request directly (server params as given, no superglobals, so not `createFromGlobals()`'s `request_parse_body()` path), and symfony/runtime's `SymfonyRuntime` + `HttpKernelRunner` (`createFromGlobals()`, `handle()`, `send()`, `fastcgi_finish_request()`, `terminate()`); Go servers embedding PHP (FrankenPHP, RoadRunner) fill superglobals per request in their worker modes | Emulate the deployment the original runs in: nginx's `fastcgi_params` for Symfony's documented location (written from nginx's documentation) and PHP-FPM's superglobals, uploads and output rules (`symfony_http_foundation::sapi`, written from the manual and 115 requests and 946 output scripts recorded from PHP-FPM 8.4.27 in a new oracle FPM image), then `Request::createFromGlobals()` and a port of `HttpKernelRunner.php`; new crate `symfony-runtime` (Composer's package name), whose only new dependency is tokio's `rt`/`sync` (already in the lock through axum) for `spawn_blocking` and a oneshot | The Request must be what `createFromGlobals()` makes of real superglobals (`$_SERVER` order and contents, `argv`, `PHP_AUTH_*`, `request_parse_body()` for PUT, the `$_FILES` layout and error codes) and the response what PHP-FPM sends for `header()` calls (status lines, `Location`'s 302, the content type rewrite, `Status:` headers, 304s, HEAD), which a PSR-7 style bridge or a framework adapter does not reproduce. Embedding php-src is excluded. A blocking thread per request keeps the per-thread superglobals of one request together, as a PHP-FPM worker does; the response is sent at `fastcgi_finish_request()` while `terminate()` runs |
 | HttpFoundation's `Response.php` (searched November 25) | No Rust port of Symfony's Response on GitHub or crates.io. Nearest: [http-fresh](https://docs.rs/http-fresh) (Express's `fresh`: conditional GET only, honours a request `no-cache`, no `strtotime()` dates), [http-cache-semantics](https://crates.io/crates/http-cache-semantics) and [http-cache](https://docs.rs/http-cache) (RFC 7234 cache policy for clients and proxies: other freshness rules, no `setCache()`, `prepare()` or `sendHeaders()`) | Ported in `response.rs` on the ported ResponseHeaderBag, Request, php-value and php-pcre; no new dependency. What PHP does while sending is recorded in `php::Output` | Symfony's own rules decide the headers a converted app sends: `getMaxAge()`'s order, weak ETag matching, `strtotime()` comparison of `false`, loose `==` on the protocol, the MSIE rule, 103 early hints. 33,387 answers, 300 buffer calls and 121 protocol pairs recorded from PHP 8.4.27 pin them |
 | HttpFoundation's `JsonResponse.php` and `RedirectResponse.php`, and PHP's `json_encode()` (November 25) | The responses: the `Response.php` row's search covers them (no Rust port of Symfony's responses). `json_encode()`: [serde_json](https://docs.rs/serde_json) (already a test dependency; its serializer has no `JSON_HEX_*`, `NUMERIC_CHECK`, `PARTIAL_OUTPUT_ON_ERROR` or invalid-UTF-8 handling, writes floats and non-ASCII its own way, and has no PHP arrays, enum cases or `JsonSerializable`), the config crate's scalar `json_encode_with()` (no flags beyond two, no errors) | Ported in `json_response.rs` and `redirect_response.rs`; `json_encode()` (`json::encode`), `json_decode()` to objects and `htmlspecialchars()` written in php-value; no new dependency | The content of a converted app's JSON and redirect responses is PHP's text byte for byte: escapes, float layout, errors and which of them end the encoding. 15,747 `json_encode()` calls, 8,154 `json_decode()` documents and 11,772 response answers recorded from PHP 8.4.27 pin them |
 | PHP's `parse_url()` (RequestContext::fromUri(), searched November 24) | [url](https://docs.rs/url) (WHATWG URL Standard: normalizes, lowercases, percent-encodes, other failures), [http::Uri](https://docs.rs/http) and [fluent-uri](https://docs.rs/fluent-uri) (strict RFC 3986: reject control bytes, spaces and `[` hosts PHP accepts), symfony-filesystem's scheme-only `parse_url_scheme()` | Written in `php-value::url` from the PHP manual and recorded answers, no dependency | PHP's components for malformed input (`host:port` without `//`, `false` for empty hosts and long ports, control bytes as `_`, `file:///`) are what `fromUri()` reads; 12,119 calls recorded from PHP 8.4.27 pin them |
@@ -1558,6 +1584,38 @@ Stack rows (searched November 22):
       service container). Decision 19 records the file a constructor's
       `ArgumentCountError` names. No advisory is listed for these files.
       Next: request-lab on the kernel with both resolvers.
+- [ ] HTTP adapter and request-lab on the ported kernel (November 25;
+      [docs/milestones/m2-a-axum-adapter-request-lab.md](docs/milestones/m2-a-axum-adapter-request-lab.md)):
+      new crate `symfony-runtime` with `Runner/Symfony/HttpKernelRunner.php`
+      and the Axum adapter (`server`: nginx's FastCGI parameters, the
+      response nginx makes of PHP-FPM's, `FrontController` running one PHP
+      request per blocking thread and answering at
+      `fastcgi_finish_request()` while `terminate()` runs).
+      http-foundation gains `sapi`, PHP-FPM itself: `$_SERVER`, `$_GET`,
+      `$_POST`, `$_FILES` with uploaded files (the multipart parser now
+      keeps file parts), `$_COOKIE`, `$_REQUEST`, `php://input`,
+      `request_parse_body()`; `header()`, `header_remove()`,
+      `http_response_code()`, `setcookie()`, output buffers and the CGI
+      response. Recorded from PHP-FPM 8.4.27 in a new oracle image
+      (`oracle/fpm.Dockerfile`, `scripts/record.sh runtime-fpm`): 115
+      requests and 946 output scripts (600 generated), all matching, the
+      responses byte for byte; 27 mutations of the rules, each caught.
+      RequestFunctionalTest 2 of 2 is ported; ResponseFunctionalTest's
+      `testCookie` runs five of its six fixtures and stays pending (the
+      sixth needs the Session classes). The uploaded-file list became per
+      thread (it was process-wide: one request could see another's
+      uploads). request-lab now uses routing's `RouteCollection` and
+      `RedirectableUrlMatcher` through `RouterListener`, the
+      `ControllerResolver` on a declared `LabController`, the
+      `ArgumentResolver`, `HttpKernel` and a `kernel.exception` listener;
+      its four HTTP tests pass unchanged, and 29 compared requests keep
+      their statuses, bodies and earlier headers (Symfony adds
+      `Cache-Control`, `Date` and the content type of bodiless
+      responses). Decision 20 lists what the adapter does not reproduce.
+      GHSA-fqc7-9xjw-jrh3 (symfony/runtime, `SymfonyRuntime`) is
+      `not-ported`. The listener seam (above) moves to the ported kernel.
+      Next: the converter fixture on this adapter and kernel, then the
+      listener seam; StreamedResponse.
 
 ## Local development performance
 
