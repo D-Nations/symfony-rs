@@ -394,3 +394,57 @@ pub fn hexdec(s: &[u8]) -> Number {
 pub fn octdec(s: &[u8]) -> Number {
     radix(s, 8)
 }
+
+/// `(int) $float`: truncated toward zero; NAN and infinities give 0; a
+/// value outside the int range wraps modulo 2^64, as PHP 8 does on 64-bit
+/// systems (`(int) 1e19` is -8446744073709551616).
+#[expect(
+    clippy::cast_possible_truncation,
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions and comparisons"
+)]
+pub fn float_to_int(value: f64) -> i64 {
+    if !value.is_finite() {
+        return 0;
+    }
+    let truncated = value.trunc();
+    if truncated >= i64::MIN as f64 && truncated < i64::MAX as f64 {
+        return truncated as i64;
+    }
+    let two_64 = 18_446_744_073_709_551_616.0_f64;
+    let mut wrapped = truncated % two_64;
+    if wrapped >= 9_223_372_036_854_775_808.0 {
+        wrapped -= two_64;
+    } else if wrapped < -9_223_372_036_854_775_808.0 {
+        wrapped += two_64;
+    }
+    wrapped as i64
+}
+
+/// `(int) $value`. An object is 1 (PHP also warns).
+pub fn int_cast(value: &crate::Value) -> i64 {
+    use crate::Value;
+    match value {
+        Value::Null | Value::Bool(false) => 0,
+        Value::Bool(true) | Value::Object(_) => 1,
+        Value::Int(i) => *i,
+        Value::Float(f) => float_to_int(*f),
+        Value::String(s) => string_to_int(s.as_bytes()),
+        Value::Array(a) => i64::from(!a.is_empty()),
+    }
+}
+
+/// `(float) $value`. An object is 1.0 (PHP also warns).
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions and comparisons"
+)]
+pub fn float_cast(value: &crate::Value) -> f64 {
+    use crate::Value;
+    match value {
+        Value::Float(f) => *f,
+        Value::Int(i) => *i as f64,
+        Value::String(s) => string_to_float(s.as_bytes()),
+        other => int_cast(other) as f64,
+    }
+}

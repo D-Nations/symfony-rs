@@ -9,9 +9,15 @@
 //!
 //! Upstream: none
 
-use std::fmt::Write;
+use std::{
+    fmt::Write,
+    sync::{Arc, Mutex, PoisonError},
+};
 
-use crate::{array::PhpArray, value::PhpObject};
+use crate::{
+    array::PhpArray,
+    value::{PhpObject, Value},
+};
 
 /// A `DateTimeZone`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -274,24 +280,113 @@ impl DateTimeImmutable {
     }
 }
 
+impl DateTimeImmutable {
+    /// `new DateTimeImmutable('now', $zone)`: the clock's time
+    /// (`clock::microtime()`, mocks included) with its microseconds.
+    pub fn now(zone: TimeZone) -> Self {
+        let now = crate::clock::microtime();
+        let seconds = now.floor();
+        let fraction = ((now - seconds) * 1_000_000.0)
+            .round()
+            .clamp(0.0, 999_999.0);
+        #[expect(
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss,
+            reason = "a clock reading in range; the fraction is clamped to 0..=999999"
+        )]
+        let (seconds, microsecond) = (seconds as i64, fraction as u32);
+        Self::from_timestamp(seconds, microsecond, zone)
+    }
+
+    /// `setTimezone($zone)`: the same instant shown in `zone`.
+    #[must_use]
+    pub fn set_timezone(&self, zone: TimeZone) -> Self {
+        Self { zone, ..*self }
+    }
+
+    /// `getOffset()`.
+    pub fn offset(&self) -> i32 {
+        self.zone.offset_seconds()
+    }
+
+    /// This instant as a PHP object.
+    pub fn object(self) -> Value {
+        Value::Object(Arc::new(self))
+    }
+}
+
+/// What `var_dump()` and `(array)` show for a date: `date`,
+/// `timezone_type`, `timezone`.
+fn date_properties(date: &DateTimeImmutable) -> PhpArray {
+    let mut properties = PhpArray::new();
+    properties.insert("date", date.format("Y-m-d H:i:s.u").into());
+    let kind = match date.zone {
+        TimeZone::Offset(_) => 1,
+        TimeZone::Zulu | TimeZone::Gmt => 2,
+        TimeZone::Utc => 3,
+    };
+    properties.insert("timezone_type", kind.into());
+    properties.insert("timezone", date.zone.name().into());
+    properties
+}
+
 impl PhpObject for DateTimeImmutable {
     fn class(&self) -> &str {
         Self::CLASS
     }
 
-    /// What `var_dump()` and `(array)` show: `date`, `timezone_type`,
-    /// `timezone`.
     fn properties(&self) -> PhpArray {
-        let mut properties = PhpArray::new();
-        properties.insert("date", self.format("Y-m-d H:i:s.u").into());
-        let kind = match self.zone {
-            TimeZone::Offset(_) => 1,
-            TimeZone::Zulu | TimeZone::Gmt => 2,
-            TimeZone::Utc => 3,
-        };
-        properties.insert("timezone_type", kind.into());
-        properties.insert("timezone", self.zone.name().into());
-        properties
+        date_properties(self)
+    }
+}
+
+/// A mutable `DateTime`: one object whose instant and zone methods such
+/// as `setTimezone()` change in place (`clone` gives a new object).
+#[derive(Debug)]
+pub struct DateTime(Mutex<DateTimeImmutable>);
+
+impl DateTime {
+    pub const CLASS: &'static str = "DateTime";
+
+    pub fn new(date: DateTimeImmutable) -> Self {
+        Self(Mutex::new(date))
+    }
+
+    /// A new `DateTime` object holding `date`.
+    pub fn object(date: DateTimeImmutable) -> Value {
+        Value::Object(Arc::new(Self::new(date)))
+    }
+
+    /// The current instant and zone.
+    pub fn get(&self) -> DateTimeImmutable {
+        *self.0.lock().unwrap_or_else(PoisonError::into_inner)
+    }
+
+    /// `setTimezone($zone)`, in place.
+    pub fn set_timezone(&self, zone: TimeZone) {
+        let mut date = self.0.lock().unwrap_or_else(PoisonError::into_inner);
+        *date = date.set_timezone(zone);
+    }
+
+    /// `format($format)` (see [`DateTimeImmutable::format`]).
+    pub fn format(&self, format: &str) -> String {
+        self.get().format(format)
+    }
+
+    /// `clone $date`: a new object with the same instant and zone.
+    #[must_use]
+    pub fn deep_clone(&self) -> Self {
+        Self::new(self.get())
+    }
+}
+
+impl PhpObject for DateTime {
+    fn class(&self) -> &str {
+        Self::CLASS
+    }
+
+    fn properties(&self) -> PhpArray {
+        date_properties(&self.get())
     }
 }
 
