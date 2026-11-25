@@ -146,7 +146,7 @@ fn local_path(path: &[u8]) -> Option<PathBuf> {
 use php_value::path::from_os_string as os_bytes;
 
 #[cfg(not(unix))]
-fn secs(t: std::io::Result<std::time::SystemTime>) -> i64 {
+fn secs(t: &std::io::Result<std::time::SystemTime>) -> i64 {
     match t {
         Ok(t) => match t.duration_since(std::time::UNIX_EPOCH) {
             Ok(d) => i64::try_from(d.as_secs()).unwrap_or(i64::MAX),
@@ -186,10 +186,10 @@ fn stat_of(m: &std::fs::Metadata) -> Stat {
     Stat {
         mode: kind | perms,
         size: i64::try_from(m.len()).unwrap_or(i64::MAX),
-        atime: secs(m.accessed()),
-        mtime: secs(m.modified()),
+        atime: secs(&m.accessed()),
+        mtime: secs(&m.modified()),
         // as PHP on Windows: the creation time
-        ctime: secs(m.created()),
+        ctime: secs(&m.created()),
     }
 }
 
