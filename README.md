@@ -171,7 +171,7 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/event-dispatcher | 140 | 114 | 0 | 26 |
 | symfony/filesystem | 157 | 27 | 0 | 130 |
 | symfony/finder | 143 | 139 | 4 | 0 |
-| symfony/http-foundation | 959 | 447 | 10 | 502 |
+| symfony/http-foundation | 959 | 477 | 10 | 472 |
 | symfony/http-kernel | 1,045 | 185 | 8 | 852 |
 | symfony/mime | 395 | 28 | 1 | 366 |
 | symfony/options-resolver | 234 | 234 | 0 | 0 |
@@ -180,7 +180,7 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/string | 266 | 235 | 1 | 30 |
 | symfony/translation | 345 | 81 | 2 | 262 |
 | symfony/yaml | 342 | 341 | 1 | 0 |
-| **Total** | **6,583** | **3,000** | **46** | **3,537** |
+| **Total** | **6,583** | **3,030** | **46** | **3,507** |
 
 Six packages have no pending rows and are listed in `parity/done.txt`:
 Stopwatch, Yaml, Dotenv, CssSelector, OptionsResolver and Finder. M1 is
@@ -189,7 +189,8 @@ filesystem resources and ConfigCache ported (the reflection-based
 resources, decision 17, are a later stage); String, Console (the subset the Yaml and
 Dotenv commands use), Translation's XLIFF and Qt loaders and the XML
 gates are partial. M2 has started: HttpFoundation's bags, headers,
-cookies, IpUtils, AcceptHeader, the File classes, Request, Response and
+cookies, IpUtils, AcceptHeader, the File classes, Request, Response,
+JsonResponse, RedirectResponse and
 RequestStack, HttpKernel's lifecycle with its events and HTTP exceptions,
 RouterListener and the ArgumentResolver with its value resolvers,
 symfony/mime's MIME types and guessers, and Routing's Route,
