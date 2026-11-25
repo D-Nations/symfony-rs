@@ -1,10 +1,10 @@
 # symfony/clock at 945ea3b64d6da9c1c2c354fe5c07b27455df6442: upstream file	classes	code lines	status	rust files
-Clock.php	Clock	45	pending	
-ClockAwareTrait.php	ClockAwareTrait	17	pending	
-ClockInterface.php	ClockInterface	7	pending	
-DatePoint.php	DatePoint	103	pending	
-MockClock.php	MockClock	47	pending	
-MonotonicClock.php	MonotonicClock	51	pending	
-NativeClock.php	NativeClock	31	pending	
-Resources/now.php	-	11	pending	
-Test/ClockSensitiveTrait.php	ClockSensitiveTrait	36	pending	
+Clock.php	Clock	45	ported	crates/clock/src/clock.rs
+ClockAwareTrait.php	ClockAwareTrait	17	ported	crates/clock/src/clock_aware_trait.rs
+ClockInterface.php	ClockInterface	7	ported	crates/clock/src/clock_interface.rs
+DatePoint.php	DatePoint	103	ported	crates/clock/src/date_point.rs
+MockClock.php	MockClock	47	ported	crates/clock/src/mock_clock.rs
+MonotonicClock.php	MonotonicClock	51	ported	crates/clock/src/monotonic_clock.rs
+NativeClock.php	NativeClock	31	ported	crates/clock/src/native_clock.rs
+Resources/now.php	-	11	ported	crates/clock/src/now.rs
+Test/ClockSensitiveTrait.php	ClockSensitiveTrait	36	ported	crates/clock/src/test.rs

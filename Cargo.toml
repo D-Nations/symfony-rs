@@ -3,6 +3,7 @@ members = [
     "crates/event-dispatcher-contracts",
     "crates/event-dispatcher",
     "crates/stopwatch",
+    "crates/clock",
     "crates/string",
     "crates/psr-container",
     "crates/psr-log",

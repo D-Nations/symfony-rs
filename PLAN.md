@@ -1037,6 +1037,7 @@ Stack rows (searched November 19):
 | Component | Options compared | Choice | Reason |
 |---|---|---|---|
 | Stopwatch | [fine_grained](https://docs.rs/crate/fine_grained/latest) (one stopwatch with laps, 2017), [ticky](https://docs.rs/ticky/1.0.2/src/ticky/lib.rs.html), [chronometer](https://docs.rs/crate/chronometer/latest), clock-core: single anonymous timers | Port, no dependency (`std::time` underneath) | None has named events, categories, sections, periods with memory, PHP's rounding or Symfony's messages |
+| Clock (searched November 25) | No Rust port of symfony/clock or PSR-20. Clock crates ([chronoshift](https://crates.io/crates/chronoshift), [clock-lib](https://crates.io/crates/clock-lib), [qubit-clock](https://crates.io/crates/qubit-clock)): mockable clocks without PHP dates. Date and zone crates: [jiff](https://docs.rs/jiff) 1.0 (IANA zones with transitions, DST flags and abbreviations, gap and fold detection, bundled tzdb 2026f, Unlicense/MIT), [chrono](https://docs.rs/chrono) + [chrono-tz](https://docs.rs/chrono-tz) (zones compiled in, no abbreviation or DST flag per instant), [time](https://docs.rs/time) (no IANA zones; time-tz is a release candidate). PHP date text: [strtotime](https://crates.io/crates/strtotime) (its own grammar and answers), [timelib](https://crates.io/crates/timelib) (bindings to PHP's own C date library: FFI and PHP code, decision 8). php-value's `DateTimeImmutable` has no named zones | Port the Symfony classes; PHP's date layer written in `symfony-clock::php` from the manual and oracle vectors; `jiff` (`default-features = false`, `std` + `tzdb-bundle-always`) only for zone lookups (offset, DST, abbreviation, gaps and folds) | Clock needs `DateTimeImmutable` with microseconds and IANA zones (`DatePoint`, `withTimeZone()`), PHP's fall-back and gap rules, `modify()` texts and `createFromFormat()`. jiff gives the zone data with no C and no `unsafe` in this crate; a bundled tzdb keeps answers equal on every host. Calendar arithmetic, parsing and formatting stay in the port, so PHP's rollover rules and its year range (beyond jiff's ±9999) are kept. Texts outside the recorded grammar are refused |
 | Yaml | No Rust port of Symfony Yaml exists. YAML 1.2 crates ([saphyr](https://docs.rs/serde-saphyr/latest/), [yaml-rust2](https://docs.rs/crate/yaml-rust2/0.11.1), [noyalib](https://github.com/sebastienrousseau/noyalib), [saneyaml](https://docs.rs/crate/saneyaml/latest)) implement the spec, not Symfony's dialect; serde_yaml is archived | Port on `php-value` | Symfony's booleans, `0o` octals, timestamps as ints, merge keys, `!php/*` tags, flags and messages are its own |
 | Regex for ported PCRE patterns (owner, November 19) | `regex` 1.13 (RE2-style, linear time, no backtracking) vs hand-written matchers vs `fancy-regex` (lookaround, backtracking) | `regex`; patterns without its features (Yaml's `(?<!:):(?!:)` delimiter) matched by hand | Upstream patterns translate one for one and stay comparable; linear time rules out ReDoS; possessive quantifiers become greedy where the following class excludes what they consume |
 | Dotenv | [dotenvy](https://crates.io/crates/dotenvy), [dotenvs](https://docs.rs/crate/dotenvs/0.2.1/source/README.md) (`${VAR:-default}`), [zenv](https://github.com/numToStr/zenv) (expansion only in double quotes), [dotenvx](https://docs.rs/crate/dotenvx/0.1.0) (encryption, shell commands): other parsers and expansion rules | Port on `php-value`, no dependency | None has Symfony's syntax errors, `.env.local` / `.env.$env` layering, `SYMFONY_DOTENV_VARS`, deferred cross-file resolution or `$_ENV` / `$_SERVER` / `getenv()` precedence |
@@ -1092,6 +1093,16 @@ Stack rows (searched November 19):
       shortest decimal form (3,270 differ, from 7e13) and php2rust's
       `php-rt` `round()` (14,571 differ, from 2.35: it implements the
       pre-8.4 15-digit pre-rounding, a php2rust bug to report).
+- [x] Clock (`symfony-clock`): all 36 upstream tests; in
+      `parity/done.txt`. Every file is ported, including `Resources/now.php`
+      and `Test/ClockSensitiveTrait.php`. The crate has its own subset of
+      PHP's `DateTimeImmutable` and `DateTimeZone` (`symfony_clock::php`),
+      written from the manual and checked against about 9,800 recorded
+      answers (`scripts/record.sh clock`). jiff gives the zone data only.
+      Date texts outside the recorded grammar are refused, not answered
+      differently. php-value's dates have no named zones and its zone
+      abbreviation and keyword lists are private, so the crate has its own
+      copy: a later step can move one shared date layer into php-value.
 - [x] Yaml (`symfony-yaml`, values in `php-value`). Ported: every file,
       `Command/LintCommand.php` behind the `console` feature: 341 of 342
       upstream tests, 1 `n/a` with its reason in the manifest, plus
