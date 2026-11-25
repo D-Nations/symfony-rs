@@ -14,6 +14,7 @@
 pub mod argument_resolver;
 pub mod controller;
 pub mod controller_metadata;
+pub mod controller_resolver;
 pub mod event;
 pub mod exception;
 pub mod http_kernel;

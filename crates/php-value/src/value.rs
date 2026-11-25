@@ -144,7 +144,18 @@ impl Value {
             Self::Float(_) => "float".to_owned(),
             Self::String(_) => "string".to_owned(),
             Self::Array(_) => "array".to_owned(),
-            Self::Object(o) => o.class().to_owned(),
+            Self::Object(o) => debug_class_name(o.class()).to_owned(),
+        }
+    }
+
+    /// The type name PHP's messages use for a value (`zend_zval_value_name`):
+    /// as [`Value::debug_type`], except `true` and `false` for bools
+    /// ("must be of type string, true given").
+    pub fn value_name(&self) -> String {
+        match self {
+            Self::Bool(true) => "true".to_owned(),
+            Self::Bool(false) => "false".to_owned(),
+            other => other.debug_type(),
         }
     }
 
@@ -198,6 +209,17 @@ impl Value {
             Self::Object(o) => o.to_php_string(),
             other => other.to_php_string(),
         }
+    }
+}
+
+/// `get_debug_type()` of an object of class `class`: an anonymous class
+/// (named `Parent@anonymous` + NUL + its file, line and number) is
+/// `Parent@anonymous` (or `Interface@anonymous`, `class@anonymous`).
+pub fn debug_class_name(class: &str) -> &str {
+    const ANONYMOUS: &str = "@anonymous\0";
+    match class.find(ANONYMOUS) {
+        Some(at) => &class[..at + ANONYMOUS.len() - 1],
+        None => class,
     }
 }
 

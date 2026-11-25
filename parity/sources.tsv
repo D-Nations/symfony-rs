@@ -468,6 +468,8 @@ crates/http-kernel/src/controller.rs	symfony/http-kernel	Controller/ArgumentReso
 crates/http-kernel/src/controller_metadata.rs	symfony/http-kernel	ControllerMetadata/ArgumentMetadata.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller_metadata.rs	symfony/http-kernel	ControllerMetadata/ArgumentMetadataFactory.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller_metadata.rs	symfony/http-kernel	ControllerMetadata/ArgumentMetadataFactoryInterface.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/src/controller_resolver.rs	symfony/http-kernel	Controller/ControllerResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/src/controller_resolver.rs	symfony/http-kernel	Attribute/AsController.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/event.rs	symfony/http-kernel	Event/KernelEvent.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/event.rs	symfony/http-kernel	Event/RequestEvent.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/event.rs	symfony/http-kernel	Event/ControllerEvent.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
@@ -521,6 +523,7 @@ crates/http-kernel/src/value_resolver.rs	symfony/http-kernel	Controller/Argument
 crates/http-kernel/tests/argument_metadata_factory_test.rs	symfony/http-kernel	Tests/ControllerMetadata/ArgumentMetadataFactoryTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/argument_metadata_test.rs	symfony/http-kernel	Tests/ControllerMetadata/ArgumentMetadataTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/argument_resolver_test.rs	symfony/http-kernel	Tests/Controller/ArgumentResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/tests/controller_resolver_test.rs	symfony/http-kernel	Tests/Controller/ControllerResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Exception/HttpExceptionTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Exception/AccessDeniedHttpExceptionTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Exception/BadRequestHttpExceptionTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
