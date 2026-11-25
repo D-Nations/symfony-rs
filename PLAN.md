@@ -1696,8 +1696,16 @@ Stack rows (searched November 25):
       5,919 parses of 3,024 generated statements in both modes match
       PHP call by call; the 135 that PHP refuses at a PCRE limit are
       decision 21. No new dependency.
-- [ ] D1 next: Types and the platforms' type SQL; Query (QueryBuilder,
-      ExpressionBuilder, SQL builders); the SQLite platform; Connection on
+- [x] D1 slice 2 (Query): `QueryBuilder.php` (SQL building, parameters,
+      state; not execution), `ExpressionBuilder.php`,
+      `CompositeExpression.php`, the small Query classes, the select,
+      union and WITH SQL builders, and the `AbstractPlatform` methods they
+      use. QueryBuilderTest 73 of 84 (the 11 execute/fetch tests wait for
+      Connection), ExpressionBuilderTest 19 of 19, CompositeExpressionTest
+      3 of 3; 112 recorded builder runs replayed. `ConnectionStandIn`
+      holds the place of `Connection.php`. Differences in the crate
+      README (numeric join alias, shared sub-builders).
+- [ ] D1 next: Types and the platforms' type SQL; the SQLite platform; Connection on
       sqlx's SQLite driver; schema manager. The demo comparison stays
       paused (owner, November 23).
 
