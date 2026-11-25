@@ -23,7 +23,7 @@ pub enum Class {
     /// `Exception\InvalidArgumentException` (extends
     /// `\InvalidArgumentException`).
     InvalidArgument,
-    /// PHP native \`InvalidArgumentException` (invalid catalogue batch).
+    /// PHP native `\InvalidArgumentException` (invalid catalogue batch).
     NativeInvalidArgument,
     /// `Exception\LogicException` (extends `\LogicException`).
     Logic,

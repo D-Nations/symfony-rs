@@ -15,3 +15,6 @@ symfony-config = { path = "../config" }
 php-value = { path = "../php-value", features = ["vectors"] }
 serde_json = "1.0.154"
 symfony-finder = { path = "../finder" }
+
+[lints]
+workspace = true

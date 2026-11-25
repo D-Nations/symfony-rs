@@ -26,7 +26,7 @@
 
 use php_dom::{LoadOptions, libxml_use_internal_errors, load_xml};
 use php_value::{
-    Value,
+    PhpArray, Value,
     vectors::{base64, decode},
 };
 use serde_json::Value as Json;
@@ -113,6 +113,7 @@ fn is_known(kind: &str, resource: &[u8]) -> bool {
 }
 
 #[test]
+#[allow(clippy::too_many_lines, reason = "one replay, in the recorder's order")]
 fn recorded_xliff() -> Result<(), BoxError> {
     let data: Json = serde_json::from_str(include_str!("data/xliff.json"))?;
     let dir =
@@ -313,7 +314,7 @@ fn recorded_xliff() -> Result<(), BoxError> {
     count += 1;
     match XliffUtils::validate_schema(&dom) {
         Ok(Ok(errors))
-            if errors.is_empty() && decode(external)? == Value::Array(Default::default()) => {}
+            if errors.is_empty() && decode(external)? == Value::Array(PhpArray::default()) => {}
         other => failures.push(format!(
             "validateSchema() with an external entity: {other:?}, expected {external}"
         )),

@@ -13,6 +13,8 @@
 //!
 //! Upstream: symfony/translation Util/XliffUtils.php
 
+use std::fmt::Write as _;
+
 use php_dom::{Document, ErrorLevel, Refusal, libxml_use_internal_errors, schema_validate_source};
 
 use crate::exception::{Class, Error};
@@ -133,10 +135,12 @@ impl XliffUtils {
     pub fn get_errors_as_string(errors: &[XmlError]) -> String {
         let mut out = String::new();
         for error in errors {
-            out.push_str(&format!(
-                "[ERROR {}] {} (in {} - line {}, column {})\n",
+            // Writing to a String cannot fail.
+            let _ = writeln!(
+                out,
+                "[ERROR {}] {} (in {} - line {}, column {})",
                 error.code, error.message, error.file, error.line, error.column
-            ));
+            );
         }
         out
     }

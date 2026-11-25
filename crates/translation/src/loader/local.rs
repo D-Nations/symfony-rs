@@ -47,15 +47,13 @@ pub(crate) fn locate(resource: &[u8]) -> Location {
     }
     match scheme(resource) {
         Some((scheme, rest)) => match scheme.as_str() {
-            "http" | "https" | "ftp" | "ftps" | "data" => Location::Remote,
             "file" if rest.starts_with(b"/") => local(rest),
             "file" if rest.len() >= 10 && rest[..10].eq_ignore_ascii_case(b"localhost/") => {
                 local(&rest[9..])
             }
-            "file" => Location::Remote,
-            "php" | "glob" | "compress.zlib" => Location::Absent,
+            "http" | "https" | "ftp" | "ftps" | "data" | "file" => Location::Remote,
             "phar" if phar_archive(rest) => Location::Phar,
-            "phar" => Location::Absent,
+            "php" | "glob" | "compress.zlib" | "phar" => Location::Absent,
             _ => local(resource),
         },
         None => local(resource),

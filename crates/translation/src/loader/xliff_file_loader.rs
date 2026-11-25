@@ -571,7 +571,6 @@ fn collect_pgs_text(dom: &Document, node: NodeId, plural: &[&str], out: &mut Str
                     out.push('}');
                 }
             }
-            "pc" | "mrk" => collect_pgs_text(dom, child, plural, out),
             "cp" => {
                 let hex = dom.get_attribute(child, "hex");
                 if !hex.is_empty() && hex.bytes().all(|b| b.is_ascii_hexdigit()) {
@@ -589,6 +588,7 @@ fn collect_pgs_text(dom: &Document, node: NodeId, plural: &[&str], out: &mut Str
                 }
             }
             "sc" | "ec" | "sm" | "em" => {}
+            // "pc", "mrk" and every other element: their text.
             _ => collect_pgs_text(dom, child, plural, out),
         }
     }
