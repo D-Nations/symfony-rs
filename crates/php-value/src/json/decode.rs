@@ -23,6 +23,8 @@
 //! - then the parser's: `]` where an object may close or `}` where an
 //!   array may close is `JSON_ERROR_STATE_MISMATCH`; any other unexpected
 //!   byte or token is `JSON_ERROR_SYNTAX`.
+//!
+//! Upstream: none
 
 use crate::{Key, PhpArray, PhpString, Value};
 

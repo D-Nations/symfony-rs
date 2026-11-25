@@ -28,6 +28,20 @@ pub fn time() -> i64 {
     })
 }
 
+/// `microtime(true)`: seconds since the Unix epoch, with a fraction. A
+/// mocked clock reads as its whole second.
+pub fn microtime() -> f64 {
+    #[expect(clippy::cast_precision_loss, reason = "microtime(true) is a float")]
+    MOCKED.with(Cell::get).map_or_else(
+        || {
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map_or(0.0, |elapsed| elapsed.as_secs_f64())
+        },
+        |now| now as f64,
+    )
+}
+
 /// Restores the clock that was in place when [`mock`] was called.
 #[must_use = "the clock is restored when the guard is dropped"]
 pub struct MockClock {
