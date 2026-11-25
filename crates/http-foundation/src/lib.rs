@@ -23,6 +23,7 @@ pub mod multipart;
 pub mod parameter_bag;
 pub mod php;
 pub mod query;
+pub mod request;
 pub mod scheme;
 pub mod server_bag;
 pub mod uploaded_file;

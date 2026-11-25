@@ -27,12 +27,14 @@ complete port of Symfony HttpFoundation.
 | `file` | Symfony `File` (`File.php`) with the `\SplFileInfo` methods callers use: `getMimeType()`, `guessExtension()`, `move()` (`move_to`), `getContent()`; the File exceptions in `exception` | FileTest 9 of 9 | MIME types come from `symfony-mime`'s default `MimeTypes`, its finfo port first (a pure-Rust libmagic, so some answers differ from PHP's; PLAN.md decision 18), then the `file` command; a failed rename's warning is given as a web SAPI escapes it |
 | `uploaded_file` | Symfony `UploadedFile`: client name, extension, path and MIME type, `guessClientExtension()`, errors and their messages, `isValid()`, `move()`, `getMaxFilesize()` | UploadedFileTest 23 of 23; 108 recorded `parseFilesize()` texts, 126 `getMaxFilesize()` ini pairs with their message, 55 names, 33 MIME types, 26 error codes (`tests/data/files.json`) | `getMaxFilesize()` reads PHP's defaults (8M, 2M); `max_filesize()` takes other ini texts. Outside test mode, `isValid()` and `move()` need the upload code to register its temporary files (`php::register_uploaded_file`, cleared with `forget_uploaded_files` at the end of the request) |
 | `file_bag` | Symfony `FileBag`: `$_FILES` arrays (and the array-named fields' layout) into `UploadedFile` values, empty uploads removed from lists | FileBagTest 9 of 9; 71 recorded arrays with PHP's coercions and TypeErrors | A sibling field that is a string or object where `name` is an array (PHP string offsets), nesting over 512 and non-UTF-8 keys are refused (`Class::NotPorted`); TypeError messages lack PHP's "called in" suffix |
+| `request` | Symfony `Request` (v8.1.11): `new`/`initialize()`, `create()` with its URI checks, `createFromGlobals()`, `duplicate()`, `__toString()`, `overrideGlobals()`; trusted proxies and headers (`Forwarded`, `X-Forwarded-*`, conflicts), trusted hosts; client IPs, scheme, host, port, base URL and path, path info, request URI (IIS included), URIs; method and overrides; formats and MIME types; languages, charsets, encodings, content types; content, `toArray()`, `getPayload()`; the bags behind accessors, `set_*()` deprecated as upstream | RequestTest 113 of 120 (3 `n/a`: a PHP subclass; 4 pending: Session, intl), covering GHSA-3rg7-wf37-54rm; 4,000 recorded requests answering 42 calls each (149,016 answers), 24 `getFormat()` MIME types, 21 `normalizeQueryString()` strings and 13 JSON bodies (`tests/data/request.json`) | Static properties are per thread, `reset_statics()` ending a PHP request; the session methods and `\Locale::setDefault()` are not ported; a trusted host pattern that does not compile alone is refused (`Class::NotPorted`); an array or object where PHP converts to a string is refused; URL methods follow PHP on Linux (`/` separator) |
+| `php` (`Globals`, `Stream`) | What `Request` reads from the PHP process: superglobals, `php://input`, `request_parse_body()`'s answer, `request_order`/`variables_order`; PHP streams on bytes (`fread()`, `feof()`, `rewind()`, `stream_get_contents()`) | RequestTest's content and globals tests | Per thread; the HTTP adapter fills `Globals` (`set_globals`) and must compute `parsed_body` itself |
 | `scheme` | Symfony `Request` trusted HTTPS proxy subset | Demo proxy/security regression tests, request-lab untrusted-header test | Axum adapter; exact trusted peer IPs and one `X-Forwarded-Proto` value only |
 
 HTTP adapters bound body reads using `POST_MAX_SIZE` (8 MiB), and supply an
 empty body after a read failure. No socket I/O or body buffering is done by
 the parsers. The runtime dependencies are the already-used Axum, for
-`scheme`'s request-parts adapter, and the workspace's `php-value`, `php-pcre`, and for the file classes
+`scheme`'s request-parts adapter, and the workspace's `php-value`, `php-pcre`, `symfony-deprecation-contracts` (Request's deprecations), and for the file classes
 `symfony-mime`, `symfony-filesystem` and `symfony-finder`. JSON, serde and base64 are test dependencies.
 
 Run this crate independently with:
@@ -44,6 +46,9 @@ cargo test -p symfony-http-foundation
 symfony-demo-rs's `src/request/mod.rs` re-exports this API. The second consumer is
 [`request-lab`](../../examples/request-lab/README.md); it has no dependency on
 the demo crate, its database, templates, translations or built assets.
+
+The Request vectors are recorded by `scripts/record.sh
+http-foundation-request` (`oracle/recorders/http_foundation_request.php`).
 
 The UploadedFile and FileBag vectors are recorded by `scripts/record.sh
 http-foundation-files` (`oracle/recorders/http_foundation_files.php`); the

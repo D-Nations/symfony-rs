@@ -327,126 +327,126 @@ Tests/RequestStackTest.php	RequestStackTest::testGetCurrentRequest	pending
 Tests/RequestStackTest.php	RequestStackTest::testGetMainRequest	pending	
 Tests/RequestStackTest.php	RequestStackTest::testGetParentRequest	pending	
 Tests/RequestStackTest.php	RequestStackTest::testResetRequestFormats	pending	
-Tests/RequestTest.php	RequestTest::testBaseUriDetectionOnIisWithRewrite	pending	
-Tests/RequestTest.php	RequestTest::testContentAsResource	pending	
-Tests/RequestTest.php	RequestTest::testCreate	pending	
-Tests/RequestTest.php	RequestTest::testCreateCheckPrecedence	pending	
-Tests/RequestTest.php	RequestTest::testCreateDoesNotWarnAboutQueryKeysNestedBeyondMaxInputNestingLevel	pending	
-Tests/RequestTest.php	RequestTest::testCreateFromGlobals	pending	
-Tests/RequestTest.php	RequestTest::testCreateWithBadRequestUri	pending	
-Tests/RequestTest.php	RequestTest::testCreateWithRequestUri	pending	
-Tests/RequestTest.php	RequestTest::testDirectPropertyWriteFromSubclassReportsSubclass	pending	
-Tests/RequestTest.php	RequestTest::testDirectPropertyWriteIsDeprecated	pending	
-Tests/RequestTest.php	RequestTest::testDuplicate	pending	
-Tests/RequestTest.php	RequestTest::testDuplicateWithFormat	pending	
-Tests/RequestTest.php	RequestTest::testFactory	pending	
-Tests/RequestTest.php	RequestTest::testFactoryCallable	pending	
-Tests/RequestTest.php	RequestTest::testGetAcceptHeadersReturnString	pending	
-Tests/RequestTest.php	RequestTest::testGetAcceptableContentTypes	pending	
-Tests/RequestTest.php	RequestTest::testGetAcceptableContentTypesRfc9110	pending	
-Tests/RequestTest.php	RequestTest::testGetBasePath	pending	
-Tests/RequestTest.php	RequestTest::testGetBaseUrl	pending	
-Tests/RequestTest.php	RequestTest::testGetBaseUrlDoesNotStartWithTwoSlashes	pending	
-Tests/RequestTest.php	RequestTest::testGetBaseUrlDoesNotStartWithTwoSlashesWhenTheScriptNameIsTheRequestPath	pending	
-Tests/RequestTest.php	RequestTest::testGetCharsets	pending	
-Tests/RequestTest.php	RequestTest::testGetClientIp	pending	
-Tests/RequestTest.php	RequestTest::testGetClientIps	pending	
-Tests/RequestTest.php	RequestTest::testGetClientIpsForwarded	pending	
-Tests/RequestTest.php	RequestTest::testGetClientIpsOnlyXHttpForwardedForTrusted	pending	
-Tests/RequestTest.php	RequestTest::testGetClientIpsWithAgreeingHeaders	pending	
-Tests/RequestTest.php	RequestTest::testGetClientIpsWithConflictingHeaders	pending	
-Tests/RequestTest.php	RequestTest::testGetContentCanBeCalledTwiceWithResources	pending	
-Tests/RequestTest.php	RequestTest::testGetContentReturnsResource	pending	
-Tests/RequestTest.php	RequestTest::testGetContentReturnsResourceWhenContentSetInConstructor	pending	
-Tests/RequestTest.php	RequestTest::testGetContentTypeFormat	pending	
-Tests/RequestTest.php	RequestTest::testGetContentWorksTwiceInDefaultMode	pending	
-Tests/RequestTest.php	RequestTest::testGetEncodings	pending	
-Tests/RequestTest.php	RequestTest::testGetFormatFromMimeType	pending	
-Tests/RequestTest.php	RequestTest::testGetFormatFromMimeTypeWithParameters	pending	
-Tests/RequestTest.php	RequestTest::testGetFormatFromMimeTypeWithSubtypeFallback	pending	
-Tests/RequestTest.php	RequestTest::testGetFormatWithCustomMimeType	pending	
-Tests/RequestTest.php	RequestTest::testGetHost	pending	
-Tests/RequestTest.php	RequestTest::testGetHostWithFakeHttpHostValue	pending	
-Tests/RequestTest.php	RequestTest::testGetLanguages	pending	
-Tests/RequestTest.php	RequestTest::testGetLocale	pending	
-Tests/RequestTest.php	RequestTest::testGetMimeTypeFromFormat	pending	
-Tests/RequestTest.php	RequestTest::testGetMimeTypesFromFormat	pending	
-Tests/RequestTest.php	RequestTest::testGetMimeTypesFromInexistentFormat	pending	
-Tests/RequestTest.php	RequestTest::testGetPassword	pending	
-Tests/RequestTest.php	RequestTest::testGetPathInfo	pending	
-Tests/RequestTest.php	RequestTest::testGetPayload	pending	
-Tests/RequestTest.php	RequestTest::testGetPort	pending	
-Tests/RequestTest.php	RequestTest::testGetPreferredFormat	pending	
-Tests/RequestTest.php	RequestTest::testGetPreferredFormatRfc9110	pending	
-Tests/RequestTest.php	RequestTest::testGetPreferredLanguage	pending	
-Tests/RequestTest.php	RequestTest::testGetQueryString	pending	
-Tests/RequestTest.php	RequestTest::testGetQueryStringReturnsNull	pending	
-Tests/RequestTest.php	RequestTest::testGetRealMethod	pending	
-Tests/RequestTest.php	RequestTest::testGetRelativeUriForPath	pending	
-Tests/RequestTest.php	RequestTest::testGetRequestFormat	pending	
-Tests/RequestTest.php	RequestTest::testGetRequestUri	pending	
-Tests/RequestTest.php	RequestTest::testGetRequestUriWithoutRequiredHeader	pending	
-Tests/RequestTest.php	RequestTest::testGetSchemeAndHttpHost	pending	
-Tests/RequestTest.php	RequestTest::testGetScriptName	pending	
+Tests/RequestTest.php	RequestTest::testBaseUriDetectionOnIisWithRewrite	ported	crates/http-foundation/tests/request_test.rs::testBaseUriDetectionOnIisWithRewrite
+Tests/RequestTest.php	RequestTest::testContentAsResource	ported	crates/http-foundation/tests/request_test.rs::testContentAsResource
+Tests/RequestTest.php	RequestTest::testCreate	ported	crates/http-foundation/tests/request_test.rs::testCreate
+Tests/RequestTest.php	RequestTest::testCreateCheckPrecedence	ported	crates/http-foundation/tests/request_test.rs::testCreateCheckPrecedence
+Tests/RequestTest.php	RequestTest::testCreateDoesNotWarnAboutQueryKeysNestedBeyondMaxInputNestingLevel	ported	crates/http-foundation/tests/request_test.rs::testCreateDoesNotWarnAboutQueryKeysNestedBeyondMaxInputNestingLevel
+Tests/RequestTest.php	RequestTest::testCreateFromGlobals	ported	crates/http-foundation/tests/request_test.rs::testCreateFromGlobals
+Tests/RequestTest.php	RequestTest::testCreateWithBadRequestUri	ported	crates/http-foundation/tests/request_test.rs::testCreateWithBadRequestUri
+Tests/RequestTest.php	RequestTest::testCreateWithRequestUri	ported	crates/http-foundation/tests/request_test.rs::testCreateWithRequestUri
+Tests/RequestTest.php	RequestTest::testDirectPropertyWriteFromSubclassReportsSubclass	n/a: the deprecation names static::class of a NewRequest subclass; a Rust struct has no subclasses (the Request message is tested by testDirectPropertyWriteIsDeprecated)	
+Tests/RequestTest.php	RequestTest::testDirectPropertyWriteIsDeprecated	ported	crates/http-foundation/tests/request_test.rs::testDirectPropertyWriteIsDeprecated
+Tests/RequestTest.php	RequestTest::testDuplicate	ported	crates/http-foundation/tests/request_test.rs::testDuplicate
+Tests/RequestTest.php	RequestTest::testDuplicateWithFormat	ported	crates/http-foundation/tests/request_test.rs::testDuplicateWithFormat
+Tests/RequestTest.php	RequestTest::testFactory	n/a: the factory returns a NewRequest subclass with its own getFoo(); a Rust struct has no subclasses. setFactory() is ported and tested by request_test.rs::factory_creates_the_request	
+Tests/RequestTest.php	RequestTest::testFactoryCallable	n/a: as testFactory, through an [object, method] callable returning the NewRequest subclass; setFactory() takes a Rust closure	
+Tests/RequestTest.php	RequestTest::testGetAcceptHeadersReturnString	ported	crates/http-foundation/tests/request_test.rs::testGetAcceptHeadersReturnString
+Tests/RequestTest.php	RequestTest::testGetAcceptableContentTypes	ported	crates/http-foundation/tests/request_test.rs::testGetAcceptableContentTypes
+Tests/RequestTest.php	RequestTest::testGetAcceptableContentTypesRfc9110	ported	crates/http-foundation/tests/request_test.rs::testGetAcceptableContentTypesRfc9110
+Tests/RequestTest.php	RequestTest::testGetBasePath	ported	crates/http-foundation/tests/request_test.rs::testGetBasePath
+Tests/RequestTest.php	RequestTest::testGetBaseUrl	ported	crates/http-foundation/tests/request_test.rs::testGetBaseUrl
+Tests/RequestTest.php	RequestTest::testGetBaseUrlDoesNotStartWithTwoSlashes	ported	crates/http-foundation/tests/request_test.rs::testGetBaseUrlDoesNotStartWithTwoSlashes
+Tests/RequestTest.php	RequestTest::testGetBaseUrlDoesNotStartWithTwoSlashesWhenTheScriptNameIsTheRequestPath	ported	crates/http-foundation/tests/request_test.rs::testGetBaseUrlDoesNotStartWithTwoSlashesWhenTheScriptNameIsTheRequestPath
+Tests/RequestTest.php	RequestTest::testGetCharsets	ported	crates/http-foundation/tests/request_test.rs::testGetCharsets
+Tests/RequestTest.php	RequestTest::testGetClientIp	ported	crates/http-foundation/tests/request_test.rs::testGetClientIp
+Tests/RequestTest.php	RequestTest::testGetClientIps	ported	crates/http-foundation/tests/request_test.rs::testGetClientIps
+Tests/RequestTest.php	RequestTest::testGetClientIpsForwarded	ported	crates/http-foundation/tests/request_test.rs::testGetClientIpsForwarded
+Tests/RequestTest.php	RequestTest::testGetClientIpsOnlyXHttpForwardedForTrusted	ported	crates/http-foundation/tests/request_test.rs::testGetClientIpsOnlyXHttpForwardedForTrusted
+Tests/RequestTest.php	RequestTest::testGetClientIpsWithAgreeingHeaders	ported	crates/http-foundation/tests/request_test.rs::testGetClientIpsWithAgreeingHeaders
+Tests/RequestTest.php	RequestTest::testGetClientIpsWithConflictingHeaders	ported	crates/http-foundation/tests/request_test.rs::testGetClientIpsWithConflictingHeaders
+Tests/RequestTest.php	RequestTest::testGetContentCanBeCalledTwiceWithResources	ported	crates/http-foundation/tests/request_test.rs::testGetContentCanBeCalledTwiceWithResources
+Tests/RequestTest.php	RequestTest::testGetContentReturnsResource	ported	crates/http-foundation/tests/request_test.rs::testGetContentReturnsResource
+Tests/RequestTest.php	RequestTest::testGetContentReturnsResourceWhenContentSetInConstructor	ported	crates/http-foundation/tests/request_test.rs::testGetContentReturnsResourceWhenContentSetInConstructor
+Tests/RequestTest.php	RequestTest::testGetContentTypeFormat	ported	crates/http-foundation/tests/request_test.rs::testGetContentTypeFormat
+Tests/RequestTest.php	RequestTest::testGetContentWorksTwiceInDefaultMode	ported	crates/http-foundation/tests/request_test.rs::testGetContentWorksTwiceInDefaultMode
+Tests/RequestTest.php	RequestTest::testGetEncodings	ported	crates/http-foundation/tests/request_test.rs::testGetEncodings
+Tests/RequestTest.php	RequestTest::testGetFormatFromMimeType	ported	crates/http-foundation/tests/request_test.rs::testGetFormatFromMimeType
+Tests/RequestTest.php	RequestTest::testGetFormatFromMimeTypeWithParameters	ported	crates/http-foundation/tests/request_test.rs::testGetFormatFromMimeTypeWithParameters
+Tests/RequestTest.php	RequestTest::testGetFormatFromMimeTypeWithSubtypeFallback	ported	crates/http-foundation/tests/request_test.rs::testGetFormatFromMimeTypeWithSubtypeFallback
+Tests/RequestTest.php	RequestTest::testGetFormatWithCustomMimeType	ported	crates/http-foundation/tests/request_test.rs::testGetFormatWithCustomMimeType
+Tests/RequestTest.php	RequestTest::testGetHost	ported	crates/http-foundation/tests/request_test.rs::testGetHost
+Tests/RequestTest.php	RequestTest::testGetHostWithFakeHttpHostValue	ported	crates/http-foundation/tests/request_test.rs::testGetHostWithFakeHttpHostValue
+Tests/RequestTest.php	RequestTest::testGetLanguages	ported	crates/http-foundation/tests/request_test.rs::testGetLanguages
+Tests/RequestTest.php	RequestTest::testGetLocale	ported	crates/http-foundation/tests/request_test.rs::testGetLocale
+Tests/RequestTest.php	RequestTest::testGetMimeTypeFromFormat	ported	crates/http-foundation/tests/request_test.rs::testGetMimeTypeFromFormat
+Tests/RequestTest.php	RequestTest::testGetMimeTypesFromFormat	ported	crates/http-foundation/tests/request_test.rs::testGetMimeTypesFromFormat
+Tests/RequestTest.php	RequestTest::testGetMimeTypesFromInexistentFormat	ported	crates/http-foundation/tests/request_test.rs::testGetMimeTypesFromInexistentFormat
+Tests/RequestTest.php	RequestTest::testGetPassword	ported	crates/http-foundation/tests/request_test.rs::testGetPassword
+Tests/RequestTest.php	RequestTest::testGetPathInfo	ported	crates/http-foundation/tests/request_test.rs::testGetPathInfo
+Tests/RequestTest.php	RequestTest::testGetPayload	ported	crates/http-foundation/tests/request_test.rs::testGetPayload
+Tests/RequestTest.php	RequestTest::testGetPort	ported	crates/http-foundation/tests/request_test.rs::testGetPort
+Tests/RequestTest.php	RequestTest::testGetPreferredFormat	ported	crates/http-foundation/tests/request_test.rs::testGetPreferredFormat
+Tests/RequestTest.php	RequestTest::testGetPreferredFormatRfc9110	ported	crates/http-foundation/tests/request_test.rs::testGetPreferredFormatRfc9110
+Tests/RequestTest.php	RequestTest::testGetPreferredLanguage	ported	crates/http-foundation/tests/request_test.rs::testGetPreferredLanguage
+Tests/RequestTest.php	RequestTest::testGetQueryString	ported	crates/http-foundation/tests/request_test.rs::testGetQueryString
+Tests/RequestTest.php	RequestTest::testGetQueryStringReturnsNull	ported	crates/http-foundation/tests/request_test.rs::testGetQueryStringReturnsNull
+Tests/RequestTest.php	RequestTest::testGetRealMethod	ported	crates/http-foundation/tests/request_test.rs::testGetRealMethod
+Tests/RequestTest.php	RequestTest::testGetRelativeUriForPath	ported	crates/http-foundation/tests/request_test.rs::testGetRelativeUriForPath
+Tests/RequestTest.php	RequestTest::testGetRequestFormat	ported	crates/http-foundation/tests/request_test.rs::testGetRequestFormat
+Tests/RequestTest.php	RequestTest::testGetRequestUri	ported	crates/http-foundation/tests/request_test.rs::testGetRequestUri
+Tests/RequestTest.php	RequestTest::testGetRequestUriWithoutRequiredHeader	ported	crates/http-foundation/tests/request_test.rs::testGetRequestUriWithoutRequiredHeader
+Tests/RequestTest.php	RequestTest::testGetSchemeAndHttpHost	ported	crates/http-foundation/tests/request_test.rs::testGetSchemeAndHttpHost
+Tests/RequestTest.php	RequestTest::testGetScriptName	ported	crates/http-foundation/tests/request_test.rs::testGetScriptName
 Tests/RequestTest.php	RequestTest::testGetSession	pending	
-Tests/RequestTest.php	RequestTest::testGetSetMethod	pending	
-Tests/RequestTest.php	RequestTest::testGetUri	pending	
-Tests/RequestTest.php	RequestTest::testGetUriForPath	pending	
-Tests/RequestTest.php	RequestTest::testGetUser	pending	
-Tests/RequestTest.php	RequestTest::testGetUserInfo	pending	
+Tests/RequestTest.php	RequestTest::testGetSetMethod	ported	crates/http-foundation/tests/request_test.rs::testGetSetMethod
+Tests/RequestTest.php	RequestTest::testGetUri	ported	crates/http-foundation/tests/request_test.rs::testGetUri
+Tests/RequestTest.php	RequestTest::testGetUriForPath	ported	crates/http-foundation/tests/request_test.rs::testGetUriForPath
+Tests/RequestTest.php	RequestTest::testGetUser	ported	crates/http-foundation/tests/request_test.rs::testGetUser
+Tests/RequestTest.php	RequestTest::testGetUserInfo	ported	crates/http-foundation/tests/request_test.rs::testGetUserInfo
 Tests/RequestTest.php	RequestTest::testHasPreviousSession	pending	
 Tests/RequestTest.php	RequestTest::testHasSession	pending	
-Tests/RequestTest.php	RequestTest::testHostValidity	pending	
-Tests/RequestTest.php	RequestTest::testHttpMethodOverrideCannotBeAppliedToCertainMethods	pending	
-Tests/RequestTest.php	RequestTest::testHttpMethodOverrideDisabledWithEmptyAllowedList	pending	
-Tests/RequestTest.php	RequestTest::testHttpMethodOverrideDisallowedSkipsOverrideWithHeader	pending	
-Tests/RequestTest.php	RequestTest::testHttpMethodOverrideRespectsAllowedListWithHeader	pending	
-Tests/RequestTest.php	RequestTest::testHttpMethodOverrideRespectsAllowedListWithParameter	pending	
-Tests/RequestTest.php	RequestTest::testIISRequestUri	pending	
-Tests/RequestTest.php	RequestTest::testInitialize	pending	
+Tests/RequestTest.php	RequestTest::testHostValidity	ported	crates/http-foundation/tests/request_test.rs::testHostValidity
+Tests/RequestTest.php	RequestTest::testHttpMethodOverrideCannotBeAppliedToCertainMethods	ported	crates/http-foundation/tests/request_test.rs::testHttpMethodOverrideCannotBeAppliedToCertainMethods
+Tests/RequestTest.php	RequestTest::testHttpMethodOverrideDisabledWithEmptyAllowedList	ported	crates/http-foundation/tests/request_test.rs::testHttpMethodOverrideDisabledWithEmptyAllowedList
+Tests/RequestTest.php	RequestTest::testHttpMethodOverrideDisallowedSkipsOverrideWithHeader	ported	crates/http-foundation/tests/request_test.rs::testHttpMethodOverrideDisallowedSkipsOverrideWithHeader
+Tests/RequestTest.php	RequestTest::testHttpMethodOverrideRespectsAllowedListWithHeader	ported	crates/http-foundation/tests/request_test.rs::testHttpMethodOverrideRespectsAllowedListWithHeader
+Tests/RequestTest.php	RequestTest::testHttpMethodOverrideRespectsAllowedListWithParameter	ported	crates/http-foundation/tests/request_test.rs::testHttpMethodOverrideRespectsAllowedListWithParameter
+Tests/RequestTest.php	RequestTest::testIISRequestUri	ported	crates/http-foundation/tests/request_test.rs::testIISRequestUri
+Tests/RequestTest.php	RequestTest::testInitialize	ported	crates/http-foundation/tests/request_test.rs::testInitialize
 Tests/RequestTest.php	RequestTest::testIntlLocale	pending	
-Tests/RequestTest.php	RequestTest::testIsMethod	pending	
-Tests/RequestTest.php	RequestTest::testIsNoCache	pending	
-Tests/RequestTest.php	RequestTest::testIsXmlHttpRequest	pending	
-Tests/RequestTest.php	RequestTest::testLegitimateUrls	pending	
-Tests/RequestTest.php	RequestTest::testMalformedUrls	pending	
-Tests/RequestTest.php	RequestTest::testMethodCacheable	pending	
-Tests/RequestTest.php	RequestTest::testMethodIdempotent	pending	
-Tests/RequestTest.php	RequestTest::testMethodSafe	pending	
-Tests/RequestTest.php	RequestTest::testNonstandardRequests	pending	
-Tests/RequestTest.php	RequestTest::testOverrideGlobals	pending	
-Tests/RequestTest.php	RequestTest::testPreferSafeContent	pending	
-Tests/RequestTest.php	RequestTest::testPreferredLanguageWithLocales	pending	
-Tests/RequestTest.php	RequestTest::testPrivateRangesDoNotTrustAddressesEmbeddingARemoteIpv4	pending	
-Tests/RequestTest.php	RequestTest::testProtocolVersion	pending	
-Tests/RequestTest.php	RequestTest::testReservedFlags	pending	
-Tests/RequestTest.php	RequestTest::testSetDefaultLocale	pending	
-Tests/RequestTest.php	RequestTest::testSetTrustedHostsDoesNotBreakOnSpecialCharacters	pending	
-Tests/RequestTest.php	RequestTest::testSetTrustedHostsKeepsPatternsIndependent	pending	
-Tests/RequestTest.php	RequestTest::testToArray	pending	
-Tests/RequestTest.php	RequestTest::testToArrayEmpty	pending	
-Tests/RequestTest.php	RequestTest::testToArrayNonJson	pending	
-Tests/RequestTest.php	RequestTest::testToString	pending	
-Tests/RequestTest.php	RequestTest::testTrustedHost	pending	
-Tests/RequestTest.php	RequestTest::testTrustedHosts	pending	
-Tests/RequestTest.php	RequestTest::testTrustedHostsAreNotAccumulated	pending	
-Tests/RequestTest.php	RequestTest::testTrustedHostsAreNotMatchedLoosely	pending	
-Tests/RequestTest.php	RequestTest::testTrustedHostsWithManyConstantPatterns	pending	
-Tests/RequestTest.php	RequestTest::testTrustedHostsWithManyPatterns	pending	
-Tests/RequestTest.php	RequestTest::testTrustedHostsWithMetaCharactersAreMatchedAsRegexps	pending	
-Tests/RequestTest.php	RequestTest::testTrustedPort	pending	
-Tests/RequestTest.php	RequestTest::testTrustedPortDoesNotDefaultToZero	pending	
-Tests/RequestTest.php	RequestTest::testTrustedPrefix	pending	
-Tests/RequestTest.php	RequestTest::testTrustedPrefixEmpty	pending	
-Tests/RequestTest.php	RequestTest::testTrustedPrefixWithSubdir	pending	
-Tests/RequestTest.php	RequestTest::testTrustedProxiesForwarded	pending	
-Tests/RequestTest.php	RequestTest::testTrustedProxiesPrivateSubnets	pending	
-Tests/RequestTest.php	RequestTest::testTrustedProxiesRemoteAddr	pending	
-Tests/RequestTest.php	RequestTest::testTrustedProxiesXForwardedFor	pending	
-Tests/RequestTest.php	RequestTest::testTrustedValuesCache	pending	
-Tests/RequestTest.php	RequestTest::testUnsafeMethodOverride	pending	
-Tests/RequestTest.php	RequestTest::testUrlencodedStringPrefix	pending	
-Tests/RequestTest.php	RequestTest::testVeryLongHosts	pending	
+Tests/RequestTest.php	RequestTest::testIsMethod	ported	crates/http-foundation/tests/request_test.rs::testIsMethod
+Tests/RequestTest.php	RequestTest::testIsNoCache	ported	crates/http-foundation/tests/request_test.rs::testIsNoCache
+Tests/RequestTest.php	RequestTest::testIsXmlHttpRequest	ported	crates/http-foundation/tests/request_test.rs::testIsXmlHttpRequest
+Tests/RequestTest.php	RequestTest::testLegitimateUrls	ported	crates/http-foundation/tests/request_test.rs::testLegitimateUrls
+Tests/RequestTest.php	RequestTest::testMalformedUrls	ported	crates/http-foundation/tests/request_test.rs::testMalformedUrls
+Tests/RequestTest.php	RequestTest::testMethodCacheable	ported	crates/http-foundation/tests/request_test.rs::testMethodCacheable
+Tests/RequestTest.php	RequestTest::testMethodIdempotent	ported	crates/http-foundation/tests/request_test.rs::testMethodIdempotent
+Tests/RequestTest.php	RequestTest::testMethodSafe	ported	crates/http-foundation/tests/request_test.rs::testMethodSafe
+Tests/RequestTest.php	RequestTest::testNonstandardRequests	ported	crates/http-foundation/tests/request_test.rs::testNonstandardRequests
+Tests/RequestTest.php	RequestTest::testOverrideGlobals	ported	crates/http-foundation/tests/request_test.rs::testOverrideGlobals
+Tests/RequestTest.php	RequestTest::testPreferSafeContent	ported	crates/http-foundation/tests/request_test.rs::testPreferSafeContent
+Tests/RequestTest.php	RequestTest::testPreferredLanguageWithLocales	ported	crates/http-foundation/tests/request_test.rs::testPreferredLanguageWithLocales
+Tests/RequestTest.php	RequestTest::testPrivateRangesDoNotTrustAddressesEmbeddingARemoteIpv4	ported	crates/http-foundation/tests/request_test.rs::testPrivateRangesDoNotTrustAddressesEmbeddingARemoteIpv4
+Tests/RequestTest.php	RequestTest::testProtocolVersion	ported	crates/http-foundation/tests/request_test.rs::testProtocolVersion
+Tests/RequestTest.php	RequestTest::testReservedFlags	ported	crates/http-foundation/tests/request_test.rs::testReservedFlags
+Tests/RequestTest.php	RequestTest::testSetDefaultLocale	ported	crates/http-foundation/tests/request_test.rs::testSetDefaultLocale
+Tests/RequestTest.php	RequestTest::testSetTrustedHostsDoesNotBreakOnSpecialCharacters	ported	crates/http-foundation/tests/request_test.rs::testSetTrustedHostsDoesNotBreakOnSpecialCharacters
+Tests/RequestTest.php	RequestTest::testSetTrustedHostsKeepsPatternsIndependent	ported	crates/http-foundation/tests/request_test.rs::testSetTrustedHostsKeepsPatternsIndependent
+Tests/RequestTest.php	RequestTest::testToArray	ported	crates/http-foundation/tests/request_test.rs::testToArray
+Tests/RequestTest.php	RequestTest::testToArrayEmpty	ported	crates/http-foundation/tests/request_test.rs::testToArrayEmpty
+Tests/RequestTest.php	RequestTest::testToArrayNonJson	ported	crates/http-foundation/tests/request_test.rs::testToArrayNonJson
+Tests/RequestTest.php	RequestTest::testToString	ported	crates/http-foundation/tests/request_test.rs::testToString
+Tests/RequestTest.php	RequestTest::testTrustedHost	ported	crates/http-foundation/tests/request_test.rs::testTrustedHost
+Tests/RequestTest.php	RequestTest::testTrustedHosts	ported	crates/http-foundation/tests/request_test.rs::testTrustedHosts
+Tests/RequestTest.php	RequestTest::testTrustedHostsAreNotAccumulated	ported	crates/http-foundation/tests/request_test.rs::testTrustedHostsAreNotAccumulated
+Tests/RequestTest.php	RequestTest::testTrustedHostsAreNotMatchedLoosely	ported	crates/http-foundation/tests/request_test.rs::testTrustedHostsAreNotMatchedLoosely
+Tests/RequestTest.php	RequestTest::testTrustedHostsWithManyConstantPatterns	ported	crates/http-foundation/tests/request_test.rs::testTrustedHostsWithManyConstantPatterns
+Tests/RequestTest.php	RequestTest::testTrustedHostsWithManyPatterns	ported	crates/http-foundation/tests/request_test.rs::testTrustedHostsWithManyPatterns
+Tests/RequestTest.php	RequestTest::testTrustedHostsWithMetaCharactersAreMatchedAsRegexps	ported	crates/http-foundation/tests/request_test.rs::testTrustedHostsWithMetaCharactersAreMatchedAsRegexps
+Tests/RequestTest.php	RequestTest::testTrustedPort	ported	crates/http-foundation/tests/request_test.rs::testTrustedPort
+Tests/RequestTest.php	RequestTest::testTrustedPortDoesNotDefaultToZero	ported	crates/http-foundation/tests/request_test.rs::testTrustedPortDoesNotDefaultToZero
+Tests/RequestTest.php	RequestTest::testTrustedPrefix	ported	crates/http-foundation/tests/request_test.rs::testTrustedPrefix
+Tests/RequestTest.php	RequestTest::testTrustedPrefixEmpty	ported	crates/http-foundation/tests/request_test.rs::testTrustedPrefixEmpty
+Tests/RequestTest.php	RequestTest::testTrustedPrefixWithSubdir	ported	crates/http-foundation/tests/request_test.rs::testTrustedPrefixWithSubdir
+Tests/RequestTest.php	RequestTest::testTrustedProxiesForwarded	ported	crates/http-foundation/tests/request_test.rs::testTrustedProxiesForwarded
+Tests/RequestTest.php	RequestTest::testTrustedProxiesPrivateSubnets	ported	crates/http-foundation/tests/request_test.rs::testTrustedProxiesPrivateSubnets
+Tests/RequestTest.php	RequestTest::testTrustedProxiesRemoteAddr	ported	crates/http-foundation/tests/request_test.rs::testTrustedProxiesRemoteAddr
+Tests/RequestTest.php	RequestTest::testTrustedProxiesXForwardedFor	ported	crates/http-foundation/tests/request_test.rs::testTrustedProxiesXForwardedFor
+Tests/RequestTest.php	RequestTest::testTrustedValuesCache	ported	crates/http-foundation/tests/request_test.rs::testTrustedValuesCache
+Tests/RequestTest.php	RequestTest::testUnsafeMethodOverride	ported	crates/http-foundation/tests/request_test.rs::testUnsafeMethodOverride
+Tests/RequestTest.php	RequestTest::testUrlencodedStringPrefix	ported	crates/http-foundation/tests/request_test.rs::testUrlencodedStringPrefix
+Tests/RequestTest.php	RequestTest::testVeryLongHosts	ported	crates/http-foundation/tests/request_test.rs::testVeryLongHosts
 Tests/ResponseFunctionalTest.php	ResponseFunctionalTest::testCookie	pending	
 Tests/ResponseFunctionalTest.php	ResponseFunctionalTest::testInformationalResponse	pending	
 Tests/ResponseHeaderBagTest.php	ResponseHeaderBagTest::testAllPreserveCase	ported	crates/http-foundation/tests/response_header_bag_test.rs::testAllPreserveCase

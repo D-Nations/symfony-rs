@@ -1134,6 +1134,7 @@ dependencies = [
  "php-value",
  "serde",
  "serde_json",
+ "symfony-deprecation-contracts",
  "symfony-filesystem",
  "symfony-finder",
  "symfony-mime",

@@ -17,13 +17,21 @@
 //! - `pathinfo($name, PATHINFO_EXTENSION)` and `SplFileInfo::getBasename()`;
 //! - PHP's coercion of the values `FileBag` passes to `new
 //!   UploadedFile()` (no `strict_types`), and its `TypeError` texts without
-//!   the "called in" suffix.
+//!   the "called in" suffix;
+//! - what `Request` reads from the PHP process: the superglobals,
+//!   `php://input`, `request_parse_body()`'s answer and two ini settings
+//!   ([`Globals`]), kept per thread as PHP keeps them per request; and the
+//!   streams `getContent(true)` returns ([`Stream`]).
 //!
 //! Upstream: none
 
-use std::{collections::BTreeSet, sync::Mutex};
+use std::{
+    cell::RefCell,
+    collections::BTreeSet,
+    sync::{Arc, Mutex},
+};
 
-use php_value::{PhpString, Value, numeric::int_argument};
+use php_value::{PhpArray, PhpString, Value, numeric::int_argument};
 
 use crate::exception::{Class, Error, Result};
 
@@ -184,9 +192,170 @@ pub fn nullable_int_argument(n: usize, name: &str, value: &Value) -> Result<Opti
     }
 }
 
+/// What a PHP request sees of the process: the superglobals `Request`
+/// reads and writes, `php://input`, and the two ini settings
+/// `overrideGlobals()` reads. The HTTP adapter fills it for each request
+/// ([`set_globals`]); a test does as PHPUnit does with `$_SERVER`.
+#[derive(Debug, Clone)]
+pub struct Globals {
+    pub get: PhpArray,
+    pub post: PhpArray,
+    pub cookie: PhpArray,
+    pub files: PhpArray,
+    pub server: PhpArray,
+    /// `$_REQUEST`, which `overrideGlobals()` writes.
+    pub request: PhpArray,
+    /// The body, as `php://input` reads it.
+    pub input: Arc<[u8]>,
+    /// What `request_parse_body()` returns for this request (`[$post,
+    /// $files]`), or `None` where it throws `\RequestParseBodyException`.
+    /// `createFromGlobals()` calls it for PUT, DELETE, PATCH and QUERY.
+    pub parsed_body: Option<(PhpArray, PhpArray)>,
+    /// `ini_get('request_order')`.
+    pub request_order: PhpString,
+    /// `ini_get('variables_order')`.
+    pub variables_order: PhpString,
+}
+
+impl Default for Globals {
+    /// PHP 8.4.27's in the oracle: empty superglobals and body,
+    /// `request_order` empty and `variables_order` `EGPCS` (no php.ini).
+    fn default() -> Self {
+        Self {
+            get: PhpArray::new(),
+            post: PhpArray::new(),
+            cookie: PhpArray::new(),
+            files: PhpArray::new(),
+            server: PhpArray::new(),
+            request: PhpArray::new(),
+            input: Arc::from(&b""[..]),
+            parsed_body: None,
+            request_order: PhpString::default(),
+            variables_order: PhpString::from("EGPCS"),
+        }
+    }
+}
+
+thread_local! {
+    static GLOBALS: RefCell<Globals> = RefCell::new(Globals::default());
+}
+
+/// Starts a request on this thread: these are its superglobals.
+pub fn set_globals(globals: Globals) {
+    GLOBALS.with(|g| *g.borrow_mut() = globals);
+}
+
+/// Ends the request on this thread, returning what it left in the
+/// superglobals.
+pub fn take_globals() -> Globals {
+    GLOBALS.with(|g| std::mem::take(&mut *g.borrow_mut()))
+}
+
+/// Reads or changes this thread's superglobals.
+pub fn with_globals<R>(f: impl FnOnce(&mut Globals) -> R) -> R {
+    GLOBALS.with(|g| f(&mut g.borrow_mut()))
+}
+
+/// A PHP stream on bytes (`php://memory`, `php://temp`, `php://input`):
+/// a position and an end-of-file flag. Clones are the same stream, as a
+/// PHP resource passed around is.
+#[derive(Debug, Clone, Default)]
+pub struct Stream(Arc<Mutex<StreamState>>);
+
+#[derive(Debug, Default)]
+struct StreamState {
+    bytes: Vec<u8>,
+    position: usize,
+    eof: bool,
+}
+
+impl Stream {
+    /// A stream on `bytes`, at its start (`fopen('php://memory', 'r+')`,
+    /// `fwrite()`, `rewind()`).
+    pub fn new(bytes: impl Into<Vec<u8>>) -> Self {
+        Self(Arc::new(Mutex::new(StreamState {
+            bytes: bytes.into(),
+            position: 0,
+            eof: false,
+        })))
+    }
+
+    fn state(&self) -> std::sync::MutexGuard<'_, StreamState> {
+        self.0
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+    }
+
+    /// `rewind()`.
+    pub fn rewind(&self) {
+        let mut state = self.state();
+        state.position = 0;
+        state.eof = false;
+    }
+
+    /// `fwrite()` at the position.
+    pub fn write(&self, bytes: &[u8]) {
+        let mut state = self.state();
+        let at = state.position;
+        let end = at + bytes.len();
+        if state.bytes.len() < end {
+            state.bytes.resize(end, 0);
+        }
+        state.bytes[at..end].copy_from_slice(bytes);
+        state.position = end;
+    }
+
+    /// `fread($stream, $length)`: at most `length` bytes; reading at the
+    /// end sets the end-of-file flag.
+    pub fn read(&self, length: usize) -> Vec<u8> {
+        let mut state = self.state();
+        let at = state.position.min(state.bytes.len());
+        let end = at.saturating_add(length).min(state.bytes.len());
+        let out = state.bytes[at..end].to_vec();
+        state.position = end;
+        if out.len() < length {
+            state.eof = true;
+        }
+        out
+    }
+
+    /// `stream_get_contents()`: the rest, from the position.
+    pub fn contents(&self) -> Vec<u8> {
+        let mut state = self.state();
+        let at = state.position.min(state.bytes.len());
+        let out = state.bytes[at..].to_vec();
+        state.position = state.bytes.len();
+        state.eof = true;
+        out
+    }
+
+    /// `feof()`.
+    pub fn eof(&self) -> bool {
+        self.state().eof
+    }
+
+    /// Whether two handles are the same stream (`===` on resources).
+    pub fn same(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.0, &other.0)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn streams_read_as_php_does() {
+        let stream = Stream::default();
+        assert_eq!(stream.read(1), b"");
+        assert!(stream.eof());
+        let stream = Stream::new(*b"abc");
+        assert_eq!(stream.read(2), b"ab");
+        assert!(!stream.eof());
+        assert_eq!(stream.contents(), b"c");
+        stream.rewind();
+        assert_eq!(stream.contents(), b"abc");
+    }
 
     #[test]
     fn reads_prefixed_integers() {
