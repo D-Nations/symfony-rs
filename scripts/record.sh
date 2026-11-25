@@ -117,15 +117,16 @@ di_trial() {
     local out=spikes/di-trial/demo/data/container.xml tmp
     mkdir -p oracle/out "$(dirname "$out")"
     tmp=$(mktemp -p oracle/out)
-    # /demo is read-only; the kernel writes its cache to a tmpfs on /demo/var.
-    docker compose -f oracle/compose.yaml run --rm -T --tmpfs /demo/var php \
+    # /demo is read-only; the php-kernel service puts a tmpfs on /demo/var
+    # for the kernel's cache.
+    docker compose -f oracle/compose.yaml run --rm -T php-kernel \
         oracle/recorders/di_container.php > "$tmp"
     mv "$tmp" "$out"
     echo "$(grep -c '<service ' "$out") service definitions written to $out"
     out=spikes/di-trial/demo/tests/data/php_classes.json
     mkdir -p "$(dirname "$out")"
     tmp=$(mktemp -p oracle/out)
-    docker compose -f oracle/compose.yaml run --rm -T --tmpfs /demo/var php \
+    docker compose -f oracle/compose.yaml run --rm -T php-kernel \
         oracle/recorders/di_container.php classes > "$tmp"
     python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
     mv "$tmp" "$out"
