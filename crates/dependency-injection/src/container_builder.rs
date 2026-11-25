@@ -110,13 +110,15 @@ impl TrackContents {
 /// Reads env vars for `getEnv()`: `$processor->getEnv($prefix, $name,
 /// $getEnv)` of the processor that the prefix selects
 /// (`container.env_var_processors_locator`, else `EnvVarProcessor`).
-/// `prefix` is empty for a name without one; `get_env` reads another env
-/// var through the builder.
+/// `prefix` is empty for a name without one; `parameters` are the
+/// container's (the `env(NAME)` defaults `EnvVarProcessor` reads), and
+/// `get_env` reads another env var through the builder.
 pub trait EnvVarResolver: Send + Sync {
     fn get_env(
         &self,
         prefix: &str,
         name: &str,
+        parameters: &ParameterBag,
         get_env: &mut dyn FnMut(&str) -> Result<Value>,
     ) -> Result<Value>;
 }
@@ -1623,7 +1625,12 @@ impl ContainerBuilder {
                 None => ("", name),
             };
             self.resolving.push(env_name.clone());
-            let result = resolver.get_env(prefix, local_name, &mut |n: &str| self.get_env(n));
+            let result = {
+                let parameters = self.parameter_bag.clone();
+                resolver.get_env(prefix, local_name, &parameters, &mut |n: &str| {
+                    self.get_env(n)
+                })
+            };
             self.unresolve(&env_name);
             let value = result?;
             self.env_cache.insert(name, value.clone());

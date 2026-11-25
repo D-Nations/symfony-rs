@@ -34,8 +34,7 @@ fn fixtures() -> Arc<ClassRegistry> {
     registry.add_class(
         ClassMetadata::class(&bar_class())
             .with_interfaces(&[&format!("{FIXTURES}BarInterface")])
-            .with_method(
-                MethodMetadata::public("__construct").with_parameters(vec![
+            .with_method(MethodMetadata::public("__construct").with_parameters(vec![
                     ParameterMetadata::new("quz", None).with_default(Value::Null),
                     ParameterMetadata::new("nonExistent", Some("?NonExistent"))
                         .with_default(Value::Null),
@@ -45,8 +44,7 @@ fn fixtures() -> Arc<ClassRegistry> {
                         .with_default(Value::Array(PhpArray::new())),
                     ParameterMetadata::new("baz", Some("iterable"))
                         .with_default(Value::Array(PhpArray::new())),
-                ]),
-            )
+                ]))
             .with_method(
                 MethodMetadata::public("create")
                     .with_static(true)
