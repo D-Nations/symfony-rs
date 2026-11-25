@@ -15,6 +15,10 @@
     reason = "test helpers; a panic is a test failure"
 )]
 #![allow(non_snake_case)]
+#![allow(
+    clippy::float_cmp,
+    reason = "PHPUnit's assertEquals compares floats exactly; the tests keep it"
+)]
 
 use std::sync::{Arc, Mutex};
 
