@@ -5,9 +5,14 @@
 //! U+FFFF) unless `JSON_UNESCAPED_UNICODE`, U+2028 and U+2029 always
 //! escaped, and `false` (here `None`) for invalid UTF-8.
 //!
+//! `json_decode()` is in [`decode`].
+//!
 //! Upstream: none
 
 use std::fmt::Write;
+
+mod decode;
+pub use decode::{JsonError, decode_assoc};
 
 /// The `json_encode()` flags that affect strings.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]

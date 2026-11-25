@@ -16,6 +16,7 @@ pub mod constants;
 pub mod dateparse;
 pub mod datetime;
 pub mod filter;
+pub mod html;
 pub mod json;
 pub mod net;
 pub mod numeric;
