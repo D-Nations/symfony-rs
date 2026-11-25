@@ -16,9 +16,9 @@
 //! not compile fails the match when it is reached, as PHP's lazy
 //! `compile()` does. Path and host regexes are compiled once per matcher.
 //!
-//! Not ported: route conditions, which need ExpressionLanguage. A route
+//! Not ported: route conditions, which need `ExpressionLanguage`. A route
 //! with a condition throws upstream's `\LogicException` for a missing
-//! ExpressionLanguage component when it is reached, which is what PHP
+//! `ExpressionLanguage` component when it is reached, which is what PHP
 //! does without that component.
 //!
 //! `matchRequest()` (RequestMatcherInterface.php) matches the request's
@@ -70,7 +70,7 @@ impl RequirementStatus {
 }
 
 /// The message `getExpressionLanguage()` throws without the
-/// ExpressionLanguage component.
+/// `ExpressionLanguage` component.
 const NO_EXPRESSION_LANGUAGE: &str = "Unable to use expressions as the Symfony ExpressionLanguage component is not installed. Try running \"composer require symfony/expression-language\".";
 
 /// `'#\{[\w\x80-\xFF]+\}/?$#'`: a path ending in a variable.
@@ -199,6 +199,7 @@ impl UrlMatcher {
     }
 
     /// `matchCollection($pathinfo, $routes)`.
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn match_collection(
         &self,
         pathinfo: &[u8],
@@ -413,7 +414,7 @@ fn get_attributes(route: &Route, name: &PhpString, mut attributes: PhpArray) -> 
 }
 
 /// `handleRouteRequirements(...)`: a route with a condition needs
-/// ExpressionLanguage.
+/// `ExpressionLanguage`.
 fn handle_route_requirements(route: &Route) -> Result<RequirementStatus, Error> {
     if !route.condition().is_empty() {
         return Err(Error::new(Class::PhpLogic, NO_EXPRESSION_LANGUAGE));

@@ -33,6 +33,7 @@ impl Alias {
     }
 
     /// `withId()`: a copy pointing at another route.
+    #[must_use]
     pub fn with_id(&self, id: impl Into<PhpString>) -> Self {
         Self {
             id: id.into(),

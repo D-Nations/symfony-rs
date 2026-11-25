@@ -1,6 +1,6 @@
 //! Port of Symfony\Component\Routing\RequestContext.php.
 //!
-//! `fromRequest()` reads HttpFoundation's [`Request`] (whose getters
+//! `fromRequest()` reads `HttpFoundation`'s [`Request`] (whose getters
 //! cache, so it is borrowed mutably) and passes what it reads to the
 //! setters as PHP does from a file without `strict_types`: the port to
 //! `setHttpPort(int)` and `setHttpsPort(int)` and the `QUERY_STRING` server
@@ -60,6 +60,7 @@ impl RequestContext {
     /// `new RequestContext($baseUrl, $method, $host, $scheme, $httpPort,
     /// $httpsPort, $path, $queryString, $parameters)`.
     #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::similar_names, reason = "upstream's httpPort and httpsPort")]
     pub fn new(
         base_url: impl AsRef<[u8]>,
         method: impl AsRef<[u8]>,
@@ -103,6 +104,7 @@ impl RequestContext {
     /// or tab anywhere, is read as `''`. The URI's path becomes the base
     /// URL; a port goes to the scheme it belongs to (compared before
     /// lowercasing, as upstream does).
+    #[expect(clippy::similar_names, reason = "upstream's httpPort and httpsPort")]
     pub fn from_uri(
         uri: &[u8],
         host: &[u8],
@@ -155,6 +157,7 @@ impl RequestContext {
     }
 
     /// `fromRequest($request)`: the context of a request.
+    #[expect(clippy::similar_names, reason = "upstream's httpPort and httpsPort")]
     pub fn from_request(&mut self, request: &mut Request) -> Result<&mut Self, Error> {
         self.set_base_url(request.get_base_url()?);
         self.set_path_info(request.get_path_info()?);

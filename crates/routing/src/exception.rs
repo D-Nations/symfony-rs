@@ -59,7 +59,7 @@ pub enum Class {
     PhpTypeError,
     /// PHP's `\Error`.
     PhpError,
-    /// An exception HttpFoundation's Request threw while `fromRequest()`
+    /// An exception `HttpFoundation`'s Request threw while `fromRequest()`
     /// read it (`SuspiciousOperationException` for an untrusted host,
     /// `ConflictingHeadersException`, ...), passed on with its class and
     /// message, as PHP lets it propagate.
@@ -81,6 +81,7 @@ impl Class {
     }
 
     /// The classes and interfaces it is an instance of, itself first.
+    #[expect(clippy::too_many_lines, reason = "one arm for each upstream class")]
     pub const fn ancestry(self) -> &'static [&'static str] {
         match self {
             Self::InvalidArgument => &[
