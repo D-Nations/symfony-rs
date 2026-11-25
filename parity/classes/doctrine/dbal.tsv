@@ -166,7 +166,7 @@ src/Logging/Middleware.php	Middleware	15	pending
 src/Logging/Statement.php	Statement	34	pending	
 src/ParameterType.php	ParameterType	12	ported	crates/doctrine-dbal/src/parameter_type.rs
 src/Platforms/AbstractMySQLPlatform.php	AbstractMySQLPlatform	620	pending	
-src/Platforms/AbstractPlatform.php	AbstractPlatform	1312	pending	
+src/Platforms/AbstractPlatform.php	AbstractPlatform	1312	ported	crates/doctrine-dbal/src/platforms/abstract_platform.rs
 src/Platforms/DB2Platform.php	DB2Platform	420	pending	
 src/Platforms/DateIntervalUnit.php	DateIntervalUnit	13	pending	
 src/Platforms/Db2/Db2MetadataProvider.php	Db2MetadataProvider	416	pending	

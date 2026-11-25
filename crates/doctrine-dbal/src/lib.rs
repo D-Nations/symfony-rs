@@ -14,6 +14,7 @@ struct ReadmeExample;
 mod array_parameter_type;
 mod expand_array_parameters;
 mod parameter_type;
+pub mod platforms;
 pub mod sql;
 
 pub use array_parameter_type::ArrayParameterType;
