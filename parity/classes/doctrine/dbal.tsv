@@ -1,8 +1,8 @@
 # doctrine/dbal at c435cd7ea33e17d2a89288caf994cf3d4549b879: upstream file	classes	code lines	status	rust files
-src/ArrayParameterType.php	ArrayParameterType	18	pending	
-src/ArrayParameters/Exception.php	Exception	6	pending	
-src/ArrayParameters/Exception/MissingNamedParameter.php	MissingNamedParameter	14	pending	
-src/ArrayParameters/Exception/MissingPositionalParameter.php	MissingPositionalParameter	14	pending	
+src/ArrayParameterType.php	ArrayParameterType	18	ported	crates/doctrine-dbal/src/array_parameter_type.rs
+src/ArrayParameters/Exception.php	Exception	6	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
+src/ArrayParameters/Exception/MissingNamedParameter.php	MissingNamedParameter	14	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
+src/ArrayParameters/Exception/MissingPositionalParameter.php	MissingPositionalParameter	14	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
 src/Cache/ArrayResult.php	ArrayResult	88	pending	
 src/Cache/CacheException.php	CacheException	6	pending	
 src/Cache/Exception/NoCacheKey.php	NoCacheKey	10	pending	
@@ -116,7 +116,7 @@ src/Driver/SQLite3/Result.php	Result	76	pending
 src/Driver/SQLite3/Statement.php	Statement	46	pending	
 src/Driver/Statement.php	Statement	8	pending	
 src/DriverManager.php	DriverManager	70	pending	
-src/Exception.php	Exception	6	pending	
+src/Exception.php	Exception	6	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/CommitFailedRollbackOnly.php	CommitFailedRollbackOnly	10	pending	
 src/Exception/ConnectionException.php	ConnectionException	5	pending	
 src/Exception/ConnectionLost.php	ConnectionLost	5	pending	
@@ -129,14 +129,14 @@ src/Exception/DeadlockException.php	DeadlockException	5	pending
 src/Exception/DriverException.php	DriverException	30	pending	
 src/Exception/DriverRequired.php	DriverRequired	22	pending	
 src/Exception/ForeignKeyConstraintViolationException.php	ForeignKeyConstraintViolationException	5	pending	
-src/Exception/InvalidArgumentException.php	InvalidArgumentException	6	pending	
-src/Exception/InvalidColumnDeclaration.php	InvalidColumnDeclaration	19	pending	
+src/Exception/InvalidArgumentException.php	InvalidArgumentException	6	ported	crates/doctrine-dbal/src/exception/mod.rs
+src/Exception/InvalidColumnDeclaration.php	InvalidColumnDeclaration	19	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/InvalidColumnIndex.php	InvalidColumnIndex	13	pending	
-src/Exception/InvalidColumnType.php	InvalidColumnType	7	pending	
-src/Exception/InvalidColumnType/ColumnLengthRequired.php	ColumnLengthRequired	19	pending	
-src/Exception/InvalidColumnType/ColumnPrecisionRequired.php	ColumnPrecisionRequired	10	pending	
-src/Exception/InvalidColumnType/ColumnScaleRequired.php	ColumnScaleRequired	10	pending	
-src/Exception/InvalidColumnType/ColumnValuesRequired.php	ColumnValuesRequired	19	pending	
+src/Exception/InvalidColumnType.php	InvalidColumnType	7	ported	crates/doctrine-dbal/src/exception/mod.rs
+src/Exception/InvalidColumnType/ColumnLengthRequired.php	ColumnLengthRequired	19	ported	crates/doctrine-dbal/src/exception/mod.rs
+src/Exception/InvalidColumnType/ColumnPrecisionRequired.php	ColumnPrecisionRequired	10	ported	crates/doctrine-dbal/src/exception/mod.rs
+src/Exception/InvalidColumnType/ColumnScaleRequired.php	ColumnScaleRequired	10	ported	crates/doctrine-dbal/src/exception/mod.rs
+src/Exception/InvalidColumnType/ColumnValuesRequired.php	ColumnValuesRequired	19	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/InvalidDriverClass.php	InvalidDriverClass	17	pending	
 src/Exception/InvalidFieldNameException.php	InvalidFieldNameException	5	pending	
 src/Exception/InvalidWrapperClass.php	InvalidWrapperClass	17	pending	
@@ -158,22 +158,22 @@ src/Exception/TableNotFoundException.php	TableNotFoundException	5	pending
 src/Exception/TransactionRolledBack.php	TransactionRolledBack	5	pending	
 src/Exception/UniqueConstraintViolationException.php	UniqueConstraintViolationException	5	pending	
 src/Exception/UnknownDriver.php	UnknownDriver	17	pending	
-src/ExpandArrayParameters.php	ExpandArrayParameters	84	pending	
+src/ExpandArrayParameters.php	ExpandArrayParameters	84	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
 src/LockMode.php	LockMode	9	pending	
 src/Logging/Connection.php	Connection	51	pending	
 src/Logging/Driver.php	Driver	32	pending	
 src/Logging/Middleware.php	Middleware	15	pending	
 src/Logging/Statement.php	Statement	34	pending	
-src/ParameterType.php	ParameterType	12	pending	
+src/ParameterType.php	ParameterType	12	ported	crates/doctrine-dbal/src/parameter_type.rs
 src/Platforms/AbstractMySQLPlatform.php	AbstractMySQLPlatform	620	pending	
-src/Platforms/AbstractPlatform.php	AbstractPlatform	1312	pending	
+src/Platforms/AbstractPlatform.php	AbstractPlatform	1312	ported	crates/doctrine-dbal/src/platforms/abstract_platform.rs
 src/Platforms/DB2Platform.php	DB2Platform	420	pending	
 src/Platforms/DateIntervalUnit.php	DateIntervalUnit	13	pending	
 src/Platforms/Db2/Db2MetadataProvider.php	Db2MetadataProvider	416	pending	
 src/Platforms/Exception/InvalidPlatformVersion.php	InvalidPlatformVersion	15	pending	
 src/Platforms/Exception/NoColumnsSpecifiedForTable.php	NoColumnsSpecifiedForTable	11	pending	
-src/Platforms/Exception/NotSupported.php	NotSupported	11	pending	
-src/Platforms/Exception/PlatformException.php	PlatformException	6	pending	
+src/Platforms/Exception/NotSupported.php	NotSupported	11	ported	crates/doctrine-dbal/src/platforms/exception.rs
+src/Platforms/Exception/PlatformException.php	PlatformException	6	ported	crates/doctrine-dbal/src/platforms/exception.rs
 src/Platforms/Keywords/DB2Keywords.php	DB2Keywords	404	pending	
 src/Platforms/Keywords/KeywordList.php	KeywordList	31	pending	
 src/Platforms/Keywords/MariaDB117Keywords.php	MariaDB117Keywords	12	pending	
@@ -227,35 +227,35 @@ src/Portability/OptimizeFlags.php	OptimizeFlags	28	pending
 src/Portability/Result.php	Result	53	pending	
 src/Portability/Statement.php	Statement	19	pending	
 src/Query.php	Query	23	pending	
-src/Query/CommonTableExpression.php	CommonTableExpression	16	pending	
-src/Query/Exception/NonUniqueAlias.php	NonUniqueAlias	19	pending	
-src/Query/Exception/UnknownAlias.php	UnknownAlias	19	pending	
-src/Query/Expression/CompositeExpression.php	CompositeExpression	49	pending	
-src/Query/Expression/ExpressionBuilder.php	ExpressionBuilder	88	pending	
-src/Query/ForUpdate.php	ForUpdate	14	pending	
-src/Query/ForUpdate/ConflictResolutionMode.php	ConflictResolutionMode	7	pending	
-src/Query/From.php	From	10	pending	
-src/Query/Join.php	Join	28	pending	
-src/Query/Limit.php	Limit	22	pending	
-src/Query/QueryBuilder.php	QueryBuilder	602	pending	
-src/Query/QueryException.php	QueryException	6	pending	
-src/Query/QueryType.php	QueryType	10	pending	
-src/Query/SelectQuery.php	SelectQuery	53	pending	
-src/Query/Union.php	Union	10	pending	
-src/Query/UnionQuery.php	UnionQuery	23	pending	
-src/Query/UnionType.php	UnionType	7	pending	
+src/Query/CommonTableExpression.php	CommonTableExpression	16	ported	crates/doctrine-dbal/src/query/common_table_expression.rs
+src/Query/Exception/NonUniqueAlias.php	NonUniqueAlias	19	ported	crates/doctrine-dbal/src/query/query_exception.rs
+src/Query/Exception/UnknownAlias.php	UnknownAlias	19	ported	crates/doctrine-dbal/src/query/query_exception.rs
+src/Query/Expression/CompositeExpression.php	CompositeExpression	49	ported	crates/doctrine-dbal/src/query/expression/composite_expression.rs
+src/Query/Expression/ExpressionBuilder.php	ExpressionBuilder	88	ported	crates/doctrine-dbal/src/query/expression/expression_builder.rs
+src/Query/ForUpdate.php	ForUpdate	14	ported	crates/doctrine-dbal/src/query/for_update.rs
+src/Query/ForUpdate/ConflictResolutionMode.php	ConflictResolutionMode	7	ported	crates/doctrine-dbal/src/query/for_update.rs
+src/Query/From.php	From	10	ported	crates/doctrine-dbal/src/query/from.rs
+src/Query/Join.php	Join	28	ported	crates/doctrine-dbal/src/query/from.rs
+src/Query/Limit.php	Limit	22	ported	crates/doctrine-dbal/src/query/limit.rs
+src/Query/QueryBuilder.php	QueryBuilder	602	ported	crates/doctrine-dbal/src/query/query_builder.rs
+src/Query/QueryException.php	QueryException	6	ported	crates/doctrine-dbal/src/query/query_exception.rs
+src/Query/QueryType.php	QueryType	10	ported	crates/doctrine-dbal/src/query/query_type.rs
+src/Query/SelectQuery.php	SelectQuery	53	ported	crates/doctrine-dbal/src/query/select_query.rs
+src/Query/Union.php	Union	10	ported	crates/doctrine-dbal/src/query/union.rs
+src/Query/UnionQuery.php	UnionQuery	23	ported	crates/doctrine-dbal/src/query/union_query.rs
+src/Query/UnionType.php	UnionType	7	ported	crates/doctrine-dbal/src/query/union.rs
 src/Result.php	Result	160	pending	
 src/SQL/Builder/CreateSchemaObjectsSQLBuilder.php	CreateSchemaObjectsSQLBuilder	43	pending	
-src/SQL/Builder/DefaultSelectSQLBuilder.php	DefaultSelectSQLBuilder	65	pending	
-src/SQL/Builder/DefaultUnionSQLBuilder.php	DefaultUnionSQLBuilder	36	pending	
+src/SQL/Builder/DefaultSelectSQLBuilder.php	DefaultSelectSQLBuilder	65	ported	crates/doctrine-dbal/src/sql/builder/select_sql_builder.rs
+src/SQL/Builder/DefaultUnionSQLBuilder.php	DefaultUnionSQLBuilder	36	ported	crates/doctrine-dbal/src/sql/builder/union_sql_builder.rs
 src/SQL/Builder/DropSchemaObjectsSQLBuilder.php	DropSchemaObjectsSQLBuilder	32	pending	
-src/SQL/Builder/SelectSQLBuilder.php	SelectSQLBuilder	8	pending	
-src/SQL/Builder/UnionSQLBuilder.php	UnionSQLBuilder	8	pending	
-src/SQL/Builder/WithSQLBuilder.php	WithSQLBuilder	22	pending	
-src/SQL/Parser.php	Parser	82	pending	
+src/SQL/Builder/SelectSQLBuilder.php	SelectSQLBuilder	8	ported	crates/doctrine-dbal/src/sql/builder/select_sql_builder.rs
+src/SQL/Builder/UnionSQLBuilder.php	UnionSQLBuilder	8	ported	crates/doctrine-dbal/src/sql/builder/union_sql_builder.rs
+src/SQL/Builder/WithSQLBuilder.php	WithSQLBuilder	22	ported	crates/doctrine-dbal/src/sql/builder/with_sql_builder.rs
+src/SQL/Parser.php	Parser	82	ported	crates/doctrine-dbal/src/sql/parser.rs
 src/SQL/Parser/Exception.php	Exception	6	pending	
 src/SQL/Parser/Exception/RegularExpressionError.php	RegularExpressionError	13	pending	
-src/SQL/Parser/Visitor.php	Visitor	8	pending	
+src/SQL/Parser/Visitor.php	Visitor	8	ported	crates/doctrine-dbal/src/sql/parser.rs
 src/Schema/AbstractAsset.php	AbstractAsset	283	pending	
 src/Schema/AbstractNamedObject.php	AbstractNamedObject	26	pending	
 src/Schema/AbstractOptionallyNamedObject.php	AbstractOptionallyNamedObject	22	pending	
@@ -389,57 +389,57 @@ src/Tools/Console/ConnectionProvider.php	ConnectionProvider	8	pending
 src/Tools/Console/ConnectionProvider/SingleConnectionProvider.php	SingleConnectionProvider	25	pending	
 src/Tools/DsnParser.php	DsnParser	112	pending	
 src/TransactionIsolationLevel.php	TransactionIsolationLevel	9	pending	
-src/Types/AsciiStringType.php	AsciiStringType	15	pending	
-src/Types/BigIntType.php	BigIntType	34	pending	
-src/Types/BinaryType.php	BinaryType	32	pending	
-src/Types/BlobType.php	BlobType	39	pending	
-src/Types/BooleanType.php	BooleanType	23	pending	
-src/Types/ConversionException.php	ConversionException	6	pending	
-src/Types/DateImmutableType.php	DateImmutableType	42	pending	
-src/Types/DateIntervalType.php	DateIntervalType	47	pending	
-src/Types/DateTimeImmutableType.php	DateTimeImmutableType	48	pending	
-src/Types/DateTimeType.php	DateTimeType	48	pending	
-src/Types/DateTimeTzImmutableType.php	DateTimeTzImmutableType	42	pending	
-src/Types/DateTimeTzType.php	DateTimeTzType	42	pending	
-src/Types/DateTimeUtcImmutableType.php	DateTimeUtcImmutableType	59	pending	
-src/Types/DateTimeUtcType.php	DateTimeUtcType	59	pending	
-src/Types/DateType.php	DateType	38	pending	
-src/Types/DecimalType.php	DecimalType	19	pending	
-src/Types/EnumType.php	EnumType	10	pending	
-src/Types/Exception/InvalidFormat.php	InvalidFormat	27	pending	
-src/Types/Exception/InvalidType.php	InvalidType	35	pending	
-src/Types/Exception/SerializationFailed.php	SerializationFailed	22	pending	
-src/Types/Exception/TypeAlreadyRegistered.php	TypeAlreadyRegistered	18	pending	
-src/Types/Exception/TypeArgumentCountError.php	TypeArgumentCountError	18	pending	
-src/Types/Exception/TypeNotFound.php	TypeNotFound	11	pending	
-src/Types/Exception/TypeNotRegistered.php	TypeNotRegistered	18	pending	
-src/Types/Exception/TypesAlreadyExists.php	TypesAlreadyExists	11	pending	
-src/Types/Exception/TypesException.php	TypesException	6	pending	
-src/Types/Exception/UnknownColumnType.php	UnknownColumnType	22	pending	
-src/Types/Exception/ValueNotConvertible.php	ValueNotConvertible	32	pending	
-src/Types/FloatType.php	FloatType	14	pending	
-src/Types/GuidType.php	GuidType	10	pending	
-src/Types/IntegerType.php	IntegerType	19	pending	
-src/Types/JsonObjectType.php	JsonObjectType	15	pending	
-src/Types/JsonType.php	JsonType	15	pending	
-src/Types/JsonTypeConvert.php	JsonTypeConvert	41	pending	
-src/Types/JsonbObjectType.php	JsonbObjectType	15	pending	
-src/Types/JsonbType.php	JsonbType	10	pending	
-src/Types/NumberType.php	NumberType	40	pending	
-src/Types/PhpDateMappingType.php	PhpDateMappingType	5	pending	
-src/Types/PhpDateTimeMappingType.php	PhpDateTimeMappingType	5	pending	
-src/Types/PhpFloatMappingType.php	PhpFloatMappingType	5	pending	
-src/Types/PhpIntegerMappingType.php	PhpIntegerMappingType	5	pending	
-src/Types/PhpTimeMappingType.php	PhpTimeMappingType	5	pending	
-src/Types/SimpleArrayType.php	SimpleArrayType	31	pending	
-src/Types/SmallFloatType.php	SmallFloatType	14	pending	
-src/Types/SmallIntType.php	SmallIntType	19	pending	
-src/Types/StringType.php	StringType	10	pending	
-src/Types/TextType.php	TextType	16	pending	
-src/Types/TimeImmutableType.php	TimeImmutableType	42	pending	
-src/Types/TimeType.php	TimeType	38	pending	
-src/Types/Type.php	Type	126	pending	
-src/Types/TypeRegistry.php	TypeRegistry	75	pending	
-src/Types/Types.php	Types	39	pending	
-src/Types/VarDateTimeImmutableType.php	VarDateTimeImmutableType	36	pending	
-src/Types/VarDateTimeType.php	VarDateTimeType	21	pending	
+src/Types/AsciiStringType.php	AsciiStringType	15	ported	crates/doctrine-dbal/src/types/string_type.rs
+src/Types/BigIntType.php	BigIntType	34	ported	crates/doctrine-dbal/src/types/integer_type.rs
+src/Types/BinaryType.php	BinaryType	32	ported	crates/doctrine-dbal/src/types/binary_type.rs
+src/Types/BlobType.php	BlobType	39	ported	crates/doctrine-dbal/src/types/binary_type.rs
+src/Types/BooleanType.php	BooleanType	23	ported	crates/doctrine-dbal/src/types/boolean_type.rs
+src/Types/ConversionException.php	ConversionException	6	ported	crates/doctrine-dbal/src/types/conversion_exception.rs
+src/Types/DateImmutableType.php	DateImmutableType	42	ported	crates/doctrine-dbal/src/types/date_type.rs
+src/Types/DateIntervalType.php	DateIntervalType	47	ported	crates/doctrine-dbal/src/types/date_interval_type.rs
+src/Types/DateTimeImmutableType.php	DateTimeImmutableType	48	ported	crates/doctrine-dbal/src/types/date_time_type.rs
+src/Types/DateTimeType.php	DateTimeType	48	ported	crates/doctrine-dbal/src/types/date_time_type.rs
+src/Types/DateTimeTzImmutableType.php	DateTimeTzImmutableType	42	ported	crates/doctrine-dbal/src/types/date_time_type.rs
+src/Types/DateTimeTzType.php	DateTimeTzType	42	ported	crates/doctrine-dbal/src/types/date_time_type.rs
+src/Types/DateTimeUtcImmutableType.php	DateTimeUtcImmutableType	59	ported	crates/doctrine-dbal/src/types/date_time_type.rs
+src/Types/DateTimeUtcType.php	DateTimeUtcType	59	ported	crates/doctrine-dbal/src/types/date_time_type.rs
+src/Types/DateType.php	DateType	38	ported	crates/doctrine-dbal/src/types/date_type.rs
+src/Types/DecimalType.php	DecimalType	19	ported	crates/doctrine-dbal/src/types/float_type.rs
+src/Types/EnumType.php	EnumType	10	ported	crates/doctrine-dbal/src/types/enum_type.rs
+src/Types/Exception/InvalidFormat.php	InvalidFormat	27	ported	crates/doctrine-dbal/src/types/conversion_exception.rs
+src/Types/Exception/InvalidType.php	InvalidType	35	ported	crates/doctrine-dbal/src/types/conversion_exception.rs
+src/Types/Exception/SerializationFailed.php	SerializationFailed	22	ported	crates/doctrine-dbal/src/types/conversion_exception.rs
+src/Types/Exception/TypeAlreadyRegistered.php	TypeAlreadyRegistered	18	ported	crates/doctrine-dbal/src/types/exception.rs
+src/Types/Exception/TypeArgumentCountError.php	TypeArgumentCountError	18	ported	crates/doctrine-dbal/src/types/exception.rs
+src/Types/Exception/TypeNotFound.php	TypeNotFound	11	ported	crates/doctrine-dbal/src/types/exception.rs
+src/Types/Exception/TypeNotRegistered.php	TypeNotRegistered	18	ported	crates/doctrine-dbal/src/types/exception.rs
+src/Types/Exception/TypesAlreadyExists.php	TypesAlreadyExists	11	ported	crates/doctrine-dbal/src/types/exception.rs
+src/Types/Exception/TypesException.php	TypesException	6	ported	crates/doctrine-dbal/src/types/exception.rs
+src/Types/Exception/UnknownColumnType.php	UnknownColumnType	22	ported	crates/doctrine-dbal/src/types/exception.rs
+src/Types/Exception/ValueNotConvertible.php	ValueNotConvertible	32	ported	crates/doctrine-dbal/src/types/conversion_exception.rs
+src/Types/FloatType.php	FloatType	14	ported	crates/doctrine-dbal/src/types/float_type.rs
+src/Types/GuidType.php	GuidType	10	ported	crates/doctrine-dbal/src/types/string_type.rs
+src/Types/IntegerType.php	IntegerType	19	ported	crates/doctrine-dbal/src/types/integer_type.rs
+src/Types/JsonObjectType.php	JsonObjectType	15	ported	crates/doctrine-dbal/src/types/json_type.rs
+src/Types/JsonType.php	JsonType	15	ported	crates/doctrine-dbal/src/types/json_type.rs
+src/Types/JsonTypeConvert.php	JsonTypeConvert	41	ported	crates/doctrine-dbal/src/types/json_type.rs
+src/Types/JsonbObjectType.php	JsonbObjectType	15	ported	crates/doctrine-dbal/src/types/json_type.rs
+src/Types/JsonbType.php	JsonbType	10	ported	crates/doctrine-dbal/src/types/json_type.rs
+src/Types/NumberType.php	NumberType	40	ported	crates/doctrine-dbal/src/types/float_type.rs
+src/Types/PhpDateMappingType.php	PhpDateMappingType	5	ported	crates/doctrine-dbal/src/types/php_mapping_type.rs
+src/Types/PhpDateTimeMappingType.php	PhpDateTimeMappingType	5	ported	crates/doctrine-dbal/src/types/php_mapping_type.rs
+src/Types/PhpFloatMappingType.php	PhpFloatMappingType	5	ported	crates/doctrine-dbal/src/types/php_mapping_type.rs
+src/Types/PhpIntegerMappingType.php	PhpIntegerMappingType	5	ported	crates/doctrine-dbal/src/types/php_mapping_type.rs
+src/Types/PhpTimeMappingType.php	PhpTimeMappingType	5	ported	crates/doctrine-dbal/src/types/php_mapping_type.rs
+src/Types/SimpleArrayType.php	SimpleArrayType	31	ported	crates/doctrine-dbal/src/types/simple_array_type.rs
+src/Types/SmallFloatType.php	SmallFloatType	14	ported	crates/doctrine-dbal/src/types/float_type.rs
+src/Types/SmallIntType.php	SmallIntType	19	ported	crates/doctrine-dbal/src/types/integer_type.rs
+src/Types/StringType.php	StringType	10	ported	crates/doctrine-dbal/src/types/string_type.rs
+src/Types/TextType.php	TextType	16	ported	crates/doctrine-dbal/src/types/string_type.rs
+src/Types/TimeImmutableType.php	TimeImmutableType	42	ported	crates/doctrine-dbal/src/types/date_type.rs
+src/Types/TimeType.php	TimeType	38	ported	crates/doctrine-dbal/src/types/date_type.rs
+src/Types/Type.php	Type	126	ported	crates/doctrine-dbal/src/types/mod.rs
+src/Types/TypeRegistry.php	TypeRegistry	75	ported	crates/doctrine-dbal/src/types/type_registry.rs
+src/Types/Types.php	Types	39	ported	crates/doctrine-dbal/src/types/names.rs
+src/Types/VarDateTimeImmutableType.php	VarDateTimeImmutableType	36	ported	crates/doctrine-dbal/src/types/date_time_type.rs
+src/Types/VarDateTimeType.php	VarDateTimeType	21	ported	crates/doctrine-dbal/src/types/date_time_type.rs

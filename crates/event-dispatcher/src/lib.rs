@@ -1,5 +1,6 @@
 //! Port of the symfony/event-dispatcher component: `EventDispatcher`,
-//! `GenericEvent`, `ImmutableEventDispatcher`, the two interfaces and, with
+//! `GenericEvent`, `ImmutableEventDispatcher`, the two interfaces, the
+//! `CompiledEventDispatcher` listener seam and, with
 //! the `debug` feature, the Debug namespace. See README.md for the
 //! contract and what is not ported yet.
 //!
@@ -13,6 +14,7 @@
 #[doc = include_str!("../README.md")]
 struct ReadmeExample;
 
+mod compiled_event_dispatcher;
 #[cfg(feature = "debug")]
 pub mod debug;
 mod event_dispatcher;
@@ -21,6 +23,7 @@ mod immutable_event_dispatcher;
 mod interface;
 mod listener;
 
+pub use compiled_event_dispatcher::{CompiledEventDispatcher, ListenerMap, ListenerPipeline};
 pub use event_dispatcher::{CallListeners, EventDispatcher, call_listeners};
 pub use generic_event::{GenericEvent, InvalidArgumentException};
 pub use immutable_event_dispatcher::ImmutableEventDispatcher;

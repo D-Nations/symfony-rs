@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 publish = false
-description = "M1-D converter fixture: hand-authored, generated-code-shaped Rust for oracle/apps/converter-fixture (converter contract 0.3)"
+description = "M1-D converter fixture: hand-authored, generated-code-shaped Rust for oracle/apps/converter-fixture (converter contract 0.4)"
 
 [dependencies]
 axum = "0.8.9"

@@ -3,7 +3,7 @@
 Private workspace crate; MIT. The Rust side of the converter fixture
 (PLAN.md, "Early conversion proof and second application"): the Symfony app
 in [oracle/apps/converter-fixture](../../oracle/apps/converter-fixture),
-written against [converter contract 0.3](../../docs/converter-contract.md),
+written against [converter contract 0.4](../../docs/converter-contract.md),
 on the ported Symfony kernel served by `symfony-runtime`.
 
 **Hand-authored, not converter output.** The crate has the shape

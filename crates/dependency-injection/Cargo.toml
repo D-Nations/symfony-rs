@@ -1,0 +1,26 @@
+[package]
+name = "symfony-dependency-injection"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Port of the symfony/dependency-injection component, for a build-time container compiler"
+
+[dependencies]
+php-value = { path = "../php-value" }
+symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+# sprintf() for the parameter deprecation messages; the loaders, resources
+# and configuration processing of later slices use the rest.
+symfony-config = { path = "../config" }
+# PSR-11 for ServiceLocator, ContainerBag and ReverseContainer.
+psr-container = { path = "../psr-container" }
+# Globals: $_ENV, $_SERVER and getenv() for EnvVarProcessor.
+symfony-dotenv = { path = "../dotenv" }
+
+[dev-dependencies]
+# Replaying the vectors recorded from PHP (tests/data/*.json).
+php-value = { path = "../php-value", features = ["vectors"] }
+serde_json = "1.0.154"
+
+[lints]
+workspace = true

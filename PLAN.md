@@ -139,7 +139,7 @@ parameters or trait objects as a performance metric.
       existing concrete container, typed controller enum, typed routes and
       generic `Kernel<C>::handle<R, I, F>`. Prefer declared scalar, nullable
       and class types; keep PHP coercion and error handling at boundaries.
-- [ ] During the next HttpKernel stage (M2-A), introduce a minimal listener
+- [x] During the next HttpKernel stage (M2-A), introduce a minimal listener
       execution seam, e.g. `Kernel<C, L = DynamicListeners<C>>` with a
       listener pipeline trait. Keep the existing dynamic registration API
       and default behaviour; prove the seam with a small static fixture.
@@ -152,9 +152,17 @@ parameters or trait objects as a performance metric.
       moves, M2-A next stage.)
       Test priority, equal-priority order, propagation, controller replacement,
       early response, exceptions and response filtering in both modes.
-- [ ] Keep the general EventDispatcher's dynamic API and observable mutation,
+      (November 26, done: `CompiledEventDispatcher` with the
+      `ListenerPipeline` trait in event-dispatcher, after upstream's 8.2
+      design; the 1,500 recorded lifecycles pass in both modes and the
+      converter fixture runs on it. Stage log
+      docs/milestones/m2-a-listener-seam.md.)
+- [x] Keep the general EventDispatcher's dynamic API and observable mutation,
       lazy loading and identity semantics. Document a typed alternative
       boundary, but do not rewrite that component or duplicate its logic now.
+      (November 26: `EventDispatcher` is unchanged but for two crate-private
+      hooks; the boundary is documented in the crate README and converter
+      contract 0.4 section 6.)
 - [ ] Inventory dynamic `Value`, `PhpArray`, `Arc<dyn ...>`, boxed futures,
       locks and allocations on fixture request paths. Record why each is
       required or a candidate for later removal; no blanket rewrite.
@@ -900,6 +908,20 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     as in production); the web server's own 404 for `/index.php/...` and
     `*.php` has an empty body where nginx sends its HTML page.
 
+21. **PCRE limits in Doctrine's SQL parser (M6, November 25).** DBAL's
+    `SQL\Parser` is one PCRE pattern, and PHP stops it at PCRE's limits:
+    an unterminated `/*` comment followed by about 20 bytes without `*`
+    throws `RegularExpressionError` ("Backtrack limit exhausted"), and a
+    MySQL-mode string literal of about 6,200 bytes or a bracket identifier
+    of about 25,000 bytes throws "JIT stack limit exhausted" (oracle,
+    PHP 8.4.27 defaults). The Rust parser does not backtrack and parses
+    them. Recommended: do not copy the limits. An unterminated comment is
+    refused by the database anyway; a long MySQL literal is valid SQL that
+    PHP cannot run. Alternative: refuse the same inputs with the same
+    message, which needs the thresholds of PCRE's JIT and is not exact.
+    `crates/doctrine-dbal/tests/parser_vectors.rs` fails on any other
+    difference.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -1015,6 +1037,7 @@ Stack rows (searched November 19):
 | Component | Options compared | Choice | Reason |
 |---|---|---|---|
 | Stopwatch | [fine_grained](https://docs.rs/crate/fine_grained/latest) (one stopwatch with laps, 2017), [ticky](https://docs.rs/ticky/1.0.2/src/ticky/lib.rs.html), [chronometer](https://docs.rs/crate/chronometer/latest), clock-core: single anonymous timers | Port, no dependency (`std::time` underneath) | None has named events, categories, sections, periods with memory, PHP's rounding or Symfony's messages |
+| Clock (searched November 25) | No Rust port of symfony/clock or PSR-20. Clock crates ([chronoshift](https://crates.io/crates/chronoshift), [clock-lib](https://crates.io/crates/clock-lib), [qubit-clock](https://crates.io/crates/qubit-clock)): mockable clocks without PHP dates. Date and zone crates: [jiff](https://docs.rs/jiff) 1.0 (IANA zones with transitions, DST flags and abbreviations, gap and fold detection, bundled tzdb 2026f, Unlicense/MIT), [chrono](https://docs.rs/chrono) + [chrono-tz](https://docs.rs/chrono-tz) (zones compiled in, no abbreviation or DST flag per instant), [time](https://docs.rs/time) (no IANA zones; time-tz is a release candidate). PHP date text: [strtotime](https://crates.io/crates/strtotime) (its own grammar and answers), [timelib](https://crates.io/crates/timelib) (bindings to PHP's own C date library: FFI and PHP code, decision 8). php-value's `DateTimeImmutable` has no named zones | Port the Symfony classes; PHP's date layer written in `symfony-clock::php` from the manual and oracle vectors; `jiff` (`default-features = false`, `std` + `tzdb-bundle-always`) only for zone lookups (offset, DST, abbreviation, gaps and folds) | Clock needs `DateTimeImmutable` with microseconds and IANA zones (`DatePoint`, `withTimeZone()`), PHP's fall-back and gap rules, `modify()` texts and `createFromFormat()`. jiff gives the zone data with no C and no `unsafe` in this crate; a bundled tzdb keeps answers equal on every host. Calendar arithmetic, parsing and formatting stay in the port, so PHP's rollover rules and its year range (beyond jiff's ±9999) are kept. Texts outside the recorded grammar are refused |
 | Yaml | No Rust port of Symfony Yaml exists. YAML 1.2 crates ([saphyr](https://docs.rs/serde-saphyr/latest/), [yaml-rust2](https://docs.rs/crate/yaml-rust2/0.11.1), [noyalib](https://github.com/sebastienrousseau/noyalib), [saneyaml](https://docs.rs/crate/saneyaml/latest)) implement the spec, not Symfony's dialect; serde_yaml is archived | Port on `php-value` | Symfony's booleans, `0o` octals, timestamps as ints, merge keys, `!php/*` tags, flags and messages are its own |
 | Regex for ported PCRE patterns (owner, November 19) | `regex` 1.13 (RE2-style, linear time, no backtracking) vs hand-written matchers vs `fancy-regex` (lookaround, backtracking) | `regex`; patterns without its features (Yaml's `(?<!:):(?!:)` delimiter) matched by hand | Upstream patterns translate one for one and stay comparable; linear time rules out ReDoS; possessive quantifiers become greedy where the following class excludes what they consume |
 | Dotenv | [dotenvy](https://crates.io/crates/dotenvy), [dotenvs](https://docs.rs/crate/dotenvs/0.2.1/source/README.md) (`${VAR:-default}`), [zenv](https://github.com/numToStr/zenv) (expansion only in double quotes), [dotenvx](https://docs.rs/crate/dotenvx/0.1.0) (encryption, shell commands): other parsers and expansion rules | Port on `php-value`, no dependency | None has Symfony's syntax errors, `.env.local` / `.env.$env` layering, `SYMFONY_DOTENV_VARS`, deferred cross-file resolution or `$_ENV` / `$_SERVER` / `getenv()` precedence |
@@ -1028,6 +1051,7 @@ Stack rows (searched November 19):
 | Console (M1-B subset; searched November 20) | No Rust port of Symfony Console (searches find only the PHP original and Node ports such as [symfony-style-console](https://www.npmjs.org/package/symfony-style-console)); [clap](https://docs.rs/clap) (its own argv grammar, errors and help), [clap_complete](https://docs.rs/clap_complete) (its own completion protocol), [comfy-table](https://github.com/Nukesor/comfy-table) / tabled (their own layout and wrapping); symfony-demo-rs's `src/console` (a partial port arranged around the demo's commands) | Port on `php-value`, no dependency; move the demo's measured width table in | None reproduces Symfony's ArrayInput/ArgvInput binding and messages, SymfonyStyle's blocks and spacing, Table's layout, or `_complete`'s input model. Process: none of the three commands M1-B needs (Yaml `lint:yaml`, Dotenv `debug:dotenv` and `dotenv:dump`) uses symfony/process, so M1-B ports no Process behaviour |
 | String's Unicode layer for Console (owner, November 20) | [unicode-normalization](https://docs.rs/unicode-normalization) + [unicode-segmentation](https://docs.rs/unicode-segmentation) (unicode-rs, no dependencies; the demo already uses unicode-segmentation) vs tables extracted from the oracle's ICU and PCRE2 with hand-written UAX #29 and NFC | The two crates, checked against the oracle | They match ICU 72.1 on all 13,233 NFC cases and 4,105 grapheme sequences; PCRE2's `\X` (used by `chunk()`) is reproduced by splitting their clusters where PCRE2 does, matching all 4,105. Remaining differences come from their newer Unicode data (95 code points assigned after 15.0, and Indic conjuncts in `length()`), listed in crates/string/README.md |
 | OS randomness for `ByteString::fromRandom()` (owner, November 22; decision 15) | [getrandom](https://docs.rs/getrandom) (rust-random, the OS CSPRNG only; adds `cfg-if` everywhere and `libc` on Unix, `r-efi` only for UEFI targets), [rand](https://docs.rs/rand) / `rand_core::OsRng` (built on getrandom, adds generators the port does not need), reading `/dev/urandom` by hand (Unix only; Windows needs `BCryptGenRandom` through FFI, excluded by no-`unsafe`), the caller supplying the bytes (no dependency, differs from PHP's signature) | `getrandom` 0.4 | The smallest crate that reaches each platform's CSPRNG, as PHP's `Random\Randomizer` does, with no `unsafe` in this workspace; `rand` would add code for nothing. `from_random_with()` keeps a caller's source |
+| PasswordHasher's hash functions (searched November 25) | No Rust port of Symfony PasswordHasher found. bcrypt: [bcrypt](https://docs.rs/bcrypt) 0.19 (already the demo's; `$2a/b/x/y$`, salt and cost given), [pwhash](https://docs.rs/pwhash) 1.0 (all Unix `crypt()` formats incl. DES, older, more code), RustCrypto `blowfish` with a hand-written bcrypt. Argon2: RustCrypto [argon2](https://docs.rs/argon2) 0.6 (pure Rust, both variants, lanes, no `unsafe`), [rust-argon2](https://docs.rs/rust-argon2) 3.0 (also pure Rust, own encoding), libsodium/libargon2 bindings (C, FFI). PBKDF2: RustCrypto [pbkdf2](https://docs.rs/pbkdf2) 0.13 vs 20 lines on [hmac](https://docs.rs/hmac) 0.13. Digests: RustCrypto `md-5`, `sha1`, `sha2` 0.11. SHA-crypt: RustCrypto [sha-crypt](https://docs.rs/sha-crypt) 0.6 (core functions without `password-hash`). Constant time: [subtle](https://docs.rs/subtle) 2.6 (already under bcrypt). Encodings: PHC and crypt strings written here | `bcrypt` (`std` only), `argon2` (`alloc` only), `hmac`, `md-5`, `sha1`, `sha2`, `sha-crypt` (no default features), `subtle`; `getrandom` 0.4 (decision 15) for salts; no `pbkdf2` crate | Hashing is below the behaviour layer (AGENTS.md); all are RustCrypto or bcrypt, pure Rust, MIT/Apache-2.0, on one `digest` 0.11 tree. PHP's string formats (`$2y$`, libsodium's strict `$argon2id$v=19$m=..,t=..,p=..$...` reading, `password_needs_rehash()`'s scan, `crypt()`'s `rounds=` and salt rules, base64 and hex outputs) are written here and checked on recorded vectors; PHP verifies the Rust hashes. DES `crypt()` and 52 of PHP's 60 `hash_algos()` are not ported (crates/password-hasher/README.md). The hash crates get `opt-level = 3` in the dev profile so that upstream's default costs run in seconds |
 | Atomic file writes for ConfigCache (symfony-filesystem `dumpFile()`; November 23) | No Rust port of Symfony Filesystem found. [tempfile](https://docs.rs/tempfile) (`NamedTempFile::persist()`: its own random names and errors, no PHP `tempnam()` fallback or messages), [atomic-write-file](https://docs.rs/atomic-write-file) 0.3 (`O_TMPFILE` and `linkat` on Linux, fsync; no temporary file name to observe), [atomicwrites](https://docs.rs/atomicwrites) 0.4 and [write_atomic](https://docs.rs/write_atomic) 0.7 (temporary file plus rename, their own names and errors) | Port of `dumpFile()` and what it calls (`mkdir()`, `tempnam()`, `chmod()`, `rename()`, `readlink()`, `readFile()`) in a new `symfony-filesystem` crate, on `std::fs` and `getrandom` (already in the lock, decision 15) | Upstream's steps are observable: the temporary file in the target's directory with PHP's `tempnam()` name shape and 0600 mode, the target's mode or `0666 & ~umask()`, the link target written, the IOException texts with PHP's warnings, and the temporary file removed on failure. 39 recorded filesystem calls match (docs/milestones/m1-c-config-cache.md). No new crate in the lock |
 | `hash('xxh128')` for Config's DirectoryResource and GlobResource (November 23) | [twox-hash](https://docs.rs/twox-hash) 2.1 (MIT, XXH3-128 with `default-features = false`, no dependencies), [xxhash-rust](https://docs.rs/xxhash-rust) 0.8 (BSL-1.0, no dependencies), a hand-written XXH3-128 (seven length paths and the long-input loop) | `twox-hash`, feature `xxhash3_128` only | Hashing is below the behaviour layer (AGENTS.md); MIT like this repository; matches PHP's `hash('xxh128')` on the recorded vectors (empty, short, 300-byte and invalid-UTF-8 inputs) |
 | String's case mappings, NFKC_CF and patterns (November 22) | Rust's `char::to_lowercase()` / `to_uppercase()` (its own Unicode version, no title case or folding), [unicase](https://docs.rs/unicase) / [caseless](https://docs.rs/caseless) (folding only), [icu_casemap](https://docs.rs/icu_casemap) + icu_normalizer (ICU4X: complete, but a large dependency tree and newer data than the oracle's ICU 72.1), tables recorded from the oracle; for `match()`, `replaceMatches()` and flagged `split()`: Finder's PCRE translator | Tables of mbstring's lower, upper, title and fold mappings, ICU's NFKC_CF and the final sigma properties, recorded per code point (`scripts/gen-string-tables.py`); Finder's `pcre.rs` moved into a `php-pcre` crate both use | The tables are PHP's own answers for every code point (11,881 differ from identity), so case results cannot drift with a crate's Unicode version; no new crate in the lock. symfony-finder re-exports php-pcre unchanged; `\p{..}` inside a class is now translated as outside one |
@@ -1039,6 +1063,7 @@ Stack rows (searched November 19):
 | composer.json for `dotenv:dump` and `debug:dotenv` (November 21) | A hand-written JSON reader in `php-value` (none exists; it would need PHP's `json_decode()` rules for depth, big integers and invalid UTF-8), `serde_json` (already in the lock as every crate's test dependency) | `serde_json`, optional, only with symfony-dotenv's `console` feature | The commands read `extra.runtime` from a file the project owns; integers that do not fit become floats as in PHP, invalid JSON is `null`. No new crate in the lock |
 | Twig trial emission (spikes/twig-trial, November 24) | Rust source as hand-built strings (no dependency); `quote` + `proc-macro2` + `syn` 2 (already in Cargo.lock through other crates) with [prettyplease](https://docs.rs/prettyplease) 0.2 to lay out the file, as php2rust does; [genco](https://docs.rs/genco) (quasi-quoting with its own formatter) | `quote` + `syn` + `prettyplease`, in the trial compiler only (a build dependency) | It was the planned M4 approach ("quote + prettyplease"), the emitted tokens are checked by `syn` before they are written, and readable output makes generated templates reviewable. M4 repeats this row when the real `twig` crate starts |
 | DI trial input and emission (spikes/di-trial, November 24) | Input: `debug:container --format=json` or the debug container XML it reads (both exist only with `kernel.debug` and are written before the removal passes), or `XmlDumper` on the final `ContainerBuilder` from a recorder; output: hand-built strings, or `quote` + `syn` + `prettyplease` as in the Twig trial; existing Rust DI crates ([shaku](https://docs.rs/crate/shaku), [lockjaw](https://docs.rs/crate/lockjaw/latest/source/userguide/src/setup.md), [fundle](https://docs.rs/crate/fundle/0.3.5), [injectable-rs](https://docs.rs/injectable-rs), [chassis](https://docs.rs/crate/chassis/0.2.0), [rustyinject](https://docs.rs/crate/rustyinject/latest), [dill](https://docs.rs/dill), [dependency-injector](https://docs.rs/crate/dependency-injector/2.1.0)) | `XmlDumper` output of the final graph (prod, no debug), read with `php-dom` and `XmlUtils::phpize()`; `quote` + `syn` + `prettyplease`, in the trial compiler only | It is the graph `PhpDumper` compiles, in Symfony's own format, read with workspace crates (no new dependency). The DI crates take their graph from hand-written Rust attributes and could not take Symfony's. M3 repeats this row when the real crate starts |
+| DependencyInjection crate (symfony/dependency-injection, M3; searched again November 25 with `cargo search`) | No Rust port of Symfony's component. Runtime or compile-time DI containers with their own registration APIs: [shaku](https://docs.rs/shaku), [fundle](https://docs.rs/fundle), [nject](https://docs.rs/nject), [dill](https://docs.rs/dill), [more-di](https://docs.rs/more-di), [rust-dix](https://docs.rs/rust-dix), [dependency-injector](https://docs.rs/dependency-injector), [reinhardt-di](https://docs.rs/reinhardt-di) (FastAPI-style); [serenade-framework](https://docs.rs/serenade-framework) (Symfony-shaped, no behaviour parity); [claviron-symfony](https://docs.rs/claviron-symfony) (runs PHP in an embedded runtime) | Port on `php-value`, `symfony-config` and `symfony-deprecation-contracts`, no new dependency ([crates/dependency-injection](crates/dependency-injection/README.md)) | None has Symfony's definition model (child definitions, change tracking, bindings, tagged iterators), parameter placeholders and their messages, compiler passes or the graph the converter must read; the trial's finding (no crate takes an external graph) still holds |
 
 - [ ] EventDispatcher. Ported: `EventDispatcher.php`,
       `EventDispatcherInterface.php`, `EventSubscriberInterface.php`,
@@ -1068,6 +1093,16 @@ Stack rows (searched November 19):
       shortest decimal form (3,270 differ, from 7e13) and php2rust's
       `php-rt` `round()` (14,571 differ, from 2.35: it implements the
       pre-8.4 15-digit pre-rounding, a php2rust bug to report).
+- [x] Clock (`symfony-clock`): all 36 upstream tests; in
+      `parity/done.txt`. Every file is ported, including `Resources/now.php`
+      and `Test/ClockSensitiveTrait.php`. The crate has its own subset of
+      PHP's `DateTimeImmutable` and `DateTimeZone` (`symfony_clock::php`),
+      written from the manual and checked against about 9,800 recorded
+      answers (`scripts/record.sh clock`). jiff gives the zone data only.
+      Date texts outside the recorded grammar are refused, not answered
+      differently. php-value's dates have no named zones and its zone
+      abbreviation and keyword lists are private, so the crate has its own
+      copy: a later step can move one shared date layer into php-value.
 - [x] Yaml (`symfony-yaml`, values in `php-value`). Ported: every file,
       `Command/LintCommand.php` behind the `console` feature: 341 of 342
       upstream tests, 1 `n/a` with its reason in the manifest, plus
@@ -1277,6 +1312,19 @@ Stack rows (searched November 19):
       PCRE translator checked on recorded `preg_match` answers; the
       date grammar is a subset (decision 13). No advisories listed for
       symfony/finder.
+- [ ] PasswordHasher (`symfony-password-hasher`, November 25): every
+      PHP file except `Command/UserPasswordHashCommand.php`; 63 of 87
+      upstream tests ported, the command's 24 tests `pending` (they need
+      Console's `QuestionHelper`, not ported). Security Core's user
+      interfaces are traits in the crate until a security-core crate
+      exists. Vectors from PHP 8.4.27 with sodium 1.0.18 and libargon2
+      (`scripts/record.sh password-hasher`): 4,352 digest, PBKDF2 and
+      `crypt()` cases, Argon2 outputs and strings, `needsRehash()`
+      answers, 36 factory configurations, and 30 hashes made by the
+      port that PHP verifies. Not ported: DES `crypt()` formats and 52
+      digest algorithms (crate README). Advisories for
+      symfony/password-hasher not checked in this session (the GitHub
+      advisory API was not reachable).
 - [ ] String (`symfony-string`). Done: ByteString, CodePointString,
       UnicodeString, AbstractString (with TruncateMode), AbstractUnicodeString,
       the exceptions and `u()` / `b()` / `s()`: ByteStringTest 68 of 68,
@@ -1317,6 +1365,7 @@ Stack rows (searched November 22):
 | PHP's loose equality `==` (UrlGenerator's `array_udiff_assoc()` against defaults; searched November 24) | No Rust crate implements it: [ext-php-rs](https://docs.rs/ext-php-rs) and [phper](https://docs.rs/phper) bind the PHP engine through FFI (needs libphp and `unsafe`); symfony-console's `loose_equals_str()` and symfony-finder's `loose_eq()` cover a string or scalar operand only | Written in `php-value::compare` from the PHP manual's comparison table, no dependency | Every PHP type is compared (arrays by key, objects by class and properties, numeric strings, big integer strings as bytes, NAN); 8,649 pairs recorded from PHP 8.4.27 pin it. The two crate copies can move to it later |
 | RouteCollection's name-keyed arrays (routes, aliases, priorities, resources; November 24) | [indexmap](https://docs.rs/indexmap) (already in the lock as a transitive dependency: O(1) lookup, but `shift_remove()`, the removal that keeps order, is O(n), and `swap_remove()` breaks PHP's order), [hashlink](https://docs.rs/hashlink)'s `LinkedHashMap` (O(1) ordered removal; a new dependency), `php_value::PhpArray` (its `remove()` shifts and reindexes, O(n)), a vector with holes and a hash index | The vector with holes and a hash index (`routing::ordered`, private), no dependency | It is how PHP keeps an array: insertion order, assignment in place, `unset()` then append, all O(1); compacted when holes outnumber entries. About 150 lines with its tests, against a dependency for one internal structure |
 | ExpressionLanguage (searched November 25: crates.io, docs.rs) | No Rust port of Symfony's ExpressionLanguage. Expression crates with their own grammars and value rules: [evalexpr](https://docs.rs/evalexpr) (no `matches`, `..`, `?.`, `??`, attribute or method access, no compilation to PHP), [cel](https://docs.rs/cel) (Common Expression Language), [zen-expression](https://docs.rs/zen-expression) (ZEN rules) | Port of every PHP file except `SerializedParsedExpression.php`, on php-value and php-pcre (workspace crates); no new dependency (serde_json is already a test dependency) | Routing conditions and security expressions need Symfony's grammar, error texts, the PHP source `compile()` writes and PHP 8.4's operator semantics; 69,024 binary operations and 1,730 other cases recorded from PHP 8.4.27 pin them |
+| The listener execution seam: `CompiledEventDispatcher` (event-dispatcher; November 26) | Upstream's own [`CompiledEventDispatcher`](https://github.com/symfony/symfony/pull/66122) (Symfony 8.2, after the pinned 8.1: an ordered listener map built by the container, dispatch from it, thaw into a plain `EventDispatcher` on anything but `dispatch()`/`hasListeners()`); its rejected alternative [#66121](https://github.com/symfony/symfony/pull/66121) (the `addListener()` calls folded into `EventDispatcher`'s constructor, closures kept); Drupal's `ContainerAwareEventDispatcher` (a precompiled array changed in place, no fallback); on crates.io, [mod-events](https://docs.rs/crate/mod-events) (run-time registration behind a lock, typed handlers, no PHP identity or ordering semantics). The PLAN's `Kernel<C, L>` shape no longer applies: the ported kernel takes a dispatcher | 8.2's design, adapted to 8.1's behaviour: `ListenerMap` (sorted once; a dispatch takes no table lock and copies no list), `CompiledEventDispatcher<P: ListenerPipeline = ListenerMap>`, a thaw that shares the stored listener slots and re-sorts dispatched events' buckets; no deprecation notices; no new dependency | Upstream took this path, so M3's container output maps onto it; the fallback keeps every dynamic call exact without a second implementation of the table; the trait is where M3-A's generated per-event pipelines go |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1657,6 +1706,57 @@ Stack rows (searched November 22):
       only; `constant()` and `enum()` read a `Registry`. Warnings are not
       reported, and `range()` stops at 2^20 elements (crate README,
       "Differences").
+- [x] The listener seam (November 26): `CompiledEventDispatcher` and
+      `ListenerPipeline` in event-dispatcher, after upstream's own 8.2
+      design (symfony/symfony#66122) with the pinned 8.1 behaviour: it
+      dispatches from a `ListenerMap` sorted once, and thaws into a plain
+      `EventDispatcher` in the state the pinned one would have for anything
+      else. 20,000 generated scripts against the plain dispatcher; the
+      1,500 recorded lifecycles in both modes; the converter fixture on it
+      (converter contract 0.4); eight mutations, each caught. Next:
+      StreamedResponse.
+
+## M6 progress
+
+Stack rows (searched November 25):
+
+| Component | Options compared | Choice | Reason |
+|---|---|---|---|
+| Doctrine DBAL (`doctrine/dbal` 4.5.0) | No Rust port of DBAL on GitHub or crates.io (searches for a DBAL, Doctrine or data-mapper port find only PHP packages). Rust database layers: [sqlx](https://github.com/launchbadge/sqlx) (the demo's driver), rusqlite, diesel, SeaORM / sea-query (own query builders and type mappings) | Port DBAL's behaviour (parser, types, platforms' SQL, schema, QueryBuilder, Connection) in `doctrine-dbal`. Drivers (D1: SQLite) later go on sqlx, behind DBAL's `Driver` interfaces, when the Connection is ported; this slice adds no dependency | DBAL's observable behaviour (generated SQL, type conversions, error classes and messages) is what the ORM, migrations and the demo depend on, and no crate reproduces it. sqlx stays the driver choice of PLAN.md's architecture (bound parameters only) |
+| Doctrine ORM (`doctrine/orm` 3.7.5) | No Rust port. Unit-of-work crates: [sqlmodel-session](https://docs.rs/sqlmodel-session) (identity map and session for its own models), [tideorm](https://docs.rs/tideorm), [rust-ef](https://docs.rs/rust-ef), reinhardt-db (Django-style); SeaORM, Diesel (no unit of work, see M6) | Port the ORM on `doctrine-dbal` (D2) | None has Doctrine's metadata, DQL, hydration or UnitOfWork semantics; using one would mean a second behaviour to keep equal to Doctrine's |
+
+- [x] D1 slice 1 (`doctrine-dbal`): `ParameterType.php`,
+      `ArrayParameterType.php`, `SQL/Parser.php` and `Parser/Visitor.php`,
+      `ExpandArrayParameters.php` and its `ArrayParameters` exceptions.
+      ParserTest 4 of 4 and ExpandArrayParametersTest 3 of 3 on upstream's
+      provider rows, recorded from PHP (`scripts/record.sh doctrine-dbal`);
+      5,919 parses of 3,024 generated statements in both modes match
+      PHP call by call; the 135 that PHP refuses at a PCRE limit are
+      decision 21. No new dependency.
+- [x] D1 slice 2 (Query): `QueryBuilder.php` (SQL building, parameters,
+      state; not execution), `ExpressionBuilder.php`,
+      `CompositeExpression.php`, the small Query classes, the select,
+      union and WITH SQL builders, and the `AbstractPlatform` methods they
+      use. QueryBuilderTest 73 of 84 (the 11 execute/fetch tests wait for
+      Connection), ExpressionBuilderTest 19 of 19, CompositeExpressionTest
+      3 of 3; 112 recorded builder runs replayed. `ConnectionStandIn`
+      holds the place of `Connection.php`. Differences in the crate
+      README (numeric join alias, shared sub-builders).
+- [x] D1 slice 3 (Types): `Types/*.php` (the `Type` trait, registry,
+      31 built-in types, `ConversionException`, `Types/Exception/*`), the
+      column exceptions, `WrapperParameterType::Type`, and the
+      `AbstractPlatform` declaration and date-format methods they call.
+      188 Types tests ported, 7 pending (stream resources, a recursive
+      value, the Europe/Berlin zone). php-value gains a mutable
+      `DateTime`, `createFromFormat`, `new DateTime($text)`,
+      `DateInterval` and `BcMath\Number`, checked on 12,036 + 89 + 1,602
+      recorded PHP answers; texts outside what it reads are refused, not
+      guessed (counts in the crate README). `Doctrine\DBAL\Exception` is
+      one struct (class, message, previous); the Query slice's typed
+      exceptions convert into it.
+- [ ] D1 next: the SQLite platform; Connection on
+      sqlx's SQLite driver; schema manager. The demo comparison stays
+      paused (owner, November 23).
 
 ## Local development performance
 

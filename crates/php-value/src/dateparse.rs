@@ -187,7 +187,7 @@ fn month_name(word: &[u8]) -> Option<i64> {
 }
 
 /// A word PHP may read: a day or month name, a keyword or a zone.
-fn known_word(word: &[u8]) -> bool {
+pub(crate) fn known_word(word: &[u8]) -> bool {
     let lower = word.to_ascii_lowercase();
     day_name(word).is_some()
         || month_name(word).is_some()
