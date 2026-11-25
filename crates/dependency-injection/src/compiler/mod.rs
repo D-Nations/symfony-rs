@@ -28,6 +28,9 @@ pub use service_reference_graph::{
 mod resolve_class_pass;
 pub use resolve_class_pass::ResolveClassPass;
 
+mod resolve_env_placeholders_pass;
+pub use resolve_env_placeholders_pass::ResolveEnvPlaceholdersPass;
+
 mod resolve_factory_class_pass;
 pub use resolve_factory_class_pass::ResolveFactoryClassPass;
 
@@ -36,6 +39,9 @@ pub use resolve_hot_path_pass::ResolveHotPathPass;
 
 mod resolve_no_preload_pass;
 pub use resolve_no_preload_pass::ResolveNoPreloadPass;
+
+mod resolve_parameter_place_holders_pass;
+pub use resolve_parameter_place_holders_pass::ResolveParameterPlaceHoldersPass;
 
 mod resolve_service_subscribers_pass;
 pub use resolve_service_subscribers_pass::ResolveServiceSubscribersPass;

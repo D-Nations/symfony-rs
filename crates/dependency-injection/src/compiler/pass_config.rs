@@ -148,7 +148,7 @@ impl PassConfig {
                 pending("ResolveAutowireInlineAttributesPass"),
                 pending("ResolveChildDefinitionsPass"),
                 pending("RegisterServiceSubscribersPass"),
-                pending_with("ResolveParameterPlaceHoldersPass", "false, false"),
+                Pass::new(super::ResolveParameterPlaceHoldersPass::new(false, false)),
                 Pass::new(super::ResolveFactoryClassPass::new()),
                 pending("ResolveNamedArgumentsPass"),
                 pending("AutowireRequiredMethodsPass"),
