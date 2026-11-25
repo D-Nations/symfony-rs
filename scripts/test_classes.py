@@ -63,6 +63,24 @@ class ClassManifestTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("B.php is pending but crates/example/src/b2.rs ports it", err)
 
+    def test_sync(self):
+        self.write("parity/sources.tsv", (
+            "# header\n"
+            "crates/example/src/b2.rs\tsymfony/example\tB.php\t123\n"
+        ))
+        code, out, err = self.run_mode(classes.sync)
+        self.assertEqual(code, 0, err)
+        self.assertIn("updated parity/classes/symfony/example.tsv", out)
+        self.assertEqual(self.run_mode(classes.check)[0], 0)
+        text = (self.root / "parity/classes/symfony/example.tsv").read_text()
+        self.assertIn("A.php\tA\t10\tpending\t\n", text)
+        self.assertIn("B.php\tB AInterface\t30\tported\tcrates/example/src/b2.rs\n", text)
+        self.assertIn("C.php\t-\t5\tn/a: PHP-only helper\t\n", text)
+        self.write("parity/sources.tsv", "# header\ncrates/x.rs\tsymfony/example\tD.php\t123\n")
+        code, _, err = self.run_mode(classes.sync)
+        self.assertEqual(code, 1)
+        self.assertIn("run scripts/classes.py generate symfony/example", err)
+
     def test_ported_but_unmapped(self):
         self.write("parity/sources.tsv", "# header\n")
         code, _, err = self.run_mode(classes.check)

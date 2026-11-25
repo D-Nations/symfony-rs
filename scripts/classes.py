@@ -2,6 +2,8 @@
 
     python scripts/classes.py generate PACKAGE...   (re)write parity/classes/<package>.tsv
     python scripts/classes.py generate --all        every package of parity/packages.tsv
+    python scripts/classes.py sync                  update the status columns from
+                                                    parity/sources.tsv (no PHP needed)
     python scripts/classes.py check                 fail if a manifest disagrees with
                                                     parity/sources.tsv (no PHP needed)
     python scripts/classes.py report [--markdown]   size-weighted port percentage
@@ -130,6 +132,43 @@ def generate(root: Path, package: str, refs: dict[str, str],
     print(f"{out.relative_to(root).as_posix()}: {len(lines) - 1} files")
 
 
+def sync(root: Path) -> int:
+    """Update the status and Rust files columns from parity/sources.tsv,
+    without PHP or upstream/: run it after scripts/sources.sh."""
+    mapped = source_map(root)
+    refs = packages(root)
+    status = 0
+    for package in refs:
+        path = manifest_path(root, package)
+        if not path.is_file():
+            continue
+        files = mapped.get(package, {})
+        out = []
+        listed = set()
+        for line in path.read_text(encoding="utf-8").splitlines():
+            row = line.split("\t")
+            if line.startswith("#") or len(row) != 5:
+                out.append(line)
+                continue
+            listed.add(row[0])
+            rust = files.get(row[0], [])
+            if rust:
+                row[3], row[4] = "ported", " ".join(rust)
+            elif row[3] == "ported":
+                row[3], row[4] = "pending", ""
+            out.append("\t".join(row))
+        for file in sorted(set(files) - listed):
+            print(f"{package}: sources.tsv names {file}, which the manifest does not list; "
+                  f"run scripts/classes.py generate {package}", file=sys.stderr)
+            status = 1
+        text = "\n".join(out) + "\n"
+        if text != path.read_text(encoding="utf-8"):
+            with path.open("w", encoding="utf-8", newline="\n") as handle:
+                handle.write(text)
+            print(f"updated {path.relative_to(root).as_posix()}")
+    return status
+
+
 def check(root: Path) -> int:
     refs = packages(root)
     mapped = source_map(root)
@@ -157,12 +196,14 @@ def check(root: Path) -> int:
             expected = " ".join(files.get(file, []))
             if status == "ported":
                 if not expected:
-                    errors.append(f"{name}: {file} is ported but no Rust file names it")
+                    errors.append(f"{name}: {file} is ported but no Rust file names it; "
+                                  "run scripts/classes.py sync")
                 elif rust != expected:
                     errors.append(f"{name}: {file} names '{rust}', sources.tsv has '{expected}'")
             elif status == "pending" or (status.startswith("n/a: ") and len(status) > 5):
                 if expected:
-                    errors.append(f"{name}: {file} is {status} but {expected} ports it")
+                    errors.append(f"{name}: {file} is {status} but {expected} ports it; "
+                                  "run scripts/classes.py sync")
                 elif rust:
                     errors.append(f"{name}: {file} is {status} but names Rust files")
             else:
@@ -236,11 +277,14 @@ def main() -> int:
     gen.add_argument("packages", nargs="*")
     gen.add_argument("--all", action="store_true")
     sub.add_parser("check")
+    sub.add_parser("sync")
     rep = sub.add_parser("report")
     rep.add_argument("--markdown", action="store_true")
     options = parser.parse_args()
     if options.mode == "check":
         return check(ROOT)
+    if options.mode == "sync":
+        return sync(ROOT)
     if options.mode == "report":
         return report(ROOT, options.markdown)
     refs = packages(ROOT)
