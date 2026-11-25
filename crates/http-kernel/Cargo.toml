@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 publish = false
-description = "Small typed subset of Symfony's request lifecycle for Axum applications"
+description = "Symfony HttpKernel's request lifecycle on HttpFoundation, and a typed subset for Axum applications"
 
 [dependencies]
 axum = "0.8.9"
@@ -14,6 +14,8 @@ symfony-event-dispatcher = { path = "../event-dispatcher" }
 symfony-http-foundation = { path = "../http-foundation" }
 
 [dev-dependencies]
+base64 = "0.23.1"
+serde_json = { version = "1.0.154", features = ["preserve_order"] }
 php-value = { path = "../php-value", features = ["vectors"] }
 tokio = { version = "1.54.1", features = ["macros", "rt"] }
 

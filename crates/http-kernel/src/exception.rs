@@ -34,9 +34,14 @@ pub fn same(a: &Throwable, b: &Throwable) -> bool {
     Arc::ptr_eq(a, b)
 }
 
-/// A throwable from a listener (the `EventDispatcher`'s boxed error).
+/// A throwable from a listener (the `EventDispatcher`'s boxed error). A
+/// listener that rethrows a shared throwable boxes the `Arc` itself; that
+/// one is unwrapped, so the kernel sees the same object.
 pub fn from_box(error: symfony_event_dispatcher::Throwable) -> Throwable {
-    Arc::from(error)
+    match error.downcast::<Throwable>() {
+        Ok(shared) => *shared,
+        Err(error) => Arc::from(error),
+    }
 }
 
 /// The classes a throwable is an instance of, its class first; an error

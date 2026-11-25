@@ -20,7 +20,7 @@ Nothing outside those tables is claimed.
 |---|---|---|
 | [`symfony-http-foundation`](crates/http-foundation/README.md) | `symfony/http-foundation` (+ PHP request parsing) | Query, cookie and multipart parsing; ParameterBag, InputBag, ServerBag, HeaderBag, HeaderUtils, Cookie, IpUtils, AcceptHeader; File, UploadedFile and FileBag; Request; Response (sending recorded for the HTTP adapter) |
 | [`symfony-routing`](crates/routing/README.md) | `symfony/routing` | Route, CompiledRoute, RouteCompiler, RouteCollection; typed registrations, matcher and redirectable matcher, URL escaping |
-| [`symfony-http-kernel`](crates/http-kernel/README.md) | `symfony/http-kernel` | Request, controller, response and exception hooks with priorities |
+| [`symfony-http-kernel`](crates/http-kernel/README.md) | `symfony/http-kernel` | HttpKernel's lifecycle on Request and Response (events, exceptions, terminate), the HttpException family; the typed Axum hook subset |
 | [`symfony-mime`](crates/mime/README.md) | `symfony/mime` | MimeTypes and its guessers (the `file` command, and finfo on a pure-Rust libmagic) |
 | [`symfony-config`](crates/config/README.md) | `symfony/config` | Definition, Builder, dumpers, XmlUtils, loaders, resources, ConfigCache |
 | [`symfony-console`](crates/console/README.md) | `symfony/console` | The parts the Yaml and Dotenv commands use |
@@ -171,8 +171,8 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/event-dispatcher | 140 | 114 | 0 | 26 |
 | symfony/filesystem | 157 | 27 | 0 | 130 |
 | symfony/finder | 143 | 139 | 4 | 0 |
-| symfony/http-foundation | 959 | 442 | 10 | 507 |
-| symfony/http-kernel | 1,045 | 10 | 0 | 1,035 |
+| symfony/http-foundation | 959 | 447 | 10 | 502 |
+| symfony/http-kernel | 1,045 | 117 | 5 | 923 |
 | symfony/mime | 395 | 28 | 1 | 366 |
 | symfony/options-resolver | 234 | 234 | 0 | 0 |
 | symfony/routing | 896 | 372 | 1 | 523 |
@@ -180,7 +180,7 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/string | 266 | 235 | 1 | 30 |
 | symfony/translation | 345 | 81 | 2 | 262 |
 | symfony/yaml | 342 | 341 | 1 | 0 |
-| **Total** | **6,583** | **2,820** | **38** | **3,725** |
+| **Total** | **6,583** | **2,932** | **43** | **3,608** |
 
 Six packages have no pending rows and are listed in `parity/done.txt`:
 Stopwatch, Yaml, Dotenv, CssSelector, OptionsResolver and Finder. M1 is
@@ -189,7 +189,8 @@ filesystem resources and ConfigCache ported (the reflection-based
 resources, decision 17, are a later stage); String, Console (the subset the Yaml and
 Dotenv commands use), Translation's XLIFF and Qt loaders and the XML
 gates are partial. M2 has started: HttpFoundation's bags, headers,
-cookies, IpUtils, AcceptHeader, the File classes, Request and Response,
+cookies, IpUtils, AcceptHeader, the File classes, Request, Response and
+RequestStack, HttpKernel's lifecycle with its events and HTTP exceptions,
 symfony/mime's MIME types and guessers, and Routing's Route,
 RouteCompiler, RouteCollection, RequestContext, both URL generators and
 both matchers (route conditions wait for ExpressionLanguage).

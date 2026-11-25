@@ -1228,6 +1228,7 @@ Stack rows (searched November 22):
 | Routing's UrlMatcher and RedirectableUrlMatcher (searched November 25) | No Rust port of Symfony's matcher on GitHub or crates.io (as for the row above); adopting a router crate (matchit, path-tree, route-recognizer) would approximate Symfony's trailing-slash, host, scheme and method rules; porting `CompiledUrlMatcher` first would optimize before the matcher contract is proven (M2-A row) | Ported from `Matcher/UrlMatcher.php` and `RedirectableUrlMatcher.php` on the ported routes and php-pcre (which gains `group_names()` and PCRE2's Unicode group names), no new dependency; the compiled matcher later as a build-time emitter | Same algorithm and regexes as PHP, so the upstream test classes apply one for one; 22,304 recorded answers pin both matchers |
 | HttpFoundation's Request, and PHP's `html_entity_decode()` and `json_decode()` it calls (searched November 25) | No Rust port of Symfony's Request on GitHub or crates.io. Trusted-proxy crates ([trusted-proxies](https://docs.rs/trusted-proxies) 0.3: RFC 7239 client IP, host and port, but not Symfony's header set, conflict exception, chain filtering or port rules; [ipware](https://docs.rs/crate/ipware) (a python-ipware port); [client-ip](https://docs.rs/crate/client-ip)) solve part of `getClientIps()` with other rules. Entity decoders ([htmlize](https://docs.rs/crate/htmlize), [html-escape](https://docs.rs/crate/html-escape), html-entities) follow WHATWG's 2,231 entities, not PHP's HTML 4.01 table and numeric rules. [serde_json](https://docs.rs/serde_json) (already a test dependency) has no big-integer-as-string mode, a 128-level recursion limit and its own error classes | Port `Request.php` on the ported bags, HeaderUtils, IpUtils and AcceptHeader; `html_entity_decode()` and `json_decode()` written in php-value from the manual and recorded answers; no new dependency (symfony-deprecation-contracts is a workspace crate) | Request's derivations (base URL, path info, trusted values, host checks) are security-relevant and pinned by RequestTest and 149,016 recorded answers; the two built-ins decode attacker-controlled query strings and bodies, where PHP's exact rules (depth, big integers, error order) matter |
 | Routing's `RequestContext::fromRequest()` and `matchRequest()` (searched November 25) | No Rust port of these methods on GitHub or crates.io (as for the matcher row above); both are short methods on classes already ported here, so there was nothing to adopt | Ported in `request_context.rs` and both matchers on the ported Request; no new dependency | The context a request yields (base URL, path info, host, ports) decides which route matches, and is pinned by 15,368 recorded answers on 3,842 requests |
+| HttpKernel's `HttpKernel.php` lifecycle, its events and `RequestStack.php` (searched November 25) | No Rust port of Symfony's HttpKernel on GitHub or crates.io; [Serenade](https://github.com/Interchouette-ITC/Serenade) (row above) is conceptual only; tower/axum middleware have no event semantics (priorities, propagation, a response that stops an event, exception-to-response rules). For PHP object identity: borrowed events (this crate's typed `Kernel<C>`, which the type-erased `'static` dispatcher cannot carry), `Rc<RefCell<_>>` (not `Send`, while listeners and the request stack are shared services), `Arc<Mutex<_>>` | Ported in `http_kernel.rs`, `event.rs`, `controller.rs` and `exception.rs` on the ported EventDispatcher, Request, Response and RequestStack; PHP object handles are php-value's new `Handle<T>` (`Arc<Mutex<T>>` with `===` by identity); no new dependency | The kernel's observable order (which listener sees what, when the request leaves the stack, which status survives an exception) is pinned by 1,500 recorded lifecycles; handles keep PHP's shared-object semantics that listeners rely on |
 | HttpFoundation's `Response.php` (searched November 25) | No Rust port of Symfony's Response on GitHub or crates.io. Nearest: [http-fresh](https://docs.rs/http-fresh) (Express's `fresh`: conditional GET only, honours a request `no-cache`, no `strtotime()` dates), [http-cache-semantics](https://crates.io/crates/http-cache-semantics) and [http-cache](https://docs.rs/http-cache) (RFC 7234 cache policy for clients and proxies: other freshness rules, no `setCache()`, `prepare()` or `sendHeaders()`) | Ported in `response.rs` on the ported ResponseHeaderBag, Request, php-value and php-pcre; no new dependency. What PHP does while sending is recorded in `php::Output` | Symfony's own rules decide the headers a converted app sends: `getMaxAge()`'s order, weak ETag matching, `strtotime()` comparison of `false`, loose `==` on the protocol, the MSIE rule, 103 early hints. 33,387 answers, 300 buffer calls and 121 protocol pairs recorded from PHP 8.4.27 pin them |
 | PHP's `parse_url()` (RequestContext::fromUri(), searched November 24) | [url](https://docs.rs/url) (WHATWG URL Standard: normalizes, lowercases, percent-encodes, other failures), [http::Uri](https://docs.rs/http) and [fluent-uri](https://docs.rs/fluent-uri) (strict RFC 3986: reject control bytes, spaces and `[` hosts PHP accepts), symfony-filesystem's scheme-only `parse_url_scheme()` | Written in `php-value::url` from the PHP manual and recorded answers, no dependency | PHP's components for malformed input (`host:port` without `//`, `false` for empty hosts and long ports, control bytes as `_`, `file:///`) are what `fromUri()` reads; 12,119 calls recorded from PHP 8.4.27 pin them |
 | PHP's loose equality `==` (UrlGenerator's `array_udiff_assoc()` against defaults; searched November 24) | No Rust crate implements it: [ext-php-rs](https://docs.rs/ext-php-rs) and [phper](https://docs.rs/phper) bind the PHP engine through FFI (needs libphp and `unsafe`); symfony-console's `loose_equals_str()` and symfony-finder's `loose_eq()` cover a string or scalar operand only | Written in `php-value::compare` from the PHP manual's comparison table, no dependency | Every PHP type is compared (arrays by key, objects by class and properties, numeric strings, big integer strings as bytes, NAN); 8,649 pairs recorded from PHP 8.4.27 pin it. The two crate copies can move to it later |
@@ -1419,23 +1420,28 @@ Stack rows (searched November 22):
       for this file. Next: the HttpKernel lifecycle on Request and
       Response, then JsonResponse, RedirectResponse and StreamedResponse.
 - [ ] HttpKernel stage 1, the lifecycle on Request and Response (November
-      25, in progress;
-      [docs/milestones/m2-a-http-kernel-lifecycle.md](docs/milestones/m2-a-http-kernel-lifecycle.md)):
+      25; [docs/milestones/m2-a-http-kernel-lifecycle.md](docs/milestones/m2-a-http-kernel-lifecycle.md)):
       `HttpKernel.php`, `HttpKernelInterface.php`, `TerminableInterface.php`,
       `KernelEvents.php`, the `Event/*` classes it dispatches, the
       `Exception/*HttpException` family and
       `ControllerDoesNotReturnResponseException.php`, the two resolver
       interfaces, and HttpFoundation's `RequestStack.php`, on the ported
-      EventDispatcher. PHP object handles (a request, response or event
-      seen by the kernel, the stack and every listener) are php-value's new
+      EventDispatcher. PHP object handles (a request, response or event the
+      kernel, the stack and listeners share) are php-value's new
       `Handle<T>`; a controller is a closure with its declared parameters
-      and attributes (what PHP reflects). The existing typed Axum subset
-      (`Kernel<C>`) stays for request-lab and the converter fixture until
-      they move. Steps: [x] `Handle<T>`; [x] RequestStack (RequestStackTest 5 of 5);
-      [x] exceptions (HttpExceptionTest and its 16 subclass tests, 86 of
-      86); [x] events; [x] HttpKernel (HttpKernelTest 31 of 37: 5 `n/a`,
-      PHP callable forms and a trace line; StreamedResponse's test
-      pending); [ ] recorded lifecycle vectors.
+      and attributes (what PHP reflects); a throwable is an `Arc`, so `===`
+      holds. HttpKernelTest 31 of 37 (5 `n/a`: PHP callable forms, a trace
+      line; StreamedResponse's test pending), HttpExceptionTest and its 16
+      subclass tests 86 of 86, RequestStackTest 5 of 5; 1,500 recorded
+      lifecycles (every listener call with what it saw, the result, the
+      stack, `terminate()` / `terminateWithException()` and their output,
+      71 terminate throwables given back), all matching. The typed Axum
+      subset (`Kernel<C>`) is unchanged for request-lab and the converter
+      fixture; the listener seam (decision above) waits until they move to
+      this kernel. No advisory is listed for these files. Next:
+      RouterListener and the ControllerResolver/ArgumentResolver on this
+      kernel, then request-lab on them; JsonResponse, RedirectResponse and
+      StreamedResponse.
 
 ## Local development performance
 
