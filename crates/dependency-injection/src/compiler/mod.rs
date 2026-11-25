@@ -28,6 +28,9 @@ pub use service_reference_graph::{
 mod analyze_service_references_pass;
 pub use analyze_service_references_pass::AnalyzeServiceReferencesPass;
 
+mod check_alias_validity_pass;
+pub use check_alias_validity_pass::CheckAliasValidityPass;
+
 mod check_arguments_validity_pass;
 pub use check_arguments_validity_pass::CheckArgumentsValidityPass;
 
