@@ -18,6 +18,12 @@
 //! tests/yaml-test-suite.
 //!
 //! Upstream: none
+#![allow(
+    clippy::cast_possible_truncation,
+    clippy::similar_names,
+    clippy::map_unwrap_or,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use std::sync::{Arc, LazyLock};
 

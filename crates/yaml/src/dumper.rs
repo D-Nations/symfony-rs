@@ -65,6 +65,11 @@ impl Dumper {
         Self::with_environment(Arc::new(Environment::new()), indentation)
     }
 
+    #[expect(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     pub fn with_environment(
         environment: Arc<Environment>,
         indentation: i64,
@@ -125,6 +130,7 @@ impl Dumper {
         })
     }
 
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn do_dump(
         &self,
         input: &Value,

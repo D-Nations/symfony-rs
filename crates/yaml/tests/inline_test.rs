@@ -10,6 +10,12 @@
 //!
 //! Upstream: symfony/yaml Tests/InlineTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_sign_loss,
+    clippy::needless_pass_by_value,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 mod common;
 

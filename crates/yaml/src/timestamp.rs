@@ -57,6 +57,10 @@ fn number(bytes: Option<regex::bytes::Match<'_>>) -> i64 {
 
 /// The instant PHP makes of a timestamp, or `None` where PHP's date
 /// parser throws.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 pub(crate) fn parse(scalar: &[u8]) -> Option<DateTimeImmutable> {
     let c = TIMESTAMP.captures(scalar)?;
     let len = |name: &str| c.name(name).map_or(0, |m| m.len());
@@ -72,7 +76,7 @@ pub(crate) fn parse(scalar: &[u8]) -> Option<DateTimeImmutable> {
     if c.name("hour").is_some() && (hour > 24 || minute > 59 || second > 60) {
         return None;
     }
-    let fraction = c.name("fraction").map(|m| m.as_bytes()).unwrap_or(b"");
+    let fraction = c.name("fraction").map_or(&b""[..], |m| m.as_bytes());
     let separator = c.name("sep").map(|m| m.as_bytes());
     if separator == Some(b"T")
         && !(len("month") == 2 && len("day") == 2 && len("hour") == 2)

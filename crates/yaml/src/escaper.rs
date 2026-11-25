@@ -116,11 +116,11 @@ pub fn escape_with_double_quotes(value: &[u8]) -> Vec<u8> {
 /// one of `\s ' " : { } [ ] , & * # ?`, or starts with one of
 /// `- ? | < > = ! % @` `` ` `` or a space separator.
 pub fn requires_single_quoting(value: &[u8]) -> bool {
-    let lower = value.to_ascii_lowercase();
     const KEYWORDS: [&[u8]; 13] = [
         b"null", b"~", b"true", b"false", b"y", b"n", b"yes", b"no", b"on", b"off", b".inf",
         b".nan", b"...",
     ];
+    let lower = value.to_ascii_lowercase();
     if KEYWORDS.contains(&lower.as_slice()) {
         return true;
     }
