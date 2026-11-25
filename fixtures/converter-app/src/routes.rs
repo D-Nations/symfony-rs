@@ -1,52 +1,29 @@
-//! The compiled routes of oracle/apps/converter-fixture (`debug:router`), as
-//! symfony2rust is to emit them: one typed target per route, matched by
-//! `symfony-routing` (converter contract 0.1, section 6).
+//! The routes of oracle/apps/converter-fixture as `debug:router` lists
+//! them (`#[Route]` on `GreetController::greet`, with `router.utf8: true`),
+//! in the shape symfony2rust is to emit: a routing `RouteCollection`
+//! (converter contract 0.3, section 6).
 //!
 //! Upstream: none
 
-use symfony_routing::{Definition, Requirement, RouteCollection, Segment, Target};
+use php_value::{PhpString, Value};
+use symfony_routing::{exception::Error, route::Route, route_collection::RouteCollection};
 
-/// A matched route with its parameters.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Route {
-    /// `greet`: `GET /greet/{name}`, `name` matching `[a-z]+`.
-    Greet { name: String },
-}
+use crate::app::greet_controller;
 
-impl Route {
-    pub fn name(&self) -> &'static str {
-        match self {
-            Self::Greet { .. } => "greet",
-        }
-    }
-}
-
-impl Target for Route {
-    fn methods(&self) -> Option<&'static [&'static str]> {
-        match self {
-            Self::Greet { .. } => Some(&["GET"]),
-        }
-    }
-}
-
-/// `[a-z]+`, anchored, as the compiled matcher applies it (the `u` flag
-/// from `router.utf8` does not widen `[a-z]`).
-fn lowercase_ascii(text: &str) -> bool {
-    !text.is_empty() && text.bytes().all(|b| b.is_ascii_lowercase())
-}
-
-pub fn routes() -> RouteCollection<Route> {
-    let mut routes = RouteCollection::default();
-    routes.add(Definition::new(
-        vec![
-            Segment::Literal("greet"),
-            Segment::Parameter("name", Requirement::Custom(lowercase_ascii)),
-        ],
-        |parameters| {
-            Some(Route::Greet {
-                name: parameters.get("name")?.to_owned(),
-            })
-        },
-    ));
-    routes
+/// `greet`: `GET /greet/{name}`, `name` matching `[a-z]+`.
+pub fn routes() -> Result<RouteCollection, Error> {
+    let mut greet = Route::new("/greet/{name}")?;
+    greet.set_methods(["GET"]);
+    greet.set_default(
+        b"_controller",
+        Value::String(PhpString::from(format!(
+            "{}::greet",
+            greet_controller::CLASS
+        ))),
+    )?;
+    greet.set_requirement(b"name", b"[a-z]+")?;
+    greet.set_option(b"utf8", Value::Bool(true));
+    let mut routes = RouteCollection::new();
+    routes.add("greet", greet, 0);
+    Ok(routes)
 }
