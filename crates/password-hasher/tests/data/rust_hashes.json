@@ -1,0 +1,152 @@
+[
+  {
+    "by": "NativePasswordHasher(cost 4)",
+    "hash": "$2y$04$jpDk.nkHZVlqLuxDUOhgwOWkZbtwMDtRucuFaq/zWZnNk5Mzqwdzu",
+    "password": "password"
+  },
+  {
+    "by": "NativePasswordHasher(cost 4)",
+    "hash": "$2y$04$t6rraDHOJR6snZeTfMV7S.S8rRrwHzduZ6BOKuPT/dMJVaDRME8FK",
+    "password": "é"
+  },
+  {
+    "by": "NativePasswordHasher(cost 4)",
+    "hash": "$2y$04$5OyLFRn18R3dfALOhgl3G.JnuCp0LLvOpK2ICRYdtyeY4eVyxZwbu",
+    "password": "a\u0000b"
+  },
+  {
+    "by": "NativePasswordHasher(cost 4)",
+    "hash": "$2y$04$sxFGmH9MI8IqY/QmNt1bV.virieWOV1CD49DaaUKnZtaDJAbKB01u",
+    "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "by": "NativePasswordHasher(cost 4)",
+    "hash": "$2y$04$2LcRlf00b33bK3rEzydhlewpq1mDLJmyOxcHJxhGyYhcWE4.s0hmi",
+    "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "by": "NativePasswordHasher(cost 4)",
+    "hash": "$2y$04$e40rUwYhGBI9/j3j0WqczuHYqSohDwzwcMADC8geV3NYV3QWUqnFq",
+    "password": "Ünïcödé ✓"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2i)",
+    "hash": "$argon2i$v=19$m=10,t=3,p=1$k4cqys5sxETS/PROSnQZhg$BZPCSjlGgSv86f1C60MftsGF/c1BjhHD4owEvOaNCgk",
+    "password": "password"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2i)",
+    "hash": "$argon2i$v=19$m=10,t=3,p=1$gBENLQcfzoQIOwqKi9Zw3w$tPGhJeB3LSxMqziadOVAB6m+G78Zdavl1pYaaabTaNU",
+    "password": "é"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2i)",
+    "hash": "$argon2i$v=19$m=10,t=3,p=1$RxxPpliLXrTBX1dYLgKe+Q$Maf2sYlPEztAXvBqXhYaTaY0dXQfgzKDSbKpI64utu8",
+    "password": "a\u0000b"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2i)",
+    "hash": "$argon2i$v=19$m=10,t=3,p=1$0tSPZPLJZmAtzcagskAGHg$svRI+lw0L23OSEiSx18XSNmSMcXsvsdVzzwN+/d7Lr8",
+    "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2i)",
+    "hash": "$argon2i$v=19$m=10,t=3,p=1$949RTp3osiHvbax7pedCtg$S7jWGDRXO0AVnFhAydBzFgo4p6aF7irGUy4/hfd5juo",
+    "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2i)",
+    "hash": "$argon2i$v=19$m=10,t=3,p=1$v30KXyMXRnE8DTSkH/OvXg$gHao9AeDQwZqo/mdKS1XgsZ+qA5QF0xogjbXqQ3HtdI",
+    "password": "Ünïcödé ✓"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2id)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$/YodhIv9HXv+92hhGW45CA$91vNstXIV0NvXxHr9r6sln0lQNrhAmtEpPu92mLC1Sw",
+    "password": "password"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2id)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$2aupsfxhmCAoAQTRQUEy9A$TSjaxy2i7m7mT5D2gipz2kgqfsPCSxgBnb22PPHwRN4",
+    "password": "é"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2id)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$cQwN3Hvohw68mSQv7sNJDQ$nYOQaCI7Sm4H2dQh67+Z9etfmlJaz7P26LNsDuqp6vs",
+    "password": "a\u0000b"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2id)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$/8BQsNNlx8EwPKf7l7iLww$FFjjq3+wEwH61EdebA01DOvyqg1bVa/8OkHYQsv8VWI",
+    "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2id)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$ussTfWMnQZat+XFaIVReOg$vqG9PnoeG0W/UF5drLc6ZOHBoyX/Gtu8snzN0lQ3Kuc",
+    "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "by": "NativePasswordHasher(3, 10240, 4, argon2id)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$QMCzhWbfAXydg2c1wxqRAg$UeRLujhNVZfXUzsC4oOMcstWgO1uss0pFfDXGQYjEm0",
+    "password": "Ünïcödé ✓"
+  },
+  {
+    "by": "SodiumPasswordHasher(3, 10240)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$JkoF8e9qSp9qtLU3EotLJA$D/3mZKsQFfbdHJm7pERzMc7HTT3togPzDKDBC9Q4dJk",
+    "password": "password"
+  },
+  {
+    "by": "SodiumPasswordHasher(3, 10240)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$YW3aenewneUKEQSeJc5Izw$/9W+/OgDlObTBLAobwq4cWKnLKECZ8VJRMrSBLGSA9Q",
+    "password": "é"
+  },
+  {
+    "by": "SodiumPasswordHasher(3, 10240)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$wTsskBy05Tjn/6N4LnMbOQ$sLRNs2xGFpSZUoKA1EUHUevlALY7i057OZHz033WttE",
+    "password": "a\u0000b"
+  },
+  {
+    "by": "SodiumPasswordHasher(3, 10240)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$KjKah8Mg2wVyhreA1fHDug$1HexG9g+Pg5OtiwZcciUHl0OA8H1gfDsFevp5JDE1lo",
+    "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "by": "SodiumPasswordHasher(3, 10240)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$GleU2IeeMIBqJp6S2Zki8g$OiyudEcziM0ZgLP+8dh2IaNvsHVD/aZ7nqj4r6KZftg",
+    "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "by": "SodiumPasswordHasher(3, 10240)",
+    "hash": "$argon2id$v=19$m=10,t=3,p=1$J4sJtkxR71bXBlakFTDfmg$uQUxPQfnBGgh3lIWVaZdb213AU9ugDdhg27CtViqWpo",
+    "password": "Ünïcödé ✓"
+  },
+  {
+    "by": "SodiumPasswordHasher()",
+    "hash": "$argon2id$v=19$m=65536,t=4,p=1$c4SFO5IN8k6DNuj+mGxg4A$FvUipGyS7B4GUg8vu3ydm8O5sZ1aiS9DMHldqBhlDz8",
+    "password": "password"
+  },
+  {
+    "by": "SodiumPasswordHasher()",
+    "hash": "$argon2id$v=19$m=65536,t=4,p=1$hSyWTKfYylhnfJ6pHOu9cA$U4VQtbnsvANuHiQ93xWyLUQXyMPw4qLi1tBJKDqKZbQ",
+    "password": "é"
+  },
+  {
+    "by": "SodiumPasswordHasher()",
+    "hash": "$argon2id$v=19$m=65536,t=4,p=1$QIfkgio6Fg2/h1fNqq7UCQ$Cb0ZC0cqWHvmr/AurCnHniDHgiUPlKGi1nbs3wvMyGQ",
+    "password": "a\u0000b"
+  },
+  {
+    "by": "SodiumPasswordHasher()",
+    "hash": "$argon2id$v=19$m=65536,t=4,p=1$SZaeIcvz402puomkQJ9exA$yJbBmOrCu4oIGzaatzwiMg+3ov2elQXLQ/QUsMLsfCY",
+    "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "by": "SodiumPasswordHasher()",
+    "hash": "$argon2id$v=19$m=65536,t=4,p=1$Dt8LFCtgWRtDciQr90FvZQ$SbNIglKv10e06Byy5qplNZB6Jc3ymH4wMJx6EAjqkbc",
+    "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "by": "SodiumPasswordHasher()",
+    "hash": "$argon2id$v=19$m=65536,t=4,p=1$YmkFdhG+pvM3an3DAKgMYQ$OOAD9jTzlh+kLqdqI1nz200AHq07JmW9K75AoOeMgxo",
+    "password": "Ünïcödé ✓"
+  }
+]
