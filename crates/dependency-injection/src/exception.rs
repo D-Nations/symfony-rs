@@ -276,6 +276,9 @@ pub struct Error {
     code: i64,
     data: Box<Data>,
     previous: Option<Box<Error>>,
+    /// A `ParameterNotFoundException`'s message set by [`Error::set_message`],
+    /// until a setter rebuilds it.
+    message_override: Option<String>,
 }
 
 impl Error {
@@ -287,6 +290,7 @@ impl Error {
             code: 0,
             data: Box::new(Data::None),
             previous: None,
+            message_override: None,
         }
     }
 
@@ -441,6 +445,7 @@ impl Error {
                 service_id: service_id.into(),
             }),
             previous: None,
+            message_override: None,
         }
     }
 
@@ -476,19 +481,15 @@ impl Error {
     /// `getMessage()`.
     pub fn message(&self) -> String {
         if let Data::ParameterNotFound(fields) = &*self.data {
-            return fields.message();
+            return self
+                .message_override
+                .clone()
+                .unwrap_or_else(|| fields.message());
         }
         match &self.message {
             Message::Text(text) => text.clone(),
             Message::Lazy(lazy) => lazy.get(),
         }
-    }
-
-    /// Replaces the message, as `ServiceLocator::get()` does through
-    /// reflection. A `ParameterNotFoundException` keeps rebuilding its
-    /// message from its fields.
-    pub fn set_message(&mut self, message: impl Into<String>) {
-        self.message = Message::Text(message.into());
     }
 
     pub fn code(&self) -> i64 {
@@ -497,6 +498,24 @@ impl Error {
 
     pub fn previous(&self) -> Option<&Error> {
         self.previous.as_deref()
+    }
+
+    /// The previous error, to change it in place.
+    pub fn previous_mut(&mut self) -> Option<&mut Error> {
+        self.previous.as_deref_mut()
+    }
+
+    /// `$this->message = $message` set through reflection, as
+    /// `Compiler::compile()` and `ServiceLocator::get()` do. A `ParameterNotFoundException` keeps
+    /// its fields; its next setter rebuilds the message from them, as
+    /// upstream's `updateRepr()` does.
+    pub fn set_message(&mut self, message: impl Into<String>) {
+        let message = message.into();
+        if matches!(&*self.data, Data::ParameterNotFound(_)) {
+            self.message_override = Some(message);
+        } else {
+            self.message = Message::Text(message);
+        }
     }
 
     /// Whether the error is of this kind or one that extends it.
@@ -597,6 +616,7 @@ impl Error {
     pub fn update_parameter_not_found(&mut self, update: impl FnOnce(&mut ParameterNotFound)) {
         if let Data::ParameterNotFound(fields) = &mut *self.data {
             update(fields);
+            self.message_override = None;
         }
     }
 
