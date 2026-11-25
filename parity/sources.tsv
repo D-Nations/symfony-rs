@@ -689,6 +689,15 @@ crates/translation/tests/target_operation_test.rs	symfony/translation	Tests/Cata
 crates/translation/tests/target_operation_test.rs	symfony/translation	Tests/Catalogue/AbstractOperationTestCase.php	d9e1caba0d6b6f9a26710af8a2f88d37f001215a
 crates/translation/tests/xliff_file_loader_test.rs	symfony/translation	Tests/Loader/XliffFileLoaderTest.php	d9e1caba0d6b6f9a26710af8a2f88d37f001215a
 crates/translation/tests/xliff_utils_test.rs	symfony/translation	Tests/Util/XliffUtilsTest.php	d9e1caba0d6b6f9a26710af8a2f88d37f001215a
+crates/twig/src/error.rs	twig/twig	src/Error/Error.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/error.rs	twig/twig	src/Error/SyntaxError.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/error.rs	twig/twig	src/Error/LoaderError.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/error.rs	twig/twig	src/Error/RuntimeError.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/lexer.rs	twig/twig	src/Lexer.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/source.rs	twig/twig	src/Source.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/token.rs	twig/twig	src/Token.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/token_stream.rs	twig/twig	src/TokenStream.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/tests/lexer_test.rs	twig/twig	tests/LexerTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/yaml/src/command/lint_command.rs	symfony/yaml	Command/LintCommand.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/dumper.rs	symfony/yaml	Dumper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
 crates/yaml/src/escaper.rs	symfony/yaml	Escaper.php	6107ee26a25215c3df3af0a3315e56bb4fd0b7db
