@@ -858,7 +858,10 @@ fn testGetMimeTypesFromInexistentFormat() {
     let _t = TearDown;
     let request = Request::default();
     assert_eq!(None, request.get_mime_type(b"foo"));
-    assert!(Request::get_mime_types(b"foo").is_empty());
+    assert_eq!(
+        Request::get_mime_types(b"foo"),
+        [] as [php_value::PhpString; 0]
+    );
 }
 
 #[test]
@@ -2447,13 +2450,13 @@ fn strings(values: &[&str]) -> Vec<PhpString> {
 fn testGetCharsets() -> TestResult {
     let _t = TearDown;
     let mut request = Request::default();
-    assert!(request.get_charsets().is_empty());
+    assert_eq!(request.get_charsets(), [] as [php_value::PhpString; 0]);
     set_header(
         &mut request,
         "Accept-Charset",
         "ISO-8859-1, US-ASCII, UTF-8; q=0.8, ISO-10646-UCS-2; q=0.6",
     )?;
-    assert!(request.get_charsets().is_empty()); // testing caching
+    assert_eq!(request.get_charsets(), [] as [php_value::PhpString; 0]); // testing caching
 
     let mut request = Request::default();
     set_header(
@@ -2483,9 +2486,9 @@ fn testGetCharsets() -> TestResult {
 fn testGetEncodings() -> TestResult {
     let _t = TearDown;
     let mut request = Request::default();
-    assert!(request.get_encodings().is_empty());
+    assert_eq!(request.get_encodings(), [] as [php_value::PhpString; 0]);
     set_header(&mut request, "Accept-Encoding", "gzip,deflate,sdch")?;
-    assert!(request.get_encodings().is_empty()); // testing caching
+    assert_eq!(request.get_encodings(), [] as [php_value::PhpString; 0]); // testing caching
 
     let mut request = Request::default();
     set_header(&mut request, "Accept-Encoding", "gzip,deflate,sdch")?;
@@ -2512,9 +2515,15 @@ fn testGetAcceptableContentTypes() -> TestResult {
     let _t = TearDown;
     let accept = "application/vnd.wap.wmlscriptc, text/vnd.wap.wml, application/vnd.wap.xhtml+xml, application/xhtml+xml, text/html, multipart/mixed, */*";
     let mut request = Request::default();
-    assert!(request.get_acceptable_content_types()?.is_empty());
+    assert_eq!(
+        request.get_acceptable_content_types()?,
+        [] as [php_value::PhpString; 0]
+    );
     set_header(&mut request, "Accept", accept)?;
-    assert!(request.get_acceptable_content_types()?.is_empty()); // testing caching
+    assert_eq!(
+        request.get_acceptable_content_types()?,
+        [] as [php_value::PhpString; 0]
+    ); // testing caching
 
     let mut request = Request::default();
     set_header(&mut request, "Accept", accept)?;
@@ -3247,7 +3256,10 @@ fn testTrustedHostsWithManyConstantPatterns() -> TestResult {
         .map(|i| format!(r"^customer-{i}\.example\.com$"))
         .collect();
     Request::set_trusted_hosts(patterns.iter().map(String::as_str))?;
-    assert!(Request::trusted_hosts_regexps().is_empty());
+    assert_eq!(
+        Request::trusted_hosts_regexps(),
+        [] as [php_value::PhpString; 0]
+    );
 
     let mut request = Request::create("/")?;
     set_header(&mut request, "host", "customer-0.example.com")?;

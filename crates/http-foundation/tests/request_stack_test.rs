@@ -98,5 +98,8 @@ fn testResetRequestFormats() {
 
     request_stack.reset_request_formats();
 
-    assert!(Request::get_mime_types(b"foo").is_empty());
+    assert_eq!(
+        Request::get_mime_types(b"foo"),
+        [] as [php_value::PhpString; 0]
+    );
 }
