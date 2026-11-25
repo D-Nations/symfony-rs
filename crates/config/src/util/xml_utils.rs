@@ -8,11 +8,11 @@
 //! validation callable adds to it through the list it is given.
 //! `libxml_use_internal_errors()` is `php_dom::libxml_use_internal_errors`,
 //! set and restored as upstream does (also where upstream leaves it set:
-//! after `loadXML('')`'s ValueError or a callable's `\Error`).
+//! after `loadXML('')`'s `ValueError` or a callable's `\Error`).
 //!
 //! Where `php_dom` refuses a document or schema (it would read a file or
 //! the network, or uses an encoding or schema construct it does not
-//! implement), the refusal is an XmlParsingException carrying its text
+//! implement), the refusal is an `XmlParsingException` carrying its text
 //! (PLAN.md decision 14), a stated difference from PHP.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -221,7 +221,7 @@ impl XmlUtils {
     /// `"value"` when there are keys), repeated keys a list; `null` for an
     /// empty element. A child that is neither text, a comment nor an
     /// element (a processing instruction, an entity reference) reaches the
-    /// `\DOMElement` parameter: PHP's TypeError.
+    /// `\DOMElement` parameter: PHP's `TypeError`.
     pub fn convert_dom_element_to_array(
         dom: &Document,
         element: NodeId,
@@ -363,7 +363,7 @@ impl XmlUtils {
             .iter()
             .map(|error| {
                 let file = match error.file.as_deref() {
-                    None | Some("") | Some("0") => "n/a",
+                    None | Some("" | "0") => "n/a",
                     Some(file) => file,
                 };
                 format!(
@@ -458,7 +458,7 @@ fn dom_class(node_type: NodeType) -> &'static str {
 }
 
 /// `(new Filesystem())->readFile($filename)`: the content, or
-/// Filesystem's IOException.
+/// Filesystem's `IOException`.
 fn read_file(path: &Path) -> Result<Vec<u8>, Error> {
     read_file_named(path, &path_bytes(path))
 }
@@ -510,29 +510,26 @@ fn resolve_import(location: &str, cwd: Option<&Path>) -> Option<Vec<u8>> {
     if location.contains(' ') {
         return None;
     }
-    let path = match location.strip_prefix("file://") {
-        Some(rest) => {
-            if !rest.starts_with('/') {
-                return None;
-            }
-            let decoded = percent_decode(rest)?;
-            let decoded = if cfg!(windows) && decoded.get(2..3) == Some(":") {
-                decoded[1..].to_string()
-            } else {
-                decoded
-            };
-            PathBuf::from(decoded)
+    let path = if let Some(rest) = location.strip_prefix("file://") {
+        if !rest.starts_with('/') {
+            return None;
         }
-        None => {
-            if has_scheme(location) {
-                return None;
-            }
-            let path = PathBuf::from(percent_decode(location)?);
-            if path.is_absolute() {
-                path
-            } else {
-                cwd?.join(path)
-            }
+        let decoded = percent_decode(rest)?;
+        let decoded = if cfg!(windows) && decoded.get(2..3) == Some(":") {
+            decoded[1..].to_string()
+        } else {
+            decoded
+        };
+        PathBuf::from(decoded)
+    } else {
+        if has_scheme(location) {
+            return None;
+        }
+        let path = PathBuf::from(percent_decode(location)?);
+        if path.is_absolute() {
+            path
+        } else {
+            cwd?.join(path)
         }
     };
     std::fs::read(path).ok()

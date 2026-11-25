@@ -1,6 +1,6 @@
 //! Replays tests/data/parse.json (scripts/record.sh php-dom): for every
 //! recorded document, what `DOMDocument::loadXML()` answered in PHP 8.4.27
-//! with libxml 2.9.14, once with XmlUtils's settings (`validateOnParse`)
+//! with libxml 2.9.14, once with `XmlUtils`'s settings (`validateOnParse`)
 //! and once plain: whether it loaded, `libxml_get_errors()`, and the tree.
 //!
 //! The cases this crate answers differently are listed in `KNOWN` with the
@@ -8,6 +8,12 @@
 //! stops differing (so the list stays exact).
 //!
 //! Upstream: none
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use std::collections::BTreeMap;
 
@@ -171,7 +177,7 @@ fn expected_tree(tree: &Value) -> Vec<Value> {
 }
 
 /// Validity errors (5xx) and I/O warnings (15xx) for documents with a
-/// document type: DTD validation is not modelled (XmlUtils rejects every
+/// document type: DTD validation is not modelled (`XmlUtils` rejects every
 /// document type anyway).
 fn claimed_errors(errors: &Value, has_doctype: bool) -> Vec<Value> {
     errors

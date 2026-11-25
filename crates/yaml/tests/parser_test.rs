@@ -3,7 +3,7 @@
 //! Each test has its upstream name and replays every call the upstream
 //! test makes to the parser (through `$this->parser`, `new Parser(...)`,
 //! `Yaml::parse()`) and the dumper, for each of its data-provider rows,
-//! from tests/data/parser_test.json (common/replay.rs says how).
+//! from `tests/data/parser_test.json` (common/replay.rs says how).
 //!
 //! Inputs over 64 KiB are not recorded: the four tests that build them
 //! with `str_repeat()` build them here the same way, and check them
@@ -1081,7 +1081,7 @@ fn testCanParseVeryLongValue() -> TestResult {
 
 #[test]
 fn testParseHandlesLargeYamlHeaders() -> TestResult {
-    let yaml = format!("%YAML:{}\nfoo: bar\n", "1".repeat(100000));
+    let yaml = format!("%YAML:{}\nfoo: bar\n", "1".repeat(100_000));
     replay::replay_with(recording(), "testParseHandlesLargeYamlHeaders", &|_| {
         Value::from(yaml.as_str())
     })

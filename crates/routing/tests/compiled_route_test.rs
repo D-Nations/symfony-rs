@@ -58,7 +58,7 @@ fn testAccessors() {
     );
 }
 
-/// CompiledRouteTestToStringGadget.
+/// `CompiledRouteTestToStringGadget`.
 #[derive(Debug)]
 struct Gadget(Arc<AtomicBool>);
 

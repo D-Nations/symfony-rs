@@ -3,7 +3,7 @@
 //! PHPUnit's. A collection owns its routes, so a route PHP keeps a handle
 //! to (`$routea`) is read back through `get()`, and `assertSame()` on
 //! routes compares values (a copy taken before the route was added).
-//! The two FileResource fixtures (empty files) are in tests/fixtures.
+//! The two `FileResource` fixtures (empty files) are in tests/fixtures.
 //!
 //! Upstream: symfony/routing Tests/RouteCollectionTest.php
 #![allow(non_snake_case)]

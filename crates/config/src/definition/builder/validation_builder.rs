@@ -11,7 +11,7 @@ use crate::definition::{
     builder::expr_builder::{Expr, ExprRef},
 };
 
-/// ValidationBuilder's properties.
+/// `ValidationBuilder`'s properties.
 #[derive(Clone, Default)]
 pub(crate) struct ValidationBuilder {
     pub(crate) rules: Vec<Expr>,

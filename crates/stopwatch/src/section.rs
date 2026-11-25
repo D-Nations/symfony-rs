@@ -65,6 +65,7 @@ impl Section {
     }
 
     /// Creates a child section, or re-opens the child with this id.
+    #[must_use]
     pub fn open(&self, id: Option<&str>) -> Self {
         if let Some(section) = id.and_then(|id| self.get(id)) {
             return section;
@@ -92,24 +93,23 @@ impl Section {
     pub fn start_event(&self, name: &str, category: Option<&str>) -> StopwatchEvent {
         let event = {
             let mut state = self.lock();
-            match state.events.iter().find(|(n, _)| n == name) {
-                Some((_, event)) => event.clone(),
-                None => {
-                    // `$this->origin ?: microtime(true) * 1000`: 0.0 is falsy.
-                    let origin = match state.origin {
-                        Some(origin) if origin != 0.0 => origin,
-                        _ => self.host.microtime() * 1000.0,
-                    };
-                    let event = StopwatchEvent::new(
-                        self.host.clone(),
-                        origin,
-                        category,
-                        state.more_precision,
-                        Some(name),
-                    );
-                    state.events.push((name.to_owned(), event.clone()));
-                    event
-                }
+            if let Some((_, event)) = state.events.iter().find(|(n, _)| n == name) {
+                event.clone()
+            } else {
+                // `$this->origin ?: microtime(true) * 1000`: 0.0 is falsy.
+                let origin = match state.origin {
+                    Some(origin) if origin != 0.0 => origin,
+                    _ => self.host.microtime() * 1000.0,
+                };
+                let event = StopwatchEvent::new(
+                    self.host.clone(),
+                    origin,
+                    category,
+                    state.more_precision,
+                    Some(name),
+                );
+                state.events.push((name.to_owned(), event.clone()));
+                event
             }
         };
         event.start();

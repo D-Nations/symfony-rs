@@ -115,7 +115,7 @@ impl File {
         })
     }
 
-    /// `getSize()`; a file that cannot be read is PHP's RuntimeException.
+    /// `getSize()`; a file that cannot be read is PHP's `RuntimeException`.
     pub fn get_size(&self) -> Result<i64> {
         Ok(self.stat("getSize")?.size)
     }
@@ -158,7 +158,7 @@ impl File {
         Ok(target)
     }
 
-    /// The FileException of a failed move, with the warning PHP gave.
+    /// The `FileException` of a failed move, with the warning PHP gave.
     pub(crate) fn move_failed(&self, target: &File, warning: Option<&str>) -> Error {
         let warning = warning.map(php::html_warning).unwrap_or_default();
         Error::new(

@@ -1,10 +1,16 @@
-//! strtotime(), createFromFormat(DATE_RFC2822) and gmdate() against the
+//! `strtotime()`, `createFromFormat(DATE_RFC2822)` and `gmdate()` against the
 //! answers PHP 8.4.27 gave in the oracle (tests/data/dates.json,
-//! oracle/recorders/http_foundation_dates.php). A text the port refuses
+//! `oracle/recorders/http_foundation_dates.php`). A text the port refuses
 //! must be listed in `REFUSED_*`, so a change in what is read shows up;
 //! every other text must give PHP's answer, `false` included.
 //!
 //! Upstream: none
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use php_value::{base64, dateparse, datetime::gmdate};
 use serde_json::Value as Json;

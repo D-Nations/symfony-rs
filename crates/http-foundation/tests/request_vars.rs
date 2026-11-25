@@ -63,7 +63,7 @@ fn from_rust(entries: &[(String, QueryValue)]) -> Tree {
     )
 }
 
-/// The nesting-depth vectors are deeper than serde_json's default limit.
+/// The nesting-depth vectors are deeper than `serde_json`'s default limit.
 fn vectors(json: &str) -> Result<Vec<Value>, Box<dyn std::error::Error>> {
     use serde::Deserialize as _;
     let mut deserializer = serde_json::Deserializer::from_str(json);

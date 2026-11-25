@@ -2,7 +2,7 @@
 //! yet. Each submodule names the upstream file it ports and covers only
 //! what the fixture's recorded cases exercise; anything else is refused with
 //! `NotPorted`, never approximated. These are the gaps M2-A must close in
-//! `symfony-http-foundation`, `symfony-http-kernel` and a FrameworkBundle
+//! `symfony-http-foundation`, `symfony-http-kernel` and a `FrameworkBundle`
 //! crate (docs/milestones/m1-d-converter-fixture.md lists them); generated
 //! code is not meant to carry them.
 //!

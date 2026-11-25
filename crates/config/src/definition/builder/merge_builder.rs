@@ -7,7 +7,7 @@
 //!
 //! Upstream: symfony/config Definition/Builder/MergeBuilder.php
 
-/// MergeBuilder's properties.
+/// `MergeBuilder`'s properties.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) struct MergeBuilder {
     pub(crate) allow_false: bool,

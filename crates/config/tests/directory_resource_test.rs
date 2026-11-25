@@ -142,7 +142,7 @@ fn testIsFreshDeleteFile() -> TestResult {
     let t = set_up();
     let resource = DirectoryResource::new(&t.directory, None)?;
     let time = time();
-    std::thread::sleep(std::time::Duration::from_micros(1_500_000));
+    std::thread::sleep(std::time::Duration::from_millis(1500));
     unlink(&t.join("/tmp.xml"));
     assert!(
         !resource.is_fresh(time)?,

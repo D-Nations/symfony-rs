@@ -141,7 +141,7 @@ impl XliffUtils {
         out
     }
 
-    /// `getFileUrl($path)` (private upstream; XliffUtilsTest reaches it by
+    /// `getFileUrl($path)` (private upstream; `XliffUtilsTest` reaches it by
     /// reflection): `file:///` and the path's `/`-separated parts through
     /// `rawurlencode()`.
     pub fn get_file_url(path: &[u8]) -> Vec<u8> {

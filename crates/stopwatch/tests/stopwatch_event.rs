@@ -3,11 +3,17 @@
 //! PHPUnit's.
 //!
 //! Upstream runs this class in the `time-sensitive` group, where
-//! symfony/phpunit-bridge's ClockMock replaces `microtime()` and makes
+//! symfony/phpunit-bridge's `ClockMock` replaces `microtime()` and makes
 //! `usleep()` advance it. `ClockMock` below does the same, starting from
 //! the real time as the bridge does.
 //!
 //! Upstream: symfony/stopwatch Tests/StopwatchEventTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::sync::{Arc, Mutex};
@@ -113,17 +119,17 @@ fn testDuration() -> Result<(), Box<dyn std::error::Error>> {
     let clock = ClockMock::new();
     let event = self::event(&clock, None, None);
     event.start();
-    clock.usleep(200000);
+    clock.usleep(200_000);
     event.stop()?;
     assert_equals_with_delta(200.0, event.get_duration(), DELTA);
 
     let event = self::event(&clock, None, None);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.stop()?;
     clock.usleep(50000);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.stop()?;
     assert_equals_with_delta(200.0, event.get_duration(), DELTA);
     Ok(())
@@ -134,17 +140,17 @@ fn testDurationBeforeStop() -> Result<(), Box<dyn std::error::Error>> {
     let clock = ClockMock::new();
     let event = self::event(&clock, None, None);
     event.start();
-    clock.usleep(200000);
+    clock.usleep(200_000);
     assert_equals_with_delta(200.0, event.get_duration(), DELTA);
 
     let event = self::event(&clock, None, None);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.stop()?;
     clock.usleep(50000);
     event.start();
     assert_equals_with_delta(100.0, event.get_duration(), DELTA);
-    clock.usleep(100000);
+    clock.usleep(100_000);
     assert_equals_with_delta(200.0, event.get_duration(), DELTA);
     Ok(())
 }
@@ -154,13 +160,13 @@ fn testDurationWithMultipleStarts() -> Result<(), Box<dyn std::error::Error>> {
     let clock = ClockMock::new();
     let event = self::event(&clock, None, None);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     assert_equals_with_delta(300.0, event.get_duration(), DELTA);
     event.stop()?;
     assert_equals_with_delta(300.0, event.get_duration(), DELTA);
-    clock.usleep(100000);
+    clock.usleep(100_000);
     assert_equals_with_delta(400.0, event.get_duration(), DELTA);
     event.stop()?;
     assert_equals_with_delta(400.0, event.get_duration(), DELTA);
@@ -196,9 +202,9 @@ fn testEnsureStopped() {
     let clock = ClockMock::new();
     let event = self::event(&clock, None, None);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.ensure_stopped();
     assert_equals_with_delta(300.0, event.get_duration(), DELTA);
 }
@@ -216,7 +222,7 @@ fn testStartTime() -> Result<(), Box<dyn std::error::Error>> {
 
     let event = self::event(&clock, None, None);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.stop()?;
     assert_equals_with_delta(0.0, event.get_start_time(), DELTA);
     Ok(())
@@ -226,19 +232,19 @@ fn testStartTime() -> Result<(), Box<dyn std::error::Error>> {
 fn testStartTimeWhenStartedLater() -> Result<(), Box<dyn std::error::Error>> {
     let clock = ClockMock::new();
     let event = self::event(&clock, None, None);
-    clock.usleep(100000);
+    clock.usleep(100_000);
     assert!(event.get_start_time().as_f64() <= 0.5);
 
     let event = self::event(&clock, None, None);
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.start();
     event.stop()?;
     assert!(event.get_start_time().as_f64() <= 101.0);
 
     let event = self::event(&clock, None, None);
-    clock.usleep(100000);
+    clock.usleep(100_000);
     event.start();
-    clock.usleep(100000);
+    clock.usleep(100_000);
     assert_equals_with_delta(100.0, event.get_start_time(), DELTA);
     event.stop()?;
     assert_equals_with_delta(100.0, event.get_start_time(), DELTA);
@@ -254,10 +260,7 @@ fn testHumanRepresentation() -> Result<(), Box<dyn std::error::Error>> {
     event.stop()?;
     // preg_match('/default: [0-9\.]+ MiB - [0-9]+ ms/', ...)
     let text = event.to_string();
-    let rest = text
-        .split_once("default: ")
-        .map(|(_, rest)| rest)
-        .unwrap_or("");
+    let rest = text.split_once("default: ").map_or("", |(_, rest)| rest);
     let (memory, rest) = rest.split_once(" MiB - ").unwrap_or(("", ""));
     let duration = rest.strip_suffix(" ms").unwrap_or("");
     assert!(

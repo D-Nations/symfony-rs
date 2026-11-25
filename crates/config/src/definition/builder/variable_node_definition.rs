@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\Builder\VariableNodeDefinition.php:
-//! the definition of a VariableNode, and `createNode()` for it and its
+//! the definition of a `VariableNode`, and `createNode()` for it and its
 //! subclasses (scalar, string, boolean, integer, float and enum), whose
 //! `instantiateNode()` is in their own modules.
 //!
@@ -21,10 +21,10 @@ use crate::definition::{
     variable_node::VariableNode,
 };
 
-/// VariableNodeDefinition.
+/// `VariableNodeDefinition`.
 pub type VariableNodeDefinition<P = ()> = Definition<class::Variable, P>;
 
-/// VariableNodeDefinition's `instantiateNode()`.
+/// `VariableNodeDefinition`'s `instantiateNode()`.
 fn instantiate_node(def: &Def) -> Result<Node, Error> {
     let parent = def.parent_node(BASE_NODE)?;
     VariableNode::with_separator(
@@ -34,7 +34,7 @@ fn instantiate_node(def: &Def) -> Result<Node, Error> {
     )
 }
 
-/// `createNode()` of VariableNodeDefinition and its subclasses.
+/// `createNode()` of `VariableNodeDefinition` and its subclasses.
 pub(crate) fn create_node(def: &Def, builtin: Builtin) -> Result<Node, Error> {
     let node = match builtin {
         Builtin::Scalar => scalar_node_definition::instantiate_node(def)?,

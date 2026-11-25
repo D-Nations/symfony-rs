@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\ScalarNode.php: a
-//! VariableNode that only accepts scalars and null. Its `isValueEmpty()`
+//! `VariableNode` that only accepts scalars and null. Its `isValueEmpty()`
 //! (null and `""`, never a placeholder) and placeholder types are in
 //! [`crate::definition::base_node`]'s dispatch.
 //!
@@ -70,7 +70,7 @@ pub(crate) fn invalid_type(node: &Node, expected: &str, value: &Value) -> Error 
     )
 }
 
-/// ScalarNode's `validateType()`.
+/// `ScalarNode`'s `validateType()`.
 pub(crate) fn validate_type(node: &Node, value: &Value) -> Result<(), Error> {
     match value {
         Value::Null | Value::Bool(_) | Value::Int(_) | Value::Float(_) | Value::String(_) => Ok(()),

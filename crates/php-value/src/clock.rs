@@ -1,7 +1,7 @@
 //! PHP's `time()`: seconds since the Unix epoch.
 //!
 //! Tests replace the clock for the current thread, as
-//! symfony/phpunit-bridge's ClockMock does for a `time-sensitive` test
+//! symfony/phpunit-bridge's `ClockMock` does for a `time-sensitive` test
 //! class: [`mock`] fixes `time()` (and through it `gmdate()` without a
 //! timestamp, `strtotime()` without a base) until the guard is dropped,
 //! and [`sleep`] moves the mocked clock forward.

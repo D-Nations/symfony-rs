@@ -1,5 +1,5 @@
 //! PHP's string/number conversions, written from PHP 8.4's recorded
-//! behaviour (oracle/recorders/php_value.php -> tests/data/php.json):
+//! behaviour (`oracle/recorders/php_value.php` -> tests/data/php.json):
 //!
 //! - A numeric string is optional whitespace (` \t\n\r\v\f`), an optional
 //!   sign, digits with an optional fraction (or a fraction alone), an

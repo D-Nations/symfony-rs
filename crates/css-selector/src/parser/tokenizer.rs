@@ -165,7 +165,7 @@ impl TokenizerEscaping {
                 let c = match hexdec(digits) {
                     Number::Int(i) => i,
                     Number::Float(f) => f as i64,
-                } % 0x200000;
+                } % 0x0020_0000;
                 // `c` is below 0x200000, so the casts below keep its bits.
                 if c < 0x80 {
                     vec![c as u8]

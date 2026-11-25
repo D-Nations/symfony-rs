@@ -1,7 +1,7 @@
 //! Port of Twig\Parser.php and the core expression parsers (trial subset):
-//! the precedence-climbing loop of Parser::parseExpression(), literals,
+//! the precedence-climbing loop of `Parser::parseExpression()`, literals,
 //! sequences and mappings, unary `not`/`-`/`+`, the binary operators of
-//! CoreExtension with their precedence and associativity, the ternary,
+//! `CoreExtension` with their precedence and associativity, the ternary,
 //! `.` attribute access, function calls and filters. Tags: `if`/`elseif`/
 //! `else` and `for`/`else`. Anything else is refused with a location.
 //!
@@ -106,7 +106,7 @@ enum Infix {
     Call,
 }
 
-/// Precedences from CoreExtension::getExpressionParsers().
+/// Precedences from `CoreExtension::getExpressionParsers()`.
 fn infix(op: &str) -> Option<(Infix, u32)> {
     let binary = |b, p| Some((Infix::Binary(b, p, false), p));
     match op {
@@ -246,7 +246,7 @@ impl Parser<'_> {
         }
     }
 
-    /// Parser::subparse(): reads nodes until one of `ends` starts a block
+    /// `Parser::subparse()`: reads nodes until one of `ends` starts a block
     /// tag, and returns that tag's name (the tag token is consumed).
     fn subparse(&mut self, ends: &[&str]) -> Result<(Vec<Node>, Option<String>), Error> {
         let mut body = Vec::new();
@@ -303,7 +303,7 @@ impl Parser<'_> {
         }
     }
 
-    /// IfTokenParser::parse().
+    /// `IfTokenParser::parse()`.
     fn parse_if(&mut self) -> Result<Node, Error> {
         let mut tests = Vec::new();
         let mut otherwise = None;
@@ -332,7 +332,7 @@ impl Parser<'_> {
         Ok(Node::If { tests, otherwise })
     }
 
-    /// ForTokenParser::parse().
+    /// `ForTokenParser::parse()`.
     fn parse_for(&mut self, line: usize) -> Result<Node, Error> {
         let first = self.expect_name()?;
         let (key, value) = if self.test_punct(',') {
@@ -370,7 +370,7 @@ impl Parser<'_> {
         })
     }
 
-    /// Parser::parseExpression().
+    /// `Parser::parseExpression()`.
     pub fn parse_expression(&mut self, precedence: u32) -> Result<Expr, Error> {
         let token = self.current().clone();
         let mut expr = match &token.kind {
@@ -546,7 +546,7 @@ impl Parser<'_> {
         Ok(Expr::Array(elements))
     }
 
-    /// DotExpressionParser::parse().
+    /// `DotExpressionParser::parse()`.
     fn parse_dot(&mut self, object: Expr) -> Result<Expr, Error> {
         let token = self.next();
         let attribute = match token.kind {
@@ -575,7 +575,7 @@ impl Parser<'_> {
         })
     }
 
-    /// FilterExpressionParser::parse().
+    /// `FilterExpressionParser::parse()`.
     fn parse_filter(&mut self, node: Expr) -> Result<Expr, Error> {
         let line = self.current().line;
         let name = self.expect_name()?;
@@ -593,7 +593,7 @@ impl Parser<'_> {
         })
     }
 
-    /// ArgumentsTrait::parseNamedArguments(), positional arguments only.
+    /// `ArgumentsTrait::parseNamedArguments()`, positional arguments only.
     fn parse_arguments_after_paren(&mut self) -> Result<Vec<Expr>, Error> {
         let mut args = Vec::new();
         while !self.test_punct(')') {

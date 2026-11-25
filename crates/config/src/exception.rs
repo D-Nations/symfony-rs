@@ -4,7 +4,7 @@
 //! [`Error`]s of those classes, with upstream's messages.
 //!
 //! The classes are [`Class::LoaderLoad`],
-//! [`Class::FileLoaderImportCircularReference`] (a LoaderLoadException)
+//! [`Class::FileLoaderImportCircularReference`] (a `LoaderLoadException`)
 //! and [`Class::FileLocatorFileNotFound`] (an `\InvalidArgumentException`
 //! whose `getPaths()` is [`Error::get_paths`]). `DIRECTORY_SEPARATOR` is
 //! `/` (Linux, the oracle's system).
@@ -94,7 +94,7 @@ pub fn loader_load_exception(
 }
 
 /// `new FileLoaderImportCircularReferenceException($resources)`: the keys
-/// of FileLoader's loading set, oldest first (never empty there).
+/// of `FileLoader`'s loading set, oldest first (never empty there).
 pub fn file_loader_import_circular_reference_exception(resources: &[Vec<u8>]) -> Error {
     let first = resources.first().cloned().unwrap_or_default();
     let mut message = b"Circular reference detected in \"".to_vec();

@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\BooleanNode.php: a
-//! ScalarNode for booleans, optionally nullable. A boolean is never
+//! `ScalarNode` for booleans, optionally nullable. A boolean is never
 //! empty.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -39,7 +39,7 @@ impl BooleanNode {
     }
 }
 
-/// BooleanNode's `validateType()`.
+/// `BooleanNode`'s `validateType()`.
 pub(crate) fn validate_type(node: &Node, value: &Value, nullable: bool) -> Result<(), Error> {
     match value {
         Value::Bool(_) => Ok(()),

@@ -1,5 +1,5 @@
-//! BaseNodeTest.php at symfony/config v8.1.10. The anonymous BaseNode
-//! subclass is a [`CustomNode`]; the stubbed parent NodeInterface is a
+//! BaseNodeTest.php at symfony/config v8.1.10. The anonymous `BaseNode`
+//! subclass is a [`CustomNode`]; the stubbed parent `NodeInterface` is a
 //! custom node whose `getPath()` returns the stubbed path.
 //!
 //! Upstream: symfony/config Tests/Definition/BaseNodeTest.php
@@ -20,7 +20,7 @@ use symfony_config::{
 struct Anonymous;
 
 impl CustomNode for Anonymous {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "BaseNode@anonymous"
     }
     fn validate_type(&self, _: &Node, _: &Value) -> Result<(), Error> {
@@ -47,7 +47,7 @@ impl CustomNode for Anonymous {
 struct StubParent(&'static str);
 
 impl CustomNode for StubParent {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "NodeInterface@stub"
     }
     fn validate_type(&self, _: &Node, _: &Value) -> Result<(), Error> {

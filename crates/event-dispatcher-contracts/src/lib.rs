@@ -1,5 +1,5 @@
 //! Port of Symfony\Contracts\EventDispatcher\Event.php and
-//! EventDispatcherInterface.php, with PSR-14's StoppableEventInterface
+//! EventDispatcherInterface.php, with PSR-14's `StoppableEventInterface`
 //! folded into [`EventObject`].
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.

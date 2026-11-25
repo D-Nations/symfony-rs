@@ -1,5 +1,5 @@
 //! `filter_var()` against PHP 8.4.27's answers recorded by
-//! oracle/recorders/filter_var.php (`scripts/record.sh php-value`).
+//! `oracle/recorders/filter_var.php` (`scripts/record.sh php-value`).
 //!
 //! Upstream: none
 

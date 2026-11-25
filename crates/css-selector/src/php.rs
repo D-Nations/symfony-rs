@@ -1,4 +1,4 @@
-//! The PHP built-ins CssSelector relies on, written from PHP's documented
+//! The PHP built-ins `CssSelector` relies on, written from PHP's documented
 //! behaviour and checked by the recorded vectors (tests/data/php.json);
 //! no PHP source code (PLAN.md decision 8). Strings are bytes, as in PHP.
 //!

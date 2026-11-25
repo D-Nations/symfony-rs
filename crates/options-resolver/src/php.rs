@@ -1,4 +1,4 @@
-//! The PHP built-ins OptionsResolver relies on, on `php_value::Value`:
+//! The PHP built-ins `OptionsResolver` relies on, on `php_value::Value`:
 //! `get_debug_type()`, the `is_*()` type checks behind its allowed types,
 //! `instanceof` with a class name string, `(string)` conversion for its
 //! messages, and `ksort()` of option names. Written from PHP's documented
@@ -53,7 +53,7 @@ impl Resource {
 }
 
 impl PhpObject for Resource {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "resource"
     }
 

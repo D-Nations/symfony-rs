@@ -5,6 +5,12 @@
 //! is checked line by line.
 //!
 //! Upstream: symfony/http-foundation Tests/ResponseHeaderBagTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use php_value::{

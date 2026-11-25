@@ -1,4 +1,4 @@
-//! The PHP engine behaviour Route, CompiledRoute and RouteCompiler rely
+//! The PHP engine behaviour Route, `CompiledRoute` and `RouteCompiler` rely
 //! on: truthiness, `trim()`, case mapping, and the coercion of a value
 //! assigned to a typed property in `__unserialize()`. Written from PHP's
 //! documentation and answers recorded in the oracle; no PHP source.

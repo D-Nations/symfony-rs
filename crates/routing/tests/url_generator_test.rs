@@ -1,7 +1,7 @@
 //! UrlGeneratorTest.php at symfony/routing
 //! f3fefc6cad3748d538be970ca81b71f06d7aa8b3. Names and assertions are
 //! PHPUnit's; a data provider's cases run in a loop. The test classes
-//! with `__toString()` or public properties are PhpObject impls here, and
+//! with `__toString()` or public properties are `PhpObject` impls here, and
 //! the logger mock counts `error()` calls.
 //!
 //! Upstream: symfony/routing Tests/Generator/UrlGeneratorTest.php
@@ -266,7 +266,7 @@ fn testNotPassedOptionalParameterInBetween() -> TestResult {
 struct StringableObjectWithPublicProperty;
 
 impl PhpObject for StringableObjectWithPublicProperty {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Symfony\\Component\\Routing\\Tests\\Generator\\StringableObjectWithPublicProperty"
     }
 
@@ -406,7 +406,7 @@ fn testAbsoluteUrlWithExtraParameters() -> TestResult {
 struct Node(OnceLock<PhpArray>);
 
 impl PhpObject for Node {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "stdClass"
     }
 

@@ -162,24 +162,21 @@ impl MessageCatalogue {
         for (domain, messages) in inner.messages.iter() {
             let messages = messages.as_array().cloned().unwrap_or_default();
             let bytes = key_bytes(domain);
-            match strip_suffix(&bytes) {
-                Some(base) => {
-                    let key = Key::from_bytes(base);
-                    let mut merged = messages;
-                    if let Some(existing) = all.get(&key).and_then(Value::as_array) {
-                        merged.union(existing);
-                    }
-                    all.insert(key, Value::Array(merged));
+            if let Some(base) = strip_suffix(&bytes) {
+                let key = Key::from_bytes(base);
+                let mut merged = messages;
+                if let Some(existing) = all.get(&key).and_then(Value::as_array) {
+                    merged.union(existing);
                 }
-                None => {
-                    let mut merged = all
-                        .get(domain)
-                        .and_then(Value::as_array)
-                        .cloned()
-                        .unwrap_or_default();
-                    merged.union(&messages);
-                    all.insert(domain.clone(), Value::Array(merged));
-                }
+                all.insert(key, Value::Array(merged));
+            } else {
+                let mut merged = all
+                    .get(domain)
+                    .and_then(Value::as_array)
+                    .cloned()
+                    .unwrap_or_default();
+                merged.union(&messages);
+                all.insert(domain.clone(), Value::Array(merged));
             }
         }
         all
@@ -431,7 +428,7 @@ impl MessageCatalogue {
 
     pub fn delete_metadata(&self, key: &[u8], domain: &[u8]) {
         let mut inner = self.0.borrow_mut();
-        delete(&mut inner.metadata, key, domain, |s| s.is_empty());
+        delete(&mut inner.metadata, key, domain, <[u8]>::is_empty);
     }
 
     /// `getCatalogueMetadata($key, $domain)`; a domain or key of `"0"` counts

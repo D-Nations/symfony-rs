@@ -1,6 +1,6 @@
 //! Port of Symfony\UX\TwigComponent\Twig\TwigPreLexer.php (trial subset):
 //! rewrites self-closing `<twig:Name attr="..." :prop="expr"/>` tags into
-//! `{{ component('Name', { ... }) }}`, as ComponentLexer does before
+//! `{{ component('Name', { ... }) }}`, as `ComponentLexer` does before
 //! Twig's lexer runs. Comments and `{{ }}`/`{% %}` contents are copied
 //! unchanged. Refused with a location: components with content
 //! (`<twig:X>...</twig:X>`), `<twig:block>`, `<twig:component is=...>`,
@@ -211,7 +211,7 @@ impl PreLexer<'_> {
         self.input[start..self.pos].to_vec()
     }
 
-    /// TwigPreLexer::consumeAttributes().
+    /// `TwigPreLexer::consumeAttributes()`.
     fn consume_attributes(&mut self, component: &str) -> Result<String, Error> {
         let mut attributes = Vec::new();
         while self.pos < self.input.len() && !self.check(">") && !self.check("/>") {
@@ -276,7 +276,7 @@ impl PreLexer<'_> {
         Ok(attributes.join(", "))
     }
 
-    /// TwigPreLexer::consumeAttributeValue().
+    /// `TwigPreLexer::consumeAttributeValue()`.
     fn consume_attribute_value(&mut self, quote: u8) -> Result<String, Error> {
         let mut parts = Vec::new();
         let mut current = Vec::new();

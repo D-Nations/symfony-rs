@@ -5,8 +5,8 @@
 //!
 //! The modules [`route`], [`compiled_route`], [`route_compiler`], [`request_context`],
 //! [`route_collection`], [`alias`] and [`url_generator`] port Symfony's own Route,
-//! CompiledRoute, RouteCompiler, RequestContext, RouteCollection, Alias and
-//! UrlGenerator classes; the typed matcher and generator here do not use them yet.
+//! `CompiledRoute`, `RouteCompiler`, `RequestContext`, `RouteCollection`, Alias and
+//! `UrlGenerator` classes; the typed matcher and generator here do not use them yet.
 //!
 //! Upstream: symfony/routing Matcher/UrlMatcher.php Matcher/RedirectableUrlMatcher.php Generator/UrlGenerator.php
 
@@ -112,7 +112,7 @@ impl<T> Definition<T> {
             match segment {
                 Segment::Literal(literal) if *literal == text => {}
                 Segment::Parameter(name, requirement) if requirement.accepts(text) => {
-                    parameters.0.push((name, text.to_owned()))
+                    parameters.0.push((name, text.to_owned()));
                 }
                 _ => return None,
             }

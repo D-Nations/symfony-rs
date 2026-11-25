@@ -1,5 +1,5 @@
-//! ParameterBag and InputBag against PHP 8.4.27's answers recorded by
-//! oracle/recorders/http_foundation_bags.php (`scripts/record.sh
+//! `ParameterBag` and `InputBag` against PHP 8.4.27's answers recorded by
+//! `oracle/recorders/http_foundation_bags.php` (`scripts/record.sh
 //! http-foundation`): every getter, `all()`, `getEnum()` with int- and
 //! string-backed enums, and `filter()`, for 53 stored values and as
 //! many defaults. PHP's notices (`E_DEPRECATED` for a float truncated by

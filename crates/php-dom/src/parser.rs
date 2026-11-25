@@ -33,7 +33,7 @@ pub(crate) const MAX_TEXT_LENGTH: usize = 10_000_000;
 /// The `DOMDocument` settings a load uses.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct LoadOptions {
-    /// `$dom->validateOnParse = true` (Symfony's XmlUtils sets it, with
+    /// `$dom->validateOnParse = true` (Symfony's `XmlUtils` sets it, with
     /// `LIBXML_NONET | LIBXML_COMPACT`, which change nothing observable
     /// here: nothing is ever fetched).
     pub validate_on_parse: bool,
@@ -454,22 +454,19 @@ impl Parser {
             }
             return (u32::from(c), 1);
         }
-        match self.decode_strict(i) {
-            Some((v, l)) => {
-                if !is_char(v) {
-                    self.fatal(9, &format!("Char 0x{v:X} out of allowed range"));
-                }
-                (v, l)
+        if let Some((v, l)) = self.decode_strict(i) {
+            if !is_char(v) {
+                self.fatal(9, &format!("Char 0x{v:X} out of allowed range"));
             }
-            None => {
-                if self.remaining() < 4 {
-                    return (0, 0);
-                }
-                let m = self.bytes_message(i);
-                self.fatal(9, &m);
-                self.latin1 = true;
-                (u32::from(c), 1)
+            (v, l)
+        } else {
+            if self.remaining() < 4 {
+                return (0, 0);
             }
+            let m = self.bytes_message(i);
+            self.fatal(9, &m);
+            self.latin1 = true;
+            (u32::from(c), 1)
         }
     }
 
@@ -524,7 +521,7 @@ impl Parser {
                 v = (u32::from(c & 0xF) << 12) | (u32::from(b1 & 0x3F) << 6) | u32::from(b2 & 0x3F);
                 self.input.pos += 3;
             }
-            if (0xD800..0xE000).contains(&v) || (0xFFFE..0x10000).contains(&v) || v >= 0x110000 {
+            if (0xD800..0xE000).contains(&v) || (0xFFFE..0x10000).contains(&v) || v >= 0x0011_0000 {
                 self.fatal(9, &format!("Char 0x{v:X} out of allowed range"));
             }
         } else {
@@ -704,28 +701,26 @@ impl Parser {
                 return None;
             }
             self.error(202, &format!("Failed to parse QName '{p}:'"));
-            let tmp = match self.parse_nmtoken() {
-                Some(t) => format!("{p}:{t}"),
-                None => {
-                    if self.halted {
-                        return None;
-                    }
-                    format!("{p}:")
+            let tmp = if let Some(t) = self.parse_nmtoken() {
+                format!("{p}:{t}")
+            } else {
+                if self.halted {
+                    return None;
                 }
+                format!("{p}:")
             };
             return Some((None, tmp));
         };
         if self.raw() == b':' {
             self.error(202, &format!("Failed to parse QName '{p}:{l}:'"));
             self.next();
-            return match self.parse_name() {
-                Some(t) => Some((Some(p), format!("{l}:{t}"))),
-                None => {
-                    if self.halted {
-                        return None;
-                    }
-                    Some((Some(p), format!("{l}:")))
+            return if let Some(t) = self.parse_name() {
+                Some((Some(p), format!("{l}:{t}")))
+            } else {
+                if self.halted {
+                    return None;
                 }
+                Some((Some(p), format!("{l}:")))
             };
         }
         Some((Some(p), l))
@@ -768,15 +763,15 @@ impl Parser {
             self.in_subset = false;
             self.parse_misc();
         }
-        if self.raw() != b'<' {
-            self.fatal(4, "Start tag expected, '<' not found");
-        } else {
+        if self.raw() == b'<' {
             self.parse_element();
             self.parse_misc();
             if self.raw() != 0 {
                 self.fatal_code(5);
             }
             self.halt();
+        } else {
+            self.fatal(4, "Start tag expected, '<' not found");
         }
     }
 
@@ -868,10 +863,10 @@ impl Parser {
         }
         self.next();
         let v = self.parse_version_num();
-        if self.raw() != q {
-            self.fatal_code(34);
-        } else {
+        if self.raw() == q {
             self.next();
+        } else {
+            self.fatal_code(34);
         }
         v
     }
@@ -1014,10 +1009,10 @@ impl Parser {
         } else {
             self.fatal_code(78);
         }
-        if self.raw() != q {
-            self.fatal_code(34);
-        } else {
+        if self.raw() == q {
             self.next();
+        } else {
+            self.fatal_code(34);
         }
         standalone
     }
@@ -1162,10 +1157,10 @@ impl Parser {
             return;
         }
         self.skip_blanks();
-        if self.raw() != b'>' {
-            self.fatal_code(73);
-        } else {
+        if self.raw() == b'>' {
             self.next1();
+        } else {
+            self.fatal_code(73);
         }
         if let Err(name) = matched {
             let name = name.unwrap_or_else(|| "unparsable".into());
@@ -1648,7 +1643,7 @@ impl Parser {
                     val = 0;
                     break;
                 }
-                val = val.min(0x110000);
+                val = val.min(0x0011_0000);
                 self.next();
                 count += 1;
             }
@@ -1666,7 +1661,7 @@ impl Parser {
                     val = 0;
                     break;
                 }
-                val = val.min(0x110000);
+                val = val.min(0x0011_0000);
                 self.next();
             }
             if self.raw() == b';' {
@@ -1675,7 +1670,7 @@ impl Parser {
         } else {
             self.fatal_code(8);
         }
-        if val >= 0x110000 {
+        if val >= 0x0011_0000 {
             self.fatal(9, "xmlParseCharRef: character reference out of bounds");
         } else if is_char(val) {
             return val;
@@ -2256,11 +2251,11 @@ impl Parser {
             self.nextl(l);
             (c, l) = self.cur_char();
         }
-        if c != u32::from(b'?') {
-            self.fatal(47, &format!("ParsePI: PI {target} never end ..."));
-        } else {
+        if c == u32::from(b'?') {
             self.skip(2);
             self.pi(target, data);
+        } else {
+            self.fatal(47, &format!("ParsePI: PI {target} never end ..."));
         }
     }
 
@@ -2417,7 +2412,7 @@ pub(crate) fn string_char_ref(b: &[u8]) -> (Result<u32, (u32, String)>, usize) {
                 b'A'..=b'F' => c - b'A' + 10,
                 _ => return (Err((6, fatal_message(6).into())), i),
             };
-            val = (val * 16 + u32::from(d)).min(0x110000);
+            val = (val * 16 + u32::from(d)).min(0x0011_0000);
             i += 1;
         }
     } else {
@@ -2427,14 +2422,14 @@ pub(crate) fn string_char_ref(b: &[u8]) -> (Result<u32, (u32, String)>, usize) {
             if !c.is_ascii_digit() {
                 return (Err((7, fatal_message(7).into())), i);
             }
-            val = (val * 10 + u32::from(c - b'0')).min(0x110000);
+            val = (val * 10 + u32::from(c - b'0')).min(0x0011_0000);
             i += 1;
         }
     }
     if i < b.len() {
         i += 1;
     }
-    if val >= 0x110000 {
+    if val >= 0x0011_0000 {
         return (
             Err((
                 9,

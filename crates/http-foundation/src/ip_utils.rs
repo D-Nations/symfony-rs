@@ -16,7 +16,7 @@
 //! can share an entry, as in PHP.
 //!
 //! IPv6 support is always present, so `checkIp6()` never throws PHP's
-//! "Unable to check Ipv6" RuntimeException.
+//! "Unable to check Ipv6" `RuntimeException`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -232,35 +232,32 @@ pub fn check_ip6(request_ip: &str, ip: &str) -> Result<bool> {
     if !net::validate_ip(request_ip.as_bytes(), false, true) {
         return Ok(cache(key, false));
     }
-    let (address, netmask) = match ip.split_once('/') {
-        Some((address, netmask)) => {
-            if !net::validate_ip(address.as_bytes(), false, true) {
-                return Ok(cache(key, false));
-            }
-            if netmask == "0" {
-                // (bool) unpack('n*', @inet_pton($address)), not cached
-                return Ok(true);
-            }
-            let bytes = netmask.as_bytes();
-            if compare_string_with_int(bytes, 1) == Ordering::Less
-                || compare_string_with_int(bytes, 128) == Ordering::Greater
-            {
-                return Ok(cache(key, false));
-            }
-            let number = leading_numeric_value(bytes).ok_or_else(|| {
-                Error::new(
-                    Class::PhpTypeError,
-                    "Unsupported operand types: string / int",
-                )
-            })?;
-            (address, number)
+    let (address, netmask) = if let Some((address, netmask)) = ip.split_once('/') {
+        if !net::validate_ip(address.as_bytes(), false, true) {
+            return Ok(cache(key, false));
         }
-        None => {
-            if !net::validate_ip(ip.as_bytes(), false, true) {
-                return Ok(cache(key, false));
-            }
-            (ip, Number::Int(128))
+        if netmask == "0" {
+            // (bool) unpack('n*', @inet_pton($address)), not cached
+            return Ok(true);
         }
+        let bytes = netmask.as_bytes();
+        if compare_string_with_int(bytes, 1) == Ordering::Less
+            || compare_string_with_int(bytes, 128) == Ordering::Greater
+        {
+            return Ok(cache(key, false));
+        }
+        let number = leading_numeric_value(bytes).ok_or_else(|| {
+            Error::new(
+                Class::PhpTypeError,
+                "Unsupported operand types: string / int",
+            )
+        })?;
+        (address, number)
+    } else {
+        if !net::validate_ip(ip.as_bytes(), false, true) {
+            return Ok(cache(key, false));
+        }
+        (ip, Number::Int(128))
     };
     let (Some(bytes_addr), Some(bytes_test)) = (
         net::parse_ipv6(address.as_bytes()),

@@ -10,7 +10,7 @@
 //! stream resource has no counterpart here.
 //!
 //! Other stream wrappers (`gs://`, `compress.zlib://`, user wrappers) and
-//! renaming a directory (upstream's mirror() fallback) are refused with
+//! renaming a directory (upstream's `mirror()` fallback) are refused with
 //! [`Class::Unsupported`]. `PHP_MAXPATHLEN` is 4096 (Linux).
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -107,7 +107,7 @@ impl Filesystem {
     pub fn rename(&self, origin: &[u8], target: &[u8], overwrite: bool) -> Result<(), Error> {
         local_only(origin)?;
         local_only(target)?;
-        if !overwrite && self.is_readable(target)? {
+        if !overwrite && Self::is_readable(target)? {
             return Err(Error::io(
                 quoted(
                     "Cannot rename because the target \"",
@@ -138,7 +138,7 @@ impl Filesystem {
     }
 
     /// `isReadable($filename)`.
-    fn is_readable(&self, filename: &[u8]) -> Result<bool, Error> {
+    fn is_readable(filename: &[u8]) -> Result<bool, Error> {
         let max = PHP_MAXPATHLEN - 2;
         if filename.len() > max {
             return Err(Error::io(

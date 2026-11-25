@@ -273,8 +273,8 @@ impl Reader<'_> {
                         b"-INF" => f64::NEG_INFINITY,
                         b"NAN" => f64::NAN,
                         _ if crate::numeric::is_numeric(text)
-                            && !text.first().is_some_and(|b| b.is_ascii_whitespace())
-                            && !text.last().is_some_and(|b| b.is_ascii_whitespace()) =>
+                            && !text.first().is_some_and(u8::is_ascii_whitespace)
+                            && !text.last().is_some_and(u8::is_ascii_whitespace) =>
                         {
                             crate::numeric::string_to_float(text)
                         }

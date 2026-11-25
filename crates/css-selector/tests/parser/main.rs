@@ -1,8 +1,14 @@
 //! The Parser tests at symfony/css-selector v8.1.6, one module per
-//! upstream test class; AbstractHandlerTestCase's tests and assertions
+//! upstream test class; `AbstractHandlerTestCase`'s tests and assertions
 //! are the helpers below.
 //!
 //! Upstream: none
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 #[path = "../common/mod.rs"]
@@ -36,7 +42,7 @@ fn escaping() -> TokenizerEscaping {
     TokenizerEscaping::new(patterns())
 }
 
-/// AbstractHandlerTestCase::testHandleValue.
+/// `AbstractHandlerTestCase::testHandleValue`.
 fn handle_value(handler: &dyn HandlerInterface, rows: &[(String, Vec<V>)]) {
     for (name, args) in rows {
         let mut reader = Reader::new(&args[0].bytes());
@@ -51,7 +57,7 @@ fn handle_value(handler: &dyn HandlerInterface, rows: &[(String, Vec<V>)]) {
     }
 }
 
-/// CommentHandlerTest::testHandleValue.
+/// `CommentHandlerTest::testHandleValue`.
 fn handle_value_without_token(handler: &dyn HandlerInterface, rows: &[(String, Vec<V>)]) {
     for (name, args) in rows {
         let mut reader = Reader::new(&args[0].bytes());
@@ -66,7 +72,7 @@ fn handle_value_without_token(handler: &dyn HandlerInterface, rows: &[(String, V
     }
 }
 
-/// AbstractHandlerTestCase::testDontHandleValue.
+/// `AbstractHandlerTestCase::testDontHandleValue`.
 fn dont_handle_value(handler: &dyn HandlerInterface, rows: &[(String, Vec<V>)]) {
     for (name, args) in rows {
         let value = args[0].bytes();

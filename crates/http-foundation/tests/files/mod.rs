@@ -1,4 +1,4 @@
-//! Fixtures for the File, UploadedFile and FileBag tests: upstream's
+//! Fixtures for the File, `UploadedFile` and `FileBag` tests: upstream's
 //! `Tests/File/Fixtures`, copied to `tests/fixtures/file`. Tests that
 //! move files work on their own copy of that directory, so tests running
 //! in parallel do not share `test.copy.gif`.

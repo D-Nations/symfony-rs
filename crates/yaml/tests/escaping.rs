@@ -1,5 +1,5 @@
 //! Symfony Yaml's Escaper and Unescaper on PHP 8.4.27, recorded by
-//! oracle/recorders/yaml_escaping.php (`scripts/record.sh yaml`).
+//! `oracle/recorders/yaml_escaping.php` (`scripts/record.sh yaml`).
 //!
 //! Upstream: none
 

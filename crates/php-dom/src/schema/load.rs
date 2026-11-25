@@ -237,7 +237,7 @@ impl B<'_> {
         refused(self.line(src), what)
     }
 
-    /// Resolves a QName written in the schema at `src`.
+    /// Resolves a `QName` written in the schema at `src`.
     fn qname(&self, src: Src, value: &str) -> R<QName> {
         let value = value.trim();
         let (prefix, local) = match value.split_once(':') {
@@ -347,21 +347,18 @@ impl B<'_> {
             "restriction" => {
                 self.allow(ks, &["base"])?;
                 let mut kids = self.kids(ks)?;
-                let base = match attr(self.doc(src.0), k, "base") {
-                    Some(b) => {
-                        let b = b.to_owned();
-                        self.simple_ref(ks, &b)?
+                let base = if let Some(b) = attr(self.doc(src.0), k, "base") {
+                    let b = b.to_owned();
+                    self.simple_ref(ks, &b)?
+                } else {
+                    if kids
+                        .first()
+                        .is_none_or(|&c| local(self.doc(src.0), c) != "simpleType")
+                    {
+                        return Err(self.no(ks, "a restriction without a base"));
                     }
-                    None => {
-                        if kids
-                            .first()
-                            .is_none_or(|&c| local(self.doc(src.0), c) != "simpleType")
-                        {
-                            return Err(self.no(ks, "a restriction without a base"));
-                        }
-                        let inner = kids.remove(0);
-                        self.simple_type((src.0, inner), None)?
-                    }
+                    let inner = kids.remove(0);
+                    self.simple_type((src.0, inner), None)?
                 };
                 let base_t = self.s.simple[base].clone();
                 let Variety::Atomic { primitive } = base_t.variety else {
@@ -598,9 +595,8 @@ impl B<'_> {
                 return Err(self.no(src, "an attribute ref with a type"));
             }
             let q = self.qname(src, &r)?;
-            let id = match self.global_attribute(&q)? {
-                Some(id) => id,
-                None => return Err(self.no(src, format!("unresolved attribute ref '{r}'"))),
+            let Some(id) = self.global_attribute(&q)? else {
+                return Err(self.no(src, format!("unresolved attribute ref '{r}'")));
             };
             // libxml 2.9.14 does not check a `fixed` value given where a
             // global attribute is referenced (XLIFF 2.0's
@@ -799,18 +795,17 @@ impl B<'_> {
         if let Some(r) = attr(doc, src.1, "ref").map(str::to_owned) {
             self.allow(src, &["ref", "minOccurs", "maxOccurs"])?;
             let q = self.qname(src, &r)?;
-            return match self.s.global_elements.get(&q) {
-                Some(&id) => Ok(id),
-                None => {
-                    self.error(
-                        src,
-                        3004,
-                        format!(
-                            "Element '{{{XSD_NS}}}element', attribute 'ref': The QName value '{r}' does not resolve to a(n) element declaration."
-                        ),
-                    );
-                    Ok(self.placeholder_element(q))
-                }
+            return if let Some(&id) = self.s.global_elements.get(&q) {
+                Ok(id)
+            } else {
+                self.error(
+                    src,
+                    3004,
+                    format!(
+                        "Element '{{{XSD_NS}}}element', attribute 'ref': The QName value '{r}' does not resolve to a(n) element declaration."
+                    ),
+                );
+                Ok(self.placeholder_element(q))
             };
         }
         self.allow(src, &["name", "type", "minOccurs", "maxOccurs"])?;

@@ -59,6 +59,10 @@ impl Greeter {
             length,
             // int / int, then coerced to the `float` property. The
             // parameter is 12, never 0, so DivisionByZeroError cannot occur.
+            #[expect(
+                clippy::cast_precision_loss,
+                reason = "PHP converts int operands of `/` to float"
+            )]
             ratio: length as f64 / self.max_length as f64,
             tags: self.tags.clone(),
             visits: self.visits.increment(),

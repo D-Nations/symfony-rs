@@ -1,11 +1,17 @@
 //! CookieTest.php at symfony/http-foundation
 //! 30fa3efe6e736b0d06f5331cc6abe813582c0a26. Names and assertions are
 //! PHPUnit's; a data provider's cases run in a loop. The class is
-//! `time-sensitive`: each test runs on a mocked clock, as ClockMock gives
+//! `time-sensitive`: each test runs on a mocked clock, as `ClockMock` gives
 //! it, and `strtotime()` reads the same clock. `assertEquals()` on two
 //! cookies compares every property, as derived `PartialEq` does.
 //!
 //! Upstream: symfony/http-foundation Tests/CookieTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use php_value::{
@@ -20,7 +26,7 @@ type TestResult = Result<(), Box<dyn std::error::Error>>;
 
 const INVALID_ARGUMENT: &str = "InvalidArgumentException";
 
-/// ClockMock's clock for a `time-sensitive` test.
+/// `ClockMock`'s clock for a `time-sensitive` test.
 fn clock() -> MockClock {
     clock::mock(1_700_000_000)
 }

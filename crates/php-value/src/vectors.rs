@@ -197,10 +197,7 @@ pub fn phpunit_equals(expected: &Value, actual: &Value) -> bool {
             }
             phpunit_equals(&Value::Array(e.properties()), &Value::Array(a.properties()))
         }
-        (Value::Object(_), _)
-        | (_, Value::Object(_))
-        | (Value::Array(_), _)
-        | (_, Value::Array(_)) => false,
+        (Value::Object(_) | Value::Array(_), _) | (_, Value::Object(_) | Value::Array(_)) => false,
         (Value::Null | Value::Bool(_), _) | (_, Value::Null | Value::Bool(_)) => {
             to_bool(expected) == to_bool(actual)
         }

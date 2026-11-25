@@ -269,7 +269,7 @@ impl AllowedValues {
                         .count();
                     self.0.push((Key::Int(next as i64), value));
                 }
-                key => match self.0.iter_mut().find(|(k, _)| *k == key) {
+                key @ Key::Str(_) => match self.0.iter_mut().find(|(k, _)| *k == key) {
                     Some(entry) => entry.1 = value,
                     None => self.0.push((key, value)),
                 },
@@ -1294,7 +1294,7 @@ impl OptionsResolver {
             {
                 let mut child = resolver.state();
                 child.prototype = Some(false);
-                child.parents_options = state.parents_options.clone();
+                child.parents_options.clone_from(&state.parents_options);
                 if state.prototype == Some(true)
                     && let (Some(index), Some(last)) =
                         (&state.prototype_index, child.parents_options.last_mut())

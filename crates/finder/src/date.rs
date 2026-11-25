@@ -1,5 +1,5 @@
 //! The part of PHP's date/time string parsing (`new DateTimeImmutable($s)`,
-//! `strtotime($s, $now)`) that DateComparator needs, written from PHP's
+//! `strtotime($s, $now)`) that `DateComparator` needs, written from PHP's
 //! "Supported Date and Time Formats" documentation and checked against
 //! PHP 8.4.27 (tests/data/php.json). Times are UTC (PHP's default
 //! `date.timezone`). Accepted, case-insensitively and separated by

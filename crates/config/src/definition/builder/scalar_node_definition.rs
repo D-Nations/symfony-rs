@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\Builder\ScalarNodeDefinition.php:
-//! the definition of a ScalarNode.
+//! the definition of a `ScalarNode`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -12,7 +12,7 @@ use crate::definition::{
     scalar_node::ScalarNode,
 };
 
-/// ScalarNodeDefinition.
+/// `ScalarNodeDefinition`.
 pub type ScalarNodeDefinition<P = ()> = Definition<class::Scalar, P>;
 
 /// `instantiateNode()`.

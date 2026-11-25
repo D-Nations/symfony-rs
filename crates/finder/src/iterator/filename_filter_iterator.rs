@@ -26,7 +26,7 @@ impl<I> FilenameFilterIterator<I> {
     }
 
     /// `toRegex($str)`: PCRE patterns are left unchanged, globs go
-    /// through Glob::toRegex().
+    /// through `Glob::toRegex()`.
     pub fn to_regex(s: &[u8]) -> Result<Vec<u8>, Error> {
         Ok(if MultiplePcreFilter::is_regex(s)? {
             s.to_vec()

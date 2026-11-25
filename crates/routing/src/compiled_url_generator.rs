@@ -67,13 +67,12 @@ impl CompiledRoutes {
     /// an existing PHP array key keeps its position.
     pub fn insert(&mut self, name: impl Into<PhpString>, route: CompiledRoute) {
         let name = name.into();
-        match self.index.get(name.as_bytes()) {
-            Some(&i) => self.entries[i].1 = route,
-            None => {
-                self.index
-                    .insert(name.as_bytes().to_vec(), self.entries.len());
-                self.entries.push((name, route));
-            }
+        if let Some(&i) = self.index.get(name.as_bytes()) {
+            self.entries[i].1 = route
+        } else {
+            self.index
+                .insert(name.as_bytes().to_vec(), self.entries.len());
+            self.entries.push((name, route));
         }
     }
 

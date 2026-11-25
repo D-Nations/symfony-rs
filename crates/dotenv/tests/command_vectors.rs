@@ -1,13 +1,14 @@
 //! Replays tests/data/commands.json: debug:dotenv's and dotenv:dump's
 //! exact output, and the .env.local.php the dump writes, recorded from
 //! PHP 8.4.27 with symfony/dotenv and symfony/console v8.1.9
-//! (oracle/recorders/dotenv_commands.php, `scripts/record.sh dotenv`).
+//! (`oracle/recorders/dotenv_commands.php`, `scripts/record.sh dotenv`).
 //! Each case starts from empty globals, as the recorder's did, with
 //! COLUMNS=80; the recorder's temporary directory in messages is this
 //! test's.
 //!
 //! Upstream: none
 
+use std::fmt::Write as _;
 use std::sync::{Arc, Mutex};
 
 use php_value::{PhpArray, Value};
@@ -193,7 +194,7 @@ fn commands_match_php() -> Result<(), Box<dyn std::error::Error>> {
             Ok((status, display)) => {
                 let mut out = format!("status {status}\n{display}");
                 if is_dump {
-                    out.push_str(&format!("\ndumped {}", dumped(&dir)));
+                    let _ = write!(out, "\ndumped {}", dumped(&dir));
                 }
                 out
             }
@@ -203,23 +204,22 @@ fn commands_match_php() -> Result<(), Box<dyn std::error::Error>> {
                 e.message().replace(&root(), RECORDED_ROOT)
             ),
         };
-        let expected = match case.get("throws") {
-            Some(class) => format!(
+        let expected = if let Some(class) = case.get("throws") {
+            format!(
                 "throws {}\n{}",
                 class.as_str().unwrap_or_default(),
                 case["message"].as_str().unwrap_or_default()
-            ),
-            None => {
-                let mut out = format!(
-                    "status {}\n{}",
-                    case["status"],
-                    case["display"].as_str().unwrap_or_default()
-                );
-                if is_dump {
-                    out.push_str(&format!("\ndumped {}", case["dumped"]));
-                }
-                out
+            )
+        } else {
+            let mut out = format!(
+                "status {}\n{}",
+                case["status"],
+                case["display"].as_str().unwrap_or_default()
+            );
+            if is_dump {
+                let _ = write!(out, "\ndumped {}", case["dumped"]);
             }
+            out
         };
         if ours != expected {
             failures.push(format!(

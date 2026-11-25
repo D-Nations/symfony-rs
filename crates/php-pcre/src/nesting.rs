@@ -184,7 +184,7 @@ fn flatten(branches: Vec<Vec<Node>>) -> Vec<Vec<Node>> {
                     branches: flatten(branches),
                     close,
                 },
-                t => t,
+                t @ Node::Text(_) => t,
             })
             .collect();
         let distributable = branch.len() >= 2

@@ -1,5 +1,5 @@
 //! YAML timestamps through `Inline::parse()`, against Symfony on PHP
-//! 8.4.27 (oracle/recorders/yaml_timestamps.php, `scripts/record.sh yaml`):
+//! 8.4.27 (`oracle/recorders/yaml_timestamps.php`, `scripts/record.sh yaml`):
 //! the plain result (int or float timestamp, or the invalid-date
 //! exception) and the `PARSE_DATETIME` object, with its formats.
 //!

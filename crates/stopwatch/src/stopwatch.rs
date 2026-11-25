@@ -1,6 +1,6 @@
 //! Port of Symfony\Component\Stopwatch\Stopwatch.php.
 //!
-//! `reset()` is service-contracts' ResetInterface, which is not ported yet.
+//! `reset()` is service-contracts' `ResetInterface`, which is not ported yet.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -194,6 +194,6 @@ impl fmt::Debug for Stopwatch {
             .field("more_precision", &self.more_precision)
             .field("sections", &state.sections)
             .field("active", &state.active)
-            .finish()
+            .finish_non_exhaustive()
     }
 }

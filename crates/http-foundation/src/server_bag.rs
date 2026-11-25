@@ -4,7 +4,7 @@
 //!
 //! The values are PHP values, as `$_SERVER` may hold anything. Where PHP
 //! converts a value to a string, an array is `"Array"` (PHP warns), and an
-//! array or object handed to `stripos()` is PHP's TypeError.
+//! array or object handed to `stripos()` is PHP's `TypeError`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -19,7 +19,7 @@ use crate::{
     parameter_bag::ParameterBag,
 };
 
-/// `ServerBag`: a ParameterBag over `$_SERVER`.
+/// `ServerBag`: a `ParameterBag` over `$_SERVER`.
 #[derive(Debug, Clone)]
 pub struct ServerBag(ParameterBag);
 

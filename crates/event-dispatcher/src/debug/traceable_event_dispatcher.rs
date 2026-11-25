@@ -6,7 +6,7 @@
 //! PHP. The dispatcher is created in an `Arc` because the wrappers refer
 //! back to it (weakly) and pass it to the listeners they call.
 //!
-//! - `RequestStack` stands in for HttpFoundation's RequestStack, which is
+//! - `RequestStack` stands in for `HttpFoundation`'s `RequestStack`, which is
 //!   not ported yet: it only needs the current request's identity (PHP's
 //!   `spl_object_id($request)`).
 //! - `DispatchHooks` is what a PHP subclass overrides (`beforeDispatch()`,
@@ -403,11 +403,11 @@ impl<D: EventDispatcherInterface + 'static> TraceableEventDispatcher<D> {
             let Some(stack) = &mut state.call_stack else {
                 return;
             };
-            let (stale, kept) = std::mem::take(stack)
+            let (dropped, kept): (Vec<_>, _) = std::mem::take(stack)
                 .into_iter()
                 .partition(|(_, name, _)| name == event_name);
             *stack = kept;
-            stale.into_iter().map(|(w, _, _)| w).collect()
+            dropped.into_iter().map(|(w, _, _)| w).collect()
         };
         for wrapper in stale {
             if wrapper.was_called() {
@@ -437,21 +437,19 @@ impl<D: EventDispatcherInterface + 'static> TraceableEventDispatcher<D> {
             entry.count += 1;
             return;
         }
-        let events = match state.called.iter().position(|(hash, _)| *hash == current) {
-            Some(i) => &mut state.called[i].1,
-            None => {
-                state.called.push((current, Vec::new()));
-                let last = state.called.len() - 1;
-                &mut state.called[last].1
-            }
+        let events = if let Some(i) = state.called.iter().position(|(hash, _)| *hash == current) {
+            &mut state.called[i].1
+        } else {
+            state.called.push((current, Vec::new()));
+            let last = state.called.len() - 1;
+            &mut state.called[last].1
         };
-        let listeners = match events.iter().position(|(name, _)| name == event_name) {
-            Some(i) => &mut events[i].1,
-            None => {
-                events.push((event_name.to_owned(), Vec::new()));
-                let last = events.len() - 1;
-                &mut events[last].1
-            }
+        let listeners = if let Some(i) = events.iter().position(|(name, _)| name == event_name) {
+            &mut events[i].1
+        } else {
+            events.push((event_name.to_owned(), Vec::new()));
+            let last = events.len() - 1;
+            &mut events[last].1
         };
         listeners.push(Called {
             original: original.clone(),

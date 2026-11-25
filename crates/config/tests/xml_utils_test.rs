@@ -4,7 +4,7 @@
 //!
 //! `assertSame([], libxml_get_errors())` holds by construction: php-dom
 //! keeps no global error buffer (each call returns its errors), so those
-//! assertions check the internal-errors setting XmlUtils restores instead.
+//! assertions check the internal-errors setting `XmlUtils` restores instead.
 //! The mocked Validator is a closure counting its calls
 //! (`expects($this->exactly(2))`).
 //!
@@ -308,7 +308,7 @@ fn testConvertDomToArray() -> TestResult {
         } else {
             format!("<root>{xml}</root>")
         };
-        let dom = load_xml(source.as_bytes(), Default::default())?
+        let dom = load_xml(source.as_bytes(), php_dom::LoadOptions::default())?
             .document
             .ok_or("loadXML() failed")?;
         let element = dom.document_element().ok_or("no document element")?;

@@ -2,9 +2,9 @@
 //! creates child definitions by type, from a mapping of types to classes
 //! that `setNodeClass()` extends or overrides.
 //!
-//! A PHP subclass of NodeBuilder is a [`NodeBuilderClass`]: its class
+//! A PHP subclass of `NodeBuilder` is a [`NodeBuilderClass`]: its class
 //! name, and its override of the protected `getNodeClass()`. Each
-//! ArrayNodeDefinition a builder creates gets a copy of the builder
+//! `ArrayNodeDefinition` a builder creates gets a copy of the builder
 //! (PHP's `clone $this`), so the mapping and the class reach its
 //! children.
 //!
@@ -41,13 +41,13 @@ use crate::definition::{
 
 pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder";
 
-/// A PHP subclass of NodeBuilder.
+/// A PHP subclass of `NodeBuilder`.
 pub trait NodeBuilderClass: Send + Sync {
     /// `static::class`.
     fn class(&self) -> &str;
 
     /// An override of the protected `getNodeClass($type)`; `None` runs
-    /// NodeBuilder's own (`parent::getNodeClass($type)`).
+    /// `NodeBuilder`'s own (`parent::getNodeClass($type)`).
     fn get_node_class(&self, _type_name: &str) -> Option<NodeClass> {
         None
     }
@@ -60,7 +60,7 @@ struct BuilderState {
     class: Option<Arc<dyn NodeBuilderClass>>,
 }
 
-/// A shared NodeBuilder.
+/// A shared `NodeBuilder`.
 #[derive(Clone)]
 pub(crate) struct Builder(Arc<Mutex<BuilderState>>);
 
@@ -126,7 +126,7 @@ impl Builder {
     }
 }
 
-/// A NodeBuilder whose `end()` gives `P`.
+/// A `NodeBuilder` whose `end()` gives `P`.
 pub struct NodeBuilder<P = ()> {
     pub(crate) builder: Builder,
     parent: P,
@@ -159,13 +159,13 @@ impl NodeBuilder {
         Self::from_builder(Builder::new(), ())
     }
 
-    /// `new $subclass()`: a NodeBuilder of a PHP subclass.
+    /// `new $subclass()`: a `NodeBuilder` of a PHP subclass.
     pub fn with_class(class: Arc<dyn NodeBuilderClass>) -> Self {
         Self::from_builder(Builder::of_class(Some(class)), ())
     }
 }
 
-/// What can be a NodeBuilder's parent: an ArrayNodeDefinition, or none.
+/// What can be a `NodeBuilder`'s parent: an `ArrayNodeDefinition`, or none.
 pub trait BuilderParent: ParentHandle {
     fn parent_definition(&self) -> Option<NodeDefinition>;
 }

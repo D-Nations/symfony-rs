@@ -1,6 +1,6 @@
-//! Port of Symfony\Component\Dotenv\Exception: FormatException (with its
-//! FormatExceptionContext), PathException and
-//! VariableCircularReferenceException; and the `\LogicException`s
+//! Port of Symfony\Component\Dotenv\Exception: `FormatException` (with its
+//! `FormatExceptionContext`), `PathException` and
+//! `VariableCircularReferenceException`; and the `\LogicException`s
 //! Dotenv.php throws itself.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.

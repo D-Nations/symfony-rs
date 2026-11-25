@@ -33,7 +33,7 @@ impl LoaderResolver {
     pub fn add_loader(&self, loader: Arc<dyn LoaderInterface>) {
         self.loaders
             .write()
-            .unwrap_or_else(|e| e.into_inner())
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
             .push(Arc::clone(&loader));
         if let Some(this) = self.this.upgrade() {
             loader.set_resolver(this);
@@ -44,7 +44,7 @@ impl LoaderResolver {
     pub fn get_loaders(&self) -> Vec<Arc<dyn LoaderInterface>> {
         self.loaders
             .read()
-            .unwrap_or_else(|e| e.into_inner())
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
             .clone()
     }
 }

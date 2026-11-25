@@ -111,7 +111,7 @@ fn load_env(
 }
 
 impl CommandHandler for DotenvDumpCommand {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Symfony\\Component\\Dotenv\\Command\\DotenvDumpCommand"
     }
 

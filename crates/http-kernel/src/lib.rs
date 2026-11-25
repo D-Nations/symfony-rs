@@ -89,7 +89,7 @@ pub struct RequestEvent<'a> {
 }
 
 impl RequestEvent<'_> {
-    /// Like Symfony's RequestEvent::setResponse(), stops this event.
+    /// Like Symfony's `RequestEvent::setResponse()`, stops this event.
     pub fn set_response(&mut self, response: Response) {
         self.response = Some(response);
         self.propagation.stop();

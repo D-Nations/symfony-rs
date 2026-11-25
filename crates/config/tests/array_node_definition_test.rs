@@ -1,6 +1,6 @@
 //! ArrayNodeDefinitionTest.php at symfony/config v8.1.10. Names and
 //! assertions are PHPUnit's; provider rows are upstream's, written as
-//! literals. `getField()` (ReflectionProperty) is `property()`, and
+//! literals. `getField()` (`ReflectionProperty`) is `property()`, and
 //! the `children` property `getChildNodeDefinitions()`. `assertEquals()`
 //! of two definitions is `equals()`.
 //!

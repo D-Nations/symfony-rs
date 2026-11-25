@@ -2,7 +2,7 @@
 //!
 //! Each test has its upstream name and replays every call the upstream
 //! test makes to the parser and the dumper, for each of its data-provider
-//! rows, from tests/data/yaml_test_suite_test.json (common/replay.rs says how).
+//! rows, from `tests/data/yaml_test_suite_test.json` (common/replay.rs says how).
 //!
 //! The suite is yaml/yaml-test-suite at 6ad3d2c6 (2022.01.17, symfony/yaml's
 //! require-dev; MIT, see tests/yaml-test-suite/License): the `in.yaml` of

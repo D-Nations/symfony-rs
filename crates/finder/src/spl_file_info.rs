@@ -68,7 +68,7 @@ impl SplFileInfo {
         }
     }
 
-    /// A PHP `\SplFileInfo` turned into this class as Finder::append()
+    /// A PHP `\SplFileInfo` turned into this class as `Finder::append()`
     /// does: `new SplFileInfo($path, $file->getPath(), $path)`.
     pub fn from_path(path: impl Into<Vec<u8>>) -> Self {
         let mut path = path.into();

@@ -1,6 +1,6 @@
-//! Upstream's Tests/Fixtures/Configuration: ExampleConfiguration, the tree
-//! the reference dumper tests print, and CustomNode / CustomNodeDefinition
-//! (a node that implements NodeInterface without extending BaseNode).
+//! Upstream's Tests/Fixtures/Configuration: `ExampleConfiguration`, the tree
+//! the reference dumper tests print, and `CustomNode` / `CustomNodeDefinition`
+//! (a node that implements `NodeInterface` without extending `BaseNode`).
 //! Upstream's `prototype('array')` is `array_prototype()`, which is the
 //! same call with its return type checked.
 //!
@@ -60,7 +60,7 @@ impl CustomNodeClass for CustomNode {
                         ));
                     }
                 }
-                k => {
+                k @ php_value::Key::Str(_) => {
                     merged.insert(k.clone(), v.clone());
                 }
             }
@@ -97,7 +97,7 @@ impl CustomDefinition for CustomNodeDefinition {
         CUSTOM_NODE_DEFINITION
     }
 
-    /// `new CustomNode()`, whose `getName()` is "custom_node".
+    /// `new CustomNode()`, whose `getName()` is "`custom_node`".
     fn create_node(&self, _definition: &NodeDefinition) -> Result<Node, Error> {
         Node::custom(
             b"custom_node",

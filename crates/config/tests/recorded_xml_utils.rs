@@ -1,6 +1,6 @@
-//! Replays tests/data/xml_utils.json, recorded from XmlUtils on PHP 8.4.27
+//! Replays `tests/data/xml_utils.json`, recorded from `XmlUtils` on PHP 8.4.27
 //! and libxml 2.9.14 (`scripts/record.sh config-xml-utils`,
-//! oracle/recorders/config_xml_utils.php): `phpize()` over a value corpus,
+//! `oracle/recorders/config_xml_utils.php`): `phpize()` over a value corpus,
 //! `convertDomElementToArray()` over documents, and the outcome of
 //! `parse()` and `loadFile()` (exception class, message, code and previous
 //! exception) for malformed documents, document types, schema files and
@@ -31,7 +31,7 @@ type TestResult = Result<(), BoxError>;
 const RECORDED_BASE: &str = "/tmp/xml-utils";
 
 /// Cases php-dom refuses (PLAN.md decision 14), with the start of the
-/// XmlParsingException message the port gives instead of PHP's answer:
+/// `XmlParsingException` message the port gives instead of PHP's answer:
 /// imports libxml fails to load (it then reports I/O warnings and skips
 /// the import; php-dom has nothing it may read in their place).
 const REFUSED: &[(&str, &str, &str)] = &[
@@ -158,7 +158,7 @@ fn callable(
             "zero" => Ok(Value::Int(0)),
             "zero-string" => Ok(Value::string("0")),
             "one" => Ok(Value::Int(1)),
-            "empty-array" => Ok(Value::Array(Default::default())),
+            "empty-array" => Ok(Value::Array(php_value::PhpArray::default())),
             "array" => {
                 let mut a = php_value::PhpArray::new();
                 a.insert(0, Value::Int(0));
@@ -228,7 +228,7 @@ fn recorded_xml_utils() -> TestResult {
     for case in data["convert"].as_array().ok_or("convert")? {
         let source = base64(str_of(&case[0])?)?;
         let check_prefix = case[1].as_bool().ok_or("check")?;
-        let dom = load_xml(&source, Default::default())?
+        let dom = load_xml(&source, php_dom::LoadOptions::default())?
             .document
             .ok_or("loadXML() failed")?;
         let element = dom.document_element().ok_or("no document element")?;

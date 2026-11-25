@@ -1,12 +1,18 @@
 //! FilesystemTest.php at symfony/filesystem v8.1.9: the tests of the
 //! ported subset (`dumpFile()`, `readFile()`, `chmod()`, `tempnam()`).
 //! Names and assertions are PHPUnit's. The workspace is a private
-//! temporary directory (FilesystemTestCase::setUp()). Rust cannot set the
+//! temporary directory (`FilesystemTestCase::setUp()`). Rust cannot set the
 //! process umask safely, so testDumpFile expects `0666 & ~umask()` for
 //! the umask the tests run with, where upstream sets it to 0o002 first.
 //! Mode tests are skipped on Windows, as upstream's are.
 //!
 //! Upstream: symfony/filesystem Tests/FilesystemTest.php Tests/FilesystemTestCase.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::{
@@ -87,7 +93,7 @@ fn expect_io<T: std::fmt::Debug>(result: Result<T, Error>, pattern: &str) {
 }
 
 /// A `^...$` pattern with `.+` wildcards only, enough for upstream's
-/// expectExceptionMessageMatches() here.
+/// `expectExceptionMessageMatches()` here.
 fn regex_lite(pattern: &str) -> impl Fn(&str) -> bool {
     let parts: Vec<String> = pattern.split(".+").map(str::to_owned).collect();
     move |text: &str| {

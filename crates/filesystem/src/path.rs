@@ -42,8 +42,8 @@ impl Env {
 
 /// PHP's truthiness of a `getenv()` result: false, `""` and `"0"` are
 /// false.
-fn truthy(value: &Option<Vec<u8>>) -> bool {
-    value.as_deref().is_some_and(|v| !v.is_empty() && v != b"0")
+fn truthy(value: Option<&[u8]>) -> bool {
+    value.is_some_and(|v| !v.is_empty() && v != b"0")
 }
 
 /// `Path`: static methods only.
@@ -87,13 +87,13 @@ impl Path {
     }
 
     /// `getHomeDirectory()`: `HOME`, else `HOMEDRIVE` + `HOMEPATH`,
-    /// canonicalized; a RuntimeException when neither is set.
+    /// canonicalized; a `RuntimeException` when neither is set.
     pub fn get_home_directory_in(env: &Env) -> Result<Vec<u8>, Error> {
-        if truthy(&env.home) {
+        if truthy(env.home.as_deref()) {
             let home = env.home.clone().unwrap_or_default();
             return Self::canonicalize_in(&home, env);
         }
-        if truthy(&env.homedrive) && truthy(&env.homepath) {
+        if truthy(env.homedrive.as_deref()) && truthy(env.homepath.as_deref()) {
             let mut home = env.homedrive.clone().unwrap_or_default();
             home.extend_from_slice(env.homepath.as_deref().unwrap_or_default());
             return Self::canonicalize_in(&home, env);

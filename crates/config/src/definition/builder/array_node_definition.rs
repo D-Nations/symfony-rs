@@ -1,7 +1,7 @@
 //! Port of Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition.php,
 //! with ParentNodeDefinitionInterface.php and BuilderAwareInterface.php:
-//! the definition of an ArrayNode (named children) or, once it has a
-//! prototype, of a PrototypedArrayNode; `canBeEnabled()` /
+//! the definition of an `ArrayNode` (named children) or, once it has a
+//! prototype, of a `PrototypedArrayNode`; `canBeEnabled()` /
 //! `canBeDisabled()`, `acceptAndWrap()`, `find()`, and the checks that
 //! refuse options of the other kind of node.
 //!
@@ -39,12 +39,12 @@ use crate::{
     php::{self, Msg},
 };
 
-/// ArrayNodeDefinition.
+/// `ArrayNodeDefinition`.
 pub type ArrayNodeDefinition<P = ()> = Definition<class::Array, P>;
 
 pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition";
 
-/// ArrayNodeDefinition's properties.
+/// `ArrayNodeDefinition`'s properties.
 #[derive(Clone)]
 pub(crate) struct ArrayState {
     pub(crate) perform_deep_merging: bool,
@@ -94,7 +94,7 @@ impl ArrayState {
             "removeExtraKeys" => Value::Bool(self.remove_extra_keys),
             "atLeastOne" => Value::Bool(self.at_least_one),
             "allowNewKeys" => Value::Bool(self.allow_new_keys),
-            "key" => self.key.clone().map(Value::String).unwrap_or(Value::Null),
+            "key" => self.key.clone().map_or(Value::Null, Value::String),
             "removeKeyItem" => Value::Bool(self.remove_key_item),
             "addDefaults" => Value::Bool(self.add_defaults),
             "addDefaultChildren" => self
@@ -176,7 +176,7 @@ pub(crate) fn set_builder(def: &Def, builder: Builder) {
     state(def, |a| a.node_builder = Some(builder));
 }
 
-/// `getNodeBuilder()`: the definition's NodeBuilder (a new one at first),
+/// `getNodeBuilder()`: the definition's `NodeBuilder` (a new one at first),
 /// parented by the definition.
 fn get_node_builder(def: &Def) -> Builder {
     let builder = state(def, |a| {
@@ -357,7 +357,7 @@ impl<P: Clone> Definition<class::Array, P> {
         self.def.write(|s| {
             s.normalization
                 .get_or_insert_with(Default::default)
-                .remap(singular.as_ref(), plural)
+                .remap(singular.as_ref(), plural);
         });
         self.clone()
     }
@@ -377,7 +377,7 @@ impl<P: Clone> Definition<class::Array, P> {
         self.def.write(|s| {
             s.merge
                 .get_or_insert_with(Default::default)
-                .allow_unset(allow)
+                .allow_unset(allow);
         });
         self.clone()
     }
@@ -450,7 +450,7 @@ impl<P: Clone> Definition<class::Array, P> {
         self.clone()
     }
 
-    /// `append($node)` (ParentNodeDefinitionInterface).
+    /// `append($node)` (`ParentNodeDefinitionInterface`).
     pub fn append<D: class::Marker, Q: Clone>(&self, node: &Definition<D, Q>) -> Self {
         append(&self.def, &node.def);
         self.clone()

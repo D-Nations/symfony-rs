@@ -1,11 +1,17 @@
-//! Cookie against PHP 8.4.27's answers for what CookieTest leaves open
-//! (tests/data/cookie.json, oracle/recorders/http_foundation_cookie.php):
+//! Cookie against PHP 8.4.27's answers for what `CookieTest` leaves open
+//! (tests/data/cookie.json, `oracle/recorders/http_foundation_cookie.php`):
 //! 2,112 `fromString()` calls and 165 constructions on a clock fixed at
 //! the recorded time. Every getter, the `Set-Cookie` text and every
 //! exception's class and message must match. A text the port refuses
 //! (`NotPorted`, a date it does not read) must be listed in `REFUSED`.
 //!
 //! Upstream: symfony/http-foundation Cookie.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use php_value::{PhpString, base64, clock};
 use serde_json::Value as Json;
@@ -59,7 +65,9 @@ fn check(label: &str, outcome: Result<Cookie>, expected: &Json, refused: &mut Ve
             assert_eq!(cookie.is_http_only(), expected[7], "{label}: httponly");
             assert_eq!(cookie.is_raw(), expected[8], "{label}: raw");
             assert_eq!(
-                cookie.same_site().map(|s| s.as_str()),
+                cookie
+                    .same_site()
+                    .map(symfony_http_foundation::cookie::SameSite::as_str),
                 expected[9].as_str(),
                 "{label}: samesite"
             );

@@ -1,11 +1,17 @@
 //! MimeTypesTest.php at symfony/mime
 //! 8d1232052c9cdef170ed9608b3147bca4f61ff69, with the tests it inherits
-//! from AbstractMimeTypeGuesserTestCase (`common`). Upstream requires
+//! from `AbstractMimeTypeGuesserTestCase` (`common`). Upstream requires
 //! the fileinfo extension for the class; here the default guessers are
 //! the finfo port (PLAN.md decision 18), which is always supported, and
 //! the `file` command.
 //!
 //! Upstream: symfony/mime Tests/MimeTypesTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 mod common;
@@ -36,7 +42,7 @@ fn testGuessImageWithoutExtension() -> TestResult {
 
 #[test]
 fn testGuessImageWithDirectory() {
-    common::guess_image_with_directory(&guesser())
+    common::guess_image_with_directory(&guesser());
 }
 
 #[test]
@@ -56,7 +62,7 @@ fn testGuessWithDuplicatedFileType() -> TestResult {
 
 #[test]
 fn testGuessWithIncorrectPath() {
-    common::guess_with_incorrect_path(&guesser())
+    common::guess_with_incorrect_path(&guesser());
 }
 
 #[test]
@@ -105,7 +111,10 @@ fn testGetExtensions() {
     );
     assert!(mt.get_extensions("image/svg+xml").contains(&"svg".into()));
     assert!(mt.get_extensions("image/svg").contains(&"svg".into()));
-    assert!(mt.get_extensions("application/whatever-symfony").is_empty());
+    assert_eq!(
+        mt.get_extensions("application/whatever-symfony"),
+        [] as [std::string::String; 0]
+    );
 }
 
 #[test]
@@ -122,7 +131,7 @@ fn testGetMimeTypes() {
     );
     assert!(mt.get_mime_types("svg").contains(&"image/svg+xml".into()));
     assert!(mt.get_mime_types("svg").contains(&"image/svg".into()));
-    assert!(mt.get_mime_types("symfony").is_empty());
+    assert_eq!(mt.get_mime_types("symfony"), [] as [std::string::String; 0]);
 }
 
 #[test]

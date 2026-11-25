@@ -1,6 +1,6 @@
 //! InlineTest.php at symfony/yaml 6107ee26a25215c3df3af0a3315e56bb4fd0b7db.
 //! Names and assertions are PHPUnit's. Data-provider tests read the
-//! provider rows recorded from upstream (tests/data/inline_test.json,
+//! provider rows recorded from upstream (`tests/data/inline_test.json`,
 //! `scripts/record.sh yaml`), so they run on upstream's own data.
 //! `expectExceptionMessage` checks that the message contains the text;
 //! `expectExceptionMessageMatches` uses the upstream pattern.
@@ -118,7 +118,7 @@ fn pcre(pattern: &str) -> String {
     pattern[1..end].to_owned()
 }
 
-/// Recorded TaggedValue objects become real ones, so `dump()` sees them.
+/// Recorded `TaggedValue` objects become real ones, so `dump()` sees them.
 fn realize(value: Value) -> Value {
     match value {
         Value::Array(array) => Value::Array(
@@ -132,7 +132,7 @@ fn realize(value: Value) -> Value {
             let tag = properties
                 .get(&Key::from("tag"))
                 .and_then(Value::as_string)
-                .map(|s| s.to_string())
+                .map(std::string::ToString::to_string)
                 .unwrap_or_default();
             let inner = properties
                 .get(&Key::from("value"))
@@ -169,7 +169,10 @@ fn provider(test: &str) -> Result<Vec<Row>, Box<dyn std::error::Error>> {
 }
 
 fn text(value: &Value) -> String {
-    value.as_string().map(|s| s.to_string()).unwrap_or_default()
+    value
+        .as_string()
+        .map(std::string::ToString::to_string)
+        .unwrap_or_default()
 }
 
 fn int(value: &Value) -> i64 {

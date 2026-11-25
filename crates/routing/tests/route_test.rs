@@ -414,7 +414,7 @@ fn testRequirementAlternativeStartAndEndRegexSyntax() -> TestResult {
     Ok(())
 }
 
-/// getInvalidRequirements()
+/// `getInvalidRequirements()`
 const INVALID_REQUIREMENTS: [&str; 7] = ["", "^$", "^", "$", r"\A\z", r"\A", r"\z"];
 
 #[test]
@@ -548,7 +548,7 @@ fn testSerialize() -> TestResult {
     Ok(())
 }
 
-/// RouteTestToStringGadget: a `\Stringable` whose `__toString()` records
+/// `RouteTestToStringGadget`: a `\Stringable` whose `__toString()` records
 /// that it ran.
 #[derive(Debug)]
 struct Gadget(Arc<AtomicBool>);
@@ -619,7 +619,7 @@ fn testUnserializeRejectsObjectInTypedScalarProperty() -> TestResult {
     Ok(())
 }
 
-/// A row of provideInlineDefaultAndRequirementCases().
+/// A row of `provideInlineDefaultAndRequirementCases()`.
 struct Inline {
     route: Route,
     path: &'static str,
@@ -873,7 +873,7 @@ fn testSerializeWhenCompiled() -> TestResult {
 }
 
 /// Tests that unserialization does not fail when the compiled Route is of a
-/// class other than CompiledRoute, such as a subclass of it.
+/// class other than `CompiledRoute`, such as a subclass of it.
 #[test]
 fn testSerializeWhenCompiledWithClass() -> TestResult {
     let mut route = Route::with(

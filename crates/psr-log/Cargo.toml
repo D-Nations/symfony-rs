@@ -7,3 +7,6 @@ publish = false
 description = "Port of psr/log (PSR-3): LoggerInterface, LogLevel and NullLogger"
 
 [dependencies]
+
+[lints]
+workspace = true

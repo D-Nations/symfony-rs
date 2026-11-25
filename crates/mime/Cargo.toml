@@ -17,3 +17,6 @@ magic-db = "=0.7.2"
 [dev-dependencies]
 # Reads the recorded finfo answers (tests/data/fileinfo.json).
 serde_json = "1.0.154"
+
+[lints]
+workspace = true

@@ -183,13 +183,13 @@ async fn inspect(request: Request) -> Response {
         Ok(body) => body,
         Err(error) => {
             eprintln!("request-lab: body read failed: {error}");
-            Default::default()
+            axum::body::Bytes::new()
         }
     };
     let content_type = parts
         .headers
         .get(header::CONTENT_TYPE)
-        .map(|value| value.as_bytes())
+        .map(axum::http::HeaderValue::as_bytes)
         .unwrap_or_default();
     let form = form_fields(parts.method.as_str(), content_type, &body);
     let cookies = Cookies::parse(
@@ -204,7 +204,7 @@ async fn inspect(request: Request) -> Response {
         parts
             .headers
             .get(header::ACCEPT_LANGUAGE)
-            .map(|value| value.as_bytes()),
+            .map(axum::http::HeaderValue::as_bytes),
         &["en", "fr"],
     );
     Json(json!({

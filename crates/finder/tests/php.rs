@@ -1,7 +1,7 @@
 //! PHP 8.4.27's answers for the PHP behaviour this port writes itself,
-//! recorded by oracle/recorders/finder_vectors.php (tests/data/php.json):
-//! preg_match on Finder's patterns, PHP 8 comparisons, strnatcmp & co.,
-//! NumberComparator, and the dates DateComparator parses.
+//! recorded by `oracle/recorders/finder_vectors.php` (tests/data/php.json):
+//! `preg_match` on Finder's patterns, PHP 8 comparisons, strnatcmp & co.,
+//! `NumberComparator`, and the dates `DateComparator` parses.
 //!
 //! Upstream: none
 

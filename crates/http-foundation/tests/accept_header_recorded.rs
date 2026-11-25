@@ -1,5 +1,5 @@
-//! AcceptHeader and AcceptHeaderItem against PHP 8.4.27's answers
-//! recorded by oracle/recorders/http_foundation_accept_header.php
+//! `AcceptHeader` and `AcceptHeaderItem` against PHP 8.4.27's answers
+//! recorded by `oracle/recorders/http_foundation_accept_header.php`
 //! (`scripts/record.sh http-foundation`): 1,500 generated headers through
 //! `fromString()`, `__toString()` and `all()`, with `has()` and `get()`
 //! for 6,000 generated queries; `filter()` with 7 patterns on 3 headers;
@@ -85,7 +85,7 @@ fn headers_match_php() -> Result<(), Error> {
         total += 1;
         let unsorted = header.to_php_string().map_err(|e| e.to_string())?;
         if bytes(&case[1])? != unsorted.as_bytes() {
-            failures.push(format!("{label:?} __toString: {:?}", unsorted));
+            failures.push(format!("{label:?} __toString: {unsorted:?}"));
         }
         let expected_all = case[2].as_array().ok_or("all")?;
         let all = header.all();

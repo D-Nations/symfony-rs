@@ -1,6 +1,6 @@
 //! Replays tests/data/schema.json (scripts/record.sh php-dom-schema): for
 //! every recorded document, what `DOMDocument::schemaValidateSource()`
-//! answered in PHP 8.4.27 with libxml 2.9.14 after XmlUtils's
+//! answered in PHP 8.4.27 with libxml 2.9.14 after `XmlUtils`'s
 //! `loadXML()`: the result and every `libxml_get_errors()` entry.
 //!
 //! The cases this crate answers differently are listed in `KNOWN` with the
@@ -8,6 +8,12 @@
 //! stops differing (so the list stays exact).
 //!
 //! Upstream: none
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -132,10 +138,10 @@ fn recorded_schema_validation() {
                 }
             }
             (true, Some(_)) => {
-                failures.push(format!("{schema_id} | {name}: listed in KNOWN but matches"))
+                failures.push(format!("{schema_id} | {name}: listed in KNOWN but matches"));
             }
             (false, None) => {
-                failures.push(format!("{schema_id} | {name}\n  want {want}\n  got  {got}"))
+                failures.push(format!("{schema_id} | {name}\n  want {want}\n  got  {got}"));
             }
         }
     }

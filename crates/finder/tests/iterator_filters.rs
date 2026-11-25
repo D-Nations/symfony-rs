@@ -1,13 +1,13 @@
 //! The filter iterator tests of symfony/finder
 //! 2f4c0f26106520d82e1b71759d2fb8d32d8b7a43 (Tests/Iterator/*Test.php):
-//! CustomFilter, DateRange, DepthRange, ExcludeDirectory, FileType,
-//! Filecontent, Filename, Lazy, MultiplePcre, Path and SizeRange. Names
+//! `CustomFilter`, `DateRange`, `DepthRange`, `ExcludeDirectory`, `FileType`,
+//! Filecontent, Filename, Lazy, `MultiplePcre`, Path and `SizeRange`. Names
 //! and assertions are PHPUnit's; each test is named
-//! `<Class>_<method>`. FilenameFilterIteratorTest and
-//! MultiplePcreFilterIteratorTest replay their recorded providers; the
+//! `<Class>_<method>`. `FilenameFilterIteratorTest` and
+//! `MultiplePcreFilterIteratorTest` replay their recorded providers; the
 //! others' providers hold closures, comparators or mock objects
-//! (MockSplFileInfo, below) and are written out here. The real-file
-//! tests run on RealIteratorTestCase's tree, one per test class.
+//! (`MockSplFileInfo`, below) and are written out here. The real-file
+//! tests run on `RealIteratorTestCase`'s tree, one per test class.
 //!
 //! Upstream: symfony/finder Tests/Iterator/CustomFilterIteratorTest.php Tests/Iterator/DateRangeFilterIteratorTest.php Tests/Iterator/DepthRangeFilterIteratorTest.php Tests/Iterator/ExcludeDirectoryFilterIteratorTest.php Tests/Iterator/FileTypeFilterIteratorTest.php Tests/Iterator/FilecontentFilterIteratorTest.php Tests/Iterator/FilenameFilterIteratorTest.php Tests/Iterator/LazyIteratorTest.php Tests/Iterator/MultiplePcreFilterIteratorTest.php Tests/Iterator/PathFilterIteratorTest.php Tests/Iterator/SizeRangeFilterIteratorTest.php Tests/Iterator/MockSplFileInfo.php Tests/Iterator/RealIteratorTestCase.php Tests/Iterator/IteratorTestCase.php
 #![allow(non_snake_case)]
@@ -69,7 +69,13 @@ fn CustomFilterIteratorTest_testAccept() {
     for (filters, expected) in rows {
         let inner = infos(&["test.php", "test.py", "foo.php"].map(String::from));
         let iterator = CustomFilterIterator::new(inner, filters);
-        assert_iterator(expected.iter().map(|s| s.to_string()).collect(), iterator);
+        assert_iterator(
+            expected
+                .iter()
+                .map(std::string::ToString::to_string)
+                .collect(),
+            iterator,
+        );
     }
 }
 
@@ -445,7 +451,7 @@ fn mocks(names: &[&str]) -> std::vec::IntoIter<Result<MockSplFileInfo, Error>> {
 }
 
 fn strs(v: &[&str]) -> Vec<String> {
-    v.iter().map(|s| s.to_string()).collect()
+    v.iter().map(std::string::ToString::to_string).collect()
 }
 
 // --- FilecontentFilterIteratorTest ----------------------------------------

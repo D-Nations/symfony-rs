@@ -143,7 +143,7 @@ impl Markup {
 }
 
 impl PhpObject for Markup {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Twig\\Markup"
     }
 
@@ -167,7 +167,7 @@ pub fn set(context: &mut Context, name: &str, value: Value) {
     context.insert(name, value);
 }
 
-/// ForNode's exit: the loop variables are unset, then
+/// `ForNode`'s exit: the loop variables are unset, then
 /// `$context = array_intersect_key($context, $_parent) + $_parent`, so a
 /// loop variable never leaks and an outer variable of the same name
 /// comes back.
@@ -182,7 +182,7 @@ pub fn restore_after_loop(context: &mut Context, parent: Context, loop_variables
     *context = restored;
 }
 
-/// An ArrayExpression: keys `None` take the next index.
+/// An `ArrayExpression`: keys `None` take the next index.
 pub fn array(elements: Vec<(Option<Value>, Value)>) -> Value {
     let mut array = PhpArray::new();
     for (key, value) in elements {
@@ -213,7 +213,7 @@ fn number(value: &Value) -> Option<f64> {
     match value {
         Value::Int(i) => Some(*i as f64),
         Value::Float(f) => Some(*f),
-        Value::String(s) => numeric_value(s.as_bytes()).map(|n| n.as_f64()),
+        Value::String(s) => numeric_value(s.as_bytes()).map(php_value::Number::as_f64),
         _ => None,
     }
 }
@@ -221,7 +221,7 @@ fn number(value: &Value) -> Option<f64> {
 /// PHP 8's `==` for scalars and null; arrays and objects compare by
 /// identity in the trial.
 pub fn loose_eq(a: &Value, b: &Value) -> bool {
-    use Value::*;
+    use Value::{Bool, Float, Int, Null, String};
     match (a, b) {
         (Null, Null) => true,
         (Bool(x), other) | (other, Bool(x)) => *x == to_bool(other),
@@ -326,7 +326,7 @@ pub fn to_string(value: &Value) -> Result<PhpString, Error> {
     })
 }
 
-/// EscaperRuntime::escape() with the `html` strategy, for autoescaped
+/// `EscaperRuntime::escape()` with the `html` strategy, for autoescaped
 /// output: Markup is printed as is.
 pub fn write_escaped_html(out: &mut String, value: &Value) -> Result<(), Error> {
     if let Value::Object(o) = value
@@ -362,7 +362,7 @@ pub fn escape_html(s: &str) -> String {
     out
 }
 
-/// CoreExtension::ensureTraversable() plus the foreach over it.
+/// `CoreExtension::ensureTraversable()` plus the foreach over it.
 pub fn iterate(value: &Value) -> Vec<(Value, Value)> {
     match value {
         Value::Array(a) => a.iter().map(|(k, v)| (k.to_value(), v.clone())).collect(),
@@ -374,7 +374,7 @@ pub fn iterate(value: &Value) -> Vec<(Value, Value)> {
     }
 }
 
-/// CoreExtension::getAttribute() without the sandbox, with strict
+/// `CoreExtension::getAttribute()` without the sandbox, with strict
 /// variables off: a missing key, property or method gives null.
 pub fn get_attribute(
     _env: &Env,
@@ -405,7 +405,7 @@ pub fn get_attribute(
     }
 }
 
-/// The method cache of getAttribute(): exact name, lower-case name, then
+/// The method cache of `getAttribute()`: exact name, lower-case name, then
 /// the `get`/`is`/`has` forms (a `has` form loses to an `is` form).
 fn find_method(methods: &'static [&'static str], item: &str) -> Option<&'static str> {
     let mut sorted: Vec<&'static str> = methods.to_vec();
@@ -445,7 +445,7 @@ fn find_method(methods: &'static [&'static str], item: &str) -> Option<&'static 
     lookup(item).or_else(|| lookup(&item.to_ascii_lowercase()))
 }
 
-/// CoreExtension::include() for a template compiled in the same set.
+/// `CoreExtension::include()` for a template compiled in the same set.
 pub fn include_static(env: &Env, context: &Context, template: TemplateFn) -> Result<Value, Error> {
     let mut variables = context.clone();
     let mut out = String::new();
@@ -457,7 +457,7 @@ pub fn include_static(env: &Env, context: &Context, template: TemplateFn) -> Res
     })
 }
 
-/// CoreExtension::include() through the compiled registry.
+/// `CoreExtension::include()` through the compiled registry.
 pub fn include(env: &Env, context: &Context, name: &Value) -> Result<Value, Error> {
     let name = to_string(name)?;
     let name = name.to_string_lossy();

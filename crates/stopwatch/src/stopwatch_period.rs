@@ -60,7 +60,7 @@ impl fmt::Display for StopwatchPeriod {
         write!(
             f,
             "{} MiB - {} ms",
-            Fixed2(self.memory as f64 / 1024.0 / 1024.0),
+            Fixed2(Number::Int(self.memory).as_f64() / 1024.0 / 1024.0),
             Decimal(self.get_duration())
         )
     }

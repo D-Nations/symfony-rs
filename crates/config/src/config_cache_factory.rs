@@ -2,7 +2,7 @@
 //! ConfigCacheFactory.php and ResourceCheckerConfigCacheFactory.php:
 //! `cache($file, $callable)` makes the cache and calls `callable` with it
 //! when it is not fresh. A callable is a Rust closure by type, so
-//! upstream's TypeError for a non-callable cannot occur.
+//! upstream's `TypeError` for a non-callable cannot occur.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!

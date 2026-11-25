@@ -1,4 +1,4 @@
-//! Port of Symfony\Component\Config\Definition\EnumNode.php: a ScalarNode
+//! Port of Symfony\Component\Config\Definition\EnumNode.php: a `ScalarNode`
 //! whose value must be one of a list (compared with `===`), or a case of
 //! a PHP enum, given or cast from its backing value.
 //!
@@ -33,7 +33,7 @@ use crate::{
 
 pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\EnumNode";
 
-/// EnumNode's properties.
+/// `EnumNode`'s properties.
 #[derive(Clone)]
 pub(crate) struct EnumData {
     pub(crate) values: Vec<Value>,
@@ -65,7 +65,7 @@ fn as_case(value: &Value) -> Option<&EnumCase> {
 pub struct EnumNode;
 
 impl EnumNode {
-    /// An EnumNode of `values`.
+    /// An `EnumNode` of `values`.
     pub fn new(
         name: impl AsRef<[u8]>,
         parent: Option<&Node>,
@@ -81,7 +81,7 @@ impl EnumNode {
         )
     }
 
-    /// An EnumNode of the cases of `enum_fqcn`, looked up in `enums`.
+    /// An `EnumNode` of the cases of `enum_fqcn`, looked up in `enums`.
     pub fn of_enum(
         name: impl AsRef<[u8]>,
         parent: Option<&Node>,
@@ -251,7 +251,7 @@ fn permissible_values(data: &EnumData, separator: &[u8], trim: bool) -> Vec<u8> 
     php::implode(separator, seen)
 }
 
-/// EnumNode's `validateType()`: enum cases, or what ScalarNode accepts.
+/// `EnumNode`'s `validateType()`: enum cases, or what `ScalarNode` accepts.
 pub(crate) fn validate_type(node: &Node, value: &Value) -> Result<(), Error> {
     if as_case(value).is_some() {
         return Ok(());
@@ -333,7 +333,7 @@ fn invalid_value(node: &Node, data: &EnumData, value: &Value) -> Error {
     node.config_error(Class::InvalidConfiguration, message, false)
 }
 
-/// EnumNode's `finalizeValue()`.
+/// `EnumNode`'s `finalizeValue()`.
 pub(crate) fn finalize_value(
     node: &Node,
     variable: &VariableData,

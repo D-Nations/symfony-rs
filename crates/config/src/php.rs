@@ -10,10 +10,10 @@
 //!   non-numeric string as strings, `null` and `bool` against anything as
 //!   bools except `null` against a string, which compares `""`);
 //! - `strtr($string, $pairs)`;
-//! - `json_encode()` of scalars and of the empty values VariableNode
+//! - `json_encode()` of scalars and of the empty values `VariableNode`
 //!   reports, and `var_export()` of enum cases;
 //! - for `XmlUtils::phpize()` and `loadFile()` (checked against
-//!   tests/data/xml_utils.json, `scripts/record.sh config-xml-utils`):
+//!   `tests/data/xml_utils.json`, `scripts/record.sh config-xml-utils`):
 //!   `trim()` with its default characters, `ctype_digit()`,
 //!   `intval($string, 8)` (a C `strtol()`: leading octal digits, saturating),
 //!   `decoct()` of a non-negative int, and `bindec()` (characters other than
@@ -54,7 +54,7 @@ pub fn to_bytes(value: &Value) -> Vec<u8> {
     }
 }
 
-/// A value's type as PHP's TypeError messages name it ("given",
+/// A value's type as PHP's `TypeError` messages name it ("given",
 /// "returned"): `true` and `false` for bools, the class for objects.
 pub fn error_type_name(value: &Value) -> String {
     match value {
@@ -101,7 +101,7 @@ fn numeric_string(s: &[u8]) -> Num {
 /// `$a <=> $b` for scalars and null, or `None` when PHP's answer is
 /// "uncomparable" (NAN, arrays, objects): then `<` and `>` are false.
 pub fn compare(a: &Value, b: &Value) -> Option<Ordering> {
-    use Value::*;
+    use Value::{Bool, Float, Int, Null, String};
     match (a, b) {
         (Null, String(s)) => Some(compare_strings(b"", s)),
         (String(s), Null) => Some(compare_strings(s, b"")),
@@ -173,15 +173,12 @@ pub fn strtr(subject: &[u8], pairs: &[(&[u8], &[u8])]) -> Vec<u8> {
             .iter()
             .filter(|(from, _)| !from.is_empty() && subject[i..].starts_with(from))
             .max_by_key(|(from, _)| from.len());
-        match found {
-            Some((from, to)) => {
-                out.extend_from_slice(to);
-                i += from.len();
-            }
-            None => {
-                out.push(subject[i]);
-                i += 1;
-            }
+        if let Some((from, to)) = found {
+            out.extend_from_slice(to);
+            i += from.len();
+        } else {
+            out.push(subject[i]);
+            i += 1;
         }
     }
     out
@@ -282,7 +279,7 @@ pub fn contains(haystack: &[u8], needle: &[u8]) -> bool {
     needle.is_empty() || haystack.windows(needle.len()).any(|w| w == needle)
 }
 
-/// A PhpString from bytes.
+/// A `PhpString` from bytes.
 pub fn string(bytes: impl Into<Vec<u8>>) -> PhpString {
     PhpString::from(bytes.into())
 }
@@ -391,7 +388,7 @@ fn format_error(class: &str, message: impl Into<Vec<u8>>) -> crate::Error {
 /// `h`, `H` and `*` widths are refused with an `\Error` naming them,
 /// never approximated. Left-justified `d` and `u` pad with spaces where
 /// `0` is asked, as PHP does. Too few arguments is PHP's
-/// ArgumentCountError, a bad specifier its ValueError.
+/// `ArgumentCountError`, a bad specifier its `ValueError`.
 pub fn sprintf(format: &[u8], args: &[Value]) -> Result<Vec<u8>, crate::Error> {
     struct Spec {
         arg: usize,
@@ -435,7 +432,7 @@ pub fn sprintf(format: &[u8], args: &[Value]) -> Result<Vec<u8>, crate::Error> {
         if let Some(n) = n
             && format.get(end) == Some(&b'$')
         {
-            if n == 0 || n >= 2147483647 {
+            if n == 0 || n >= 2_147_483_647 {
                 return Err(format_error(
                     "ValueError",
                     "Argument number specifier must be greater than zero and less than 2147483647",

@@ -406,13 +406,12 @@ impl Dotenv {
 
         let k = self.debug_key.clone();
         let k = k.as_bytes();
-        let debug = match get(&g.server, k) {
-            Some(debug) => debug.clone(),
-            None => {
-                let app_env = get(&g.server, self.env_key.as_bytes());
-                let prod = matches!(app_env, Some(Value::String(s)) if self.prod_envs.iter().any(|e| e.as_bytes() == s.as_bytes()));
-                Value::Bool(!prod)
-            }
+        let debug = if let Some(debug) = get(&g.server, k) {
+            debug.clone()
+        } else {
+            let app_env = get(&g.server, self.env_key.as_bytes());
+            let prod = matches!(app_env, Some(Value::String(s)) if self.prod_envs.iter().any(|e| e.as_bytes() == s.as_bytes()));
+            Value::Bool(!prod)
         };
         let on = to_int(&debug) != 0 || (!matches!(debug, Value::Bool(_)) && filter_bool(&debug));
         let flag = Value::from(if on { "1" } else { "0" });
@@ -494,7 +493,7 @@ impl Dotenv {
     }
 
     fn start(&mut self, data: &[u8], path: &str) {
-        self.path = path.to_owned();
+        path.clone_into(&mut self.path);
         self.data = replace(&replace(data, b"\r\n", b"\n"), b"\r", b"\n");
         self.lineno = 1;
         self.cursor = 0;
@@ -510,7 +509,7 @@ impl Dotenv {
         self.end = 0;
     }
 
-    /// parse()'s loop (`loaded_vars` set) or parseRaw()'s (`None`).
+    /// `parse()`'s loop (`loaded_vars` set) or `parseRaw()`'s (`None`).
     fn parse_values(
         &mut self,
         g: &Globals,
@@ -591,7 +590,7 @@ impl Dotenv {
         self.move_cursor(&matched);
 
         match self.byte(self.cursor) {
-            None | Some(b'\n') | Some(b'#') => {
+            None | Some(b'\n' | b'#') => {
                 if export {
                     return Err(self.format_exception("Unable to unset an environment variable"));
                 }
@@ -903,15 +902,12 @@ impl Dotenv {
         let mut out = Vec::new();
         let mut i = 0;
         while i < value.len() {
-            match self.variable_at(value, i) {
-                Some(m) => {
-                    out.extend(self.expand_variable(g, value, &m, loaded_vars)?);
-                    i = m.end;
-                }
-                None => {
-                    out.push(value[i]);
-                    i += 1;
-                }
+            if let Some(m) = self.variable_at(value, i) {
+                out.extend(self.expand_variable(g, value, &m, loaded_vars)?);
+                i = m.end;
+            } else {
+                out.push(value[i]);
+                i += 1;
             }
         }
         Ok(out)
@@ -1119,7 +1115,7 @@ impl Dotenv {
         Ok(())
     }
 
-    /// Eagerly resolves a raw env key value so that loadEnv() can determine
+    /// Eagerly resolves a raw env key value so that `loadEnv()` can determine
     /// which additional .env files to load before full deferred resolution.
     fn resolve_env_key(
         &mut self,
@@ -1208,17 +1204,14 @@ impl Dotenv {
                 if is_self {
                     let env_backup = get(&g.env, name).cloned();
                     let server_backup = get(&g.server, name).cloned();
-                    match get(&self.overridden_values, name).map(string) {
-                        Some(overridden) => {
-                            let hidden =
-                                replace(&replace(&overridden, b"\\\\", b"\\\\\\\\"), b"$", b"\0");
-                            g.env.insert(key(name), value(&hidden));
-                            g.server.insert(key(name), value(&hidden));
-                        }
-                        None => {
-                            g.env.remove(&key(name));
-                            g.server.remove(&key(name));
-                        }
+                    if let Some(overridden) = get(&self.overridden_values, name).map(string) {
+                        let hidden =
+                            replace(&replace(&overridden, b"\\\\", b"\\\\\\\\"), b"$", b"\0");
+                        g.env.insert(key(name), value(&hidden));
+                        g.server.insert(key(name), value(&hidden));
+                    } else {
+                        g.env.remove(&key(name));
+                        g.server.remove(&key(name));
                     }
                     let getenv_backup = self.use_putenv.then(|| g.getenv(name).unwrap_or_default());
                     if self.use_putenv {

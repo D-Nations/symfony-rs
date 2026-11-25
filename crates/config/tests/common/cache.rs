@@ -1,7 +1,7 @@
-//! Fixtures of the cache tests: ResourceStub (a self-checking resource
+//! Fixtures of the cache tests: `ResourceStub` (a self-checking resource
 //! whose freshness is set by hand), the resource with a long class name,
-//! PHPUnit's mock and stub of ResourceCheckerInterface, and the setUp()
-//! of ConfigCacheTest and ResourceCheckerConfigCacheTest (two empty files
+//! PHPUnit's mock and stub of `ResourceCheckerInterface`, and the `setUp()`
+//! of `ConfigCacheTest` and `ResourceCheckerConfigCacheTest` (two empty files
 //! from `tempnam()`).
 //!
 //! Neither fixture class defines `__serialize()`, so PHP's `serialize()`
@@ -55,7 +55,10 @@ impl ResourceStub {
 
     /// `setFresh($isFresh)`.
     pub fn set_fresh(&self, fresh: bool) {
-        *self.fresh.lock().unwrap_or_else(|e| e.into_inner()) = fresh;
+        *self
+            .fresh
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner) = fresh;
     }
 }
 
@@ -72,7 +75,12 @@ impl ResourceInterface for ResourceStub {
         let mut data = PhpArray::new();
         data.insert(
             mangled(RESOURCE_STUB, "fresh"),
-            Value::Bool(*self.fresh.lock().unwrap_or_else(|e| e.into_inner())),
+            Value::Bool(
+                *self
+                    .fresh
+                    .lock()
+                    .unwrap_or_else(std::sync::PoisonError::into_inner),
+            ),
         );
         Ok(data)
     }
@@ -84,7 +92,10 @@ impl ResourceInterface for ResourceStub {
 
 impl SelfCheckingResourceInterface for ResourceStub {
     fn is_fresh(&self, _timestamp: i64) -> Result<bool, Error> {
-        Ok(*self.fresh.lock().unwrap_or_else(|e| e.into_inner()))
+        Ok(*self
+            .fresh
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner))
     }
 }
 
@@ -182,7 +193,7 @@ impl MockChecker {
 }
 
 impl ResourceCheckerInterface for MockChecker {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "MockObject_ResourceCheckerInterface"
     }
 
@@ -197,8 +208,8 @@ impl ResourceCheckerInterface for MockChecker {
     }
 }
 
-/// setUp(): `tempnam(sys_get_temp_dir(), 'config_')` twice, in a private
-/// directory removed with it (tearDown()).
+/// `setUp()`: `tempnam(sys_get_temp_dir(), 'config_')` twice, in a private
+/// directory removed with it (`tearDown()`).
 pub struct Files {
     pub dir: TempDir,
     pub cache_file: Vec<u8>,

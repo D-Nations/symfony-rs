@@ -1,5 +1,5 @@
-//! What ParameterBagTest and InputBagTest share: the FooEnum fixture
-//! (Tests/Fixtures/FooEnum.php), ParameterBagTest's two data providers,
+//! What `ParameterBagTest` and `InputBagTest` share: the `FooEnum` fixture
+//! (Tests/Fixtures/FooEnum.php), `ParameterBagTest`'s two data providers,
 //! and `strtoupper(...)`.
 //!
 //! Upstream: none

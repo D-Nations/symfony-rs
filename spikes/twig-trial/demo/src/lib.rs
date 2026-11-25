@@ -4,7 +4,7 @@
 //! `model` holds typed stand-ins for the demo's entities, with the same
 //! public method lists, so Twig's attribute lookup resolves as in PHP.
 //! `ext` holds the stubbed bridges, written exactly as the PHP recorder
-//! (oracle/recorders/twig_trial.php) writes them.
+//! (`oracle/recorders/twig_trial.php`) writes them.
 //!
 //! Upstream: none
 
@@ -37,10 +37,11 @@ pub fn render(name: &str, context: &mut twig_trial_runtime::Context) -> Result<S
 
 pub mod ext {
     //! Stubs for bridges whose providers do not exist yet: `path()`
-    //! (Routing, M2-A), `component()` (UX TwigComponent + Icons, M5) and
+    //! (Routing, M2-A), `component()` (UX `TwigComponent` + Icons, M5) and
     //! `format_datetime` (twig/intl-extra, M5).
 
     use php_value::{Key, datetime::DateTimeImmutable};
+    use std::fmt::Write as _;
     use twig_trial_runtime::{Env, Error, Value, escape_html, to_string};
 
     fn arg(arguments: &[Value], index: usize) -> Value {
@@ -83,11 +84,12 @@ pub mod ext {
         );
         if let Value::Array(props) = arg(arguments, 1) {
             for (key, value) in props.iter() {
-                html.push_str(&format!(
+                let _ = write!(
+                    html,
                     " {}=\"{}\"",
                     key_text(key),
                     escape_html(&text(value)?)
-                ));
+                );
             }
         }
         html.push_str("/>");
@@ -122,7 +124,7 @@ pub mod ext {
 
 pub mod model {
     //! Typed stand-ins for App\Entity\Post, Tag and User, Doctrine's
-    //! ArrayCollection, and the HTTP objects that `app.request.query`
+    //! `ArrayCollection`, and the HTTP objects that `app.request.query`
     //! reaches. M4 would generate the `TwigObject` impls with a derive.
 
     use std::sync::Arc;
@@ -141,7 +143,7 @@ pub mod model {
     }
 
     impl TwigObject for Post {
-        fn class(&self) -> &str {
+        fn class(&self) -> &'static str {
             "App\\Entity\\Post"
         }
 
@@ -188,7 +190,7 @@ pub mod model {
     pub struct Tag(pub String);
 
     impl TwigObject for Tag {
-        fn class(&self) -> &str {
+        fn class(&self) -> &'static str {
             "App\\Entity\\Tag"
         }
 
@@ -218,7 +220,7 @@ pub mod model {
     pub struct User(pub String);
 
     impl TwigObject for User {
-        fn class(&self) -> &str {
+        fn class(&self) -> &'static str {
             "App\\Entity\\User"
         }
 
@@ -235,12 +237,12 @@ pub mod model {
         }
     }
 
-    /// The part of Doctrine's ArrayCollection the templates use.
+    /// The part of Doctrine's `ArrayCollection` the templates use.
     #[derive(Debug)]
     pub struct Collection(pub Vec<Value>);
 
     impl TwigObject for Collection {
-        fn class(&self) -> &str {
+        fn class(&self) -> &'static str {
             "Doctrine\\Common\\Collections\\ArrayCollection"
         }
 
@@ -267,14 +269,14 @@ pub mod model {
         }
     }
 
-    /// Stub of Symfony's AppVariable (the `app` global).
+    /// Stub of Symfony's `AppVariable` (the `app` global).
     #[derive(Debug)]
     pub struct App {
         pub request: Value,
     }
 
     impl TwigObject for App {
-        fn class(&self) -> &str {
+        fn class(&self) -> &'static str {
             "Symfony\\Bridge\\Twig\\AppVariable"
         }
 
@@ -298,7 +300,7 @@ pub mod model {
     }
 
     impl TwigObject for Request {
-        fn class(&self) -> &str {
+        fn class(&self) -> &'static str {
             "Symfony\\Component\\HttpFoundation\\Request"
         }
 
@@ -307,12 +309,12 @@ pub mod model {
         }
     }
 
-    /// Stub of InputBag: `get($key, $default = null)` and `all()`.
+    /// Stub of `InputBag`: `get($key, $default = null)` and `all()`.
     #[derive(Debug)]
     pub struct InputBag(pub php_value::PhpArray);
 
     impl TwigObject for InputBag {
-        fn class(&self) -> &str {
+        fn class(&self) -> &'static str {
             "Symfony\\Component\\HttpFoundation\\InputBag"
         }
 

@@ -1,9 +1,15 @@
-//! DebugCommandTest, with upstream's names and assertions. Each test has
+//! `DebugCommandTest`, with upstream's names and assertions. Each test has
 //! its own globals, as `#[RunInSeparateProcess]` gives upstream's (the
 //! others share one process; none depends on what an earlier one left).
 //! The scenarios are upstream's fixtures, copied to tests/fixtures/Command.
 //!
 //! Upstream: symfony/dotenv Tests/Command/DebugCommandTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::sync::{Arc, Mutex};

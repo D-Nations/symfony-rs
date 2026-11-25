@@ -1,5 +1,5 @@
-//! Port of the symfony/filesystem component: the part ConfigCache and
-//! ResourceCheckerConfigCache use (`dumpFile()`, `readFile()`, `chmod()`
+//! Port of the symfony/filesystem component: the part `ConfigCache` and
+//! `ResourceCheckerConfigCache` use (`dumpFile()`, `readFile()`, `chmod()`
 //! and what they call), and `Path`'s canonicalization. See README.md for
 //! the contract.
 //!

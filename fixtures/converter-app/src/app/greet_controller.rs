@@ -33,7 +33,7 @@ impl GreetController {
         let punctuation = query.get_string("punctuation", "!")?;
         let greeting = self.greeter.greet(name, &punctuation)?;
         new_response(
-            greeting.render()?,
+            &greeting.render()?,
             StatusCode::OK,
             &[("Content-Type", "text/plain")],
         )
@@ -42,6 +42,10 @@ impl GreetController {
 
 /// The action as the kernel invokes it: `GreetController::greet`, with
 /// `$name` from the route and `$request` from the argument resolver.
+#[expect(
+    clippy::unused_async,
+    reason = "converter contract: every action is an async fn"
+)]
 pub async fn greet(
     container: &Container,
     scope: RequestScope,

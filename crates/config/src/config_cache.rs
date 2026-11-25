@@ -13,7 +13,7 @@
 //! `"__PHP_Incomplete_Class_Name":"Tracking\\` becomes `"@type":"`. When
 //! that encoding fails PHP formats an array with `%s`: the file then
 //! reads `{"resources":Array}`. Each file is then set to
-//! `0666 & ~umask()`, failures ignored. OPcache has no counterpart.
+//! `0666 & ~umask()`, failures ignored. `OPcache` has no counterpart.
 //!
 //! **Reading the meta file.** `unserialize()` with every class allowed
 //! and a callback that fails for a class PHP cannot load: here the
@@ -23,7 +23,7 @@
 //! `isFresh()`) make the cache stale. A value that is not an array or
 //! object is iterated as nothing (PHP warns), so the cache is fresh; an
 //! element that is not a resource is a `\TypeError` from the first
-//! checker's `supports()`. The TypeError's "called in <file> on line
+//! checker's `supports()`. The `TypeError`'s "called in <file> on line
 //! <n>" suffix names PHP's file and is not reproduced.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -407,7 +407,7 @@ impl crate::resource::SelfCheckingResourceInterface for Uninitialized {
     }
 }
 
-/// How PHP names a value's type in an argument TypeError.
+/// How PHP names a value's type in an argument `TypeError`.
 fn argument_type(value: &Value) -> String {
     match value {
         Value::Bool(true) => "true".into(),
@@ -489,12 +489,11 @@ fn contains_incomplete(value: &Value) -> bool {
 /// once the digits overflow.
 fn add_to_digits(digits: &[u8], delta: i64) -> Vec<u8> {
     let text = String::from_utf8_lossy(digits);
-    match text.parse::<i64>().ok().and_then(|n| n.checked_add(delta)) {
-        Some(n) => n.to_string().into_bytes(),
-        None => {
-            let f = php_value::numeric::string_to_float(digits) + delta as f64;
-            php_value::numeric::float_to_string(f).into_bytes()
-        }
+    if let Some(n) = text.parse::<i64>().ok().and_then(|n| n.checked_add(delta)) {
+        n.to_string().into_bytes()
+    } else {
+        let f = php_value::numeric::string_to_float(digits) + delta as f64;
+        php_value::numeric::float_to_string(f).into_bytes()
     }
 }
 
@@ -741,7 +740,7 @@ fn scan_value(data: &[u8], pos: &mut usize, depth: usize) -> Option<()> {
 
 /// `serialize($metadata)`: the meta file's content. Each resource is
 /// `O:<len>:"<class>":<n>:{...}` with its `__serialize()` array, whose
-/// keys keep their type (`i:0;` for an int key; php-value's serialize()
+/// keys keep their type (`i:0;` for an int key; php-value's `serialize()`
 /// writes an object's property names as strings, as for an object
 /// without `__serialize()`).
 pub fn serialize_resources(metadata: &[Arc<dyn ResourceInterface>]) -> Result<PhpString, Error> {

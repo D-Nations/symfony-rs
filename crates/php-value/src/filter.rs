@@ -3,7 +3,7 @@
 //! `FILTER_VALIDATE_INT`, `FILTER_VALIDATE_BOOL`,
 //! `FILTER_SANITIZE_NUMBER_INT` and `FILTER_CALLBACK`. Written from the
 //! PHP manual and from 8.4.27's answers recorded by
-//! oracle/recorders/filter_var.php (tests/data/filter.json), no PHP
+//! `oracle/recorders/filter_var.php` (tests/data/filter.json), no PHP
 //! source.
 //!
 //! What was recorded:

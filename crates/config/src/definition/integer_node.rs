@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\IntegerNode.php: a
-//! NumericNode for ints.
+//! `NumericNode` for ints.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -45,7 +45,7 @@ impl IntegerNode {
     }
 }
 
-/// IntegerNode's `validateType()`.
+/// `IntegerNode`'s `validateType()`.
 pub(crate) fn validate_type(node: &Node, value: &Value) -> Result<(), Error> {
     match value {
         Value::Int(_) => Ok(()),

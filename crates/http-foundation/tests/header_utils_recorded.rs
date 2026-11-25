@@ -1,5 +1,5 @@
-//! HeaderUtils against PHP 8.4.27's answers recorded by
-//! oracle/recorders/http_foundation_header_utils.php (`scripts/record.sh
+//! `HeaderUtils` against PHP 8.4.27's answers recorded by
+//! `oracle/recorders/http_foundation_header_utils.php` (`scripts/record.sh
 //! http-foundation`): `split()` on 3,000 generated headers and separator
 //! lists, `quote()` and `unquote()` on 633 strings, `makeDisposition()`
 //! on 2,880 type, filename and fallback combinations (v8.1.11),

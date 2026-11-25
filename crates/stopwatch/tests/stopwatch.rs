@@ -67,7 +67,7 @@ fn testIsNotStartedEvent() -> TestResult {
 fn testStop() -> TestResult {
     let stopwatch = Stopwatch::new(false);
     stopwatch.start("foo", Some("cat"));
-    sleep(Duration::from_micros(200000));
+    sleep(Duration::from_millis(200));
     let event = stopwatch.stop("foo")?;
 
     let duration = event.get_duration().as_f64();
@@ -183,9 +183,8 @@ fn testReset() -> TestResult {
 
 #[test]
 fn testShouldReturnEmptyArrayWhenSectionMissing() {
-    assert!(
-        Stopwatch::new(false)
-            .get_section_events("missing")
-            .is_empty()
+    assert_eq!(
+        Stopwatch::new(false).get_section_events("missing"),
+        [] as [(std::string::String, symfony_stopwatch::StopwatchEvent); 0]
     );
 }

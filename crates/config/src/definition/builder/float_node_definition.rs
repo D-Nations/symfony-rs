@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\Builder\FloatNodeDefinition.php:
-//! the definition of a FloatNode.
+//! the definition of a `FloatNode`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -13,7 +13,7 @@ use crate::definition::{
     numeric_node,
 };
 
-/// FloatNodeDefinition.
+/// `FloatNodeDefinition`.
 pub type FloatNodeDefinition<P = ()> = Definition<class::Float, P>;
 
 /// `instantiateNode()`.

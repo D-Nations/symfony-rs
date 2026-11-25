@@ -4,8 +4,8 @@
 //! Every node class is a [`Node`]: a handle to one shared, mutable node,
 //! as a PHP object is (cloning the handle gives the same node;
 //! [`Node::clone_node`] is PHP's `clone`). What differs between the
-//! classes (VariableNode, ScalarNode and its subclasses, ArrayNode,
-//! PrototypedArrayNode, or a [`CustomNode`]) is its [`Kind`]; the
+//! classes (`VariableNode`, `ScalarNode` and its subclasses, `ArrayNode`,
+//! `PrototypedArrayNode`, or a [`CustomNode`]) is its [`Kind`]; the
 //! protected methods each class overrides (`validateType`,
 //! `normalizeValue`, `mergeValues`, `finalizeValue`, ...) dispatch on it,
 //! and live in the module of the class that defines them.
@@ -65,7 +65,7 @@ pub(crate) struct Inner {
     pub(crate) kind: Kind,
 }
 
-/// BaseNode's properties.
+/// `BaseNode`'s properties.
 #[derive(Clone)]
 pub(crate) struct Base {
     pub(crate) name: PhpString,
@@ -104,7 +104,7 @@ pub struct Deprecation {
 /// The node's class and its own properties.
 #[derive(Clone)]
 pub(crate) enum Kind {
-    /// VariableNode, or ScalarNode and its subclasses.
+    /// `VariableNode`, or `ScalarNode` and its subclasses.
     Variable {
         data: VariableData,
         scalar: Option<ScalarKind>,
@@ -114,7 +114,7 @@ pub(crate) enum Kind {
     Custom(Arc<dyn CustomNode>),
 }
 
-/// The ScalarNode classes.
+/// The `ScalarNode` classes.
 #[derive(Clone)]
 pub(crate) enum ScalarKind {
     Scalar,
@@ -127,7 +127,7 @@ pub(crate) enum ScalarKind {
 }
 
 /// A node class written outside this crate (a PHP subclass of BaseNode):
-/// its implementations of BaseNode's abstract and overridable methods.
+/// its implementations of `BaseNode`'s abstract and overridable methods.
 pub trait CustomNode: Send + Sync {
     /// `static::class`.
     fn class(&self) -> &str;
@@ -137,7 +137,7 @@ pub trait CustomNode: Send + Sync {
     fn finalize_value(&self, node: &Node, value: Value) -> Result<Value, Error>;
     fn has_default_value(&self, node: &Node) -> bool;
     fn get_default_value(&self, node: &Node) -> Result<Value, Error>;
-    /// An override of `getPath()`, as a stubbed NodeInterface has.
+    /// An override of `getPath()`, as a stubbed `NodeInterface` has.
     fn get_path(&self, _node: &Node) -> Option<PhpString> {
         None
     }
@@ -147,12 +147,12 @@ pub trait CustomNode: Send + Sync {
     fn valid_placeholder_types(&self) -> Vec<&'static str> {
         Vec::new()
     }
-    /// Whether the class implements PrototypeNodeInterface.
+    /// Whether the class implements `PrototypeNodeInterface`.
     fn is_prototype_node(&self) -> bool {
         false
     }
-    /// Whether the class extends BaseNode; false for a class that only
-    /// implements NodeInterface, whose BaseNode methods callers skip.
+    /// Whether the class extends `BaseNode`; false for a class that only
+    /// implements `NodeInterface`, whose `BaseNode` methods callers skip.
     fn extends_base_node(&self) -> bool {
         true
     }
@@ -340,7 +340,10 @@ impl Node {
     pub fn is_instance_of(&self, class: &str) -> bool {
         let wanted = php::class_name_key(class);
         let (subclass, kind) = self.read(|n| (n.base.subclass.clone(), n.kind.clone()));
-        let mut classes: Vec<String> = subclass.iter().map(|c| c.to_string()).collect();
+        let mut classes: Vec<String> = subclass
+            .iter()
+            .map(std::string::ToString::to_string)
+            .collect();
         match &kind {
             Kind::Custom(c) => classes.push(c.class().to_owned()),
             kind => classes.extend(kind_ancestors(kind).iter().map(|c| (*c).to_owned())),
@@ -356,7 +359,7 @@ impl Node {
     }
 
     /// `instanceof BaseNode`: every class but a [`CustomNode`] that only
-    /// implements NodeInterface.
+    /// implements `NodeInterface`.
     pub fn is_base_node(&self) -> bool {
         match self.kind() {
             Kind::Custom(c) => c.extends_base_node(),
@@ -364,7 +367,7 @@ impl Node {
         }
     }
 
-    /// `instanceof ArrayNode` (ArrayNode and PrototypedArrayNode).
+    /// `instanceof ArrayNode` (`ArrayNode` and `PrototypedArrayNode`).
     pub fn is_array_node(&self) -> bool {
         self.read(|n| matches!(n.kind, Kind::Array(_) | Kind::Prototyped(..)))
     }
@@ -374,7 +377,7 @@ impl Node {
         self.read(|n| matches!(n.kind, Kind::Prototyped(..)))
     }
 
-    /// `instanceof VariableNode` (VariableNode, ScalarNode and its
+    /// `instanceof VariableNode` (`VariableNode`, `ScalarNode` and its
     /// subclasses).
     pub fn is_variable_node(&self) -> bool {
         self.read(|n| matches!(n.kind, Kind::Variable { .. }))
@@ -556,7 +559,7 @@ impl Node {
         self.read(|n| n.base.name.clone())
     }
 
-    /// `setName()`, which only PrototypeNodeInterface classes have.
+    /// `setName()`, which only `PrototypeNodeInterface` classes have.
     pub fn set_name(&self, name: &[u8]) -> Result<(), Error> {
         if !self.is_prototype_node() {
             return Err(undefined_method(&self.class(), "setName"));
@@ -612,7 +615,7 @@ impl Node {
         self.read(|n| !n.base.final_validation_closures.is_empty())
     }
 
-    /// An InvalidConfigurationException (or subclass) with the path set,
+    /// An `InvalidConfigurationException` (or subclass) with the path set,
     /// and the node's info as a hint when `hint` is true.
     pub(crate) fn config_error(
         &self,
@@ -882,7 +885,7 @@ impl Node {
         }
     }
 
-    /// The protected `isValueEmpty()` of VariableNode and its subclasses.
+    /// The protected `isValueEmpty()` of `VariableNode` and its subclasses.
     pub(crate) fn is_value_empty(&self, value: &Value) -> bool {
         match self.kind() {
             Kind::Variable { scalar: None, .. } => !php::truthy(value),
@@ -948,7 +951,7 @@ pub const NODE_INTERFACE: &str = "Symfony\\Component\\Config\\Definition\\NodeIn
 pub const PROTOTYPE_NODE_INTERFACE: &str =
     "Symfony\\Component\\Config\\Definition\\PrototypeNodeInterface";
 
-/// The node classes a built-in kind is an instance of, below BaseNode.
+/// The node classes a built-in kind is an instance of, below `BaseNode`.
 fn kind_ancestors(kind: &Kind) -> Vec<&'static str> {
     let scalar = |own: &[&'static str]| -> Vec<&'static str> {
         let mut classes = own.to_vec();

@@ -33,7 +33,7 @@ fn testConstruct() {
     );
 }
 
-/// Tests Event->getArgs().
+/// Tests `Event->getArgs()`.
 #[test]
 fn testGetArguments() {
     let (event, _) = set_up();
@@ -46,7 +46,7 @@ fn testSetArguments() {
     let (mut event, _) = set_up();
     let result: *const _ = event.set_arguments(args(&[("foo", "bar")]));
     assert_eq!(args(&[("foo", "bar")]), event.get_arguments());
-    assert!(std::ptr::eq(&event, result));
+    assert!(std::ptr::eq(&raw const event, result));
 }
 
 #[test]

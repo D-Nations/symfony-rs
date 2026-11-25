@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\Builder\IntegerNodeDefinition.php:
-//! the definition of an IntegerNode.
+//! the definition of an `IntegerNode`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -13,7 +13,7 @@ use crate::definition::{
     numeric_node,
 };
 
-/// IntegerNodeDefinition.
+/// `IntegerNodeDefinition`.
 pub type IntegerNodeDefinition<P = ()> = Definition<class::Integer, P>;
 
 /// `instantiateNode()`.

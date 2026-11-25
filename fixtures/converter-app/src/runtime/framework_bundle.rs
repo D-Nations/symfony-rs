@@ -57,10 +57,10 @@ pub fn url_redirect_action(
         raw if path.contains('?') => format!("&{raw}"),
         raw => format!("?{raw}"),
     };
-    let port = if redirect.http_port != 80 {
-        format!(":{}", redirect.http_port)
-    } else {
+    let port = if redirect.http_port == 80 {
         String::new()
+    } else {
+        format!(":{}", redirect.http_port)
     };
     let url = format!("{scheme}://{}{port}{path}{qs}", request.host);
     redirect_response(&url, status)

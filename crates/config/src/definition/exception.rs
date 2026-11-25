@@ -1,6 +1,6 @@
 //! Port of Symfony\Component\Config\Definition\Exception: Exception,
-//! InvalidConfigurationException (path and hints) and its subclasses,
-//! UnsetKeyException and InvalidDefinitionException; and
+//! `InvalidConfigurationException` (path and hints) and its subclasses,
+//! `UnsetKeyException` and `InvalidDefinitionException`; and
 //! Symfony\Component\Config\Exception\LogicException.
 //!
 //! PHP's exceptions form a class hierarchy that callers test with
@@ -36,7 +36,7 @@ pub enum Class {
     /// `\Exception`; see [`crate::exception`]).
     LoaderLoad,
     /// `Exception\FileLoaderImportCircularReferenceException` (extends
-    /// LoaderLoadException).
+    /// `LoaderLoadException`).
     FileLoaderImportCircularReference,
     /// `Exception\FileLocatorFileNotFoundException` (extends
     /// `\InvalidArgumentException`), with the paths tried.
@@ -46,7 +46,7 @@ pub enum Class {
     /// `Util\Exception\XmlParsingException` (extends
     /// `\InvalidArgumentException`; see [`crate::util::exception`]).
     XmlParsing,
-    /// `Util\Exception\InvalidXmlException` (extends XmlParsingException).
+    /// `Util\Exception\InvalidXmlException` (extends `XmlParsingException`).
     InvalidXml,
     /// `\RuntimeException`.
     Runtime,
@@ -194,9 +194,9 @@ pub struct Error {
     message: Vec<u8>,
     code: i64,
     previous: Option<Box<Error>>,
-    /// InvalidConfigurationException's path.
+    /// `InvalidConfigurationException`'s path.
     path: Option<PhpString>,
-    /// FileLocatorFileNotFoundException's `getPaths()`.
+    /// `FileLocatorFileNotFoundException`'s `getPaths()`.
     paths: Vec<Vec<u8>>,
     contains_hints: bool,
 }
@@ -258,13 +258,13 @@ impl Error {
         self
     }
 
-    /// FileLocatorFileNotFoundException's `$paths`.
+    /// `FileLocatorFileNotFoundException`'s `$paths`.
     pub fn with_paths(mut self, paths: Vec<Vec<u8>>) -> Self {
         self.paths = paths;
         self
     }
 
-    /// `getPaths()`: the paths a FileLocatorFileNotFoundException tried.
+    /// `getPaths()`: the paths a `FileLocatorFileNotFoundException` tried.
     pub fn get_paths(&self) -> &[Vec<u8>] {
         &self.paths
     }
@@ -272,11 +272,11 @@ impl Error {
     /// Appends "\nHint: " and the hint, or ", " and the hint after the
     /// first one.
     pub fn add_hint(&mut self, hint: &[u8]) {
-        if !self.contains_hints {
+        if self.contains_hints {
+            self.message.extend_from_slice(b", ");
+        } else {
             self.message.extend_from_slice(b"\nHint: ");
             self.contains_hints = true;
-        } else {
-            self.message.extend_from_slice(b", ");
         }
         self.message.extend_from_slice(hint);
     }

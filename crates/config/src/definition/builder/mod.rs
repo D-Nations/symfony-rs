@@ -1,5 +1,5 @@
 //! The Definition\Builder namespace: the fluent interface that builds a
-//! configuration tree (TreeBuilder, NodeBuilder, the node definitions and
+//! configuration tree (`TreeBuilder`, `NodeBuilder`, the node definitions and
 //! their expression, merge, normalization and validation builders).
 //!
 //! A definition is a handle to one shared, mutable definition, as a PHP

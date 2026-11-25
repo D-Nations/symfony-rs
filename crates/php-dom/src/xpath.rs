@@ -1,5 +1,5 @@
 //! `DOMXPath::evaluate()` for the location paths Symfony's XML loaders
-//! build (QtFileLoader's `//TS/context/name[text()="…"]`), over a
+//! build (`QtFileLoader`'s `//TS/context/name[text()="…"]`), over a
 //! [`Document`]. Written from PHP 8.4.27's observed answers on libxml
 //! 2.9.14 (symfony-translation's recorded `evaluate` cases) and XPath 1.0.
 //!

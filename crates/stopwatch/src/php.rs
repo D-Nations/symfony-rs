@@ -26,7 +26,7 @@ use std::{
 };
 
 /// What PHP asks its host for. Tests substitute a mocked clock, as
-/// symfony/phpunit-bridge's ClockMock does for `time-sensitive` tests.
+/// symfony/phpunit-bridge's `ClockMock` does for `time-sensitive` tests.
 pub trait Host: Send + Sync {
     /// `microtime(true)`: seconds since the Unix epoch, microsecond
     /// resolution.
@@ -50,7 +50,12 @@ impl Host for SystemHost {
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default();
-        now.as_secs() as f64 + f64::from(now.subsec_micros()) / 1e6
+        #[expect(
+            clippy::cast_precision_loss,
+            reason = "PHP's microtime(true) is a float of the seconds"
+        )]
+        let seconds = now.as_secs() as f64;
+        seconds + f64::from(now.subsec_micros()) / 1e6
     }
 }
 
@@ -66,6 +71,8 @@ impl Number {
         matches!(self, Self::Float(_))
     }
 
+    /// PHP's int-to-float conversion, which rounds beyond 2^53.
+    #[expect(clippy::cast_precision_loss, reason = "PHP int-to-float conversion")]
     pub fn as_f64(self) -> f64 {
         match self {
             Self::Int(i) => i as f64,
@@ -90,7 +97,7 @@ impl Add for Number {
         match (self, other) {
             (Self::Int(a), Self::Int(b)) => a
                 .checked_add(b)
-                .map_or(Self::Float(a as f64 + b as f64), Self::Int),
+                .map_or(Self::Float(self.as_f64() + other.as_f64()), Self::Int),
             (a, b) => Self::Float(a.as_f64() + b.as_f64()),
         }
     }
@@ -104,7 +111,7 @@ impl Sub for Number {
         match (self, other) {
             (Self::Int(a), Self::Int(b)) => a
                 .checked_sub(b)
-                .map_or(Self::Float(a as f64 - b as f64), Self::Int),
+                .map_or(Self::Float(self.as_f64() - other.as_f64()), Self::Int),
             (a, b) => Self::Float(a.as_f64() - b.as_f64()),
         }
     }
@@ -148,6 +155,10 @@ const POWERS_OF_TEN: [f64; 23] = [
 ];
 
 /// `(int) $value` for a float.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's (int) truncates toward zero; the range is checked first"
+)]
 pub fn to_int(value: f64) -> i64 {
     const TWO_63: f64 = 9_223_372_036_854_775_808.0;
     const TWO_64: f64 = 18_446_744_073_709_551_616.0;

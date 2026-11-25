@@ -1,8 +1,14 @@
-//! LintCommandTest, with upstream's names, assertions and provider rows.
+//! `LintCommandTest`, with upstream's names, assertions and provider rows.
 //! The test's `Foo::TEST` constant is defined in the parser's
 //! environment, as PHP finds it among the loaded classes.
 //!
 //! Upstream: symfony/yaml Tests/Command/LintCommandTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 use std::{
@@ -42,7 +48,7 @@ impl Files {
         std::env::temp_dir().join("framework-yml-lint-test")
     }
 
-    /// `createFile($content)`: tempnam(), a new name each time.
+    /// `createFile($content)`: `tempnam()`, a new name each time.
     fn create_file(&mut self, content: &str) -> String {
         static COUNTER: AtomicUsize = AtomicUsize::new(0);
         let n = COUNTER.fetch_add(1, Ordering::Relaxed);

@@ -5,7 +5,7 @@
 //! Composer's data is.
 //!
 //! Composer's behaviour: an unknown package throws an
-//! OutOfBoundsException ('Package "x" is not installed'); a package with
+//! `OutOfBoundsException` ('Package "x" is not installed'); a package with
 //! no version gives null.
 //!
 //! Upstream: none

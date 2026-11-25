@@ -1,5 +1,5 @@
 //! Port of the symfony/mime component: the MIME type part that
-//! HttpFoundation's `File` and `UploadedFile` use (`MimeTypes`, its
+//! `HttpFoundation`'s `File` and `UploadedFile` use (`MimeTypes`, its
 //! guesser interface, `FileBinaryMimeTypeGuesser` and
 //! `FileinfoMimeTypeGuesser`). See README.md for
 //! the contract.

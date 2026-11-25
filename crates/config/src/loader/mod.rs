@@ -1,7 +1,7 @@
 //! Port of Symfony\Component\Config\Loader: LoaderInterface.php,
 //! LoaderResolverInterface.php, DirectoryAwareLoaderInterface.php and
-//! the loaders that do not parse a format (Loader, LoaderResolver,
-//! DelegatingLoader, FileLoader, GlobFileLoader), with
+//! the loaders that do not parse a format (Loader, `LoaderResolver`,
+//! `DelegatingLoader`, `FileLoader`, `GlobFileLoader`), with
 //! ParamConfigurator.php.
 //!
 //! Resources are PHP values ([`Value`]), as upstream's `mixed`. A loader
@@ -53,7 +53,7 @@ pub trait LoaderInterface: Send + Sync {
     /// `setResolver($resolver)`.
     fn set_resolver(&self, resolver: Arc<dyn LoaderResolverInterface>);
 
-    /// `$loader instanceof FileLoader`: the embedded FileLoader.
+    /// `$loader instanceof FileLoader`: the embedded `FileLoader`.
     fn as_file_loader(&self) -> Option<&FileLoader> {
         None
     }

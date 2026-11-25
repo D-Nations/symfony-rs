@@ -1,7 +1,7 @@
 //! Test doubles for the loader tests: what PHPUnit's `createMock()` /
 //! `createStub()` give upstream (a loader, a resolver, a locator with
 //! configured answers that count their calls), and upstream's
-//! ProjectLoader1 and TestFileLoader.
+//! `ProjectLoader1` and `TestFileLoader`.
 //!
 //! Upstream: symfony/config Tests/Loader/LoaderTest.php Tests/Loader/FileLoaderTest.php
 
@@ -62,7 +62,7 @@ impl MockLoader {
 }
 
 impl LoaderInterface for MockLoader {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "MockObject_LoaderInterface"
     }
 
@@ -187,7 +187,7 @@ fn extension(path: &[u8]) -> &[u8] {
 }
 
 impl LoaderInterface for ProjectLoader1 {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Symfony\\Component\\Config\\Tests\\Loader\\ProjectLoader1"
     }
 
@@ -242,7 +242,7 @@ impl TestFileLoader {
 }
 
 impl LoaderInterface for TestFileLoader {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Symfony\\Component\\Config\\Tests\\Loader\\TestFileLoader"
     }
 

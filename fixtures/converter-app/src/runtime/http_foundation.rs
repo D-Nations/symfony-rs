@@ -1,4 +1,4 @@
-//! What the fixture needs from HttpFoundation beyond `symfony-http-foundation`:
+//! What the fixture needs from `HttpFoundation` beyond `symfony-http-foundation`:
 //! `Request::getHost()`, `getPort()`, `getHttpHost()`, `getUriForPath()`
 //! and `isHostValid()`; `InputBag::get()` / `getString()`;
 //! `Response::__construct()` with `ResponseHeaderBag`'s default
@@ -38,7 +38,7 @@ pub struct Server {
     pub port: i64,
 }
 
-/// The parts of `Request` that the router listener and RedirectController read.
+/// The parts of `Request` that the router listener and `RedirectController` read.
 #[derive(Debug, Clone)]
 pub struct RequestInfo {
     /// `getMethod()`: `REQUEST_METHOD`, uppercased (no method override).
@@ -109,7 +109,7 @@ fn header_text(headers: &HeaderMap, name: HeaderName) -> Option<String> {
 
 /// `getHost()`: the Host header (else `SERVER_NAME`), trimmed, a trailing
 /// `:digits` removed, lowercased, then `isHostValid()`. An invalid host
-/// throws SuspiciousOperationException, a request exception, which
+/// throws `SuspiciousOperationException`, a request exception, which
 /// `HttpKernel::handle` turns into a 400 with the same message.
 fn host(host_header: Option<&str>, server: &Server) -> Result<String, Exception> {
     let raw = host_header.unwrap_or(&server.name);
@@ -185,7 +185,7 @@ impl InputBag {
     }
 
     /// `getString($key, $default)`: `(string) $this->get($key, $default)`.
-    /// A non-scalar value throws BadRequestException, which
+    /// A non-scalar value throws `BadRequestException`, which
     /// `HttpKernel::handle` turns into a 400 with the same message.
     pub fn get_string(&self, key: &str, default: &str) -> Result<PhpString, Exception> {
         match self.0.get(key) {
@@ -202,7 +202,7 @@ impl InputBag {
 /// later name replaces an earlier one, case-insensitively), then
 /// `ResponseHeaderBag` computes `Cache-Control`.
 pub fn new_response(
-    content: PhpString,
+    content: &[u8],
     status: StatusCode,
     headers: &[(&str, &str)],
 ) -> Result<Response, Exception> {
@@ -252,7 +252,7 @@ pub fn redirect_response(url: &str, status: StatusCode) -> Result<Response, Exce
         "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='{escaped}'\" />\n\n        <title>Redirecting to {escaped}</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"{escaped}\">{escaped}</a>.\n    </body>\n</html>"
     );
     let mut response = new_response(
-        PhpString::from(content),
+        content.as_bytes(),
         status,
         &[
             ("Location", url),
@@ -266,7 +266,7 @@ pub fn redirect_response(url: &str, status: StatusCode) -> Result<Response, Exce
 }
 
 /// `Response::prepare($request)` for a response with no charset of its own
-/// (ResponseListener gives it `kernel.charset`).
+/// (`ResponseListener` gives it `kernel.charset`).
 pub fn prepare(response: &mut Response, request: &Parts, charset: &str) {
     let status = response.status();
     let headers = response.headers_mut();

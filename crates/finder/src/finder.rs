@@ -276,7 +276,9 @@ impl Finder {
 
     /// `Finder::addVCSPattern()` (process-wide, as PHP's static).
     pub fn add_vcs_pattern(pattern: impl Into<Args>) {
-        let mut patterns = VCS_PATTERNS.write().unwrap_or_else(|e| e.into_inner());
+        let mut patterns = VCS_PATTERNS
+            .write()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
         for p in pattern.into().0 {
             if !patterns.contains(&p) {
                 patterns.push(p);
@@ -476,7 +478,9 @@ impl Finder {
         let mut not_paths = self.not_paths.clone();
         exclude.extend(self.prune_filters.iter().cloned().map(Exclusion::Prune));
         if self.ignore & IGNORE_VCS_FILES != 0 {
-            let patterns = VCS_PATTERNS.read().unwrap_or_else(|e| e.into_inner());
+            let patterns = VCS_PATTERNS
+                .read()
+                .unwrap_or_else(std::sync::PoisonError::into_inner);
             exclude.extend(patterns.iter().cloned().map(Exclusion::Directory));
         }
         if self.ignore & IGNORE_DOT_FILES != 0 {

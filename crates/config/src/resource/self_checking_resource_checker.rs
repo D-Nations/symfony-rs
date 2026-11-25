@@ -32,7 +32,10 @@ impl SelfCheckingResourceChecker {
     /// Empties the shared answers, as upstream's tests do through
     /// reflection (`$cache` set to `[]`).
     pub fn clear_cache() {
-        CACHE.lock().unwrap_or_else(|e| e.into_inner()).clear();
+        CACHE
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .clear();
     }
 }
 
@@ -49,7 +52,11 @@ impl ResourceCheckerInterface for SelfCheckingResourceChecker {
         let mut key = resource.to_string();
         key.push(b':');
         key.extend_from_slice(timestamp.to_string().as_bytes());
-        if let Some(&fresh) = CACHE.lock().unwrap_or_else(|e| e.into_inner()).get(&key) {
+        if let Some(&fresh) = CACHE
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .get(&key)
+        {
             return Ok(fresh);
         }
         // a resource that is not self-checking: PHP calls a method it
@@ -63,7 +70,7 @@ impl ResourceCheckerInterface for SelfCheckingResourceChecker {
         let fresh = checking.is_fresh(timestamp)?;
         CACHE
             .lock()
-            .unwrap_or_else(|e| e.into_inner())
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
             .insert(key, fresh);
         Ok(fresh)
     }

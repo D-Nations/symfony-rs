@@ -87,16 +87,15 @@ pub fn compare(a: &Scalar, b: &Scalar) -> Ordering {
         Scalar::String(s) if is_numeric(s) => Some(numeric_value(s)),
         Scalar::String(_) => None,
     };
-    match (num(a), num(b)) {
-        (Some(x), Some(y)) => cmp_num(x, y),
-        _ => {
-            let text = |s: &Scalar| match s {
-                Scalar::Int(i) => num_to_string(Num::Int(*i)),
-                Scalar::Float(f) => num_to_string(Num::Float(*f)),
-                Scalar::String(s) => s.clone(),
-            };
-            text(a).cmp(&text(b))
-        }
+    if let (Some(x), Some(y)) = (num(a), num(b)) {
+        cmp_num(x, y)
+    } else {
+        let text = |s: &Scalar| match s {
+            Scalar::Int(i) => num_to_string(Num::Int(*i)),
+            Scalar::Float(f) => num_to_string(Num::Float(*f)),
+            Scalar::String(s) => s.clone(),
+        };
+        text(a).cmp(&text(b))
     }
 }
 

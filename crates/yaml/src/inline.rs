@@ -1328,7 +1328,10 @@ impl Inline {
             return Ok(PhpString::default());
         }
         let parsed = self.parse_scalar_simple(&parsed, Flags::NONE, true)?;
-        if parsed.as_string().is_some_and(|s| s.is_empty()) {
+        if parsed
+            .as_string()
+            .is_some_and(php_value::PhpString::is_empty)
+        {
             return Ok(PhpString::default());
         }
         let Some(parsed) = scalar_string(&parsed) else {
@@ -1351,10 +1354,7 @@ impl Inline {
         }
         if !BASE64.is_match(&parsed) {
             return Err(self.error(
-                format!(
-                    "The base64 encoded data ({}) contains invalid characters.",
-                    parsed
-                ),
+                format!("The base64 encoded data ({parsed}) contains invalid characters."),
                 Some(scalar),
             ));
         }

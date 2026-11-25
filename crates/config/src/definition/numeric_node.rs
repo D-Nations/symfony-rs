@@ -1,5 +1,5 @@
 //! Port of Symfony\Component\Config\Definition\NumericNode.php: a
-//! ScalarNode with an optional minimum and maximum, checked when the
+//! `ScalarNode` with an optional minimum and maximum, checked when the
 //! value is finalized (with PHP's loose `<` and `>`, and the value printed
 //! as `sprintf('%s')` prints it). A numeric value is never empty.
 //!
@@ -21,7 +21,7 @@ use crate::{
 
 pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\NumericNode";
 
-/// NumericNode's properties.
+/// `NumericNode`'s properties.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub(crate) struct NumericData {
     pub(crate) min: Option<Number>,
@@ -89,7 +89,7 @@ impl Node {
     }
 }
 
-/// NumericNode's `finalizeValue()`.
+/// `NumericNode`'s `finalizeValue()`.
 pub(crate) fn finalize_value(
     node: &Node,
     data: &VariableData,

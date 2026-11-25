@@ -5,6 +5,12 @@
 //! (upstream: `extension_loaded('fileinfo')`).
 //!
 //! Upstream: symfony/http-foundation Tests/File/UploadedFileTest.php
+
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 mod files;

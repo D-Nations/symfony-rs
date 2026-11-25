@@ -153,6 +153,7 @@ fn non_readable(guesser: &dyn MimeTypeGuesser) -> TestResult {
 }
 
 #[cfg(not(unix))]
+#[expect(clippy::unnecessary_wraps, reason = "same signature as the Unix test")]
 fn non_readable(_guesser: &dyn MimeTypeGuesser) -> TestResult {
     Ok(())
 }

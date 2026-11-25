@@ -1,6 +1,6 @@
-//! Inputs that tell symfony/yaml's fix for GHSA-9frc-8383-795m (ReDoS in
+//! Inputs that tell symfony/yaml's fix for GHSA-9frc-8383-795m (`ReDoS` in
 //! `Parser::cleanup()`) from the code before it: on v8.0.11 the old
-//! patterns hit PCRE's backtrack limit (a TypeError, or a `---` marker
+//! patterns hit PCRE's backtrack limit (a `TypeError`, or a `---` marker
 //! left in place), on the pin they do not. The fix's own tests
 //! (testParseHandlesLarge*) pass on both, so these pin the difference.
 //! Expected values are the pin's answers on the oracle (PHP 8.4.27,
@@ -21,7 +21,7 @@ fn reserved_indicator(yaml: &str) -> String {
 fn cleanup_does_not_backtrack_on_long_yaml_headers() {
     for yaml in [
         format!("%YAML:{}", "1.".repeat(50000)),
-        format!("%YAML 1{}x", ".".repeat(100000)),
+        format!("%YAML 1{}x", ".".repeat(100_000)),
     ] {
         let error = Parser::new()
             .parse(yaml.as_bytes(), Flags::NONE)

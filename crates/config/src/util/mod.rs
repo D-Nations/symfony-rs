@@ -1,4 +1,4 @@
-//! Symfony\Component\Config\Util: XmlUtils and its exceptions, on
+//! Symfony\Component\Config\Util: `XmlUtils` and its exceptions, on
 //! `php-dom` (PLAN.md decision 9).
 //!
 //! Upstream: none

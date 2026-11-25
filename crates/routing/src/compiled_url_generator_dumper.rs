@@ -100,8 +100,10 @@ impl CompiledUrlGeneratorDumper {
                     .position(|v| loose_equals(&Value::String(v.clone()), &current));
                 if let Some(search_key) = search_key {
                     visited.push(current_id.clone());
-                    let path: Vec<&[u8]> =
-                        visited[search_key..].iter().map(|v| v.as_bytes()).collect();
+                    let path: Vec<&[u8]> = visited[search_key..]
+                        .iter()
+                        .map(php_value::PhpString::as_bytes)
+                        .collect();
                     return Err(Error::circular_reference(current_id.as_bytes(), &path));
                 }
 

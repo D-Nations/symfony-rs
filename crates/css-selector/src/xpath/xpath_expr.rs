@@ -94,17 +94,17 @@ impl XPathExpr {
         }
         self.path = path;
 
-        if !has_inner_conditions {
-            self.element = cat(&[&expr.element, closing_combiner.unwrap_or_default()]);
-            self.condition = expr.condition.clone();
-        } else {
-            self.element = expr.element.clone();
+        if has_inner_conditions {
+            self.element.clone_from(&expr.element);
             if truthy(&expr.condition) {
                 self.element = cat(&[&self.element, b"[", &expr.condition, b"]"]);
             }
             if let Some(closing) = closing_combiner.filter(|c| truthy(c)) {
                 self.element.extend_from_slice(closing);
             }
+        } else {
+            self.element = cat(&[&expr.element, closing_combiner.unwrap_or_default()]);
+            self.condition.clone_from(&expr.condition);
         }
         self
     }

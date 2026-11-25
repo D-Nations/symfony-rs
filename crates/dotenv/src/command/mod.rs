@@ -9,6 +9,7 @@
 //!
 //! Upstream: none
 
+use std::fmt::Write as _;
 use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
 
 use php_value::{Key, PhpArray, Value, numeric::var_export_float};
@@ -168,7 +169,7 @@ fn export(value: &Value, indent: usize, out: &mut String) {
             out.push_str(&" ".repeat(indent));
             out.push(')');
         }
-        Value::Object(o) => out.push_str(&format!("\\{}::__set_state(array(\n))", o.class())),
+        Value::Object(o) => _ = write!(out, "\\{}::__set_state(array(\n))", o.class()),
     }
 }
 

@@ -49,7 +49,7 @@ impl<C> Listener<C> for ErrorSubscriber {
                 all.push((name.as_str(), value.as_str()));
             }
         }
-        let response = new_response(body.into(), status, &all)?;
+        let response = new_response(body.as_bytes(), status, &all)?;
         event.set_response(response);
         Ok(())
     }

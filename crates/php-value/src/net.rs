@@ -1,6 +1,6 @@
 //! PHP's IP address functions, written from the PHP manual and the answers
 //! recorded from PHP 8.4.27 on the oracle's glibc
-//! (oracle/recorders/http_foundation_ip_utils.php ->
+//! (`oracle/recorders/http_foundation_ip_utils.php` ->
 //! crates/http-foundation/tests/data/ip_utils.json):
 //!
 //! - `filter_var($s, FILTER_VALIDATE_IP, ...)`, `inet_pton()` and
@@ -21,6 +21,7 @@
 //!
 //! Upstream: none
 
+use std::fmt::Write as _;
 /// `inet_pton()` or `ip2long()` was given a NUL byte: PHP's `ValueError`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NulByte {
@@ -90,26 +91,23 @@ fn groups(s: &[u8], ipv4_tail: bool) -> Option<Vec<u16>> {
 
 /// An IPv6 address in text form, as all three functions read it.
 pub fn parse_ipv6(s: &[u8]) -> Option<[u8; 16]> {
-    let words = match s.windows(2).position(|w| w == b"::") {
-        Some(at) => {
-            let (left, right) = (&s[..at], &s[at + 2..]);
-            let left = groups(left, false)?;
-            let right = groups(right, true)?;
-            if left.len() + right.len() > 7 {
-                return None;
-            }
-            let mut words = left;
-            words.resize(8 - right.len(), 0);
-            words.extend(right);
-            words
+    let words = if let Some(at) = s.windows(2).position(|w| w == b"::") {
+        let (left, right) = (&s[..at], &s[at + 2..]);
+        let left = groups(left, false)?;
+        let right = groups(right, true)?;
+        if left.len() + right.len() > 7 {
+            return None;
         }
-        None => {
-            let words = groups(s, true)?;
-            if words.len() != 8 {
-                return None;
-            }
-            words
+        let mut words = left;
+        words.resize(8 - right.len(), 0);
+        words.extend(right);
+        words
+    } else {
+        let words = groups(s, true)?;
+        if words.len() != 8 {
+            return None;
         }
+        words
     };
     let mut out = [0u8; 16];
     for (i, word) in words.iter().enumerate() {
@@ -195,7 +193,7 @@ pub fn inet_ntop(packed: &[u8]) -> Option<String> {
             out.push_str(&dotted([bytes[12], bytes[13], bytes[14], bytes[15]]));
             break;
         }
-        out.push_str(&format!("{:x}", words[i]));
+        let _ = write!(out, "{:x}", words[i]);
         i += 1;
     }
     Some(out)
