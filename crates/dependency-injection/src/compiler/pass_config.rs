@@ -18,6 +18,7 @@ use super::check_exception_on_invalid_reference_behavior_pass::CheckExceptionOnI
 use super::check_factory_builder_circular_reference_pass::CheckFactoryBuilderCircularReferencePass;
 use super::check_reference_validity_pass::CheckReferenceValidityPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
+use super::definition_error_exception_pass::DefinitionErrorExceptionPass;
 use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
 use super::remove_abstract_definitions_pass::RemoveAbstractDefinitionsPass;
 use super::remove_build_parameters_pass::RemoveBuildParametersPass;
@@ -197,7 +198,7 @@ impl PassConfig {
                 ))),
                 Pass::new(AnalyzeServiceReferencesPass::default()),
                 Pass::new(CheckFactoryBuilderCircularReferencePass),
-                pending("DefinitionErrorExceptionPass"),
+                Pass::new(DefinitionErrorExceptionPass::new()),
             ],
         )]);
         let after_removing = BTreeMap::from([

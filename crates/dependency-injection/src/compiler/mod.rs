@@ -49,6 +49,9 @@ pub use check_factory_builder_circular_reference_pass::CheckFactoryBuilderCircul
 mod check_reference_validity_pass;
 pub use check_reference_validity_pass::CheckReferenceValidityPass;
 
+mod definition_error_exception_pass;
+pub use definition_error_exception_pass::DefinitionErrorExceptionPass;
+
 mod inline_service_definitions_pass;
 pub use inline_service_definitions_pass::InlineServiceDefinitionsPass;
 
