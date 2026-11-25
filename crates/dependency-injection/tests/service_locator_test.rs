@@ -12,7 +12,8 @@
 //! stands for the `&$locator` the PHP closures capture. The closures'
 //! return types are declared with [`LocatorEntry::returns`].
 //!
-//! Upstream: symfony/dependency-injection Tests/ServiceLocatorTest.php; symfony/service-contracts Test/ServiceLocatorTestCase.php
+//! Upstream: symfony/dependency-injection Tests/ServiceLocatorTest.php
+//! Upstream: symfony/service-contracts Test/ServiceLocatorTestCase.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
 use std::sync::Arc;

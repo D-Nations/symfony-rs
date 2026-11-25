@@ -16,7 +16,8 @@
 //! The return types `getProvidedServices()` reflects from closures are
 //! declared on the entry ([`LocatorEntry::returns`]).
 //!
-//! Upstream: symfony/dependency-injection ServiceLocator.php Argument/ServiceLocator.php; symfony/service-contracts ServiceLocatorTrait.php
+//! Upstream: symfony/dependency-injection ServiceLocator.php Argument/ServiceLocator.php
+//! Upstream: symfony/service-contracts ServiceLocatorTrait.php
 
 use std::fmt;
 use std::sync::{Arc, OnceLock};
