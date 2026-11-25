@@ -5,8 +5,9 @@ the implementation. This is an unofficial partial port, not a complete
 HttpKernel, bundle system or dependency-injection container. It has two
 parts: the port of `HttpKernel.php` on HttpFoundation's Request and
 Response (modules `http_kernel`, `event`, `controller`, `exception`), and
-the earlier typed Axum lifecycle subset (`Kernel<C>`, below), which
-request-lab and the converter fixture still use.
+the earlier typed Axum lifecycle subset (`Kernel<C>`, below), which the
+converter fixture still uses. request-lab runs on the port, served by
+`symfony-runtime`'s HTTP adapter.
 
 ## The HttpKernel port
 
@@ -47,9 +48,9 @@ around Axum's `Next` target, covering static files as well as dynamic pages.
 The demo's controller errors, firewall and session finalization retain their
 existing application-specific handling inside that target.
 
-The independent request lab supplies `Match<Route>` as its controller target
-and converts an explicit controller failure to JSON in an exception listener.
-It has no demo dependency, database, templates, translations or assets.
+The request lab used this subset until it moved to the HttpKernel port
+(M2-A, `docs/milestones/m2-a-axum-adapter-request-lab.md`); the converter
+fixture is its remaining user.
 
 ```rust
 use axum::{body::Body, extract::Request, response::IntoResponse};

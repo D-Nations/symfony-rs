@@ -63,11 +63,13 @@ impl Query {
     /// pairs are skipped, and only the first `max_input_vars` other pairs
     /// are read.
     pub fn parse(raw: &str) -> Self {
+        Self::parse_bytes(raw.as_bytes())
+    }
+
+    /// [`Query::parse`] on the bytes PHP-FPM is given as `QUERY_STRING`.
+    pub fn parse_bytes(raw: &[u8]) -> Self {
         let mut query = Self::default();
-        let pairs = raw
-            .as_bytes()
-            .split(|&b| b == b'&')
-            .filter(|pair| !pair.is_empty());
+        let pairs = raw.split(|&b| b == b'&').filter(|pair| !pair.is_empty());
         for pair in pairs.take(MAX_INPUT_VARS) {
             query.register_pair(pair, Decode::Plus, Duplicate::Replace);
         }

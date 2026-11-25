@@ -143,6 +143,17 @@ pub fn register(
     value: PhpString,
     duplicate: Duplicate,
 ) -> Registered {
+    register_value(vars, name, Value::String(value), duplicate)
+}
+
+/// [`register`] for any value: PHP stores the `int` entries of `$_FILES`
+/// (`error`, `size`) the same way.
+pub fn register_value(
+    vars: &mut PhpArray,
+    name: &[u8],
+    value: Value,
+    duplicate: Duplicate,
+) -> Registered {
     let Some(name) = Name::parse(name) else {
         return Registered::default();
     };
@@ -151,7 +162,7 @@ pub fn register(
         if duplicate == Duplicate::KeepFirst && vars.contains_key(&base) {
             return Registered::default();
         }
-        vars.insert(base, Value::String(value));
+        vars.insert(base, value);
         return Registered {
             stored: true,
             replaced: true,
@@ -184,7 +195,7 @@ fn array_at(vars: &mut PhpArray, key: Key) -> Option<&mut PhpArray> {
 /// Stores `value` at `groups` below `map`. False when an append found the
 /// next index taken (after `PHP_INT_MAX`), in which case nothing more is
 /// stored.
-fn store(mut map: &mut PhpArray, groups: &[Group], value: PhpString) -> bool {
+fn store(mut map: &mut PhpArray, groups: &[Group], value: Value) -> bool {
     let Some((last, parents)) = groups.split_last() else {
         return false;
     };
@@ -200,7 +211,7 @@ fn store(mut map: &mut PhpArray, groups: &[Group], value: PhpString) -> bool {
     let Some(key) = key_for(map, last) else {
         return false;
     };
-    map.insert(key, Value::String(value));
+    map.insert(key, value);
     true
 }
 

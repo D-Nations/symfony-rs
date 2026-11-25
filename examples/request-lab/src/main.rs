@@ -20,10 +20,11 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap_or_else(|_| "127.0.0.1:8012".to_owned())
         .parse()?;
     let listener = tokio::net::TcpListener::bind(address).await?;
-    eprintln!("request-lab listening at http://{}", listener.local_addr()?);
+    let local = listener.local_addr()?;
+    eprintln!("request-lab listening at http://{local}");
     axum::serve(
         listener,
-        request_lab::router().into_make_service_with_connect_info::<SocketAddr>(),
+        request_lab::router_at(local).into_make_service_with_connect_info::<SocketAddr>(),
     )
     .await?;
     Ok(())

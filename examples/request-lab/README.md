@@ -1,9 +1,10 @@
 # Request lab
 
-A small second application proving that the shared request crate can be used
-without the Symfony Demo application's state or dependencies. Its JSON output
-is a diagnostic representation, not a reproduction of a Symfony Demo page.
-PHP array keys are represented as JSON object keys, preserving their order.
+A small second application proving that the ported Symfony crates can be
+used without the Symfony Demo application's state or dependencies. Its JSON
+output is a diagnostic representation, not a reproduction of a Symfony Demo
+page. PHP array keys are represented as JSON object keys, preserving their
+order.
 
 ```sh
 cargo run -p request-lab
@@ -18,18 +19,43 @@ The default address is `127.0.0.1:8012`. Override it with
 | `/inspect?scalar[]=x` | A 400 response demonstrating `InputBag::get()` rejecting an array |
 | `/redirect` | A fixed 303 redirect to `/inspect` |
 | `/error` | A fixed 400 JSON error |
-| `/item/{id}` | A GET/HEAD route using the shared positive signed 64-bit requirement |
+| `/item/{id}` | A GET/HEAD route whose requirement accepts 1 to `PHP_INT_MAX` |
 
-Route dispatch uses the same private routing crate as the demo. GET/HEAD
-slash variants redirect with 301 and preserve the query; method refusals
-send 405 with Allow. HEAD responses have empty bodies. `/item/0` and ids
-outside signed 64-bit range return 404.
+## How it runs
 
-The shared HttpKernel subset surrounds resolution and invocation. Its
-application-owned controller target is `Match<Route>`; an exception listener
-turns the `/error` controller's explicit failure into the same 400 JSON response
-as before. The demo independently uses the kernel around Axum's `Next` target
-to apply its existing security headers to dynamic and static responses.
+The lab runs on the ported Symfony kernel, as a PHP application behind
+nginx and PHP-FPM would:
+
+- `symfony-runtime`'s `FrontController` turns each Axum request into the
+  FastCGI parameters nginx sends for Symfony's documented location, builds
+  the superglobals as PHP-FPM does (`symfony-http-foundation`'s `sapi`,
+  recorded from PHP-FPM 8.4.27), runs `Request::createFromGlobals()`,
+  hands the request to `HttpKernelRunner` and turns what `Response::send()`
+  recorded into the HTTP response.
+- Its routes are a routing `RouteCollection` (`_controller` defaults naming
+  `App\Controller\LabController::<action>`), matched by a
+  `RedirectableUrlMatcher` through HttpKernel's `RouterListener`. The
+  matcher's `redirect()` is the lab's own `slashRedirect` action: GET/HEAD
+  slash variants redirect with 301 and keep the query string as sent.
+- `LabController` is declared in a `ClassRegistry` for the
+  `ControllerResolver`; its actions declare their parameters
+  (`Request $request`, `string $path`) for the `ArgumentResolver`.
+- A `kernel.exception` listener answers a `BadRequestHttpException` with
+  `{"error": <message>}` and any other HTTP exception with an empty body;
+  the kernel applies the exception's status and headers (404, 405 with
+  `Allow`). Other throwables are PHP's uncaught exception: a 500.
+- JSON is `JsonResponse` with `JSON_FORCE_OBJECT | JSON_UNESCAPED_SLASHES
+  | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE`, which gives the
+  bytes the lab wrote before it ran on the kernel.
+
+What changed for a client when the lab moved from the typed Axum subset
+(`Kernel<C>`) to the ported kernel: statuses, bodies and the headers it
+sent before are unchanged for the 29 requests compared in the stage log
+(`docs/milestones/m2-a-axum-adapter-request-lab.md`); Symfony's Response
+adds `Cache-Control: no-cache, private` and `Date` to every response and
+`Content-Type: text/html; charset=UTF-8` to the bodiless ones (redirects,
+404, 405), and `/index.php/...` is now refused (404) by the web server, as
+Symfony's nginx location refuses it.
 
 Examples:
 

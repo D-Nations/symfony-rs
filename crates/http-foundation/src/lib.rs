@@ -28,6 +28,7 @@ pub mod redirect_response;
 pub mod request;
 pub mod request_stack;
 pub mod response;
+pub mod sapi;
 pub mod scheme;
 pub mod server_bag;
 pub mod uploaded_file;
