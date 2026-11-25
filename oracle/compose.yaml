@@ -17,3 +17,10 @@ services:
       - ../upstream/symfony/http-foundation:/demo/vendor/symfony/http-foundation:ro
       - ../upstream/symfony/http-kernel:/demo/vendor/symfony/http-kernel:ro
       - ../upstream/symfony/routing:/demo/vendor/symfony/routing:ro
+  # Recorders that boot the demo's kernel (di_container.php): /demo stays
+  # read-only and the kernel writes its cache to a tmpfs on /demo/var.
+  # `docker compose run` has no --tmpfs flag, so the service declares it.
+  php-kernel:
+    extends: php
+    tmpfs:
+      - /demo/var
