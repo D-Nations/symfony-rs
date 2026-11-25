@@ -96,6 +96,10 @@ pub mod ext {
         Ok(Value::string(html))
     }
 
+    #[expect(
+        clippy::needless_pass_by_value,
+        reason = "one signature for every Twig filter"
+    )]
     pub fn format_datetime(_env: &Env, date: Value, arguments: &[Value]) -> Result<Value, Error> {
         let Some(date) = date
             .as_object()

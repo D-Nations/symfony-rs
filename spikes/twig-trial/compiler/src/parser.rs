@@ -229,6 +229,7 @@ impl Parser<'_> {
         ))
     }
 
+    #[expect(clippy::needless_pass_by_value, reason = "Twig's expect($type)")]
     fn expect(&mut self, kind: TokenKind) -> Result<Token, Error> {
         if self.current().kind == kind {
             return Ok(self.next());
