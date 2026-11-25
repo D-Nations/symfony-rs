@@ -8,7 +8,12 @@
 //! on values (PHP's `===`).
 //!
 //! Upstream: symfony/options-resolver Tests/OptionsResolverTest.php
-
+#![allow(
+    clippy::needless_pass_by_value,
+    clippy::too_many_lines,
+    clippy::similar_names,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,
@@ -118,7 +123,7 @@ fn date_time_immutable_at(timestamp: i64) -> Value {
 fn now() -> i64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .map_or(0, |d| d.as_secs() as i64)
+        .map_or(0, |d| d.as_secs().cast_signed())
 }
 
 fn date_time_immutable() -> Value {

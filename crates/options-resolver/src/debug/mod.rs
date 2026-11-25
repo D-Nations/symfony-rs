@@ -31,20 +31,20 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// Upstream's bound `$get` closure.
     fn get<T>(
         &self,
-        option: Key,
+        option: &Key,
         message: &str,
         property: impl Fn(&State, &Key) -> Option<T>,
     ) -> Result<T, Error> {
         let state = self.resolver.state();
-        if !state.defined.contains(&option) {
+        if !state.defined.contains(option) {
             let mut text = b"The option \"".to_vec();
-            text.extend(key_bytes(&option));
+            text.extend(key_bytes(option));
             text.extend_from_slice(b"\" does not exist.");
             return Err(Error::new(Class::UndefinedOptions, text));
         }
-        property(&state, &option).ok_or_else(|| {
+        property(&state, option).ok_or_else(|| {
             let mut text = message.as_bytes().to_vec();
-            text = replace_option(&text, &option);
+            text = replace_option(&text, option);
             Error::new(Class::NoConfiguration, text)
         })
     }
@@ -52,7 +52,7 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// `getDefault()`.
     pub fn get_default(&self, option: impl Into<Key>) -> Result<Value, Error> {
         self.get(
-            option.into(),
+            &option.into(),
             "No default value was set for the \"%s\" option.",
             |s, o| s.defaults.get(o).cloned(),
         )
@@ -61,7 +61,7 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// `getLazyClosures()`.
     pub fn get_lazy_closures(&self, option: impl Into<Key>) -> Result<Vec<OptionClosure>, Error> {
         self.get(
-            option.into(),
+            &option.into(),
             "No lazy closures were set for the \"%s\" option.",
             |s, o| s.lazy.get(o).cloned(),
         )
@@ -70,7 +70,7 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// `getAllowedTypes()`.
     pub fn get_allowed_types(&self, option: impl Into<Key>) -> Result<Vec<String>, Error> {
         self.get(
-            option.into(),
+            &option.into(),
             "No allowed types were set for the \"%s\" option.",
             |s, o| s.allowed_types.get(o).cloned(),
         )
@@ -79,7 +79,7 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// `getAllowedValues()`.
     pub fn get_allowed_values(&self, option: impl Into<Key>) -> Result<AllowedValues, Error> {
         self.get(
-            option.into(),
+            &option.into(),
             "No allowed values were set for the \"%s\" option.",
             |s, o| s.allowed_values.get(o).cloned(),
         )
@@ -93,7 +93,7 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// `getNormalizers()`.
     pub fn get_normalizers(&self, option: impl Into<Key>) -> Result<Vec<OptionClosure>, Error> {
         self.get(
-            option.into(),
+            &option.into(),
             "No normalizer was set for the \"%s\" option.",
             |s, o| s.normalizers.get(o).cloned(),
         )
@@ -102,7 +102,7 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// `getDeprecation()`.
     pub fn get_deprecation(&self, option: impl Into<Key>) -> Result<Deprecation, Error> {
         self.get(
-            option.into(),
+            &option.into(),
             "No deprecation was set for the \"%s\" option.",
             |s, o| s.deprecated.get(o).cloned(),
         )
@@ -111,7 +111,7 @@ impl<'a> OptionsResolverIntrospector<'a> {
     /// `getNestedOptions()`.
     pub fn get_nested_options(&self, option: impl Into<Key>) -> Result<Vec<NestedClosure>, Error> {
         self.get(
-            option.into(),
+            &option.into(),
             "No nested option was set for the \"%s\" option.",
             |s, o| s.nested.get(o).cloned(),
         )

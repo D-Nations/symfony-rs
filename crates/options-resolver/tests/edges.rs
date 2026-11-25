@@ -5,6 +5,12 @@
 //! recorder's case of the same name.
 //!
 //! Upstream: none
+#![allow(
+    clippy::needless_pass_by_value,
+    clippy::too_many_lines,
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use std::sync::Arc;
 

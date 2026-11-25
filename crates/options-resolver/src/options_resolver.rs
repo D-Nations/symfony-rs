@@ -250,7 +250,7 @@ impl AllowedValues {
             values
                 .into_iter()
                 .enumerate()
-                .map(|(i, v)| (Key::Int(i as i64), v))
+                .map(|(i, v)| (Key::Int(i64::try_from(i).unwrap_or(i64::MAX)), v))
                 .collect(),
         )
     }
@@ -267,7 +267,8 @@ impl AllowedValues {
                         .iter()
                         .filter(|(k, _)| matches!(k, Key::Int(_)))
                         .count();
-                    self.0.push((Key::Int(next as i64), value));
+                    self.0
+                        .push((Key::Int(i64::try_from(next).unwrap_or(i64::MAX)), value));
                 }
                 key @ Key::Str(_) => match self.0.iter_mut().find(|(k, _)| *k == key) {
                     Some(entry) => entry.1 = value,
@@ -644,6 +645,7 @@ impl OptionsResolver {
 
     /// Another handle to the same resolver (a PHP variable holding the
     /// same object, not `clone`).
+    #[must_use]
     pub fn handle(&self) -> Self {
         Self(Arc::clone(&self.0))
     }
@@ -1201,6 +1203,7 @@ impl OptionsResolver {
     }
 
     /// `offsetGet($option, $triggerDeprecation)`.
+    #[expect(clippy::too_many_lines, reason = "one method, in upstream's order")]
     pub fn offset_get_with(&self, option: impl Into<Key>, trigger: bool) -> Result<Value, Error> {
         let option = option.into();
         let mut state = self.state();
@@ -1306,7 +1309,7 @@ impl OptionsResolver {
                 child.parents_options.push(php::key_bytes(&option));
             }
             drop(state);
-            let result = self.resolve_nested(&resolver, &nested, &option, array);
+            let result = self.resolve_nested(&resolver, &nested, &option, &array);
             resolver.state().prototype_index = None;
             state = self.state();
             state.calling.remove(&option);
@@ -1473,7 +1476,7 @@ impl OptionsResolver {
         resolver: &OptionsResolver,
         nested: &[NestedClosure],
         option: &Key,
-        value: PhpArray,
+        value: &PhpArray,
     ) -> Result<Value, Error> {
         for closure in nested {
             (closure.0)(resolver, self)?;
@@ -1503,7 +1506,7 @@ impl OptionsResolver {
             }
             Ok(Value::Array(values))
         } else {
-            Ok(Value::Array(resolver.resolve(&value)?))
+            Ok(Value::Array(resolver.resolve(value)?))
         }
     }
 
