@@ -45,6 +45,9 @@ pub use resolve_factory_class_pass::ResolveFactoryClassPass;
 mod resolve_hot_path_pass;
 pub use resolve_hot_path_pass::ResolveHotPathPass;
 
+mod resolve_instanceof_conditionals_pass;
+pub use resolve_instanceof_conditionals_pass::ResolveInstanceofConditionalsPass;
+
 mod resolve_invalid_references_pass;
 pub use resolve_invalid_references_pass::ResolveInvalidReferencesPass;
 
