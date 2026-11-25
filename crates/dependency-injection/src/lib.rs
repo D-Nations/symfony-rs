@@ -17,15 +17,21 @@
 
 pub mod alias;
 pub mod argument;
+pub mod class_metadata;
+pub mod compiler;
+pub mod container_builder;
 pub mod container_interface;
 pub mod definition;
 pub mod exception;
+pub mod extension;
 pub mod id_map;
 pub mod object;
 pub mod parameter_bag;
 pub mod reference;
 
 pub use alias::{Alias, Deprecation};
+pub use class_metadata::{ClassMetadata, ClassRegistry};
+pub use container_builder::ContainerBuilder;
 pub use container_interface::{ContainerInterface, InvalidBehavior};
 pub use definition::{DecoratedService, Definition, DefinitionError, Index};
 pub use exception::{Error, ErrorKind, Result};

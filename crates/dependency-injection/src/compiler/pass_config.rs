@@ -1,0 +1,296 @@
+//! Port of Symfony\Component\DependencyInjection\Compiler\PassConfig.php.
+//!
+//! Upstream's default passes, in upstream's order and with its
+//! priorities. A pass that is not ported yet is a [`PendingPass`] named
+//! after upstream's class (with the constructor arguments upstream
+//! passes): it stays in its place in the list and refuses to run, so
+//! compiling fails at the first missing pass instead of skipping it.
+//!
+//! Upstream: symfony/dependency-injection Compiler/PassConfig.php
+
+use std::collections::BTreeMap;
+
+use super::compiler_pass_interface::{CompilerPassInterface, Pass};
+use crate::container_builder::ContainerBuilder;
+use crate::exception::{Error, Result};
+
+const NS: &str = "Symfony\\Component\\DependencyInjection\\Compiler\\";
+
+/// `PassConfig::TYPE_*`, in the order of execution.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum PassType {
+    /// `TYPE_BEFORE_OPTIMIZATION`.
+    BeforeOptimization,
+    /// `TYPE_OPTIMIZE`.
+    Optimize,
+    /// `TYPE_BEFORE_REMOVING`.
+    BeforeRemoving,
+    /// `TYPE_REMOVE`.
+    Remove,
+    /// `TYPE_AFTER_REMOVING`.
+    AfterRemoving,
+}
+
+impl PassType {
+    /// The constant's value.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::BeforeOptimization => "beforeOptimization",
+            Self::Optimize => "optimization",
+            Self::BeforeRemoving => "beforeRemoving",
+            Self::Remove => "removing",
+            Self::AfterRemoving => "afterRemoving",
+        }
+    }
+
+    /// The type named `name`, or `addPass()`'s error for another name.
+    pub fn from_name(name: &str) -> Result<Self> {
+        [
+            Self::BeforeOptimization,
+            Self::Optimize,
+            Self::BeforeRemoving,
+            Self::Remove,
+            Self::AfterRemoving,
+        ]
+        .into_iter()
+        .find(|t| t.as_str() == name)
+        .ok_or_else(|| Error::invalid_argument(format!("Invalid type \"{name}\".")))
+    }
+}
+
+/// A pass of upstream's default list that this port does not have yet.
+/// Running it fails with its class name.
+#[derive(Debug, Clone)]
+pub struct PendingPass {
+    class: String,
+    arguments: &'static str,
+}
+
+impl PendingPass {
+    /// `new <short>(<arguments>)` of the `Compiler` namespace.
+    pub fn new(short: &str, arguments: &'static str) -> Self {
+        Self {
+            class: format!("{NS}{short}"),
+            arguments,
+        }
+    }
+
+    /// The constructor arguments upstream passes, as PHP source.
+    pub fn arguments(&self) -> &str {
+        self.arguments
+    }
+}
+
+impl CompilerPassInterface for PendingPass {
+    fn class(&self) -> &str {
+        &self.class
+    }
+
+    fn process(&mut self, _container: &mut ContainerBuilder) -> Result<()> {
+        Err(Error::logic(format!(
+            "The compiler pass \"{}\" is not ported yet: this build cannot compile a container that needs it.",
+            self.class
+        )))
+    }
+}
+
+fn pending(short: &str) -> Pass {
+    Pass::new(PendingPass::new(short, ""))
+}
+
+fn pending_with(short: &str, arguments: &'static str) -> Pass {
+    Pass::new(PendingPass::new(short, arguments))
+}
+
+/// Passes by priority (`array<int, CompilerPassInterface[]>`).
+type Prioritized = BTreeMap<i64, Vec<Pass>>;
+
+/// `PassConfig`: the passes of each type, by priority.
+#[derive(Debug, Clone)]
+pub struct PassConfig {
+    merge_pass: Pass,
+    after_removing: Prioritized,
+    before_optimization: Prioritized,
+    before_removing: Prioritized,
+    optimization: Prioritized,
+    removing: Prioritized,
+}
+
+impl Default for PassConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl PassConfig {
+    /// `new PassConfig()`: upstream's default passes.
+    pub fn new() -> Self {
+        let before_optimization = BTreeMap::from([
+            (
+                100,
+                vec![
+                    pending("ResolveClassPass"),
+                    pending("RegisterAutoconfigureAttributesPass"),
+                    pending("AutowireAsDecoratorPass"),
+                    pending("AttributeAutoconfigurationPass"),
+                    pending("ResolveInstanceofConditionalsPass"),
+                    pending("RegisterEnvVarProcessorsPass"),
+                ],
+            ),
+            (-1000, vec![pending("ExtensionCompilerPass")]),
+        ]);
+        let optimization = BTreeMap::from([(
+            0,
+            vec![
+                pending("AutoAliasServicePass"),
+                pending("ValidateEnvPlaceholdersPass"),
+                pending("ResolveDecoratorStackPass"),
+                pending("ResolveAutowireInlineAttributesPass"),
+                pending("ResolveChildDefinitionsPass"),
+                pending("RegisterServiceSubscribersPass"),
+                pending_with("ResolveParameterPlaceHoldersPass", "false, false"),
+                pending("ResolveFactoryClassPass"),
+                pending("ResolveNamedArgumentsPass"),
+                pending("AutowireRequiredMethodsPass"),
+                pending("AutowireRequiredPropertiesPass"),
+                pending("ResolveBindingsPass"),
+                pending("ServiceLocatorTagPass"),
+                pending("TagDecoratorPass"),
+                pending("DecoratorServicePass"),
+                pending("CheckDefinitionValidityPass"),
+                pending_with("AutowirePass", "false"),
+                pending("ServiceLocatorTagPass"),
+                pending("ResolveTaggedIteratorArgumentPass"),
+                pending("ResolveServiceSubscribersPass"),
+                pending("ResolveReferencesToAliasesPass"),
+                pending("ResolveInvalidReferencesPass"),
+                pending_with("AnalyzeServiceReferencesPass", "true"),
+                pending("CheckCircularReferencesPass"),
+                pending("CheckReferenceValidityPass"),
+                pending_with("CheckArgumentsValidityPass", "false"),
+            ],
+        )]);
+        let removing = BTreeMap::from([(
+            0,
+            vec![
+                pending("RemovePrivateAliasesPass"),
+                pending("ReplaceAliasByActualDefinitionPass"),
+                pending("RemoveAbstractDefinitionsPass"),
+                pending("RemoveUnusedDefinitionsPass"),
+                pending("AnalyzeServiceReferencesPass"),
+                pending("CheckExceptionOnInvalidReferenceBehaviorPass"),
+                pending_with(
+                    "InlineServiceDefinitionsPass",
+                    "new AnalyzeServiceReferencesPass()",
+                ),
+                pending("AnalyzeServiceReferencesPass"),
+                pending("CheckFactoryBuilderCircularReferencePass"),
+                pending("DefinitionErrorExceptionPass"),
+            ],
+        )]);
+        let after_removing = BTreeMap::from([
+            (
+                0,
+                vec![
+                    pending("ResolveHotPathPass"),
+                    pending("ResolveNoPreloadPass"),
+                    pending("AliasDeprecatedPublicServicesPass"),
+                ],
+            ),
+            // Let build parameters be available as late as possible
+            // Don't remove array parameters since ResolveParameterPlaceHoldersPass doesn't resolve them
+            (
+                -2048,
+                vec![pending_with("RemoveBuildParametersPass", "true")],
+            ),
+        ]);
+        Self {
+            merge_pass: pending("MergeExtensionConfigurationPass"),
+            after_removing,
+            before_optimization,
+            before_removing: BTreeMap::new(),
+            optimization,
+            removing,
+        }
+    }
+
+    /// `getPasses()`: every pass in the order of execution.
+    pub fn get_passes(&self) -> Vec<Pass> {
+        let mut passes = vec![self.merge_pass.clone()];
+        passes.extend(self.get_before_optimization_passes());
+        passes.extend(self.get_optimization_passes());
+        passes.extend(self.get_before_removing_passes());
+        passes.extend(self.get_removing_passes());
+        passes.extend(self.get_after_removing_passes());
+        passes
+    }
+
+    fn list_mut(&mut self, type_: PassType) -> &mut Prioritized {
+        match type_ {
+            PassType::BeforeOptimization => &mut self.before_optimization,
+            PassType::Optimize => &mut self.optimization,
+            PassType::BeforeRemoving => &mut self.before_removing,
+            PassType::Remove => &mut self.removing,
+            PassType::AfterRemoving => &mut self.after_removing,
+        }
+    }
+
+    /// `addPass($pass, $type, $priority)`.
+    pub fn add_pass(&mut self, pass: Pass, type_: PassType, priority: i64) {
+        self.list_mut(type_).entry(priority).or_default().push(pass);
+    }
+
+    pub fn get_after_removing_passes(&self) -> Vec<Pass> {
+        sort_passes(&self.after_removing)
+    }
+
+    pub fn get_before_optimization_passes(&self) -> Vec<Pass> {
+        sort_passes(&self.before_optimization)
+    }
+
+    pub fn get_before_removing_passes(&self) -> Vec<Pass> {
+        sort_passes(&self.before_removing)
+    }
+
+    pub fn get_optimization_passes(&self) -> Vec<Pass> {
+        sort_passes(&self.optimization)
+    }
+
+    pub fn get_removing_passes(&self) -> Vec<Pass> {
+        sort_passes(&self.removing)
+    }
+
+    pub fn get_merge_pass(&self) -> Pass {
+        self.merge_pass.clone()
+    }
+
+    pub fn set_merge_pass(&mut self, pass: Pass) {
+        self.merge_pass = pass;
+    }
+
+    /// `setAfterRemovingPasses($passes)`: the list, at priority 0.
+    pub fn set_after_removing_passes(&mut self, passes: Vec<Pass>) {
+        self.after_removing = BTreeMap::from([(0, passes)]);
+    }
+
+    pub fn set_before_optimization_passes(&mut self, passes: Vec<Pass>) {
+        self.before_optimization = BTreeMap::from([(0, passes)]);
+    }
+
+    pub fn set_before_removing_passes(&mut self, passes: Vec<Pass>) {
+        self.before_removing = BTreeMap::from([(0, passes)]);
+    }
+
+    pub fn set_optimization_passes(&mut self, passes: Vec<Pass>) {
+        self.optimization = BTreeMap::from([(0, passes)]);
+    }
+
+    pub fn set_removing_passes(&mut self, passes: Vec<Pass>) {
+        self.removing = BTreeMap::from([(0, passes)]);
+    }
+}
+
+/// `sortPasses()`: `krsort()`, then flattened.
+fn sort_passes(passes: &Prioritized) -> Vec<Pass> {
+    passes.values().rev().flatten().cloned().collect()
+}
