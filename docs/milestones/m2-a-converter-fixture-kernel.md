@@ -116,23 +116,27 @@ synchronous ([docs/converter-contract.md](../converter-contract.md)).
 
 ## Checks
 
-Rebased on `c337a7c` (#66, the Clippy opt-ins). On Windows, #66 made
-`cargo clippy --all-targets -- -D warnings` fail in code Linux never
-compiles (`cfg(not(unix))`): `php_value::path::from_os_string`, finder's
-`secs()` and two Unix-only finder tests. Fixed in `d565715`, same
-behaviour.
+Rebased on `656166f` (#66 and #68, the Clippy opt-ins; #67, the Twig
+lexer). On rustc and Clippy 1.99.1, `cargo clippy --all-targets -- -D
+warnings` then failed in code from those opt-ins: on Windows only, in
+`cfg(not(unix))` code Linux never compiles (`php_value::path::from_os_string`,
+finder's `secs()`, two Unix-only finder tests); and everywhere, 11
+http-foundation test assertions (`assert_is_empty`). Fixed here with the
+same behaviour and the same assertions (`d54d82e`, `da843e8`), with this
+branch's own doc line for routing's opt-in.
 
-On Windows at `d565715`: `cargo fmt --check` clean; `cargo clippy
+On Windows at `da843e8`: `cargo fmt --check` clean; `cargo clippy
 --all-targets -- -D warnings` clean; `cargo test --workspace
---no-fail-fast` 3,413 passed, 0 failed; `scripts/sources.sh --check` and
+--no-fail-fast` 3,457 passed, 0 failed; `scripts/sources.sh --check` and
 `scripts/parity-check.sh` pass.
 
-Linux at `d565715`, fresh containers: `scripts/converter-fixture.sh`
+Linux at `da843e8`, fresh containers: `scripts/converter-fixture.sh`
 (fmt, clippy and every test of the fixture and the crates it links, from
 an empty directory) passes, 1,388 tests, 0 failed; `scripts/linux-test.sh
 -p php-value -p symfony-finder -p symfony-filesystem -p
-symfony-http-kernel -p symfony-routing -p psr-container -p symfony-runtime
--p request-lab -p converter-fixture-app` passes, 902 tests, 0 failed.
+symfony-http-foundation -p symfony-http-kernel -p symfony-routing -p
+psr-container -p symfony-runtime -p request-lab -p converter-fixture-app
+-p twig` passes, 1,485 tests, 0 failed.
 
 symfony-demo-rs comparison: **not run**, paused by the owner (November
 23). Acceptance criteria that name it stay open.
