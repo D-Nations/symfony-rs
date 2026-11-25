@@ -189,7 +189,7 @@ fn recorded_header_bags() {
                     "{label}: string"
                 );
                 assert_eq!(
-                    base.count() as i64,
+                    i64::try_from(base.count()).unwrap(),
                     expected["count"].as_i64().unwrap(),
                     "{label}: count"
                 );

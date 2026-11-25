@@ -71,9 +71,9 @@ fn vectors(json: &str) -> Result<Vec<Value>, Box<dyn std::error::Error>> {
     Ok(Vec::<Value>::deserialize(&mut deserializer)?)
 }
 
-fn check(failures: &mut Vec<String>, label: String, expected: &Value, got: Tree) {
+fn check(failures: &mut Vec<String>, label: &str, expected: &Value, got: &Tree) {
     match from_php(expected) {
-        Ok(expected) if expected == got => {}
+        Ok(expected) if expected == *got => {}
         Ok(expected) => failures.push(format!("{label}:\n  php  {expected:?}\n  rust {got:?}")),
         Err(error) => failures.push(format!("{label}: {error}")),
     }
@@ -100,16 +100,16 @@ fn query_strings_and_form_bodies_read_as_php_does() -> Result<(), Box<dyn std::e
             let text = String::from_utf8(raw.clone())?;
             check(
                 &mut failures,
-                format!("{name} GET"),
+                &format!("{name} GET"),
                 &vector["get"],
-                from_rust(Query::parse(&text).all()),
+                &from_rust(Query::parse(&text).all()),
             );
         }
         check(
             &mut failures,
-            format!("{name} POST"),
+            &format!("{name} POST"),
             &vector["post"],
-            from_rust(Query::parse_body(&raw).all()),
+            &from_rust(Query::parse_body(&raw).all()),
         );
     }
     report(&failures, vectors.len());
@@ -127,9 +127,9 @@ fn cookie_headers_read_as_php_does() -> Result<(), Box<dyn std::error::Error>> {
         let cookies = Cookies::parse([header.as_str()]);
         check(
             &mut failures,
-            name.to_owned(),
+            name,
             &vector["cookie"],
-            from_rust(cookies.all()),
+            &from_rust(cookies.all()),
         );
     }
     report(&failures, vectors.len());
@@ -146,9 +146,9 @@ fn form_content_types_select_the_parser_as_php_does() -> Result<(), Box<dyn std:
         let fields = form_fields("POST", content_type.as_bytes(), b"a=1&b[]=2");
         check(
             &mut failures,
-            name.to_owned(),
+            name,
             &vector["post"],
-            from_rust(fields.all()),
+            &from_rust(fields.all()),
         );
     }
     report(&failures, vectors.len());

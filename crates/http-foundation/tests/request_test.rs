@@ -6,6 +6,11 @@
 //!
 //! Upstream: symfony/http-foundation Tests/RequestTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::too_many_lines,
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 // the providers' rows are tuples of slices, as PHPUnit's are arrays
 #![allow(clippy::type_complexity)]
 

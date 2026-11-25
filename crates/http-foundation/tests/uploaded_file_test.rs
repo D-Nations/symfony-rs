@@ -5,7 +5,10 @@
 //! (upstream: `extension_loaded('fileinfo')`).
 //!
 //! Upstream: symfony/http-foundation Tests/File/UploadedFileTest.php
-
+#![allow(
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,
@@ -299,7 +302,7 @@ fn testGetSize() -> TestResult {
         false,
     )?;
     let size = std::fs::metadata(format!("{}/test.gif", fixtures()))?.len();
-    assert_eq!(size as i64, file.get_size()?);
+    assert_eq!(i64::try_from(size)?, file.get_size()?);
 
     let file = UploadedFile::new(
         fixture("test"),
@@ -309,7 +312,7 @@ fn testGetSize() -> TestResult {
         false,
     )?;
     let size = std::fs::metadata(format!("{}/test", fixtures()))?.len();
-    assert_eq!(size as i64, file.get_size()?);
+    assert_eq!(i64::try_from(size)?, file.get_size()?);
     Ok(())
 }
 

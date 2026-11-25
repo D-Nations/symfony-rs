@@ -9,6 +9,8 @@
 //!
 //! Upstream: none
 
+use std::fmt::Write as _;
+
 use php_value::net;
 use php_value::vectors::{Error, base64};
 use serde_json::{Value as Json, json};
@@ -51,12 +53,10 @@ fn builtins_match_php() -> Result<(), Error> {
         let s = text(&case[0])?;
         let b = s.as_bytes();
         let pton = match net::inet_pton(b) {
-            Ok(Some(packed)) => json!(
-                packed
-                    .iter()
-                    .map(|x| format!("{x:02x}"))
-                    .collect::<String>()
-            ),
+            Ok(Some(packed)) => json!(packed.iter().fold(String::new(), |mut hex, x| {
+                let _ = write!(hex, "{x:02x}");
+                hex
+            })),
             Ok(None) => json!(false),
             Err(e) => json!(["throw", "ValueError", e.to_string()]),
         };

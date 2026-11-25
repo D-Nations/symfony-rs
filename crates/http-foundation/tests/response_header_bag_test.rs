@@ -5,7 +5,10 @@
 //! is checked line by line.
 //!
 //! Upstream: symfony/http-foundation Tests/ResponseHeaderBagTest.php
-
+#![allow(
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,

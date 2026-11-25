@@ -224,6 +224,7 @@ pub fn check_ip4(request_ip: &str, ip: &str) -> Result<bool> {
 }
 
 /// `IpUtils::checkIp6($requestIp, $ip)`.
+#[expect(clippy::cast_possible_truncation, reason = "PHP's float shift count")]
 pub fn check_ip6(request_ip: &str, ip: &str) -> Result<bool> {
     let key = format!("{request_ip}-{ip}-v6");
     if let Some(value) = cached(&key) {
@@ -288,13 +289,13 @@ pub fn check_ip6(request_ip: &str, ip: &str) -> Result<bool> {
 
 /// `IpUtils::anonymize($ip, $v4Bytes, $v6Bytes)`.
 pub fn anonymize(ip: &str, v4_bytes: i64, v6_bytes: i64) -> Result<String> {
-    if v4_bytes < 0 || v6_bytes < 0 {
+    let (Ok(v4), Ok(v6)) = (usize::try_from(v4_bytes), usize::try_from(v6_bytes)) else {
         return Err(Error::new(
             Class::PhpInvalidArgument,
             "Cannot anonymize less than 0 bytes.",
         ));
-    }
-    if v4_bytes > 4 || v6_bytes > 16 {
+    };
+    if v4 > 4 || v6 > 16 {
         return Err(Error::new(
             Class::PhpInvalidArgument,
             "Cannot anonymize more than 4 bytes for IPv4 and 16 bytes for IPv6.",
@@ -318,7 +319,6 @@ pub fn anonymize(ip: &str, v4_bytes: i64, v6_bytes: i64) -> Result<String> {
         ));
     };
     // v4Bytes <= 4 and v6Bytes <= 16 here.
-    let (v4, v6) = (v4_bytes as usize, v6_bytes as usize);
     let mapped_mask = |prefix: &str| {
         let hex = format!("{prefix}{}{}", "ff".repeat(4 - v4), "00".repeat(v4));
         let groups: Vec<&str> = (0..hex.len())

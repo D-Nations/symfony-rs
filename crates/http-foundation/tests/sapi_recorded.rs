@@ -1,6 +1,6 @@
 //! `sapi` against PHP-FPM 8.4.27 (the oracle's FPM image, no php.ini),
 //! recorded by `oracle/recorders/runtime_fpm.php` (`scripts/record.sh
-//! runtime-fpm`): FastCGI requests a web server would send for a front
+//! runtime-fpm`): `FastCGI` requests a web server would send for a front
 //! controller `index.php` (methods, query strings, cookies, headers,
 //! `Authorization`, forms, multipart bodies with files of every outcome,
 //! bodies past `post_max_size`), with what the script saw (`$_SERVER`,
@@ -164,6 +164,10 @@ fn params(case: &Json) -> Result<Vec<(PhpString, PhpString)>, TestError> {
 }
 
 #[test]
+#[expect(
+    clippy::too_many_lines,
+    reason = "one replay loop over the recorded cases"
+)]
 fn builds_the_superglobals_php_fpm_builds() -> Result<(), TestError> {
     let data: Json = serde_json::from_str(DATA)?;
     let cases = data["requests"].as_array().ok_or("requests")?;
@@ -329,18 +333,17 @@ fn run(sapi: &mut Sapi, script: &[Json], answers: &mut Vec<Json>) -> Result<(), 
                     secure: call[6].as_bool().ok_or("secure")?,
                     httponly: call[7].as_bool().ok_or("httponly")?,
                 };
-                match sapi.setcookie(&cookie, op == "setrawcookie") {
-                    Ok(done) => answers.push(Json::from(done)),
-                    Err(_) => {
-                        sapi.fatal_error();
-                        return Ok(());
-                    }
+                if let Ok(done) = sapi.setcookie(&cookie, op == "setrawcookie") {
+                    answers.push(Json::from(done));
+                } else {
+                    sapi.fatal_error();
+                    return Ok(());
                 }
             }
             "headers_list" => answers.push(answer_list(&sapi.headers_list())),
             "headers_sent" => answers.push(Json::from(sapi.headers_sent())),
             "response_code" => {
-                answers.push(sapi.response_code().map_or(Json::from(false), Json::from))
+                answers.push(sapi.response_code().map_or(Json::from(false), Json::from));
             }
             "ob_start" => sapi.ob_start(),
             "ob_end_flush" => answers.push(Json::from(sapi.ob_end_flush())),

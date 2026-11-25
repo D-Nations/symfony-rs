@@ -14,7 +14,10 @@
 //! pending.
 //!
 //! Upstream: symfony/http-foundation Tests/RequestFunctionalTest.php Tests/ResponseFunctionalTest.php
-
+#![allow(
+    clippy::too_many_lines,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 #![allow(
     clippy::unwrap_used,
     clippy::expect_used,
@@ -74,7 +77,7 @@ fn upload_dir() -> PathBuf {
 }
 
 /// `Fixtures/request-functional/index.php`: `createFromGlobals()`, then
-/// a JsonResponse of the request's fields and files, sent.
+/// a `JsonResponse` of the request's fields and files, sent.
 fn request_functional(cgi: &CgiRequest) -> serde_json::Value {
     let ini = Ini {
         upload_tmp_dir: upload_dir(),
@@ -357,7 +360,7 @@ fn matches_format(format: &[u8], actual: &[u8]) -> bool {
     expected[..trim(&expected)] == actual[..trim(actual)]
 }
 
-/// ResponseFunctionalTest::testCookie for every fixture but
+/// `ResponseFunctionalTest::testCookie` for every fixture but
 /// `deleted_cookie` (see the module documentation).
 #[test]
 fn cookie_fixtures_without_a_session() {

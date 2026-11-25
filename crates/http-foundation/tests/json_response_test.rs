@@ -221,7 +221,7 @@ fn testSetContent() {
 struct JsonSerializableObject;
 
 impl PhpObject for JsonSerializableObject {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Symfony\\Component\\HttpFoundation\\Tests\\JsonSerializableObject"
     }
 
