@@ -8,3 +8,6 @@ description = "Trial DI runtime for code emitted by di-trial-compiler; not the M
 
 [dependencies]
 php-value = { path = "../../../crates/php-value" }
+
+[lints]
+workspace = true

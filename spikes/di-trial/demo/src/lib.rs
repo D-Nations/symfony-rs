@@ -17,5 +17,5 @@ pub mod container {
     include!(concat!(env!("OUT_DIR"), "/container.rs"));
 }
 
-/// What the compiler found (OUT_DIR/report.txt).
+/// What the compiler found (`OUT_DIR/report.txt`).
 pub const REPORT: &str = include_str!(concat!(env!("OUT_DIR"), "/report.txt"));

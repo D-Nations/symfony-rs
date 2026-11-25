@@ -96,6 +96,10 @@ pub fn compile(xml: &[u8], config: &Config) -> Result<Output, Error> {
     // in the ContainerBuilder. Symfony derives them from a hash of the
     // dumped code; here, from the input file.
     let hash = fnv1a(xml);
+    #[expect(
+        clippy::cast_possible_truncation,
+        reason = "the low 32 bits name the build"
+    )]
     let build_id = format!("{:08x}", hash as u32);
     let dumper_parameters = [
         (

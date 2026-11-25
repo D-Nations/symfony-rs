@@ -242,6 +242,7 @@ impl<T> ServiceCell<T> {
         lock(&self.slot).clone()
     }
 
+    #[expect(clippy::similar_names, reason = "names as in the PHP source")]
     pub fn get_or_build(&self, build: impl FnOnce() -> Arc<T>) -> Arc<T> {
         if let Some(s) = self.get() {
             return s;
