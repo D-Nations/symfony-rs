@@ -17,12 +17,17 @@
 
 pub mod alias;
 pub mod argument;
+pub mod class_metadata;
+pub mod compiler;
+pub mod container_builder;
 pub mod container_interface;
 pub mod definition;
 pub mod env_var_loader_interface;
 pub mod env_var_processor;
 pub mod env_var_processor_interface;
 pub mod exception;
+pub mod extension;
+pub mod id_map;
 pub mod object;
 pub mod parameter_bag;
 pub mod reference;
@@ -38,12 +43,15 @@ pub mod services_resetter;
 pub mod tagged_container_interface;
 
 pub use alias::{Alias, Deprecation};
+pub use class_metadata::{ClassMetadata, ClassRegistry};
+pub use container_builder::ContainerBuilder;
 pub use container_interface::{ContainerInterface, InvalidBehavior};
 pub use definition::{DecoratedService, Definition, DefinitionError, Index};
 pub use env_var_loader_interface::EnvVarLoaderInterface;
 pub use env_var_processor::{EnvVarLoaders, EnvVarProcessor};
 pub use env_var_processor_interface::EnvVarProcessorInterface;
 pub use exception::{Error, ErrorKind, Result};
+pub use id_map::IdMap;
 pub use parameter_bag::ParameterBag;
 pub use reference::{Parameter, Reference, Variable};
 
