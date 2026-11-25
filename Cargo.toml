@@ -23,6 +23,7 @@ members = [
     "crates/php-dom",
     "crates/php-pcre",
     "crates/mime",
+    "crates/twig",
     "examples/request-lab",
     "fixtures/converter-app",
     "spikes/twig-trial/compiler",
