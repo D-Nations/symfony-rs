@@ -6,7 +6,10 @@
                                                     parity/sources.tsv (no PHP needed)
     python scripts/classes.py report [--markdown]   size-weighted port percentage
 
-`generate` lists the files with oracle/classes.php (PHP's own tokenizer, in
+`generate` takes the .php files of the package's dist archive (`git archive`
+of the pinned checkout, so .gitattributes export-ignore paths such as
+twig/twig's extra/ or doctrine's ci/ are out), without Tests/, tests/ and
+vendor/, and lists them with oracle/classes.php (PHP's own tokenizer, in
 the oracle image; set SYMFONY_RS_PHP to a local php binary to run it
 without Docker) on the checkouts of scripts/fetch-upstream.sh.
 
@@ -14,17 +17,20 @@ Columns: upstream file, classes it declares, code lines, status, Rust files.
 Status: `ported` when parity/sources.tsv maps the file (a Rust module's
 `//! Upstream:` line names it), else `pending`, or `n/a: <reason>` set by
 hand and kept by `generate`. Rust files are the mapped files, separated by
-spaces. The percentage counts code lines: ported / (all - n/a).
+spaces. The percentage counts code lines: ported / (all - n/a), for all
+files and for the files outside Resources/data/ (generated data tables).
 
 A file counts as ported as soon as one Rust module names it: the column
 records the source map, not completeness. Pending upstream test rows in
 parity/<package>.tsv show what of a mapped file is still open.
 """
 import argparse
+import io
 import os
 from pathlib import Path
 import subprocess
 import sys
+import tarfile
 
 ROOT = Path(__file__).resolve().parent.parent
 HEADER = "upstream file\tclasses\tcode lines\tstatus\trust files"
@@ -48,6 +54,13 @@ def is_test_path(path: str) -> bool:
     return first in ("Tests", "tests")
 
 
+def is_data_path(path: str) -> bool:
+    """Generated data tables (symfony/intl's ICU data, string's width
+    tables): a port generates them from their sources, so the report also
+    gives the percentage without them."""
+    return path.startswith("Resources/data/") or "/Resources/data/" in path
+
+
 def source_map(root: Path) -> dict[str, dict[str, list[str]]]:
     """Package -> upstream path -> Rust files, from parity/sources.tsv."""
     result: dict[str, dict[str, list[str]]] = {}
@@ -64,7 +77,20 @@ def manifest_path(root: Path, package: str) -> Path:
     return root / "parity/classes" / f"{package}.tsv"
 
 
+def dist_files(root: Path, package: str) -> list[str]:
+    """The files of the package's dist archive (what Composer installs):
+    `git archive` honours .gitattributes export-ignore. The top-level test
+    directories are left out too, for packages that ship them."""
+    archive = subprocess.run(["git", "-C", f"upstream/{package}", "archive", "--format=tar", "HEAD"],
+                             cwd=root, check=True, capture_output=True).stdout
+    with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+        names = [member.name for member in tar.getmembers() if member.isfile()]
+    return sorted(name for name in names
+                  if not is_test_path(name) and name.split("/", 1)[0] != "vendor")
+
+
 def list_files(root: Path, package: str) -> list[list[str]]:
+    paths = "".join(f"{name}\n" for name in dist_files(root, package) if name.endswith(".php"))
     php = os.environ.get("SYMFONY_RS_PHP")
     if php:
         command = [php, "oracle/classes.php", f"upstream/{package}"]
@@ -73,7 +99,7 @@ def list_files(root: Path, package: str) -> list[list[str]]:
         command = ["docker", "compose", "-f", "oracle/compose.yaml", "run", "--rm", "-T",
                    "php", "oracle/classes.php", f"upstream/{package}"]
         env = dict(os.environ, MSYS_NO_PATHCONV="1")
-    output = subprocess.run(command, cwd=root, env=env, check=True,
+    output = subprocess.run(command, cwd=root, env=env, check=True, input=paths,
                             capture_output=True, text=True, encoding="utf-8").stdout
     return [line.split("\t") for line in output.splitlines() if line]
 
@@ -155,6 +181,7 @@ def check(root: Path) -> int:
 def report(root: Path, markdown: bool) -> int:
     rows = []
     totals = [0, 0, 0, 0]  # files, ported files, lines, ported lines
+    data = [0, 0, 0, 0]    # the same, for Resources/data/ files only
     for package in packages(root):
         path = manifest_path(root, package)
         if not path.is_file():
@@ -169,6 +196,12 @@ def report(root: Path, markdown: bool) -> int:
             if status == "ported":
                 ported_files += 1
                 ported_lines += int(size)
+            if is_data_path(file):
+                data[0] += 1
+                data[2] += int(size)
+                if status == "ported":
+                    data[1] += 1
+                    data[3] += int(size)
         rows.append((package, files, ported_files, lines, ported_lines))
         for i, value in enumerate((files, ported_files, lines, ported_lines)):
             totals[i] += value
@@ -176,19 +209,22 @@ def report(root: Path, markdown: bool) -> int:
     def percent(part: int, whole: int) -> str:
         return f"{100 * part / whole:.1f}%" if whole else "-"
 
+    code = [total - part for total, part in zip(totals, data)]
+    summary = [("all", totals), ("code (no Resources/data/)", code)]
     if markdown:
         print("| Package | Files | Ported files | Code lines | Ported lines | Ported |")
         print("|---|---:|---:|---:|---:|---:|")
         for package, files, pf, lines, pl in rows:
             print(f"| {package} | {files} | {pf} | {lines} | {pl} | {percent(pl, lines)} |")
-        print(f"| **all** | {totals[0]} | {totals[1]} | {totals[2]} | {totals[3]} "
-              f"| {percent(totals[3], totals[2])} |")
+        for label, (files, pf, lines, pl) in summary:
+            print(f"| **{label}** | {files} | {pf} | {lines} | {pl} | {percent(pl, lines)} |")
     else:
         for package, files, pf, lines, pl in rows:
             print(f"{package:<40} {pf:5}/{files:<5} files {pl:7}/{lines:<7} lines "
                   f"{percent(pl, lines):>6}")
-        print(f"{'all':<40} {totals[1]:5}/{totals[0]:<5} files {totals[3]:7}/{totals[2]:<7} lines "
-              f"{percent(totals[3], totals[2]):>6}")
+        for label, (files, pf, lines, pl) in summary:
+            print(f"{label:<40} {pf:5}/{files:<5} files {pl:7}/{lines:<7} lines "
+                  f"{percent(pl, lines):>6}")
     return 0
 
 

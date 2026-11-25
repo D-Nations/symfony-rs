@@ -3,16 +3,18 @@
 // declare and their size, using PHP's own tokenizer (nothing is loaded or
 // executed).
 //
-//   php oracle/classes.php upstream/symfony/routing
+//   git -C upstream/symfony/routing ls-files | php oracle/classes.php upstream/symfony/routing
 //
-// Prints one row per file: <path>\t<classes>\t<code lines>. Test code is
-// left out: the Tests/ and tests/ directories (matched by exact name, as in
-// oracle/manifest.php), vendor/ and .git/. <classes> is the short names of
-// the classes, interfaces, traits and enums the file declares, separated by
-// spaces, or `-` for a file that declares none (functions, config, data).
-// <code lines> counts the lines that hold a token other than whitespace, a
-// comment, a docblock or the open tag; a token over several lines (a
-// heredoc, a long string) counts every line it covers.
+// Reads the paths to list from standard input, one per line, relative to
+// the package (scripts/classes.py gives the files of the package's dist
+// archive, without its tests); paths that do not end in .php are skipped.
+// Prints one row per file: <path>\t<classes>\t<code lines>. <classes> is
+// the short names of the classes, interfaces, traits and enums the file
+// declares, separated by spaces, or `-` for a file that declares none
+// (functions, config, data); bytes of a name that is not UTF-8 are written
+// as \xNN. <code lines> counts the lines that hold a token other than
+// whitespace, a comment, a docblock or the open tag; a token over several
+// lines (a heredoc, a long string) counts every line it covers.
 
 $dir = rtrim($argv[1] ?? '', '/');
 if ($dir === '' || !is_dir($dir)) {
@@ -20,25 +22,13 @@ if ($dir === '' || !is_dir($dir)) {
     exit(2);
 }
 
-$skip = ['Tests', 'tests', 'vendor', '.git'];
 $paths = [];
-$iterator = new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator(
-    new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
-    function (SplFileInfo $file) use ($dir, $skip): bool {
-        if (!$file->isDir()) {
-            return true;
-        }
-        $relative = substr($file->getPathname(), strlen($dir) + 1);
-        // Only top-level Tests/, tests/ and vendor/; .git anywhere.
-        return !in_array($relative, $skip, true) && $file->getFilename() !== '.git';
-    },
-));
-foreach ($iterator as $file) {
-    if ($file->isFile() && str_ends_with($file->getFilename(), '.php')) {
-        $paths[] = substr($file->getPathname(), strlen($dir) + 1);
+foreach (explode("\n", stream_get_contents(STDIN) ?: '') as $path) {
+    $path = rtrim($path, "\r");
+    if ($path !== '' && str_ends_with($path, '.php')) {
+        $paths[] = $path;
     }
 }
-$paths = array_map(fn (string $p): string => str_replace('\\', '/', $p), $paths);
 sort($paths, SORT_STRING);
 
 $ignored = [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG, T_INLINE_HTML];
@@ -84,7 +74,10 @@ foreach ($paths as $path) {
                         continue;
                     }
                     if (is_array($next) && $next[0] === T_STRING) {
-                        $classes[] = $next[1];
+                        // A name that is not UTF-8 (symfony/cache's \xA9
+                        // class) is written with \x escapes.
+                        $classes[] = preg_match('//u', $next[1]) === 1 ? $next[1]
+                            : preg_replace_callback('/[\x80-\xFF]/', fn (array $m): string => sprintf('\\x%02X', ord($m[0])), $next[1]);
                     }
                     break;
                 }
