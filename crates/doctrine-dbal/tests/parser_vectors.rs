@@ -1,6 +1,6 @@
 //! The parser and the list-parameter expansion against real PHP
 //! (tests/data/php.json, `scripts/record.sh doctrine-dbal`): generated
-//! statements parsed in ANSI and MySQL mode, compared call by call, and
+//! statements parsed in ANSI and `MySQL` mode, compared call by call, and
 //! expansion cases the upstream tests leave open.
 //!
 //! PHP refuses some statements at a PCRE limit (README.md, Differences).

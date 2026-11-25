@@ -1,8 +1,8 @@
 # doctrine/dbal at c435cd7ea33e17d2a89288caf994cf3d4549b879: upstream file	classes	code lines	status	rust files
-src/ArrayParameterType.php	ArrayParameterType	18	pending	
-src/ArrayParameters/Exception.php	Exception	6	pending	
-src/ArrayParameters/Exception/MissingNamedParameter.php	MissingNamedParameter	14	pending	
-src/ArrayParameters/Exception/MissingPositionalParameter.php	MissingPositionalParameter	14	pending	
+src/ArrayParameterType.php	ArrayParameterType	18	ported	crates/doctrine-dbal/src/array_parameter_type.rs
+src/ArrayParameters/Exception.php	Exception	6	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
+src/ArrayParameters/Exception/MissingNamedParameter.php	MissingNamedParameter	14	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
+src/ArrayParameters/Exception/MissingPositionalParameter.php	MissingPositionalParameter	14	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
 src/Cache/ArrayResult.php	ArrayResult	88	pending	
 src/Cache/CacheException.php	CacheException	6	pending	
 src/Cache/Exception/NoCacheKey.php	NoCacheKey	10	pending	
@@ -158,13 +158,13 @@ src/Exception/TableNotFoundException.php	TableNotFoundException	5	pending
 src/Exception/TransactionRolledBack.php	TransactionRolledBack	5	pending	
 src/Exception/UniqueConstraintViolationException.php	UniqueConstraintViolationException	5	pending	
 src/Exception/UnknownDriver.php	UnknownDriver	17	pending	
-src/ExpandArrayParameters.php	ExpandArrayParameters	84	pending	
+src/ExpandArrayParameters.php	ExpandArrayParameters	84	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
 src/LockMode.php	LockMode	9	pending	
 src/Logging/Connection.php	Connection	51	pending	
 src/Logging/Driver.php	Driver	32	pending	
 src/Logging/Middleware.php	Middleware	15	pending	
 src/Logging/Statement.php	Statement	34	pending	
-src/ParameterType.php	ParameterType	12	pending	
+src/ParameterType.php	ParameterType	12	ported	crates/doctrine-dbal/src/parameter_type.rs
 src/Platforms/AbstractMySQLPlatform.php	AbstractMySQLPlatform	620	pending	
 src/Platforms/AbstractPlatform.php	AbstractPlatform	1312	pending	
 src/Platforms/DB2Platform.php	DB2Platform	420	pending	
@@ -252,10 +252,10 @@ src/SQL/Builder/DropSchemaObjectsSQLBuilder.php	DropSchemaObjectsSQLBuilder	32	p
 src/SQL/Builder/SelectSQLBuilder.php	SelectSQLBuilder	8	pending	
 src/SQL/Builder/UnionSQLBuilder.php	UnionSQLBuilder	8	pending	
 src/SQL/Builder/WithSQLBuilder.php	WithSQLBuilder	22	pending	
-src/SQL/Parser.php	Parser	82	pending	
+src/SQL/Parser.php	Parser	82	ported	crates/doctrine-dbal/src/sql/parser.rs
 src/SQL/Parser/Exception.php	Exception	6	pending	
 src/SQL/Parser/Exception/RegularExpressionError.php	RegularExpressionError	13	pending	
-src/SQL/Parser/Visitor.php	Visitor	8	pending	
+src/SQL/Parser/Visitor.php	Visitor	8	ported	crates/doctrine-dbal/src/sql/parser.rs
 src/Schema/AbstractAsset.php	AbstractAsset	283	pending	
 src/Schema/AbstractNamedObject.php	AbstractNamedObject	26	pending	
 src/Schema/AbstractOptionallyNamedObject.php	AbstractOptionallyNamedObject	22	pending	

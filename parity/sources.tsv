@@ -311,6 +311,16 @@ crates/css-selector/tests/parser/whitespace_handler_test.rs	symfony/css-selector
 crates/css-selector/tests/parser/whitespace_handler_test.rs	symfony/css-selector	Tests/Parser/Handler/AbstractHandlerTestCase.php	08e2905152a39cf3fd1745d83f8c483e258887d9
 crates/css-selector/tests/xpath/translator_test.rs	symfony/css-selector	Tests/XPath/TranslatorTest.php	08e2905152a39cf3fd1745d83f8c483e258887d9
 crates/deprecation-contracts/src/lib.rs	symfony/deprecation-contracts	function.php	f3202fa1b5097b0af062dc978b32ecf63404e31d
+crates/doctrine-dbal/src/array_parameter_type.rs	doctrine/dbal	src/ArrayParameterType.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/src/expand_array_parameters.rs	doctrine/dbal	src/ExpandArrayParameters.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/src/expand_array_parameters.rs	doctrine/dbal	src/ArrayParameters/Exception.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/src/expand_array_parameters.rs	doctrine/dbal	src/ArrayParameters/Exception/MissingNamedParameter.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/src/expand_array_parameters.rs	doctrine/dbal	src/ArrayParameters/Exception/MissingPositionalParameter.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/src/parameter_type.rs	doctrine/dbal	src/ParameterType.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/src/sql/parser.rs	doctrine/dbal	src/SQL/Parser.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/src/sql/parser.rs	doctrine/dbal	src/SQL/Parser/Visitor.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/tests/expand_array_parameters_test.rs	doctrine/dbal	tests/Connection/ExpandArrayParametersTest.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
+crates/doctrine-dbal/tests/parser_test.rs	doctrine/dbal	tests/SQL/ParserTest.php	c435cd7ea33e17d2a89288caf994cf3d4549b879
 crates/dotenv/src/command/debug_command.rs	symfony/dotenv	Command/DebugCommand.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/command/dotenv_dump_command.rs	symfony/dotenv	Command/DotenvDumpCommand.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/dotenv.rs	symfony/dotenv	Dotenv.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
