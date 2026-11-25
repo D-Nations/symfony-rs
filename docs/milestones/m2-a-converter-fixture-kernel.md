@@ -116,17 +116,23 @@ synchronous ([docs/converter-contract.md](../converter-contract.md)).
 
 ## Checks
 
-On Windows at `118eb86`: `cargo fmt --check` clean; `cargo clippy
+Rebased on `c337a7c` (#66, the Clippy opt-ins). On Windows, #66 made
+`cargo clippy --all-targets -- -D warnings` fail in code Linux never
+compiles (`cfg(not(unix))`): `php_value::path::from_os_string`, finder's
+`secs()` and two Unix-only finder tests. Fixed in `d565715`, same
+behaviour.
+
+On Windows at `d565715`: `cargo fmt --check` clean; `cargo clippy
 --all-targets -- -D warnings` clean; `cargo test --workspace
 --no-fail-fast` 3,413 passed, 0 failed; `scripts/sources.sh --check` and
 `scripts/parity-check.sh` pass.
 
-Linux at `118eb86`, fresh containers: `scripts/converter-fixture.sh`
+Linux at `d565715`, fresh containers: `scripts/converter-fixture.sh`
 (fmt, clippy and every test of the fixture and the crates it links, from
 an empty directory) passes, 1,388 tests, 0 failed; `scripts/linux-test.sh
--p symfony-http-kernel -p symfony-routing -p psr-container -p
-symfony-runtime -p request-lab -p converter-fixture-app` passes, 687
-tests, 0 failed.
+-p php-value -p symfony-finder -p symfony-filesystem -p
+symfony-http-kernel -p symfony-routing -p psr-container -p symfony-runtime
+-p request-lab -p converter-fixture-app` passes, 902 tests, 0 failed.
 
 symfony-demo-rs comparison: **not run**, paused by the owner (November
 23). Acceptance criteria that name it stay open.
