@@ -13,6 +13,7 @@ mod abstract_recursive_pass;
 #[expect(clippy::module_inception, reason = "one module per upstream file")]
 mod compiler;
 mod compiler_pass_interface;
+mod deep_clone;
 mod pass_config;
 mod service_reference_graph;
 
@@ -30,6 +31,9 @@ pub use resolve_child_definitions_pass::ResolveChildDefinitionsPass;
 
 mod resolve_class_pass;
 pub use resolve_class_pass::ResolveClassPass;
+
+mod resolve_decorator_stack_pass;
+pub use resolve_decorator_stack_pass::ResolveDecoratorStackPass;
 
 mod resolve_env_placeholders_pass;
 pub use resolve_env_placeholders_pass::ResolveEnvPlaceholdersPass;
