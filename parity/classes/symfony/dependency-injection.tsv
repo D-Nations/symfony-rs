@@ -34,7 +34,7 @@ Attribute/Target.php	Target	37	pending
 Attribute/When.php	When	8	pending	
 Attribute/WhenNot.php	WhenNot	9	pending	
 ChildDefinition.php	ChildDefinition	37	ported	crates/dependency-injection/src/definition.rs
-Compiler/AbstractRecursivePass.php	AbstractRecursivePass	197	pending	
+Compiler/AbstractRecursivePass.php	AbstractRecursivePass	197	ported	crates/dependency-injection/src/compiler/abstract_recursive_pass.rs
 Compiler/AddBehaviorDescribingTagsPass.php	AddBehaviorDescribingTagsPass	24	pending	
 Compiler/AliasDeprecatedPublicServicesPass.php	AliasDeprecatedPublicServicesPass	38	pending	
 Compiler/AnalyzeServiceReferencesPass.php	AnalyzeServiceReferencesPass	159	pending	
@@ -52,14 +52,14 @@ Compiler/CheckExceptionOnInvalidReferenceBehaviorPass.php	CheckExceptionOnInvali
 Compiler/CheckFactoryBuilderCircularReferencePass.php	CheckFactoryBuilderCircularReferencePass	96	pending	
 Compiler/CheckReferenceValidityPass.php	CheckReferenceValidityPass	21	pending	
 Compiler/CheckTypeDeclarationsPass.php	CheckTypeDeclarationsPass	245	pending	
-Compiler/Compiler.php	Compiler	61	pending	
-Compiler/CompilerPassInterface.php	CompilerPassInterface	6	pending	
+Compiler/Compiler.php	Compiler	61	ported	crates/dependency-injection/src/compiler/compiler.rs
+Compiler/CompilerPassInterface.php	CompilerPassInterface	6	ported	crates/dependency-injection/src/compiler/compiler_pass_interface.rs
 Compiler/DecoratorServicePass.php	DecoratorServicePass	116	pending	
 Compiler/DefinitionErrorExceptionPass.php	DefinitionErrorExceptionPass	72	pending	
 Compiler/ExtensionCompilerPass.php	ExtensionCompilerPass	15	pending	
 Compiler/InlineServiceDefinitionsPass.php	InlineServiceDefinitionsPass	180	pending	
 Compiler/MergeExtensionConfigurationPass.php	MergeExtensionConfigurationPass MergeExtensionConfigurationParameterBag MergeExtensionConfigurationContainerBuilder	175	pending	
-Compiler/PassConfig.php	PassConfig	158	pending	
+Compiler/PassConfig.php	PassConfig	158	ported	crates/dependency-injection/src/compiler/pass_config.rs
 Compiler/PriorityTaggedServiceTrait.php	PriorityTaggedServiceTrait PriorityTaggedServiceUtil	155	pending	
 Compiler/RegisterAutoconfigureAttributesPass.php	RegisterAutoconfigureAttributesPass	71	pending	
 Compiler/RegisterEnvVarProcessorsPass.php	RegisterEnvVarProcessorsPass	51	pending	
@@ -88,15 +88,15 @@ Compiler/ResolveReferencesToAliasesPass.php	ResolveReferencesToAliasesPass	53	pe
 Compiler/ResolveServiceSubscribersPass.php	ResolveServiceSubscribersPass	30	pending	
 Compiler/ResolveTaggedIteratorArgumentPass.php	ResolveTaggedIteratorArgumentPass	19	pending	
 Compiler/ServiceLocatorTagPass.php	ServiceLocatorTagPass	113	pending	
-Compiler/ServiceReferenceGraph.php	ServiceReferenceGraph	47	pending	
-Compiler/ServiceReferenceGraphEdge.php	ServiceReferenceGraphEdge	47	pending	
-Compiler/ServiceReferenceGraphNode.php	ServiceReferenceGraphNode	49	pending	
+Compiler/ServiceReferenceGraph.php	ServiceReferenceGraph	47	ported	crates/dependency-injection/src/compiler/service_reference_graph.rs
+Compiler/ServiceReferenceGraphEdge.php	ServiceReferenceGraphEdge	47	ported	crates/dependency-injection/src/compiler/service_reference_graph.rs
+Compiler/ServiceReferenceGraphNode.php	ServiceReferenceGraphNode	49	ported	crates/dependency-injection/src/compiler/service_reference_graph.rs
 Compiler/TagDecoratorPass.php	TagDecoratorPass	38	pending	
 Compiler/ValidateEnvPlaceholdersPass.php	ValidateEnvPlaceholdersPass	85	pending	
 Config/ContainerParametersResource.php	ContainerParametersResource	17	pending	
 Config/ContainerParametersResourceChecker.php	ContainerParametersResourceChecker	24	pending	
 Container.php	Container	284	ported	crates/dependency-injection/src/container.rs
-ContainerBuilder.php	ContainerBuilder	1155	pending	
+ContainerBuilder.php	ContainerBuilder	1155	ported	crates/dependency-injection/src/container_builder.rs
 ContainerInterface.php	ContainerInterface	20	ported	crates/dependency-injection/src/container_interface.rs
 Definition.php	Definition	410	ported	crates/dependency-injection/src/definition.rs
 Dumper/Dumper.php	Dumper	9	pending	
@@ -131,7 +131,7 @@ Extension/AbstractExtension.php	AbstractExtension	38	pending
 Extension/ConfigurableExtensionInterface.php	ConfigurableExtensionInterface	9	pending	
 Extension/ConfigurationExtensionInterface.php	ConfigurationExtensionInterface	7	pending	
 Extension/Extension.php	Extension	60	pending	
-Extension/ExtensionInterface.php	ExtensionInterface	7	pending	
+Extension/ExtensionInterface.php	ExtensionInterface	7	ported	crates/dependency-injection/src/extension/mod.rs
 Extension/ExtensionTrait.php	ExtensionTrait	46	pending	
 Extension/PrependExtensionInterface.php	PrependExtensionInterface	6	pending	
 Kernel/AbstractBundle.php	AbstractBundle	53	pending	
@@ -201,7 +201,7 @@ Loader/YamlFileLoader.php	YamlFileLoader	84	pending
 Parameter.php	Parameter	12	ported	crates/dependency-injection/src/reference.rs
 ParameterBag/ContainerBag.php	ContainerBag	21	ported	crates/dependency-injection/src/parameter_bag/container_bag.rs
 ParameterBag/ContainerBagInterface.php	ContainerBagInterface	10	ported	crates/dependency-injection/src/parameter_bag/container_bag.rs
-ParameterBag/EnvPlaceholderParameterBag.php	EnvPlaceholderParameterBag	94	pending	
+ParameterBag/EnvPlaceholderParameterBag.php	EnvPlaceholderParameterBag	94	ported	crates/dependency-injection/src/parameter_bag/env_placeholder_parameter_bag.rs
 ParameterBag/FrozenParameterBag.php	FrozenParameterBag	37	ported	crates/dependency-injection/src/parameter_bag/parameter_bag.rs
 ParameterBag/ParameterBag.php	ParameterBag	202	ported	crates/dependency-injection/src/parameter_bag/parameter_bag.rs
 ParameterBag/ParameterBagInterface.php	ParameterBagInterface	17	ported	crates/dependency-injection/src/parameter_bag/parameter_bag.rs
