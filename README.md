@@ -29,7 +29,7 @@ Nothing outside those tables is claimed.
 | [`symfony-string`](crates/string/README.md) | `symfony/string` | Byte, code point and Unicode strings, LazyString, inflectors |
 | [`symfony-filesystem`](crates/filesystem/README.md) | `symfony/filesystem` | The `dumpFile()` subset Config's caches use |
 | [`symfony-event-dispatcher`](crates/event-dispatcher/README.md), [contracts](crates/event-dispatcher-contracts/README.md) | `symfony/event-dispatcher` | Dispatcher, listeners, subscribers |
-| [`twig`](crates/twig/README.md) | `twig/twig` | M4 started: Source, errors, tokens, token stream, Lexer, nodes, extensions, expression and token parsers, Parser |
+| [`twig`](crates/twig/README.md) | `twig/twig` | M4 started: Source, errors, tokens, token stream, Lexer, nodes, extensions, expression and token parsers, Parser, node visitors |
 | [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
 | [`symfony-deprecation-contracts`](crates/deprecation-contracts/README.md), [`psr-log`](crates/psr-log/README.md) | `symfony/deprecation-contracts`, `psr/log` | The contracts |
 | [`php-value`](crates/php-value/README.md), [`php-dom`](crates/php-dom/README.md), [`php-pcre`](crates/php-pcre/README.md) | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source |

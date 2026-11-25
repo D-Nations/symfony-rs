@@ -50,7 +50,7 @@
 #   scripts/record.sh mime-fileinfo crates/mime/tests/data/fileinfo.json (FileinfoMimeTypeGuesser, needs upstream/)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-lexer   crates/twig/tests/data/lexer.json (Twig\Lexer on the upstream fixtures and lexer_extra.json)
-#   scripts/record.sh twig-parser  crates/twig/tests/data/parser.json (Twig\Parser trees on the upstream fixtures and parser_extra.json)
+#   scripts/record.sh twig-parser  crates/twig/tests/data/parser.json and parser_visitors.json (Twig\Parser trees without and with the node visitors)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")
 #   scripts/record.sh di-trial     spikes/di-trial/demo/data/container.xml (the demo's compiled container), demo/tests/data/php_classes.json
 #   scripts/record.sh all
@@ -769,13 +769,17 @@ twig_lexer() {
 }
 
 twig_parser() {
-    local out=crates/twig/tests/data/parser.json tmp
+    local out tmp mode
     mkdir -p oracle/out
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/twig_parser.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "templates")' "$tmp"
-    mv "$tmp" "$out"
-    echo "Twig parser vectors written to $out"
+    for mode in plain visitors; do
+        out=crates/twig/tests/data/parser.json
+        [[ "$mode" == visitors ]] && out=crates/twig/tests/data/parser_visitors.json
+        tmp=$(mktemp -p oracle/out)
+        oracle oracle/recorders/twig_parser.php "$mode" > "$tmp"
+        python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "templates")' "$tmp"
+        mv "$tmp" "$out"
+        echo "Twig parser vectors written to $out"
+    done
 }
 
 case "${1:-}" in
