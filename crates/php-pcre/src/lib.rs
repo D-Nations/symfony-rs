@@ -62,6 +62,8 @@ pub struct Pcre {
     regex: fancy_regex::Regex,
     utf8: bool,
     translated: String,
+    /// The named groups: their number and name, in pattern order.
+    names: Vec<(usize, Vec<u8>)>,
 }
 
 /// Byte ranges of the groups of a match (index 0 is the whole match).
@@ -133,6 +135,7 @@ impl Pcre {
         if anchored {
             t.out.push(')');
         }
+        let names = t.names;
         let translated = t.out;
         let mut builder = RegexBuilder::new(&translated);
         builder.bytes_mode(if utf8 {
@@ -148,12 +151,26 @@ impl Pcre {
             regex,
             utf8,
             translated,
+            names,
         })
     }
 
     /// The number of groups, the whole match included.
     pub fn group_count(&self) -> usize {
         self.regex.captures_len()
+    }
+
+    /// Each group's name, indexed by group number (index 0, the whole
+    /// match, has none): `preg_match()` reports a named group under its
+    /// name and then under its number.
+    pub fn group_names(&self) -> Vec<Option<&[u8]>> {
+        let mut names = vec![None; self.group_count()];
+        for (number, name) in &self.names {
+            if let Some(slot) = names.get_mut(*number) {
+                *slot = Some(name.as_slice());
+            }
+        }
+        names
     }
 
     /// The `fancy-regex` pattern this was translated to.
@@ -426,7 +443,46 @@ struct Translator<'a> {
     stack: Vec<Flags>,
     prev: Prev,
     captures: usize,
-    names: Vec<Vec<u8>>,
+    /// The named groups: their number and name.
+    names: Vec<(usize, Vec<u8>)>,
+}
+
+/// What a non-ASCII character is in a group name under `/u`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum NameChar {
+    /// `\p{L}`.
+    Letter,
+    /// `\p{Nd}`.
+    Digit,
+}
+
+/// `[\p{L}]` and `[\p{Nd}]`, from fancy-regex's Unicode tables.
+static NAME_CLASSES: std::sync::LazyLock<Option<(fancy_regex::Regex, fancy_regex::Regex)>> =
+    std::sync::LazyLock::new(|| {
+        Some((
+            fancy_regex::Regex::new(r"^\p{L}$").ok()?,
+            fancy_regex::Regex::new(r"^\p{Nd}$").ok()?,
+        ))
+    });
+
+/// The length and class of the UTF-8 character at the start of `bytes`,
+/// if it may appear in a group name.
+fn name_char(bytes: &[u8]) -> Option<(usize, NameChar)> {
+    let len = match bytes.first()? {
+        0xc0..=0xdf => 2,
+        0xe0..=0xef => 3,
+        0xf0..=0xf7 => 4,
+        _ => return None,
+    };
+    let c = std::str::from_utf8(bytes.get(..len)?).ok()?;
+    let (letter, digit) = NAME_CLASSES.as_ref()?;
+    if letter.is_match(c).unwrap_or(false) {
+        Some((len, NameChar::Letter))
+    } else if digit.is_match(c).unwrap_or(false) {
+        Some((len, NameChar::Digit))
+    } else {
+        None
+    }
 }
 
 /// One item of a character class.
@@ -990,19 +1046,37 @@ impl Translator<'_> {
         Ok(n)
     }
 
+    /// A group name: ASCII letters, digits and `_`; under `/u` also
+    /// Unicode letters and decimal digits (PCRE2 10.44, as PHP 8.4.27
+    /// bundles it). It does not start with a digit.
     fn group_name(&mut self, close: u8) -> Result<Vec<u8>, PcreError> {
         let start = self.pos;
-        while self
-            .peek()
-            .is_some_and(|c| c.is_ascii_alphanumeric() || c == b'_')
-        {
-            self.pos += 1;
+        let mut first_is_digit = None;
+        loop {
+            let rest = &self.p[self.pos..];
+            let (len, word, digit) = match rest.first() {
+                Some(&c) if c.is_ascii() => (
+                    1,
+                    c.is_ascii_alphanumeric() || c == b'_',
+                    c.is_ascii_digit(),
+                ),
+                Some(_) if self.utf8 => match name_char(rest) {
+                    Some((len, class)) => (len, true, class == NameChar::Digit),
+                    None => (0, false, false),
+                },
+                _ => (0, false, false),
+            };
+            if !word {
+                break;
+            }
+            first_is_digit.get_or_insert(digit);
+            self.pos += len;
         }
         let name = self.p[start..self.pos].to_vec();
         if name.is_empty() {
             return compile_err("group name expected");
         }
-        if name[0].is_ascii_digit() {
+        if first_is_digit == Some(true) {
             return compile_err("subpattern name must start with a non-digit");
         }
         if name.len() > 32 {
@@ -1103,14 +1177,14 @@ impl Translator<'_> {
     }
 
     fn named(&mut self, name: Vec<u8>) -> Result<(), PcreError> {
-        if self.names.contains(&name) {
+        if self.names.iter().any(|(_, n)| *n == name) {
             return compile_err(
                 "two named subpatterns have the same name (PCRE2_DUPNAMES not set)",
             );
         }
         self.captures += 1;
         let text = format!("(?P<{}>", String::from_utf8_lossy(&name));
-        self.names.push(name);
+        self.names.push((self.captures, name));
         self.open(&text);
         Ok(())
     }
@@ -1362,5 +1436,75 @@ impl Translator<'_> {
                 }
             },
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Pcre;
+
+    #[test]
+    fn group_names_follow_group_numbers() {
+        let pcre = Pcre::new(b"#^/(x)?(?P<b>y)(?<c>z)?(?:w)('q')?(?'d'e)$#").unwrap();
+        assert_eq!(
+            pcre.group_names(),
+            [
+                None,
+                None,
+                Some(&b"b"[..]),
+                Some(&b"c"[..]),
+                None,
+                Some(&b"d"[..])
+            ]
+        );
+        let translated: Vec<Option<&str>> = pcre.regex.capture_names().collect();
+        let names: Vec<Option<String>> = pcre
+            .group_names()
+            .into_iter()
+            .map(|n| n.map(|n| String::from_utf8_lossy(n).into_owned()))
+            .collect();
+        assert_eq!(
+            names,
+            translated
+                .iter()
+                .map(|n| n.map(str::to_owned))
+                .collect::<Vec<_>>()
+        );
+    }
+}
+
+#[cfg(test)]
+mod group_name_tests {
+    use super::Pcre;
+
+    /// PHP 8.4.27 (PCRE2 10.44) on `{^/(?P<name>x)$}u`: compiles or not.
+    #[test]
+    fn unicode_group_names_follow_pcre2() {
+        for (name, ok) in [
+            ("bär", true),
+            ("ä1", true),
+            ("日本", true),
+            ("ab٣", true),
+            ("éa", true),
+            ("a_é", true),
+            ("_1", true),
+            ("ǅ", true),
+            ("aª", true),
+            ("1ä", false),
+            ("٣a", false),
+            ("a·b", false),
+            ("a½", false),
+            ("aⅣ", false),
+            ("Ⅳa", false),
+            ("a\u{327}", false),
+            ("a〇", false),
+        ] {
+            let pattern = format!("{{^/(?P<{name}>x)$}}u");
+            assert_eq!(Pcre::new(pattern.as_bytes()).is_ok(), ok, "{name}");
+        }
+        // Without /u a name is ASCII.
+        assert!(Pcre::new("{^/(?P<bär>x)$}".as_bytes()).is_err());
+        let pcre = Pcre::new("{^/(?P<bär>x)$}u".as_bytes()).unwrap();
+        assert_eq!(pcre.group_names(), [None, Some("bär".as_bytes())]);
     }
 }
