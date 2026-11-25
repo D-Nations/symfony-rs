@@ -137,7 +137,7 @@ impl PassConfig {
                     pending("RegisterEnvVarProcessorsPass"),
                 ],
             ),
-            (-1000, vec![pending("ExtensionCompilerPass")]),
+            (-1000, vec![Pass::new(super::ExtensionCompilerPass)]),
         ]);
         let optimization = BTreeMap::from([(
             0,
@@ -205,7 +205,7 @@ impl PassConfig {
             ),
         ]);
         Self {
-            merge_pass: pending("MergeExtensionConfigurationPass"),
+            merge_pass: Pass::new(super::MergeExtensionConfigurationPass::new()),
             after_removing,
             before_optimization,
             before_removing: BTreeMap::new(),
