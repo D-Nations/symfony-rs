@@ -87,13 +87,12 @@ impl DefinitionErrorExceptionPass {
         visited_ids.insert(id, true);
 
         for (source_id, is_runtime) in sources.iter() {
-            let runtime_source = match visited_ids.get(source_id) {
-                Some(visited) => *visited,
-                None => {
-                    let visited = self.is_error_for_runtime(source_id, visited_ids);
-                    visited_ids.insert(source_id, visited);
-                    visited
-                }
+            let runtime_source = if let Some(visited) = visited_ids.get(source_id) {
+                *visited
+            } else {
+                let visited = self.is_error_for_runtime(source_id, visited_ids);
+                visited_ids.insert(source_id, visited);
+                visited
             };
             if runtime_source {
                 continue;
