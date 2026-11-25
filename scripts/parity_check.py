@@ -97,7 +97,9 @@ def check_parity(root: Path) -> int:
     done_file = root / "parity/done.txt"
     done = set(text(done_file).splitlines()) if done_file.is_file() else set()
     manifests = sorted(path for path in (root / "parity").rglob("*.tsv")
-                       if len(path.relative_to(root / "parity").parts) >= 2)
+                       if len(path.relative_to(root / "parity").parts) >= 2
+                       # Class manifests: scripts/classes.py checks them.
+                       and path.relative_to(root / "parity").parts[0] != "classes")
     for manifest in manifests:
         name = manifest.relative_to(root).as_posix()
         package = manifest.relative_to(root / "parity").with_suffix("").as_posix()

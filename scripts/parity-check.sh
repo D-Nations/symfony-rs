@@ -25,6 +25,7 @@ trap 'rm -f "$claims"' EXIT
 shopt -s nullglob globstar
 for manifest in parity/*/**/*.tsv; do
     [[ "$manifest" == parity/packages.tsv || "$manifest" == parity/sources.tsv ]] && continue
+    [[ "$manifest" == parity/classes/* ]] && continue # scripts/classes.py checks these
     package=${manifest#parity/}
     package=${package%.tsv}
     while IFS=$'\t' read -r file test state rust; do
