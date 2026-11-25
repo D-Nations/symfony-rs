@@ -158,6 +158,7 @@ enum Meta {
 }
 
 /// symfony-filesystem's exception, as Config passes it on.
+#[expect(clippy::needless_pass_by_value, reason = "a map_err() callback")]
 fn io_error(e: symfony_filesystem::Error) -> Error {
     let class = Class::Other {
         class: e.class().name().to_owned(),
@@ -187,7 +188,7 @@ impl fmt::Debug for ResourceCheckerConfigCache {
                     .map(|c| c.class().to_owned())
                     .collect::<Vec<_>>(),
             )
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 
@@ -216,6 +217,10 @@ impl ResourceCheckerConfigCache {
 
     /// The classes the meta file may name (Config's filesystem resources
     /// by default).
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn with_classes(mut self, classes: ResourceClasses) -> Self {
         self.classes = classes;
         self
@@ -447,6 +452,10 @@ impl ConfigCache {
     }
 
     /// The classes the meta file may name.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn with_classes(mut self, classes: ResourceClasses) -> Self {
         self.inner = self.inner.with_classes(classes);
         self
@@ -487,6 +496,10 @@ fn contains_incomplete(value: &Value) -> bool {
 
 /// `9 + $m[1]` or `$m[1] - $len` as PHP prints it: an int, or a float
 /// once the digits overflow.
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn add_to_digits(digits: &[u8], delta: i64) -> Vec<u8> {
     let text = String::from_utf8_lossy(digits);
     if let Some(n) = text.parse::<i64>().ok().and_then(|n| n.checked_add(delta)) {

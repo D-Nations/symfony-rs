@@ -83,6 +83,11 @@ fn recorded_catalogue_operations() -> Result<(), BoxError> {
     replay(include_str!("data/catalogue_no_intl.json"), false, 4)
 }
 
+enum Operation {
+    Merge(MergeOperation),
+    Target(TargetOperation),
+}
+
 fn replay(recorded: &str, intl: bool, count: usize) -> Result<(), BoxError> {
     let data: Json = serde_json::from_str(recorded)?;
     assert_eq!(data["php"], "8.4.27");
@@ -93,10 +98,6 @@ fn replay(recorded: &str, intl: bool, count: usize) -> Result<(), BoxError> {
     for (index, case) in cases.iter().enumerate() {
         let source = catalogue(&decode(&case[1])?)?;
         let target = catalogue(&decode(&case[2])?)?;
-        enum Operation {
-            Merge(MergeOperation),
-            Target(TargetOperation),
-        }
         let operation = match text(&case[0])? {
             "merge" => MergeOperation::new(source.clone(), target.clone()).map(Operation::Merge),
             "target" => TargetOperation::new(source.clone(), target.clone()).map(Operation::Target),
@@ -152,6 +153,12 @@ fn replay(recorded: &str, intl: bool, count: usize) -> Result<(), BoxError> {
             calls += 1;
         }
     }
-    println!("{} catalogue cases, {calls} calls matched PHP", cases.len());
+    #[allow(
+        clippy::print_stdout,
+        reason = "the test reports how many cases it matched"
+    )]
+    {
+        println!("{} catalogue cases, {calls} calls matched PHP", cases.len());
+    }
     Ok(())
 }

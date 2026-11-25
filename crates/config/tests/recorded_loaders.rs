@@ -10,6 +10,14 @@
 //!
 //! Upstream: none
 #![allow(non_snake_case)]
+#![allow(
+    clippy::match_same_arms,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
+#![allow(
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 mod common;
 

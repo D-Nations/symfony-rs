@@ -19,7 +19,7 @@ use serde_json::Value as Json;
 struct SerializableValue(PhpArray);
 
 impl PhpObject for SerializableValue {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "JsonSerializableValue"
     }
 
@@ -38,7 +38,7 @@ impl PhpObject for SerializableValue {
 struct SerializableThrows(PhpArray);
 
 impl PhpObject for SerializableThrows {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "JsonSerializableThrows"
     }
 
@@ -84,7 +84,7 @@ fn prepare(value: Value) -> Value {
     }
 }
 
-/// Reads the vector file, whose values nest past serde_json's default
+/// Reads the vector file, whose values nest past `serde_json`'s default
 /// limit.
 fn data() -> Result<Json, vectors::Error> {
     let mut reader = serde_json::Deserializer::from_str(include_str!("data/json_encode.json"));

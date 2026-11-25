@@ -1,6 +1,6 @@
 //! Compiles symfony/demo's container (data/container.xml, recorded from
-//! PHP by `scripts/record.sh di-trial`) to Rust in OUT_DIR/container.rs,
-//! and writes what the compiler found to OUT_DIR/report.txt.
+//! PHP by `scripts/record.sh di-trial`) to Rust in `OUT_DIR/container.rs`,
+//! and writes what the compiler found to `OUT_DIR/report.txt`.
 //!
 //! Upstream: none
 

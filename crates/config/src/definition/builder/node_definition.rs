@@ -853,6 +853,10 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
     }
 
     /// `info($info)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn info(&self, info: impl AsRef<[u8]>) -> Self {
         self.attribute(b"info", Value::from(PhpString::from(info.as_ref())))
     }
@@ -904,6 +908,10 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
     }
 
     /// `attribute($key, $value)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn attribute(&self, key: impl AsRef<[u8]>, value: impl Into<Value>) -> Self {
         let value = value.into();
         self.def.write(|s| {
@@ -973,6 +981,10 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
 
     /// `setDeprecated($package, $version, $message)`; upstream's default
     /// message is [`crate::definition::DEFAULT_DEPRECATION_MESSAGE`].
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn set_deprecated(
         &self,
         package: impl AsRef<[u8]>,
@@ -988,18 +1000,30 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
         self.clone()
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn treat_null_like(&self, value: impl Into<Value>) -> Self {
         let value = value.into();
         self.def.write(|s| s.null_equivalent = value);
         self.clone()
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn treat_true_like(&self, value: impl Into<Value>) -> Self {
         let value = value.into();
         self.def.write(|s| s.true_equivalent = value);
         self.clone()
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn treat_false_like(&self, value: impl Into<Value>) -> Self {
         let value = value.into();
         self.def.write(|s| s.false_equivalent = value);
@@ -1055,6 +1079,10 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
     }
 
     /// `cannotBeOverwritten($deny)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn cannot_be_overwritten(&self, deny: bool) -> Self {
         self.def.write(|s| {
             s.merge
@@ -1065,6 +1093,10 @@ impl<C: class::Marker, P: Clone> Definition<C, P> {
     }
 
     /// `setPathSeparator($separator)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn set_path_separator(&self, separator: impl AsRef<[u8]>) -> Self {
         self.def.set_path_separator(separator.as_ref());
         self.clone()

@@ -653,6 +653,10 @@ impl Block {
         e
     }
 
+    #[expect(
+        clippy::cast_possible_wrap,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn do_parse(
         &mut self,
         sh: &mut Shared<'_>,
@@ -805,6 +809,11 @@ impl Block {
         }
     }
 
+    #[expect(
+        clippy::cast_possible_wrap,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
+    #[expect(clippy::needless_pass_by_value, reason = "upstream's signature")]
     fn sequence_item(
         &mut self,
         sh: &mut Shared<'_>,
@@ -946,6 +955,7 @@ impl Block {
         )
     }
 
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn mapping_item(
         &mut self,
         sh: &mut Shared<'_>,
@@ -1329,6 +1339,10 @@ impl Block {
         real_current_line_number
     }
 
+    #[expect(
+        clippy::cast_possible_wrap,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn get_current_line_indentation(&self) -> i64 {
         if self.current_line.first() != Some(&b' ') {
             return 0;
@@ -1338,6 +1352,11 @@ impl Block {
 
     /// `getNextEmbedBlock()`. A `None` indentation compares as PHP's
     /// `null`: every indentation is `>=` it and none is `===` it.
+    #[expect(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn get_next_embed_block(
         &mut self,
         indentation: Option<i64>,
@@ -1444,11 +1463,20 @@ impl Block {
         Ok(data.join(&b'\n'))
     }
 
+    #[expect(
+        clippy::cast_possible_wrap,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn has_more_lines(&self) -> bool {
         (self.lines.len() as i64 - 1) > self.current_line_nb
     }
 
     /// Moves the parser to the next line.
+    #[expect(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn move_to_next_line(&mut self) -> bool {
         if self.current_line_nb >= self.number_of_parsed_lines - 1 {
             return false;
@@ -1459,6 +1487,11 @@ impl Block {
     }
 
     /// Moves the parser to the previous line.
+    #[expect(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn move_to_previous_line(&mut self) -> bool {
         if self.current_line_nb < 1 {
             return false;
@@ -1635,6 +1668,11 @@ impl Block {
     }
 
     /// `parseBlockScalar()`: the lines of a `|` or `>` block scalar.
+    #[expect(
+        clippy::cast_possible_truncation,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn parse_block_scalar(
         &mut self,
         style: u8,
@@ -1819,6 +1857,14 @@ impl Block {
 
     /// `cleanup()`: the document without its header, markers and the
     /// root node's properties; and whether content followed `---`.
+    #[expect(
+        clippy::cast_possible_wrap,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
+    #[expect(
+        clippy::naive_bytecount,
+        reason = "short slices; no bytecount dependency"
+    )]
     fn cleanup(&mut self, value: &[u8]) -> Result<(Vec<u8>, bool), ParseException> {
         let mut value = normalize_line_breaks(value);
 
@@ -1872,6 +1918,12 @@ impl Block {
     /// Tells whether the next line belongs to a block scalar whose header ends the given value.
     ///
     /// Unlike `isNextLineIndented()`, empty and comment-like lines are not skipped, as they can be part of the block scalar.
+    #[expect(
+        clippy::cast_possible_truncation,
+        clippy::cast_possible_wrap,
+        clippy::cast_sign_loss,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn is_next_line_in_block_scalar(&self, value: &[u8]) -> bool {
         let Some(next_line) = self.lines.get((self.current_line_nb + 1) as usize) else {
             return false;
@@ -1885,6 +1937,10 @@ impl Block {
 
     /// `removeLeadingLines()`: drops `value[..end]` and counts its lines
     /// into the offset.
+    #[expect(
+        clippy::cast_possible_wrap,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn remove_leading_lines(&mut self, mut value: Vec<u8>, end: usize) -> Vec<u8> {
         let removed = value.drain(..end);
         // items have been removed, update the offset

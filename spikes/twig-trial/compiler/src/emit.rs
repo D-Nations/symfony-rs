@@ -37,6 +37,11 @@ pub fn emit(env: &Environment, templates: &[(String, Vec<Node>)]) -> Result<Stri
         let doc = format!(" `{name}`");
         functions.push(quote! {
             #[doc = #doc]
+            #[allow(
+                clippy::too_many_lines,
+                clippy::unreadable_literal,
+                reason = "generated: one function per template, literals as PHP writes them"
+            )]
             pub fn #ident(env: &rt::Env, context: &mut rt::Context, out: &mut String) -> Result<(), rt::Error> {
                 #[allow(dead_code)]
                 const TEMPLATE: &str = #name;
@@ -52,7 +57,7 @@ pub fn emit(env: &Environment, templates: &[(String, Vec<Node>)]) -> Result<Stri
 
         #(#functions)*
 
-        /// The compiled template registry (Environment::load()).
+        /// The compiled template registry (`Environment::load()`).
         pub fn template(name: &str) -> Option<rt::TemplateFn> {
             match name {
                 #(#lookup,)*
@@ -90,7 +95,7 @@ impl Emitter<'_> {
             }
             Node::Print(expr, line) => {
                 let value = self.expr(expr, *line)?;
-                let line = *line as u32;
+                let line = u32::try_from(*line).unwrap_or(u32::MAX);
                 if self.is_safe(expr) {
                     quote! { rt::write_raw(out, &#value).map_err(|e| e.at(TEMPLATE, #line))?; }
                 } else {
@@ -182,6 +187,10 @@ impl Emitter<'_> {
         exprs.iter().map(|e| self.expr(e, line)).collect()
     }
 
+    #[expect(
+        clippy::cast_possible_truncation,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     fn expr(&self, expr: &Expr, line: usize) -> Result<TokenStream, Error> {
         Ok(match expr {
             Expr::Constant(c) => constant(c),
@@ -198,7 +207,7 @@ impl Emitter<'_> {
                     CallType::Any => quote! { rt::CallType::Any },
                     CallType::Method => quote! { rt::CallType::Method },
                 };
-                let line = line as u32;
+                let line = u32::try_from(line).unwrap_or(u32::MAX);
                 quote! {
                     rt::get_attribute(env, &#object, #attribute, &[#(#arguments),*], #call)
                         .map_err(|e| e.at(TEMPLATE, #line))?
@@ -285,7 +294,7 @@ impl Emitter<'_> {
     }
 
     fn function(&self, name: &str, arguments: &[Expr], line: usize) -> Result<TokenStream, Error> {
-        let line_number = line as u32;
+        let line_number = u32::try_from(line).unwrap_or(u32::MAX);
         if name == "include" {
             // CoreExtension::include() with the default with_context=true.
             let [template, rest @ ..] = arguments else {

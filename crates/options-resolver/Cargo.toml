@@ -13,3 +13,6 @@ symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 [dev-dependencies]
 php-value = { path = "../php-value", features = ["vectors"] }
 serde_json = "1.0.154"
+
+[lints]
+workspace = true

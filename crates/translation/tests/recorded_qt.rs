@@ -22,6 +22,10 @@
 //! November 23). On a Windows host, run it in Linux with
 //! `scripts/linux-test.sh -p symfony-translation`.
 #![cfg(unix)]
+#![allow(
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use php_dom::{
     Document, LoadOptions, NodeId, XPathError, libxml_use_internal_errors, load_xml, xpath,
@@ -132,6 +136,7 @@ fn is_known(resource: &[u8]) -> bool {
 const REFUSED_EXPRESSIONS: [&str; 1] = ["//q:context"];
 
 #[test]
+#[allow(clippy::too_many_lines, reason = "one replay, in the recorder's order")]
 fn recorded_qt() -> Result<(), BoxError> {
     let data: Json = serde_json::from_str(include_str!("data/qt.json"))?;
     let dir = std::env::temp_dir().join(format!("symfony-translation-qt-{}", std::process::id()));

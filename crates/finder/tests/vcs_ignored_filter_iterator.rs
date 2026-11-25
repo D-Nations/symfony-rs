@@ -9,6 +9,10 @@
 //!
 //! Upstream: symfony/finder Tests/Iterator/VcsIgnoredFilterIteratorTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::unused_self,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 mod common;
 

@@ -37,7 +37,8 @@ impl Reader {
     }
 
     pub fn get_remaining_length(&self) -> i64 {
-        self.length as i64 - self.position as i64
+        let length = i64::try_from(self.length).unwrap_or(i64::MAX);
+        length - i64::try_from(self.position).unwrap_or(i64::MAX)
     }
 
     pub fn get_substring(&self, length: usize, offset: usize) -> &[u8] {

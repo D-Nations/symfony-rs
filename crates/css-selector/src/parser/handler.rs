@@ -133,9 +133,9 @@ impl HandlerInterface for StringHandler {
             )));
         };
         let length = found[0].len();
-        let start = reader.get_position() as i64 - 1;
+        let start = i64::try_from(reader.get_position()).unwrap_or(i64::MAX) - 1;
         // check unclosed strings
-        if length as i64 == reader.get_remaining_length() {
+        if i64::try_from(length).ok() == Some(reader.get_remaining_length()) {
             return Err(Exception::unclosed_string(start));
         }
         // check quotes pairs validity

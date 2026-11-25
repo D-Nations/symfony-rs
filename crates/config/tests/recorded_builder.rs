@@ -11,6 +11,10 @@
 //! except that PHP's ", called in <file> on line <n>" is not reproduced.
 //!
 //! Upstream: none
+#![allow(
+    clippy::unnecessary_wraps,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use php_value::{
     PhpArray, Value, base64,
@@ -64,6 +68,7 @@ fn wrapped(v: Value) -> Result<Value, Error> {
 }
 
 /// The recorder's `apply()`.
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 fn apply(steps: &Value) -> Result<ArrayNodeDefinition, Error> {
     let d = ArrayNodeDefinition::new("root");
     for step in list(steps) {
@@ -210,6 +215,7 @@ fn swapped_builder(type_name: &str) -> NodeBuilder {
 }
 
 /// Runs one recorded operation.
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 fn run(op: &str, args: &[Value]) -> Result<Value, Error> {
     match op {
         "types" => Ok(Value::Array(PhpArray::list(

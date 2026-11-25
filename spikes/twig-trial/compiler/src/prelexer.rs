@@ -53,6 +53,10 @@ impl PreLexer<'_> {
         }
     }
 
+    #[expect(
+        clippy::naive_bytecount,
+        reason = "short slices; no bytecount dependency"
+    )]
     fn consume_until(&mut self, end: &str) -> Vec<u8> {
         let rest = &self.input[self.pos..];
         let len = rest
@@ -109,6 +113,10 @@ impl PreLexer<'_> {
         }
     }
 
+    #[expect(
+        clippy::naive_bytecount,
+        reason = "short slices; no bytecount dependency"
+    )]
     fn run(&mut self) -> Result<Vec<u8>, Error> {
         let mut out = Vec::new();
         while self.pos < self.input.len() {
@@ -197,10 +205,9 @@ impl PreLexer<'_> {
             match quote {
                 Some(_) if b == b'\\' => self.pos += 1,
                 Some(q) if b == q => quote = None,
-                Some(_) => {}
                 None if b == b'\'' || b == b'"' => quote = Some(b),
                 None if self.check(close) => break,
-                None => {}
+                Some(_) | None => {}
             }
             if b == b'\n' {
                 self.line += 1;

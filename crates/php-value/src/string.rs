@@ -156,6 +156,10 @@ fn is_c_space(c: u8) -> bool {
     matches!(c, b' ' | b'\t' | b'\n' | 0x0b | 0x0c | b'\r')
 }
 
+#[expect(
+    clippy::many_single_char_names,
+    reason = "short names as in the PHP source"
+)]
 fn natural(a: &[u8], b: &[u8], fold: bool) -> Ordering {
     if a.is_empty() || b.is_empty() {
         return a.len().cmp(&b.len());
@@ -247,6 +251,10 @@ fn compare_right(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> Ordering {
     }
 }
 
+#[expect(
+    clippy::many_single_char_names,
+    reason = "short names as in the PHP source"
+)]
 fn compare_left(a: &[u8], i: &mut usize, b: &[u8], j: &mut usize) -> Ordering {
     loop {
         let da = a.get(*i).is_some_and(u8::is_ascii_digit);

@@ -255,6 +255,10 @@ impl Schema {
     /// Validates `raw` against the simple type `ty`. `Ok(Some(v))`: valid,
     /// with its normalized value; `Ok(None)`: invalid, errors pushed to
     /// `errors` (not collected when `None`, as for union members).
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one function per facet set, as libxml's"
+    )]
     pub(crate) fn check_value(
         &self,
         ty: usize,

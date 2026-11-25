@@ -46,6 +46,7 @@ pub const CLASS: &str = "Symfony\\Component\\Config\\Definition\\Builder\\ArrayN
 
 /// `ArrayNodeDefinition`'s properties.
 #[derive(Clone)]
+#[expect(clippy::struct_excessive_bools, reason = "upstream's flags")]
 pub(crate) struct ArrayState {
     pub(crate) perform_deep_merging: bool,
     pub(crate) ignore_extra_keys: bool,
@@ -190,6 +191,10 @@ fn get_node_builder(def: &Def) -> Builder {
 /// a bool is an int, a float in the int range an int (truncated, with an
 /// `E_DEPRECATED` for a fraction that is not reproduced), another float
 /// (out of range, INF, NAN) a string.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn default_children_argument(children: Value) -> Result<Value, Error> {
     Ok(match children {
         Value::Bool(b) => Value::Int(i64::from(b)),
@@ -324,6 +329,10 @@ impl<P: Clone> Definition<class::Array, P> {
     }
 
     /// `addDefaultsIfNotSet()` (concrete nodes only).
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn add_defaults_if_not_set(&self) -> Self {
         state(&self.def, |a| a.add_defaults = true);
         self.clone()
@@ -342,17 +351,29 @@ impl<P: Clone> Definition<class::Array, P> {
     }
 
     /// `requiresAtLeastOneElement()` (prototype nodes only).
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn requires_at_least_one_element(&self) -> Self {
         state(&self.def, |a| a.at_least_one = true);
         self.clone()
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn disallow_new_keys_in_subsequent_configs(&self) -> Self {
         state(&self.def, |a| a.allow_new_keys = false);
         self.clone()
     }
 
     /// `fixXmlConfig($singular, $plural)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn fix_xml_config(&self, singular: impl AsRef<[u8]>, plural: Option<&[u8]>) -> Self {
         self.def.write(|s| {
             s.normalization
@@ -363,6 +384,10 @@ impl<P: Clone> Definition<class::Array, P> {
     }
 
     /// `useAttributeAsKey($name, $removeKeyItem)` (prototype nodes only).
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn use_attribute_as_key(&self, name: impl AsRef<[u8]>, remove_key_item: bool) -> Self {
         let name = PhpString::from(name.as_ref());
         state(&self.def, |a| {
@@ -373,6 +398,10 @@ impl<P: Clone> Definition<class::Array, P> {
     }
 
     /// `canBeUnset($allow)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn can_be_unset(&self, allow: bool) -> Self {
         self.def.write(|s| {
             s.merge
@@ -430,12 +459,20 @@ impl<P: Clone> Definition<class::Array, P> {
         Ok(self.clone())
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn perform_no_deep_merging(&self) -> Self {
         state(&self.def, |a| a.perform_deep_merging = false);
         self.clone()
     }
 
     /// `ignoreExtraKeys($remove)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn ignore_extra_keys(&self, remove: bool) -> Self {
         state(&self.def, |a| {
             a.ignore_extra_keys = true;
@@ -445,12 +482,20 @@ impl<P: Clone> Definition<class::Array, P> {
     }
 
     /// `normalizeKeys($bool)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn normalize_keys(&self, normalize: bool) -> Self {
         state(&self.def, |a| a.normalize_keys = normalize);
         self.clone()
     }
 
     /// `append($node)` (`ParentNodeDefinitionInterface`).
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn append<D: class::Marker, Q: Clone>(&self, node: &Definition<D, Q>) -> Self {
         append(&self.def, &node.def);
         self.clone()
@@ -612,6 +657,7 @@ fn validate_prototype_node(def: &Def, path: &[u8]) -> Result<(), Error> {
 }
 
 /// `createNode()`.
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 pub(crate) fn create_node(def: &Def) -> Result<Node, Error> {
     let parent = def.parent_node(BASE_NODE)?;
     let (name, separator, array, default, default_value, allow_empty, required) = def.read(|s| {

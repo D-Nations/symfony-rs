@@ -253,12 +253,17 @@ impl Error {
     }
 
     /// The exception's `$code`.
+    #[must_use]
     pub fn with_code(mut self, code: i64) -> Self {
         self.code = code;
         self
     }
 
     /// `FileLocatorFileNotFoundException`'s `$paths`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn with_paths(mut self, paths: Vec<Vec<u8>>) -> Self {
         self.paths = paths;
         self

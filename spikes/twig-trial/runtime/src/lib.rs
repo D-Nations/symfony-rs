@@ -41,6 +41,7 @@ impl Error {
     }
 
     /// Adds the location, unless an inner call already set one.
+    #[must_use]
     pub fn at(mut self, template: &str, line: u32) -> Self {
         if self.template.is_none() {
             self.template = Some(template.to_owned());
@@ -171,6 +172,10 @@ pub fn set(context: &mut Context, name: &str, value: Value) {
 /// `$context = array_intersect_key($context, $_parent) + $_parent`, so a
 /// loop variable never leaks and an outer variable of the same name
 /// comes back.
+#[expect(
+    clippy::needless_pass_by_value,
+    reason = "the saved context ends here, as in Twig"
+)]
 pub fn restore_after_loop(context: &mut Context, parent: Context, loop_variables: &[&str]) {
     let mut restored = PhpArray::new();
     for (key, value) in context.iter() {
@@ -209,6 +214,10 @@ pub fn to_bool(value: &Value) -> bool {
     }
 }
 
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn number(value: &Value) -> Option<f64> {
     match value {
         Value::Int(i) => Some(*i as f64),
@@ -220,6 +229,7 @@ fn number(value: &Value) -> Option<f64> {
 
 /// PHP 8's `==` for scalars and null; arrays and objects compare by
 /// identity in the trial.
+#[expect(clippy::many_single_char_names, reason = "names as in the PHP source")]
 pub fn loose_eq(a: &Value, b: &Value) -> bool {
     use Value::{Bool, Float, Int, Null, String};
     match (a, b) {
@@ -256,6 +266,10 @@ pub fn compare(a: &Value, b: &Value) -> Ordering {
     }
 }
 
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn arithmetic(
     a: &Value,
     b: &Value,
@@ -310,9 +324,8 @@ pub fn null_coalesce(a: Value, b: impl FnOnce() -> Value) -> Value {
 /// PHP's string conversion (`(string) $value`, as `echo` does it).
 pub fn to_string(value: &Value) -> Result<PhpString, Error> {
     Ok(match value {
-        Value::Null => PhpString::from(""),
+        Value::Null | Value::Bool(false) => PhpString::from(""),
         Value::Bool(true) => PhpString::from("1"),
-        Value::Bool(false) => PhpString::from(""),
         Value::Int(i) => PhpString::from(i.to_string().as_str()),
         Value::Float(f) => PhpString::from(float_to_string(*f).as_str()),
         Value::String(s) => s.clone(),

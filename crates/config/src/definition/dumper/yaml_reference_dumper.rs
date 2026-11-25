@@ -110,6 +110,7 @@ impl YamlReferenceDumper {
             })
     }
 
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn write_node(
         &mut self,
         node: &Node,
@@ -395,6 +396,10 @@ impl YamlReferenceDumper {
         Ok(())
     }
 
+    #[expect(
+        clippy::self_only_used_in_recursion,
+        reason = "a method, as upstream's"
+    )]
     fn get_prototype_children(&self, node: &Node) -> Result<Vec<(Key, Node)>, Error> {
         let prototype = node.get_prototype()?;
         let key = node.get_key_attribute()?;

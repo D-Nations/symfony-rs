@@ -160,6 +160,10 @@ impl Value {
     }
 
     /// `===`. Floats compare as numbers (`NAN !== NAN`, `0.0 === -0.0`).
+    #[expect(
+        clippy::float_cmp,
+        reason = "PHP's int and float conversions and comparisons"
+    )]
     pub fn identical(&self, other: &Self) -> bool {
         match (self, other) {
             (Self::Null, Self::Null) => true,

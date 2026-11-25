@@ -173,17 +173,17 @@ impl<I> VcsIgnoredFilterIterator<I> {
             let Some((s, e)) = groups.get(1).copied().flatten() else {
                 return Ok(None);
             };
-            git_dir = self.resolve_git_path(trim(&content[s..e]), &self.base_dir)?;
+            git_dir = Self::resolve_git_path(trim(&content[s..e]), &self.base_dir)?;
             // the git directory of a worktree points to the common directory, where the exclude file is
             if let Ok(common_dir) = fs::read(&concat(&[&git_dir, b"/commondir"])) {
-                git_dir = self.resolve_git_path(trim(&common_dir), &git_dir)?;
+                git_dir = Self::resolve_git_path(trim(&common_dir), &git_dir)?;
             }
         }
         let exclude = concat(&[&git_dir, b"/info/exclude"]);
         Ok(fs::is_file(&exclude).then_some(exclude))
     }
 
-    fn resolve_git_path(&self, path: &[u8], from: &[u8]) -> Result<Vec<u8>, Error> {
+    fn resolve_git_path(path: &[u8], from: &[u8]) -> Result<Vec<u8>, Error> {
         Ok(if pattern(&ABSOLUTE)?.is_match(path).map_err(internal)? {
             path.to_vec()
         } else {

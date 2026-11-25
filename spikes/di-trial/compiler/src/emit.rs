@@ -4,10 +4,10 @@
 //! hand-written `container.rs`.
 //!
 //! Upstream: none (the order of properties, calls and configurator is
-//! PhpDumper's: addServiceProperties, addServiceMethodCalls,
+//! `PhpDumper`'s: addServiceProperties, addServiceMethodCalls,
 //! addServiceConfigurator)
 
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use php_value::{Key, Value};
 use proc_macro2::{Ident, Literal, Span, TokenStream};
@@ -29,7 +29,7 @@ fn snake(s: &str) -> String {
         if c.is_ascii_alphanumeric() {
             if c.is_ascii_uppercase() && i > 0 {
                 let prev = chars[i - 1];
-                let next_lower = chars.get(i + 1).is_some_and(|n| n.is_ascii_lowercase());
+                let next_lower = chars.get(i + 1).is_some_and(char::is_ascii_lowercase);
                 if prev.is_ascii_lowercase()
                     || prev.is_ascii_digit()
                     || (prev.is_ascii_uppercase() && next_lower)
@@ -65,13 +65,13 @@ fn lit(s: &str) -> Literal {
 
 #[derive(Default)]
 struct Module {
-    types: BTreeMap<String, ()>,
+    types: BTreeSet<String>,
     children: BTreeMap<String, Module>,
 }
 
 impl Module {
     fn tokens(&self) -> TokenStream {
-        let types = self.types.keys().map(|t| {
+        let types = self.types.iter().map(|t| {
             let t = ident(t);
             quote! { di_trial_runtime::placeholder!(#t); }
         });
@@ -112,7 +112,7 @@ fn class_names(graph: &Graph) -> (Module, HashMap<String, TokenStream>) {
         }
         // A class whose snake name collides with a module of the same
         // namespace is impossible: classes keep their case.
-        m.types.insert((*last).to_owned(), ());
+        m.types.insert((*last).to_owned());
         let t = ident(last);
         paths.insert(d.class.clone(), quote! { #path::#t });
     }
@@ -139,7 +139,7 @@ fn accessor_names(graph: &Graph) -> Vec<Ident> {
         .collect()
 }
 
-fn key_tokens(key: &Option<Key>) -> TokenStream {
+fn key_tokens(key: Option<&Key>) -> TokenStream {
     match key {
         None => quote! { None },
         Some(Key::Int(i)) => quote! { Some(Key::Int(#i)) },
@@ -272,18 +272,18 @@ impl Emitter<'_> {
         )
     }
 
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn arg(&self, a: &ArgDef, ctx: Scope) -> Result<Option<TokenStream>, Error> {
         Ok(Some(match a {
             ArgDef::Value(v) => {
                 let v = value_tokens(v)?;
                 quote! { Arg::Value(#v) }
             }
-            ArgDef::Env(parts) => match parts.as_slice() {
-                [StrPart::Env(e)] => {
+            ArgDef::Env(parts) => {
+                if let [StrPart::Env(e)] = parts.as_slice() {
                     let e = lit(e);
                     quote! { Arg::Env(#e) }
-                }
-                _ => {
+                } else {
                     let parts = parts.iter().map(|p| match p {
                         StrPart::Text(t) => {
                             let b = Literal::byte_string(t.as_bytes());
@@ -296,14 +296,14 @@ impl Emitter<'_> {
                     });
                     quote! { Arg::Concat(vec![#(#parts),*]) }
                 }
-            },
+            }
             ArgDef::Collection(items) => {
                 let mut out = Vec::new();
                 for (k, a) in items {
                     // A missing on-invalid="ignore" reference drops the
                     // element (ResolveInvalidReferencesPass).
                     if let Some(a) = self.arg(a, ctx)? {
-                        let k = key_tokens(k);
+                        let k = key_tokens(k.as_ref());
                         out.push(quote! { (#k, #a) });
                     }
                 }
@@ -312,7 +312,7 @@ impl Emitter<'_> {
             ArgDef::Iterator(items) => {
                 let mut out = Vec::new();
                 for (k, a) in items {
-                    let k = key_tokens(k);
+                    let k = key_tokens(k.as_ref());
                     match a {
                         ArgDef::Ref {
                             id,
@@ -427,7 +427,7 @@ impl Emitter<'_> {
         &self,
         i: usize,
         ctx: Scope,
-        check: Option<TokenStream>,
+        check: Option<&TokenStream>,
     ) -> Result<TokenStream, Error> {
         let d = &self.graph.services[i];
         let args = self.args(&d.arguments, ctx)?;
@@ -539,7 +539,7 @@ impl Emitter<'_> {
         let cell = self.cell(i);
         let ib = self.if_built(i);
         let check = quote! { if let Some(s) = self.#cell.get() { return s; } };
-        let mut build = self.construct(i, ctx, Some(check))?;
+        let mut build = self.construct(i, ctx, Some(&check))?;
         // A wither returns a new object, so the service is only complete
         // after its calls: PhpDumper stores it after them, and so does
         // this (a cycle through such a service is not possible).
@@ -578,6 +578,7 @@ impl Emitter<'_> {
     }
 }
 
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 pub fn emit(graph: &Graph, an: &Analysis) -> Result<String, Error> {
     let (classes, class) = class_names(graph);
     let names = Names {

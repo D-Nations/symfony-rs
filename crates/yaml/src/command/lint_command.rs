@@ -187,7 +187,7 @@ impl LintCommand {
             )])?;
         }
 
-        Ok(errored_files.min(1) as i64)
+        Ok(i64::from(errored_files > 0))
     }
 
     /// `getFiles($fileOrDirectory)`.

@@ -243,6 +243,10 @@ impl Reader<'_> {
         Some(array)
     }
 
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one match over the value kinds, as PHP's serializer"
+    )]
     fn value(&mut self) -> Option<Value> {
         let slot = self.slots.len();
         self.slots.push(Value::Null);

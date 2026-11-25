@@ -122,6 +122,10 @@ fn keyed(remove: bool) -> Result<Node, Error> {
 }
 
 /// Runs one recorded operation.
+#[expect(
+    clippy::cast_possible_wrap,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn run(op: &str, args: &[Value], enums: &Registry) -> Result<Value, Error> {
     match op {
         "normalize" => scalar_node(&text(&args[0]))?.normalize(args[1].clone()),

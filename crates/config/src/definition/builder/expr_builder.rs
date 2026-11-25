@@ -164,11 +164,19 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `always()`: the expression is always used.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn always(&self) -> Self {
         self.set_if(Arc::new(|_| Ok(true)), ExprType::Any)
     }
 
     /// `always($then)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn always_then<F>(&self, then: F) -> Self
     where
         F: Fn(Value) -> Result<Value, Error> + Send + Sync + 'static,
@@ -178,6 +186,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `ifTrue()`: the value is `true`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_true(&self) -> Self {
         self.set_if(
             Arc::new(|v| Ok(matches!(v, Value::Bool(true)))),
@@ -186,6 +198,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `ifTrue($closure)`: the closure's result is truthy.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_true_with<F, R>(&self, closure: F) -> Self
     where
         F: Fn(&Value) -> R + Send + Sync + 'static,
@@ -195,6 +211,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `ifFalse()`: the value is `false`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_false(&self) -> Self {
         self.set_if(
             Arc::new(|v| Ok(matches!(v, Value::Bool(false)))),
@@ -203,6 +223,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `ifFalse($closure)`: the closure's result is falsy.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_false_with<F, R>(&self, closure: F) -> Self
     where
         F: Fn(&Value) -> R + Send + Sync + 'static,
@@ -212,6 +236,10 @@ impl<T: Clone> ExprBuilder<T> {
         self.set_if(Arc::new(move |v| Ok(!closure(v)?)), ExprType::Any)
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_string(&self) -> Self {
         self.set_if(
             Arc::new(|v| Ok(matches!(v, Value::String(_)))),
@@ -219,15 +247,27 @@ impl<T: Clone> ExprBuilder<T> {
         )
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_null(&self) -> Self {
         self.set_if(Arc::new(|v| Ok(v.is_null())), ExprType::Null)
     }
 
     /// `ifEmpty()`: `!$v`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_empty(&self) -> Self {
         self.set_if(Arc::new(|v| Ok(!php::truthy(v))), ExprType::Any)
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_array(&self) -> Self {
         self.set_if(
             Arc::new(|v| Ok(matches!(v, Value::Array(_)))),
@@ -236,6 +276,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `ifInArray($array)`: `in_array($v, $array, true)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_in_array(&self, values: Vec<Value>) -> Self {
         self.set_if(
             Arc::new(move |v| Ok(values.iter().any(|x| x.identical(v)))),
@@ -244,6 +288,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `ifNotInArray($array)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn if_not_in_array(&self, values: Vec<Value>) -> Self {
         self.set_if(
             Arc::new(move |v| Ok(!values.iter().any(|x| x.identical(v)))),
@@ -252,6 +300,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `castToArray()`: a value that is not an array becomes `[$v]`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn cast_to_array(&self) -> Self {
         self.set_if(
             Arc::new(|v| Ok(!matches!(v, Value::Array(_)))),
@@ -261,6 +313,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `then($closure)`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn then<F>(&self, closure: F) -> Self
     where
         F: Fn(Value) -> Result<Value, Error> + Send + Sync + 'static,
@@ -268,12 +324,20 @@ impl<T: Clone> ExprBuilder<T> {
         self.set_then(Arc::new(closure))
     }
 
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn then_empty_array(&self) -> Self {
         self.set_then(Arc::new(|_| Ok(Value::Array(PhpArray::new()))))
     }
 
     /// `thenInvalid($message)`: an `InvalidArgumentException` whose message
     /// is `sprintf($message, json_encode($v))`.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn then_invalid(&self, message: impl AsRef<[u8]>) -> Self {
         let message = message.as_ref().to_vec();
         self.set_then(Arc::new(move |v| {
@@ -287,6 +351,10 @@ impl<T: Clone> ExprBuilder<T> {
     }
 
     /// `thenUnset()`: an `UnsetKeyException` removes the key.
+    #[expect(
+        clippy::return_self_not_must_use,
+        reason = "a PHP fluent call: it changes the shared builder and returns $this"
+    )]
     pub fn then_unset(&self) -> Self {
         self.set_then(Arc::new(|_| {
             Err(Error::new(Class::UnsetKey, "Unsetting key."))

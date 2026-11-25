@@ -11,6 +11,10 @@ use crate::xpath::XPathExpr;
 #[derive(Debug, Clone, Copy, Default)]
 pub struct CombinationExtension;
 
+#[expect(
+    clippy::needless_pass_by_value,
+    reason = "one signature for every combination translator, as upstream"
+)]
 impl CombinationExtension {
     pub fn translate_descendant(mut xpath: XPathExpr, combined_xpath: XPathExpr) -> XPathExpr {
         xpath.join(b"/descendant-or-self::*/", &combined_xpath, None, false);

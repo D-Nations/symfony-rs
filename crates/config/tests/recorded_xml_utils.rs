@@ -204,6 +204,7 @@ fn run_validation(
 }
 
 #[test]
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 fn recorded_xml_utils() -> TestResult {
     let data: Json = serde_json::from_slice(&std::fs::read(
         Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/data/xml_utils.json"),

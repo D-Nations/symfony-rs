@@ -179,6 +179,11 @@ impl V<'_, '_> {
 
     /// Validates the element `node` against `ty`. `decl` is its element
     /// declaration (for identity constraints), if any.
+    #[expect(
+        clippy::many_single_char_names,
+        clippy::too_many_lines,
+        reason = "one function per content model, as libxml's"
+    )]
     fn element(&mut self, node: NodeId, ty: TypeRef, decl: Option<usize>) {
         if self.refusal.is_some() {
             return;

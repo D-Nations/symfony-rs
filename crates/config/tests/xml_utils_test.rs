@@ -10,6 +10,10 @@
 //!
 //! Upstream: symfony/config Tests/Util/XmlUtilsTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 mod common;
 
@@ -190,6 +194,7 @@ fn s(text: &str) -> Value {
     Value::string(text)
 }
 
+#[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
 fn getDataForConvertDomToArray() -> Vec<(Value, &'static str, bool, bool)> {
     vec![
         (Value::Null, "", false, true),

@@ -26,6 +26,10 @@ pub enum Number {
 }
 
 impl Number {
+    #[expect(
+        clippy::cast_precision_loss,
+        reason = "PHP's int and float conversions and comparisons"
+    )]
     pub fn as_f64(self) -> f64 {
         match self {
             Self::Int(i) => i as f64,
@@ -148,6 +152,10 @@ pub fn leading_numeric_value(s: &[u8]) -> Option<Number> {
 /// `$string <=> $int` under PHP 8's rules: a numeric string compares as
 /// a number; any other string compares bytewise with the int's decimal
 /// form (`"8x" > 32`, since `"8x"` sorts after `"32"`).
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 pub fn compare_string_with_int(s: &[u8], int: i64) -> std::cmp::Ordering {
     match numeric_value(s) {
         Some(Number::Int(value)) => value.cmp(&int),
@@ -163,6 +171,10 @@ pub fn compare_string_with_int(s: &[u8], int: i64) -> std::cmp::Ordering {
 /// still truncates); `None` for any other string, a leading-numeric one
 /// included, where PHP throws `TypeError: ... must be of type int, string
 /// given`, and for a float outside the int range.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 pub fn int_argument(s: &[u8]) -> Option<i64> {
     const LIMIT: f64 = 9_223_372_036_854_775_808.0; // 2^63
     match numeric_value(s)? {
@@ -175,6 +187,10 @@ pub fn int_argument(s: &[u8]) -> Option<i64> {
 }
 
 /// `(int) $string`.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 pub fn string_to_int(s: &[u8]) -> i64 {
     let Some((start, end, integer)) = numeric_prefix(s) else {
         return 0;
@@ -231,6 +247,10 @@ fn decimal_digits(value: f64, significant: Option<usize>) -> (String, i32) {
 /// The layout shared by PHP's float formatting: plain unless the exponent
 /// is below -4 or at least `precision`, else `d.dddE+X` with at least one
 /// fraction digit.
+#[expect(
+    clippy::cast_sign_loss,
+    reason = "each branch makes the exponent non-negative first"
+)]
 fn layout(value: f64, digits: &str, exponent: i32, precision: i32, e: char) -> String {
     let mut out = String::new();
     if value.is_sign_negative() {
@@ -317,6 +337,10 @@ pub fn json_float(value: f64) -> Option<String> {
     Some(layout(value, &digits, exponent, 17, 'e'))
 }
 
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 fn radix(s: &[u8], base: u32) -> Number {
     let mut value = Number::Int(0);
     for &b in s {
@@ -353,6 +377,10 @@ pub fn serialize_float(value: f64) -> String {
 
 /// The int key of a float array key: truncated toward zero; NAN and
 /// infinities give 0.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 pub fn float_key(value: f64) -> i64 {
     if value.is_finite() { value as i64 } else { 0 }
 }

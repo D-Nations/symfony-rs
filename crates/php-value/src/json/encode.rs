@@ -248,15 +248,12 @@ impl Encoder {
                 _ => {}
             }
         }
-        match escape(bytes, self.flags) {
-            Some(text) => {
-                self.out.push_str(&text);
-                Ok(())
-            }
-            None => {
-                self.out.push_str(if key { "\"\"" } else { "null" });
-                self.fail(JsonError::Utf8, !key)
-            }
+        if let Some(text) = escape(bytes, self.flags) {
+            self.out.push_str(&text);
+            Ok(())
+        } else {
+            self.out.push_str(if key { "\"\"" } else { "null" });
+            self.fail(JsonError::Utf8, !key)
         }
     }
 
@@ -276,12 +273,11 @@ impl Encoder {
             }
             Value::Object(object) => {
                 if let Some(case) = object.downcast_ref::<EnumCase>() {
-                    return match case.value() {
-                        Some(backing) => self.value(backing),
-                        None => {
-                            self.out.push('0');
-                            self.fail(JsonError::NonBackedEnum, true)
-                        }
+                    return if let Some(backing) = case.value() {
+                        self.value(backing)
+                    } else {
+                        self.out.push('0');
+                        self.fail(JsonError::NonBackedEnum, true)
                     };
                 }
                 if let Some(serialized) = object.json_serialize() {

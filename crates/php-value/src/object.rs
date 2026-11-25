@@ -273,6 +273,10 @@ impl EnumFromError {
 /// (truncated) as the int's decimal digits, any other float as PHP prints
 /// it (`"1.0E+20"`, `"NAN"`), a `\Stringable` as its string. `None` when
 /// the cases are not a backed enum's.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 pub fn backed_enum_from(
     class: &str,
     cases: &[Object],

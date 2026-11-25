@@ -176,9 +176,9 @@ fn schema_doc(
             continue;
         }
         match (a.local_name.as_str(), a.value.as_str()) {
-            ("targetNamespace" | "version" | "id", _) => {}
-            ("elementFormDefault", "qualified" | "unqualified") => {}
-            ("attributeFormDefault", "unqualified") => {}
+            ("targetNamespace" | "version" | "id", _)
+            | ("elementFormDefault", "qualified" | "unqualified")
+            | ("attributeFormDefault", "unqualified") => {}
             (other, _) => return Err(refused(line, format!("schema attribute '{other}'"))),
         }
     }
@@ -332,6 +332,10 @@ impl B<'_> {
         }
     }
 
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one function per schema component, as libxml's"
+    )]
     fn simple_type(&mut self, src: Src, name: Option<String>) -> R<usize> {
         self.allow(src, &["name", "final"])?;
         if attr(self.doc(src.0), src.1, "final").is_some() {
@@ -986,6 +990,10 @@ impl B<'_> {
 }
 
 /// Reads `source` as a schema.
+#[expect(
+    clippy::too_many_lines,
+    reason = "one loop over the top-level schema elements"
+)]
 pub(crate) fn parse(
     source: &[u8],
     resolve: &mut dyn FnMut(&str) -> Option<Vec<u8>>,
@@ -1018,8 +1026,8 @@ pub(crate) fn parse(
             }
             let comp_name = attr(&sd.doc, c, "name").map(|n| QName::new(sd.tns.as_deref(), n));
             match name.as_str() {
-                "annotation" => continue,
-                "import" if !past_imports => continue,
+                "annotation" => {}
+                "import" if !past_imports => {}
                 "include" | "redefine" => return Err(b.no(src, format!("<{name}>"))),
                 "notation" => return Err(b.no(src, "<notation>")),
                 "element" | "attribute" | "simpleType" | "complexType" | "group"
@@ -1154,6 +1162,7 @@ impl Schema {
     }
 
     /// `xs:anyType`.
+    #[expect(clippy::unused_self, reason = "a method, as the other schema lookups")]
     pub(crate) fn any_type(&self) -> usize {
         0
     }

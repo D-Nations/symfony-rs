@@ -21,6 +21,10 @@ fn compile(pattern: &str) -> Regex {
     }
 }
 
+#[expect(
+    clippy::unnecessary_wraps,
+    reason = "the callers take an Option, as for other PHP groups"
+)]
 fn group<'a>(caps: &Captures<'a>, i: usize) -> Option<&'a [u8]> {
     // PHP lists an unmatched group as "".
     Some(caps.get(i).map_or(&b""[..], |m| m.as_bytes()))

@@ -124,6 +124,11 @@ fn factory_edges(
     Ok(())
 }
 
+#[expect(
+    clippy::items_after_statements,
+    clippy::too_many_lines,
+    reason = "one analysis pass, with its depth-first searches nested"
+)]
 pub fn analyse(graph: &Graph, config: &Config) -> Result<Analysis, Error> {
     let mut an = Analysis {
         index: HashMap::new(),

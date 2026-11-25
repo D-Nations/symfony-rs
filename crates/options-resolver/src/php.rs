@@ -239,23 +239,27 @@ pub fn replace(subject: &[u8], from: &[u8], to: &[u8]) -> Vec<u8> {
 /// PHP 8's comparison of two array keys as `ksort()` (`SORT_REGULAR`)
 /// orders them: ints numerically; numeric strings with ints or each
 /// other as numbers; otherwise as byte strings.
-pub fn compare_keys(a: &Key, b: &Key) -> Ordering {
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP compares an int with a numeric string as floats"
+)]
+pub fn compare_keys(left: &Key, right: &Key) -> Ordering {
     fn numeric(s: &PhpString) -> Option<f64> {
         is_numeric(s).then(|| string_to_float(s))
     }
     let by_number = |x: f64, y: f64| x.partial_cmp(&y).unwrap_or(Ordering::Equal);
-    match (a, b) {
+    match (left, right) {
         (Key::Int(x), Key::Int(y)) => x.cmp(y),
-        (Key::Int(x), Key::Str(s)) => match numeric(s) {
+        (Key::Int(x), Key::Str(text)) => match numeric(text) {
             Some(y) => by_number(*x as f64, y),
-            None => x.to_string().as_bytes().cmp(s.as_ref()),
+            None => x.to_string().as_bytes().cmp(text.as_ref()),
         },
-        (Key::Str(s), Key::Int(y)) => match numeric(s) {
+        (Key::Str(text), Key::Int(y)) => match numeric(text) {
             Some(x) => by_number(x, *y as f64),
-            None => s.as_ref().cmp(y.to_string().as_bytes()),
+            None => text.as_ref().cmp(y.to_string().as_bytes()),
         },
         (Key::Str(x), Key::Str(y)) => match (numeric(x), numeric(y)) {
-            (Some(p), Some(q)) => by_number(p, q),
+            (Some(first), Some(second)) => by_number(first, second),
             _ => x.as_ref().cmp(y.as_ref()),
         },
     }

@@ -28,6 +28,7 @@ pub(crate) fn lock(globals: &SharedGlobals) -> MutexGuard<'_, Globals> {
 }
 
 /// A Dotenv error as the console reports it: its class and message.
+#[expect(clippy::needless_pass_by_value, reason = "a map_err() callback")]
 pub(crate) fn console_error(error: crate::exception::Error) -> ConsoleError {
     ConsoleError::Other {
         class: error.class().to_owned(),

@@ -8,3 +8,6 @@ description = "Trial Twig runtime for code emitted by twig-trial-compiler; not t
 
 [dependencies]
 php-value = { path = "../../../crates/php-value" }
+
+[lints]
+workspace = true

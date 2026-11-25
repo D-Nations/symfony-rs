@@ -68,6 +68,10 @@ pub fn unescape_double_quoted_string(value: &str) -> Result<Vec<u8>, ParseExcept
 }
 
 /// `unescapeCharacter()`: `escape` is a backslash and what followed it.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn unescape_character(escape: &[u8]) -> Result<Vec<u8>, ParseException> {
     let code = |digits: &[u8]| match hexdec(digits) {
         Number::Int(i) => i,
@@ -107,6 +111,10 @@ fn unescape_character(escape: &[u8]) -> Result<Vec<u8>, ParseException> {
 }
 
 /// `utf8chr()`: the UTF-8-style bytes of a code point, modulo 0x200000.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn utf8chr(c: i64) -> Vec<u8> {
     let c = c.rem_euclid(0x0020_0000) as u32;
     let byte = |v: u32| (v & 0xff) as u8;

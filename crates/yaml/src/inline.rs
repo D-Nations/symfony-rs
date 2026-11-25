@@ -188,6 +188,7 @@ fn isset(output: &PhpArray, key: &Value) -> bool {
 
 /// The inline parser and dumper, with the state PHP keeps in statics.
 #[derive(Debug, Clone)]
+#[expect(clippy::struct_excessive_bools, reason = "upstream's flags")]
 pub struct Inline {
     pub parsed_line_number: i64,
     pub parsed_filename: Option<String>,
@@ -484,6 +485,7 @@ impl Inline {
         result
     }
 
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn parse_sequence_items(
         &mut self,
         state: &mut ParserState,
@@ -513,7 +515,7 @@ impl Inline {
             }
 
             let mut tag = self.parse_tag(sequence, i, flags)?;
-            let anchor_ref = self.parse_anchor(sequence, i);
+            let anchor_ref = Self::parse_anchor(sequence, i);
             if anchor_ref.is_some() && tag.is_none() {
                 tag = self.parse_tag(sequence, i, flags)?;
             }
@@ -659,6 +661,7 @@ impl Inline {
         )
     }
 
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn parse_mapping_items(
         &mut self,
         state: &mut ParserState,
@@ -790,7 +793,7 @@ impl Inline {
                 }
 
                 let mut tag = self.parse_tag(mapping, i, flags)?;
-                let anchor_ref = self.parse_anchor(mapping, i);
+                let anchor_ref = Self::parse_anchor(mapping, i);
                 if anchor_ref.is_some() && tag.is_none() {
                     tag = self.parse_tag(mapping, i, flags)?;
                 }
@@ -934,6 +937,12 @@ impl Inline {
     }
 
     /// `evaluateScalar()`: evaluates scalars and replaces magic values.
+    #[expect(
+        clippy::cast_precision_loss,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
+    #[expect(clippy::similar_names, reason = "names as in the PHP source")]
     fn evaluate_scalar(
         &mut self,
         state: &mut ParserState,
@@ -1070,6 +1079,7 @@ impl Inline {
     }
 
     /// The `'!' === $scalar[0]` branch of `evaluateScalar()`.
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn evaluate_tagged_scalar(
         &mut self,
         scalar: &[u8],
@@ -1243,7 +1253,7 @@ impl Inline {
     }
 
     /// `parseAnchor()`.
-    fn parse_anchor(&self, value: &[u8], i: &mut usize) -> Option<Key> {
+    fn parse_anchor(value: &[u8], i: &mut usize) -> Option<Key> {
         if value.get(*i) != Some(&b'&') {
             return None;
         }
@@ -1534,6 +1544,10 @@ fn number(value: Number) -> Value {
 }
 
 /// `-$value` for an `octdec()` result.
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn negate(value: Value) -> Value {
     match value {
         Value::Int(i) => i
@@ -1590,6 +1604,10 @@ fn dump_null(flags: Flags, root_level: bool) -> PhpString {
 }
 
 /// The float branch of `dump()`, under the C locale.
+#[expect(
+    clippy::float_cmp,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 fn dump_float(value: f64) -> String {
     let repr = float_to_string(value);
     if value.is_infinite() {

@@ -233,13 +233,12 @@ impl Document {
     pub fn node_name(&self, id: NodeId) -> &str {
         match &self.nodes[id.0].kind {
             Kind::Document => "#document",
-            Kind::DocumentType { name, .. } => name,
+            Kind::DocumentType { name, .. } | Kind::EntityRef(name) => name,
             Kind::Element(e) => &e.name,
             Kind::Text(_) => "#text",
             Kind::CData(_) => "#cdata-section",
             Kind::Comment(_) => "#comment",
             Kind::Pi { target, .. } => target,
-            Kind::EntityRef(name) => name,
         }
     }
 

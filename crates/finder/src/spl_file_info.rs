@@ -29,7 +29,7 @@ impl fmt::Debug for SplFileInfo {
                 "relative_pathname",
                 &String::from_utf8_lossy(&self.relative_pathname),
             )
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 

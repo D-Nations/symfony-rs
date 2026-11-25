@@ -97,6 +97,7 @@ impl From<Vec<&str>> for Appended {
 }
 
 #[derive(Clone)]
+#[expect(clippy::struct_excessive_bools, reason = "upstream's Finder flags")]
 pub struct Finder {
     mode: Option<Mode>,
     names: Vec<Vec<u8>>,
@@ -129,6 +130,11 @@ impl Default for Finder {
 
 /// `$target + $n` on a comparator's numeric target, as an int (a float
 /// is truncated when PHP passes it to an `int` parameter).
+#[expect(
+    clippy::cast_precision_loss,
+    clippy::cast_possible_truncation,
+    reason = "PHP's float addition and (int) truncation"
+)]
 fn target_plus(target: &[u8], n: i64) -> i64 {
     let integer_form = !target.iter().any(|&c| matches!(c, b'.' | b'e' | b'E'));
     if integer_form {
@@ -509,9 +515,9 @@ impl Finder {
         };
         let iterator = RecursiveDirectoryIterator::new(dir, flags, self.ignore_unreadable_dirs)?;
         let mut iterator: FinderIterator = if exclude.is_empty() {
-            self.depth_filtered(iterator, min_depth, max_depth)?
+            Self::depth_filtered(iterator, min_depth, max_depth)?
         } else {
-            self.depth_filtered(
+            Self::depth_filtered(
                 ExcludeDirectoryFilterIterator::new(iterator, exclude)?,
                 min_depth,
                 max_depth,
@@ -553,7 +559,7 @@ impl Finder {
         Ok(iterator)
     }
 
-    fn depth_filtered<R>(&self, iterator: R, min: i64, max: i64) -> Result<FinderIterator, Error>
+    fn depth_filtered<R>(iterator: R, min: i64, max: i64) -> Result<FinderIterator, Error>
     where
         R: RecursiveFileIterator + Send + 'static,
     {

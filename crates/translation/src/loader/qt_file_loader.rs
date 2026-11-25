@@ -118,10 +118,14 @@ impl LoaderInterface for QtFileLoader {
                     "Call to a member function getElementsByTagName() on null",
                 ));
             };
-            let ts = dom
-                .parent(sibling)
-                .and_then(|context| dom.parent(context))
-                .expect("a node the path found has a grandparent");
+            let Some(ts) = dom.parent(sibling).and_then(|context| dom.parent(context)) else {
+                // A node that the path found always has a grandparent;
+                // without one, PHP calls the method on `null`.
+                return Err(Error::new(
+                    Class::PhpError,
+                    "Call to a member function getElementsByTagName() on null",
+                ));
+            };
             for message in dom.get_elements_by_tag_name(ts, "message") {
                 let first = |name: &str| {
                     dom.get_elements_by_tag_name(message, name)

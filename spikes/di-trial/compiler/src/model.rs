@@ -75,6 +75,7 @@ pub struct CallDef {
 }
 
 #[derive(Clone, Debug)]
+#[expect(clippy::struct_excessive_bools, reason = "upstream's flags")]
 pub struct Definition {
     /// The service id; for an inline definition, a generated
     /// `.inline.<n>` name (never visible to PHP).
@@ -195,7 +196,7 @@ const SERVICE_ATTRIBUTES: &[&str] = &[
     "constructor",
 ];
 
-/// A string value as PhpDumper's `export()` reads it, with
+/// A string value as `PhpDumper`'s `export()` reads it, with
 /// `ParameterBag::resolveString()`'s pattern `/%%|%([^%\s]+)%/`: `%%` is
 /// a literal `%`, `%env(...)%` is an env placeholder, `%name%` is a
 /// parameter, and any other `%` is literal text (`"%d days"`).
@@ -243,7 +244,7 @@ fn split(s: &str, parameters: &HashMap<String, Value>, depth: u32) -> Result<Vec
                 )? {
                     match p {
                         StrPart::Text(t) => text.push_str(&t),
-                        env => {
+                        env @ StrPart::Env(_) => {
                             if !text.is_empty() {
                                 parts.push(StrPart::Text(std::mem::take(&mut text)));
                             }
@@ -549,7 +550,7 @@ impl Reader<'_> {
             if !has_factory {
                 return Err(refuse(doc, s, format!("service \"{id}\" has no class")));
             }
-            class = "mixed".to_owned();
+            "mixed".clone_into(&mut class);
         }
         let mut def = Definition {
             id,

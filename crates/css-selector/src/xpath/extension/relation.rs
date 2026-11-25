@@ -11,6 +11,10 @@ use crate::xpath::XPathExpr;
 #[derive(Debug, Clone, Copy, Default)]
 pub struct RelationExtension;
 
+#[expect(
+    clippy::needless_pass_by_value,
+    reason = "one signature for every relation translator, as upstream"
+)]
 impl RelationExtension {
     pub fn translate_relation_descendant(
         mut xpath: XPathExpr,

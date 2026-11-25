@@ -36,6 +36,10 @@ pub fn encode(bytes: &[u8]) -> String {
 }
 
 /// `base64_decode($text)`: never false.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "a base64 digit is below 64, and PHP keeps the low byte"
+)]
 pub fn decode(text: &[u8]) -> Vec<u8> {
     let mut out = Vec::with_capacity(text.len() * 3 / 4);
     let (mut buffer, mut bits) = (0u32, 0);
@@ -54,6 +58,10 @@ pub fn decode(text: &[u8]) -> Vec<u8> {
 }
 
 /// `base64_decode($text, true)`; `None` where PHP returns `false`.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "a base64 digit is below 64, and PHP keeps the low byte"
+)]
 pub fn decode_strict(text: &[u8]) -> Option<Vec<u8>> {
     let data_len = text.iter().rposition(|&c| c != b'=').map_or(0, |p| p + 1);
     let padding = text.len() - data_len;
@@ -101,6 +109,7 @@ mod lenient_tests {
     /// Recorded from PHP 8.4.27 (`base64_decode($s)`).
     #[test]
     fn non_strict_matches_php() {
+        use std::fmt::Write as _;
         for (text, hex) in [
             ("Zm9vOmJhcg==", "666f6f3a626172"),
             ("Zm9vOmJhcg", "666f6f3a626172"),
@@ -118,10 +127,13 @@ mod lenient_tests {
             ("Zm9vOmJhcg==x", "666f6f3a6261720c"),
             ("Y=WI", "6162"),
         ] {
-            let decoded: String = decode(text.as_bytes())
-                .iter()
-                .map(|b| format!("{b:02x}"))
-                .collect();
+            let decoded: String =
+                decode(text.as_bytes())
+                    .iter()
+                    .fold(String::new(), |mut out, b| {
+                        let _ = write!(out, "{b:02x}");
+                        out
+                    });
             assert_eq!(decoded, hex, "{text}");
         }
     }

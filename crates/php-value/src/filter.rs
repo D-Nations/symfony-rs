@@ -225,6 +225,10 @@ struct Options {
 
 /// `(int)` of a range option: an int, a float truncated, or a numeric
 /// string (recorded: `'5'` and `12.5` bound as 5 and 12).
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 fn option_int(value: &Value, name: &str) -> Result<i64, Unsupported> {
     match value {
         Value::Int(i) => Ok(*i),
@@ -269,9 +273,8 @@ impl Options {
                     (Filter::Callback, Some(Value::Object(object))) => {
                         read.callback = object.downcast_ref::<Closure>().cloned();
                     }
-                    (Filter::Callback, _) => {}
+                    (Filter::Callback, _) | (_, None) => {}
                     (_, Some(Value::Array(options))) => read.read_options(options)?,
-                    (_, None) => {}
                     (_, Some(other)) => {
                         return Err(Unsupported(format!("{} options", other.debug_type())));
                     }
@@ -477,7 +480,7 @@ fn unsigned(digits: &[u8], radix: u32) -> Option<i64> {
             .checked_mul(u64::from(radix))?
             .checked_add(u64::from(digit))?;
     }
-    Some(value as i64)
+    Some(value.cast_signed())
 }
 
 /// An optional sign, then `0` or digits without a leading zero.

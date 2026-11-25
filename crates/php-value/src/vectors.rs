@@ -39,6 +39,10 @@ fn text(json: &Json) -> Result<&str, Error> {
 }
 
 /// Decodes the recorders' base64.
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "a base64 digit is below 64, and the byte is the low byte"
+)]
 pub fn base64(text: &str) -> Result<Vec<u8>, Error> {
     const ALPHABET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut out = Vec::new();
@@ -69,6 +73,10 @@ fn pairs(json: &Json) -> Result<PhpArray, Error> {
     Ok(array)
 }
 
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "a UTC offset in seconds fits in i32"
+)]
 fn datetime(full: &str, zone: &str) -> Result<DateTimeImmutable, Error> {
     // "-0001-12-10T00:00:00.000000+00:00": the offset is the last 6.
     let (local, offset) = full.split_at(full.len() - 6);
@@ -178,6 +186,10 @@ fn to_bool(value: &Value) -> bool {
 /// dates by instant, numbers by value (NAN equals NAN, as for PHPUnit's
 /// float comparator), strings against scalars as strings, and `null` /
 /// `bool` loosely.
+#[expect(
+    clippy::float_cmp,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 pub fn phpunit_equals(expected: &Value, actual: &Value) -> bool {
     match (expected, actual) {
         (Value::Array(e), Value::Array(a)) => {
@@ -211,6 +223,10 @@ pub fn phpunit_equals(expected: &Value, actual: &Value) -> bool {
     }
 }
 
+#[expect(
+    clippy::cast_precision_loss,
+    reason = "PHP's int and float conversions and comparisons"
+)]
 fn number(value: &Value) -> f64 {
     match value {
         Value::Int(i) => *i as f64,

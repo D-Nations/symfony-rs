@@ -120,6 +120,7 @@ impl ExampleConfiguration {
 }
 
 impl ConfigurationInterface for ExampleConfiguration {
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn get_config_tree_builder(&self) -> Result<TreeBuilder, Error> {
         let tree_builder = TreeBuilder::new("acme_root")?;
         let list =

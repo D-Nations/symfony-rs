@@ -9,6 +9,10 @@
 //!
 //! Upstream: symfony/finder Tests/Iterator/SortableIteratorTest.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::too_many_lines,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 mod common;
 

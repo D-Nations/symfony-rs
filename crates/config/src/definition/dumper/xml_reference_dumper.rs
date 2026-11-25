@@ -54,6 +54,7 @@ impl XmlReferenceDumper {
         result.map(|()| reference)
     }
 
+    #[expect(clippy::too_many_lines, reason = "one function, as upstream's")]
     fn write_node(
         &mut self,
         node: &Node,

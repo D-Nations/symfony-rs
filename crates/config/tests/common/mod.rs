@@ -3,6 +3,10 @@
 //!
 //! Upstream: symfony/config Tests/Fixtures/TestEnum.php Tests/Fixtures/TestEnum2.php Tests/Fixtures/StringBackedTestEnum.php Tests/Fixtures/StringBackedTestEnum2.php Tests/Fixtures/IntegerBackedTestEnum.php
 #![allow(dead_code)]
+#![allow(
+    clippy::needless_pass_by_value,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 pub mod builder;
 pub mod cache;

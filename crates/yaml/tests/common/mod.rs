@@ -2,6 +2,10 @@
 //!
 //! Upstream: none
 #![allow(dead_code)]
+#![allow(
+    clippy::cast_possible_truncation,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use serde_json::Value as Json;
 

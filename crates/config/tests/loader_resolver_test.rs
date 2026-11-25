@@ -32,6 +32,7 @@ fn testConstructor() {
 }
 
 #[test]
+#[expect(clippy::similar_names, reason = "names as in the PHP source")]
 fn testResolve() {
     let loader = MockLoader::stub();
     let resolver = LoaderResolver::new(vec![loader]);

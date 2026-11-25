@@ -117,6 +117,10 @@ impl Node {
     /// `setAddChildrenIfNoneSet(int|string|array|null $children)`:
     /// upstream's default argument is `['defaults']`, which `null` also
     /// gives; a positive int `n` names the children 1 to n.
+    #[expect(
+        clippy::cast_possible_truncation,
+        reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+    )]
     pub fn set_add_children_if_none_set(&self, children: Value) -> Result<(), Error> {
         let children = match children {
             Value::Null => vec![Value::from("defaults")],
@@ -178,6 +182,10 @@ fn int_children(n: i64) -> Vec<Value> {
 }
 
 /// `PrototypedArrayNode`'s `getDefaultValue()`.
+#[expect(
+    clippy::cast_possible_wrap,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 pub(crate) fn get_default_value(data: &PrototypedData) -> Result<Value, Error> {
     if data.default_to_null {
         return Ok(Value::Null);
@@ -237,6 +245,10 @@ fn get_prototype_for_child(node: &Node, key: &[u8]) -> Result<Node, Error> {
 }
 
 /// `PrototypedArrayNode`'s `finalizeValue()`.
+#[expect(
+    clippy::cast_possible_wrap,
+    reason = "PHP's int and float conversions, offsets and lengths, as upstream"
+)]
 pub(crate) fn finalize_value(
     node: &Node,
     data: &PrototypedData,

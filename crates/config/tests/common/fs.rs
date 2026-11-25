@@ -7,6 +7,10 @@
 //! them (its `realpath()` on Windows included).
 //!
 //! Upstream: none
+#![allow(
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use std::{
     path::{Path, PathBuf},
