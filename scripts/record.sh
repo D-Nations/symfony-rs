@@ -52,7 +52,7 @@
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-lexer   crates/twig/tests/data/lexer.json (Twig\Lexer on the upstream fixtures and lexer_extra.json)
 #   scripts/record.sh twig-parser  crates/twig/tests/data/parser.json and parser_visitors.json (Twig\Parser trees without and with the node visitors)
-#   scripts/record.sh doctrine-dbal crates/doctrine-dbal/tests/data/php.json (providers, SQL\Parser, ExpandArrayParameters, Query\QueryBuilder)
+#   scripts/record.sh doctrine-dbal crates/doctrine-dbal/tests/data/php.json (providers, SQL\Parser, ExpandArrayParameters, Query\QueryBuilder, date vectors)
 #   scripts/record.sh di-parameter-bag crates/dependency-injection/tests/data/parameter_bag.json (ParameterBag)
 #   scripts/record.sh di-env-var-processor crates/dependency-injection/tests/data/env_var_processor.json (EnvVarProcessor)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")

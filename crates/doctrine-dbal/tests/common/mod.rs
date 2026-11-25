@@ -18,7 +18,7 @@ use doctrine_dbal::{
     ArrayParameterType, ConnectionStandIn, Exception, ParameterType, WrapperParameterType,
 };
 use php_value::vectors::{base64, decode};
-use php_value::{Key, PhpArray, Value};
+use php_value::{Key, PhpArray, PhpString, Value};
 use serde_json::Value as Json;
 
 pub fn data() -> &'static Json {
@@ -167,7 +167,38 @@ pub fn expression_parts(json: &Json) -> Vec<ExpressionPart> {
 /// final or protected).
 pub struct StubPlatform;
 
+/// The methods `AbstractPlatform` declares abstract, answered as a
+/// PHPUnit stub answers an unconfigured call (an empty string). The Query
+/// tests never call them.
+macro_rules! abstract_platform_stub_methods {
+    () => {
+        fn class(&self) -> &str {
+            "Mock_AbstractPlatform"
+        }
+        abstract_platform_stub_methods!(
+            get_boolean_type_declaration_sql,
+            get_integer_type_declaration_sql,
+            get_big_int_type_declaration_sql,
+            get_small_int_type_declaration_sql,
+            get_clob_type_declaration_sql,
+            get_blob_type_declaration_sql,
+            get_date_time_type_declaration_sql,
+            get_date_type_declaration_sql,
+            get_time_type_declaration_sql
+        );
+    };
+    ($($name:ident),*) => {
+        $(
+            fn $name(&self, _column: &PhpArray) -> Result<PhpString, Exception> {
+                Ok(PhpString::from(""))
+            }
+        )*
+    };
+}
+
 impl AbstractPlatform for StubPlatform {
+    abstract_platform_stub_methods!();
+
     fn get_union_select_part_sql(&self, sub_query: &str) -> String {
         sub_query.to_owned()
     }
@@ -197,7 +228,9 @@ impl AbstractPlatform for StubPlatform {
 /// keeps them, which the recorder uses).
 pub struct DefaultPlatform;
 
-impl AbstractPlatform for DefaultPlatform {}
+impl AbstractPlatform for DefaultPlatform {
+    abstract_platform_stub_methods!();
+}
 
 /// `createMock(Connection::class)` with `getDatabasePlatform()` set; a
 /// mocked `quote()` gives its return type's default, `''`.

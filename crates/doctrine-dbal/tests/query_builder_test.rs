@@ -41,9 +41,19 @@ fn string(qb: &QueryBuilder<'_, Conn>) -> String {
 
 /// The `QueryException` that `getSQL()` throws.
 fn query_exception(result: Result<String, Exception>) -> QueryException {
-    match result {
-        Err(Exception::Query(e)) => e,
+    let e = match result {
+        Err(e) if e.is_instance_of(QueryExceptionKind::Query.class()) => e,
         other => panic!("expected a QueryException, got {other:?}"),
+    };
+    let message = String::from_utf8_lossy(e.message().as_bytes()).into_owned();
+    match e.class() {
+        c if c == QueryExceptionKind::NonUniqueAlias.class() => {
+            QueryException::with_kind(QueryExceptionKind::NonUniqueAlias, message)
+        }
+        c if c == QueryExceptionKind::UnknownAlias.class() => {
+            QueryException::with_kind(QueryExceptionKind::UnknownAlias, message)
+        }
+        _ => QueryException::new(message),
     }
 }
 

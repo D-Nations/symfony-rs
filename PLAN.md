@@ -1719,7 +1719,19 @@ Stack rows (searched November 25):
       3 of 3; 112 recorded builder runs replayed. `ConnectionStandIn`
       holds the place of `Connection.php`. Differences in the crate
       README (numeric join alias, shared sub-builders).
-- [ ] D1 next: Types and the platforms' type SQL; the SQLite platform; Connection on
+- [x] D1 slice 3 (Types): `Types/*.php` (the `Type` trait, registry,
+      31 built-in types, `ConversionException`, `Types/Exception/*`), the
+      column exceptions, `WrapperParameterType::Type`, and the
+      `AbstractPlatform` declaration and date-format methods they call.
+      188 Types tests ported, 7 pending (stream resources, a recursive
+      value, the Europe/Berlin zone). php-value gains a mutable
+      `DateTime`, `createFromFormat`, `new DateTime($text)`,
+      `DateInterval` and `BcMath\Number`, checked on 12,036 + 89 + 1,602
+      recorded PHP answers; texts outside what it reads are refused, not
+      guessed (counts in the crate README). `Doctrine\DBAL\Exception` is
+      one struct (class, message, previous); the Query slice's typed
+      exceptions convert into it.
+- [ ] D1 next: the SQLite platform; Connection on
       sqlx's SQLite driver; schema manager. The demo comparison stays
       paused (owner, November 23).
 
