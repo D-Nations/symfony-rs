@@ -2,6 +2,10 @@
 //! a temporary directory, and the iterator assertions.
 //!
 //! Upstream: none
+#![allow(
+    clippy::needless_pass_by_value,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 use std::{
     fs,

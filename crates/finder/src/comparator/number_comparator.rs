@@ -21,6 +21,11 @@ pub struct NumberComparator(Comparator);
 
 impl NumberComparator {
     /// `new NumberComparator($test)`; `None` is PHP's `null`.
+    #[expect(
+        clippy::float_cmp,
+        clippy::cast_precision_loss,
+        reason = "PHP compares and converts ints and floats this way"
+    )]
     pub fn new(test: Option<&[u8]>) -> Result<Self, Error> {
         let not_understood = || {
             Error::InvalidArgument(format!(

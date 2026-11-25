@@ -43,6 +43,11 @@ enum Num {
 
 /// The number a numeric string stands for (an int when it is written as
 /// one and fits).
+#[expect(
+    clippy::float_cmp,
+    clippy::cast_precision_loss,
+    reason = "PHP compares and converts ints and floats this way"
+)]
 fn numeric_value(s: &[u8]) -> Num {
     let integer_form = !s.iter().any(|&c| matches!(c, b'.' | b'e' | b'E'));
     let f = string_to_float(s);
@@ -65,6 +70,7 @@ fn cmp_num(a: Num, b: Num) -> Ordering {
     }
 }
 
+#[expect(clippy::cast_precision_loss, reason = "PHP converts an int to float")]
 fn to_f64(n: Num) -> f64 {
     match n {
         Num::Int(i) => i as f64,

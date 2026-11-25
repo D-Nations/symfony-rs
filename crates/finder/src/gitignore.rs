@@ -42,6 +42,7 @@ pub(crate) fn patterns() -> Result<&'static Patterns, Error> {
     PATTERNS.as_ref().map_err(Clone::clone)
 }
 
+#[expect(clippy::needless_pass_by_value, reason = "a map_err() callback")]
 fn matching(e: crate::pcre::MatchError) -> Error {
     Error::Runtime(e.to_string())
 }

@@ -15,6 +15,7 @@ const LEADING_DOT: &[u8] = br"(?=[^\.])";
 impl Glob {
     /// `Glob::toRegex($glob, $strictLeadingDot, $strictWildcardSlash,
     /// $delimiter)`; an empty delimiter is `''`.
+    #[expect(clippy::too_many_lines, reason = "one loop, as upstream's toRegex()")]
     pub fn to_regex(
         glob: &[u8],
         strict_leading_dot: bool,

@@ -103,6 +103,11 @@ fn parse_date(s: &str) -> Option<(i64, i64, i64)> {
 
 /// The Unix timestamp `$s` stands for at `now`, or None when the string
 /// is not in the supported subset.
+#[expect(
+    clippy::many_single_char_names,
+    clippy::too_many_lines,
+    reason = "date parts named as in strtotime(): y, m, d, h, i, s"
+)]
 pub fn timestamp(s: &[u8], now: i64) -> Option<i64> {
     let s = std::str::from_utf8(s).ok()?.trim().to_ascii_lowercase();
     if let Some(ts) = s.strip_prefix('@') {

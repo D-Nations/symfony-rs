@@ -15,6 +15,11 @@
 //!
 //! Upstream: symfony/finder Tests/FinderTest.php Tests/Iterator/VfsIteratorTestTrait.php
 #![allow(non_snake_case)]
+#![allow(
+    clippy::if_not_else,
+    clippy::unused_self,
+    reason = "test code ports PHPUnit tests and helpers as they are"
+)]
 
 mod common;
 
