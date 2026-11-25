@@ -1124,6 +1124,15 @@ name = "symfony-event-dispatcher-contracts"
 version = "0.1.0"
 
 [[package]]
+name = "symfony-expression-language"
+version = "0.1.0"
+dependencies = [
+ "php-pcre",
+ "php-value",
+ "serde_json",
+]
+
+[[package]]
 name = "symfony-filesystem"
 version = "0.1.0"
 dependencies = [

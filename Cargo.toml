@@ -25,6 +25,7 @@ members = [
     "crates/php-pcre",
     "crates/mime",
     "crates/twig",
+    "crates/expression-language",
     "examples/request-lab",
     "fixtures/converter-app",
     "spikes/twig-trial/compiler",
