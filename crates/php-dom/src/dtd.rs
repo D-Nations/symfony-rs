@@ -288,6 +288,7 @@ impl Parser {
     }
 
     /// `xmlParseEntityDecl`.
+    #[expect(clippy::too_many_lines, reason = "one declaration parser, as libxml's")]
     fn parse_entity_decl(&mut self) {
         if !self.cmp(b"<!ENTITY") {
             return;
@@ -404,6 +405,10 @@ impl Parser {
 
     /// `xmlParseEntityValue`: the replacement text, with character and
     /// parameter-entity references expanded and general ones kept.
+    #[expect(
+        clippy::many_single_char_names,
+        reason = "libxml's names: c, l, q and so on"
+    )]
     fn parse_entity_value(&mut self) -> Option<Vec<u8>> {
         let stop = self.raw();
         self.next();
@@ -452,6 +457,10 @@ impl Parser {
     }
 
     /// `xmlStringDecodeEntities` with parameter references only.
+    #[expect(
+        clippy::many_single_char_names,
+        reason = "libxml's names: c, l, q and so on"
+    )]
     fn decode_pe_refs(&mut self, s: &str) -> Option<Vec<u8>> {
         if self.depth > 40 {
             self.fatal_code(89);
@@ -709,9 +718,7 @@ impl Parser {
             if self.well_formed && !self.halted {
                 self.dtd_has_decls = true;
                 if !cdata {
-                    self.special_atts
-                        .entry((elem.clone(), attr.clone()))
-                        .or_insert(());
+                    self.special_atts.insert((elem.clone(), attr.clone()));
                 }
             }
         }

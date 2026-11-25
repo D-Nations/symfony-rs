@@ -11,7 +11,7 @@
 //!
 //! Upstream: none
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::chars::{
     is_ascii_name_char, is_ascii_name_start, is_blank, is_char, is_name_char, is_name_start,
@@ -117,6 +117,10 @@ pub(crate) struct Entity {
     pub(crate) expanded: Option<Result<String, ()>>,
 }
 
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "libxml's parser context flags"
+)]
 pub(crate) struct Parser {
     pub(crate) input: Input,
     /// Inputs suspended by a parameter-entity reference.
@@ -145,7 +149,7 @@ pub(crate) struct Parser {
     pub(crate) entities: HashMap<String, Entity>,
     pub(crate) pentities: HashMap<String, Entity>,
     /// Attributes declared with a type other than CDATA: (element, attribute).
-    pub(crate) special_atts: HashMap<(String, String), ()>,
+    pub(crate) special_atts: HashSet<(String, String)>,
     pub(crate) depth: u32,
     in_attribute_value: bool,
     pub(crate) refusal: Option<Refusal>,
@@ -171,8 +175,7 @@ pub(crate) fn fatal_message(code: u32) -> &'static str {
         25 => "PEReference: expecting ';'",
         33 => "String not started expecting ' or \"",
         34 => "String not closed expecting \" or '",
-        36 => "EntityValue: \" or ' expected",
-        37 => "EntityValue: \" or ' expected",
+        36 | 37 => "EntityValue: \" or ' expected",
         38 => "Unescaped '<' not allowed in attributes values",
         39 => "AttValue: \" or ' expected",
         43 => "SystemLiteral \" or ' expected",
@@ -254,7 +257,7 @@ impl Parser {
             standalone: -1,
             entities: HashMap::new(),
             pentities: HashMap::new(),
-            special_atts: HashMap::new(),
+            special_atts: HashSet::new(),
             depth: 0,
             in_attribute_value: false,
             refusal: None,
@@ -374,7 +377,7 @@ impl Parser {
     /// `SKIP(n)`: ASCII known to be there.
     pub(crate) fn skip(&mut self, n: usize) {
         self.input.pos = (self.input.pos + n).min(self.input.end.max(self.input.pos));
-        self.input.col += n as u32;
+        self.input.col += to_col(n);
     }
 
     /// `NEXT1`.
@@ -585,7 +588,7 @@ impl Parser {
                 }
                 let name = self.bytes_text(start, i);
                 self.input.pos = i;
-                self.input.col += count as u32;
+                self.input.col += to_col(count);
                 return Some(name);
             }
         }
@@ -613,7 +616,7 @@ impl Parser {
                 }
                 let name = self.bytes_text(start, i);
                 self.input.pos = i;
-                self.input.col += count as u32;
+                self.input.col += to_col(count);
                 return Some(name);
             }
         }
@@ -929,7 +932,7 @@ impl Parser {
             Declared::Latin1 if !self.has_decoder => {
                 let rest =
                     encoding::latin1_to_utf8(&self.input.buf[self.input.pos..self.input.end]);
-                self.replace_rest(rest);
+                self.replace_rest(&rest);
             }
             Declared::Ascii if !self.has_decoder => {
                 let pos = self.input.pos;
@@ -949,10 +952,10 @@ impl Parser {
         self.encoding_name = Some(name);
     }
 
-    fn replace_rest(&mut self, rest: Vec<u8>) {
+    fn replace_rest(&mut self, rest: &[u8]) {
         let pos = self.input.pos;
         self.input.buf.truncate(pos);
-        self.input.buf.extend_from_slice(&rest);
+        self.input.buf.extend_from_slice(rest);
         if let Some(nul) = self.input.buf[pos..].iter().position(|&b| b == 0) {
             self.input.buf.truncate(pos + nul);
         }
@@ -1181,7 +1184,7 @@ impl Parser {
             k += 1;
         }
         if k == o.len() && (self.byte_at(i) == b'>' || is_blank(self.byte_at(i))) {
-            self.input.col += (i - self.input.pos) as u32;
+            self.input.col += to_col(i - self.input.pos);
             self.input.pos = i;
             return Ok(());
         }
@@ -1208,7 +1211,7 @@ impl Parser {
                 k += 1;
             }
             if k == n.len() && (self.byte_at(i) == b'>' || is_blank(self.byte_at(i))) {
-                self.input.col += (i - self.input.pos) as u32;
+                self.input.col += to_col(i - self.input.pos);
                 self.input.pos = i;
                 return Ok(());
             }
@@ -1237,6 +1240,7 @@ impl Parser {
 
     /// `xmlParseStartTag2`: the element's prefix, local name and node.
     #[allow(clippy::type_complexity)]
+    #[expect(clippy::too_many_lines, reason = "one parser function, as libxml's")]
     fn parse_start_tag(&mut self) -> Option<(Option<String>, String, Option<NodeId>)> {
         if self.raw() != b'<' {
             return None;
@@ -1488,7 +1492,7 @@ impl Parser {
             Some(p) => format!("{p}:{name}"),
             None => name.clone(),
         };
-        let normalize = self.special_atts.contains_key(&(elem.to_owned(), qname));
+        let normalize = self.special_atts.contains(&(elem.to_owned(), qname));
         self.skip_blanks();
         if self.raw() != b'=' {
             self.fatal(
@@ -1547,7 +1551,7 @@ impl Parser {
         }
         if !normalize && i < self.input.end && self.input.buf[i] == q {
             let v = self.bytes_text(start, i);
-            self.input.col += (i - start + 2) as u32;
+            self.input.col += to_col(i - start + 2);
             self.input.pos = i + 1;
             return Some(v);
         }
@@ -1755,6 +1759,10 @@ impl Parser {
 
     /// `xmlStringDecodeEntities` with general references substituted:
     /// the replacement text of an entity value used in an attribute.
+    #[expect(
+        clippy::many_single_char_names,
+        reason = "libxml's names: c, l, q and so on"
+    )]
     fn decode_entities(&mut self, s: &[u8]) -> Option<String> {
         if self.depth > 40 {
             self.fatal_code(89);
@@ -2159,11 +2167,11 @@ impl Parser {
             }
             break;
         }
-        self.parse_comment_complex(buf.unwrap_or_default());
+        self.parse_comment_complex(&buf.unwrap_or_default());
     }
 
-    fn parse_comment_complex(&mut self, buf: Vec<u8>) {
-        let mut text = String::from_utf8_lossy(&buf).into_owned();
+    fn parse_comment_complex(&mut self, buf: &[u8]) {
+        let mut text = String::from_utf8_lossy(buf).into_owned();
         let (q, ql) = self.cur_char();
         if q == 0 || ql == 0 {
             self.fatal(45, "Comment not terminated");
@@ -2448,4 +2456,9 @@ pub(crate) fn string_char_ref(b: &[u8]) -> (Result<u32, (u32, String)>, usize) {
         );
     }
     (Ok(val), i)
+}
+
+/// A column advance as libxml's `int` column counter takes it.
+fn to_col(n: usize) -> u32 {
+    u32::try_from(n).unwrap_or(u32::MAX)
 }
