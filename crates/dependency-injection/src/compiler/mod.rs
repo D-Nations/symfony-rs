@@ -25,6 +25,9 @@ pub use service_reference_graph::{
     ServiceReferenceGraphNode,
 };
 
+mod resolve_child_definitions_pass;
+pub use resolve_child_definitions_pass::ResolveChildDefinitionsPass;
+
 mod resolve_class_pass;
 pub use resolve_class_pass::ResolveClassPass;
 
