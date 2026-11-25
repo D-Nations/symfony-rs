@@ -164,31 +164,81 @@ percentage; later changes are authoritative in `parity/`):
 
 | Package | Upstream tests | Ported | N/A | Pending |
 |---|---:|---:|---:|---:|
+| doctrine/dbal | 2,878 | 0 | 0 | 2,878 |
+| doctrine/orm | 3,208 | 0 | 0 | 3,208 |
 | psr/log | 0 | 0 | 0 | 0 |
+| symfony/asset-mapper | 160 | 0 | 0 | 160 |
+| symfony/asset | 34 | 0 | 0 | 34 |
+| symfony/browser-kit | 206 | 0 | 0 | 206 |
+| symfony/cache-contracts | 0 | 0 | 0 | 0 |
+| symfony/cache | 1,080 | 0 | 0 | 1,080 |
+| symfony/clock | 36 | 0 | 0 | 36 |
 | symfony/config | 334 | 307 | 2 | 25 |
 | symfony/console | 1,152 | 320 | 11 | 821 |
 | symfony/css-selector | 85 | 80 | 5 | 0 |
+| symfony/debug-bundle | 11 | 0 | 0 | 11 |
+| symfony/dependency-injection | 1,436 | 0 | 0 | 1,436 |
 | symfony/deprecation-contracts | 0 | 0 | 0 | 0 |
+| symfony/doctrine-bridge | 377 | 0 | 0 | 377 |
+| symfony/dom-crawler | 222 | 0 | 0 | 222 |
 | symfony/dotenv | 57 | 57 | 0 | 0 |
-| symfony/event-dispatcher | 140 | 114 | 0 | 26 |
+| symfony/error-handler | 114 | 0 | 0 | 114 |
 | symfony/event-dispatcher-contracts | 0 | 0 | 0 | 0 |
+| symfony/event-dispatcher | 140 | 114 | 0 | 26 |
+| symfony/expression-language | 106 | 0 | 0 | 106 |
 | symfony/filesystem | 157 | 27 | 0 | 130 |
 | symfony/finder | 143 | 139 | 4 | 0 |
+| symfony/form | 2,734 | 0 | 0 | 2,734 |
+| symfony/framework-bundle | 1,089 | 0 | 0 | 1,089 |
+| symfony/html-sanitizer | 73 | 0 | 0 | 73 |
+| symfony/http-client-contracts | 0 | 0 | 0 | 0 |
+| symfony/http-client | 941 | 0 | 0 | 941 |
 | symfony/http-foundation | 959 | 477 | 10 | 472 |
 | symfony/http-kernel | 1,045 | 200 | 8 | 837 |
+| symfony/intl | 209 | 0 | 0 | 209 |
+| symfony/mailer | 125 | 0 | 0 | 125 |
 | symfony/mime | 395 | 28 | 1 | 366 |
+| symfony/monolog-bridge | 75 | 0 | 0 | 75 |
+| symfony/monolog-bundle | 108 | 0 | 0 | 108 |
 | symfony/options-resolver | 234 | 234 | 0 | 0 |
+| symfony/password-hasher | 87 | 0 | 0 | 87 |
+| symfony/process | 168 | 0 | 0 | 168 |
+| symfony/property-access | 227 | 0 | 0 | 227 |
+| symfony/property-info | 143 | 0 | 0 | 143 |
 | symfony/routing | 896 | 372 | 1 | 523 |
+| symfony/runtime | 19 | 0 | 0 | 19 |
+| symfony/security-bundle | 323 | 0 | 0 | 323 |
+| symfony/security-core | 158 | 0 | 0 | 158 |
+| symfony/security-csrf | 109 | 0 | 0 | 109 |
+| symfony/security-http | 503 | 0 | 0 | 503 |
+| symfony/service-contracts | 0 | 0 | 0 | 0 |
+| symfony/stimulus-bundle | 36 | 0 | 0 | 36 |
 | symfony/stopwatch | 33 | 33 | 0 | 0 |
 | symfony/string | 266 | 235 | 1 | 30 |
-| symfony/translation | 345 | 81 | 2 | 262 |
+| symfony/translation-contracts | 0 | 0 | 0 | 0 |
+| symfony/translation | 319 | 81 | 2 | 236 |
+| symfony/twig-bridge | 2,021 | 0 | 0 | 2,021 |
+| symfony/twig-bundle | 43 | 0 | 0 | 43 |
+| symfony/type-info | 175 | 0 | 0 | 175 |
+| symfony/ux-icons | 109 | 0 | 0 | 109 |
+| symfony/ux-live-component | 258 | 0 | 0 | 258 |
+| symfony/ux-twig-component | 212 | 0 | 0 | 212 |
+| symfony/validator | 1,399 | 0 | 0 | 1,399 |
+| symfony/var-dumper | 237 | 0 | 0 | 237 |
+| symfony/var-exporter | 119 | 0 | 0 | 119 |
+| symfony/web-profiler-bundle | 90 | 0 | 0 | 90 |
 | symfony/yaml | 342 | 341 | 1 | 0 |
-| **Total** | **6,583** | **3,045** | **46** | **3,492** |
+| twig/extra-bundle | 7 | 0 | 0 | 7 |
+| twig/html-extra | 14 | 0 | 0 | 14 |
+| twig/intl-extra | 17 | 0 | 0 | 17 |
+| twig/markdown-extra | 6 | 0 | 0 | 6 |
+| twig/twig | 778 | 0 | 0 | 778 |
+| **Total** | **29,037** | **3,045** | **46** | **25,946** |
 
-Six packages have no pending rows and are listed in `parity/done.txt`:
-Stopwatch, Yaml, Dotenv, CssSelector, OptionsResolver and Finder. psr/log, symfony/deprecation-contracts and
-symfony/event-dispatcher-contracts ship no PHPUnit tests upstream, so their
-manifests hold only the header line. M1 is
+Every package pinned in `parity/packages.tsv` has a manifest; those
+without a Rust port yet are all `pending`, and the contracts packages
+that ship no PHPUnit tests have the header line alone. Six packages have no pending rows and are listed in `parity/done.txt`:
+Stopwatch, Yaml, Dotenv, CssSelector, OptionsResolver and Finder. M1 is
 underway: Config has its Definition, Builder, dumpers, XmlUtils, loaders,
 filesystem resources and ConfigCache ported (the reflection-based
 resources, decision 17, are a later stage); String, Console (the subset the Yaml and

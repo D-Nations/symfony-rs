@@ -913,6 +913,22 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       line alone (`oracle/manifest.php` prints nothing for a package with
       no `Tests/` or `tests/` directory); that is the convention for every
       package without upstream tests. `parity/done.txt` is unchanged.
+- [x] Manifests for every pinned package (November 25,
+      [docs/milestones/m0-missing-manifests.md](docs/milestones/m0-missing-manifests.md)):
+      the 50 packages without one, all `pending` (no Rust test ports them
+      yet), 22,480 upstream tests in all. `oracle/manifest.php` now resolves
+      a parent class or trait by its fully qualified name (namespace and
+      `use` imports), follows trait test methods, and looks parents up in
+      the whole package and in the pinned checkouts of the packages it
+      requires; it matches `Tests/` and `tests/` exactly (a Docker Desktop
+      mount is case-insensitive). The short-name match had listed wrong
+      parents (doctrine/dbal's two AbstractDriverTestCase) and missed base
+      classes outside `Tests/` (http-client-contracts' HttpClientTestCase,
+      translation-contracts' TranslatorTest, twig/twig's `src/Test`).
+      Regenerated, 15 existing manifests are byte-identical; symfony/translation's
+      IdentityTranslatorTest rows are corrected (37 wrong `pending` rows
+      out, 11 in: 345 to 319 tests). Packages without PHPUnit tests get a
+      header-only manifest.
 - [x] Recorders for this repository's vectors moved from symfony-demo-rs
       into `oracle/recorders/` (`scripts/record.sh routing|multipart`); one
       oracle container each, and both re-recorded files are byte-identical

@@ -7,7 +7,17 @@
 // Prints one row per test: <test file>\t<Class>::<method>. A method counts
 // as a test when it is public and named test*, or carries #[Test] or an
 // @test docblock tag (PHPUnit 11's rules). Methods of abstract classes are
-// listed under each concrete subclass in the package, as PHPUnit runs them.
+// listed under each concrete subclass in the package, as PHPUnit runs them,
+// and so are the test methods of the traits a class uses.
+//
+// A parent class or trait is found by its fully qualified name, resolved
+// from the file's namespace and `use` imports as PHP resolves it, so classes
+// that share a short name in different namespaces are kept apart. Parents
+// are looked up in the whole package (e.g. a `Test/` base class beside
+// `Tests/`) and in the pinned checkouts of the packages it requires
+// (composer.json `require` and `require-dev`, then their `require`s), found
+// beside it as <upstream>/<vendor>/<name>; their own Tests/ are skipped.
+// Only classes under the package's Tests/ (or tests/) give rows.
 
 $dir = rtrim($argv[1] ?? '', '/');
 if ($dir === '' || !is_dir($dir)) {
@@ -15,8 +25,11 @@ if ($dir === '' || !is_dir($dir)) {
     exit(2);
 }
 $testsDir = null;
+// Compare names exactly: on a case-insensitive mount (Docker Desktop on
+// Windows) is_dir("$dir/Tests") is also true for a `tests/` directory.
+$entries = scandir($dir) ?: [];
 foreach (['Tests', 'tests'] as $candidate) {
-    if (is_dir("$dir/$candidate")) {
+    if (in_array($candidate, $entries, true) && is_dir("$dir/$candidate")) {
         $testsDir = "$dir/$candidate";
         break;
     }
@@ -24,15 +37,71 @@ foreach (['Tests', 'tests'] as $candidate) {
 if ($testsDir === null) {
     exit(0); // A package without tests has an empty manifest.
 }
+$upstream = dirname($dir, 2);
 
-$paths = [];
-$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($testsDir, FilesystemIterator::SKIP_DOTS));
-foreach ($files as $file) {
-    if ($file->isFile() && str_ends_with($file->getFilename(), '.php')) {
-        $paths[] = $file->getPathname();
+/** The .php files under $base, sorted, without vendor/ and the $skip subdirectories. */
+function phpFiles(string $base, array $skip): array
+{
+    $paths = [];
+    $iterator = new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator(
+        new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS),
+        function (SplFileInfo $file) use ($base, $skip): bool {
+            if (!$file->isDir()) {
+                return true;
+            }
+            $relative = substr($file->getPathname(), strlen($base) + 1);
+            return $relative !== 'vendor' && !in_array($relative, $skip, true) && $file->getFilename() !== '.git';
+        },
+    ));
+    foreach ($iterator as $file) {
+        if ($file->isFile() && str_ends_with($file->getFilename(), '.php')) {
+            $paths[] = $file->getPathname();
+        }
     }
+    sort($paths, SORT_STRING);
+    return $paths;
 }
-sort($paths, SORT_STRING);
+
+/** Package names a composer.json requires; $dev adds require-dev. */
+function requires(string $packageDir, bool $dev): array
+{
+    $json = @file_get_contents("$packageDir/composer.json");
+    $data = $json === false ? null : json_decode($json, true);
+    if (!is_array($data)) {
+        return [];
+    }
+    $names = array_keys($data['require'] ?? []);
+    if ($dev) {
+        $names = array_merge($names, array_keys($data['require-dev'] ?? []));
+    }
+    return array_values(array_filter($names, fn ($name) => is_string($name) && str_contains($name, '/')));
+}
+
+// [path, gives rows?]: the package's tests first, then everything else
+// that may declare a parent class or trait.
+$paths = [];
+foreach (phpFiles($testsDir, []) as $path) {
+    $paths[] = [$path, true];
+}
+foreach (phpFiles($dir, ['Tests', 'tests']) as $path) {
+    $paths[] = [$path, false];
+}
+$queue = requires($dir, true);
+$visited = [];
+while ($queue !== []) {
+    $name = array_shift($queue);
+    if (isset($visited[$name]) || !is_dir("$upstream/$name")) {
+        continue;
+    }
+    $visited[$name] = true;
+    if (realpath("$upstream/$name") === realpath($dir)) {
+        continue;
+    }
+    foreach (phpFiles("$upstream/$name", ['Tests', 'tests']) as $path) {
+        $paths[] = [$path, false];
+    }
+    $queue = array_merge($queue, requires("$upstream/$name", false));
+}
 
 /** Next token index after $i that is not whitespace or a comment. */
 function nextSignificant(array $tokens, int $i): int
@@ -57,10 +126,82 @@ function previousSignificant(array $tokens, int $i): int
     return -1;
 }
 
-$classes = []; // short name => list of class records
-foreach ($paths as $path) {
+/** A class name as written in a file, as a lowercase fully qualified name. */
+function resolveClass(string $name, string $namespace, array $uses): string
+{
+    if (str_starts_with($name, '\\')) {
+        return strtolower(substr($name, 1));
+    }
+    if (strncasecmp($name, 'namespace\\', 10) === 0) {
+        $name = substr($name, 10);
+    } else {
+        $first = explode('\\', $name, 2)[0];
+        if (isset($uses[strtolower($first)])) {
+            return strtolower($uses[strtolower($first)] . substr($name, strlen($first)));
+        }
+    }
+    return strtolower($namespace === '' ? $name : "$namespace\\$name");
+}
+
+/**
+ * Reads the class imports of the `use` statement whose T_USE is token $i
+ * into $uses (lowercase alias => fully qualified name), skipping function
+ * and constant imports. Returns the index of the statement's `;`.
+ */
+function readUse(array $tokens, int $i, array &$uses): int
+{
+    $n = count($tokens);
+    $kind = null; // T_FUNCTION or T_CONST for `use function` / `use const`
+    $prefix = '';
+    $name = '';
+    $alias = null;
+    $afterAs = false;
+    $add = function () use (&$uses, &$kind, &$prefix, &$name, &$alias): void {
+        if ($name !== '' && $kind === null) {
+            $full = ltrim($prefix . $name, '\\');
+            $parts = explode('\\', $full);
+            $uses[strtolower($alias ?? end($parts))] = $full;
+        }
+        $name = '';
+        $alias = null;
+    };
+    for ($i++; $i < $n; $i++) {
+        $t = $tokens[$i];
+        if ($t->is([T_WHITESPACE, T_COMMENT, T_DOC_COMMENT])) {
+            continue;
+        }
+        if ($t->text === ';') {
+            $add();
+            return $i;
+        }
+        if ($t->is([T_FUNCTION, T_CONST])) {
+            $kind = $t->id;
+        } elseif ($t->is(T_AS)) {
+            $afterAs = true;
+        } elseif ($t->text === '{') { // group use: `use A\{B, C as D};`
+            $prefix = rtrim($name, '\\') . '\\';
+            $name = '';
+        } elseif ($t->text === ',' || $t->text === '}') {
+            $add();
+        } elseif ($t->is([T_STRING, T_NAME_QUALIFIED, T_NAME_FULLY_QUALIFIED, T_NS_SEPARATOR])) {
+            if ($afterAs) {
+                $alias = $t->text;
+                $afterAs = false;
+            } else {
+                $name .= $t->text;
+            }
+        }
+    }
+    return $n;
+}
+
+$classes = []; // lowercase fully qualified name => list of class records
+foreach ($paths as [$path, $emit]) {
     $tokens = PhpToken::tokenize(file_get_contents($path));
     $n = count($tokens);
+    $namespace = '';
+    $uses = [];
+    $nsDepth = 0; // 1 inside `namespace X { ... }`
     $depth = 0;
     $class = null;
     $classDepth = null;
@@ -104,7 +245,7 @@ foreach ($paths as $path) {
         if ($t->text === '}') {
             $depth--;
             if ($class !== null && $depth === $classDepth) {
-                $classes[$class['short']][] = $class;
+                $classes[$class['key']][] = $class;
                 $class = null;
             }
             continue;
@@ -113,7 +254,56 @@ foreach ($paths as $path) {
             $modifiers[] = $t->id;
             continue;
         }
-        if ($t->is(T_CLASS) && $class === null) {
+        if ($t->is(T_NAMESPACE) && $class === null) {
+            $j = nextSignificant($tokens, $i);
+            if ($j < $n && $tokens[$j]->is([T_STRING, T_NAME_QUALIFIED])) {
+                $namespace = $tokens[$j]->text;
+                $uses = [];
+                $i = $j;
+                $k = nextSignificant($tokens, $j);
+                $nsDepth = ($k < $n && $tokens[$k]->text === '{') ? 1 : 0;
+            } elseif ($j < $n && $tokens[$j]->text === '{') {
+                $namespace = ''; // `namespace { ... }` is the global namespace
+                $uses = [];
+                $nsDepth = 1;
+            }
+            $modifiers = [];
+            continue;
+        }
+        // An import: top level, not a closure's `use (...)` or a trait use.
+        if ($t->is(T_USE) && $class === null && $depth <= $nsDepth) {
+            $j = nextSignificant($tokens, $i);
+            if ($j < $n && $tokens[$j]->text !== '(') {
+                $i = readUse($tokens, $i, $uses);
+                $attrTest = false;
+                $doc = '';
+                $modifiers = [];
+                continue;
+            }
+        }
+        // A trait use in a class or trait body: `use A, B;` or `use A { ... }`.
+        if ($t->is(T_USE) && $class !== null && $depth === $classDepth + 1) {
+            for ($i++; $i < $n && $tokens[$i]->text !== ';' && $tokens[$i]->text !== '{'; $i++) {
+                if ($tokens[$i]->is([T_STRING, T_NAME_QUALIFIED, T_NAME_FULLY_QUALIFIED, T_NAME_RELATIVE])) {
+                    $class['traits'][] = resolveClass($tokens[$i]->text, $namespace, $uses);
+                }
+            }
+            if ($i < $n && $tokens[$i]->text === '{') { // skip the conflict rules
+                for ($level = 1, $i++; $i < $n && $level > 0; $i++) {
+                    if ($tokens[$i]->text === '{') {
+                        $level++;
+                    } elseif ($tokens[$i]->text === '}') {
+                        $level--;
+                    }
+                }
+                $i--;
+            }
+            $attrTest = false;
+            $doc = '';
+            $modifiers = [];
+            continue;
+        }
+        if ($t->is([T_CLASS, T_TRAIT]) && $class === null) {
             $p = previousSignificant($tokens, $i);
             $j = nextSignificant($tokens, $i);
             // Skip `Foo::class` and anonymous `new class`.
@@ -127,16 +317,19 @@ foreach ($paths as $path) {
                 if ($tokens[$k]->is(T_EXTENDS)) {
                     $m = nextSignificant($tokens, $k);
                     if ($m < $n) {
-                        $parts = explode('\\', $tokens[$m]->text);
-                        $extends = end($parts);
+                        $extends = resolveClass($tokens[$m]->text, $namespace, $uses);
                     }
                 }
             }
             $class = [
                 'short' => $tokens[$j]->text,
+                'key' => resolveClass($tokens[$j]->text, $namespace, []),
                 'file' => substr($path, strlen($dir) + 1),
-                'abstract' => in_array(T_ABSTRACT, $modifiers, true),
+                'emit' => $emit,
+                // A trait never runs on its own, like an abstract class.
+                'abstract' => $t->is(T_TRAIT) || in_array(T_ABSTRACT, $modifiers, true),
                 'extends' => $extends,
+                'traits' => [],
                 'tests' => [],
             ];
             $classDepth = $depth;
@@ -169,25 +362,40 @@ foreach ($paths as $path) {
     }
 }
 
-// Inherited tests: walk up `extends` within the package by short name.
+/**
+ * The test methods $record has from its traits and, through `extends`, its
+ * parents and their traits, looked up by qualified name.
+ */
+function inheritedTests(array $record, array $classes, array &$seen, array &$warnings, string $file): array
+{
+    $tests = [];
+    foreach ($record['traits'] as $trait) {
+        if (isset($classes[$trait]) && !isset($seen[$trait])) {
+            $seen[$trait] = true;
+            $tests = array_merge($tests, $classes[$trait][0]['tests'], inheritedTests($classes[$trait][0], $classes, $seen, $warnings, $file));
+        }
+    }
+    $parent = $record['extends'];
+    if ($parent !== null && isset($classes[$parent]) && !isset($seen[$parent])) {
+        $seen[$parent] = true;
+        if (count($classes[$parent]) > 1) {
+            $warnings[] = "ambiguous parent $parent of $file";
+        }
+        $tests = array_merge($tests, $classes[$parent][0]['tests'], inheritedTests($classes[$parent][0], $classes, $seen, $warnings, $file));
+    }
+    return $tests;
+}
+
 $rows = [];
 $warnings = [];
-foreach ($classes as $short => $records) {
+foreach ($classes as $key => $records) {
     foreach ($records as $record) {
-        if ($record['abstract']) {
+        if ($record['abstract'] || !$record['emit']) {
             continue;
         }
-        $tests = $record['tests'];
-        $seen = [$short => true];
-        $parent = $record['extends'];
-        while ($parent !== null && isset($classes[$parent]) && !isset($seen[$parent])) {
-            $seen[$parent] = true;
-            if (count($classes[$parent]) > 1) {
-                $warnings[] = "ambiguous parent $parent of {$record['file']}";
-            }
-            $tests = array_merge($tests, $classes[$parent][0]['tests']);
-            $parent = $classes[$parent][0]['extends'];
-        }
+        $short = $record['short'];
+        $seen = [$key => true];
+        $tests = array_merge($record['tests'], inheritedTests($record, $classes, $seen, $warnings, $record['file']));
         foreach (array_unique($tests) as $method) {
             $rows[] = "{$record['file']}\t{$short}::{$method}";
         }
