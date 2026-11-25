@@ -16,7 +16,8 @@
 // "create" has [uri (base64), method, parameters (typed), server
 // (typed)]. A result is ["ok", typed value] or ["throws", class, message
 // (base64)]; a create() that throws has results ["throws", ...] only.
-// Then format, normalizeQueryString() and body cases.
+// Then format, normalizeQueryString() and body cases, and getPort() on
+// SERVER_PORT values of every type.
 
 error_reporting(E_ALL);
 ini_set('memory_limit', '2G');
@@ -328,4 +329,11 @@ foreach ($bodies as $body) {
     ];
 }
 
-echo json_encode(['cases' => $cases, 'formats' => $formats, 'normalized' => $normalized, 'payloads' => $payloads], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";
+// getPort() returns SERVER_PORT under its int|string|null return type.
+$serverPorts = [8.5, -0.5, 1e19, -1e19, 9.2233720368547758E+18, -9.2233720368547758E+18, NAN, INF, -INF, 1e15 + 0.5, -0.0, 1e30, 123.0, true, false, null, [], ['80'], '8080', '', 'x', 0, -1];
+$ports = [];
+foreach ($serverPorts as $port) {
+    $ports[] = [typed_value($port), result(static fn () => (new Request([], [], [], [], [], ['SERVER_PORT' => $port]))->getPort())];
+}
+
+echo json_encode(['cases' => $cases, 'formats' => $formats, 'normalized' => $normalized, 'payloads' => $payloads, 'ports' => $ports], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";

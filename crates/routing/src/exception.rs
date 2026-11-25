@@ -59,6 +59,11 @@ pub enum Class {
     PhpTypeError,
     /// PHP's `\Error`.
     PhpError,
+    /// An exception HttpFoundation's Request threw while `fromRequest()`
+    /// read it (`SuspiciousOperationException` for an untrusted host,
+    /// `ConflictingHeadersException`, ...), passed on with its class and
+    /// message, as PHP lets it propagate.
+    HttpFoundation(symfony_http_foundation::exception::Class),
     /// Input this port does not reproduce; not a PHP class. It is refused
     /// rather than approximated.
     NotPorted,
@@ -69,7 +74,10 @@ const INTERFACE: &str = "Symfony\\Component\\Routing\\Exception\\ExceptionInterf
 impl Class {
     /// The class name, as `$e::class` gives it.
     pub const fn name(self) -> &'static str {
-        self.ancestry()[0]
+        match self {
+            Self::HttpFoundation(class) => class.name(),
+            _ => self.ancestry()[0],
+        }
     }
 
     /// The classes and interfaces it is an instance of, itself first.
@@ -173,6 +181,7 @@ impl Class {
             Self::PhpException => &["Exception", "Throwable"],
             Self::PhpTypeError => &["TypeError", "Error", "Throwable"],
             Self::PhpError => &["Error", "Throwable"],
+            Self::HttpFoundation(class) => class.ancestry(),
             Self::NotPorted => &["NotPorted"],
         }
     }
@@ -296,6 +305,18 @@ impl std::fmt::Display for Error {
 }
 
 impl std::error::Error for Error {}
+
+impl From<symfony_http_foundation::exception::Error> for Error {
+    /// The exception as it leaves a Request method; its code (always 0
+    /// for what `fromRequest()` can throw) and previous exception are not
+    /// kept.
+    fn from(error: symfony_http_foundation::exception::Error) -> Self {
+        Self::new(
+            Class::HttpFoundation(error.class()),
+            error.message().clone(),
+        )
+    }
+}
 
 /// Builds a message from byte pieces (upstream's `sprintf()` arguments
 /// need not be UTF-8).

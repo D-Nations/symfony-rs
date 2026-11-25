@@ -525,6 +525,7 @@ crates/routing/src/url_generator.rs	symfony/routing	Generator/UrlGeneratorInterf
 crates/routing/src/url_generator.rs	symfony/routing	Generator/ConfigurableRequirementsInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/url_matcher.rs	symfony/routing	Matcher/UrlMatcher.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/src/url_matcher.rs	symfony/routing	Matcher/UrlMatcherInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
+crates/routing/src/url_matcher.rs	symfony/routing	Matcher/RequestMatcherInterface.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/compiled_route_test.rs	symfony/routing	Tests/CompiledRouteTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/compiled_url_generator_dumper_test.rs	symfony/routing	Tests/Generator/Dumper/CompiledUrlGeneratorDumperTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3
 crates/routing/tests/redirectable_url_matcher_test.rs	symfony/routing	Tests/Matcher/RedirectableUrlMatcherTest.php	f3fefc6cad3748d538be970ca81b71f06d7aa8b3

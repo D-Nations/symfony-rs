@@ -92,13 +92,66 @@ pub(crate) fn string_argument(
 /// PHP's message for a parameter type mismatch, without the
 /// ", called in %s on line %d" that names the calling PHP file.
 fn argument_type_error(value: &Value, function: &str, position: usize, name: &str) -> Error {
+    typed_argument_error(value, function, position, name, "string")
+}
+
+fn typed_argument_error(
+    value: &Value,
+    function: &str,
+    position: usize,
+    name: &str,
+    ty: &str,
+) -> Error {
     Error::new(
         Class::PhpTypeError,
         format!(
-            "{function}(): Argument #{position} (${name}) must be of type string, {} given",
+            "{function}(): Argument #{position} (${name}) must be of type {ty}, {} given",
             value.debug_type()
         ),
     )
+}
+
+/// A value passed to an `int` parameter in coercive typing mode: a bool
+/// is 0 or 1; a float, or a numeric string, is truncated toward zero when
+/// it fits (PHP 8.1+ deprecates a fraction, a notice this does not
+/// print); anything else, a leading-numeric string included, is a
+/// `\TypeError`.
+pub(crate) fn int_argument(
+    value: &Value,
+    function: &str,
+    position: usize,
+    name: &str,
+) -> Result<i64, Error> {
+    const LIMIT: f64 = 9_223_372_036_854_775_808.0; // 2^63
+    match value {
+        Value::Bool(b) => Ok(i64::from(*b)),
+        Value::Int(i) => Ok(*i),
+        Value::Float(f) if f.is_finite() && (-LIMIT..LIMIT).contains(f) => Ok(f.trunc() as i64),
+        Value::String(s) => php_value::numeric::int_argument(s.as_bytes())
+            .ok_or_else(|| typed_argument_error(value, function, position, name, "int")),
+        _ => Err(typed_argument_error(value, function, position, name, "int")),
+    }
+}
+
+/// A value passed to a `?string` parameter in coercive typing mode:
+/// null stays null, scalars and `\Stringable` objects become strings,
+/// arrays and other objects are a `\TypeError`.
+pub(crate) fn nullable_string_argument(
+    value: &Value,
+    function: &str,
+    position: usize,
+    name: &str,
+) -> Result<Option<PhpString>, Error> {
+    match value {
+        Value::Null => Ok(None),
+        Value::Array(_) => Err(typed_argument_error(
+            value, function, position, name, "?string",
+        )),
+        other => other
+            .to_php_string_or_stringable()
+            .map(Some)
+            .ok_or_else(|| typed_argument_error(value, function, position, name, "?string")),
+    }
 }
 
 fn property_type_error(value: &Value, class: &str, property: &str, ty: &str) -> Error {

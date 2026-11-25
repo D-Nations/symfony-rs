@@ -18,6 +18,7 @@ mod url_matcher;
 use std::cell::RefCell;
 
 use php_value::{PhpArray, PhpString};
+use symfony_http_foundation::request::Request;
 use symfony_routing::{
     exception::Error,
     redirectable_url_matcher::{RedirectableUrlMatcher, RedirectableUrlMatcherInterface},
@@ -41,6 +42,14 @@ impl RedirectableUrlMatcherInterface for Empty {
 impl<R: RedirectableUrlMatcherInterface> Matcher for RedirectableUrlMatcher<R> {
     fn match_path(&self, pathinfo: &[u8]) -> Result<PhpArray, Error> {
         RedirectableUrlMatcher::match_path(self, pathinfo)
+    }
+
+    fn match_request(&self, request: &mut Request) -> Result<PhpArray, Error> {
+        RedirectableUrlMatcher::match_request(self, request)
+    }
+
+    fn context(&self) -> &RequestContext {
+        RedirectableUrlMatcher::context(self)
     }
 }
 
@@ -473,6 +482,16 @@ fn testNoMethodSoAllowed() -> TestResult {
 #[test]
 fn testMethodNotAllowed() -> TestResult {
     url_matcher::testMethodNotAllowed(get_url_matcher)
+}
+
+#[test]
+fn testMatchRequestHonorsTheRequestsMethodOverTheStaticContext() -> TestResult {
+    url_matcher::testMatchRequestHonorsTheRequestsMethodOverTheStaticContext(get_url_matcher)
+}
+
+#[test]
+fn testMatchRequestRestoresTheContextAfterwards() -> TestResult {
+    url_matcher::testMatchRequestRestoresTheContextAfterwards(get_url_matcher)
 }
 
 #[test]

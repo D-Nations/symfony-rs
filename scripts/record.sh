@@ -4,6 +4,7 @@
 #   scripts/record.sh routing      crates/routing/tests/data/matcher.json and route.json
 #   scripts/record.sh routing-route crates/routing/tests/data/route.json (Route, RouteCompiler, RouteCollection)
 #   scripts/record.sh routing-request-context crates/routing/tests/data/request_context.json
+#   scripts/record.sh routing-from-request crates/routing/tests/data/from_request.json (fromRequest(), matchRequest(); reads http-foundation's request.json)
 #   scripts/record.sh routing-url-generator crates/routing/tests/data/url_generator.json (UrlGenerator)
 #   scripts/record.sh routing-url-matcher crates/routing/tests/data/url_matcher.json (UrlMatcher and RedirectableUrlMatcher)
 #   scripts/record.sh routing-compiled-url-generator crates/routing/tests/data/compiled_url_generator.json (CompiledUrlGenerator and its dumper)
@@ -81,6 +82,16 @@ routing_request_context() {
     oracle oracle/recorders/routing_request_context.php > "$tmp"
     mv "$tmp" "$out"
     echo "RequestContext answers written to $out"
+}
+
+routing_from_request() {
+    local out=crates/routing/tests/data/from_request.json tmp
+    mkdir -p oracle/out "$(dirname "$out")"
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/routing_from_request.php > "$tmp"
+    python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d["cases"]), "recorded requests,", len(d["edges"]), "edge requests")' "$tmp"
+    mv "$tmp" "$out"
+    echo "fromRequest() and matchRequest() answers written to $out"
 }
 
 routing_url_generator() {
@@ -610,6 +621,7 @@ twig_trial() {
 case "${1:-}" in
     routing) routing; routing_route; routing_request_context ;;
     routing-request-context) routing_request_context ;;
+    routing-from-request) routing_from_request ;;
     routing-url-generator) routing_url_generator ;;
     routing-url-matcher) routing_url_matcher ;;
     routing-compiled-url-generator) routing_compiled_url_generator ;;
@@ -646,6 +658,6 @@ case "${1:-}" in
     mime-fileinfo) mime_fileinfo ;;
     http-foundation-releases) http_foundation_releases ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; php_value_decode; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; http_foundation_request; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|php-value-decode|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|http-foundation-request|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; php_value; php_value_decode; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; http_foundation_request; routing_from_request; mime_fileinfo; translation_xliff; translation_qt; config_cache ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|php-value|php-value-decode|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|http-foundation-request|mime-fileinfo|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|all" >&2; exit 2 ;;
 esac

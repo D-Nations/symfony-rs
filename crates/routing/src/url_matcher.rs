@@ -19,12 +19,17 @@
 //! Not ported: route conditions, which need ExpressionLanguage. A route
 //! with a condition throws upstream's `\LogicException` for a missing
 //! ExpressionLanguage component when it is reached, which is what PHP
-//! does without that component. `matchRequest()` (RequestMatcherInterface)
-//! needs HttpFoundation's Request, which is not ported yet.
+//! does without that component.
+//!
+//! `matchRequest()` (RequestMatcherInterface.php) matches the request's
+//! path info on a copy of the context filled by
+//! [`RequestContext::from_request`]; the matcher's own context is never
+//! changed, which is what upstream's `finally` restores. `$this->request`,
+//! which only route conditions read, is not kept.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
-//! Upstream: symfony/routing Matcher/UrlMatcher.php Matcher/UrlMatcherInterface.php
+//! Upstream: symfony/routing Matcher/UrlMatcher.php Matcher/UrlMatcherInterface.php Matcher/RequestMatcherInterface.php
 
 use std::{
     collections::HashMap,
@@ -33,6 +38,7 @@ use std::{
 
 use php_pcre::{Pcre, PcreError};
 use php_value::{Key, PhpArray, PhpString, Value, url::rawurldecode};
+use symfony_http_foundation::request::Request;
 
 use crate::{
     compiled_route::CompiledRoute,
@@ -142,6 +148,22 @@ impl UrlMatcher {
     /// `NoConfigurationException`.
     pub fn match_path(&self, pathinfo: &[u8]) -> Result<PhpArray, Error> {
         self.match_in(pathinfo, &self.context, &mut State::default(), false)
+    }
+
+    /// `matchRequest($request)`: `match($request->getPathInfo())` in the
+    /// context of the request. A Request exception, or PHP's `\TypeError`
+    /// for a port that is not an int, propagates.
+    pub fn match_request(&self, request: &mut Request) -> Result<PhpArray, Error> {
+        let context = self.request_context(request)?;
+        let pathinfo = request.get_path_info()?;
+        self.match_in(pathinfo.as_bytes(), &context, &mut State::default(), false)
+    }
+
+    /// `(clone $this->context)->fromRequest($request)`.
+    pub(crate) fn request_context(&self, request: &mut Request) -> Result<RequestContext, Error> {
+        let mut context = self.context.clone();
+        context.from_request(request)?;
+        Ok(context)
     }
 
     /// `match()` with the context and state it runs on; `redirectable` is

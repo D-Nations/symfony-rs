@@ -4,7 +4,8 @@
 //! `$_SERVER` arrays through `new Request()` and 1,500 generated URIs
 //! through `Request::create()`, each under a generated configuration and
 //! answering the recorder's 42 calls in its order; then `getFormat()`,
-//! `normalizeQueryString()` and JSON bodies. A value is compared with
+//! `normalizeQueryString()`, JSON bodies, and `getPort()` on 23
+//! `SERVER_PORT` values of every type. A value is compared with
 //! `===`; an exception by class and message.
 //!
 //! Upstream: none
@@ -325,6 +326,24 @@ fn matches_recorded_requests() -> Result<(), TestError> {
                     String::from_utf8_lossy(&body)
                 ));
             }
+        }
+    }
+    let ports = data["ports"].as_array().ok_or("ports")?;
+    assert_eq!(23, ports.len());
+    for case in ports {
+        let port = vectors::decode(&case[0])?;
+        let mut server = PhpArray::new();
+        server.insert("SERVER_PORT", port.clone());
+        let mut request = Request::new(Parameters {
+            server,
+            ..Parameters::default()
+        })?;
+        let want = recorded(&case[1])?;
+        let have = got(request.get_port());
+        if !want.same(&have) {
+            failures.push(format!(
+                "getPort() of SERVER_PORT {port:?}: PHP {want:?}, Rust {have:?}"
+            ));
         }
     }
     with_globals(|g| *g = Globals::default());
