@@ -10,6 +10,7 @@
 mod url_matcher;
 
 use php_value::PhpArray;
+use symfony_http_foundation::request::Request;
 use symfony_routing::{
     exception::Error, request_context::RequestContext, route_collection::RouteCollection,
     url_matcher::UrlMatcher,
@@ -19,6 +20,14 @@ use url_matcher::{Matcher, TestResult};
 impl Matcher for UrlMatcher {
     fn match_path(&self, pathinfo: &[u8]) -> Result<PhpArray, Error> {
         UrlMatcher::match_path(self, pathinfo)
+    }
+
+    fn match_request(&self, request: &mut Request) -> Result<PhpArray, Error> {
+        UrlMatcher::match_request(self, request)
+    }
+
+    fn context(&self) -> &RequestContext {
+        UrlMatcher::context(self)
     }
 }
 
@@ -40,6 +49,16 @@ fn testNoMethodSoAllowed() -> TestResult {
 #[test]
 fn testMethodNotAllowed() -> TestResult {
     url_matcher::testMethodNotAllowed(get_url_matcher)
+}
+
+#[test]
+fn testMatchRequestHonorsTheRequestsMethodOverTheStaticContext() -> TestResult {
+    url_matcher::testMatchRequestHonorsTheRequestsMethodOverTheStaticContext(get_url_matcher)
+}
+
+#[test]
+fn testMatchRequestRestoresTheContextAfterwards() -> TestResult {
+    url_matcher::testMatchRequestRestoresTheContextAfterwards(get_url_matcher)
 }
 
 #[test]

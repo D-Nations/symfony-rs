@@ -43,7 +43,7 @@ use php_value::{
     compare::loose_equals,
     html::html_entity_decode,
     json::decode_assoc,
-    numeric::string_to_int,
+    numeric::{float_to_string, string_to_int},
     path::{basename, dirname},
     url::{QueryEncoding, http_build_query, http_build_query_with, parse_url, rawurldecode},
     vars::parse_str,
@@ -1422,7 +1422,8 @@ impl Request {
         Ok(if self.is_secure()? { "https" } else { "http" })
     }
 
-    /// `getPort()`: an int, or `SERVER_PORT` as the server bag holds it.
+    /// `getPort()`: an int, or `SERVER_PORT` as the server bag holds it,
+    /// coerced to the `int|string|null` return type ([`port_return`]).
     pub fn get_port(&mut self) -> Result<Value> {
         let host = if let Some(first) = self.trusted_first(Self::HEADER_X_FORWARDED_PORT)? {
             first
@@ -1431,7 +1432,7 @@ impl Request {
         } else {
             match self.headers.get("HOST", None) {
                 Some(host) if truthy(host.as_bytes()) => host,
-                _ => return Ok(self.server.get("SERVER_PORT", Value::Null)),
+                _ => return port_return(self.server.get("SERVER_PORT", Value::Null)),
             }
         };
         let host = host.as_bytes();
@@ -2580,4 +2581,37 @@ impl Request {
         }
         Ok(self.is_iis_rewrite)
     }
+}
+
+/// `getPort()`'s `return $value;` under its `int|string|null` return type,
+/// in coercive typing mode (recorded from PHP 8.4.27): a bool is 0 or 1, a
+/// float that fits an int is truncated (PHP 8.1+ deprecates a fraction, a
+/// notice this does not print), any other float is its `precision = 14`
+/// string (`"1.0E+30"`, `"NAN"`), a `\Stringable` object its string; an
+/// array or other object is a `\TypeError`.
+fn port_return(value: Value) -> Result<Value> {
+    const LIMIT: f64 = 9_223_372_036_854_775_808.0; // 2^63
+    match value {
+        Value::Null | Value::Int(_) | Value::String(_) => Ok(value),
+        Value::Bool(b) => Ok(Value::Int(i64::from(b))),
+        Value::Float(f) if f.is_finite() && (-LIMIT..LIMIT).contains(&f) => {
+            Ok(Value::Int(f.trunc() as i64))
+        }
+        Value::Float(f) => Ok(Value::string(float_to_string(f))),
+        Value::Object(ref object) => match object.to_php_string() {
+            Some(s) => Ok(Value::String(s)),
+            None => Err(port_type_error(&value)),
+        },
+        Value::Array(_) => Err(port_type_error(&value)),
+    }
+}
+
+fn port_type_error(value: &Value) -> Error {
+    Error::new(
+        Class::PhpTypeError,
+        format!(
+            r"Symfony\Component\HttpFoundation\Request::getPort(): Return value must be of type string|int|null, {} returned",
+            value.debug_type()
+        ),
+    )
 }

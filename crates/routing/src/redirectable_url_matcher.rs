@@ -21,6 +21,7 @@
 //! Upstream: symfony/routing Matcher/RedirectableUrlMatcher.php Matcher/RedirectableUrlMatcherInterface.php
 
 use php_value::{Key, PhpArray, PhpString, Value};
+use symfony_http_foundation::request::Request;
 
 use crate::{
     exception::Error,
@@ -101,7 +102,19 @@ impl<R: RedirectableUrlMatcherInterface> RedirectableUrlMatcher<R> {
 
     /// `match($pathinfo)`.
     pub fn match_path(&self, pathinfo: &[u8]) -> Result<PhpArray, Error> {
-        let context = self.matcher.context();
+        self.match_in(pathinfo, self.matcher.context())
+    }
+
+    /// `matchRequest($request)`, inherited from UrlMatcher: this class's
+    /// `match($request->getPathInfo())` in the context of the request.
+    pub fn match_request(&self, request: &mut Request) -> Result<PhpArray, Error> {
+        let context = self.matcher.request_context(request)?;
+        let pathinfo = request.get_path_info()?;
+        self.match_in(pathinfo.as_bytes(), &context)
+    }
+
+    /// `match()` in a context.
+    fn match_in(&self, pathinfo: &[u8], context: &RequestContext) -> Result<PhpArray, Error> {
         let mut state = State::default();
         let e = match self.matcher.match_in(pathinfo, context, &mut state, true) {
             Ok(ret) => return Ok(ret),

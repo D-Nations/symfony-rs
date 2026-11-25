@@ -8,10 +8,10 @@
 //! Not here (pending in the manifest): the tests of route conditions,
 //! which need ExpressionLanguage (testCondition, testZeroCondition,
 //! testZeroConditionNextToOtherConditions, testRequestCondition,
-//! testRouteParametersCondition, testSiblingRoutes), and of
-//! `matchRequest()`, which needs HttpFoundation's Request
-//! (testMatchRequestHonorsTheRequestsMethodOverTheStaticContext,
-//! testMatchRequestRestoresTheContextAfterwards).
+//! testRouteParametersCondition, testSiblingRoutes).
+//!
+//! `assertSame($originalContext, $matcher->getContext())` compares by
+//! value: the matcher owns its context.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
@@ -20,6 +20,7 @@
 
 use php_pcre::preg_quote;
 use php_value::{Key, PhpArray, PhpString, Value, url::rawurlencode};
+use symfony_http_foundation::request::{Create, Request};
 use symfony_routing::{
     exception::{Detail, Error},
     request_context::RequestContext,
@@ -39,6 +40,19 @@ pub const NO_CONFIGURATION: &str =
 /// What the tests call on a matcher.
 pub trait Matcher {
     fn match_path(&self, pathinfo: &[u8]) -> Result<PhpArray, Error>;
+    fn match_request(&self, request: &mut Request) -> Result<PhpArray, Error>;
+    fn context(&self) -> &RequestContext;
+}
+
+/// `Request::create($uri, $method)`.
+pub fn request(uri: &str, method: &str) -> Result<Request, Box<dyn std::error::Error>> {
+    Ok(Request::create_with(
+        uri,
+        Create {
+            method: Some(PhpString::from(method)),
+            ..Create::default()
+        },
+    )?)
 }
 
 /// `getUrlMatcher($routes, $context)` of the test class.
@@ -191,6 +205,30 @@ pub fn testMethodNotAllowed(get: GetUrlMatcher) -> TestResult {
     let matcher = get(coll, None);
     let e = expect_exception(matcher.match_path(b"/foo"), METHOD_NOT_ALLOWED);
     assert_eq!(allowed_methods(&e), ["POST"]);
+    Ok(())
+}
+
+pub fn testMatchRequestHonorsTheRequestsMethodOverTheStaticContext(
+    get: GetUrlMatcher,
+) -> TestResult {
+    let coll = coll(vec![("foo", route("/foo").methods(&["GET"]))])?;
+    let matcher = get(coll, Some(method("POST")));
+    assert_same(
+        &[("_route", "foo")],
+        &matcher.match_request(&mut request("/foo", "GET")?)?,
+    );
+    Ok(())
+}
+
+pub fn testMatchRequestRestoresTheContextAfterwards(get: GetUrlMatcher) -> TestResult {
+    let coll = coll(vec![("foo", route("/foo").methods(&["GET"]))])?;
+    let original_context = ctx("", "POST", "example.com");
+    let matcher = get(coll, Some(original_context.clone()));
+    matcher.match_request(&mut request("https://other.example/foo", "GET")?)?;
+
+    assert_eq!(b"POST", matcher.context().method().as_bytes());
+    assert_eq!(b"example.com", matcher.context().host().as_bytes());
+    assert_eq!(&original_context, matcher.context());
     Ok(())
 }
 

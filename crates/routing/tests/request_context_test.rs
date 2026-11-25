@@ -4,15 +4,15 @@
 //! $context->setX())` (the fluent interface) compares the returned
 //! reference with the context. `testPort` passes PHP's `'123'` and `'456'`
 //! as the integers PHP's coercion makes of them before the call.
-//! `testFromRequest` waits for `HttpFoundation`'s Request, and
 //! `testConstructParametersBcLayer` is a PHP subclass calling
 //! `setParameters()` before the parent constructor (not applicable to a
-//! Rust value); both are listed in the manifest.
+//! Rust value; `n/a` in the manifest).
 //!
 //! Upstream: symfony/routing Tests/RequestContextTest.php
 #![allow(non_snake_case)]
 
 use php_value::{PhpArray, PhpString, Value};
+use symfony_http_foundation::request::Request;
 use symfony_routing::request_context::RequestContext;
 
 fn s(text: &str) -> PhpString {
@@ -116,6 +116,32 @@ fn testFromBadUri() {
         assert_eq!(s(""), *context.base_url(), "{uri:?}");
         assert_eq!(s("/"), *context.path_info(), "{uri:?}");
     }
+}
+
+#[test]
+fn testFromRequest() -> Result<(), Box<dyn std::error::Error>> {
+    let mut request = Request::create("https://test.com:444/foo?bar=baz")?;
+    let mut request_context = RequestContext::default();
+    request_context.set_http_port(123);
+    request_context.from_request(&mut request)?;
+
+    assert_eq!(s(""), *request_context.base_url());
+    assert_eq!(s("GET"), *request_context.method());
+    assert_eq!(s("test.com"), *request_context.host());
+    assert_eq!(s("https"), *request_context.scheme());
+    assert_eq!(s("/foo"), *request_context.path_info());
+    assert_eq!(s("bar=baz"), *request_context.query_string());
+    assert_eq!(123, request_context.http_port());
+    assert_eq!(444, request_context.https_port());
+
+    let mut request = Request::create("http://test.com:8080/foo?bar=baz")?;
+    let mut request_context = RequestContext::default();
+    request_context.set_https_port(567);
+    request_context.from_request(&mut request)?;
+
+    assert_eq!(8080, request_context.http_port());
+    assert_eq!(567, request_context.https_port());
+    Ok(())
 }
 
 #[test]

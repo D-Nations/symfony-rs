@@ -1,6 +1,14 @@
 //! Port of Symfony\Component\Routing\RequestContext.php.
 //!
-//! `fromRequest()` waits for `HttpFoundation`'s Request (not ported yet).
+//! `fromRequest()` reads HttpFoundation's [`Request`] (whose getters
+//! cache, so it is borrowed mutably) and passes what it reads to the
+//! setters as PHP does from a file without `strict_types`: the port to
+//! `setHttpPort(int)` and `setHttpsPort(int)` and the `QUERY_STRING` server
+//! value to `setQueryString(?string)` are coerced, or are PHP's
+//! `\TypeError`. A Request exception propagates as is. The setters run
+//! in upstream's order, so a failure leaves the earlier ones applied, as
+//! in PHP.
+//!
 //! The constructor's `$parameters = null` keeps the parameters a PHP
 //! subclass set before calling it; a Rust value is built whole, so `None`
 //! is `[]`. Ports are integers: PHP's coercion of a numeric string
@@ -11,6 +19,16 @@
 //! Upstream: symfony/routing RequestContext.php
 
 use php_value::{Key, PhpArray, PhpString, Value, url::parse_url};
+use symfony_http_foundation::request::Request;
+
+use crate::{
+    exception::Error,
+    php::{int_argument, nullable_string_argument},
+};
+
+const SET_HTTP_PORT: &str = r"Symfony\Component\Routing\RequestContext::setHttpPort";
+const SET_HTTPS_PORT: &str = r"Symfony\Component\Routing\RequestContext::setHttpsPort";
+const SET_QUERY_STRING: &str = r"Symfony\Component\Routing\RequestContext::setQueryString";
 
 /// `RequestContext`: what the matcher and generator know about the
 /// current request.
@@ -134,6 +152,45 @@ impl RequestContext {
             "",
             None,
         )
+    }
+
+    /// `fromRequest($request)`: the context of a request.
+    pub fn from_request(&mut self, request: &mut Request) -> Result<&mut Self, Error> {
+        self.set_base_url(request.get_base_url()?);
+        self.set_path_info(request.get_path_info()?);
+        self.set_method(request.get_method()?);
+        self.set_host(request.get_host()?);
+        self.set_scheme(request.get_scheme()?);
+
+        // `$request->isSecure() || null === $request->getPort() ?
+        // $this->httpPort : $request->getPort()`
+        let http_port = if request.is_secure()? {
+            self.http_port
+        } else {
+            match request.get_port()? {
+                Value::Null => self.http_port,
+                _ => int_argument(&request.get_port()?, SET_HTTP_PORT, 1, "httpPort")?,
+            }
+        };
+        self.set_http_port(http_port);
+
+        // `$request->isSecure() && null !== $request->getPort() ?
+        // $request->getPort() : $this->httpsPort`
+        let https_port = if request.is_secure()? {
+            match request.get_port()? {
+                Value::Null => self.https_port,
+                _ => int_argument(&request.get_port()?, SET_HTTPS_PORT, 1, "httpsPort")?,
+            }
+        } else {
+            self.https_port
+        };
+        self.set_https_port(https_port);
+
+        let query_string = request.server().get("QUERY_STRING", Value::string(""));
+        let query_string =
+            nullable_string_argument(&query_string, SET_QUERY_STRING, 1, "queryString")?;
+        self.set_query_string(query_string);
+        Ok(self)
     }
 
     /// `getBaseUrl()`.

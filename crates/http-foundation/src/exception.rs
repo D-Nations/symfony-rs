@@ -151,7 +151,7 @@ impl Class {
     }
 
     /// The classes and interfaces it is an instance of, itself first.
-    const fn ancestry(self) -> &'static [&'static str] {
+    pub const fn ancestry(self) -> &'static [&'static str] {
         match self {
             Self::BadRequest => &[
                 "Symfony\\Component\\HttpFoundation\\Exception\\BadRequestException",
