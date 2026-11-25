@@ -49,7 +49,7 @@ pub trait RedirectableUrlMatcherInterface {
     ) -> Result<PhpArray, Error>;
 
     /// `redirect()` for an implementation that reads `$this->context`
-    /// (FrameworkBundle's `RedirectableCompiledUrlMatcher` reads its
+    /// (`FrameworkBundle`'s `RedirectableCompiledUrlMatcher` reads its
     /// ports): the context the match ran in, with the scheme changed on a
     /// scheme retry, as PHP's is while `redirect()` runs. By default,
     /// [`Self::redirect`].
