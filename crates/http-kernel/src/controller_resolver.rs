@@ -129,6 +129,18 @@ impl ClassKind {
     }
 }
 
+/// A method body that reads `$this`: the object, then the arguments.
+type ThisCallable = dyn Fn(&Value, &[Value]) -> Result<ControllerResult, Throwable> + Send + Sync;
+
+#[derive(Clone)]
+struct ThisBody(Arc<ThisCallable>);
+
+impl fmt::Debug for ThisBody {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("ThisBody")
+    }
+}
+
 /// A declared method.
 #[derive(Debug, Clone)]
 pub struct Method {
@@ -138,6 +150,8 @@ pub struct Method {
     attributes: Vec<String>,
     /// `None` for an abstract method.
     body: Option<Controller>,
+    /// What runs when the method is called on an object, given `$this`.
+    this_body: Option<ThisBody>,
 }
 
 impl Method {
@@ -149,6 +163,7 @@ impl Method {
             is_static: false,
             attributes: Vec::new(),
             body: Some(body),
+            this_body: None,
         }
     }
 
@@ -160,6 +175,7 @@ impl Method {
             is_static: false,
             attributes: Vec::new(),
             body: None,
+            this_body: None,
         }
     }
 
@@ -167,6 +183,23 @@ impl Method {
     #[must_use]
     pub fn with_visibility(mut self, visibility: Visibility) -> Self {
         self.visibility = visibility;
+        self
+    }
+
+    /// With a body that reads `$this`: called on an object (`[$object,
+    /// 'method']`, an invokable object, or a closure made of either), the
+    /// kernel runs `function($this, $arguments)`; what reflection reports
+    /// (name, parameters, attributes) stays the declared body's, which
+    /// runs when there is no object.
+    #[must_use]
+    pub fn with_this(
+        mut self,
+        function: impl Fn(&Value, &[Value]) -> Result<ControllerResult, Throwable>
+        + Send
+        + Sync
+        + 'static,
+    ) -> Self {
+        self.this_body = Some(ThisBody(Arc::new(function)));
         self
     }
 
@@ -516,6 +549,8 @@ enum Target {
     Method {
         called: Arc<Class>,
         method: Method,
+        /// `$this`: the object a non-static method is called on.
+        this: Option<Value>,
     },
     /// `__call` / `__callStatic` with the name called.
     Magic {
@@ -771,6 +806,7 @@ impl ClassRegistry {
                 (e.method.is_static && !e.method.is_abstract()).then(|| Target::Method {
                     called: class.clone(),
                     method: e.method,
+                    this: None,
                 })
             }
             _ => self.magic(class, b"__callStatic", method),
@@ -791,9 +827,11 @@ impl ClassRegistry {
             }
             ObjectClass::Declared(class) => match self.find_method(&class, method, true) {
                 Some(e) if e.method.visibility == Visibility::Public && !e.method.is_abstract() => {
+                    let this = (!e.method.is_static).then(|| Value::Object(object.clone()));
                     Some(Target::Method {
                         called: class,
                         method: e.method,
+                        this,
                     })
                 }
                 _ => self.magic(&class, b"__call", method),
@@ -843,6 +881,7 @@ impl ClassRegistry {
                     .filter(|e| !e.method.is_abstract())
                     .map(|e| Target::Method {
                         called: class,
+                        this: (!e.method.is_static).then(|| value.clone()),
                         method: e.method,
                     }),
                 ObjectClass::Other(_) => None,
@@ -863,10 +902,15 @@ impl ClassRegistry {
         let closure = match self.callable(callable)? {
             Target::Closure(_) | Target::ClosureMethod(_) => return None,
             Target::Function(f) => ClosureObject::from_function(&f),
-            Target::Method { called, method } => {
+            Target::Method {
+                called,
+                method,
+                this,
+            } => {
                 let controller = controller_of(&Target::Method {
                     called: called.clone(),
                     method: method.clone(),
+                    this,
                 });
                 ClosureObject::new(
                     method.name.clone(),
@@ -922,10 +966,21 @@ impl ClassRegistry {
 fn controller_of(target: &Target) -> Controller {
     match target {
         Target::Closure(controller) => controller.clone(),
-        Target::Method { called, method } => match &method.body {
-            Some(body) => body
-                .clone()
-                .with_name(format!("{}::{}", called.name, method.name)),
+        Target::Method {
+            called,
+            method,
+            this,
+        } => match &method.body {
+            Some(body) => {
+                let body = match (this, &method.this_body) {
+                    (Some(this), Some(ThisBody(function))) => {
+                        let (this, function) = (this.clone(), function.clone());
+                        body.with_function(move |arguments| function(&this, arguments))
+                    }
+                    _ => body.clone(),
+                };
+                body.with_name(format!("{}::{}", called.name, method.name))
+            }
             // Not reached: abstract methods are not callable.
             None => Controller::new(|_| Ok(ControllerResult::Value(Value::Null))),
         },

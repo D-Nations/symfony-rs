@@ -197,6 +197,18 @@ impl Controller {
         self
     }
 
+    /// The same controller (name, parameters, attributes) running another
+    /// function: a method body bound to `$this`.
+    pub(crate) fn with_function(
+        &self,
+        function: impl Fn(&[Value]) -> Result<ControllerResult, Throwable> + Send + Sync + 'static,
+    ) -> Self {
+        Self {
+            function: Arc::new(function),
+            ..self.clone()
+        }
+    }
+
     /// `$controller(...$arguments)`.
     pub fn call(&self, arguments: &[Value]) -> Result<ControllerResult, Throwable> {
         (self.function)(arguments)
