@@ -116,7 +116,7 @@ src/Driver/SQLite3/Result.php	Result	76	pending
 src/Driver/SQLite3/Statement.php	Statement	46	pending	
 src/Driver/Statement.php	Statement	8	pending	
 src/DriverManager.php	DriverManager	70	pending	
-src/Exception.php	Exception	6	pending	
+src/Exception.php	Exception	6	ported	crates/doctrine-dbal/src/exception.rs
 src/Exception/CommitFailedRollbackOnly.php	CommitFailedRollbackOnly	10	pending	
 src/Exception/ConnectionException.php	ConnectionException	5	pending	
 src/Exception/ConnectionLost.php	ConnectionLost	5	pending	
@@ -129,7 +129,7 @@ src/Exception/DeadlockException.php	DeadlockException	5	pending
 src/Exception/DriverException.php	DriverException	30	pending	
 src/Exception/DriverRequired.php	DriverRequired	22	pending	
 src/Exception/ForeignKeyConstraintViolationException.php	ForeignKeyConstraintViolationException	5	pending	
-src/Exception/InvalidArgumentException.php	InvalidArgumentException	6	pending	
+src/Exception/InvalidArgumentException.php	InvalidArgumentException	6	ported	crates/doctrine-dbal/src/exception.rs
 src/Exception/InvalidColumnDeclaration.php	InvalidColumnDeclaration	19	pending	
 src/Exception/InvalidColumnIndex.php	InvalidColumnIndex	13	pending	
 src/Exception/InvalidColumnType.php	InvalidColumnType	7	pending	
@@ -172,8 +172,8 @@ src/Platforms/DateIntervalUnit.php	DateIntervalUnit	13	pending
 src/Platforms/Db2/Db2MetadataProvider.php	Db2MetadataProvider	416	pending	
 src/Platforms/Exception/InvalidPlatformVersion.php	InvalidPlatformVersion	15	pending	
 src/Platforms/Exception/NoColumnsSpecifiedForTable.php	NoColumnsSpecifiedForTable	11	pending	
-src/Platforms/Exception/NotSupported.php	NotSupported	11	pending	
-src/Platforms/Exception/PlatformException.php	PlatformException	6	pending	
+src/Platforms/Exception/NotSupported.php	NotSupported	11	ported	crates/doctrine-dbal/src/platforms/exception.rs
+src/Platforms/Exception/PlatformException.php	PlatformException	6	ported	crates/doctrine-dbal/src/platforms/exception.rs
 src/Platforms/Keywords/DB2Keywords.php	DB2Keywords	404	pending	
 src/Platforms/Keywords/KeywordList.php	KeywordList	31	pending	
 src/Platforms/Keywords/MariaDB117Keywords.php	MariaDB117Keywords	12	pending	
@@ -227,31 +227,31 @@ src/Portability/OptimizeFlags.php	OptimizeFlags	28	pending
 src/Portability/Result.php	Result	53	pending	
 src/Portability/Statement.php	Statement	19	pending	
 src/Query.php	Query	23	pending	
-src/Query/CommonTableExpression.php	CommonTableExpression	16	pending	
-src/Query/Exception/NonUniqueAlias.php	NonUniqueAlias	19	pending	
-src/Query/Exception/UnknownAlias.php	UnknownAlias	19	pending	
-src/Query/Expression/CompositeExpression.php	CompositeExpression	49	pending	
-src/Query/Expression/ExpressionBuilder.php	ExpressionBuilder	88	pending	
-src/Query/ForUpdate.php	ForUpdate	14	pending	
-src/Query/ForUpdate/ConflictResolutionMode.php	ConflictResolutionMode	7	pending	
-src/Query/From.php	From	10	pending	
-src/Query/Join.php	Join	28	pending	
-src/Query/Limit.php	Limit	22	pending	
-src/Query/QueryBuilder.php	QueryBuilder	602	pending	
-src/Query/QueryException.php	QueryException	6	pending	
-src/Query/QueryType.php	QueryType	10	pending	
-src/Query/SelectQuery.php	SelectQuery	53	pending	
-src/Query/Union.php	Union	10	pending	
-src/Query/UnionQuery.php	UnionQuery	23	pending	
-src/Query/UnionType.php	UnionType	7	pending	
+src/Query/CommonTableExpression.php	CommonTableExpression	16	ported	crates/doctrine-dbal/src/query/common_table_expression.rs
+src/Query/Exception/NonUniqueAlias.php	NonUniqueAlias	19	ported	crates/doctrine-dbal/src/query/query_exception.rs
+src/Query/Exception/UnknownAlias.php	UnknownAlias	19	ported	crates/doctrine-dbal/src/query/query_exception.rs
+src/Query/Expression/CompositeExpression.php	CompositeExpression	49	ported	crates/doctrine-dbal/src/query/expression/composite_expression.rs
+src/Query/Expression/ExpressionBuilder.php	ExpressionBuilder	88	ported	crates/doctrine-dbal/src/query/expression/expression_builder.rs
+src/Query/ForUpdate.php	ForUpdate	14	ported	crates/doctrine-dbal/src/query/for_update.rs
+src/Query/ForUpdate/ConflictResolutionMode.php	ConflictResolutionMode	7	ported	crates/doctrine-dbal/src/query/for_update.rs
+src/Query/From.php	From	10	ported	crates/doctrine-dbal/src/query/from.rs
+src/Query/Join.php	Join	28	ported	crates/doctrine-dbal/src/query/from.rs
+src/Query/Limit.php	Limit	22	ported	crates/doctrine-dbal/src/query/limit.rs
+src/Query/QueryBuilder.php	QueryBuilder	602	ported	crates/doctrine-dbal/src/query/query_builder.rs
+src/Query/QueryException.php	QueryException	6	ported	crates/doctrine-dbal/src/query/query_exception.rs
+src/Query/QueryType.php	QueryType	10	ported	crates/doctrine-dbal/src/query/query_type.rs
+src/Query/SelectQuery.php	SelectQuery	53	ported	crates/doctrine-dbal/src/query/select_query.rs
+src/Query/Union.php	Union	10	ported	crates/doctrine-dbal/src/query/union.rs
+src/Query/UnionQuery.php	UnionQuery	23	ported	crates/doctrine-dbal/src/query/union_query.rs
+src/Query/UnionType.php	UnionType	7	ported	crates/doctrine-dbal/src/query/union.rs
 src/Result.php	Result	160	pending	
 src/SQL/Builder/CreateSchemaObjectsSQLBuilder.php	CreateSchemaObjectsSQLBuilder	43	pending	
-src/SQL/Builder/DefaultSelectSQLBuilder.php	DefaultSelectSQLBuilder	65	pending	
-src/SQL/Builder/DefaultUnionSQLBuilder.php	DefaultUnionSQLBuilder	36	pending	
+src/SQL/Builder/DefaultSelectSQLBuilder.php	DefaultSelectSQLBuilder	65	ported	crates/doctrine-dbal/src/sql/builder/select_sql_builder.rs
+src/SQL/Builder/DefaultUnionSQLBuilder.php	DefaultUnionSQLBuilder	36	ported	crates/doctrine-dbal/src/sql/builder/union_sql_builder.rs
 src/SQL/Builder/DropSchemaObjectsSQLBuilder.php	DropSchemaObjectsSQLBuilder	32	pending	
-src/SQL/Builder/SelectSQLBuilder.php	SelectSQLBuilder	8	pending	
-src/SQL/Builder/UnionSQLBuilder.php	UnionSQLBuilder	8	pending	
-src/SQL/Builder/WithSQLBuilder.php	WithSQLBuilder	22	pending	
+src/SQL/Builder/SelectSQLBuilder.php	SelectSQLBuilder	8	ported	crates/doctrine-dbal/src/sql/builder/select_sql_builder.rs
+src/SQL/Builder/UnionSQLBuilder.php	UnionSQLBuilder	8	ported	crates/doctrine-dbal/src/sql/builder/union_sql_builder.rs
+src/SQL/Builder/WithSQLBuilder.php	WithSQLBuilder	22	ported	crates/doctrine-dbal/src/sql/builder/with_sql_builder.rs
 src/SQL/Parser.php	Parser	82	ported	crates/doctrine-dbal/src/sql/parser.rs
 src/SQL/Parser/Exception.php	Exception	6	pending	
 src/SQL/Parser/Exception/RegularExpressionError.php	RegularExpressionError	13	pending	
