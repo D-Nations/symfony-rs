@@ -17,6 +17,15 @@
 //! returns and the name `ArgumentMetadataFactory` gives it, or the
 //! exception (class, message, code and previous).
 //!
+//! `ContainerControllerResolver` against 2,000 more scripts from the same
+//! recorder (`CR_MODE=container`, `scripts/record.sh
+//! http-kernel-container-controller-resolver`): each also has a container,
+//! a Symfony DI `Container` (services set, removed ids) or another PSR-11
+//! container, whose services are the script's objects, closures or a
+//! `stdClass`, and `_controller` may name one of its ids. Also compared:
+//! the container's `has()`, `get()` (PSR-11 only) and `getRemovedIds()`
+//! calls, in order.
+//!
 //! Upstream: none
 
 #![allow(
@@ -25,16 +34,23 @@
     reason = "test helpers; a panic is a test failure"
 )]
 
-use std::sync::{Arc, Mutex};
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
+};
 
 use base64::Engine;
 use php_value::{
     Handle, Key, PhpArray, PhpString, Value, object::StdClass, value::debug_class_name, vectors,
 };
+use psr_container::{ContainerInterface, Throwable as ContainerThrowable};
 use psr_log::{Context, ContextValue, LogLevel, LoggerInterface};
 use serde_json::{Value as Json, json};
 use symfony_http_foundation::request::Request;
 use symfony_http_kernel::{
+    container_controller_resolver::{
+        ContainerControllerResolver, ControllerContainer, DependencyInjectionContainer,
+    },
     controller::{Controller, ControllerResult, Parameter},
     controller_resolver::{
         Class, ClassKind, ClassRegistry, ClosureObject, ControllerResolver, Function, Method,
@@ -44,6 +60,72 @@ use symfony_http_kernel::{
 };
 
 const DATA: &str = include_str!("data/controller_resolver.json");
+const CONTAINER_DATA: &str = include_str!("data/container_controller_resolver.json");
+
+/// The recorder's `RecordingContainer` (a DI `Container`: `has()` and
+/// `getRemovedIds()` recorded) or `PsrContainer` (`has()` and `get()`
+/// recorded).
+struct RecordingContainer {
+    di: bool,
+    services: HashMap<Vec<u8>, Value>,
+    removed: PhpArray,
+    calls: Mutex<Vec<Json>>,
+}
+
+impl ContainerInterface for RecordingContainer {
+    fn get(&self, id: &[u8]) -> Result<Value, ContainerThrowable> {
+        if !self.di {
+            self.calls.lock().unwrap().push(json!(["get", b64(id)]));
+        }
+        self.services
+            .get(id)
+            .cloned()
+            .ok_or_else(|| Arc::new(std::io::Error::other("no such service")) as ContainerThrowable)
+    }
+
+    fn has(&self, id: &[u8]) -> bool {
+        self.calls.lock().unwrap().push(json!(["has", b64(id)]));
+        self.services.contains_key(id)
+    }
+}
+
+impl DependencyInjectionContainer for RecordingContainer {
+    fn get_removed_ids(&self) -> PhpArray {
+        self.calls.lock().unwrap().push(json!(["getRemovedIds"]));
+        self.removed.clone()
+    }
+}
+
+/// The script's container, from its recorded spec.
+fn container(spec: &Json, objects: &[Value], closures: &[Value]) -> Arc<RecordingContainer> {
+    let services = spec["services"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|pair| {
+            let service = &pair[1];
+            let value = match service[0].as_str().unwrap() {
+                "object" => objects[index(&service[1])].clone(),
+                "closure" => closures[index(&service[1])].clone(),
+                _ => StdClass::object(PhpArray::new()),
+            };
+            (unb64(&pair[0]), value)
+        })
+        .collect();
+    let mut removed = PhpArray::new();
+    for pair in spec["removed"].as_array().unwrap() {
+        removed.insert(
+            Key::from_bytes(&unb64(&pair[0])),
+            vectors::decode(&pair[1]).unwrap(),
+        );
+    }
+    Arc::new(RecordingContainer {
+        di: spec["kind"] == "di",
+        services,
+        removed,
+        calls: Mutex::default(),
+    })
+}
 
 fn b64(bytes: &[u8]) -> Json {
     Json::String(base64::engine::general_purpose::STANDARD.encode(bytes))
@@ -328,6 +410,11 @@ fn decode_controller(spec: &Json, objects: &[Value], closures: &[Value]) -> Valu
             }
             Value::Array(array)
         }
+        "service" => Value::String(PhpString::from(unb64(&spec[1]))),
+        "service_array" => Value::Array(PhpArray::list([
+            Value::String(PhpString::from(unb64(&spec[1]))),
+            Value::String(PhpString::from(unb64(&spec[2]))),
+        ])),
         other => panic!("unknown controller {other}"),
     }
 }
@@ -374,6 +461,31 @@ fn make_closure(
             registry.closure_from_callable(&Value::Array(callable))?
         }
     })
+}
+
+/// `new ControllerResolver($logger)`, or `new
+/// ContainerControllerResolver($container, $logger)` for a script with a
+/// container.
+fn resolver(
+    file: &str,
+    registry: &Arc<ClassRegistry>,
+    logger: &Arc<Logger>,
+    container: Option<&Arc<RecordingContainer>>,
+) -> ControllerResolver {
+    let logger: Arc<dyn LoggerInterface> = logger.clone();
+    match container {
+        Some(container) => {
+            let shared = if container.di {
+                ControllerContainer::DependencyInjection(container.clone())
+            } else {
+                ControllerContainer::Psr(container.clone())
+            };
+            ContainerControllerResolver::new(shared, registry.clone(), Some(logger))
+                .with_source_file(file)
+                .into_inner()
+        }
+        None => ControllerResolver::new(registry.clone(), Some(logger)).with_source_file(file),
+    }
 }
 
 fn run(file: &str, script: &Json) -> Vec<(String, Json, Json)> {
@@ -438,8 +550,10 @@ fn run(file: &str, script: &Json) -> Vec<(String, Json, Json)> {
     }
 
     let logger = Arc::new(Logger::default());
-    let mut resolver =
-        ControllerResolver::new(registry.clone(), Some(logger.clone())).with_source_file(file);
+    let container = script
+        .get("container")
+        .map(|spec| container(spec, &objects, &closures));
+    let mut resolver = resolver(file, &registry, &logger, container.as_ref());
     for call in script["allow"].as_array().unwrap() {
         let types: Vec<PhpString> = call[0]
             .as_array()
@@ -466,15 +580,31 @@ fn run(file: &str, script: &Json) -> Vec<(String, Json, Json)> {
         &script["logs"],
         Json::Array(logger.0.lock().unwrap().clone()),
     );
+    if let Some(container) = &container {
+        differ(
+            "container calls",
+            &script["container_calls"],
+            Json::Array(container.calls.lock().unwrap().clone()),
+        );
+    }
     differences
 }
 
 #[test]
 fn recorded_scripts() {
-    let data: Json = serde_json::from_str(DATA).unwrap();
+    run_all(DATA, 4000);
+}
+
+#[test]
+fn recorded_container_scripts() {
+    run_all(CONTAINER_DATA, 2000);
+}
+
+fn run_all(data: &str, count: usize) {
+    let data: Json = serde_json::from_str(data).unwrap();
     let file = data["file"].as_str().unwrap();
     let scripts = data["scripts"].as_array().unwrap();
-    assert_eq!(scripts.len(), 4000);
+    assert_eq!(scripts.len(), count);
     let mut failures = 0;
     for (n, script) in scripts.iter().enumerate() {
         let differences = run(file, script);

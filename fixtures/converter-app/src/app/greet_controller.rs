@@ -1,25 +1,51 @@
 //! `Fixture\Controller\GreetController` (oracle/apps/converter-fixture/src/Controller/GreetController.php).
 //!
-//! An action is `async fn(&Container, RequestScope, Request, args) ->
-//! Result<Response, Exception>` (converter contract 0.1, section 6). The
-//! controller is a service like any other, built from the request scope.
+//! A controller is a service like any other, built from the request scope,
+//! and a PHP object: the `ContainerControllerResolver` takes it from the
+//! container for `Fixture\Controller\GreetController::greet`. Its class is
+//! declared for the resolver (what reflection would report of `greet()`),
+//! and the declared method runs the Rust method on `$this` (converter
+//! contract 0.3, section 6).
 //!
 //! Upstream: none
 
 use std::sync::Arc;
 
-use axum::{extract::Request, http::StatusCode, response::Response};
-use php_value::PhpString;
-use symfony_http_kernel::Exception;
-
-use super::greeter::Greeter;
-use crate::{
-    container::{Container, RequestScope},
-    runtime::http_foundation::{InputBag, new_response},
+use php_value::{PhpArray, PhpObject, PhpString, Value};
+use symfony_http_foundation::{
+    header_bag::ResponseHeaderBag, request::Request, request_stack::RequestHandle,
+    response::Response,
+};
+use symfony_http_kernel::{
+    controller::{Controller, ControllerResult, Parameter, REQUEST_CLASS, as_request},
+    controller_resolver::{Class, Method},
+    exception::Throwable,
+    http_kernel::response_handle,
 };
 
+use super::greeter::Greeter;
+use crate::runtime::NotPorted;
+
+pub const CLASS: &str = "Fixture\\Controller\\GreetController";
+
+#[derive(Debug)]
 pub struct GreetController {
     greeter: Arc<Greeter>,
+}
+
+impl PhpObject for GreetController {
+    fn class(&self) -> &str {
+        CLASS
+    }
+
+    /// Its only property is private.
+    fn properties(&self) -> PhpArray {
+        PhpArray::new()
+    }
+}
+
+fn throwable(error: impl std::error::Error + Send + Sync + 'static) -> Throwable {
+    Arc::new(error)
 }
 
 impl GreetController {
@@ -28,29 +54,43 @@ impl GreetController {
     }
 
     /// `#[Route('/greet/{name}', name: 'greet', requirements: ['name' => '[a-z]+'], methods: ['GET'])]`
-    pub fn greet(&self, name: &PhpString, request: &Request) -> Result<Response, Exception> {
-        let query = InputBag::query(request);
-        let punctuation = query.get_string("punctuation", "!")?;
-        let greeting = self.greeter.greet(name, &punctuation)?;
-        new_response(
-            &greeting.render()?,
-            StatusCode::OK,
-            &[("Content-Type", "text/plain")],
-        )
+    pub fn greet(&self, name: &PhpString, request: &mut Request) -> Result<Response, Throwable> {
+        let punctuation = request
+            .query()
+            .get_string("punctuation", "!")
+            .map_err(throwable)?;
+        let greeting = self.greeter.greet(name, &punctuation).map_err(throwable)?;
+        let headers =
+            ResponseHeaderBag::new([("Content-Type", "text/plain")]).map_err(throwable)?;
+        let content = greeting.render().map_err(throwable)?;
+        Response::new(Some(content), 200, headers).map_err(throwable)
     }
 }
 
-/// The action as the kernel invokes it: `GreetController::greet`, with
-/// `$name` from the route and `$request` from the argument resolver.
-#[expect(
-    clippy::unused_async,
-    reason = "converter contract: every action is an async fn"
-)]
-pub async fn greet(
-    container: &Container,
-    scope: RequestScope,
-    request: Request,
-    name: PhpString,
-) -> Result<Response, Exception> {
-    scope.greet_controller(container).greet(&name, &request)
+/// The declared class: `greet(string $name, Request $request): Response`.
+pub fn class() -> Class {
+    let declared = Controller::new(|_| Err(throwable(NotPorted("greet() without its object"))))
+        .with_parameters([
+            Parameter::new("name").typed("string"),
+            Parameter::new("request").typed(REQUEST_CLASS),
+        ]);
+    Class::new(CLASS).with_method(Method::new("greet", declared).with_this(|this, arguments| {
+        let controller = match this {
+            Value::Object(object) => object.downcast_ref::<GreetController>(),
+            _ => None,
+        }
+        .ok_or_else(|| throwable(NotPorted("greet() on another object")))?;
+        // `string $name`: the route attribute is always a string.
+        let Some(Value::String(name)) = arguments.first() else {
+            return Err(throwable(NotPorted(
+                "greet() with a name that is not a string",
+            )));
+        };
+        let request: RequestHandle = arguments
+            .get(1)
+            .and_then(as_request)
+            .ok_or_else(|| throwable(NotPorted("greet() without its request")))?;
+        let response = request.with_mut(|r| controller.greet(name, r))?;
+        Ok(ControllerResult::Response(response_handle(response)))
+    }))
 }

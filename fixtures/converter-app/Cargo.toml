@@ -4,18 +4,22 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 publish = false
-description = "M1-D converter fixture: hand-authored, generated-code-shaped Rust for oracle/apps/converter-fixture (converter contract 0.2)"
+description = "M1-D converter fixture: hand-authored, generated-code-shaped Rust for oracle/apps/converter-fixture (converter contract 0.3)"
 
 [dependencies]
 axum = "0.8.9"
 php-value = { path = "../../crates/php-value" }
+psr-container = { path = "../../crates/psr-container" }
+symfony-event-dispatcher = { path = "../../crates/event-dispatcher" }
 symfony-http-foundation = { path = "../../crates/http-foundation" }
 symfony-http-kernel = { path = "../../crates/http-kernel" }
 symfony-routing = { path = "../../crates/routing" }
+symfony-runtime = { path = "../../crates/runtime" }
 tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread"] }
 
 [dev-dependencies]
 serde_json = "1.0.154"
+tower = { version = "0.5.3", features = ["util"] }
 
 [lints]
 workspace = true

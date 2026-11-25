@@ -1,5 +1,6 @@
 //! M1-D converter fixture: the Symfony app in `oracle/apps/converter-fixture`
-//! as Rust, against converter contract 0.2 (docs/converter-contract.md).
+//! as Rust, against converter contract 0.3 (docs/converter-contract.md), on
+//! the ported Symfony kernel served by `symfony-runtime`.
 //!
 //! **Hand-authored, not converter output.** It is written in the shape
 //! symfony2rust is to emit (one module per PHP class under `app`, the
@@ -26,5 +27,4 @@ pub mod kernel;
 pub mod routes;
 pub mod runtime;
 
-pub use kernel::App;
-pub use runtime::http_foundation::Server;
+pub use kernel::{router, router_at};

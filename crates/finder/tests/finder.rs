@@ -1785,6 +1785,13 @@ fn chmod(path: &str, mode: u32) {
 }
 
 #[test]
+#[cfg_attr(
+    not(unix),
+    expect(
+        clippy::unnecessary_wraps,
+        reason = "the test body is Unix-only; elsewhere it only returns Ok"
+    )
+)]
 fn testAccessDeniedException() -> TestResult {
     #[cfg(unix)]
     {
@@ -1813,6 +1820,13 @@ fn testAccessDeniedException() -> TestResult {
 }
 
 #[test]
+#[cfg_attr(
+    not(unix),
+    expect(
+        clippy::unnecessary_wraps,
+        reason = "the test body is Unix-only; elsewhere it only returns Ok"
+    )
+)]
 fn testIgnoredAccessDeniedException() -> TestResult {
     #[cfg(unix)]
     {

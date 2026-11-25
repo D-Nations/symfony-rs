@@ -1,124 +1,153 @@
-//! The application kernel: listeners registered at start-up with their
-//! Symfony priorities, controller resolution from the router's match, and
-//! invocation with the request scope (converter contract 0.1, sections 4
-//! and 6).
+//! The application kernel on the ported Symfony kernel, served as nginx and
+//! PHP-FPM would serve `public/index.php` (converter contract 0.3, sections
+//! 6 and 7).
+//!
+//! Built once: the matcher over the routes (`FrameworkBundle`'s redirecting
+//! matcher), the declared classes the resolver reads, and the
+//! application-scoped container. Built per request, as PHP builds them:
+//! the request-scoped container, the event dispatcher with the listeners
+//! `FrameworkBundle` registers on this app's path (`RouterListener`,
+//! `ResponseListener`) and the app's `ErrorSubscriber`, the
+//! `ContainerControllerResolver` and `HttpKernel`.
+//!
+//! Not registered: `FrameworkBundle`'s other listeners, none of which
+//! changes a recorded response, and `ErrorListener` with its error page,
+//! which no recorded case reaches (an unhandled throwable is the runtime's
+//! 500).
 //!
 //! Upstream: none
 
-use std::sync::Arc;
-
-use axum::{
-    body::Body,
-    extract::Request,
-    http::{HeaderValue, StatusCode, header},
-    response::Response,
+use std::{
+    net::SocketAddr,
+    sync::{Arc, LazyLock},
 };
-use php_value::PhpString;
-use symfony_http_kernel::{Exception, Kernel};
+
+use axum::Router;
+use php_value::Handle;
+use symfony_event_dispatcher::{EventDispatcher, EventDispatcherInterface};
+use symfony_http_foundation::{request_stack::RequestStack, sapi::Ini};
+use symfony_http_kernel::{
+    argument_resolver::ArgumentResolver,
+    container_controller_resolver::{ContainerControllerResolver, ControllerContainer},
+    controller_resolver::ClassRegistry,
+    exception::Throwable,
+    http_kernel::{HttpKernel, Options as KernelOptions},
+    response_listener::ResponseListener,
+    router_listener::{Matcher, Options as RouterOptions, RouterListener},
+};
+use symfony_routing::{
+    redirectable_url_matcher::RedirectableUrlMatcher, request_context::RequestContext,
+};
+use symfony_runtime::{
+    http_kernel_runner::RunnableKernel,
+    server::{FrontController, ServerConfig},
+};
 
 use crate::{
     app::greet_controller,
-    container::{Container, RequestScope},
-    routes::{Route, routes},
+    container::{Container, ServiceContainer},
+    routes::routes,
     runtime::{
-        framework_bundle::{UrlRedirect, url_redirect_action},
-        http_foundation::{RequestInfo, Server},
-        listeners::{Matched, ResponseListener, Routed, RouterListener},
+        NotPorted,
+        framework_bundle::{RedirectableCompiledUrlMatcher, redirect_controller_class},
     },
 };
 
-/// A resolved controller and its arguments.
-pub enum Controller {
-    Greet {
-        info: RequestInfo,
-        name: PhpString,
-    },
-    UrlRedirect {
-        info: RequestInfo,
-        redirect: UrlRedirect,
-    },
-}
-
-pub struct App {
+/// What the app builds once.
+struct App {
+    matcher: Arc<RedirectableUrlMatcher<RedirectableCompiledUrlMatcher>>,
+    classes: Arc<ClassRegistry>,
     container: Arc<Container>,
-    kernel: Kernel<Controller>,
 }
 
-impl App {
-    pub fn new(server: Server) -> Self {
-        let container = Arc::new(Container::new());
-        let mut kernel = Kernel::default();
-        kernel.add_listener(
-            32,
-            RouterListener {
-                routes: Arc::new(routes()),
-                server,
-            },
-        );
-        kernel.add_listener(0, container.error_subscriber());
-        kernel.add_listener(0, ResponseListener { charset: "UTF-8" });
-        Self { container, kernel }
-    }
-
-    /// One request, with a fresh request scope. An exception no listener
-    /// handles would reach Symfony's `ErrorListener` and its error page,
-    /// which the fixture does not port: it answers a bare 500 instead,
-    /// and no recorded case reaches it.
-    pub async fn handle(&self, request: Request) -> Response {
-        let container = Arc::clone(&self.container);
-        let scope = RequestScope::default();
-        let result = self
-            .kernel
-            .handle(request, resolve, move |request, controller| {
-                invoke(container, scope, request, controller)
-            })
-            .await;
-        result.unwrap_or_else(|exception| unhandled(&exception))
-    }
-}
-
-/// `ControllerResolver`: the controller the router chose.
-fn resolve(request: &mut Request) -> Result<Controller, Exception> {
-    let Some(Routed { info, matched }) = request.extensions_mut().remove::<Routed>() else {
-        return Err(Exception::new(
-            StatusCode::NOT_FOUND,
-            format!(
-                "Unable to find the controller for path \"{}\". The route is wrongly configured.",
-                request.uri().path()
-            ),
-        ));
-    };
-    Ok(match matched {
-        Matched::Route(Route::Greet { name }) => Controller::Greet {
-            info,
-            name: PhpString::from(name),
-        },
-        Matched::Redirect(redirect) => Controller::UrlRedirect { info, redirect },
+static APP: LazyLock<Result<App, String>> = LazyLock::new(|| {
+    let routes = routes().map_err(|e| e.to_string())?;
+    let matcher = Arc::new(RedirectableUrlMatcher::new(
+        routes,
+        RequestContext::default(),
+        RedirectableCompiledUrlMatcher,
+    ));
+    let mut classes = ClassRegistry::new();
+    classes
+        .declare_class(greet_controller::class())
+        .map_err(|e| e.to_string())?;
+    classes
+        .declare_class(redirect_controller_class())
+        .map_err(|e| e.to_string())?;
+    Ok(App {
+        matcher,
+        classes: Arc::new(classes),
+        container: Arc::new(Container::new()),
     })
+});
+
+fn throwable(error: impl std::error::Error + Send + Sync + 'static) -> Throwable {
+    Arc::new(error)
 }
 
-async fn invoke(
-    container: Arc<Container>,
-    scope: RequestScope,
-    request: Request,
-    controller: Controller,
-) -> Result<Response, Exception> {
-    match controller {
-        Controller::Greet { name, .. } => {
-            greet_controller::greet(&container, scope, request, name).await
-        }
-        Controller::UrlRedirect { info, redirect } => url_redirect_action(&info, &redirect),
-    }
-}
-
-fn unhandled(exception: &Exception) -> Response {
-    let mut response = Response::new(Body::from("500 Internal Server Error\n"));
-    *response.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
-    response.headers_mut().insert(
-        header::CONTENT_TYPE,
-        HeaderValue::from_static("text/plain; charset=UTF-8"),
+/// The kernel of one request, as `public/index.php` builds it.
+pub fn kernel() -> Result<Arc<dyn RunnableKernel>, Throwable> {
+    let app = APP
+        .as_ref()
+        .map_err(|_| throwable(NotPorted("the app failed to build")))?;
+    let services = Arc::new(ServiceContainer::new(app.container.clone()));
+    let request_stack = RequestStack::default();
+    let dispatcher = Arc::new(EventDispatcher::new());
+    // `router.request_context`: http_port 80, https_port 443.
+    let listener = RouterListener::new(
+        Matcher::Request(app.matcher.clone()),
+        request_stack.clone(),
+        RouterOptions {
+            context: Some(Handle::new(RequestContext::default())),
+            debug: false,
+            ..RouterOptions::default()
+        },
+    )?;
+    dispatcher
+        .add_subscriber(Arc::new(listener))
+        .map_err(throwable)?;
+    // `kernel.charset`; `set_content_language_from_locale` is off.
+    dispatcher
+        .add_subscriber(Arc::new(ResponseListener::new("UTF-8", false)))
+        .map_err(throwable)?;
+    dispatcher
+        .add_subscriber(Arc::new(app.container.error_subscriber()))
+        .map_err(throwable)?;
+    let resolver = ContainerControllerResolver::new(
+        ControllerContainer::DependencyInjection(services),
+        app.classes.clone(),
+        None,
     );
-    // Server-side only, as the kernel never writes `detail` to a response.
-    eprintln!("unhandled exception: {}", exception.detail);
-    response
+    let kernel: Arc<dyn RunnableKernel> = HttpKernel::new(
+        dispatcher,
+        Arc::new(resolver),
+        KernelOptions {
+            request_stack: Some(request_stack),
+            argument_resolver: Arc::new(ArgumentResolver::default()),
+            // framework.handle_all_throwables: true
+            handle_all_throwables: true,
+        },
+    );
+    Ok(kernel)
+}
+
+/// The app served at `address` (`SERVER_ADDR`, `SERVER_PORT`), named
+/// `server_name`.
+pub fn router_at(address: SocketAddr, server_name: &str) -> Router {
+    let server = ServerConfig {
+        server_name: server_name.into(),
+        server_addr: address,
+        ..ServerConfig::default()
+    };
+    Arc::new(FrontController::new(
+        server,
+        Ini::default(),
+        Arc::new(kernel),
+    ))
+    .router()
+}
+
+/// The app as the recording served it: `php -S 0.0.0.0:8000`.
+pub fn router() -> Router {
+    router_at(SocketAddr::from(([0, 0, 0, 0], 8000)), "0.0.0.0")
 }

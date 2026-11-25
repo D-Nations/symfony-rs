@@ -15,6 +15,17 @@
 // callable returned (by identity with the given values), what calling it
 // returns and its name as ArgumentMetadataFactory reports it, or the
 // exception (class, message, code, previous).
+//
+// With CR_MODE=container (scripts/record.sh
+// http-kernel-container-controller-resolver), 2,000 scripts on another
+// seed ask a ContainerControllerResolver instead. Each has a container:
+// a Symfony DependencyInjection Container (services set, maybe removed
+// ids with values true, false or null) or another PSR-11 container. Its
+// services are generated objects, closures or a stdClass under class
+// names in any spelling or other ids, and some _controller values name a
+// service, a removed id or an unknown id. Recorded additionally: the
+// container, and each has() and getRemovedIds() call. 'service_container'
+// (which a DI Container has without set()) is never generated.
 
 error_reporting(E_ALL);
 set_error_handler(static fn () => true);
@@ -24,9 +35,61 @@ require __DIR__.'/lib/typed.php';
 
 use Psr\Log\AbstractLogger;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpKernel\Controller\ContainerControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
-mt_srand(20261127);
+define('CONTAINER_MODE', 'container' === getenv('CR_MODE'));
+
+mt_srand(CONTAINER_MODE ? 20261128 : 20261127);
+
+/** A DI Container with given removed ids, recording the resolver's calls. */
+final class RecordingContainer extends Container
+{
+    public array $calls = [];
+
+    /** Set after the services: set() refuses a removed id. */
+    public array $removed = [];
+
+    public function has(string $id): bool
+    {
+        $this->calls[] = ['has', base64_encode($id)];
+
+        return parent::has($id);
+    }
+
+    public function getRemovedIds(): array
+    {
+        $this->calls[] = ['getRemovedIds'];
+
+        return $this->removed;
+    }
+}
+
+/** Another PSR-11 container, recording the resolver's calls. */
+final class PsrContainer implements ContainerInterface
+{
+    public array $calls = [];
+
+    public function __construct(private array $services)
+    {
+    }
+
+    public function get(string $id): mixed
+    {
+        $this->calls[] = ['get', base64_encode($id)];
+
+        return $this->services[$id];
+    }
+
+    public function has(string $id): bool
+    {
+        $this->calls[] = ['has', base64_encode($id)];
+
+        return \array_key_exists($id, $this->services);
+    }
+}
 
 const AS_CONTROLLER = 'Symfony\\Component\\HttpKernel\\Attribute\\AsController';
 
@@ -594,7 +657,83 @@ function closure_info(\Closure $c): array
 
 @mkdir('/tmp/cr');
 $scripts = [];
-for ($n = 0; $n < 4000; ++$n) {
+/**
+ * The container of a script: its spec, the container, and maybe a
+ * _controller naming one of its ids (a string, or [id, method]).
+ */
+function gen_container(array $classes, array $world, array $objects, array $closures): array
+{
+    $di = chance(80);
+    $ids = [];
+    $services = [];
+    $specs = [];
+    for ($k = mt_rand(0, 3); $k > 0; --$k) {
+        $id = match (mt_rand(1, 6)) {
+            1, 2, 3 => class_name_variant(pick($classes)['name']),
+            4 => 'app.service_'.mt_rand(1, 3),
+            5 => strtolower(pick($classes)['name']),
+            default => $world['ns'].'\Missing',
+        };
+        $choices = [];
+        if ($objects) {
+            $choices[] = 'object';
+        }
+        if ($closures) {
+            $choices[] = 'closure';
+        }
+        $choices[] = 'stdclass';
+        $kind = pick($choices);
+        [$service, $value] = match ($kind) {
+            'object' => [['object', $o = mt_rand(0, \count($objects) - 1)], $objects[$o]],
+            'closure' => [['closure', $c = mt_rand(0, \count($closures) - 1)], $closures[$c]],
+            default => [['stdclass'], new \stdClass()],
+        };
+        $services[$id] = $value;
+        $specs[] = [base64_encode($id), $service];
+        $ids[] = $id;
+    }
+    $removed = [];
+    $removedSpec = [];
+    if ($di && chance(50)) {
+        for ($k = mt_rand(1, 3); $k > 0; --$k) {
+            $id = chance(60) ? class_name_variant(pick($classes)['name']) : 'app.removed_'.mt_rand(1, 2);
+            if (!\array_key_exists($id, $services)) {
+                $removed[$id] = pick([true, true, true, false, null, 1]);
+                $ids[] = $id;
+            }
+        }
+        foreach ($removed as $id => $value) {
+            $removedSpec[] = [base64_encode((string) $id), typed_value($value)];
+        }
+    }
+    if ($di) {
+        $container = new RecordingContainer();
+        foreach ($services as $id => $value) {
+            $container->set($id, $value);
+        }
+        $container->removed = $removed;
+        $container->calls = [];
+    } else {
+        $container = new PsrContainer($services);
+    }
+
+    $controller = null;
+    if (chance(45)) {
+        $id = $ids && chance(85) ? pick($ids) : pick(['app.unknown', $world['ns'].'\Unknown']);
+        if (chance(15)) {
+            $id = '\\'.$id;
+        }
+        $controller = match (mt_rand(1, 3)) {
+            1 => $id,
+            2 => $id.'::'.gen_method_name($world, null),
+            default => [$id, gen_method_name($world, null)],
+        };
+    }
+
+    return [['kind' => $di ? 'di' : 'psr', 'services' => $specs, 'removed' => $removedSpec], $container, $controller];
+}
+
+for ($n = 0; $n < (CONTAINER_MODE ? 2000 : 4000); ++$n) {
     $world = gen_world($n + 1);
     $file = '/tmp/cr/s'.($n + 1).'.php';
     file_put_contents($file, program_code($world));
@@ -676,8 +815,20 @@ for ($n = 0; $n < 4000; ++$n) {
         $check = typed_value($check);
     }
 
+    $containerSpec = null;
+    $container = null;
+    if (CONTAINER_MODE) {
+        [$containerSpec, $container, $serviceController] = gen_container($decoded, $world, $objects, $closures);
+        if (null !== $serviceController) {
+            $spec = \is_array($serviceController)
+                ? ['service_array', base64_encode($serviceController[0]), base64_encode($serviceController[1])]
+                : ['service', base64_encode($serviceController)];
+            $request->attributes->set('_controller', $serviceController);
+        }
+    }
+
     $logger = new Logger();
-    $resolver = new ControllerResolver($logger);
+    $resolver = CONTAINER_MODE ? new ContainerControllerResolver($container, $logger) : new ControllerResolver($logger);
     $allow = [];
     if (chance(45)) {
         for ($k = mt_rand(1, 2); $k > 0; --$k) {
@@ -716,7 +867,7 @@ for ($n = 0; $n < 4000; ++$n) {
         'allow' => $allow,
         'outcome' => $outcome,
         'logs' => $logger->calls,
-    ];
+    ] + (CONTAINER_MODE ? ['container' => $containerSpec, 'container_calls' => $container->calls] : []);
 }
 
 echo json_encode(['file' => (new \ReflectionClass(ControllerResolver::class))->getFileName(), 'scripts' => $scripts], \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR);

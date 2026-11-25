@@ -1,4 +1,4 @@
-# Converter contract (provisional, version 0.2)
+# Converter contract (provisional, version 0.3)
 
 What code generated from a Symfony application may assume about this
 runtime, and what the runtime may assume about that code. It is the
@@ -6,7 +6,8 @@ interface between the symfony2rust converter (a php2rust workstream) and
 the crates in this workspace.
 
 **Status: provisional.** Version 0.1 was written before any converter
-output existed (PLAN.md, M1-D); 0.2 adds what the first fixture showed. The converter fixture pins the version it was built
+output existed (PLAN.md, M1-D); 0.2 adds what the first fixture showed;
+0.3 moves the fixture onto the ported Symfony kernel. The converter fixture pins the version it was built
 against. Each change to this document bumps the version and adds a row to
 the change log at the end. Nothing here is stable before M8.
 
@@ -104,7 +105,14 @@ identity maps).
   and `VisitCounter`).
 - **Request-scoped services** are every other shared service. Each request
   builds its own instances, so one request's writes are never visible to
-  another, as under PHP-FPM. They need `Send`, not `Sync`.
+  another, as under PHP-FPM. The request's container is the PSR-11
+  container the controller resolver reads (`psr_container::ContainerInterface`,
+  which is `Send + Sync`), so they are `Send + Sync` too: built lazily in a
+  `OnceLock`, mutable state behind a `Mutex`.
+- The generated container implements `ContainerInterface` (`get()` and
+  `has()` by service id) and, as Symfony's compiled container is a
+  `DependencyInjection\Container`, `DependencyInjectionContainer`
+  (`getRemovedIds()`).
 - Non-shared services (`shared: false`) are constructed at each injection
   point, as in Symfony.
 - A service that cannot be classified is refused at conversion time.
@@ -115,33 +123,40 @@ identity maps).
   generated error type covering the exception classes that function can
   throw. Each exception carries its class name, message, code and
   previous exception, so `getMessage()` and the error pages read the same.
-- `HttpExceptionInterface` exceptions convert into
-  `symfony_http_kernel::Exception::new` with their status, message and
-  headers. Any other uncaught exception reaches the kernel through
-  `Exception::from_throwable`: a 500 that keeps the original error, so
-  `kernel.exception` listeners can downcast it as PHP listeners test
-  `$event->getThrowable()` with `instanceof`; `is_http()` is
-  `instanceof HttpExceptionInterface`.
+- A thrown exception is a shared `symfony_http_kernel::exception::Throwable`
+  (`Arc<dyn Error + Send + Sync>`), as a PHP exception object is shared:
+  the kernel hands the same object to listeners and rethrows it.
+  `instanceof` on a generated exception class is a downcast; for the
+  runtime's classes it is `exception::instance_of()`, and any other Rust
+  error is an `\Exception`. HTTP exceptions are the ported
+  `HttpException` (status, message, headers).
 - Request exceptions (`RequestExceptionInterface`, such as
-  `BadRequestException` from `InputBag::get()`) become 400 HTTP exceptions
-  with the same message, as `HttpKernel::handle` converts them. The kernel's
-  exception listeners decide what the response says (the kernel never
-  writes `detail` to a response on its own).
+  `BadRequestException` from `InputBag::get()`) become
+  `BadRequestHttpException`s, as `HttpKernel::handleThrowable` converts
+  them. The kernel's exception listeners decide what the response says.
 - Generated code does not panic. No `unwrap` or `expect` is used on
   request, database, file or network data (AGENTS.md).
 
 ## 6. Requests, controllers and responses
 
-- The HTTP boundary is Axum's `Request` and `Response`, run through
-  `symfony_http_kernel::Kernel::handle`: request listeners, controller
-  resolution, controller listeners, invocation, then response or
-  exception listeners.
-- Routes come from the route table Symfony compiles (`debug:router`,
-  attributes and loaders), matched by `symfony-routing`.
-- A controller action becomes `async fn(&Container, RequestScope, Request,
-  args) -> Result<Response, E>`, with arguments resolved by the ported
-  argument resolvers. The returned future must be `Send`, because Axum
-  may move it between worker threads.
+- The HTTP boundary is `symfony-runtime`'s `FrontController`, which serves
+  `public/index.php` as nginx and PHP-FPM would: one request per blocking
+  thread, a kernel built per request by the generated factory, and
+  `HttpKernelRunner` running the ported `HttpKernel` on an
+  `EventDispatcher` with the listeners the application's container
+  registers (FrameworkBundle's `RouterListener` and `ResponseListener`,
+  the application's subscribers).
+- Routes are a `symfony-routing` `RouteCollection` built from the table
+  Symfony compiles (`debug:router`, attributes and loaders; route options
+  such as `utf8` included), matched by the `RouterListener`.
+- Controllers are PHP classes declared in a `ClassRegistry`: what
+  reflection reports (methods, visibility, parameters with their types and
+  defaults, attributes). A controller service is a Rust type that is a
+  `PhpObject` of its class; the `ContainerControllerResolver` takes it
+  from the container, and a method declared with `Method::with_this` runs
+  on it with the arguments the ported `ArgumentResolver` resolves. Bodies
+  are synchronous, as PHP's are; the front controller keeps them off the
+  async workers.
 - Request data is read through `symfony-http-foundation`'s bags, which
   keep PHP's parsing of query strings, bodies and cookies. The fixture
   links those crates only after their provenance rewrite (PLAN.md,
@@ -152,9 +167,9 @@ identity maps).
 | Item | Bound |
 |---|---|
 | `Container` and application-scoped services | `Send + Sync`, immutable after start-up |
-| Request scope and its services | `Send` |
-| Controller and listener futures | `Send` |
-| Kernel listeners | `Send + Sync`, registered at start-up |
+| Request scope and its services | `Send + Sync` (behind the request's PSR-11 container) |
+| Controller objects and method bodies | `Send + Sync` |
+| Kernel listeners and subscribers | `Send + Sync`, added when the request's kernel is built |
 | `php_value::Value`, `PhpArray`, `Object` | `Send + Sync` (already true) |
 
 ## Change log
@@ -163,3 +178,4 @@ identity maps).
 |---|---|
 | 0.1 | First provisional contract (M1-D), before any converter output |
 | 0.2 | From the first fixture: a service's state includes the services it reaches (section 4); non-HTTP exceptions reach listeners through `Exception::from_throwable`, and request exceptions become 400s (section 5) |
+| 0.3 | The fixture on the ported kernel: the container is a PSR-11 container and request-scoped services are `Send + Sync` (section 4); exceptions are shared `Throwable`s (section 5); the boundary is `symfony-runtime`'s front controller, routes a routing `RouteCollection`, controllers declared classes resolved by the `ContainerControllerResolver` with `$this` through `Method::with_this`, and bodies synchronous (sections 6 and 7) |
