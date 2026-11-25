@@ -51,7 +51,7 @@
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-lexer   crates/twig/tests/data/lexer.json (Twig\Lexer on the upstream fixtures and lexer_extra.json)
 #   scripts/record.sh twig-parser  crates/twig/tests/data/parser.json (Twig\Parser trees on the upstream fixtures and parser_extra.json)
-#   scripts/record.sh doctrine-dbal crates/doctrine-dbal/tests/data/php.json (providers, SQL\Parser, ExpandArrayParameters)
+#   scripts/record.sh doctrine-dbal crates/doctrine-dbal/tests/data/php.json (providers, SQL\Parser, ExpandArrayParameters, Query\QueryBuilder)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")
 #   scripts/record.sh di-trial     spikes/di-trial/demo/data/container.xml (the demo's compiled container), demo/tests/data/php_classes.json
 #   scripts/record.sh all
