@@ -16,6 +16,7 @@
 use php_value::{PhpArray, PhpString, Value, array::Key, numeric::is_numeric, string::levenshtein};
 use symfony_deprecation_contracts::trigger_deprecation;
 
+use super::env_placeholder_parameter_bag::EnvPlaceholders;
 use crate::exception::{Error, ErrorKind, ParameterNotFound, Result};
 
 /// A parameter deprecation: the arguments of `trigger_deprecation()`.
@@ -31,11 +32,13 @@ pub struct ParameterDeprecation {
 /// `ParameterBag` (and `FrozenParameterBag`).
 #[derive(Debug, Clone, Default)]
 pub struct ParameterBag {
-    parameters: PhpArray,
-    resolved: bool,
+    pub(super) parameters: PhpArray,
+    pub(super) resolved: bool,
     deprecated: Vec<(String, ParameterDeprecation)>,
     non_empty: Vec<(String, String)>,
     frozen: bool,
+    /// The `EnvPlaceholderParameterBag` state, for that subclass.
+    pub(super) env: Option<EnvPlaceholders>,
 }
 
 fn key_name(key: &Key) -> String {
@@ -84,6 +87,7 @@ impl ParameterBag {
             deprecated,
             non_empty,
             frozen: true,
+            env: None,
         }
     }
 
@@ -143,8 +147,17 @@ impl ParameterBag {
             .map(|(_, m)| m.as_str())
     }
 
-    /// `get($name)`.
+    /// `get($name)` (`EnvPlaceholderParameterBag::get()` for that
+    /// subclass).
     pub fn get(&self, name: &str) -> Result<Value> {
+        if let Some(placeholder) = self.env_placeholder_get(name)? {
+            return Ok(placeholder);
+        }
+        self.parent_get(name)
+    }
+
+    /// `ParameterBag::get($name)`.
+    pub(super) fn parent_get(&self, name: &str) -> Result<Value> {
         let Some(value) = self.parameters.get(&Key::from(name)) else {
             return Err(self.not_found(name));
         };
@@ -304,7 +317,7 @@ impl ParameterBag {
         }
         self.parameters = parameters;
         self.resolved = true;
-        Ok(())
+        self.check_env_defaults()
     }
 
     /// `resolveValue($value, $resolving)`: placeholders in strings, and in
