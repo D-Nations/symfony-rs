@@ -897,10 +897,13 @@ name = "request-lab"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "php-value",
  "serde_json",
+ "symfony-event-dispatcher",
  "symfony-http-foundation",
  "symfony-http-kernel",
  "symfony-routing",
+ "symfony-runtime",
  "tokio",
  "tower",
 ]
@@ -1191,6 +1194,19 @@ dependencies = [
  "symfony-deprecation-contracts",
  "symfony-http-foundation",
  "symfony-routing",
+]
+
+[[package]]
+name = "symfony-runtime"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "php-value",
+ "symfony-event-dispatcher",
+ "symfony-http-foundation",
+ "symfony-http-kernel",
+ "tokio",
+ "tower",
 ]
 
 [[package]]
