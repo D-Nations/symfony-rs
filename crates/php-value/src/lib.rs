@@ -16,6 +16,7 @@ pub mod constants;
 pub mod dateparse;
 pub mod datetime;
 pub mod filter;
+pub mod handle;
 pub mod html;
 pub mod json;
 pub mod net;
@@ -32,6 +33,7 @@ pub mod vars;
 pub mod vectors;
 
 pub use array::{Key, NextElementOccupied, PhpArray};
+pub use handle::Handle;
 pub use numeric::Number;
 pub use string::PhpString;
 pub use value::{Object, PhpObject, Value};

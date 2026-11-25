@@ -1347,6 +1347,12 @@ impl Request {
         statics(|s| *s = Statics::new());
     }
 
+    /// `self::$formats = null` (`RequestStack::resetRequestFormats()`):
+    /// the formats go back to the defaults on next use.
+    pub fn reset_formats() {
+        statics(|s| s.formats = None);
+    }
+
     fn remote_addr(&self) -> Result<Option<PhpString>> {
         nullable_string_of(&self.server.get("REMOTE_ADDR", Value::Null))
     }

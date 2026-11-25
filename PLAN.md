@@ -1418,6 +1418,22 @@ Stack rows (searched November 22):
       `false` for words its parser does not know. No advisory is listed
       for this file. Next: the HttpKernel lifecycle on Request and
       Response, then JsonResponse, RedirectResponse and StreamedResponse.
+- [ ] HttpKernel stage 1, the lifecycle on Request and Response (November
+      25, in progress;
+      [docs/milestones/m2-a-http-kernel-lifecycle.md](docs/milestones/m2-a-http-kernel-lifecycle.md)):
+      `HttpKernel.php`, `HttpKernelInterface.php`, `TerminableInterface.php`,
+      `KernelEvents.php`, the `Event/*` classes it dispatches, the
+      `Exception/*HttpException` family and
+      `ControllerDoesNotReturnResponseException.php`, the two resolver
+      interfaces, and HttpFoundation's `RequestStack.php`, on the ported
+      EventDispatcher. PHP object handles (a request, response or event
+      seen by the kernel, the stack and every listener) are php-value's new
+      `Handle<T>`; a controller is a closure with its declared parameters
+      and attributes (what PHP reflects). The existing typed Axum subset
+      (`Kernel<C>`) stays for request-lab and the converter fixture until
+      they move. Steps: [x] `Handle<T>`; [x] RequestStack (RequestStackTest 5 of 5);
+      [ ] exceptions (HttpExceptionTest and its subclasses); [ ] events;
+      [ ] HttpKernel (HttpKernelTest); [ ] recorded lifecycle vectors.
 
 ## Local development performance
 
