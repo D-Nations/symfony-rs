@@ -137,6 +137,7 @@ class RunnerTests(unittest.TestCase):
             ("cargo", "test", "--locked", "--workspace", "--no-fail-fast"),
             ("/chosen/bash", "scripts/sources.sh", "--check"),
             ("/chosen/bash", "scripts/parity-check.sh"),
+            (sys.executable, "scripts/classes.py", "check"),
         ])
 
     def test_parity_does_not_start_cargo(self):
@@ -146,6 +147,7 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(run.call_args_list, [
             call("chosen-bash", "scripts/sources.sh", "--check"),
             call("chosen-bash", "scripts/parity-check.sh"),
+            call(sys.executable, "scripts/classes.py", "check"),
         ])
 
     def test_explicit_bash_is_preserved(self):
