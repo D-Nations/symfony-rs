@@ -12,6 +12,7 @@
 #![forbid(unsafe_code)]
 
 pub mod argument_resolver;
+pub mod container_controller_resolver;
 pub mod controller;
 pub mod controller_metadata;
 pub mod controller_resolver;

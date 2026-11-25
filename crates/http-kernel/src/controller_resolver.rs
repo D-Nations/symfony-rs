@@ -50,6 +50,7 @@ use symfony_http_foundation::{
 };
 
 use crate::{
+    container_controller_resolver::{ControllerContainer, instantiate_controller},
     controller::{Controller, ControllerResolverInterface, ControllerResult},
     exception::{PhpClass, PhpException, Throwable, instance_of, message_of},
 };
@@ -1011,6 +1012,9 @@ pub struct ControllerResolver {
     allowed_types: Vec<PhpString>,
     allowed_attributes: Vec<PhpString>,
     source_file: PhpString,
+    /// Set for a `ContainerControllerResolver`, whose
+    /// `instantiateController()` asks the container first.
+    pub(crate) container: Option<ControllerContainer>,
 }
 
 impl fmt::Debug for ControllerResolver {
@@ -1037,6 +1041,7 @@ impl ControllerResolver {
             allowed_types: Vec::new(),
             allowed_attributes: vec![PhpString::from(AS_CONTROLLER)],
             source_file: PhpString::from(DEFAULT_SOURCE_FILE),
+            container: None,
         }
     }
 
@@ -1228,9 +1233,18 @@ impl ControllerResolver {
         }
     }
 
-    /// `instantiateController($class)`: `new $class()` from this class's
-    /// scope.
+    /// `$this->instantiateController($class)`: the container's override
+    /// when there is one.
     fn instantiate(&self, name: &[u8]) -> Result<Value, Throwable> {
+        match &self.container {
+            Some(container) => instantiate_controller(self, container, name),
+            None => self.instantiate_class(name),
+        }
+    }
+
+    /// `ControllerResolver::instantiateController($class)`: `new $class()`
+    /// from this class's scope.
+    pub(crate) fn instantiate_class(&self, name: &[u8]) -> Result<Value, Throwable> {
         if is_closure_class(name) {
             return Err(error(
                 PhpClass::Error,
@@ -1710,9 +1724,12 @@ fn expected_method(method: &[u8], class_name: &[u8], collection: &[PhpString]) -
     PhpString::from(message)
 }
 
-/// Whether `Closure` has the method (`__invoke` included).
+/// Whether `Closure` has the method (`method_exists()`): `__invoke`, its
+/// private `__construct` (which `get_class_methods()` does not list from
+/// outside the class) and its public methods.
 fn closure_has_method(method: &[u8]) -> bool {
     method.eq_ignore_ascii_case(b"__invoke")
+        || method.eq_ignore_ascii_case(b"__construct")
         || CLOSURE_METHODS
             .iter()
             .any(|(name, _)| name.as_bytes().eq_ignore_ascii_case(method))

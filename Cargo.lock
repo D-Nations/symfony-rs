@@ -816,6 +816,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "psr-container"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+]
+
+[[package]]
 name = "psr-log"
 version = "0.1.0"
 dependencies = [
@@ -1153,6 +1160,7 @@ dependencies = [
  "axum",
  "base64",
  "php-value",
+ "psr-container",
  "psr-log",
  "serde_json",
  "symfony-deprecation-contracts",

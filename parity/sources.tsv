@@ -465,6 +465,7 @@ crates/http-foundation/tests/uploaded_file_test.rs	symfony/http-foundation	Tests
 crates/http-kernel/src/argument_resolver.rs	symfony/http-kernel	Controller/ArgumentResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/argument_resolver.rs	symfony/http-kernel	Controller/ValueResolverInterface.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/argument_resolver.rs	symfony/http-kernel	Attribute/ValueResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/src/container_controller_resolver.rs	symfony/http-kernel	Controller/ContainerControllerResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller.rs	symfony/http-kernel	Controller/ControllerResolverInterface.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller.rs	symfony/http-kernel	Controller/ArgumentResolverInterface.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/src/controller_metadata.rs	symfony/http-kernel	ControllerMetadata/ArgumentMetadata.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
@@ -526,6 +527,8 @@ crates/http-kernel/src/value_resolver.rs	symfony/http-kernel	Controller/Argument
 crates/http-kernel/tests/argument_metadata_factory_test.rs	symfony/http-kernel	Tests/ControllerMetadata/ArgumentMetadataFactoryTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/argument_metadata_test.rs	symfony/http-kernel	Tests/ControllerMetadata/ArgumentMetadataTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/argument_resolver_test.rs	symfony/http-kernel	Tests/Controller/ArgumentResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/tests/common/controller_resolver_test_class.rs	symfony/http-kernel	Tests/Controller/ControllerResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
+crates/http-kernel/tests/container_controller_resolver_test.rs	symfony/http-kernel	Tests/Controller/ContainerControllerResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/controller_resolver_test.rs	symfony/http-kernel	Tests/Controller/ControllerResolverTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Exception/HttpExceptionTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
 crates/http-kernel/tests/http_exception_test.rs	symfony/http-kernel	Tests/Exception/AccessDeniedHttpExceptionTest.php	460658504e26a2794aa614b4fbe6cf9bac2076fe
@@ -578,6 +581,9 @@ crates/options-resolver/src/options_resolver.rs	symfony/options-resolver	Options
 crates/options-resolver/src/options_resolver.rs	symfony/options-resolver	Options.php	88f9c561f678a02d54b897014049fa839e33ff82
 crates/options-resolver/tests/options_resolver.rs	symfony/options-resolver	Tests/OptionsResolverTest.php	88f9c561f678a02d54b897014049fa839e33ff82
 crates/options-resolver/tests/options_resolver_introspector.rs	symfony/options-resolver	Tests/Debug/OptionsResolverIntrospectorTest.php	88f9c561f678a02d54b897014049fa839e33ff82
+crates/psr-container/src/lib.rs	psr/container	src/ContainerInterface.php	c71ecc56dfe541dbd90c5360474fbc405f8d5963
+crates/psr-container/src/lib.rs	psr/container	src/ContainerExceptionInterface.php	c71ecc56dfe541dbd90c5360474fbc405f8d5963
+crates/psr-container/src/lib.rs	psr/container	src/NotFoundExceptionInterface.php	c71ecc56dfe541dbd90c5360474fbc405f8d5963
 crates/psr-log/src/lib.rs	psr/log	src/LoggerInterface.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
 crates/psr-log/src/lib.rs	psr/log	src/LogLevel.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3
 crates/psr-log/src/lib.rs	psr/log	src/NullLogger.php	f16e1d5863e37f8d8c2a01719f5b34baa2b714d3

@@ -1,0 +1,13 @@
+[package]
+name = "psr-container"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Port of psr/container (PSR-11): ContainerInterface and its two exception interfaces"
+
+[dependencies]
+php-value = { path = "../php-value" }
+
+[lints]
+workspace = true
