@@ -19,6 +19,7 @@ mod pass_config;
 mod priority_tagged_service_trait;
 mod register_env_var_processors_pass;
 mod register_reverse_container_pass;
+mod register_service_subscribers_pass;
 mod resolve_tagged_iterator_argument_pass;
 mod service_locator_tag_pass;
 mod service_reference_graph;
@@ -35,6 +36,7 @@ pub use priority_tagged_service_trait::{
 };
 pub use register_env_var_processors_pass::RegisterEnvVarProcessorsPass;
 pub use register_reverse_container_pass::RegisterReverseContainerPass;
+pub use register_service_subscribers_pass::RegisterServiceSubscribersPass;
 pub use resolve_tagged_iterator_argument_pass::ResolveTaggedIteratorArgumentPass;
 pub use service_locator_tag_pass::ServiceLocatorTagPass;
 pub use service_reference_graph::{

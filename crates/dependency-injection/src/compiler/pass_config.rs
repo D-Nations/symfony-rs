@@ -147,7 +147,7 @@ impl PassConfig {
                 pending("ResolveDecoratorStackPass"),
                 pending("ResolveAutowireInlineAttributesPass"),
                 pending("ResolveChildDefinitionsPass"),
-                pending("RegisterServiceSubscribersPass"),
+                Pass::new(super::RegisterServiceSubscribersPass::new()),
                 pending_with("ResolveParameterPlaceHoldersPass", "false, false"),
                 pending("ResolveFactoryClassPass"),
                 pending("ResolveNamedArgumentsPass"),
