@@ -28,8 +28,14 @@ pub use service_reference_graph::{
 mod analyze_service_references_pass;
 pub use analyze_service_references_pass::AnalyzeServiceReferencesPass;
 
+mod check_circular_references_pass;
+pub use check_circular_references_pass::CheckCircularReferencesPass;
+
 mod check_definition_validity_pass;
 pub use check_definition_validity_pass::CheckDefinitionValidityPass;
+
+mod check_reference_validity_pass;
+pub use check_reference_validity_pass::CheckReferenceValidityPass;
 
 mod inline_service_definitions_pass;
 pub use inline_service_definitions_pass::InlineServiceDefinitionsPass;

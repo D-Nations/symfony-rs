@@ -11,7 +11,9 @@
 use std::collections::BTreeMap;
 
 use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
+use super::check_circular_references_pass::CheckCircularReferencesPass;
 use super::check_definition_validity_pass::CheckDefinitionValidityPass;
+use super::check_reference_validity_pass::CheckReferenceValidityPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
 use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
 use super::remove_abstract_definitions_pass::RemoveAbstractDefinitionsPass;
@@ -173,8 +175,8 @@ impl PassConfig {
                 pending("ResolveReferencesToAliasesPass"),
                 pending("ResolveInvalidReferencesPass"),
                 Pass::new(AnalyzeServiceReferencesPass::new(true, true)),
-                pending("CheckCircularReferencesPass"),
-                pending("CheckReferenceValidityPass"),
+                Pass::new(CheckCircularReferencesPass::new()),
+                Pass::new(CheckReferenceValidityPass::new()),
                 pending_with("CheckArgumentsValidityPass", "false"),
             ],
         )]);
