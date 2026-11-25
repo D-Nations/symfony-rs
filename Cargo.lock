@@ -1145,6 +1145,12 @@ name = "symfony-http-kernel"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "base64",
+ "php-value",
+ "serde_json",
+ "symfony-deprecation-contracts",
+ "symfony-event-dispatcher",
+ "symfony-http-foundation",
  "tokio",
 ]
 

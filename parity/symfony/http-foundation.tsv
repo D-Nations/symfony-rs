@@ -322,11 +322,11 @@ Tests/RequestMatcher/QueryParameterRequestMatcherTest.php	QueryParameterRequestM
 Tests/RequestMatcher/QueryParameterRequestMatcherTest.php	QueryParameterRequestMatcherTest::testSingleString	pending	
 Tests/RequestMatcher/SchemeRequestMatcherTest.php	SchemeRequestMatcherTest::test	pending	
 Tests/RequestMatcher/SchemeRequestMatcherTest.php	SchemeRequestMatcherTest::testAlwaysMatchesOnParamsHeaders	pending	
-Tests/RequestStackTest.php	RequestStackTest::testConstruct	pending	
-Tests/RequestStackTest.php	RequestStackTest::testGetCurrentRequest	pending	
-Tests/RequestStackTest.php	RequestStackTest::testGetMainRequest	pending	
-Tests/RequestStackTest.php	RequestStackTest::testGetParentRequest	pending	
-Tests/RequestStackTest.php	RequestStackTest::testResetRequestFormats	pending	
+Tests/RequestStackTest.php	RequestStackTest::testConstruct	ported	crates/http-foundation/tests/request_stack_test.rs::testConstruct
+Tests/RequestStackTest.php	RequestStackTest::testGetCurrentRequest	ported	crates/http-foundation/tests/request_stack_test.rs::testGetCurrentRequest
+Tests/RequestStackTest.php	RequestStackTest::testGetMainRequest	ported	crates/http-foundation/tests/request_stack_test.rs::testGetMainRequest
+Tests/RequestStackTest.php	RequestStackTest::testGetParentRequest	ported	crates/http-foundation/tests/request_stack_test.rs::testGetParentRequest
+Tests/RequestStackTest.php	RequestStackTest::testResetRequestFormats	ported	crates/http-foundation/tests/request_stack_test.rs::testResetRequestFormats
 Tests/RequestTest.php	RequestTest::testBaseUriDetectionOnIisWithRewrite	ported	crates/http-foundation/tests/request_test.rs::testBaseUriDetectionOnIisWithRewrite
 Tests/RequestTest.php	RequestTest::testContentAsResource	ported	crates/http-foundation/tests/request_test.rs::testContentAsResource
 Tests/RequestTest.php	RequestTest::testCreate	ported	crates/http-foundation/tests/request_test.rs::testCreate

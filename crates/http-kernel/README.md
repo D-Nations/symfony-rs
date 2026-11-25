@@ -1,8 +1,30 @@
-# Symfony HttpKernel lifecycle subset
+# Symfony HttpKernel
 
 Private workspace crate; MIT, with Symfony's source copyright retained in
 the implementation. This is an unofficial partial port, not a complete
-HttpKernel, bundle system or dependency-injection container.
+HttpKernel, bundle system or dependency-injection container. It has two
+parts: the port of `HttpKernel.php` on HttpFoundation's Request and
+Response (modules `http_kernel`, `event`, `controller`, `exception`), and
+the earlier typed Axum lifecycle subset (`Kernel<C>`, below), which
+request-lab and the converter fixture still use.
+
+## The HttpKernel port
+
+| Module/API | Source behavior | Evidence | Limits |
+|---|---|---|---|
+| `http_kernel` | Symfony `HttpKernel` (v8.1.11): `handle()` (request stack push/pop, `kernel.request`, controller and argument resolution, `kernel.controller`, `kernel.controller_arguments`, `kernel.view`, `kernel.response`, `kernel.finish_request`, `kernel.exception` with PHP's status and header rules, `\Error`s passed through unless all throwables are handled, request exceptions as `BadRequestHttpException`, `$catch`), `terminate()`, `terminateWithException()`; `HttpKernelInterface`, `TerminableInterface`, `KernelEvents` | HttpKernelTest 31 of 37 (5 `n/a`: PHP callable forms and a trace line; 1 pending: StreamedResponse); 1,500 recorded lifecycles with every listener call (`tests/data/lifecycle.json`) | The default `ArgumentResolver` is not ported (one is passed in); no `StreamedResponse` callback wrapping; the kernel is an `Arc` (events hand it to listeners) |
+| `event` | The kernel events: `KernelEvent`, `RequestEvent`, `ControllerEvent` (controller replacement, `_controller_attributes`), `ControllerArgumentsEvent` (`getNamedArguments()`), `ControllerMetadata`, `ControllerArgumentsMetadata`, `ViewEvent`, `ResponseEvent`, `FinishRequestEvent`, `TerminateEvent`, `ExceptionEvent` | HttpKernelTest; the recorded lifecycles | `evaluate()` (ExpressionLanguage) and `ViewEvent`'s deprecated `controllerArgumentsEvent` property are not ported; attributes match by exact class name |
+| `controller` | `ControllerResolverInterface`, `ArgumentResolverInterface`; a controller is a closure with the parameters and attributes PHP would reflect | HttpKernelTest | PHP callable strings and arrays are not resolved |
+| `exception` | `HttpException` with `fromStatusCode()`, its 16 subclasses (`Allow`, `Retry-After`, `WWW-Authenticate` headers), `ControllerDoesNotReturnResponseException`, PHP's built-in throwables; `instance_of()` for the kernel's `\Error`, `RequestExceptionInterface` and `HttpExceptionInterface` checks | HttpExceptionTest and its 16 subclass tests, 86 of 86 | A throwable is an `Arc` (`===` by identity); other Rust errors count as `\Exception`; `ControllerDoesNotReturnResponseException`'s file, line and trace are not set |
+
+Requests, responses and the two controller events are object handles
+(php-value `Handle<T>`): the kernel, the request stack and listeners see
+the same objects, as in PHP. Listeners are the EventDispatcher's; a
+listener downcasts the `&mut dyn EventObject` it is given. The lifecycle
+vectors are recorded by `scripts/record.sh http-kernel-lifecycle`
+(`oracle/recorders/http_kernel_lifecycle.php`).
+
+## The typed Axum lifecycle subset
 
 The first concrete add-on is the demo's existing security-header policy.
 It now implements `Listener<C>::response`, keeping startup-built CSP hashes,
@@ -83,5 +105,8 @@ stack restoration, a `catch=false` switch, async listeners, service discovery,
 YAML configuration or bundle loading. Axum remains responsible for transport
 and HTTP response preparation; the lab retains its explicit HEAD-body rule.
 
-No new registry dependency. Run `cargo test -p symfony-http-kernel` or the
-workspace's ordinary formatting, Clippy and test commands.
+The port depends on the workspace's php-value, symfony-http-foundation,
+symfony-event-dispatcher and symfony-deprecation-contracts; base64 and
+serde_json are test dependencies. No new registry dependency. Run
+`cargo test -p symfony-http-kernel` or the workspace's ordinary
+formatting, Clippy and test commands.

@@ -1,7 +1,7 @@
 //! Port of Symfony\Component\HttpFoundation\Exception\BadRequestException.php,
 //! UnexpectedValueException.php, RequestExceptionInterface.php,
-//! SuspiciousOperationException.php, ConflictingHeadersException.php and
-//! JsonException.php, with
+//! SuspiciousOperationException.php, ConflictingHeadersException.php,
+//! JsonException.php and SessionNotFoundException.php, with
 //! the PHP exceptions the bags throw (`\UnexpectedValueException`,
 //! `\InvalidArgumentException`) and PHP's `\Error` for an enum class that
 //! has no `from()`; and the File exceptions (`File/Exception/*.php`)
@@ -14,7 +14,7 @@
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
-//! Upstream: symfony/http-foundation Exception/BadRequestException.php Exception/UnexpectedValueException.php Exception/RequestExceptionInterface.php Exception/SuspiciousOperationException.php Exception/ConflictingHeadersException.php Exception/JsonException.php File/Exception/FileException.php File/Exception/FileNotFoundException.php File/Exception/AccessDeniedException.php File/Exception/CannotWriteFileException.php File/Exception/ExtensionFileException.php File/Exception/FormSizeFileException.php File/Exception/IniSizeFileException.php File/Exception/NoFileException.php File/Exception/NoTmpDirFileException.php File/Exception/PartialFileException.php File/Exception/UnexpectedTypeException.php File/Exception/UploadException.php
+//! Upstream: symfony/http-foundation Exception/BadRequestException.php Exception/UnexpectedValueException.php Exception/RequestExceptionInterface.php Exception/SuspiciousOperationException.php Exception/ConflictingHeadersException.php Exception/JsonException.php Exception/SessionNotFoundException.php File/Exception/FileException.php File/Exception/FileNotFoundException.php File/Exception/AccessDeniedException.php File/Exception/CannotWriteFileException.php File/Exception/ExtensionFileException.php File/Exception/FormSizeFileException.php File/Exception/IniSizeFileException.php File/Exception/NoFileException.php File/Exception/NoTmpDirFileException.php File/Exception/PartialFileException.php File/Exception/UnexpectedTypeException.php File/Exception/UploadException.php
 
 use php_value::PhpString;
 
@@ -35,6 +35,9 @@ pub enum Class {
     /// `Symfony\Component\HttpFoundation\Exception\JsonException`, a
     /// `RequestExceptionInterface`.
     Json,
+    /// `Symfony\Component\HttpFoundation\Exception\SessionNotFoundException`,
+    /// a `RequestExceptionInterface` (`RequestStack::getSession()`).
+    SessionNotFound,
     /// PHP's `\JsonException` (`json_decode()` with `JSON_THROW_ON_ERROR`).
     PhpJson,
     /// PHP's `\LogicException`.
@@ -103,6 +106,9 @@ impl Class {
                 "Symfony\\Component\\HttpFoundation\\Exception\\ConflictingHeadersException"
             }
             Self::Json => "Symfony\\Component\\HttpFoundation\\Exception\\JsonException",
+            Self::SessionNotFound => {
+                "Symfony\\Component\\HttpFoundation\\Exception\\SessionNotFoundException"
+            }
             Self::PhpJson => "JsonException",
             Self::PhpLogic => "LogicException",
             Self::PhpUnexpectedValue => "UnexpectedValueException",
@@ -193,6 +199,13 @@ impl Class {
                 "Symfony\\Component\\HttpFoundation\\Exception\\UnexpectedValueException",
                 "UnexpectedValueException",
                 "RuntimeException",
+                "Exception",
+                "Throwable",
+            ],
+            Self::SessionNotFound => &[
+                "Symfony\\Component\\HttpFoundation\\Exception\\SessionNotFoundException",
+                "Symfony\\Component\\HttpFoundation\\Exception\\RequestExceptionInterface",
+                "LogicException",
                 "Exception",
                 "Throwable",
             ],

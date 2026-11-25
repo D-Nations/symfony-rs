@@ -24,6 +24,7 @@ pub mod parameter_bag;
 pub mod php;
 pub mod query;
 pub mod request;
+pub mod request_stack;
 pub mod response;
 pub mod scheme;
 pub mod server_bag;
