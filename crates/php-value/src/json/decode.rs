@@ -1,6 +1,8 @@
 //! `json_decode($json, true, $depth, JSON_BIGINT_AS_STRING)` with
-//! `JSON_THROW_ON_ERROR` ([`decode_assoc`]), written from the PHP manual
-//! and PHP 8.4.27's recorded answers (`tests/data/json_decode.json`,
+//! `JSON_THROW_ON_ERROR` ([`decode_assoc`]), and with objects as
+//! `stdClass` ([`decode_object`], `tests/data/json_encode.json`), written
+//! from the PHP manual and PHP 8.4.27's recorded answers
+//! (`tests/data/json_decode.json`,
 //! `oracle/recorders/php_value_json_decode.php`):
 //!
 //! - RFC 8259 JSON, case-sensitive literals, whitespace only space, tab,
@@ -26,7 +28,7 @@
 //!
 //! Upstream: none
 
-use crate::{Key, PhpArray, PhpString, Value};
+use crate::{Key, PhpArray, PhpString, Value, object::StdClass};
 
 /// A `json_decode()` error, as `json_last_error()` and
 /// `json_last_error_msg()` report it.
@@ -43,8 +45,15 @@ pub enum JsonError {
     Syntax,
     /// `JSON_ERROR_UTF8`.
     Utf8,
+    /// `JSON_ERROR_INF_OR_NAN` (`json_encode()`).
+    InfOrNan,
+    /// `JSON_ERROR_INVALID_PROPERTY_NAME`: an object key starting with a
+    /// NUL byte, decoded to an object.
+    InvalidPropertyName,
     /// `JSON_ERROR_UTF16`.
     Utf16,
+    /// `JSON_ERROR_NON_BACKED_ENUM` (`json_encode()`).
+    NonBackedEnum,
 }
 
 impl JsonError {
@@ -56,7 +65,10 @@ impl JsonError {
             Self::CtrlChar => 3,
             Self::Syntax => 4,
             Self::Utf8 => 5,
+            Self::InfOrNan => 7,
+            Self::InvalidPropertyName => 9,
             Self::Utf16 => 10,
+            Self::NonBackedEnum => 11,
         }
     }
 
@@ -68,7 +80,10 @@ impl JsonError {
             Self::CtrlChar => "Control character error, possibly incorrectly encoded",
             Self::Syntax => "Syntax error",
             Self::Utf8 => "Malformed UTF-8 characters, possibly incorrectly encoded",
+            Self::InfOrNan => "Inf and NaN cannot be JSON encoded",
+            Self::InvalidPropertyName => "The decoded property name is invalid",
             Self::Utf16 => "Single unpaired UTF-16 surrogate in unicode escape",
+            Self::NonBackedEnum => "Non-backed enums have no default serialization",
         }
     }
 }
@@ -293,6 +308,37 @@ enum Frame {
 /// JSON_BIGINT_AS_STRING : 0)` with `JSON_THROW_ON_ERROR`: the value, or
 /// the error PHP throws. Iterative, so deep input does not grow the stack.
 pub fn decode_assoc(json: &[u8], depth: usize, bigint_as_string: bool) -> Result<Value, JsonError> {
+    decode_with(json, depth, bigint_as_string, true)
+}
+
+/// `json_decode($json, false, $depth, $bigint_as_string ?
+/// JSON_BIGINT_AS_STRING : 0)` with `JSON_THROW_ON_ERROR`: as
+/// [`decode_assoc`], but a JSON object is a `stdClass` whose properties
+/// are its members (with the array key rules), and a member name that
+/// starts with a NUL byte is `JSON_ERROR_INVALID_PROPERTY_NAME`, raised
+/// when the member is complete.
+pub fn decode_object(
+    json: &[u8],
+    depth: usize,
+    bigint_as_string: bool,
+) -> Result<Value, JsonError> {
+    decode_with(json, depth, bigint_as_string, false)
+}
+
+fn object(map: PhpArray, assoc: bool) -> Value {
+    if assoc {
+        Value::Array(map)
+    } else {
+        StdClass::object(map)
+    }
+}
+
+fn decode_with(
+    json: &[u8],
+    depth: usize,
+    bigint_as_string: bool,
+    assoc: bool,
+) -> Result<Value, JsonError> {
     let mut scanner = Scanner {
         s: json,
         i: 0,
@@ -309,9 +355,8 @@ pub fn decode_assoc(json: &[u8], depth: usize, bigint_as_string: bool) -> Result
                 }
                 let list = token == Token::LBracket;
                 match (list, scanner.next()?) {
-                    (true, Token::RBracket) | (false, Token::RBrace) => {
-                        Value::Array(PhpArray::new())
-                    }
+                    (true, Token::RBracket) => Value::Array(PhpArray::new()),
+                    (false, Token::RBrace) => object(PhpArray::new(), assoc),
                     (true, Token::RBrace) | (false, Token::RBracket) => {
                         return Err(JsonError::StateMismatch);
                     }
@@ -359,6 +404,9 @@ pub fn decode_assoc(json: &[u8], depth: usize, bigint_as_string: bool) -> Result
                     }
                 }
                 Some(Frame::Map(map, key)) => {
+                    if !assoc && key.bytes().first() == Some(&0) {
+                        return Err(JsonError::InvalidPropertyName);
+                    }
                     map.insert(key.clone(), value);
                     match scanner.next()? {
                         Token::Comma => {
@@ -379,7 +427,8 @@ pub fn decode_assoc(json: &[u8], depth: usize, bigint_as_string: bool) -> Result
                 }
             }
             value = match stack.pop() {
-                Some(Frame::List(a) | Frame::Map(a, _)) => Value::Array(a),
+                Some(Frame::List(a)) => Value::Array(a),
+                Some(Frame::Map(a, _)) => object(a, assoc),
                 None => return Err(JsonError::Syntax),
             };
         }

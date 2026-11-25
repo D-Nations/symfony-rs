@@ -31,7 +31,45 @@ pub trait PhpObject: Any + Send + Sync + fmt::Debug {
     fn is_stringable(&self) -> bool {
         self.to_php_string().is_some()
     }
+
+    /// `jsonSerialize()` for a class that implements `\JsonSerializable`:
+    /// the value `json_encode()` writes in the object's place, or what the
+    /// method threw; `None` for any other class.
+    fn json_serialize(&self) -> Option<Result<Value, Thrown>> {
+        None
+    }
 }
+
+/// An exception a PHP method threw: its class, message and code.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Thrown {
+    pub class: String,
+    pub message: PhpString,
+    pub code: i64,
+}
+
+impl Thrown {
+    pub fn new(class: impl Into<String>, message: impl Into<PhpString>, code: i64) -> Self {
+        Self {
+            class: class.into(),
+            message: message.into(),
+            code,
+        }
+    }
+}
+
+impl fmt::Display for Thrown {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}: {}",
+            self.class,
+            String::from_utf8_lossy(self.message.as_bytes())
+        )
+    }
+}
+
+impl std::error::Error for Thrown {}
 
 impl dyn PhpObject {
     pub fn downcast_ref<T: PhpObject>(&self) -> Option<&T> {
