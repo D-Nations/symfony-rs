@@ -1278,6 +1278,19 @@ Stack rows (searched November 19):
       PCRE translator checked on recorded `preg_match` answers; the
       date grammar is a subset (decision 13). No advisories listed for
       symfony/finder.
+- [ ] PasswordHasher (`symfony-password-hasher`, November 25): every
+      PHP file except `Command/UserPasswordHashCommand.php`; 63 of 87
+      upstream tests ported, the command's 24 tests `pending` (they need
+      Console's `QuestionHelper`, not ported). Security Core's user
+      interfaces are traits in the crate until a security-core crate
+      exists. Vectors from PHP 8.4.27 with sodium 1.0.18 and libargon2
+      (`scripts/record.sh password-hasher`): 4,352 digest, PBKDF2 and
+      `crypt()` cases, Argon2 outputs and strings, `needsRehash()`
+      answers, 36 factory configurations, and 30 hashes made by the
+      port that PHP verifies. Not ported: DES `crypt()` formats and 52
+      digest algorithms (crate README). Advisories for
+      symfony/password-hasher not checked in this session (the GitHub
+      advisory API was not reachable).
 - [ ] String (`symfony-string`). Done: ByteString, CodePointString,
       UnicodeString, AbstractString (with TruncateMode), AbstractUnicodeString,
       the exceptions and `u()` / `b()` / `s()`: ByteStringTest 68 of 68,
