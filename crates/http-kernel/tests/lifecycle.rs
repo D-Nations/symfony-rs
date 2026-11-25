@@ -1,8 +1,11 @@
-//! Selected HttpKernelTest.php assertions at pinned (v8.1.11) Symfony commit
-//! 460658504e26a2794aa614b4fbe6cf9bac2076fe. Names are kept from PHPUnit.
-//! Additional tests pin priority, propagation and explicit Rust error boundaries.
+//! The typed Axum lifecycle subset (`Kernel<C>`), which request-lab and the
+//! converter fixture use: selected HttpKernelTest.php assertions at the
+//! pinned (v8.1.11) Symfony commit 460658504e26a2794aa614b4fbe6cf9bac2076fe,
+//! names kept from PHPUnit, plus priority, propagation and Rust error
+//! boundary tests. The port of HttpKernelTest.php itself, on `HttpKernel`,
+//! is `http_kernel_test.rs`.
 //!
-//! Upstream: symfony/http-kernel Tests/HttpKernelTest.php
+//! Upstream: none
 
 #![allow(
     clippy::unwrap_used,

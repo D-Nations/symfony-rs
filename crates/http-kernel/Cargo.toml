@@ -14,6 +14,7 @@ symfony-event-dispatcher = { path = "../event-dispatcher" }
 symfony-http-foundation = { path = "../http-foundation" }
 
 [dev-dependencies]
+php-value = { path = "../php-value", features = ["vectors"] }
 tokio = { version = "1.54.1", features = ["macros", "rt"] }
 
 [lints]
