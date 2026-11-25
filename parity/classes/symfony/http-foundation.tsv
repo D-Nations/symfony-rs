@@ -36,15 +36,15 @@ File/UploadedFile.php	UploadedFile	148	ported	crates/http-foundation/src/uploade
 FileBag.php	FileBag	74	ported	crates/http-foundation/src/file_bag.rs crates/http-foundation/tests/files_recorded.rs
 HeaderBag.php	HeaderBag	146	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs
 HeaderUtils.php	HeaderUtils	170	ported	crates/http-foundation/src/header_utils.rs
-InputBag.php	InputBag	112	ported	crates/http-foundation/src/input_bag.rs crates/http-foundation/src/query.rs fixtures/converter-app/src/runtime/http_foundation.rs
+InputBag.php	InputBag	112	ported	crates/http-foundation/src/input_bag.rs crates/http-foundation/src/query.rs
 IpUtils.php	IpUtils	198	ported	crates/http-foundation/src/ip_utils.rs
 JsonResponse.php	JsonResponse	83	ported	crates/http-foundation/src/json_response.rs
 ParameterBag.php	ParameterBag	155	ported	crates/http-foundation/src/parameter_bag.rs
 RateLimiter/AbstractRequestRateLimiter.php	AbstractRequestRateLimiter	48	pending	
 RateLimiter/PeekableRequestRateLimiterInterface.php	PeekableRequestRateLimiterInterface	7	pending	
 RateLimiter/RequestRateLimiterInterface.php	RequestRateLimiterInterface	8	pending	
-RedirectResponse.php	RedirectResponse	43	ported	crates/http-foundation/src/redirect_response.rs fixtures/converter-app/src/runtime/http_foundation.rs
-Request.php	Request	1267	ported	crates/http-foundation/src/accept_language.rs crates/http-foundation/src/lib.rs crates/http-foundation/src/request.rs crates/http-foundation/src/scheme.rs fixtures/converter-app/src/runtime/http_foundation.rs
+RedirectResponse.php	RedirectResponse	43	ported	crates/http-foundation/src/redirect_response.rs
+Request.php	Request	1267	ported	crates/http-foundation/src/accept_language.rs crates/http-foundation/src/lib.rs crates/http-foundation/src/request.rs crates/http-foundation/src/scheme.rs
 RequestMatcher/AttributesRequestMatcher.php	AttributesRequestMatcher	22	pending	
 RequestMatcher/ExpressionRequestMatcher.php	ExpressionRequestMatcher	24	pending	
 RequestMatcher/HeaderRequestMatcher.php	HeaderRequestMatcher	23	pending	
@@ -58,8 +58,8 @@ RequestMatcher/QueryParameterRequestMatcher.php	QueryParameterRequestMatcher	18	
 RequestMatcher/SchemeRequestMatcher.php	SchemeRequestMatcher	18	pending	
 RequestMatcherInterface.php	RequestMatcherInterface	5	pending	
 RequestStack.php	RequestStack	53	ported	crates/http-foundation/src/request_stack.rs
-Response.php	Response	689	ported	crates/http-foundation/src/response.rs crates/http-kernel/src/lib.rs fixtures/converter-app/src/runtime/http_foundation.rs
-ResponseHeaderBag.php	ResponseHeaderBag	171	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs fixtures/converter-app/src/runtime/http_foundation.rs
+Response.php	Response	689	ported	crates/http-foundation/src/response.rs crates/http-kernel/src/lib.rs
+ResponseHeaderBag.php	ResponseHeaderBag	171	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs
 ServerBag.php	ServerBag	48	ported	crates/http-foundation/src/server_bag.rs crates/http-foundation/tests/server_bag_recorded.rs
 ServerEvent.php	ServerEvent	90	pending	
 Session/Attribute/AttributeBag.php	AttributeBag	72	pending	

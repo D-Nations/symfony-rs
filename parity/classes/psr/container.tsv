@@ -1,0 +1,4 @@
+# psr/container at c71ecc56dfe541dbd90c5360474fbc405f8d5963: upstream file	classes	code lines	status	rust files
+src/ContainerExceptionInterface.php	ContainerExceptionInterface	5	ported	crates/psr-container/src/lib.rs
+src/ContainerInterface.php	ContainerInterface	7	ported	crates/psr-container/src/lib.rs
+src/NotFoundExceptionInterface.php	NotFoundExceptionInterface	4	ported	crates/psr-container/src/lib.rs

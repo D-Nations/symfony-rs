@@ -1416,6 +1416,7 @@ dependencies = [
 name = "twig"
 version = "0.1.0"
 dependencies = [
+ "php-pcre",
  "php-value",
  "serde_json",
  "symfony-deprecation-contracts",
