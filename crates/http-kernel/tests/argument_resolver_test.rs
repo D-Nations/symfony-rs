@@ -454,7 +454,10 @@ fn testGetSessionMissMatchOnNull() {
     assert!(instance_of(e.as_ref(), "RuntimeException"));
 }
 
-#[allow(clippy::unnecessary_wraps, reason = "getResolver()'s nullable $namedResolvers")]
+#[allow(
+    clippy::unnecessary_wraps,
+    reason = "getResolver()'s nullable $namedResolvers"
+)]
 fn named(
     resolvers: Vec<(&str, Arc<dyn ValueResolverInterface>)>,
 ) -> Option<Vec<(String, Arc<dyn ValueResolverInterface>)>> {
