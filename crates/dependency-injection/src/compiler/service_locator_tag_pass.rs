@@ -52,7 +52,7 @@ impl ServiceLocatorTagPass {
     /// `ServiceLocatorTagPass::register($container, $map, $callerId)`.
     pub fn register(
         container: &mut ContainerBuilder,
-        map: PhpArray,
+        map: &PhpArray,
         caller_id: Option<&str>,
     ) -> Result<Reference> {
         let mut wrapped = PhpArray::new();
@@ -202,7 +202,7 @@ impl AbstractRecursivePass for ServiceLocatorTagPass {
             let values = self.process_value(container, Value::Array(argument.values()), false)?;
             return Ok(Value::from(Self::register(
                 container,
-                into_array(values),
+                &into_array(values),
                 None,
             )?));
         }

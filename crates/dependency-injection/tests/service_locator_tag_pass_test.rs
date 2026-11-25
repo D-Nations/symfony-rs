@@ -15,7 +15,7 @@
 //!   testExcludeSelfFromTaggedServiceLocator.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/ServiceLocatorTagPassTest.php
-#![allow(non_snake_case, clippy::unwrap_used)]
+#![allow(non_snake_case, clippy::unwrap_used, clippy::needless_pass_by_value)]
 
 use php_value::{PhpArray, Value, array::Key, php_array};
 use symfony_dependency_injection::argument::{
@@ -104,7 +104,7 @@ fn testBindingsAreCopied() {
 
     let locator = ServiceLocatorTagPass::register(
         &mut container,
-        php_array!["foo" => Value::from(Reference::new("foo"))],
+        &php_array!["foo" => Value::from(Reference::new("foo"))],
         Some("foo"),
     )
     .unwrap();
@@ -178,7 +178,7 @@ fn testLocatorsAreSharedOnlyByServicesSharingTheSameBindings() {
     for id in ["foo1", "foo2", "foo3"] {
         let locator = ServiceLocatorTagPass::register(
             &mut container,
-            php_array!["baz" => Value::from(Reference::new("baz"))],
+            &php_array!["baz" => Value::from(Reference::new("baz"))],
             Some(id),
         )
         .unwrap();
@@ -205,7 +205,7 @@ fn testServicesKeysAreKept() {
     map.insert(0, Value::from(Reference::new("service-1")));
     map.insert("service-2", Value::from(Reference::new("service-2")));
     map.insert("foo", Value::from(Reference::new("service-3")));
-    let locator = ServiceLocatorTagPass::register(&mut container, map, None).unwrap();
+    let locator = ServiceLocatorTagPass::register(&mut container, &map, None).unwrap();
     let locator = container.get_definition(locator.id()).unwrap();
     let Some(Value::Array(factories)) = locator.arguments().get(&Key::Int(0)).cloned() else {
         panic!("not an array");
@@ -225,7 +225,7 @@ fn testDefinitionOrderIsTheSame() {
 
     let locator = ServiceLocatorTagPass::register(
         &mut container,
-        php_array![
+        &php_array![
             "service-2" => Value::from(Reference::new("service-2")),
             "service-1" => Value::from(Reference::new("service-1")),
         ],
@@ -267,7 +267,7 @@ fn register_locator_with_binding(binding: BoundArgument) -> String {
 
     ServiceLocatorTagPass::register(
         &mut container,
-        php_array!["baz" => Value::from(Reference::new("baz"))],
+        &php_array!["baz" => Value::from(Reference::new("baz"))],
         Some("foo"),
     )
     .unwrap()
