@@ -12,6 +12,10 @@ php-value = { path = "../php-value" }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 symfony-event-dispatcher = { path = "../event-dispatcher" }
 symfony-http-foundation = { path = "../http-foundation" }
+psr-log = { path = "../psr-log" }
+# realpath() for the welcome page.
+symfony-finder = { path = "../finder" }
+symfony-routing = { path = "../routing" }
 
 [dev-dependencies]
 base64 = "0.23.1"

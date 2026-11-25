@@ -818,6 +818,9 @@ dependencies = [
 [[package]]
 name = "psr-log"
 version = "0.1.0"
+dependencies = [
+ "php-value",
+]
 
 [[package]]
 name = "pure-magic"
@@ -1147,10 +1150,13 @@ dependencies = [
  "axum",
  "base64",
  "php-value",
+ "psr-log",
  "serde_json",
  "symfony-deprecation-contracts",
  "symfony-event-dispatcher",
+ "symfony-finder",
  "symfony-http-foundation",
+ "symfony-routing",
  "tokio",
 ]
 

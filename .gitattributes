@@ -8,3 +8,5 @@
 **/tests/Fixtures/** -text
 **/tests/yaml-test-suite/** -text
 **/tests/fixtures/** -text
+# Rendered from upstream and served byte for byte.
+crates/http-kernel/resources/** -text

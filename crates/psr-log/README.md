@@ -12,6 +12,7 @@ Interoperability Group. Unofficial.
 
 The package has no PHPUnit tests upstream. Levels are a closed enum, so
 PSR-3's `InvalidArgumentException` for an unknown level cannot occur.
-Context is an ordered list of named values, strings or (under `exception`)
-an error. `LoggerAwareInterface`/`LoggerAwareTrait` are not ported: Rust
+Context is an ordered list of named values: strings, (under `exception`)
+an error, or any other PHP value as a php-value `Value` (PSR-3's
+`mixed`, such as RouterListener's route parameters). `LoggerAwareInterface`/`LoggerAwareTrait` are not ported: Rust
 code takes the logger in its constructor.

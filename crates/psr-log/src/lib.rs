@@ -5,7 +5,8 @@
 //! PSR-3's `$level` is any value and an unknown one throws
 //! `InvalidArgumentException`; here it is the closed `LogLevel` enum, so that
 //! error cannot occur. `$context` is an ordered list of named values; the
-//! `exception` key holds a `Throwable`, as PSR-3 specifies.
+//! `exception` key holds a `Throwable`, as PSR-3 specifies; any other value
+//! is a php-value `Value`.
 //!
 //! psr/log copyright (c) PHP Framework Interoperability Group; MIT.
 //!
@@ -66,6 +67,15 @@ pub enum ContextValue {
     String(String),
     /// The `exception` entry.
     Exception(Arc<dyn std::error::Error + Send + Sync>),
+    /// Any other PHP value (PSR-3's `mixed`): an array of route
+    /// parameters, a number, null.
+    Value(php_value::Value),
+}
+
+impl From<php_value::Value> for ContextValue {
+    fn from(value: php_value::Value) -> Self {
+        Self::Value(value)
+    }
 }
 
 impl From<&str> for ContextValue {
@@ -86,6 +96,7 @@ impl PartialEq for ContextValue {
         match (self, other) {
             (Self::String(a), Self::String(b)) => a == b,
             (Self::Exception(a), Self::Exception(b)) => a.to_string() == b.to_string(),
+            (Self::Value(a), Self::Value(b)) => a == b,
             _ => false,
         }
     }
@@ -96,6 +107,7 @@ impl fmt::Debug for ContextValue {
         match self {
             Self::String(s) => write!(f, "{s:?}"),
             Self::Exception(e) => write!(f, "Exception({e})"),
+            Self::Value(v) => write!(f, "{v:?}"),
         }
     }
 }
