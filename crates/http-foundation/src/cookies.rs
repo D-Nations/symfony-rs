@@ -12,6 +12,8 @@
 //!
 //! Upstream: none
 
+use php_value::PhpArray;
+
 use super::query::{Decode, Duplicate, MAX_INPUT_VARS, Query, QueryValue, lookup};
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -21,19 +23,13 @@ impl Cookies {
     /// The `Cookie` header values of one request, in order, read as one
     /// list (as a server joining them with `; ` would pass them to PHP).
     pub fn parse<'a>(headers: impl IntoIterator<Item = &'a str>) -> Self {
-        let mut cookies = Query::default();
-        let pairs = headers
-            .into_iter()
-            .flat_map(|header| header.as_bytes().split(|&b| b == b';'))
-            .map(|pair| {
-                let start = pair.iter().position(|&b| b != b' ' && b != b'\t');
-                start.map_or(&b""[..], |start| &pair[start..])
-            })
-            .filter(|pair| !pair.is_empty());
-        for pair in pairs.take(MAX_INPUT_VARS) {
-            cookies.register_pair(pair, Decode::ValueOnly, Duplicate::KeepFirst);
-        }
-        Self(cookies.into_entries())
+        Self(read(headers.into_iter().map(str::as_bytes)).into_entries())
+    }
+
+    /// `$_COOKIE` as PHP holds it (binary-safe keys and values) for the
+    /// `HTTP_COOKIE` PHP-FPM is given.
+    pub fn vars(header: &[u8]) -> PhpArray {
+        read([header]).vars().clone()
     }
 
     /// `$request->cookies->get($name)` for a string cookie; `None` when it
@@ -61,6 +57,23 @@ impl Cookies {
     pub fn all(&self) -> &[(String, QueryValue)] {
         &self.0
     }
+}
+
+/// The pairs of `Cookie` values read as one list, as PHP reads them.
+fn read<'a>(headers: impl IntoIterator<Item = &'a [u8]>) -> Query {
+    let mut cookies = Query::default();
+    let pairs = headers
+        .into_iter()
+        .flat_map(|header| header.split(|&b| b == b';'))
+        .map(|pair| {
+            let start = pair.iter().position(|&b| b != b' ' && b != b'\t');
+            start.map_or(&b""[..], |start| &pair[start..])
+        })
+        .filter(|pair| !pair.is_empty());
+    for pair in pairs.take(MAX_INPUT_VARS) {
+        cookies.register_pair(pair, Decode::ValueOnly, Duplicate::KeepFirst);
+    }
+    cookies.finish()
 }
 
 #[cfg(test)]

@@ -24,3 +24,12 @@ services:
     extends: php
     tmpfs:
       - /demo/var
+  # PHP-FPM, for recorders of what the FastCGI SAPI does
+  # (runtime_fpm.php). It loads no package, so mounts only this repository.
+  php-fpm:
+    build:
+      context: .
+      dockerfile: fpm.Dockerfile
+    image: symfony-rs-oracle-fpm:8.4.27
+    volumes:
+      - ..:/work:ro

@@ -4,8 +4,8 @@
 //! (PLAN.md decision 8):
 //!
 //! - the `UPLOAD_ERR_*` constants;
-//! - `is_uploaded_file()` and `move_uploaded_file()` on a process-wide
-//!   list of uploaded files, which the code that writes an upload's
+//! - `is_uploaded_file()` and `move_uploaded_file()` on a per-thread
+//!   list of uploaded files (a request runs on one thread), which the code that writes an upload's
 //!   temporary file fills ([`register_uploaded_file`]) and empties at the
 //!   end of the request ([`forget_uploaded_files`]); PHP keeps that list
 //!   per request. A moved file leaves the list, as in PHP;
@@ -51,27 +51,29 @@ pub const UPLOAD_ERR_EXTENSION: i64 = 8;
 /// `DIRECTORY_SEPARATOR`.
 pub const DIRECTORY_SEPARATOR: u8 = if cfg!(windows) { b'\\' } else { b'/' };
 
-static UPLOADED: Mutex<BTreeSet<Vec<u8>>> = Mutex::new(BTreeSet::new());
+thread_local! {
+    /// The uploaded files of the request this thread runs: PHP keeps the
+    /// list per request, so one request never sees another's files.
+    static UPLOADED: RefCell<BTreeSet<Vec<u8>>> = const { RefCell::new(BTreeSet::new()) };
+}
 
-fn uploaded() -> std::sync::MutexGuard<'static, BTreeSet<Vec<u8>>> {
-    UPLOADED
-        .lock()
-        .unwrap_or_else(std::sync::PoisonError::into_inner)
+fn with_uploaded<R>(f: impl FnOnce(&mut BTreeSet<Vec<u8>>) -> R) -> R {
+    UPLOADED.with(|u| f(&mut u.borrow_mut()))
 }
 
 /// Marks `path` as a file PHP received in this request's body.
 pub fn register_uploaded_file(path: impl Into<Vec<u8>>) {
-    uploaded().insert(path.into());
+    with_uploaded(|u| u.insert(path.into()));
 }
 
 /// Ends the request: no file counts as uploaded any more.
 pub fn forget_uploaded_files() {
-    uploaded().clear();
+    with_uploaded(BTreeSet::clear);
 }
 
 /// `is_uploaded_file($filename)`.
 pub fn is_uploaded_file(filename: &[u8]) -> bool {
-    uploaded().contains(filename)
+    with_uploaded(|u| u.contains(filename))
 }
 
 /// A PHP warning's text as a web SAPI shows it to an error handler.
@@ -98,7 +100,7 @@ pub fn move_uploaded_file(from: &[u8], to: &[u8]) -> (bool, Option<String>) {
     }
     let renamed = symfony_filesystem::php::rename(from, to);
     if renamed.value {
-        uploaded().remove(from);
+        with_uploaded(|u| u.remove(from));
         return (true, None);
     }
     let warning = format!(

@@ -5,8 +5,8 @@
 //! Written from PHP 8.4.27's recorded answers to 137 bodies, each sent as
 //! POST and as PUT (`tests/data/multipart_vectors.json`, recorded by
 //! `scripts/record.sh multipart`), and the PHP manual's ini defaults; no
-//! PHP source code is used (PLAN.md decision 8). Only text fields are kept;
-//! file parts are read and dropped. Settings are PHP's defaults:
+//! PHP source code is used (PLAN.md decision 8). Text fields and file parts
+//! are kept; settings are PHP's defaults:
 //! `max_input_vars` 1000, `max_file_uploads` 20, `file_uploads` on.
 //!
 //! What the recordings show, and this parser does:
@@ -28,8 +28,16 @@
 //!   (and one CR before it). The value may start with `--boundary`.
 //! - A disposition with neither `name` nor `filename` fails and stops
 //!   parsing; so does the 1,001st text field. A part with `filename` is a
-//!   file and is dropped; a 21st non-empty filename fails but parsing
-//!   continues.
+//!   file and is not a field; a file part after 20 non-empty filenames
+//!   fails but parsing continues.
+//!
+//! File parts are kept in [`Parsed::files`], in order, with what PHP's
+//! `$_FILES` is built from (`crate::sapi`): the `name` and `filename`
+//! parameters, the first `Content-Type` header, the data, whether the part
+//! ended at a delimiter, and the `MAX_FILE_SIZE` field sent before it.
+//! A file part read once `max_file_uploads` non-empty filenames were read
+//! makes PHP warn and read no more files (recorded: `tests/data/sapi.json`,
+//! `post-file-20-then-empty` and `post-file-19-empty-2`).
 //!
 //! PHP reads the body through a fixed-size buffer. None of the recorded
 //! bodies placed around its size (`pad-*`, `long-*`) shows an effect of
@@ -48,16 +56,70 @@ pub struct Parsed {
     /// Text fields in order, name and value as sent. Names are registered
     /// as PHP registers them (`Query::from_fields`).
     pub fields: Vec<(Vec<u8>, Vec<u8>)>,
+    /// File parts in order, up to the one `max_file_uploads` stopped.
+    pub files: Vec<FilePart>,
     /// PHP raised one of its warnings. For POST they are only warnings;
     /// `request_parse_body()` turns them into an exception, and Symfony
     /// then uses no fields at all.
     pub failed: bool,
+    /// The warnings, in order.
+    pub warnings: Vec<Warning>,
+}
+
+/// A part with a `filename` parameter.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct FilePart {
+    /// The `name` parameter; `None` when the part has none.
+    pub name: Option<Vec<u8>>,
+    pub filename: Vec<u8>,
+    /// The first `Content-Type` header's value, spaces and tabs before it
+    /// dropped; `None` without one.
+    pub content_type: Option<Vec<u8>>,
+    pub data: Vec<u8>,
+    /// The data ended at a delimiter rather than at the end of the body.
+    pub complete: bool,
+    /// The last `MAX_FILE_SIZE` field read before this part.
+    pub max_file_size: Option<Vec<u8>>,
+}
+
+/// One of PHP's warnings while reading a multipart body; [`Warning::text`]
+/// is what PHP says.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Warning {
+    /// The content type names no boundary, or an unclosed quoted one.
+    MissingBoundary,
+    /// A part's disposition has neither `name` nor `filename`.
+    Garbled,
+    /// The `max_input_vars + 1`st field.
+    InputVars,
+    /// A file part after `max_file_uploads` non-empty filenames.
+    MaxFileUploads,
+}
+
+impl Warning {
+    pub fn text(self) -> &'static str {
+        match self {
+            Self::MissingBoundary => "Missing boundary in multipart/form-data POST data",
+            Self::Garbled => "File Upload Mime headers garbled",
+            Self::InputVars => {
+                "Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini."
+            }
+            Self::MaxFileUploads => "Maximum number of allowable file uploads has been exceeded",
+        }
+    }
+}
+
+impl Parsed {
+    fn fail(&mut self, warning: Warning) {
+        self.failed = true;
+        self.warnings.push(warning);
+    }
 }
 
 pub fn parse(content_type: &[u8], body: &[u8]) -> Parsed {
     let mut parsed = Parsed::default();
     let Some(boundary) = boundary(content_type) else {
-        parsed.failed = true;
+        parsed.fail(Warning::MissingBoundary);
         return parsed;
     };
     let delimiter = [b"--", boundary].concat();
@@ -66,26 +128,44 @@ pub fn parse(content_type: &[u8], body: &[u8]) -> Parsed {
         return parsed;
     }
     let mut files = 0;
+    let mut files_stopped = false;
+    let mut max_file_size = None;
     loop {
-        let disposition = body.disposition();
+        let (disposition, part_type) = body.headers();
         let (value, next) = body.value(&delimiter);
         if let Some(disposition) = disposition {
             let params = Params::of(&disposition);
             match (params.name, params.filename) {
                 (None, None) => {
-                    parsed.failed = true;
+                    parsed.fail(Warning::Garbled);
                     return parsed;
                 }
-                (_, Some(filename)) => {
-                    if !filename.is_empty() {
-                        files += 1;
-                        parsed.failed |= files > MAX_FILE_UPLOADS;
+                (name, Some(filename)) if !files_stopped => {
+                    if files == MAX_FILE_UPLOADS {
+                        files_stopped = true;
+                        parsed.fail(Warning::MaxFileUploads);
+                    } else {
+                        if !filename.is_empty() {
+                            files += 1;
+                        }
+                        parsed.files.push(FilePart {
+                            name,
+                            filename,
+                            content_type: part_type,
+                            data: value.to_vec(),
+                            complete: !matches!(next, Next::End),
+                            max_file_size: max_file_size.clone(),
+                        });
                     }
                 }
+                (_, Some(_)) => {}
                 (Some(name), None) => {
                     if parsed.fields.len() == MAX_INPUT_VARS {
-                        parsed.failed = true;
+                        parsed.fail(Warning::InputVars);
                         return parsed;
+                    }
+                    if name == b"MAX_FILE_SIZE" {
+                        max_file_size = Some(value.to_vec());
                     }
                     parsed.fields.push((name, value.to_vec()));
                 }
@@ -158,8 +238,9 @@ impl<'a> Body<'a> {
         false
     }
 
-    /// Reads a part's headers and returns its first `Content-Disposition`.
-    fn disposition(&mut self) -> Option<Vec<u8>> {
+    /// Reads a part's headers and returns its first `Content-Disposition`
+    /// and its first `Content-Type`.
+    fn headers(&mut self) -> (Option<Vec<u8>>, Option<Vec<u8>>) {
         let mut headers: Vec<(&[u8], Vec<u8>)> = Vec::new();
         while let Some(line) = self.line() {
             if line.is_empty() {
@@ -178,10 +259,13 @@ impl<'a> Body<'a> {
                 ));
             }
         }
-        headers
-            .into_iter()
-            .find(|(name, _)| name.eq_ignore_ascii_case(b"content-disposition"))
-            .map(|(_, value)| value)
+        let first = |wanted: &[u8]| {
+            headers
+                .iter()
+                .find(|(name, _)| name.eq_ignore_ascii_case(wanted))
+                .map(|(_, value)| value.clone())
+        };
+        (first(b"content-disposition"), first(b"content-type"))
     }
 
     /// Reads a part's value and finds what follows it.
