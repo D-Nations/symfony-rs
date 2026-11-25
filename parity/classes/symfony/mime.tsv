@@ -1,0 +1,71 @@
+# symfony/mime at 8d1232052c9cdef170ed9608b3147bca4f61ff69: upstream file	classes	code lines	status	rust files
+Address.php	Address	90	pending	
+BodyRendererInterface.php	BodyRendererInterface	5	pending	
+CharacterStream.php	CharacterStream	168	pending	
+Crypto/DkimOptions.php	DkimOptions	44	pending	
+Crypto/DkimSigner.php	DkimSigner	173	pending	
+Crypto/SMime.php	SMime	69	pending	
+Crypto/SMimeEncrypter.php	SMimeEncrypter	35	pending	
+Crypto/SMimeSigner.php	SMimeSigner	34	pending	
+DependencyInjection/AddMimeTypeGuesserPass.php	AddMimeTypeGuesserPass	21	pending	
+DraftEmail.php	DraftEmail	20	pending	
+Email.php	Email	335	pending	
+Encoder/AddressEncoderInterface.php	AddressEncoderInterface	6	pending	
+Encoder/Base64ContentEncoder.php	Base64ContentEncoder	26	pending	
+Encoder/Base64Encoder.php	Base64Encoder	17	pending	
+Encoder/Base64MimeHeaderEncoder.php	Base64MimeHeaderEncoder	19	pending	
+Encoder/ContentEncoderInterface.php	ContentEncoderInterface	6	pending	
+Encoder/EightBitContentEncoder.php	EightBitContentEncoder	18	pending	
+Encoder/EncoderInterface.php	EncoderInterface	5	pending	
+Encoder/IdnAddressEncoder.php	IdnAddressEncoder	16	pending	
+Encoder/MimeHeaderEncoderInterface.php	MimeHeaderEncoderInterface	5	pending	
+Encoder/QpContentEncoder.php	QpContentEncoder	29	pending	
+Encoder/QpEncoder.php	QpEncoder	132	pending	
+Encoder/QpMimeHeaderEncoder.php	QpMimeHeaderEncoder	23	pending	
+Encoder/Rfc2231Encoder.php	Rfc2231Encoder	27	pending	
+Exception/AddressEncoderException.php	AddressEncoderException	4	pending	
+Exception/ExceptionInterface.php	ExceptionInterface	4	ported	crates/mime/src/exception.rs
+Exception/InvalidArgumentException.php	InvalidArgumentException	4	ported	crates/mime/src/exception.rs
+Exception/LogicException.php	LogicException	4	ported	crates/mime/src/exception.rs
+Exception/RfcComplianceException.php	RfcComplianceException	4	pending	
+Exception/RuntimeException.php	RuntimeException	4	ported	crates/mime/src/exception.rs
+FileBinaryMimeTypeGuesser.php	FileBinaryMimeTypeGuesser	35	ported	crates/mime/src/file_binary_mime_type_guesser.rs
+FileinfoMimeTypeGuesser.php	FileinfoMimeTypeGuesser	36	ported	crates/mime/src/fileinfo_mime_type_guesser.rs
+Header/AbstractHeader.php	AbstractHeader	192	pending	
+Header/DateHeader.php	DateHeader	30	pending	
+Header/HeaderInterface.php	HeaderInterface	15	pending	
+Header/Headers.php	Headers	214	pending	
+Header/IdentificationHeader.php	IdentificationHeader	50	pending	
+Header/MailboxHeader.php	MailboxHeader	40	pending	
+Header/MailboxListHeader.php	MailboxListHeader	59	pending	
+Header/ParameterizedHeader.php	ParameterizedHeader	114	pending	
+Header/PathHeader.php	PathHeader	32	pending	
+Header/UnstructuredHeader.php	UnstructuredHeader	30	pending	
+HtmlToTextConverter/DefaultHtmlToTextConverter.php	DefaultHtmlToTextConverter	8	pending	
+HtmlToTextConverter/HtmlToTextConverterInterface.php	HtmlToTextConverterInterface	5	pending	
+HtmlToTextConverter/LeagueHtmlToMarkdownConverter.php	LeagueHtmlToMarkdownConverter	18	pending	
+Message.php	Message	111	pending	
+MessageConverter.php	MessageConverter	87	pending	
+MimeTypeGuesserInterface.php	MimeTypeGuesserInterface	6	ported	crates/mime/src/mime_types.rs
+MimeTypes.php	MimeTypes	3796	ported	crates/mime/src/map.rs crates/mime/src/mime_types.rs
+MimeTypesInterface.php	MimeTypesInterface	6	ported	crates/mime/src/mime_types.rs
+Part/AbstractMultipartPart.php	AbstractMultipartPart	91	pending	
+Part/AbstractPart.php	AbstractPart	101	pending	
+Part/DataPart.php	DataPart	108	pending	
+Part/File.php	File	29	pending	
+Part/MessagePart.php	MessagePart	45	pending	
+Part/Multipart/AlternativePart.php	AlternativePart	9	pending	
+Part/Multipart/DigestPart.php	DigestPart	14	pending	
+Part/Multipart/FormDataPart.php	FormDataPart	77	pending	
+Part/Multipart/MixedPart.php	MixedPart	9	pending	
+Part/Multipart/RelatedPart.php	RelatedPart	49	pending	
+Part/SMimePart.php	SMimePart	82	pending	
+Part/TextPart.php	TextPart	201	pending	
+RawMessage.php	RawMessage	71	pending	
+Test/Constraint/EmailAddressContains.php	EmailAddressContains	39	pending	
+Test/Constraint/EmailAttachmentCount.php	EmailAttachmentCount	26	pending	
+Test/Constraint/EmailHasHeader.php	EmailHasHeader	25	pending	
+Test/Constraint/EmailHeaderSame.php	EmailHeaderSame	34	pending	
+Test/Constraint/EmailHtmlBodyContains.php	EmailHtmlBodyContains	26	pending	
+Test/Constraint/EmailSubjectContains.php	EmailSubjectContains	29	pending	
+Test/Constraint/EmailTextBodyContains.php	EmailTextBodyContains	26	pending	

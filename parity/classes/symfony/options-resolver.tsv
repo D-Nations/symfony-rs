@@ -1,0 +1,14 @@
+# symfony/options-resolver at 88f9c561f678a02d54b897014049fa839e33ff82: upstream file	classes	code lines	status	rust files
+Debug/OptionsResolverIntrospector.php	OptionsResolverIntrospector	52	ported	crates/options-resolver/src/debug/mod.rs
+Exception/AccessException.php	AccessException	4	ported	crates/options-resolver/src/exception.rs
+Exception/ExceptionInterface.php	ExceptionInterface	4	ported	crates/options-resolver/src/exception.rs
+Exception/InvalidArgumentException.php	InvalidArgumentException	4	ported	crates/options-resolver/src/exception.rs
+Exception/InvalidOptionsException.php	InvalidOptionsException	4	ported	crates/options-resolver/src/exception.rs
+Exception/MissingOptionsException.php	MissingOptionsException	4	ported	crates/options-resolver/src/exception.rs
+Exception/NoConfigurationException.php	NoConfigurationException	5	ported	crates/options-resolver/src/exception.rs
+Exception/NoSuchOptionException.php	NoSuchOptionException	4	ported	crates/options-resolver/src/exception.rs
+Exception/OptionDefinitionException.php	OptionDefinitionException	4	ported	crates/options-resolver/src/exception.rs
+Exception/UndefinedOptionsException.php	UndefinedOptionsException	4	ported	crates/options-resolver/src/exception.rs
+OptionConfigurator.php	OptionConfigurator	60	ported	crates/options-resolver/src/option_configurator.rs
+Options.php	Options	4	ported	crates/options-resolver/src/options_resolver.rs
+OptionsResolver.php	OptionsResolver	665	ported	crates/options-resolver/src/options_resolver.rs

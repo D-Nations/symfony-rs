@@ -1,0 +1,3 @@
+# symfony/event-dispatcher-contracts at c7de7a00ffb67842132da02ea92988a39ccd9f4e: upstream file	classes	code lines	status	rust files
+Event.php	Event	14	ported	crates/event-dispatcher-contracts/src/lib.rs
+EventDispatcherInterface.php	EventDispatcherInterface	6	ported	crates/event-dispatcher-contracts/src/lib.rs

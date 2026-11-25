@@ -1,0 +1,10 @@
+# symfony/monolog-bundle at a22de65db405738364af77310761fdd0dce7a40e: upstream file	classes	code lines	status	rust files
+config/monolog.php	-	50	pending	
+src/DependencyInjection/Compiler/AddHandlersToManagerPass.php	AddHandlersToManagerPass	22	pending	
+src/DependencyInjection/Compiler/AddProcessorsPass.php	AddProcessorsPass	65	pending	
+src/DependencyInjection/Compiler/LoggerChannelPass.php	LoggerChannelPass	104	pending	
+src/DependencyInjection/Configuration.php	Configuration	685	pending	
+src/DependencyInjection/FormatterConfigurator.php	FormatterConfigurator	22	pending	
+src/DependencyInjection/MonologExtension.php	MonologExtension	756	pending	
+src/HandlerLifecycleManager.php	HandlerLifecycleManager	16	pending	
+src/MonologBundle.php	MonologBundle	23	pending	

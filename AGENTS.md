@@ -25,7 +25,9 @@ of real PHP running it. **Read upstream, never edit it.**
 3. Port one PHP file at a time. Read the whole file and its tests first.
    Each Rust module's first doc line names the PHP file it ports
    (`//! Port of Symfony\Component\X\Y.php`); `scripts/sources.sh` builds
-   `parity/sources.tsv` from those lines.
+   `parity/sources.tsv` from those lines. Then run
+   `python scripts/classes.py sync` to mark the file `ported` in
+   `parity/classes/<package>.tsv`.
 4. Port the upstream tests in the same change, with the same names and
    assertions. Record vectors from real PHP for what tests leave open
    (a recorder in `oracle/recorders/`, run by `scripts/record.sh`).

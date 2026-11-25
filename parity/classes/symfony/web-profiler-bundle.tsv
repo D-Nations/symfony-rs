@@ -1,0 +1,17 @@
+# symfony/web-profiler-bundle at 481a6d4b0b6bce7e83573576abcf01d9674cd934: upstream file	classes	code lines	status	rust files
+Controller/ExceptionPanelController.php	ExceptionPanelController	28	pending	
+Controller/ProfilerController.php	ProfilerController	286	pending	
+Controller/RouterController.php	RouterController	61	pending	
+Csp/ContentSecurityPolicyHandler.php	ContentSecurityPolicyHandler	168	pending	
+Csp/NonceGenerator.php	NonceGenerator	8	pending	
+DependencyInjection/Configuration.php	Configuration	29	pending	
+DependencyInjection/WebProfilerExtension.php	WebProfilerExtension	27	pending	
+EventListener/WebDebugToolbarListener.php	WebDebugToolbarListener	167	pending	
+Profiler/CodeExtension.php	CodeExtension	203	pending	
+Profiler/TemplateManager.php	TemplateManager	44	pending	
+Resources/config/profiler.php	-	67	pending	
+Resources/config/routing/profiler.php	-	39	pending	
+Resources/config/routing/wdt.php	-	9	pending	
+Resources/config/toolbar.php	-	18	pending	
+Twig/WebProfilerExtension.php	WebProfilerExtension	96	pending	
+WebProfilerBundle.php	WebProfilerBundle	11	pending	

@@ -1,0 +1,78 @@
+# symfony/cache at 385f37a95296a9d4bc0204c9c49ee4765d4fe989: upstream file	classes	code lines	status	rust files
+Adapter/AbstractAdapter.php	AbstractAdapter	157	pending	
+Adapter/AbstractTagAwareAdapter.php	AbstractTagAwareAdapter	235	pending	
+Adapter/AdapterInterface.php	AdapterInterface	10	pending	
+Adapter/ApcuAdapter.php	ApcuAdapter	76	pending	
+Adapter/ArrayAdapter.php	ArrayAdapter	298	pending	
+Adapter/ChainAdapter.php	ChainAdapter	232	pending	
+Adapter/CouchbaseCollectionAdapter.php	CouchbaseCollectionAdapter	145	pending	
+Adapter/DoctrineDbalAdapter.php	DoctrineDbalAdapter	349	pending	
+Adapter/FilesystemAdapter.php	FilesystemAdapter	15	pending	
+Adapter/FilesystemTagAwareAdapter.php	FilesystemTagAwareAdapter	203	pending	
+Adapter/MemcachedAdapter.php	MemcachedAdapter	244	pending	
+Adapter/NullAdapter.php	NullAdapter	83	pending	
+Adapter/ParameterNormalizer.php	ParameterNormalizer	18	pending	
+Adapter/PdoAdapter.php	PdoAdapter	310	pending	
+Adapter/PhpArrayAdapter.php	PhpArrayAdapter	293	pending	
+Adapter/PhpFilesAdapter.php	PhpFilesAdapter LazyValue	242	pending	
+Adapter/ProxyAdapter.php	ProxyAdapter	172	pending	
+Adapter/Psr16Adapter.php	Psr16Adapter	41	pending	
+Adapter/RedisAdapter.php	RedisAdapter	11	pending	
+Adapter/RedisTagAwareAdapter.php	RedisTagAwareAdapter	236	pending	
+Adapter/TagAwareAdapter.php	TagAwareAdapter	317	pending	
+Adapter/TagAwareAdapterInterface.php	TagAwareAdapterInterface	6	pending	
+Adapter/TraceableAdapter.php	TraceableAdapter TraceableAdapterEvent	251	pending	
+Adapter/TraceableTagAwareAdapter.php	TraceableTagAwareAdapter	21	pending	
+CacheItem.php	CacheItem	142	pending	
+DataCollector/CacheDataCollector.php	CacheDataCollector	138	pending	
+DependencyInjection/CacheCollectorPass.php	CacheCollectorPass	46	pending	
+DependencyInjection/CachePoolClearerPass.php	CachePoolClearerPass	21	pending	
+DependencyInjection/CachePoolPass.php	CachePoolPass	242	pending	
+DependencyInjection/CachePoolPrunerPass.php	CachePoolPrunerPass	22	pending	
+Exception/BadMethodCallException.php	BadMethodCallException BadMethodCallException	12	pending	
+Exception/CacheException.php	CacheException CacheException	12	pending	
+Exception/InvalidArgumentException.php	InvalidArgumentException InvalidArgumentException	12	pending	
+Exception/LogicException.php	LogicException LogicException	12	pending	
+LockRegistry.php	LockRegistry	138	pending	
+Marshaller/DefaultMarshaller.php	DefaultMarshaller	68	pending	
+Marshaller/DeflateMarshaller.php	DeflateMarshaller	23	pending	
+Marshaller/MarshallerInterface.php	MarshallerInterface	6	pending	
+Marshaller/SodiumMarshaller.php	SodiumMarshaller	44	pending	
+Marshaller/TagAwareMarshaller.php	TagAwareMarshaller	50	pending	
+Messenger/EarlyExpirationDispatcher.php	EarlyExpirationDispatcher	35	pending	
+Messenger/EarlyExpirationHandler.php	EarlyExpirationHandler	53	pending	
+Messenger/EarlyExpirationMessage.php	EarlyExpirationMessage	69	pending	
+PruneableInterface.php	PruneableInterface	5	pending	
+Psr16Cache.php	Psr16Cache	217	pending	
+ResettableInterface.php	ResettableInterface	5	pending	
+Traits/AbstractAdapterTrait.php	AbstractAdapterTrait	272	pending	
+Traits/CachedValueInterface.php	CachedValueInterface	5	pending	
+Traits/ContractsTrait.php	ContractsTrait	72	pending	
+Traits/FilesystemCommonTrait.php	FilesystemCommonTrait	140	pending	
+Traits/FilesystemTrait.php	FilesystemTrait	77	pending	
+Traits/ProxyTrait.php	ProxyTrait	17	pending	
+Traits/Redis62ProxyTrait.php	Redis62ProxyTrait Redis62ProxyTrait	30	pending	
+Traits/Redis63ProxyTrait.php	Redis63ProxyTrait Redis63ProxyTrait	118	pending	
+Traits/RedisCluster62ProxyTrait.php	RedisCluster62ProxyTrait RedisCluster62ProxyTrait	26	pending	
+Traits/RedisCluster63ProxyTrait.php	RedisCluster63ProxyTrait RedisCluster63ProxyTrait	118	pending	
+Traits/RedisClusterNodeProxy.php	RedisClusterNodeProxy	21	pending	
+Traits/RedisClusterProxy.php	RedisClusterProxy	909	pending	
+Traits/RedisProxy.php	RedisProxy	1025	pending	
+Traits/RedisProxyTrait.php	RedisProxyTrait	29	pending	
+Traits/RedisTrait.php	RedisTrait	679	pending	
+Traits/Relay/Relay20Trait.php	Relay20Trait Relay20Trait	26	pending	
+Traits/Relay/Relay21Trait.php	Relay21Trait Relay21Trait	18	pending	
+Traits/Relay/Relay22Trait.php	Relay22Trait Relay22Trait	18	pending	
+Traits/Relay/Relay30Trait.php	Relay30Trait Relay30Trait	26	pending	
+Traits/Relay/Relay40Trait.php	Relay40Trait Relay40Trait Relay40Trait Relay40Trait	66	pending	
+Traits/Relay/Relay502Trait.php	Relay502Trait Relay502Trait	218	pending	
+Traits/Relay/Relay50Trait.php	Relay50Trait Relay50Trait	14	pending	
+Traits/Relay/RelayCluster20Trait.php	RelayCluster20Trait RelayCluster20Trait	26	pending	
+Traits/Relay/RelayCluster21Trait.php	RelayCluster21Trait RelayCluster21Trait	18	pending	
+Traits/Relay/RelayCluster30Trait.php	RelayCluster30Trait RelayCluster30Trait	18	pending	
+Traits/Relay/RelayCluster40Trait.php	RelayCluster40Trait RelayCluster40Trait RelayCluster40Trait RelayCluster40Trait	102	pending	
+Traits/Relay/RelayCluster502Trait.php	RelayCluster502Trait RelayCluster502Trait	114	pending	
+Traits/Relay/RelayCluster50Trait.php	RelayCluster50Trait RelayCluster50Trait	26	pending	
+Traits/RelayClusterProxy.php	RelayClusterProxy	1027	pending	
+Traits/RelayProxy.php	RelayProxy	1289	pending	
+Traits/ValueWrapper.php	\xA9	50	pending	

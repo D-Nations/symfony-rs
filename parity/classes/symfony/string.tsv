@@ -1,0 +1,20 @@
+# symfony/string at 6c6110979c0150393bbb336170e286d51ab4d76c: upstream file	classes	code lines	status	rust files
+AbstractString.php	AbstractString	477	ported	crates/string/src/abstract_string.rs
+AbstractUnicodeString.php	AbstractUnicodeString	563	ported	crates/string/src/abstract_unicode_string.rs
+ByteString.php	ByteString	336	ported	crates/string/src/byte_string.rs
+CodePointString.php	CodePointString	198	ported	crates/string/src/code_point_string.rs
+Exception/ExceptionInterface.php	ExceptionInterface	4	ported	crates/string/src/exception.rs
+Exception/InvalidArgumentException.php	InvalidArgumentException	4	ported	crates/string/src/exception.rs
+Exception/RuntimeException.php	RuntimeException	4	ported	crates/string/src/exception.rs
+Inflector/EnglishInflector.php	EnglishInflector	237	ported	crates/string/src/inflector/english.rs
+Inflector/FrenchInflector.php	FrenchInflector	63	ported	crates/string/src/inflector/french.rs
+Inflector/InflectorInterface.php	InflectorInterface	6	ported	crates/string/src/inflector/mod.rs
+Inflector/SpanishInflector.php	SpanishInflector	67	ported	crates/string/src/inflector/spanish.rs
+LazyString.php	LazyString	94	ported	crates/string/src/lazy_string.rs
+Resources/data/wcswidth_table_wide.php	-	1194	ported	crates/string/src/tables.rs
+Resources/data/wcswidth_table_zero.php	-	1494	ported	crates/string/src/tables.rs
+Resources/functions.php	-	20	ported	crates/string/src/lib.rs
+Slugger/AsciiSlugger.php	AsciiSlugger	150	pending	
+Slugger/SluggerInterface.php	SluggerInterface	6	pending	
+TruncateMode.php	TruncateMode	7	ported	crates/string/src/abstract_string.rs
+UnicodeString.php	UnicodeString	345	ported	crates/string/src/unicode_string.rs

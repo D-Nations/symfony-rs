@@ -1,0 +1,179 @@
+# symfony/http-kernel at 460658504e26a2794aa614b4fbe6cf9bac2076fe: upstream file	classes	code lines	status	rust files
+Attribute/AsController.php	AsController	5	ported	crates/http-kernel/src/controller_resolver.rs
+Attribute/AsTargetedValueResolver.php	AsTargetedValueResolver	8	pending	
+Attribute/Cache.php	Cache	24	pending	
+Attribute/IsSignatureValid.php	IsSignatureValid	14	pending	
+Attribute/MapDateTime.php	MapDateTime	14	pending	
+Attribute/MapQueryParameter.php	MapQueryParameter	18	pending	
+Attribute/MapQueryString.php	MapQueryString	21	pending	
+Attribute/MapRequestHeader.php	MapRequestHeader	14	pending	
+Attribute/MapRequestPayload.php	MapRequestPayload	22	pending	
+Attribute/MapUploadedFile.php	MapUploadedFile	18	pending	
+Attribute/RateLimit.php	RateLimit	21	pending	
+Attribute/Serialize.php	Serialize	11	pending	
+Attribute/ValueResolver.php	ValueResolver	11	ported	crates/http-kernel/src/argument_resolver.rs
+Attribute/WithHttpStatus.php	WithHttpStatus	10	pending	
+Attribute/WithLogLevel.php	WithLogLevel	12	pending	
+Bundle/AbstractBundle.php	AbstractBundle	14	pending	
+Bundle/Bundle.php	Bundle	50	pending	
+Bundle/BundleAdapter.php	BundleAdapter	49	pending	
+Bundle/BundleInterface.php	BundleInterface	6	pending	
+CacheClearer/CacheClearerInterface.php	CacheClearerInterface	5	pending	
+CacheClearer/ChainCacheClearer.php	ChainCacheClearer	14	pending	
+CacheClearer/Psr6CacheClearer.php	Psr6CacheClearer	34	pending	
+CacheWarmer/CacheWarmer.php	CacheWarmer	13	pending	
+CacheWarmer/CacheWarmerAggregate.php	CacheWarmerAggregate	100	pending	
+CacheWarmer/CacheWarmerInterface.php	CacheWarmerInterface	5	pending	
+CacheWarmer/WarmableInterface.php	WarmableInterface	5	pending	
+Config/FileLocator.php	FileLocator	6	pending	
+Controller/ArgumentResolver.php	ArgumentResolver	101	ported	crates/http-kernel/src/argument_resolver.rs
+Controller/ArgumentResolver/BackedEnumValueResolver.php	BackedEnumValueResolver	36	pending	
+Controller/ArgumentResolver/DateTimeValueResolver.php	DateTimeValueResolver	83	pending	
+Controller/ArgumentResolver/DefaultValueResolver.php	DefaultValueResolver	17	ported	crates/http-kernel/src/value_resolver.rs
+Controller/ArgumentResolver/NotTaggedControllerValueResolver.php	NotTaggedControllerValueResolver	36	pending	
+Controller/ArgumentResolver/QueryParameterValueResolver.php	QueryParameterValueResolver	96	pending	
+Controller/ArgumentResolver/RequestAttributeValueResolver.php	RequestAttributeValueResolver	47	ported	crates/http-kernel/src/value_resolver.rs
+Controller/ArgumentResolver/RequestHeaderValueResolver.php	RequestHeaderValueResolver	44	pending	
+Controller/ArgumentResolver/RequestPayloadValueResolver.php	RequestPayloadValueResolver	285	pending	
+Controller/ArgumentResolver/RequestValueResolver.php	RequestValueResolver	21	ported	crates/http-kernel/src/value_resolver.rs
+Controller/ArgumentResolver/ServiceValueResolver.php	ServiceValueResolver	44	pending	
+Controller/ArgumentResolver/SessionValueResolver.php	SessionValueResolver	22	ported	crates/http-kernel/src/value_resolver.rs
+Controller/ArgumentResolver/TraceableValueResolver.php	TraceableValueResolver	20	pending	
+Controller/ArgumentResolver/UidValueResolver.php	UidValueResolver	24	pending	
+Controller/ArgumentResolver/VariadicValueResolver.php	VariadicValueResolver	18	ported	crates/http-kernel/src/value_resolver.rs
+Controller/ArgumentResolverInterface.php	ArgumentResolverInterface	6	ported	crates/http-kernel/src/controller.rs
+Controller/ContainerControllerResolver.php	ContainerControllerResolver	35	pending	
+Controller/ControllerReference.php	ControllerReference	15	pending	
+Controller/ControllerResolver.php	ControllerResolver	185	ported	crates/http-kernel/src/controller_resolver.rs
+Controller/ControllerResolverInterface.php	ControllerResolverInterface	6	ported	crates/http-kernel/src/controller.rs
+Controller/ErrorController.php	ErrorController	30	pending	
+Controller/TraceableArgumentResolver.php	TraceableArgumentResolver	20	pending	
+Controller/TraceableControllerResolver.php	TraceableControllerResolver	20	pending	
+Controller/ValueResolverInterface.php	ValueResolverInterface	7	ported	crates/http-kernel/src/argument_resolver.rs
+ControllerMetadata/ArgumentMetadata.php	ArgumentMetadata	73	ported	crates/http-kernel/src/controller_metadata.rs
+ControllerMetadata/ArgumentMetadataFactory.php	ArgumentMetadataFactory	43	ported	crates/http-kernel/src/controller_metadata.rs
+ControllerMetadata/ArgumentMetadataFactoryInterface.php	ArgumentMetadataFactoryInterface	5	ported	crates/http-kernel/src/controller_metadata.rs
+DataCollector/AjaxDataCollector.php	AjaxDataCollector	16	pending	
+DataCollector/ConfigDataCollector.php	ConfigDataCollector	189	pending	
+DataCollector/DataCollector.php	DataCollector	59	pending	
+DataCollector/DataCollectorInterface.php	DataCollectorInterface	9	pending	
+DataCollector/DumpDataCollector.php	DumpDataCollector	246	pending	
+DataCollector/EventDataCollector.php	EventDataCollector	83	pending	
+DataCollector/ExceptionDataCollector.php	ExceptionDataCollector	43	pending	
+DataCollector/LateDataCollectorInterface.php	LateDataCollectorInterface	5	pending	
+DataCollector/LoggerDataCollector.php	LoggerDataCollector	262	pending	
+DataCollector/MemoryDataCollector.php	MemoryDataCollector	63	pending	
+DataCollector/RequestDataCollector.php	RequestDataCollector	422	pending	
+DataCollector/RouterDataCollector.php	RouterDataCollector	57	pending	
+DataCollector/TimeDataCollector.php	TimeDataCollector	79	pending	
+Debug/ErrorHandlerConfigurator.php	ErrorHandlerConfigurator	88	pending	
+Debug/TraceableEventDispatcher.php	TraceableEventDispatcher	65	pending	
+Debug/VirtualRequestStack.php	VirtualRequestStack	37	pending	
+DependencyInjection/ConfigurableExtension.php	ConfigurableExtension	11	pending	
+DependencyInjection/ControllerArgumentValueResolverPass.php	ControllerArgumentValueResolverPass	47	pending	
+DependencyInjection/ControllerAttributesListenerPass.php	ControllerAttributesListenerPass	35	pending	
+DependencyInjection/Extension.php	Extension	6	pending	
+DependencyInjection/FragmentRendererPass.php	FragmentRendererPass	32	pending	
+DependencyInjection/LazyLoadingFragmentHandler.php	LazyLoadingFragmentHandler	24	pending	
+DependencyInjection/LoggerPass.php	LoggerPass	27	pending	
+DependencyInjection/MergeExtensionConfigurationPass.php	MergeExtensionConfigurationPass	6	pending	
+DependencyInjection/RegisterControllerArgumentLocatorsPass.php	RegisterControllerArgumentLocatorsPass	181	pending	
+DependencyInjection/RegisterLocaleAwareServicesPass.php	RegisterLocaleAwareServicesPass	26	pending	
+DependencyInjection/RemoveEmptyControllerArgumentLocatorsPass.php	RemoveEmptyControllerArgumentLocatorsPass	43	pending	
+DependencyInjection/ResettableServicePass.php	ResettableServicePass	6	pending	
+DependencyInjection/ServicesResetter.php	ServicesResetter	6	pending	
+DependencyInjection/ServicesResetterInterface.php	ServicesResetterInterface	6	pending	
+Event/ControllerArgumentsEvent.php	ControllerArgumentsEvent	72	ported	crates/http-kernel/src/event.rs
+Event/ControllerArgumentsMetadata.php	ControllerArgumentsMetadata	23	ported	crates/http-kernel/src/event.rs
+Event/ControllerAttributeEvent.php	ControllerAttributeEvent	47	pending	
+Event/ControllerEvent.php	ControllerEvent	102	ported	crates/http-kernel/src/event.rs crates/http-kernel/src/lib.rs
+Event/ControllerMetadata.php	ControllerMetadata	25	ported	crates/http-kernel/src/event.rs
+Event/ExceptionEvent.php	ExceptionEvent	39	ported	crates/http-kernel/src/event.rs crates/http-kernel/src/lib.rs
+Event/FinishRequestEvent.php	FinishRequestEvent	14	ported	crates/http-kernel/src/event.rs
+Event/KernelEvent.php	KernelEvent	29	ported	crates/http-kernel/src/event.rs
+Event/RequestEvent.php	RequestEvent	19	ported	crates/http-kernel/src/event.rs crates/http-kernel/src/lib.rs
+Event/ResponseEvent.php	ResponseEvent	24	ported	crates/http-kernel/src/event.rs crates/http-kernel/src/lib.rs
+Event/TerminateEvent.php	TerminateEvent	18	ported	crates/http-kernel/src/event.rs
+Event/ViewEvent.php	ViewEvent	40	ported	crates/http-kernel/src/event.rs
+EventListener/AbstractSessionListener.php	AbstractSessionListener	188	pending	
+EventListener/AddRequestFormatsListener.php	AddRequestFormatsListener	22	pending	
+EventListener/CacheAttributeListener.php	CacheAttributeListener	212	pending	
+EventListener/ControllerAttributesListener.php	ControllerAttributesListener	88	pending	
+EventListener/DebugHandlersListener.php	DebugHandlersListener	88	pending	
+EventListener/DisallowRobotsIndexingListener.php	DisallowRobotsIndexingListener	20	pending	
+EventListener/DumpListener.php	DumpListener	41	pending	
+EventListener/ErrorListener.php	ErrorListener	193	pending	
+EventListener/FragmentListener.php	FragmentListener	50	pending	
+EventListener/IsSignatureValidAttributeListener.php	IsSignatureValidAttributeListener	49	pending	
+EventListener/LocaleAwareListener.php	LocaleAwareListener	60	pending	
+EventListener/LocaleListener.php	LocaleListener	61	pending	
+EventListener/ProfilerListener.php	ProfilerListener	98	pending	
+EventListener/RateLimitAttributeListener.php	RateLimitAttributeListener	42	pending	
+EventListener/ResponseListener.php	ResponseListener	35	ported	fixtures/converter-app/src/runtime/listeners.rs
+EventListener/RouterListener.php	RouterListener	161	ported	crates/http-kernel/src/router_listener.rs fixtures/converter-app/src/runtime/listeners.rs
+EventListener/SerializeControllerResultAttributeListener.php	SerializeControllerResultAttributeListener	55	pending	
+EventListener/SessionListener.php	SessionListener	20	pending	
+EventListener/SurrogateListener.php	SurrogateListener	37	pending	
+EventListener/ValidateRequestListener.php	ValidateRequestListener	26	pending	
+Exception/AccessDeniedHttpException.php	AccessDeniedHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/BadRequestHttpException.php	BadRequestHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/ConflictHttpException.php	ConflictHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/ControllerDoesNotReturnResponseException.php	ControllerDoesNotReturnResponseException	57	ported	crates/http-kernel/src/exception.rs
+Exception/GoneHttpException.php	GoneHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/HttpException.php	HttpException	45	ported	crates/http-kernel/src/exception.rs
+Exception/HttpExceptionInterface.php	HttpExceptionInterface	6	ported	crates/http-kernel/src/exception.rs
+Exception/InvalidMetadataException.php	InvalidMetadataException	4	pending	
+Exception/LengthRequiredHttpException.php	LengthRequiredHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/LockedHttpException.php	LockedHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/MethodNotAllowedHttpException.php	MethodNotAllowedHttpException	9	ported	crates/http-kernel/src/exception.rs fixtures/converter-app/src/runtime/listeners.rs
+Exception/NearMissValueResolverException.php	NearMissValueResolverException	4	ported	crates/http-kernel/src/exception.rs
+Exception/NotAcceptableHttpException.php	NotAcceptableHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/NotFoundHttpException.php	NotFoundHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/PreconditionFailedHttpException.php	PreconditionFailedHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/PreconditionRequiredHttpException.php	PreconditionRequiredHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/ResolverNotFoundException.php	ResolverNotFoundException	17	ported	crates/http-kernel/src/exception.rs
+Exception/ServiceUnavailableHttpException.php	ServiceUnavailableHttpException	11	ported	crates/http-kernel/src/exception.rs
+Exception/TooManyRequestsHttpException.php	TooManyRequestsHttpException	11	ported	crates/http-kernel/src/exception.rs
+Exception/UnauthorizedHttpException.php	UnauthorizedHttpException	9	ported	crates/http-kernel/src/exception.rs
+Exception/UnexpectedSessionUsageException.php	UnexpectedSessionUsageException	4	pending	
+Exception/UnprocessableEntityHttpException.php	UnprocessableEntityHttpException	8	ported	crates/http-kernel/src/exception.rs
+Exception/UnsupportedMediaTypeHttpException.php	UnsupportedMediaTypeHttpException	8	ported	crates/http-kernel/src/exception.rs
+Fragment/AbstractSurrogateFragmentRenderer.php	AbstractSurrogateFragmentRenderer	51	pending	
+Fragment/EsiFragmentRenderer.php	EsiFragmentRenderer	8	pending	
+Fragment/FragmentHandler.php	FragmentHandler	48	pending	
+Fragment/FragmentRendererInterface.php	FragmentRendererInterface	9	pending	
+Fragment/FragmentUriGenerator.php	FragmentUriGenerator	51	pending	
+Fragment/FragmentUriGeneratorInterface.php	FragmentUriGeneratorInterface	7	pending	
+Fragment/HIncludeFragmentRenderer.php	HIncludeFragmentRenderer	53	pending	
+Fragment/InlineFragmentRenderer.php	InlineFragmentRenderer	92	pending	
+Fragment/RoutableFragmentRenderer.php	RoutableFragmentRenderer	16	pending	
+Fragment/SsiFragmentRenderer.php	SsiFragmentRenderer	8	pending	
+HttpCache/AbstractSurrogate.php	AbstractSurrogate	78	pending	
+HttpCache/CacheWasLockedException.php	CacheWasLockedException	4	pending	
+HttpCache/Esi.php	Esi	62	pending	
+HttpCache/HttpCache.php	HttpCache	427	pending	
+HttpCache/ResponseCacheStrategy.php	ResponseCacheStrategy	139	pending	
+HttpCache/ResponseCacheStrategyInterface.php	ResponseCacheStrategyInterface	7	pending	
+HttpCache/Ssi.php	Ssi	52	pending	
+HttpCache/Store.php	Store	310	pending	
+HttpCache/StoreInterface.php	StoreInterface	14	pending	
+HttpCache/SubRequestHandler.php	SubRequestHandler	60	pending	
+HttpCache/SurrogateInterface.php	SurrogateInterface	15	pending	
+HttpClientKernel.php	HttpClientKernel	83	pending	
+HttpKernel.php	HttpKernel	227	ported	crates/http-kernel/src/http_kernel.rs crates/http-kernel/src/lib.rs
+HttpKernelBrowser.php	HttpKernelBrowser	149	pending	
+HttpKernelInterface.php	HttpKernelInterface	9	ported	crates/http-kernel/src/http_kernel.rs
+Kernel.php	Kernel	230	pending	
+KernelEvents.php	KernelEvents	30	ported	crates/http-kernel/src/http_kernel.rs
+KernelInterface.php	KernelInterface	12	pending	
+Log/DebugLoggerConfigurator.php	DebugLoggerConfigurator	33	pending	
+Log/DebugLoggerInterface.php	DebugLoggerInterface	8	pending	
+Log/Logger.php	Logger	140	pending	
+Profiler/FileProfilerStorage.php	FileProfilerStorage	255	pending	
+Profiler/Profile.php	Profile	162	pending	
+Profiler/Profiler.php	Profiler	145	pending	
+Profiler/ProfilerStateChecker.php	ProfilerStateChecker	18	pending	
+Profiler/ProfilerStorageInterface.php	ProfilerStorageInterface	8	pending	
+RebootableInterface.php	RebootableInterface	5	pending	
+Resources/welcome.html.php	-	123	ported	crates/http-kernel/src/router_listener.rs
+TerminableInterface.php	TerminableInterface	7	ported	crates/http-kernel/src/http_kernel.rs

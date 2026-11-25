@@ -1,0 +1,16 @@
+# symfony/http-client-contracts at 35be0019e2c2c9fba80f9dc033290a5240f7b44f: upstream file	classes	code lines	status	rust files
+ChunkInterface.php	ChunkInterface	12	pending	
+Exception/ClientExceptionInterface.php	ClientExceptionInterface	4	pending	
+Exception/DecodingExceptionInterface.php	DecodingExceptionInterface	4	pending	
+Exception/ExceptionInterface.php	ExceptionInterface	4	pending	
+Exception/HttpExceptionInterface.php	HttpExceptionInterface	6	pending	
+Exception/RedirectionExceptionInterface.php	RedirectionExceptionInterface	4	pending	
+Exception/ServerExceptionInterface.php	ServerExceptionInterface	4	pending	
+Exception/TimeoutExceptionInterface.php	TimeoutExceptionInterface	4	pending	
+Exception/TransportExceptionInterface.php	TransportExceptionInterface	4	pending	
+HttpClientInterface.php	HttpClientInterface	44	pending	
+ResponseInterface.php	ResponseInterface	15	pending	
+ResponseStreamInterface.php	ResponseStreamInterface	6	pending	
+Test/Fixtures/web/index.php	-	185	pending	
+Test/HttpClientTestCase.php	HttpClientTestCase	939	pending	
+Test/TestHttpServer.php	TestHttpServer	39	pending	

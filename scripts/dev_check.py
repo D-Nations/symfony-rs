@@ -197,6 +197,7 @@ def main() -> int:
         commands.extend([
             (bash, "scripts/sources.sh", "--check"),
             (bash, "scripts/parity-check.sh"),
+            (sys.executable, "scripts/classes.py", "check"),
         ])
         return run_checks(commands)
     else:

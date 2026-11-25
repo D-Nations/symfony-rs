@@ -1,0 +1,102 @@
+# symfony/translation at d9e1caba0d6b6f9a26710af8a2f88d37f001215a: upstream file	classes	code lines	status	rust files
+Catalogue/AbstractOperation.php	AbstractOperation	108	ported	crates/translation/src/catalogue/abstract_operation.rs
+Catalogue/MergeOperation.php	MergeOperation	43	ported	crates/translation/src/catalogue/merge_operation.rs
+Catalogue/OperationInterface.php	OperationInterface	10	ported	crates/translation/src/catalogue/operation_interface.rs
+Catalogue/TargetOperation.php	TargetOperation	47	ported	crates/translation/src/catalogue/target_operation.rs
+CatalogueMetadataAwareInterface.php	CatalogueMetadataAwareInterface	7	ported	crates/translation/src/message_catalogue.rs
+Command/TranslationLintCommand.php	TranslationLintCommand	95	pending	
+Command/TranslationPullCommand.php	TranslationPullCommand	134	pending	
+Command/TranslationPushCommand.php	TranslationPushCommand	128	pending	
+Command/TranslationTrait.php	TranslationTrait	50	pending	
+Command/XliffLintCommand.php	XliffLintCommand	212	pending	
+DataCollector/TranslationDataCollector.php	TranslationDataCollector	107	pending	
+DataCollectorTranslator.php	DataCollectorTranslator	103	pending	
+DependencyInjection/DataCollectorTranslatorPass.php	DataCollectorTranslatorPass	18	pending	
+DependencyInjection/LoggingTranslatorPass.php	LoggingTranslatorPass	37	pending	
+DependencyInjection/TranslationDumperPass.php	TranslationDumperPass	17	pending	
+DependencyInjection/TranslationExtractorPass.php	TranslationExtractorPass	17	pending	
+DependencyInjection/TranslatorPass.php	TranslatorPass	66	pending	
+DependencyInjection/TranslatorPathsPass.php	TranslatorPathsPass	98	pending	
+Dumper/CsvFileDumper.php	CsvFileDumper	27	pending	
+Dumper/DumperInterface.php	DumperInterface	6	pending	
+Dumper/FileDumper.php	FileDumper	53	pending	
+Dumper/IcuResFileDumper.php	IcuResFileDumper	61	pending	
+Dumper/IniFileDumper.php	IniFileDumper	18	pending	
+Dumper/JsonFileDumper.php	JsonFileDumper	14	pending	
+Dumper/MoFileDumper.php	MoFileDumper	48	pending	
+Dumper/PhpFileDumper.php	PhpFileDumper	13	pending	
+Dumper/PoFileDumper.php	PoFileDumper	97	pending	
+Dumper/QtFileDumper.php	QtFileDumper	34	pending	
+Dumper/XliffFileDumper.php	XliffFileDumper	168	pending	
+Dumper/YamlFileDumper.php	YamlFileDumper	30	pending	
+Exception/ExceptionInterface.php	ExceptionInterface	4	ported	crates/translation/src/exception.rs
+Exception/IncompleteDsnException.php	IncompleteDsnException	11	pending	
+Exception/InvalidArgumentException.php	InvalidArgumentException	4	ported	crates/translation/src/exception.rs
+Exception/InvalidResourceException.php	InvalidResourceException	4	ported	crates/translation/src/exception.rs
+Exception/LogicException.php	LogicException	4	ported	crates/translation/src/exception.rs
+Exception/MissingRequiredOptionException.php	MissingRequiredOptionException	9	pending	
+Exception/NotFoundResourceException.php	NotFoundResourceException	4	ported	crates/translation/src/exception.rs
+Exception/ProviderException.php	ProviderException	23	pending	
+Exception/ProviderExceptionInterface.php	ProviderExceptionInterface	5	pending	
+Exception/RuntimeException.php	RuntimeException	4	ported	crates/translation/src/exception.rs
+Exception/UnsupportedSchemeException.php	UnsupportedSchemeException	41	pending	
+Extractor/AbstractFileExtractor.php	AbstractFileExtractor	34	pending	
+Extractor/ChainExtractor.php	ChainExtractor	22	pending	
+Extractor/ExtractorInterface.php	ExtractorInterface	7	pending	
+Extractor/PhpAstExtractor.php	PhpAstExtractor	52	pending	
+Extractor/Visitor/AbstractVisitor.php	AbstractVisitor	97	pending	
+Extractor/Visitor/ConstraintVisitor.php	ConstraintVisitor	73	pending	
+Extractor/Visitor/TransMethodVisitor.php	TransMethodVisitor	39	pending	
+Extractor/Visitor/TranslatableMessageVisitor.php	TranslatableMessageVisitor	40	pending	
+Formatter/IntlFormatter.php	IntlFormatter	34	pending	
+Formatter/IntlFormatterInterface.php	IntlFormatterInterface	5	pending	
+Formatter/MessageFormatter.php	MessageFormatter	22	pending	
+Formatter/MessageFormatterInterface.php	MessageFormatterInterface	5	pending	
+IdentityTranslator.php	IdentityTranslator	12	pending	
+Loader/ArrayLoader.php	ArrayLoader	28	pending	
+Loader/CsvFileLoader.php	CsvFileLoader	29	pending	
+Loader/FileLoader.php	FileLoader	28	pending	
+Loader/IcuDatFileLoader.php	IcuDatFileLoader	34	pending	
+Loader/IcuResFileLoader.php	IcuResFileLoader	46	pending	
+Loader/IniFileLoader.php	IniFileLoader	8	pending	
+Loader/JsonFileLoader.php	JsonFileLoader	27	pending	
+Loader/LoaderInterface.php	LoaderInterface	8	ported	crates/translation/src/loader/xliff_file_loader.rs
+Loader/MoFileLoader.php	MoFileLoader	75	pending	
+Loader/PhpFileLoader.php	PhpFileLoader	15	pending	
+Loader/PoFileLoader.php	PoFileLoader	80	pending	
+Loader/QtFileLoader.php	QtFileLoader	50	ported	crates/translation/src/loader/qt_file_loader.rs
+Loader/XliffFileLoader.php	XliffFileLoader	313	ported	crates/translation/src/loader/xliff_file_loader.rs
+Loader/YamlFileLoader.php	YamlFileLoader	28	pending	
+LocaleFallbackProvider.php	LocaleFallbackProvider	52	pending	
+LocaleSwitcher.php	LocaleSwitcher	46	pending	
+LoggingTranslator.php	LoggingTranslator	63	pending	
+MessageCatalogue.php	MessageCatalogue	238	ported	crates/translation/src/message_catalogue.rs
+MessageCatalogueInterface.php	MessageCatalogueInterface	20	ported	crates/translation/src/message_catalogue.rs
+MetadataAwareInterface.php	MetadataAwareInterface	7	ported	crates/translation/src/message_catalogue.rs
+Provider/AbstractProviderFactory.php	AbstractProviderFactory	18	pending	
+Provider/Dsn.php	Dsn	77	pending	
+Provider/FilteringProvider.php	FilteringProvider	35	pending	
+Provider/NullProvider.php	NullProvider	20	pending	
+Provider/NullProviderFactory.php	NullProviderFactory	16	pending	
+Provider/ProviderFactoryInterface.php	ProviderFactoryInterface	8	pending	
+Provider/ProviderInterface.php	ProviderInterface	9	pending	
+Provider/TranslationProviderCollection.php	TranslationProviderCollection	29	pending	
+Provider/TranslationProviderCollectionFactory.php	TranslationProviderCollectionFactory	31	pending	
+PseudoLocalizationTranslator.php	PseudoLocalizationTranslator	270	pending	
+Reader/TranslationReader.php	TranslationReader	27	pending	
+Reader/TranslationReaderInterface.php	TranslationReaderInterface	6	pending	
+Resources/bin/translation-status.php	-	210	pending	
+Resources/data/parents.php	-	159	pending	
+Resources/functions.php	-	7	pending	
+StaticMessage.php	StaticMessage	18	pending	
+Test/AbstractProviderFactoryTestCase.php	AbstractProviderFactoryTestCase	37	pending	
+Test/IncompleteDsnTestTrait.php	IncompleteDsnTestTrait	19	pending	
+Test/ProviderTestCase.php	ProviderTestCase	54	pending	
+TranslatableMessage.php	TranslatableMessage	34	pending	
+Translator.php	Translator	297	pending	
+TranslatorBag.php	TranslatorBag	69	pending	
+TranslatorBagInterface.php	TranslatorBagInterface	7	pending	
+Util/ArrayConverter.php	ArrayConverter	71	pending	
+Util/XliffUtils.php	XliffUtils	116	ported	crates/translation/src/util/xliff_utils.rs
+Writer/TranslationWriter.php	TranslationWriter	28	pending	
+Writer/TranslationWriterInterface.php	TranslationWriterInterface	7	pending	

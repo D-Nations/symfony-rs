@@ -160,6 +160,25 @@ manifests: `scripts/fetch-upstream.sh` clones them into the ignored
 `parity/<package>.tsv`, the list of every upstream test with its status,
 using the PHP oracle in `oracle/` (Docker).
 
+Class manifests: `parity/classes/<package>.tsv` lists every PHP source file
+of the package's dist archive (no tests), the classes it declares, its
+code lines and its status: `ported` when `parity/sources.tsv` maps it,
+`pending`, or `n/a: <reason>`. `python scripts/classes.py generate
+<package>` (re)writes one from `upstream/` with the oracle (or a local
+`php` in `SYMFONY_RS_PHP`); `python scripts/classes.py sync` updates the
+status columns after `scripts/sources.sh`, without PHP; `check` (in
+`scripts/dev_check.py parity`) fails when they disagree; `report` prints
+the size-weighted share. A file is `ported` as soon as one Rust module
+names it, so the share is an upper bound; the test manifests show what is
+still open.
+
+Class snapshot, November 25, 2026 (code lines of mapped files; later
+changes are authoritative in `parity/classes/`): 34,798 of 305,584 code
+lines (11.4%) outside `Resources/data/`, which holds generated tables
+(symfony/intl's ICU data is 391,884 lines); 37,486 of 700,315 (5.4%) with
+them. By vendor, without data: Symfony 15.7%, Twig 0%, Doctrine 0%,
+psr/log 80.4%.
+
 Manifest snapshot, November 25, 2026 (test methods, not a compatibility
 percentage; later changes are authoritative in `parity/`):
 

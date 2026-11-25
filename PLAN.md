@@ -339,7 +339,9 @@ files and upstream tests in that stage, pass all of them, and list every
 deferred integration with its dependency and destination stage below. Those
 manifest rows stay `pending`; waiting for another component is not an `n/a`
 reason. Only complete packages enter `parity/done.txt`. Test-method counts
-describe tracked coverage, not a percentage of framework compatibility.
+describe tracked coverage, not a percentage of framework compatibility. The
+class manifests (`parity/classes/`) give the share of upstream code lines
+that a Rust module maps; it too is tracked coverage, an upper bound.
 
 ## Upstream tracking and security
 
@@ -954,6 +956,16 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
       IdentityTranslatorTest rows are corrected (37 wrong `pending` rows
       out, 11 in: 345 to 319 tests). Packages without PHPUnit tests get a
       header-only manifest.
+- [x] Class manifests (November 25,
+      [docs/milestones/m0-class-manifests.md](docs/milestones/m0-class-manifests.md)):
+      `parity/classes/<package>.tsv` for all 69 pinned packages lists each
+      PHP source file of the dist archive (`git archive`, so export-ignore
+      paths are out; no tests), its classes and code lines (PHP's tokenizer,
+      `oracle/classes.php`), and `ported` when `parity/sources.tsv` maps it.
+      `scripts/classes.py` generates, syncs (no PHP), checks (in
+      `dev_check.py parity`) and reports. Snapshot: 11.4% of 305,584 code
+      lines outside `Resources/data/` (an upper bound: a mapped file may
+      be partial), 5.4% with symfony/intl's generated data.
 - [x] Recorders for this repository's vectors moved from symfony-demo-rs
       into `oracle/recorders/` (`scripts/record.sh routing|multipart`); one
       oracle container each, and both re-recorded files are byte-identical

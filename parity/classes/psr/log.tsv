@@ -1,0 +1,9 @@
+# psr/log at f16e1d5863e37f8d8c2a01719f5b34baa2b714d3: upstream file	classes	code lines	status	rust files
+src/AbstractLogger.php	AbstractLogger	5	ported	crates/psr-log/src/lib.rs
+src/InvalidArgumentException.php	InvalidArgumentException	4	pending	
+src/LogLevel.php	LogLevel	12	ported	crates/psr-log/src/lib.rs
+src/LoggerAwareInterface.php	LoggerAwareInterface	5	pending	
+src/LoggerAwareTrait.php	LoggerAwareTrait	9	pending	
+src/LoggerInterface.php	LoggerInterface	13	ported	crates/psr-log/src/lib.rs
+src/LoggerTrait.php	LoggerTrait	37	ported	crates/psr-log/src/lib.rs
+src/NullLogger.php	NullLogger	7	ported	crates/psr-log/src/lib.rs

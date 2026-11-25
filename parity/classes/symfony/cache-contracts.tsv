@@ -1,0 +1,7 @@
+# symfony/cache-contracts at 9789738bc19af1106dc54d6afba9a0b467516cf2: upstream file	classes	code lines	status	rust files
+CacheInterface.php	CacheInterface	8	pending	
+CacheTrait.php	CacheTrait	44	pending	
+CallbackInterface.php	CallbackInterface	6	pending	
+ItemInterface.php	ItemInterface	13	pending	
+NamespacedPoolInterface.php	NamespacedPoolInterface	6	pending	
+TagAwareCacheInterface.php	TagAwareCacheInterface	6	pending	

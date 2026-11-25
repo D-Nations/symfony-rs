@@ -1,0 +1,73 @@
+# symfony/routing at f3fefc6cad3748d538be970ca81b71f06d7aa8b3: upstream file	classes	code lines	status	rust files
+Alias.php	Alias	49	ported	crates/routing/src/alias.rs
+Attribute/DeprecatedAlias.php	DeprecatedAlias	11	pending	
+Attribute/Route.php	Route	45	pending	
+CompiledRoute.php	CompiledRoute	77	ported	crates/routing/src/compiled_route.rs
+DependencyInjection/AddExpressionLanguageProvidersPass.php	AddExpressionLanguageProvidersPass	17	pending	
+DependencyInjection/RoutingControllerPass.php	RoutingControllerPass	21	pending	
+DependencyInjection/RoutingResolverPass.php	RoutingResolverPass	19	pending	
+Exception/ExceptionInterface.php	ExceptionInterface	4	ported	crates/routing/src/exception.rs
+Exception/InvalidArgumentException.php	InvalidArgumentException	4	ported	crates/routing/src/exception.rs
+Exception/InvalidParameterException.php	InvalidParameterException	4	ported	crates/routing/src/exception.rs
+Exception/LogicException.php	LogicException	4	ported	crates/routing/src/exception.rs
+Exception/MethodNotAllowedException.php	MethodNotAllowedException	14	ported	crates/routing/src/exception.rs
+Exception/MissingMandatoryParametersException.php	MissingMandatoryParametersException	21	ported	crates/routing/src/exception.rs
+Exception/NoConfigurationException.php	NoConfigurationException	4	ported	crates/routing/src/exception.rs
+Exception/ResourceNotFoundException.php	ResourceNotFoundException	4	ported	crates/routing/src/exception.rs
+Exception/RouteCircularReferenceException.php	RouteCircularReferenceException	8	ported	crates/routing/src/exception.rs
+Exception/RouteNotFoundException.php	RouteNotFoundException	4	ported	crates/routing/src/exception.rs
+Exception/RuntimeException.php	RuntimeException	4	ported	crates/routing/src/exception.rs
+Generator/CompiledUrlGenerator.php	CompiledUrlGenerator	47	ported	crates/routing/src/compiled_url_generator.rs
+Generator/ConfigurableRequirementsInterface.php	ConfigurableRequirementsInterface	6	ported	crates/routing/src/url_generator.rs
+Generator/Dumper/CompiledUrlGeneratorDumper.php	CompiledUrlGeneratorDumper	87	ported	crates/routing/src/compiled_url_generator_dumper.rs
+Generator/Dumper/GeneratorDumper.php	GeneratorDumper	13	ported	crates/routing/src/compiled_url_generator_dumper.rs
+Generator/Dumper/GeneratorDumperInterface.php	GeneratorDumperInterface	7	pending	
+Generator/UrlGenerator.php	UrlGenerator	243	ported	crates/routing/src/generator.rs crates/routing/src/lib.rs crates/routing/src/url_generator.rs
+Generator/UrlGeneratorInterface.php	UrlGeneratorInterface	13	ported	crates/routing/src/url_generator.rs
+Loader/AttributeClassLoader.php	AttributeClassLoader	262	pending	
+Loader/AttributeDirectoryLoader.php	AttributeDirectoryLoader	52	pending	
+Loader/AttributeFileLoader.php	AttributeFileLoader	86	pending	
+Loader/AttributeServicesLoader.php	AttributeServicesLoader	22	pending	
+Loader/ClosureLoader.php	ClosureLoader	14	pending	
+Loader/Configurator/AliasConfigurator.php	AliasConfigurator	15	pending	
+Loader/Configurator/CollectionConfigurator.php	CollectionConfigurator	84	pending	
+Loader/Configurator/ImportConfigurator.php	ImportConfigurator	41	pending	
+Loader/Configurator/RouteConfigurator.php	RouteConfigurator	32	pending	
+Loader/Configurator/RoutesReference.php	RoutesReference	8	pending	
+Loader/Configurator/RoutingConfigurator.php	RoutingConfigurator	43	pending	
+Loader/Configurator/Traits/AddTrait.php	AddTrait	26	pending	
+Loader/Configurator/Traits/HostTrait.php	HostTrait	32	pending	
+Loader/Configurator/Traits/LocalizedRouteTrait.php	LocalizedRouteTrait	45	pending	
+Loader/Configurator/Traits/PrefixTrait.php	PrefixTrait	53	pending	
+Loader/Configurator/Traits/RouteTrait.php	RouteTrait	67	pending	
+Loader/ContainerLoader.php	ContainerLoader	19	pending	
+Loader/ContentLoaderTrait.php	ContentLoaderTrait	184	pending	
+Loader/DirectoryLoader.php	DirectoryLoader	31	pending	
+Loader/GlobFileLoader.php	GlobFileLoader	19	pending	
+Loader/ObjectLoader.php	ObjectLoader	35	pending	
+Loader/PhpFileLoader.php	PhpFileLoader	47	pending	
+Loader/Psr4DirectoryLoader.php	Psr4DirectoryLoader	66	pending	
+Loader/YamlFileLoader.php	YamlFileLoader	58	pending	
+Matcher/CompiledUrlMatcher.php	CompiledUrlMatcher	12	pending	
+Matcher/Dumper/CompiledUrlMatcherDumper.php	CompiledUrlMatcherDumper	376	pending	
+Matcher/Dumper/CompiledUrlMatcherTrait.php	CompiledUrlMatcherTrait	149	pending	
+Matcher/Dumper/MatcherDumper.php	MatcherDumper	13	pending	
+Matcher/Dumper/MatcherDumperInterface.php	MatcherDumperInterface	7	pending	
+Matcher/Dumper/StaticPrefixCollection.php	StaticPrefixCollection	123	pending	
+Matcher/ExpressionLanguageProvider.php	ExpressionLanguageProvider	27	pending	
+Matcher/RedirectableUrlMatcher.php	RedirectableUrlMatcher	51	ported	crates/routing/src/lib.rs crates/routing/src/redirectable_url_matcher.rs
+Matcher/RedirectableUrlMatcherInterface.php	RedirectableUrlMatcherInterface	5	ported	crates/routing/src/redirectable_url_matcher.rs
+Matcher/RequestMatcherInterface.php	RequestMatcherInterface	9	ported	crates/routing/src/url_matcher.rs
+Matcher/TraceableUrlMatcher.php	TraceableUrlMatcher	116	pending	
+Matcher/UrlMatcher.php	UrlMatcher	173	ported	crates/routing/src/lib.rs crates/routing/src/url_matcher.rs
+Matcher/UrlMatcherInterface.php	UrlMatcherInterface	9	ported	crates/routing/src/url_matcher.rs
+RequestContext.php	RequestContext	156	ported	crates/routing/src/request_context.rs fixtures/converter-app/src/runtime/listeners.rs
+RequestContextAwareInterface.php	RequestContextAwareInterface	6	pending	
+Requirement/EnumRequirement.php	EnumRequirement	31	pending	
+Requirement/Requirement.php	Requirement	23	pending	
+Route.php	Route	289	ported	crates/routing/src/route.rs
+RouteCollection.php	RouteCollection	215	ported	crates/routing/src/route_collection.rs
+RouteCompiler.php	RouteCompiler	220	ported	crates/routing/src/route_compiler.rs
+RouteCompilerInterface.php	RouteCompilerInterface	5	ported	crates/routing/src/route_compiler.rs
+Router.php	Router	203	pending	
+RouterInterface.php	RouterInterface	7	pending	
