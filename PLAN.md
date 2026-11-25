@@ -1316,6 +1316,7 @@ Stack rows (searched November 22):
 | PHP's `parse_url()` (RequestContext::fromUri(), searched November 24) | [url](https://docs.rs/url) (WHATWG URL Standard: normalizes, lowercases, percent-encodes, other failures), [http::Uri](https://docs.rs/http) and [fluent-uri](https://docs.rs/fluent-uri) (strict RFC 3986: reject control bytes, spaces and `[` hosts PHP accepts), symfony-filesystem's scheme-only `parse_url_scheme()` | Written in `php-value::url` from the PHP manual and recorded answers, no dependency | PHP's components for malformed input (`host:port` without `//`, `false` for empty hosts and long ports, control bytes as `_`, `file:///`) are what `fromUri()` reads; 12,119 calls recorded from PHP 8.4.27 pin them |
 | PHP's loose equality `==` (UrlGenerator's `array_udiff_assoc()` against defaults; searched November 24) | No Rust crate implements it: [ext-php-rs](https://docs.rs/ext-php-rs) and [phper](https://docs.rs/phper) bind the PHP engine through FFI (needs libphp and `unsafe`); symfony-console's `loose_equals_str()` and symfony-finder's `loose_eq()` cover a string or scalar operand only | Written in `php-value::compare` from the PHP manual's comparison table, no dependency | Every PHP type is compared (arrays by key, objects by class and properties, numeric strings, big integer strings as bytes, NAN); 8,649 pairs recorded from PHP 8.4.27 pin it. The two crate copies can move to it later |
 | RouteCollection's name-keyed arrays (routes, aliases, priorities, resources; November 24) | [indexmap](https://docs.rs/indexmap) (already in the lock as a transitive dependency: O(1) lookup, but `shift_remove()`, the removal that keeps order, is O(n), and `swap_remove()` breaks PHP's order), [hashlink](https://docs.rs/hashlink)'s `LinkedHashMap` (O(1) ordered removal; a new dependency), `php_value::PhpArray` (its `remove()` shifts and reindexes, O(n)), a vector with holes and a hash index | The vector with holes and a hash index (`routing::ordered`, private), no dependency | It is how PHP keeps an array: insertion order, assignment in place, `unset()` then append, all O(1); compacted when holes outnumber entries. About 150 lines with its tests, against a dependency for one internal structure |
+| ExpressionLanguage (searched November 25: crates.io, docs.rs) | No Rust port of Symfony's ExpressionLanguage. Expression crates with their own grammars and value rules: [evalexpr](https://docs.rs/evalexpr) (no `matches`, `..`, `?.`, `??`, attribute or method access, no compilation to PHP), [cel](https://docs.rs/cel) (Common Expression Language), [zen-expression](https://docs.rs/zen-expression) (ZEN rules) | Port of every PHP file except `SerializedParsedExpression.php`, on php-value and php-pcre (workspace crates); no new dependency (serde_json is already a test dependency) | Routing conditions and security expressions need Symfony's grammar, error texts, the PHP source `compile()` writes and PHP 8.4's operator semantics; 69,024 binary operations and 1,730 other cases recorded from PHP 8.4.27 pin them |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1645,6 +1646,17 @@ Stack rows (searched November 22):
       `Content-Length` is checked against the body, then left out of the
       fixture's header comparison (PHP's built-in server closed the
       connection instead). Next: the listener seam; StreamedResponse.
+- [x] ExpressionLanguage (`symfony-expression-language`, November 25):
+      every PHP file except `SerializedParsedExpression.php` (it needs
+      PHP's `unserialize()` of objects); 101 of 106 upstream tests, 5
+      `n/a` (`testSerialization`: PHP's `serialize()` of objects); in
+      `parity/done.txt`. The compiler writes upstream's PHP source byte
+      for byte. Operators follow PHP 8.4 on 69,024 recorded binary
+      operations and 1,730 other cases (`scripts/record.sh
+      expression-language`). Methods can be called on `MethodObject`s
+      only; `constant()` and `enum()` read a `Registry`. Warnings are not
+      reported, and `range()` stops at 2^20 elements (crate README,
+      "Differences").
 
 ## Local development performance
 

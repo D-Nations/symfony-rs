@@ -7,6 +7,10 @@
 
 #![forbid(unsafe_code)]
 
+#[cfg(doctest)]
+#[doc = include_str!("../README.md")]
+struct ReadmeExample;
+
 pub mod compiler;
 pub mod expression;
 pub mod expression_function;

@@ -1,26 +1,26 @@
 # symfony/expression-language at 9c2729bca940d84938dc0b435d037e4844f237c9: upstream file	classes	code lines	status	rust files
-Compiler.php	Compiler	73	pending	
-Expression.php	Expression	12	pending	
-ExpressionFunction.php	ExpressionFunction	40	pending	
-ExpressionFunctionProviderInterface.php	ExpressionFunctionProviderInterface	5	pending	
-ExpressionLanguage.php	ExpressionLanguage	101	pending	
-Lexer.php	Lexer	68	pending	
-Node/ArgumentsNode.php	ArgumentsNode	19	pending	
-Node/ArrayNode.php	ArrayNode	80	pending	
-Node/BinaryNode.php	BinaryNode	157	pending	
-Node/ConditionalNode.php	ConditionalNode	34	pending	
-Node/ConstantNode.php	ConstantNode	58	pending	
-Node/FunctionNode.php	FunctionNode	41	pending	
-Node/GetAttrNode.php	GetAttrNode	148	pending	
-Node/NameNode.php	NameNode	24	pending	
-Node/Node.php	Node	71	pending	
-Node/NullCoalesceNode.php	NullCoalesceNode	40	pending	
-Node/NullCoalescedNameNode.php	NullCoalescedNameNode	24	pending	
-Node/UnaryNode.php	UnaryNode	44	pending	
-ParsedExpression.php	ParsedExpression	15	pending	
-Parser.php	Parser	337	pending	
-Resources/bin/generate_operator_regex.php	-	14	pending	
+Compiler.php	Compiler	73	ported	crates/expression-language/src/compiler.rs
+Expression.php	Expression	12	ported	crates/expression-language/src/expression.rs
+ExpressionFunction.php	ExpressionFunction	40	ported	crates/expression-language/src/expression_function.rs
+ExpressionFunctionProviderInterface.php	ExpressionFunctionProviderInterface	5	ported	crates/expression-language/src/expression_function.rs
+ExpressionLanguage.php	ExpressionLanguage	101	ported	crates/expression-language/src/expression_language.rs
+Lexer.php	Lexer	68	ported	crates/expression-language/src/lexer.rs
+Node/ArgumentsNode.php	ArgumentsNode	19	ported	crates/expression-language/src/node/arguments_node.rs
+Node/ArrayNode.php	ArrayNode	80	ported	crates/expression-language/src/node/array_node.rs
+Node/BinaryNode.php	BinaryNode	157	ported	crates/expression-language/src/node/binary_node.rs
+Node/ConditionalNode.php	ConditionalNode	34	ported	crates/expression-language/src/node/conditional_node.rs
+Node/ConstantNode.php	ConstantNode	58	ported	crates/expression-language/src/node/constant_node.rs
+Node/FunctionNode.php	FunctionNode	41	ported	crates/expression-language/src/node/function_node.rs
+Node/GetAttrNode.php	GetAttrNode	148	ported	crates/expression-language/src/node/get_attr_node.rs
+Node/NameNode.php	NameNode	24	ported	crates/expression-language/src/node/name_node.rs
+Node/Node.php	Node	71	ported	crates/expression-language/src/node/mod.rs
+Node/NullCoalesceNode.php	NullCoalesceNode	40	ported	crates/expression-language/src/node/null_coalesce_node.rs
+Node/NullCoalescedNameNode.php	NullCoalescedNameNode	24	ported	crates/expression-language/src/node/null_coalesced_name_node.rs
+Node/UnaryNode.php	UnaryNode	44	ported	crates/expression-language/src/node/unary_node.rs
+ParsedExpression.php	ParsedExpression	15	ported	crates/expression-language/src/parsed_expression.rs
+Parser.php	Parser	337	ported	crates/expression-language/src/parser.rs
+Resources/bin/generate_operator_regex.php	-	14	ported	crates/expression-language/src/lexer.rs
 SerializedParsedExpression.php	SerializedParsedExpression	15	pending	
-SyntaxError.php	SyntaxError	26	pending	
-Token.php	Token	24	pending	
-TokenStream.php	TokenStream	40	pending	
+SyntaxError.php	SyntaxError	26	ported	crates/expression-language/src/syntax_error.rs
+Token.php	Token	24	ported	crates/expression-language/src/token.rs
+TokenStream.php	TokenStream	40	ported	crates/expression-language/src/token_stream.rs
