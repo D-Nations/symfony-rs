@@ -484,6 +484,13 @@ impl Error {
         }
     }
 
+    /// Replaces the message, as `ServiceLocator::get()` does through
+    /// reflection. A `ParameterNotFoundException` keeps rebuilding its
+    /// message from its fields.
+    pub fn set_message(&mut self, message: impl Into<String>) {
+        self.message = Message::Text(message.into());
+    }
+
     pub fn code(&self) -> i64 {
         self.code
     }
