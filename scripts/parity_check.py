@@ -136,7 +136,7 @@ def check_parity(root: Path) -> int:
         if package in done and pending > 0:
             errors.append(f"{package} is in parity/done.txt but has {pending} pending tests")
 
-    upstream_tests = re.compile(r"^//! Upstream: [^ ]+ .*(^| )([^ ]*/)?[Tt]ests/", re.MULTILINE)
+    upstream_tests = re.compile(r"^//! Upstream: \S+[ \t]+(?:\S+[ \t]+)*(?:\S*/)?[Tt]ests/", re.MULTILINE)
     attribute = re.compile(r"#\[(tokio::)?test")
     for name in rust_files(root):
         source = read(name)

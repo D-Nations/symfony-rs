@@ -108,6 +108,35 @@ class ReferenceParityTests(unittest.TestCase):
         self.write(name, self.files[name] + "#[test]\n// comment\nfn testExtra<T>() {}\n")
         self.compare_parity(1)
 
+    def test_single_and_multiple_test_paths_require_claims(self):
+        name = "crates/example/tests/test.rs"
+        body = self.files[name].split("\n", 1)[1]
+        for paths in (
+            "Tests/ExampleTest.php",
+            "tests/ExampleTest.php",
+            "Component/Tests/ExampleTest.php",
+            "Tests/ExampleTest.php Example.php",
+            "Example.php Tests/ExampleTest.php",
+            "Example.php\tComponent/tests/ExampleTest.php",
+        ):
+            with self.subTest(paths=paths):
+                self.write(name, "//! Upstream: symfony/example " + paths + "\n" + body
+                           + "#[test]\nfn testUnclaimed() {}\n")
+                self.compare_parity(1)
+
+    def test_production_paths_and_other_lines_do_not_claim_tests(self):
+        name = "crates/example/tests/test.rs"
+        for mapping in (
+            "//! Upstream: none",
+            "//! Upstream: symfony/example NotTests/Example.php",
+            "//! Upstream: symfony/example Example.php",
+            "//! Upstream: symfony/example Example.php\n// Tests/ExampleTest.php",
+        ):
+            with self.subTest(mapping=mapping):
+                self.write(name, mapping + "\n" + self.files[name].split("\n", 1)[1]
+                           + "#[test]\nfn testLocalHelper() {}\n")
+                self.compare_parity(0)
+
     def test_broken_source_rules(self):
         name = "crates/example/src/lib.rs"
         for content in (
