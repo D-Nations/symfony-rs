@@ -24,9 +24,9 @@ tests/ConfigurationTest.php	ConfigurationTest::testSetsDefaultConnectionAutoComm
 tests/Connection/CachedQueryTest.php	CachedQueryTest::testCachedQuery	pending	
 tests/Connection/CachedQueryTest.php	CachedQueryTest::testCachedQueryWithChangedImplementationIsExecutedTwice	pending	
 tests/Connection/CachedQueryTest.php	CachedQueryTest::testOldCacheFormat	pending	
-tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testExpandListParameters	pending	
-tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testMissingNamedParameter	pending	
-tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testMissingPositionalParameter	pending	
+tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testExpandListParameters	ported	crates/doctrine-dbal/tests/expand_array_parameters_test.rs::testExpandListParameters
+tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testMissingNamedParameter	ported	crates/doctrine-dbal/tests/expand_array_parameters_test.rs::testMissingNamedParameter
+tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testMissingPositionalParameter	ported	crates/doctrine-dbal/tests/expand_array_parameters_test.rs::testMissingPositionalParameter
 tests/ConnectionTest.php	ConnectionTest::testBeginTransactionFailureAfterCommitInNoAutoCommitMode	pending	
 tests/ConnectionTest.php	ConnectionTest::testCallConnectOnce	pending	
 tests/ConnectionTest.php	ConnectionTest::testCommitStartsTransactionInNoAutoCommitMode	pending	
@@ -2289,10 +2289,10 @@ tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionOnlyThrowException	p
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionWAllAndLimitClauseReturnsUnionAllQuery	pending	
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUpdate	pending	
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUpdateWhere	pending	
-tests/SQL/ParserTest.php	ParserTest::testAnsiEscaping	pending	
-tests/SQL/ParserTest.php	ParserTest::testMySQLEscaping	pending	
-tests/SQL/ParserTest.php	ParserTest::testStatementsWithParameters	pending	
-tests/SQL/ParserTest.php	ParserTest::testStatementsWithoutParameters	pending	
+tests/SQL/ParserTest.php	ParserTest::testAnsiEscaping	ported	crates/doctrine-dbal/tests/parser_test.rs::testAnsiEscaping
+tests/SQL/ParserTest.php	ParserTest::testMySQLEscaping	ported	crates/doctrine-dbal/tests/parser_test.rs::testMySQLEscaping
+tests/SQL/ParserTest.php	ParserTest::testStatementsWithParameters	ported	crates/doctrine-dbal/tests/parser_test.rs::testStatementsWithParameters
+tests/SQL/ParserTest.php	ParserTest::testStatementsWithoutParameters	ported	crates/doctrine-dbal/tests/parser_test.rs::testStatementsWithoutParameters
 tests/Schema/AbstractAssetTest.php	AbstractAssetTest::testConstructWithoutArguments	pending	
 tests/Schema/AbstractAssetTest.php	AbstractAssetTest::testCreateParserNotImplemented	pending	
 tests/Schema/AbstractAssetTest.php	AbstractAssetTest::testNameParsingDeprecation	pending	

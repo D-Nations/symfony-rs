@@ -900,6 +900,20 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     as in production); the web server's own 404 for `/index.php/...` and
     `*.php` has an empty body where nginx sends its HTML page.
 
+21. **PCRE limits in Doctrine's SQL parser (M6, November 25).** DBAL's
+    `SQL\Parser` is one PCRE pattern, and PHP stops it at PCRE's limits:
+    an unterminated `/*` comment followed by about 20 bytes without `*`
+    throws `RegularExpressionError` ("Backtrack limit exhausted"), and a
+    MySQL-mode string literal of about 6,200 bytes or a bracket identifier
+    of about 25,000 bytes throws "JIT stack limit exhausted" (oracle,
+    PHP 8.4.27 defaults). The Rust parser does not backtrack and parses
+    them. Recommended: do not copy the limits. An unterminated comment is
+    refused by the database anyway; a long MySQL literal is valid SQL that
+    PHP cannot run. Alternative: refuse the same inputs with the same
+    message, which needs the thresholds of PCRE's JIT and is not exact.
+    `crates/doctrine-dbal/tests/parser_vectors.rs` fails on any other
+    difference.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -1646,6 +1660,28 @@ Stack rows (searched November 22):
       `Content-Length` is checked against the body, then left out of the
       fixture's header comparison (PHP's built-in server closed the
       connection instead). Next: the listener seam; StreamedResponse.
+
+## M6 progress
+
+Stack rows (searched November 25):
+
+| Component | Options compared | Choice | Reason |
+|---|---|---|---|
+| Doctrine DBAL (`doctrine/dbal` 4.5.0) | No Rust port of DBAL on GitHub or crates.io (searches for a DBAL, Doctrine or data-mapper port find only PHP packages). Rust database layers: [sqlx](https://github.com/launchbadge/sqlx) (the demo's driver), rusqlite, diesel, SeaORM / sea-query (own query builders and type mappings) | Port DBAL's behaviour (parser, types, platforms' SQL, schema, QueryBuilder, Connection) in `doctrine-dbal`. Drivers (D1: SQLite) later go on sqlx, behind DBAL's `Driver` interfaces, when the Connection is ported; this slice adds no dependency | DBAL's observable behaviour (generated SQL, type conversions, error classes and messages) is what the ORM, migrations and the demo depend on, and no crate reproduces it. sqlx stays the driver choice of PLAN.md's architecture (bound parameters only) |
+| Doctrine ORM (`doctrine/orm` 3.7.5) | No Rust port. Unit-of-work crates: [sqlmodel-session](https://docs.rs/sqlmodel-session) (identity map and session for its own models), [tideorm](https://docs.rs/tideorm), [rust-ef](https://docs.rs/rust-ef), reinhardt-db (Django-style); SeaORM, Diesel (no unit of work, see M6) | Port the ORM on `doctrine-dbal` (D2) | None has Doctrine's metadata, DQL, hydration or UnitOfWork semantics; using one would mean a second behaviour to keep equal to Doctrine's |
+
+- [x] D1 slice 1 (`doctrine-dbal`): `ParameterType.php`,
+      `ArrayParameterType.php`, `SQL/Parser.php` and `Parser/Visitor.php`,
+      `ExpandArrayParameters.php` and its `ArrayParameters` exceptions.
+      ParserTest 4 of 4 and ExpandArrayParametersTest 3 of 3 on upstream's
+      provider rows, recorded from PHP (`scripts/record.sh doctrine-dbal`);
+      5,919 parses of 3,024 generated statements in both modes match
+      PHP call by call; the 135 that PHP refuses at a PCRE limit are
+      decision 21. No new dependency.
+- [ ] D1 next: Types and the platforms' type SQL; Query (QueryBuilder,
+      ExpressionBuilder, SQL builders); the SQLite platform; Connection on
+      sqlx's SQLite driver; schema manager. The demo comparison stays
+      paused (owner, November 23).
 
 ## Local development performance
 
