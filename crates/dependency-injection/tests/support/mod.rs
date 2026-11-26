@@ -1,6 +1,8 @@
 //! Shared test helpers.
 //!
 //! `compile()` is `ContainerBuilder::compile()` with every default pass.
+//!
+//! Upstream: none
 #![allow(dead_code)]
 
 use std::cell::RefCell;

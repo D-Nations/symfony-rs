@@ -145,13 +145,24 @@ fn cleanup_read_only_file(filename: &std::path::Path) {
             .arg(filename)
             .status();
     }
+    // Windows does not remove a read-only file.
+    if let Ok(metadata) = std::fs::metadata(filename) {
+        let mut permissions = metadata.permissions();
+        #[allow(
+            clippy::permissions_set_readonly_false,
+            reason = "the test's own file, made writable to remove it"
+        )]
+        permissions.set_readonly(false);
+        let _ = std::fs::set_permissions(filename, permissions);
+    }
     let _ = std::fs::remove_file(filename);
 }
 
 /// The schema manager's `createTable()` is the table's DDL.
 #[tokio::test]
 async fn testConnectionExceptionSqLite() {
-    use std::os::unix::fs::PermissionsExt;
+    // Upstream's chmod 0444, written portably (read-only for everyone on
+    // Unix; the read-only attribute on Windows).
     let mode = 0o444;
     let filename = std::env::temp_dir().join(format!(
         "doctrine_failed_connection_{mode}_{}.db",
@@ -161,7 +172,9 @@ async fn testConnectionExceptionSqLite() {
         cleanup_read_only_file(&filename);
     }
     std::fs::File::create(&filename).unwrap();
-    std::fs::set_permissions(&filename, std::fs::Permissions::from_mode(mode)).unwrap();
+    let mut permissions = std::fs::metadata(&filename).unwrap().permissions();
+    permissions.set_readonly(true);
+    std::fs::set_permissions(&filename, permissions).unwrap();
     if is_posix_super_user() {
         std::process::Command::new("chattr")
             .arg("+i")
