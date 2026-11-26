@@ -69,8 +69,7 @@ with the oracle (PHP 8.4.27, default `pcre.backtrack_limit` and JIT):
   `*`: "JIT stack limit exhausted". The Rust parser accepts them.
 
 `tests/parser_vectors.rs` checks that each statement PHP refuses is one of
-these cases. Whether to copy these limits is a decision for the owner
-(PLAN.md, decision 21).
+these cases. The owner decided not to copy these limits (PLAN.md, decision 21).
 
 - A list parameter given as an object is refused with the `TypeError`
   message that `count()` gives for a non-countable value. For a

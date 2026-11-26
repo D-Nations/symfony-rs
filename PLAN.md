@@ -908,7 +908,8 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     as in production); the web server's own 404 for `/index.php/...` and
     `*.php` has an empty body where nginx sends its HTML page.
 
-21. **PCRE limits in Doctrine's SQL parser (M6, November 25).** DBAL's
+21. **PCRE limits in Doctrine's SQL parser (M6, November 25; accepted
+    November 25: do not copy the limits).** DBAL's
     `SQL\Parser` is one PCRE pattern, and PHP stops it at PCRE's limits:
     an unterminated `/*` comment followed by about 20 bytes without `*`
     throws `RegularExpressionError` ("Backtrack limit exhausted"), and a
