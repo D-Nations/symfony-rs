@@ -27,7 +27,6 @@ members = [
     "crates/twig",
     "crates/twig-integration",
     "crates/expression-language",
-    "crates/doctrine-dbal",
     "examples/request-lab",
     "fixtures/converter-app",
     "spikes/twig-trial/compiler",
