@@ -356,6 +356,7 @@ async fn run(
         columns,
         rows: values,
         row_count,
+        fetched: false,
     }))
 }
 
@@ -376,12 +377,23 @@ async fn transaction_statement(inner: &mut Inner, sql: &'static str) -> Result<(
     Ok(())
 }
 
+/// PDO's `ValueError` for an empty statement.
+fn empty_statement(method: &str, parameter: &str) -> Exception {
+    Exception::new(
+        Exception::VALUE_ERROR,
+        format!("PDO::{method}(): Argument #1 (${parameter}) must not be empty"),
+    )
+}
+
 impl DriverConnection for PdoConnection {
     fn prepare<'a>(
         &'a self,
         sql: &'a str,
     ) -> BoxFuture<'a, Result<Box<dyn DriverStatement>, Exception>> {
         Box::pin(async move {
+            if sql.is_empty() {
+                return Err(empty_statement("prepare", "query"));
+            }
             let mut inner = self.inner.lock().await;
             let prepared = prepare(&mut inner, sql).await?;
             Ok(Box::new(PdoStatement {
@@ -398,6 +410,9 @@ impl DriverConnection for PdoConnection {
         sql: &'a str,
     ) -> BoxFuture<'a, Result<Box<dyn DriverResult>, Exception>> {
         Box::pin(async move {
+            if sql.is_empty() {
+                return Err(empty_statement("query", "query"));
+            }
             let mut inner = self.inner.lock().await;
             let prepared = prepare(&mut inner, sql).await?;
             run(
@@ -426,6 +441,9 @@ impl DriverConnection for PdoConnection {
 
     fn exec<'a>(&'a self, sql: &'a str) -> BoxFuture<'a, Result<i64, Exception>> {
         Box::pin(async move {
+            if sql.is_empty() {
+                return Err(empty_statement("exec", "statement"));
+            }
             let mut inner = self.inner.lock().await;
             (&mut inner.connection)
                 .execute(AssertSqlSafe(sql.to_owned()))
@@ -636,14 +654,19 @@ struct PdoResult {
     columns: Vec<PhpString>,
     rows: VecDeque<Vec<Value>>,
     row_count: i64,
+    /// A row was fetched (or the result freed): `SQLite`'s last result code
+    /// is no longer the first step's `SQLITE_ROW`.
+    fetched: bool,
 }
 
 impl DriverResult for PdoResult {
     fn fetch_numeric(&mut self) -> Result<Option<PhpArray>, Exception> {
+        self.fetched = true;
         Ok(self.rows.pop_front().map(PhpArray::list))
     }
 
     fn fetch_associative(&mut self) -> Result<Option<PhpArray>, Exception> {
+        self.fetched = true;
         Ok(self.rows.pop_front().map(|row| {
             let mut array = PhpArray::new();
             for (name, value) in self.columns.iter().zip(row) {
@@ -662,6 +685,7 @@ impl DriverResult for PdoResult {
     }
 
     fn free(&mut self) {
+        self.fetched = true;
         self.rows.clear();
     }
 
@@ -681,7 +705,16 @@ impl DriverResult for PdoResult {
                 .ok()
                 .and_then(|index| self.columns.get(index))
                 .cloned()
-                .ok_or_else(|| statement_error(25, "column index out of range")),
+                .ok_or_else(|| {
+                    // `getColumnMeta()` reports SQLite's last result code:
+                    // the first step's row when nothing was fetched yet,
+                    // otherwise none, and DBAL sees `false`.
+                    if !self.fetched && !self.rows.is_empty() {
+                        statement_error(100, "another row available")
+                    } else {
+                        Exception::invalid_column_index(index, None)
+                    }
+                }),
         )
     }
 

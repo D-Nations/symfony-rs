@@ -1,9 +1,14 @@
 //! The test doubles of the connection tests: a driver that records the
 //! calls it gets (PHPUnit's `createStub(Driver::class)` and mocks), and the
-//! SQLite connection helpers of the functional tests.
+//! `SQLite` connection helpers of the functional tests.
 //!
 //! Upstream: none
 #![allow(dead_code)]
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 
 use std::collections::VecDeque;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -99,7 +104,7 @@ macro_rules! declarations {
 }
 
 impl AbstractPlatform for TestPlatform {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Mock_AbstractPlatform"
     }
 
@@ -150,7 +155,7 @@ impl ExceptionConverter for TestConverter {
 }
 
 impl Driver for TestDriver {
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Mock_Driver"
     }
 
@@ -361,7 +366,7 @@ impl DriverResult for TestResult {
         self.rows.clear();
     }
 
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Mock_Result"
     }
 }
@@ -434,4 +439,105 @@ pub fn run<F: std::future::Future>(future: F) -> F::Output {
         .build()
         .unwrap()
         .block_on(future)
+}
+
+/// tests/data/connection.json (`scripts/record.sh doctrine-dbal-connection`).
+pub fn data() -> &'static serde_json::Value {
+    static DATA: std::sync::OnceLock<serde_json::Value> = std::sync::OnceLock::new();
+    DATA.get_or_init(|| {
+        let text = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/data/connection.json"
+        ))
+        .expect("tests/data/connection.json (scripts/record.sh doctrine-dbal-connection)");
+        serde_json::from_str(&text).expect("valid JSON")
+    })
+}
+
+/// A recorded base64 string as text.
+pub fn text(json: &serde_json::Value) -> String {
+    let bytes = php_value::vectors::base64(json.as_str().expect("base64")).expect("base64");
+    String::from_utf8(bytes).expect("UTF-8")
+}
+
+/// The SQL that `SQLitePlatform` builds for `name` (recorded).
+pub fn sql(name: &str) -> String {
+    text(&data()["sql"][name])
+}
+
+/// The DDL of a functional test's table, as the schema manager creates it
+/// on `pdo_sqlite` (recorded); `sqlite_sequence` is `SQLite`'s own.
+pub fn ddl(table: &str) -> Vec<String> {
+    data()["ddl"][table]
+        .as_array()
+        .unwrap_or_else(|| panic!("no DDL for {table}"))
+        .iter()
+        .map(text)
+        .filter(|sql| !sql.starts_with("CREATE TABLE sqlite_sequence"))
+        .collect()
+}
+
+/// `dropAndCreateTable()`: the table from its recorded DDL.
+pub async fn drop_and_create_table(connection: &Connection, table: &str) {
+    connection
+        .execute_statement(
+            &format!("DROP TABLE IF EXISTS {table}"),
+            &none(),
+            &no_types(),
+        )
+        .await
+        .unwrap();
+    for sql in ddl(table) {
+        connection
+            .execute_statement(&sql, &none(), &no_types())
+            .await
+            .unwrap();
+    }
+}
+
+/// Checks an outcome against a recorded one: ["ok", typed] or ["throws",
+/// class, message, code, sqlstate, previous, query].
+pub fn assert_outcome(
+    context: &str,
+    expected: &serde_json::Value,
+    actual: Result<Value, Exception>,
+) {
+    match (expected[0].as_str(), actual) {
+        (Some("ok"), Ok(value)) => {
+            let expected = php_value::vectors::decode(&expected[1]).expect("typed value");
+            assert!(
+                expected.identical(&value),
+                "{context}: expected {expected:?}, got {value:?}"
+            );
+        }
+        (Some("throws"), Err(e)) => {
+            assert_eq!(e.class(), expected[1].as_str().unwrap(), "{context}: {e}");
+            assert_eq!(
+                e.message().to_string_lossy(),
+                text(&expected[2]),
+                "{context}"
+            );
+            assert_eq!(e.code(), expected[3].as_i64().unwrap(), "{context}");
+            assert_eq!(e.sql_state(), expected[4].as_str(), "{context}");
+            let previous = expected[5].as_array().unwrap();
+            match (previous.first(), e.previous()) {
+                (Some(first), Some(actual)) => {
+                    assert_eq!(actual.class(), first[0].as_str().unwrap(), "{context}");
+                    assert_eq!(
+                        actual.message().to_string_lossy(),
+                        text(&first[1]),
+                        "{context}"
+                    );
+                }
+                (None, None) => {}
+                (first, actual) => panic!("{context}: previous {first:?} / {actual:?}"),
+            }
+            assert_eq!(
+                e.query().map(|query| query.get_sql().to_owned()),
+                expected[6].as_str().map(|_| text(&expected[6])),
+                "{context}"
+            );
+        }
+        (_, actual) => panic!("{context}: expected {expected}, got {actual:?}"),
+    }
 }

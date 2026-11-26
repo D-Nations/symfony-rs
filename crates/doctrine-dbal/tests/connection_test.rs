@@ -8,6 +8,11 @@
 //! bound with its binding type, after the type's conversion).
 //!
 //! Upstream: doctrine/dbal tests/ConnectionTest.php
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    reason = "test helpers; a panic is a test failure"
+)]
 #![allow(non_snake_case)]
 
 mod connection_support;
