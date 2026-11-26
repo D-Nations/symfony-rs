@@ -7,7 +7,6 @@ members = [
     "crates/string",
     "crates/psr-container",
     "crates/psr-log",
-    "crates/php-value",
     "crates/yaml",
     "crates/dotenv",
     "crates/deprecation-contracts",
@@ -24,8 +23,6 @@ members = [
     "crates/options-resolver",
     "crates/password-hasher",
     "crates/finder",
-    "crates/php-dom",
-    "crates/php-pcre",
     "crates/mime",
     "crates/twig",
     "crates/twig-integration",
@@ -41,6 +38,15 @@ members = [
     "spikes/di-trial/demo",
 ]
 resolver = "3"
+
+# PHP behaviour crates, moved to php2rust-compatibility-tools (November 26).
+# The package aliases keep the `php_value`, `php_pcre` and `php_dom` names
+# in code. To work on both repositories, override the git source with a
+# local path in an uncommitted .cargo/config.toml (see README.md).
+[workspace.dependencies]
+php-value = { package = "php2rust-value", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "977342827ba414362c6af60f38dd376f2fbcfd72" }
+php-pcre = { package = "php2rust-regex", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "977342827ba414362c6af60f38dd376f2fbcfd72" }
+php-dom = { package = "php2rust-dom", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "977342827ba414362c6af60f38dd376f2fbcfd72" }
 
 # Lints for every member that sets `[lints] workspace = true`. Members opt in
 # one at a time, once they pass with `-D warnings`; see PLAN.md

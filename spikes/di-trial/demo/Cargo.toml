@@ -7,7 +7,7 @@ publish = false
 description = "DI trial: symfony/demo's compiled container emitted as Rust at build time"
 
 [dependencies]
-php-value = { path = "../../../crates/php-value" }
+php-value = { workspace = true }
 di-trial-runtime = { path = "../runtime" }
 
 [build-dependencies]

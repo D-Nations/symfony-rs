@@ -2,3 +2,4 @@
 /upstream/
 /oracle/out/
 __pycache__/
+/.cargo/config.toml

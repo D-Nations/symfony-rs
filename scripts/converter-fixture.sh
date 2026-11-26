@@ -16,7 +16,7 @@ export MSYS_NO_PATHCONV=1
 
 # rust:1.99-slim, the host's toolchain at the time (1.99.1)
 image=rust@sha256:f6c4a35d21dbb3c89d7a8d056c193e94fc09037f2b58dd858b09c39a47dd02d7
-packages=(-p converter-fixture-app -p symfony-http-kernel -p symfony-http-foundation -p symfony-routing -p symfony-runtime -p symfony-event-dispatcher -p psr-container -p php-value)
+packages=(-p converter-fixture-app -p symfony-http-kernel -p symfony-http-foundation -p symfony-routing -p symfony-runtime -p symfony-event-dispatcher -p psr-container)
 
 echo "converter fixture at $(git rev-parse --short HEAD) in an empty Linux directory"
 git archive --format=tar HEAD | docker run --rm -i "$image" bash -euo pipefail -c "

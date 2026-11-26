@@ -7,7 +7,7 @@ publish = false
 description = "Trial DI runtime for code emitted by di-trial-compiler; not the M3 port"
 
 [dependencies]
-php-value = { path = "../../../crates/php-value" }
+php-value = { workspace = true }
 
 [lints]
 workspace = true
