@@ -52,6 +52,9 @@ pub use check_factory_builder_circular_reference_pass::CheckFactoryBuilderCircul
 mod check_reference_validity_pass;
 pub use check_reference_validity_pass::CheckReferenceValidityPass;
 
+mod check_type_declarations_pass;
+pub use check_type_declarations_pass::CheckTypeDeclarationsPass;
+
 mod decorator_service_pass;
 pub use decorator_service_pass::DecoratorServicePass;
 
