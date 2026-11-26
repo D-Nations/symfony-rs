@@ -1,7 +1,7 @@
 //! A stand-in for Doctrine\DBAL\Platforms\SQLitePlatform until
 //! `SQLitePlatform.php` is ported (another slice): the methods that the
-//! connection, its tests and the query builder call on SQLite, with
-//! SQLitePlatform's bodies, and the other required methods refusing with
+//! connection, its tests and the query builder call on `SQLite`, with
+//! `SQLitePlatform`'s bodies, and the other required methods refusing with
 //! an `Unsupported` exception. Replace this file with the real platform
 //! when it is merged; the name `SQLitePlatform` is the same.
 //!
@@ -15,7 +15,7 @@ use super::AbstractPlatform;
 use crate::sql::builder::{DefaultSelectSQLBuilder, SelectSQLBuilder};
 use crate::{Exception, TransactionIsolationLevel};
 
-/// The SQLite platform (stand-in).
+/// The `SQLite` platform (stand-in).
 #[derive(Debug, Clone, Copy, Default)]
 pub struct SQLitePlatform;
 

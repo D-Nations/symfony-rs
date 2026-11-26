@@ -3,12 +3,12 @@
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!
-//! Upstream: doctrine/dbal src/Driver/API/SQLite/ExceptionConverter.php
+//! Upstream: doctrine/dbal src/Driver/API/`SQLite`/ExceptionConverter.php
 
 use super::ExceptionConverter as ExceptionConverterInterface;
 use crate::{Exception, Query};
 
-/// The SQLite exception converter: it reads the message
+/// The `SQLite` exception converter: it reads the message
 /// (<http://www.sqlite.org/c3ref/c_abort.html>).
 #[derive(Debug, Clone, Copy, Default)]
 pub struct ExceptionConverter;

@@ -10,7 +10,7 @@
 //! One [`Exception`] value stands for a thrown object: its class (one of
 //! the constants below, or a PHP engine error such as `TypeError` that a
 //! `strict_types` call raises), its message and its previous exception.
-//! The Connection slice adds `getCode()`, the driver's SQLSTATE and the
+//! The Connection slice adds `getCode()`, the driver's `SQLSTATE` and the
 //! query of a `DriverException` (`driver_exception.rs`).
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
@@ -259,5 +259,57 @@ fn class_is_a(sub: &str, class: &str) -> bool {
         "LogicException" => column_type || sub == Exception::INVALID_COLUMN_DECLARATION,
         "InvalidArgumentException" => sub == Exception::INVALID_ARGUMENT_EXCEPTION,
         _ => false,
+    }
+}
+
+// Slice Connection: what `Connection` lets through from the layers below.
+
+/// The class of a PHP error that a lower layer reports by name.
+fn thrown_class(class: &str) -> &'static str {
+    match class {
+        "TypeError" => Exception::TYPE_ERROR,
+        "Error" => Exception::ERROR,
+        "ValueError" => Exception::VALUE_ERROR,
+        "ArgumentCountError" => "ArgumentCountError",
+        "AssertionError" => "AssertionError",
+        "JsonException" => "JsonException",
+        "InvalidArgumentException" => Exception::PHP_INVALID_ARGUMENT_EXCEPTION,
+        "LogicException" => Exception::LOGIC_EXCEPTION,
+        "Exception" => "Exception",
+        _ => Exception::UNSUPPORTED,
+    }
+}
+
+impl From<php_value::Thrown> for Exception {
+    fn from(value: php_value::Thrown) -> Self {
+        Self::new(thrown_class(&value.class), value.message).with_code(value.code)
+    }
+}
+
+impl From<crate::ArrayParametersException> for Exception {
+    fn from(value: crate::ArrayParametersException) -> Self {
+        Self::new(value.class(), value.message())
+    }
+}
+
+impl From<crate::types::TypesException> for Exception {
+    fn from(value: crate::types::TypesException) -> Self {
+        let exception = Self::new(value.class(), value.message());
+        match value.previous() {
+            Some(previous) => exception.with_previous(previous.clone().into()),
+            None => exception,
+        }
+    }
+}
+
+impl From<crate::types::ConversionError> for Exception {
+    fn from(value: crate::types::ConversionError) -> Self {
+        match value {
+            crate::types::ConversionError::Conversion(e) => {
+                Self::new(e.kind().class(), e.message().clone())
+            }
+            crate::types::ConversionError::Thrown(t) => t.into(),
+            crate::types::ConversionError::Unsupported(text) => Self::new(Self::UNSUPPORTED, text),
+        }
     }
 }

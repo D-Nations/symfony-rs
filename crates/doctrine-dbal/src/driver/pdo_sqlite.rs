@@ -1,10 +1,10 @@
-//! The SQLite driver, on sqlx. It stands where Doctrine's
+//! The `SQLite` driver, on sqlx. It stands where Doctrine's
 //! `Driver\PDO\SQLite\Driver` stands (with its `PDO\Connection`,
 //! `PDO\Statement`, `PDO\Result` and `PDO\Exception`), and gives what
-//! pdo_sqlite gives in PHP 8.4, as recorded from PHP
+//! `pdo_sqlite` gives in PHP 8.4, as recorded from PHP
 //! (`tests/data/connection.json`):
 //!
-//! - Values come back with SQLite's storage class: INTEGER as int, REAL as
+//! - Values come back with `SQLite`'s storage class: INTEGER as int, REAL as
 //!   float, TEXT and BLOB as strings, NULL as null.
 //! - A bound value is converted as PDO does for its type: `NULL` binds
 //!   null; `INTEGER` and `BOOLEAN` bind `(int) $value` (`BOOLEAN` makes an
@@ -14,15 +14,15 @@
 //!   `__toString()` throws `Error`.
 //! - Errors read `SQLSTATE[HY000]: General error: <code> <message>`
 //!   (`SQLSTATE[23000]: Integrity constraint violation: 19 ...` for a
-//!   constraint), with SQLite's primary result code; opening fails with
+//!   constraint), with `SQLite`'s primary result code; opening fails with
 //!   `SQLSTATE[HY000] [14] unable to open database file`. A parameter
 //!   bound past the statement's parameters, or by an unknown name, fails
 //!   at execution with `25 column index out of range`.
 //! - `rowCount()` is 0 for a statement that returned rows and otherwise
-//!   SQLite's `changes()` (the last INSERT, UPDATE or DELETE on the
+//!   `SQLite`'s `changes()` (the last INSERT, UPDATE or DELETE on the
 //!   connection, as `sqlite3_changes()` gives it); `exec()` gives
 //!   `changes()` after the last statement.
-//! - `lastInsertId()` is SQLite's `last_insert_rowid()` as a string, and
+//! - `lastInsertId()` is `SQLite`'s `last_insert_rowid()` as a string, and
 //!   throws `NoIdentityValue` when it is `0`.
 //! - `quote()` stops at the first NUL byte and doubles single quotes.
 //! - The database is created when missing; foreign keys stay off and the
@@ -36,7 +36,7 @@
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!
-//! Upstream: doctrine/dbal src/Driver/PDO/SQLite/Driver.php src/Driver/PDO/Connection.php
+//! Upstream: doctrine/dbal src/Driver/PDO/`SQLite`/Driver.php src/Driver/PDO/Connection.php
 //! Upstream: doctrine/dbal src/Driver/PDO/Statement.php src/Driver/PDO/Result.php
 //! Upstream: doctrine/dbal src/Driver/PDO/Exception.php src/Driver/PDO/Exception/InvalidConfiguration.php
 
@@ -92,7 +92,7 @@ fn isset<'a>(params: &'a PhpArray, key: &str) -> Option<&'a Value> {
     params.get(&Key::from(key)).filter(|value| !value.is_null())
 }
 
-/// The primary result code and message of a SQLite error.
+/// The primary result code and message of a `SQLite` error.
 fn sqlite_error(error: &sqlx::Error) -> Option<(i64, String)> {
     let sqlx::Error::Database(database) = error else {
         return None;
@@ -104,7 +104,7 @@ fn sqlite_error(error: &sqlx::Error) -> Option<(i64, String)> {
     Some((code, database.message().to_owned()))
 }
 
-/// The SQLSTATE and its description that pdo_sqlite gives a result code.
+/// The `SQLSTATE` and its description that `pdo_sqlite` gives a result code.
 fn sql_state(code: i64) -> (&'static str, &'static str) {
     if code == 19 {
         ("23000", "Integrity constraint violation")
@@ -148,7 +148,7 @@ fn connect_error(error: &sqlx::Error) -> Exception {
     }
 }
 
-/// A PDO error raised outside SQLite (no SQLSTATE).
+/// A PDO error raised outside `SQLite` (no `SQLSTATE`).
 fn pdo_message(message: &str) -> Exception {
     Exception::driver(Exception::PDO_EXCEPTION, message, None, 0)
 }
@@ -195,7 +195,7 @@ impl DriverInterface for Driver {
                 .filename(path)
                 .create_if_missing(true)
                 .foreign_keys(false)
-                .busy_timeout(Duration::from_secs(60));
+                .busy_timeout(Duration::from_mins(1));
             let connection = SqliteConnection::connect_with(&options)
                 .await
                 .map_err(|e| connect_error(&e))?;
@@ -226,13 +226,13 @@ struct Inner {
     in_transaction: bool,
 }
 
-/// `Doctrine\DBAL\Driver\PDO\Connection` on a SQLite database.
+/// `Doctrine\DBAL\Driver\PDO\Connection` on a `SQLite` database.
 struct PdoConnection {
     inner: Arc<Mutex<Inner>>,
 }
 
 /// A SQL text rewritten for sqlx: `:name` placeholders become `?N`, `N`
-/// being the index SQLite gives the name (its first occurrence).
+/// being the index `SQLite` gives the name (its first occurrence).
 #[derive(Default)]
 struct Placeholders {
     sql: Vec<u8>,
@@ -309,7 +309,7 @@ async fn prepare(inner: &mut Inner, sql: &str) -> Result<Prepared, Exception> {
     })
 }
 
-/// A value read from SQLite, as pdo_sqlite gives it.
+/// A value read from `SQLite`, as `pdo_sqlite` gives it.
 fn column_value(row: &SqliteRow, index: usize) -> Result<Value, Exception> {
     let decode_error = |e: sqlx::error::BoxDynError| {
         Exception::driver(Exception::PDO_EXCEPTION, e.to_string(), None, 0)
@@ -359,7 +359,7 @@ async fn run(
     }))
 }
 
-/// SQLite's `changes()`.
+/// `SQLite`'s `changes()`.
 async fn changes(inner: &mut Inner) -> Result<i64, Exception> {
     sqlx::query_scalar::<Sqlite, i64>("SELECT changes()")
         .fetch_one(&mut inner.connection)
@@ -500,7 +500,7 @@ impl DriverConnection for PdoConnection {
 struct PdoStatement {
     inner: Arc<Mutex<Inner>>,
     prepared: Prepared,
-    /// Bound values by SQLite parameter index.
+    /// Bound values by `SQLite` parameter index.
     bound: BTreeMap<usize, (Value, ParameterType)>,
     /// A value was bound to a parameter the statement does not have.
     out_of_range: bool,
@@ -685,7 +685,7 @@ impl DriverResult for PdoResult {
         )
     }
 
-    fn class(&self) -> &str {
+    fn class(&self) -> &'static str {
         "Doctrine\\DBAL\\Driver\\PDO\\Result"
     }
 }

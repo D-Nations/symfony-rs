@@ -95,11 +95,13 @@ pub(super) fn parents(class: &str) -> &'static [&'static str] {
         | Exception::IDENTITY_COLUMNS_NOT_SUPPORTED
         | Exception::NO_IDENTITY_VALUE
         | Exception::PDO_INVALID_CONFIGURATION => &[Exception::ABSTRACT_DRIVER_EXCEPTION],
-        Exception::DRIVER_EXCEPTION_INTERFACE | Exception::RETRYABLE_EXCEPTION => &["Throwable"],
+        Exception::DRIVER_EXCEPTION_INTERFACE
+        | Exception::RETRYABLE_EXCEPTION
+        | "Exception"
+        | "Error" => &["Throwable"],
         "InvalidArgumentException" => &["LogicException"],
         "LogicException" | "RuntimeException" => &["Exception"],
         "TypeError" | "ValueError" | "ArgumentCountError" => &["Error"],
-        "Exception" | "Error" => &["Throwable"],
         _ => &[],
     }
 }
@@ -197,12 +199,12 @@ impl Exception {
     pub const PARSE_ERROR: &'static str = "Doctrine\\DBAL\\Exception\\ParseError";
     pub const DATABASE_REQUIRED: &'static str = "Doctrine\\DBAL\\Exception\\DatabaseRequired";
     /// `Doctrine\DBAL\Driver\Exception`: the contract for a driver
-    /// exception, which provides the SQLSTATE of the driver.
+    /// exception, which provides the `SQLSTATE` of the driver.
     pub const DRIVER_EXCEPTION_INTERFACE: &'static str = "Doctrine\\DBAL\\Driver\\Exception";
     /// `Doctrine\DBAL\Driver\AbstractException`.
     pub const ABSTRACT_DRIVER_EXCEPTION: &'static str = "Doctrine\\DBAL\\Driver\\AbstractException";
-    /// `Doctrine\DBAL\Driver\PDO\Exception`, what the SQLite driver throws
-    /// (it stands where the PDO SQLite driver stands).
+    /// `Doctrine\DBAL\Driver\PDO\Exception`, what the `SQLite` driver throws
+    /// (it stands where the PDO `SQLite` driver stands).
     pub const PDO_EXCEPTION: &'static str = "Doctrine\\DBAL\\Driver\\PDO\\Exception";
     pub const PDO_INVALID_CONFIGURATION: &'static str =
         "Doctrine\\DBAL\\Driver\\PDO\\Exception\\InvalidConfiguration";
@@ -231,7 +233,7 @@ impl Exception {
         self
     }
 
-    /// `getSQLState()`: the SQLSTATE the driver was in at the time the
+    /// `getSQLState()`: the `SQLSTATE` the driver was in at the time the
     /// error occurred, if any. A `DriverException` reads it from the
     /// driver exception it wraps.
     pub fn sql_state(&self) -> Option<&str> {

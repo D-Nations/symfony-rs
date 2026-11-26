@@ -12,6 +12,6 @@ pub mod sqlite;
 pub trait ExceptionConverter: Send + Sync {
     /// Converts a given driver-level exception into a DBAL-level driver
     /// exception (a `DriverException` or one of its subclasses), using the
-    /// vendor-specific error code and SQLSTATE of the exception.
+    /// vendor-specific error code and `SQLSTATE` of the exception.
     fn convert(&self, exception: Exception, query: Option<Query>) -> Exception;
 }

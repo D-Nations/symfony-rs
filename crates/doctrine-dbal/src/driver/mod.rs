@@ -53,14 +53,14 @@ pub trait Driver: Send + Sync {
         params: &'a PhpArray,
     ) -> BoxFuture<'a, std::result::Result<Arc<dyn Connection>, Exception>>;
 
-    /// Gets the DatabasePlatform instance that provides all the metadata
+    /// Gets the `DatabasePlatform` instance that provides all the metadata
     /// about the platform this driver connects to.
     fn get_database_platform<'a>(
         &'a self,
         version_provider: &'a dyn ServerVersionProvider,
     ) -> BoxFuture<'a, std::result::Result<PlatformBox, Exception>>;
 
-    /// Gets the ExceptionConverter that can be used to convert driver-level
+    /// Gets the `ExceptionConverter` that can be used to convert driver-level
     /// exceptions into DBAL exceptions.
     fn get_exception_converter(&self) -> Arc<dyn api::ExceptionConverter>;
 }
