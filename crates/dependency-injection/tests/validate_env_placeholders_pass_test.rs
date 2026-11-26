@@ -5,11 +5,13 @@
 //! `ConfigurationWithArrayNodeRequiringOneElement` are config trees.
 //! An exception class is checked by its class name.
 //!
-//! Pending: testDiscardedEnvInConfig (it calls `compile()`, which stops
-//! at the first pass that is not ported yet).
+//! testDiscardedEnvInConfig's `compile()` is `support::compile()`
+//! (nothing is autowired), with `support::EnvDefaults` reading env vars.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/ValidateEnvPlaceholdersPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used, clippy::too_many_lines)]
+
+mod support;
 
 use std::sync::{Arc, Mutex};
 
@@ -561,4 +563,21 @@ fn testEmptyConfigFromMoreThanOneSource() {
         .unwrap();
 
     do_process(&mut container).unwrap();
+}
+
+#[test]
+fn testDiscardedEnvInConfig() {
+    let mut container = ContainerBuilder::new();
+    container.set_env_var_resolver(Arc::new(support::EnvDefaults));
+    container.set_parameter("env(BOOLISH)", "1").unwrap();
+    container.set_parameter("boolish", "%env(BOOLISH)%").unwrap();
+    container.register_extension(Arc::new(EnvExtension::new()));
+    container.prepend_extension_config(
+        "env_extension",
+        php_array!["array_node" => php_array!["bool_force_cast" => "%boolish%"]],
+    );
+
+    support::compile(&mut container, true).unwrap();
+
+    assert_same(&Value::from("1"), &container.get_parameter("boolish").unwrap());
 }
