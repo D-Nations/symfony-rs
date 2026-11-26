@@ -103,6 +103,10 @@ impl SessionHandlerInterface for StrictSessionHandler {
         super::abstract_session_handler::CLASS.to_owned()
     }
 
+    fn is_strict_wrapper(&self) -> bool {
+        self.is_wrapper()
+    }
+
     fn open(&self, save_path: &[u8], session_name: &[u8]) -> HandlerResult<bool> {
         self.parent.open(save_path, session_name);
         self.handler.open(save_path, session_name)

@@ -23,6 +23,7 @@ pub mod identity_marshaller;
 pub mod marshaller_interface;
 pub mod marshalling_session_handler;
 pub mod migrating_session_handler;
+pub mod native_file_session_handler;
 pub mod null_session_handler;
 pub mod strict_session_handler;
 
@@ -73,6 +74,11 @@ pub trait SessionHandlerInterface: fmt::Debug + Send + Sync {
 
     /// `$handler instanceof \SessionHandler`.
     fn is_native(&self) -> bool {
+        false
+    }
+
+    /// `$handler instanceof StrictSessionHandler && $handler->isWrapper()`.
+    fn is_strict_wrapper(&self) -> bool {
         false
     }
 }
