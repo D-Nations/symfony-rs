@@ -121,13 +121,14 @@ fn registry() -> Arc<ClassRegistry> {
             target(param("commonName", None), "commonName"),
         ])),
     );
-    let mut set_default_locale =
-        MethodMetadata::public("setDefaultLocale").with_parameters(vec![param("defaultLocale", None)]);
+    let mut set_default_locale = MethodMetadata::public("setDefaultLocale")
+        .with_parameters(vec![param("defaultLocale", None)]);
     set_default_locale.attributes.push(AttributeMetadata {
         class: REQUIRED.to_string(),
         arguments: PhpArray::new(),
     });
-    registry.add_class(ClassMetadata::class(&fixture("ScalarSetter")).with_method(set_default_locale));
+    registry
+        .add_class(ClassMetadata::class(&fixture("ScalarSetter")).with_method(set_default_locale));
     Arc::new(registry)
 }
 
@@ -426,11 +427,9 @@ fn testSyntheticServiceWithBind() {
 
     let mut expected = PhpArray::new();
     expected.insert(1, Value::from("bar"));
-    assert!(
-        Value::Array(expected).identical(&Value::Array(
-            container.get_definition(&class).unwrap().arguments()
-        ))
-    );
+    assert!(Value::Array(expected).identical(&Value::Array(
+        container.get_definition(&class).unwrap().arguments()
+    )));
 }
 
 #[test]

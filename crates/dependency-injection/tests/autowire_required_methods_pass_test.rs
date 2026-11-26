@@ -15,7 +15,9 @@ use symfony_dependency_injection::ContainerBuilder;
 use symfony_dependency_injection::class_metadata::{
     AttributeMetadata, ClassMetadata, ClassRegistry, MethodMetadata, ParameterMetadata,
 };
-use symfony_dependency_injection::compiler::{AutowireRequiredMethodsPass, CompilerPassInterface, ResolveClassPass};
+use symfony_dependency_injection::compiler::{
+    AutowireRequiredMethodsPass, CompilerPassInterface, ResolveClassPass,
+};
 
 const NS: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\";
 const FIXTURES: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\";

@@ -570,7 +570,9 @@ fn testDiscardedEnvInConfig() {
     let mut container = ContainerBuilder::new();
     container.set_env_var_resolver(Arc::new(support::EnvProcessor::new()));
     container.set_parameter("env(BOOLISH)", "1").unwrap();
-    container.set_parameter("boolish", "%env(BOOLISH)%").unwrap();
+    container
+        .set_parameter("boolish", "%env(BOOLISH)%")
+        .unwrap();
     container.register_extension(Arc::new(EnvExtension::new()));
     container.prepend_extension_config(
         "env_extension",
@@ -579,5 +581,8 @@ fn testDiscardedEnvInConfig() {
 
     support::compile(&mut container, true).unwrap();
 
-    assert_same(&Value::from("1"), &container.get_parameter("boolish").unwrap());
+    assert_same(
+        &Value::from("1"),
+        &container.get_parameter("boolish").unwrap(),
+    );
 }

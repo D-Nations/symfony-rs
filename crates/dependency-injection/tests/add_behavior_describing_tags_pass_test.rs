@@ -102,12 +102,15 @@ fn testProcessWithExistingParameter() {
 #[test]
 fn testDefaultTagsCoverServiceSubscriberLocatorAndProxyTagsKeptByDecoratorServicePass() {
     let mut container = ContainerBuilder::new();
-    container.register("foo", None).unwrap().set_tags(php_array![
-        "proxy" => "foo",
-        "container.service_subscriber" => php_array![],
-        "container.service_subscriber.locator" => php_array![],
-        "bar" => php_array!["attr" => "baz"],
-    ]);
+    container
+        .register("foo", None)
+        .unwrap()
+        .set_tags(php_array![
+            "proxy" => "foo",
+            "container.service_subscriber" => php_array![],
+            "container.service_subscriber.locator" => php_array![],
+            "bar" => php_array!["attr" => "baz"],
+        ]);
     container
         .register("baz", None)
         .unwrap()

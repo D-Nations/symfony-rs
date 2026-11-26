@@ -24,7 +24,12 @@
 //!   whose `getSubscribedServices()` gives what the trait returns.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/RegisterServiceSubscribersPassTest.php
-#![allow(non_snake_case, clippy::unwrap_used, clippy::too_many_lines)]
+#![allow(
+    non_snake_case,
+    clippy::unwrap_used,
+    clippy::too_many_lines,
+    clippy::disallowed_names
+)]
 
 mod support;
 
@@ -85,7 +90,11 @@ fn container() -> ContainerBuilder {
             ]),
         ),
     );
-    let (def1, def2, def3) = (f("TestDefinition1"), f("TestDefinition2"), f("TestDefinition3"));
+    let (def1, def2, def3) = (
+        f("TestDefinition1"),
+        f("TestDefinition2"),
+        f("TestDefinition3"),
+    );
     let mut services = PhpArray::list([Value::from(format!("string|{def2}|{def1}"))]);
     services.insert("bar", Value::from(format!("{def1}|{def2}")));
     services.insert("baz", Value::from(format!("?{def1}|{def2}")));
@@ -93,27 +102,44 @@ fn container() -> ContainerBuilder {
     let mut services = PhpArray::list([Value::from(format!("{def1}&{def2}"))]);
     services.insert("bar", Value::from(format!("{def1}&{def2}")));
     services.insert("baz", Value::from(format!("?{def1}&{def2}")));
-    registry.add_class(subscriber(&f("TestServiceSubscriberIntersection"), services));
+    registry.add_class(subscriber(
+        &f("TestServiceSubscriberIntersection"),
+        services,
+    ));
     // ServiceMethodsSubscriberTrait::getSubscribedServices() of the fixtures.
-    let (parent, child) = (f("TestServiceSubscriberParent"), f("TestServiceSubscriberChild"));
+    let (parent, child) = (
+        f("TestServiceSubscriberParent"),
+        f("TestServiceSubscriberChild"),
+    );
     let mut parent_services = PhpArray::new();
-    parent_services.insert(format!("{parent}::testDefinition1").as_str(), Value::from(def1.as_str()));
+    parent_services.insert(
+        format!("{parent}::testDefinition1").as_str(),
+        Value::from(def1.as_str()),
+    );
     registry.add_class(subscriber(&parent, parent_services.clone()));
     let mut services = parent_services;
-    services.insert(format!("{child}::testDefinition2").as_str(), Value::from(format!("?{def2}")));
+    services.insert(
+        format!("{child}::testDefinition2").as_str(),
+        Value::from(format!("?{def2}")),
+    );
     services.insert("custom_name", Value::from(def3.as_str()));
     services.insert(
         format!("{child}::invalidDefinition").as_str(),
         Value::from(f("InvalidDefinition")),
     );
-    services.insert(format!("{child}::testDefinition4").as_str(), Value::from(def3.as_str()));
+    services.insert(
+        format!("{child}::testDefinition4").as_str(),
+        Value::from(def3.as_str()),
+    );
     registry.add_class(
-        ClassMetadata::class(&child).with_parent(&parent).with_method(
-            MethodMetadata::public("getSubscribedServices")
-                .with_static(true)
-                .with_return_type("array")
-                .with_returns(Value::Array(services)),
-        ),
+        ClassMetadata::class(&child)
+            .with_parent(&parent)
+            .with_method(
+                MethodMetadata::public("getSubscribedServices")
+                    .with_static(true)
+                    .with_return_type("array")
+                    .with_returns(Value::Array(services)),
+            ),
     );
     let union_trait = f("TestServiceSubscriberUnionWithTrait");
     let mut services = PhpArray::new();
@@ -121,7 +147,10 @@ fn container() -> ContainerBuilder {
         format!("{union_trait}::method1").as_str(),
         Value::from(format!("?{def1}|{def2}|null")),
     );
-    services.insert(format!("{union_trait}::method2").as_str(), Value::from(format!("{def1}|{def2}")));
+    services.insert(
+        format!("{union_trait}::method2").as_str(),
+        Value::from(format!("{def1}|{def2}")),
+    );
     registry.add_class(subscriber(&union_trait, services));
     let intersection_trait = f("TestServiceSubscriberIntersectionWithTrait");
     let mut services = PhpArray::new();
@@ -410,7 +439,10 @@ fn testExtraServiceSubscriber() {
             php_array!["key" => "test", "id" => f("TestServiceSubscriber")],
         );
     container
-        .register(&f("TestServiceSubscriber"), Some(&f("TestServiceSubscriber")))
+        .register(
+            &f("TestServiceSubscriber"),
+            Some(&f("TestServiceSubscriber")),
+        )
         .unwrap();
 
     let e = support::compile(&mut container, false).unwrap_err();
@@ -444,7 +476,10 @@ fn method_subscriber(container: &mut ContainerBuilder, class: &str) -> Definitio
 #[test]
 fn testServiceMethodsSubscriberTraitWithSubscribedServiceAttribute() {
     let mut container = container();
-    let (child, parent) = (f("TestServiceSubscriberChild"), f("TestServiceSubscriberParent"));
+    let (child, parent) = (
+        f("TestServiceSubscriberChild"),
+        f("TestServiceSubscriberParent"),
+    );
     let locator = method_subscriber(&mut container, &child);
 
     let (def1, def2, def3, invalid) = (

@@ -364,7 +364,7 @@ fn testTagAddedByAutoconfigurationDoesNotOverrideThePriority() {
         ("service1", typed("service1", "stdClass")),
     ];
     let services = test(
-        &IteratorArgument::tagged("my_custom_tag", None, true, Vec::new(), true),
+        IteratorArgument::tagged("my_custom_tag", None, true, Vec::new(), true),
         &mut container,
     );
     assert_refs(&expected, &services);

@@ -183,9 +183,7 @@ fn testExtensionAlsoRegisteredAsCompilerPassIsProcessedOnceAtItsOwnPriority() {
 
     support::compile(&mut container, false).unwrap();
 
-    assert!(
-        Value::Int(1).identical(&container.get_parameter("test.processed").unwrap())
-    );
+    assert!(Value::Int(1).identical(&container.get_parameter("test.processed").unwrap()));
     assert!(
         Value::Bool(true).identical(
             &container

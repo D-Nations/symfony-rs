@@ -183,13 +183,9 @@ fn testProcessDefersLazyServices() {
     container
         .register("a", None)
         .unwrap()
-        .add_argument(ServiceLocatorArgument::from_tagged(IteratorArgument::tagged(
-            "tag",
-            None,
-            true,
-            Vec::new(),
-            true,
-        )));
+        .add_argument(ServiceLocatorArgument::from_tagged(
+            IteratorArgument::tagged("tag", None, true, Vec::new(), true),
+        ));
     container
         .register("b", None)
         .unwrap()
@@ -200,7 +196,9 @@ fn testProcessDefersLazyServices() {
         .unwrap()
         .add_argument(Reference::new("b"));
 
-    ServiceLocatorTagPass::new().process(&mut container).unwrap();
+    ServiceLocatorTagPass::new()
+        .process(&mut container)
+        .unwrap();
 
     assert_circular(&mut container);
 }

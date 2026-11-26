@@ -27,6 +27,8 @@ fn labelled(label: &str) -> Definition {
     definition
 }
 
+/// `str_ends_with($id, '.inner')` is case-sensitive.
+#[allow(clippy::case_sensitive_file_extension_comparisons)]
 fn has_inner_service(container: &ContainerBuilder) -> bool {
     container
         .get_definitions()
@@ -76,18 +78,11 @@ fn testStackDecoratesExistingService() {
     // The outermost definition should have label 'A'
     let outermost_def = container.get_definition(&outermost_id).unwrap();
     assert!(
-        Value::from("A").identical(
-            outermost_def
-                .properties()
-                .get(&Key::from("label"))
-                .unwrap()
-        )
+        Value::from("A").identical(outermost_def.properties().get(&Key::from("label")).unwrap())
     );
 
     // Follow the chain: the original service should still be accessible
-    assert!(
-        container.has_definition("original_service.inner") || has_inner_service(&container)
-    );
+    assert!(container.has_definition("original_service.inner") || has_inner_service(&container));
 }
 
 #[test]

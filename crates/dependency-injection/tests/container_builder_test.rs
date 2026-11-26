@@ -1571,7 +1571,8 @@ fn testParameterDeprecationIsTrgiggeredWhenCompiled() {
         .map(|d| String::from_utf8_lossy(&d.message).into_owned())
         .collect();
     assert!(
-        messages.contains(&"Since symfony/test 6.3: The parameter \"bar\" is deprecated.".to_string()),
+        messages
+            .contains(&"Since symfony/test 6.3: The parameter \"bar\" is deprecated.".to_string()),
         "{messages:?}"
     );
 }
@@ -1579,9 +1580,7 @@ fn testParameterDeprecationIsTrgiggeredWhenCompiled() {
 #[test]
 fn testCompileWithArrayResolveEnv() {
     let mut container = env_container(&["ARRAY={\"foo\":\"bar\"}"]);
-    container
-        .set_parameter("foo", "%env(json:ARRAY)%")
-        .unwrap();
+    container.set_parameter("foo", "%env(json:ARRAY)%").unwrap();
     support::compile(&mut container, true).unwrap();
 
     let mut expected = PhpArray::new();
@@ -1592,9 +1591,7 @@ fn testCompileWithArrayResolveEnv() {
 #[test]
 fn testCompileWithArrayAndAnotherResolveEnv() {
     let mut container = env_container(&["DUMMY_ENV_VAR=abc", "ARRAY={\"foo\":\"bar\"}"]);
-    container
-        .set_parameter("foo", "%env(json:ARRAY)%")
-        .unwrap();
+    container.set_parameter("foo", "%env(json:ARRAY)%").unwrap();
     container
         .set_parameter("bar", "%env(DUMMY_ENV_VAR)%")
         .unwrap();
@@ -1653,9 +1650,7 @@ fn testDynamicEnv() {
 #[test]
 fn testFallbackEnv() {
     let mut container = env_container(&["DUMMY_FOO=foo"]);
-    container
-        .set_parameter("foo", "%env(DUMMY_FOO)%")
-        .unwrap();
+    container.set_parameter("foo", "%env(DUMMY_FOO)%").unwrap();
     container
         .set_parameter("bar", "bar%env(default:foo:DUMMY_BAR)%")
         .unwrap();

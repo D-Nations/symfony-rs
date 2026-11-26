@@ -16,7 +16,7 @@ use symfony_dependency_injection::container_builder::EnvVarResolver;
 use symfony_dependency_injection::env_var_processor_interface::EnvVarProcessorInterface;
 use symfony_dependency_injection::parameter_bag::ParameterBag;
 use symfony_dependency_injection::{
-    ContainerBuilder, ContainerInterface, Error, EnvVarProcessor, InvalidBehavior, Result,
+    ContainerBuilder, ContainerInterface, EnvVarProcessor, Error, InvalidBehavior, Result,
 };
 use symfony_dotenv::Globals;
 
