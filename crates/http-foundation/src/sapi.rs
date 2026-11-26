@@ -1015,6 +1015,15 @@ impl Sapi {
         false
     }
 
+    /// `@ob_flush()`: the innermost buffer's content goes to the next
+    /// level and the buffer stays; without one, nothing.
+    pub fn ob_flush(&mut self) {
+        if let Some(buffer) = self.buffers.pop() {
+            self.write(&buffer);
+            self.buffers.push(Vec::new());
+        }
+    }
+
     /// `echo`.
     pub fn echo(&mut self, bytes: &[u8]) {
         self.write(bytes);
@@ -1102,6 +1111,7 @@ impl Sapi {
                 self.ob_end_clean();
             }
             OutputCall::Flush => self.flush(),
+            OutputCall::ObFlush => self.ob_flush(),
         }
     }
 

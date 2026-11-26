@@ -64,9 +64,7 @@ impl HttpKernelRunner {
             self.kernel
                 .handle(&self.request, <dyn HttpKernelInterface>::MAIN_REQUEST, true)?;
 
-        response
-            .with_mut(|r| r.send(false).map(|_| ()))
-            .map_err(|e| Arc::new(e) as Throwable)?;
+        response.with_mut(|r| r.send(false).map(|_| ()))?;
 
         let finish = with_output(|o| o.finish_request);
         if finish == FinishRequest::FastCgi && !self.debug {

@@ -197,7 +197,7 @@ fn state(response: &ResponseHandle) -> Json {
         json!([
             r.get_status_code(),
             b64(r.status_text().as_bytes()),
-            b64(r.get_content().as_bytes()),
+            b64(r.get_content().cloned().unwrap_or_default().as_bytes()),
             typed(&Value::Array(headers))
         ])
     })

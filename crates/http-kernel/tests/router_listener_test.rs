@@ -429,7 +429,12 @@ fn testNoRoutingConfigurationResponse() {
         assert_eq!(404, response.with(Response::get_status_code));
         assert!(
             response
-                .with(|r| r.get_content().to_string_lossy().into_owned())
+                .with(|r| r
+                    .get_content()
+                    .cloned()
+                    .unwrap_or_default()
+                    .to_string_lossy()
+                    .into_owned())
                 .contains("Welcome")
         );
     }
@@ -496,7 +501,12 @@ fn testRoutingContextOfTheParentIsRestoredAfterNestedMainRequest() {
     let response = kernel.handle(&request, 1, true).unwrap();
     assert_eq!(
         "http://example.com",
-        response.with(|r| r.get_content().to_string_lossy().into_owned())
+        response.with(|r| r
+            .get_content()
+            .cloned()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .into_owned())
     );
 }
 

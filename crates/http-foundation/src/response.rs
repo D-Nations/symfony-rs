@@ -41,6 +41,7 @@ use crate::{
         PHP_OUTPUT_HANDLER_REMOVABLE, with_output,
     },
     request::Request,
+    streamed_response::{Stream, Throwable},
 };
 
 /// `Response::class`.
@@ -154,6 +155,8 @@ pub struct Response {
     /// `$this->sentHeaders`: headers already sent in informational
     /// responses.
     sent_headers: Vec<(Key, Values)>,
+    /// The `StreamedResponse` state, for an instance of that subclass.
+    stream: Option<Box<Stream>>,
 }
 
 impl Default for Response {
@@ -167,6 +170,7 @@ impl Default for Response {
             status_text: PhpString::from("OK"),
             charset: None,
             sent_headers: Vec::new(),
+            stream: None,
         }
     }
 }
@@ -369,10 +373,48 @@ impl Response {
             headers,
             ..Self::default()
         };
-        response.set_content(content.map(Into::into));
+        response.set_content(content.map(Into::into))?;
         response.set_status_code(status, None)?;
         response.set_protocol_version("1.0");
         Ok(response)
+    }
+
+    /// `new StreamedResponse(...)`'s `parent::__construct(null, $status,
+    /// $headers)`, with the subclass's state (see
+    /// [`crate::streamed_response::new`]).
+    pub(crate) fn with_stream(
+        status: i64,
+        headers: ResponseHeaderBag,
+        stream: Stream,
+    ) -> Result<Self> {
+        let mut response = Self {
+            headers,
+            stream: Some(Box::new(stream)),
+            ..Self::default()
+        };
+        response.set_status_code(status, None)?;
+        response.set_protocol_version("1.0");
+        Ok(response)
+    }
+
+    /// The `StreamedResponse` state: `Some` for `$response instanceof
+    /// StreamedResponse`.
+    pub fn stream(&self) -> Option<&Stream> {
+        self.stream.as_deref()
+    }
+
+    /// The `StreamedResponse` state, to set its callback or chunks.
+    pub fn stream_mut(&mut self) -> Option<&mut Stream> {
+        self.stream.as_deref_mut()
+    }
+
+    /// `$response::class`.
+    pub fn class(&self) -> &'static str {
+        if self.stream.is_some() {
+            crate::streamed_response::CLASS
+        } else {
+            CLASS
+        }
     }
 
     /// `$response->headers`.
@@ -405,7 +447,10 @@ impl Response {
         text.extend_from_slice(b"\r\n");
         text.extend_from_slice(self.headers.to_php_string().as_bytes());
         text.extend_from_slice(b"\r\n");
-        text.extend_from_slice(self.content.as_bytes());
+        // `getContent()`; a streamed response's `false` is `''`.
+        if let Some(content) = self.get_content() {
+            text.extend_from_slice(content.as_bytes());
+        }
         PhpString::from(text)
     }
 
@@ -425,7 +470,7 @@ impl Response {
     /// for the request it answers.
     pub fn prepare(&mut self, request: &mut Request) -> Result<&mut Self> {
         if self.is_informational() || self.is_empty() {
-            self.set_content(None);
+            self.set_content(None)?;
             self.headers.remove("Content-Type");
             self.headers.remove("Content-Length");
             // prevent PHP from sending the Content-Type header based on default_mimetype
@@ -468,7 +513,7 @@ impl Response {
             if request.is_method("HEAD")? {
                 // cf. RFC2616 14.13
                 let length = self.headers.get("Content-Length", None);
-                self.set_content(None);
+                self.set_content(None)?;
                 if let Some(length) = length
                     && Value::String(length.clone()).is_truthy()
                 {
@@ -513,7 +558,19 @@ impl Response {
     /// status line. A 1xx `status_code` sends an informational response
     /// (`headers_send()`) where the SAPI has it, without changing the
     /// response's own status.
+    ///
+    /// A `StreamedResponse` sends them once: after a call that was not
+    /// informational, later calls do nothing.
     pub fn send_headers(&mut self, status_code: Option<i64>) -> Result<&mut Self> {
+        if let Some(stream) = &mut self.stream {
+            if stream.headers_sent {
+                return Ok(self);
+            }
+            // `$statusCode < 100 || $statusCode >= 200`; null is below 100.
+            if !status_code.is_some_and(|code| (100..200).contains(&code)) {
+                stream.headers_sent = true;
+            }
+        }
         let (headers_sent, sapi, headers_send_exists) =
             with_output(|o| (o.headers_sent, o.sapi.clone(), o.headers_send_exists));
         // headers have already been sent by the developer
@@ -605,19 +662,26 @@ impl Response {
         Ok(self)
     }
 
-    /// `sendContent()`: `echo $this->content`.
-    pub fn send_content(&mut self) -> &mut Self {
+    /// `sendContent()`: `echo $this->content`. A `StreamedResponse` runs
+    /// its callback instead, once; without one it throws
+    /// `\LogicException`, and what the callback throws is passed on.
+    pub fn send_content(&mut self) -> std::result::Result<&mut Self, Throwable> {
+        if let Some(stream) = &mut self.stream {
+            stream.send_content()?;
+            return Ok(self);
+        }
         let content = self.content.clone();
         with_output(|o| o.calls.push(OutputCall::Echo(content)));
-        self
+        Ok(self)
     }
 
     /// `send($flush)`: headers and content, then the request is finished
     /// (`fastcgi_finish_request()`, `litespeed_finish_request()`, or the
     /// output buffers flushed outside the CLI).
-    pub fn send(&mut self, flush: bool) -> Result<&mut Self> {
-        self.send_headers(None)?;
-        self.send_content();
+    pub fn send(&mut self, flush: bool) -> std::result::Result<&mut Self, Throwable> {
+        self.send_headers(None)
+            .map_err(|e| std::sync::Arc::new(e) as Throwable)?;
+        self.send_content()?;
 
         if !flush {
             return Ok(self);
@@ -642,15 +706,35 @@ impl Response {
         Ok(self)
     }
 
-    /// `setContent($content)`; null is `''`.
-    pub fn set_content(&mut self, content: Option<PhpString>) -> &mut Self {
+    /// `setContent($content)`; null is `''`. A `StreamedResponse` takes
+    /// only null, which marks its content as sent; other content throws
+    /// `\LogicException`.
+    pub fn set_content(&mut self, content: Option<PhpString>) -> Result<&mut Self> {
+        if let Some(stream) = &mut self.stream {
+            if content.is_some() {
+                return Err(Error::new(
+                    Class::PhpLogic,
+                    "The content cannot be set on a StreamedResponse instance.",
+                ));
+            }
+            stream.streamed = true;
+            return Ok(self);
+        }
         self.content = content.unwrap_or_default();
-        self
+        Ok(self)
     }
 
-    /// `getContent()`.
-    pub fn get_content(&self) -> &PhpString {
+    /// `$this->content`, for the subclasses whose `getContent()` is it.
+    pub(crate) fn content(&self) -> &PhpString {
         &self.content
+    }
+
+    /// `getContent()`: `None` is a `StreamedResponse`'s `false`.
+    pub fn get_content(&self) -> Option<&PhpString> {
+        if self.stream.is_some() {
+            return None;
+        }
+        Some(&self.content)
     }
 
     /// `setProtocolVersion($version)`.
@@ -1074,7 +1158,8 @@ impl Response {
     pub fn set_not_modified(&mut self) -> &mut Self {
         // 304 is a valid code.
         let _ = self.set_status_code(304, None);
-        self.set_content(None);
+        // Null content is always accepted.
+        let _ = self.set_content(None);
 
         // remove headers that MUST NOT be included with 304 Not Modified responses
         for header in [

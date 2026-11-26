@@ -32,6 +32,7 @@ use symfony_http_foundation::{
     request::Request,
     request_stack::{RequestHandle, RequestStack},
     response::Response,
+    streamed_response::{self, CallbackOrChunks},
 };
 use symfony_http_kernel::{
     controller::{
@@ -181,7 +182,13 @@ fn message_listener(dispatcher: &Arc<EventDispatcher>) {
 }
 
 fn content(response: &ResponseHandle) -> String {
-    response.with(|r| r.get_content().to_string_lossy().into_owned())
+    response.with(|r| {
+        r.get_content()
+            .cloned()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .into_owned()
+    })
 }
 
 fn status(response: &ResponseHandle) -> i64 {
@@ -816,6 +823,58 @@ fn testVerifyRequestStackPushPopDuringHandle() {
     assert_eq!(1, seen.len());
     assert!(request.same(&seen[0]));
     assert!(stack.get_current_request().is_none());
+}
+
+#[test]
+fn testVerifyRequestStackPushPopWithStreamedResponse() -> Result<(), Error> {
+    let request = new_request();
+    let stack = RequestStack::default();
+    let dispatcher = Arc::new(EventDispatcher::new());
+    let observed = stack.clone();
+    let streamed = streamed_response::new(
+        CallbackOrChunks::Callback(Arc::new(move || {
+            // `echo $stack->getMainRequest()::class`; `null::class` is an
+            // `\Error`.
+            let Some(_) = observed.get_main_request() else {
+                return Err(
+                    PhpException::new(PhpClass::Error, "Cannot use \"::class\" on null")
+                        .throwable(),
+                );
+            };
+            streamed_response::echo(symfony_http_foundation::request::CLASS);
+            Ok(())
+        })),
+        200,
+        ResponseHeaderBag::empty(),
+    )?;
+    let kernel = get_http_kernel(
+        &dispatcher,
+        Ctl::Is(returns(Handle::new(streamed))),
+        Some(stack.clone()),
+        Vec::new(),
+        false,
+    );
+
+    let response = kernel.handle(&request, MAIN_REQUEST, true)?;
+    assert!(stack.get_main_request().is_none());
+    with_output(|o| o.calls.clear());
+    response.with_mut(|r| r.send(true).map(|_| ()))?;
+    let echoed: Vec<u8> = with_output(|o| {
+        o.calls
+            .iter()
+            .filter_map(|call| match call {
+                OutputCall::Echo(text) => Some(text.as_bytes().to_vec()),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+            .concat()
+    });
+    assert_eq!(
+        symfony_http_foundation::request::CLASS.as_bytes(),
+        echoed.as_slice()
+    );
+    assert!(stack.get_main_request().is_none());
+    Ok(())
 }
 
 #[test]

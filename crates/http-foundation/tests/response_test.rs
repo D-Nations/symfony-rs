@@ -252,7 +252,7 @@ fn testMustRevalidateWithProxyRevalidateCacheControlHeader() {
 }
 
 #[test]
-fn testSetNotModified() {
+fn testSetNotModified() -> TestResult {
     let _clock = clock();
     let mut response = new_response("foo", 200, []);
     let pointer: *const Response = &raw const response;
@@ -260,9 +260,10 @@ fn testSetNotModified() {
     assert!(std::ptr::eq(pointer, modified));
     assert_eq!(304, modified.get_status_code());
 
-    modified.send_content();
+    modified.send_content()?;
     let string = echoed();
     assert_eq!(vec![PhpString::default()], string);
+    Ok(())
 }
 
 #[test]
@@ -993,7 +994,7 @@ fn testPrepareRemovesContentForHeadRequests() -> TestResult {
     set(&mut response, "Content-Length", length);
     response.prepare(&mut request)?;
 
-    assert_eq!(&PhpString::default(), response.get_content());
+    assert_eq!(Some(&PhpString::default()), response.get_content());
     assert_eq!(
         s(length),
         response.headers().get("Content-Length", None),
@@ -1008,16 +1009,16 @@ fn testPrepareRemovesContentForInformationalResponse() -> TestResult {
     let mut response = new_response("foo", 200, []);
     let mut request = Request::create("/")?;
 
-    response.set_content(s("content"));
+    response.set_content(s("content"))?;
     response.set_status_code(101, None)?;
     response.prepare(&mut request)?;
-    assert_eq!(&PhpString::default(), response.get_content());
+    assert_eq!(Some(&PhpString::default()), response.get_content());
     assert!(!response.headers().has("Content-Type"));
 
-    response.set_content(s("content"));
+    response.set_content(s("content"))?;
     response.set_status_code(304, None)?;
     response.prepare(&mut request)?;
-    assert_eq!(&PhpString::default(), response.get_content());
+    assert_eq!(Some(&PhpString::default()), response.get_content());
     assert!(!response.headers().has("Content-Type"));
     assert!(!response.headers().has("Content-Length"));
     Ok(())
@@ -1215,13 +1216,14 @@ fn testSetCache() -> TestResult {
 }
 
 #[test]
-fn testSendContent() {
+fn testSendContent() -> TestResult {
     let _clock = clock();
     let mut response = new_response("test response rendering", 200, []);
 
-    response.send_content();
+    response.send_content()?;
     let string = echoed().concat();
     assert!(string.windows(23).any(|w| w == b"test response rendering"));
+    Ok(())
 }
 
 #[test]
@@ -1527,7 +1529,7 @@ fn testSetEtag() -> TestResult {
 /// `validContentProvider()`: PHP coerces the object and the int to the
 /// `?string` parameter (no `strict_types`); here the caller does.
 #[test]
-fn testSetContent() {
+fn testSetContent() -> TestResult {
     let _clock = clock();
     let rows = [
         (
@@ -1542,13 +1544,14 @@ fn testSetContent() {
     ];
     for (name, content) in rows {
         let mut response = Response::default();
-        response.set_content(content.to_php_string_or_stringable());
+        response.set_content(content.to_php_string_or_stringable())?;
         assert_eq!(
-            &content.to_php_string_or_stringable().unwrap(),
+            Some(&content.to_php_string_or_stringable().unwrap()),
             response.get_content(),
             "{name}"
         );
     }
+    Ok(())
 }
 
 #[test]
