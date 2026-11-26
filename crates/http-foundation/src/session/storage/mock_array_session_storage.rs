@@ -217,8 +217,9 @@ impl SessionStorageInterface for MockArraySessionStorage {
         self.state().name.clone()
     }
 
-    fn set_name(&self, name: &str) {
+    fn set_name(&self, name: &str) -> Result<()> {
         name.clone_into(&mut self.state().name);
+        Ok(())
     }
 
     fn regenerate(&self, _destroy: bool, lifetime: Option<i64>) -> Result<bool> {
@@ -260,13 +261,14 @@ impl SessionStorageInterface for MockArraySessionStorage {
         self.get_bag_with(name, || self.start())
     }
 
-    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) {
+    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) -> Result<()> {
         let name = bag.get_name();
         let mut state = self.state();
         match state.bags.iter_mut().find(|(n, _)| *n == name) {
             Some(entry) => entry.1 = bag,
             None => state.bags.push((name, bag)),
         }
+        Ok(())
     }
 
     fn get_metadata_bag(&self) -> Arc<MetadataBag> {

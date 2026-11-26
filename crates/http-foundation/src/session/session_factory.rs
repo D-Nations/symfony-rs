@@ -53,6 +53,6 @@ impl SessionFactoryInterface for SessionFactory {
             None,
             None,
             self.usage_reporter.clone(),
-        )))
+        )?))
     }
 }

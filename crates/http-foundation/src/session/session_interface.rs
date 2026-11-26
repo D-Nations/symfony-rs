@@ -23,7 +23,7 @@ pub trait SessionInterface: fmt::Debug + Send + Sync {
     /// `getName()`.
     fn get_name(&self) -> String;
     /// `setName($name)`.
-    fn set_name(&self, name: &str);
+    fn set_name(&self, name: &str) -> Result<()>;
     /// `invalidate($lifetime)`: the data cleared, under a new id.
     fn invalidate(&self, lifetime: Option<i64>) -> Result<bool>;
     /// `migrate($destroy, $lifetime)`: the data kept, under a new id.
@@ -47,7 +47,7 @@ pub trait SessionInterface: fmt::Debug + Send + Sync {
     /// `isStarted()`.
     fn is_started(&self) -> bool;
     /// `registerBag($bag)`.
-    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>);
+    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) -> Result<()>;
     /// `getBag($name)`.
     fn get_bag(&self, name: &str) -> Result<Arc<dyn SessionBagInterface>>;
     /// `getMetadataBag()`.

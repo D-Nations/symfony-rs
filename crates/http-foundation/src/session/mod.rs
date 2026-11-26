@@ -219,7 +219,7 @@ impl Session {
         attributes: Option<Arc<dyn AttributeBagInterface>>,
         flashes: Option<Arc<dyn FlashBagInterface>>,
         usage_reporter: Option<UsageReporter>,
-    ) -> Self {
+    ) -> Result<Self> {
         let attributes = attributes.unwrap_or_else(|| Arc::new(AttributeBag::default()));
         let flashes = flashes.unwrap_or_else(|| Arc::new(FlashBag::default()));
         let session = Self {
@@ -230,9 +230,9 @@ impl Session {
             usage_index: Arc::new(AtomicI64::new(0)),
             usage_reporter,
         };
-        session.register_bag(attributes);
-        session.register_bag(flashes);
-        session
+        session.register_bag(attributes)?;
+        session.register_bag(flashes)?;
+        Ok(session)
     }
 
     /// `++$this->usageIndex`, then the reporter when it is not negative.
@@ -309,8 +309,8 @@ impl SessionInterface for Session {
         self.storage.get_name()
     }
 
-    fn set_name(&self, name: &str) {
-        self.storage.set_name(name);
+    fn set_name(&self, name: &str) -> Result<()> {
+        self.storage.set_name(name)
     }
 
     fn invalidate(&self, lifetime: Option<i64>) -> Result<bool> {
@@ -362,13 +362,13 @@ impl SessionInterface for Session {
 
     /// `registerBag($bag)`: the bag, in a proxy that shares this
     /// session's data and usage index.
-    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) {
+    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) -> Result<()> {
         self.storage.register_bag(Arc::new(SessionBagProxy::new(
             bag,
             Arc::clone(&self.data),
             Arc::clone(&self.usage_index),
             self.usage_reporter.clone(),
-        )));
+        )))
     }
 
     /// `getBag($name)`: the storage's bag, or the bag a proxy holds.

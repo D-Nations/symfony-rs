@@ -30,7 +30,7 @@ pub trait SessionStorageInterface: fmt::Debug + Send + Sync {
     fn get_name(&self) -> String;
 
     /// `setName($name)`.
-    fn set_name(&self, name: &str);
+    fn set_name(&self, name: &str) -> Result<()>;
 
     /// `regenerate($destroy, $lifetime)`: a new id for the same data.
     fn regenerate(&self, destroy: bool, lifetime: Option<i64>) -> Result<bool>;
@@ -45,7 +45,7 @@ pub trait SessionStorageInterface: fmt::Debug + Send + Sync {
     fn get_bag(&self, name: &str) -> Result<Arc<dyn SessionBagInterface>>;
 
     /// `registerBag($bag)`.
-    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>);
+    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) -> Result<()>;
 
     /// `getMetadataBag()`.
     fn get_metadata_bag(&self) -> Arc<MetadataBag>;

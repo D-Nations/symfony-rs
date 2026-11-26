@@ -28,7 +28,7 @@ fn map(pairs: Vec<(&str, Value)>) -> PhpArray {
     array
 }
 
-fn set_up() -> MockArraySessionStorage {
+fn set_up() -> Result<MockArraySessionStorage, symfony_http_foundation::exception::Error> {
     let attributes = Arc::new(AttributeBag::default());
     let flashes = Arc::new(FlashBag::default());
     let data = map(vec![
@@ -43,10 +43,10 @@ fn set_up() -> MockArraySessionStorage {
     ]);
 
     let storage = MockArraySessionStorage::default();
-    storage.register_bag(flashes);
-    storage.register_bag(attributes);
+    storage.register_bag(flashes)?;
+    storage.register_bag(attributes)?;
     storage.set_session_data(&data);
-    storage
+    Ok(storage)
 }
 
 fn attributes(
@@ -69,7 +69,7 @@ fn flashes(
 
 #[test]
 fn testStart() -> TestResult {
-    let storage = set_up();
+    let storage = set_up()?;
     assert_eq!("", storage.get_id());
     storage.start()?;
     let id = storage.get_id();
@@ -81,7 +81,7 @@ fn testStart() -> TestResult {
 
 #[test]
 fn testRegenerate() -> TestResult {
-    let storage = set_up();
+    let storage = set_up()?;
     storage.start()?;
     let id = storage.get_id();
     storage.regenerate(false, None)?;
@@ -111,7 +111,7 @@ fn testRegenerate() -> TestResult {
 
 #[test]
 fn testGetId() -> TestResult {
-    let storage = set_up();
+    let storage = set_up()?;
     assert_eq!("", storage.get_id());
     storage.start()?;
     assert_ne!("", storage.get_id());
@@ -120,7 +120,7 @@ fn testGetId() -> TestResult {
 
 #[test]
 fn testClearClearsBags() -> TestResult {
-    let storage = set_up();
+    let storage = set_up()?;
     storage.clear()?;
 
     assert_eq!(PhpArray::new(), attributes(&storage)?.all());
@@ -130,7 +130,7 @@ fn testClearClearsBags() -> TestResult {
 
 #[test]
 fn testClearStartsSession() -> TestResult {
-    let storage = set_up();
+    let storage = set_up()?;
     storage.clear()?;
 
     assert!(storage.is_started());
@@ -149,7 +149,10 @@ fn testClearWithNoBagsStartsSession() -> TestResult {
 
 #[test]
 fn testUnstartedSave() -> TestResult {
-    let error = set_up().save().err().ok_or("expected a RuntimeException")?;
+    let error = set_up()?
+        .save()
+        .err()
+        .ok_or("expected a RuntimeException")?;
     assert!(error.is_a("RuntimeException"));
     Ok(())
 }
