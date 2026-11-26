@@ -129,6 +129,31 @@ pub trait EnvVarResolver: Send + Sync {
 pub type AttributeConfigurator =
     Arc<dyn Fn(&Definition, &AttributeMetadata, &Reflector) -> Result<()> + Send + Sync>;
 
+/// The third parameter of an attribute configurator, which upstream's
+/// `AttributeAutoconfigurationPass` reflects to choose the reflectors the
+/// configurator is called with.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub enum AttributeConfiguratorReflector {
+    /// Two parameters or fewer: called for class attributes.
+    #[default]
+    None,
+    /// The third parameter's declared types (`ReflectionClass`,
+    /// `ReflectionMethod`, `ReflectionProperty`, `ReflectionParameter`,
+    /// `Reflector`).
+    Typed(Vec<String>),
+    /// An untyped third parameter: its name, and the callable's file and
+    /// start line.
+    Untyped {
+        name: String,
+        file: String,
+        line: i64,
+    },
+}
+
+fn configurator_key(configurator: &AttributeConfigurator) -> usize {
+    Arc::as_ptr(configurator).cast::<()>() as usize
+}
+
 /// The target of `setAlias()`: an id or an `Alias`.
 #[derive(Debug, Clone)]
 pub enum AliasTarget {
@@ -227,6 +252,8 @@ pub struct ContainerBuilder {
     env_var_resolver: Option<Arc<dyn EnvVarResolver>>,
     /// `MergeExtensionConfigurationContainerBuilder`'s `$extensionClass`.
     merge_extension_class: Option<String>,
+    /// The third parameter of each attribute configurator, by its address.
+    attribute_configurator_reflectors: HashMap<usize, AttributeConfiguratorReflector>,
 }
 
 impl std::fmt::Debug for ContainerBuilder {
@@ -284,6 +311,7 @@ impl ContainerBuilder {
             classes: Arc::new(ClassRegistry::new()),
             env_var_resolver: None,
             merge_extension_class: None,
+            attribute_configurator_reflectors: HashMap::new(),
         };
         let container = Definition::with_class(CONTAINER_INTERFACE);
         container.set_synthetic(true).set_public(true);
@@ -960,6 +988,11 @@ impl ContainerBuilder {
                 .get_or_insert_with(attribute, Vec::new)
                 .extend(configurators.iter().cloned());
         }
+        for (key, reflector) in &container.attribute_configurator_reflectors {
+            self.attribute_configurator_reflectors
+                .entry(*key)
+                .or_insert_with(|| reflector.clone());
+        }
         Ok(())
     }
 
@@ -1422,6 +1455,30 @@ impl ContainerBuilder {
     /// `getAttributeAutoconfigurators()`.
     pub fn get_attribute_autoconfigurators(&self) -> &IdMap<Vec<AttributeConfigurator>> {
         &self.autoconfigured_attributes
+    }
+
+    /// `registerAttributeForAutoconfiguration()` for a configurator with a
+    /// third parameter, which upstream reflects.
+    pub fn register_attribute_for_autoconfiguration_with_reflector(
+        &mut self,
+        attribute_class: &str,
+        configurator: AttributeConfigurator,
+        reflector: AttributeConfiguratorReflector,
+    ) {
+        self.attribute_configurator_reflectors
+            .insert(configurator_key(&configurator), reflector);
+        self.register_attribute_for_autoconfiguration(attribute_class, configurator);
+    }
+
+    /// The third parameter of a registered attribute configurator.
+    pub fn attribute_configurator_reflector(
+        &self,
+        configurator: &AttributeConfigurator,
+    ) -> AttributeConfiguratorReflector {
+        self.attribute_configurator_reflectors
+            .get(&configurator_key(configurator))
+            .cloned()
+            .unwrap_or_default()
     }
 
     // ----- env vars -----

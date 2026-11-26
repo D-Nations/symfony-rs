@@ -132,7 +132,7 @@ impl PassConfig {
                     pending("ResolveClassPass"),
                     Pass::new(super::RegisterAutoconfigureAttributesPass),
                     Pass::new(super::AutowireAsDecoratorPass),
-                    pending("AttributeAutoconfigurationPass"),
+                    Pass::new(super::AttributeAutoconfigurationPass::new()),
                     pending("ResolveInstanceofConditionalsPass"),
                     Pass::new(super::RegisterEnvVarProcessorsPass),
                 ],
