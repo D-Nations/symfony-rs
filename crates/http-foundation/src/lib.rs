@@ -12,6 +12,7 @@ pub mod accept_header;
 pub mod accept_language;
 pub mod cookie;
 pub mod cookies;
+pub mod event_stream_response;
 pub mod exception;
 pub mod file;
 pub mod file_bag;
@@ -31,6 +32,7 @@ pub mod response;
 pub mod sapi;
 pub mod scheme;
 pub mod server_bag;
+pub mod server_event;
 pub mod streamed_response;
 pub mod uploaded_file;
 

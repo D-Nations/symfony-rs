@@ -29,6 +29,7 @@ use std::{fmt, sync::Arc};
 use php_value::PhpString;
 
 use crate::{
+    event_stream_response::EventStream,
     exception::Result,
     header_bag::ResponseHeaderBag,
     php::{OutputCall, with_output},
@@ -65,6 +66,8 @@ pub struct Stream {
     pub(crate) streamed: bool,
     /// `$this->headersSent`.
     pub(crate) headers_sent: bool,
+    /// The `EventStreamResponse` state, for an instance of that subclass.
+    events: Option<EventStream>,
 }
 
 impl fmt::Debug for Stream {
@@ -73,6 +76,7 @@ impl fmt::Debug for Stream {
             .field("callback", &self.callback.as_ref().map(Arc::as_ptr))
             .field("streamed", &self.streamed)
             .field("headers_sent", &self.headers_sent)
+            .field("events", &self.events)
             .finish()
     }
 }
@@ -86,7 +90,9 @@ impl PartialEq for Stream {
             (Some(a), Some(b)) => std::ptr::addr_eq(Arc::as_ptr(a), Arc::as_ptr(b)),
             _ => false,
         };
-        same && self.streamed == other.streamed && self.headers_sent == other.headers_sent
+        same && self.streamed == other.streamed
+            && self.headers_sent == other.headers_sent
+            && self.events == other.events
     }
 }
 
@@ -109,6 +115,12 @@ impl Stream {
     pub fn set_callback(&mut self, callback: Callback) -> &mut Self {
         self.callback = Some(callback);
         self
+    }
+
+    /// The `EventStreamResponse` state: `Some` for `instanceof
+    /// EventStreamResponse`.
+    pub fn event_stream(&self) -> Option<&EventStream> {
+        self.events.as_ref()
     }
 
     /// `getCallback()`: the callback, or `None` when none is set.
@@ -144,10 +156,30 @@ pub fn new(
     status: i64,
     headers: ResponseHeaderBag,
 ) -> Result<Response> {
+    construct(callback_or_chunks, status, headers, None)
+}
+
+/// `new StreamedResponse(...)` for the `EventStreamResponse` subclass.
+pub(crate) fn new_with_events(
+    callback_or_chunks: CallbackOrChunks,
+    status: i64,
+    headers: ResponseHeaderBag,
+    events: EventStream,
+) -> Result<Response> {
+    construct(callback_or_chunks, status, headers, Some(events))
+}
+
+fn construct(
+    callback_or_chunks: CallbackOrChunks,
+    status: i64,
+    headers: ResponseHeaderBag,
+    events: Option<EventStream>,
+) -> Result<Response> {
     let mut stream = Stream {
         callback: None,
         streamed: false,
         headers_sent: false,
+        events,
     };
     match callback_or_chunks {
         CallbackOrChunks::Callback(callback) => {
