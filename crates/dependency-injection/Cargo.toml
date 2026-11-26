@@ -16,6 +16,8 @@ symfony-config = { path = "../config" }
 psr-container = { path = "../psr-container" }
 # Globals: $_ENV, $_SERVER and getenv() for EnvVarProcessor.
 symfony-dotenv = { path = "../dotenv" }
+# YamlFileLoader parses with it (and its TaggedValue).
+symfony-yaml = { path = "../yaml" }
 
 [dev-dependencies]
 # Replaying the vectors recorded from PHP (tests/data/*.json).

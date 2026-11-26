@@ -32,16 +32,19 @@ use crate::container_builder::ContainerBuilder;
 use crate::exception::{Error, ErrorKind};
 
 pub mod closure_loader;
+mod content_loader_trait;
 pub mod file_loader;
 pub mod glob_file_loader;
 pub mod ini_file_loader;
 pub mod undefined_extension_handler;
+pub mod yaml_file_loader;
 
 pub use closure_loader::ClosureLoader;
 pub use file_loader::{FileLoader, IgnoreErrors};
 pub use glob_file_loader::GlobFileLoader;
 pub use ini_file_loader::IniFileLoader;
 pub use undefined_extension_handler::UndefinedExtensionHandler;
+pub use yaml_file_loader::YamlFileLoader;
 
 /// The container the loaders of one build fill (PHP passes the same
 /// `ContainerBuilder` object to each).
