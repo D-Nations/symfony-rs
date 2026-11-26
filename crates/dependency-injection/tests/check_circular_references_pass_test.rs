@@ -1,27 +1,29 @@
 //! Tests/Compiler/CheckCircularReferencesPassTest.php at
 //! symfony/dependency-injection 9b34cad8. Names and assertions are
-//! PHPUnit's. Upstream's `process()` compiles with a `Compiler` whose
-//! optimization passes are `AnalyzeServiceReferencesPass(true)` and this
-//! pass; here those two passes run directly, since the merge and
-//! before-optimization passes of that compiler belong to other slices
-//! (they change nothing in these containers).
-//!
-//! Pending: testProcessDefersLazyServices (runs `ServiceLocatorTagPass`,
-//! ported in another slice).
+//! PHPUnit's.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/CheckCircularReferencesPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
 use php_value::{PhpArray, Value};
-use symfony_dependency_injection::argument::IteratorArgument;
+use symfony_dependency_injection::argument::{IteratorArgument, ServiceLocatorArgument};
 use symfony_dependency_injection::compiler::{
-    AnalyzeServiceReferencesPass, CheckCircularReferencesPass, CompilerPassInterface,
+    AnalyzeServiceReferencesPass, CheckCircularReferencesPass, Compiler, CompilerPassInterface,
+    Pass, ServiceLocatorTagPass,
 };
 use symfony_dependency_injection::{ContainerBuilder, ErrorKind, Reference, Result};
 
 fn process(container: &mut ContainerBuilder) -> Result<()> {
-    AnalyzeServiceReferencesPass::new(true, true).process(container)?;
-    CheckCircularReferencesPass::new().process(container)
+    let mut compiler = Compiler::new();
+    let pass_config = compiler.get_pass_config_mut();
+    pass_config.set_optimization_passes(vec![
+        Pass::new(AnalyzeServiceReferencesPass::new(true, true)),
+        Pass::new(CheckCircularReferencesPass::new()),
+    ]);
+    pass_config.set_removing_passes(Vec::new());
+    pass_config.set_after_removing_passes(Vec::new());
+
+    compiler.compile(container)
 }
 
 fn assert_circular(container: &mut ContainerBuilder) {
@@ -172,6 +174,35 @@ fn testProcessIgnoresLazyServices() {
 
     // just make sure that a lazily loaded service does not trigger a CircularReferenceException
     process(&mut container).unwrap();
+}
+
+#[test]
+fn testProcessDefersLazyServices() {
+    let mut container = ContainerBuilder::new();
+
+    container
+        .register("a", None)
+        .unwrap()
+        .add_argument(ServiceLocatorArgument::from_tagged(IteratorArgument::tagged(
+            "tag",
+            None,
+            true,
+            Vec::new(),
+            true,
+        )));
+    container
+        .register("b", None)
+        .unwrap()
+        .add_argument(Reference::new("c"))
+        .add_tag("tag", PhpArray::new());
+    container
+        .register("c", None)
+        .unwrap()
+        .add_argument(Reference::new("b"));
+
+    ServiceLocatorTagPass::new().process(&mut container).unwrap();
+
+    assert_circular(&mut container);
 }
 
 #[test]
