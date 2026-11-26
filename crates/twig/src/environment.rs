@@ -148,6 +148,7 @@ impl Environment {
     }
 
     fn build(extensions: Vec<Rc<dyn Extension>>, options: EnvironmentOptions) -> Self {
+        static NEXT_ID: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(1);
         let mut all: Vec<Rc<dyn Extension>> = vec![
             Rc::new(CoreExtension),
             Rc::new(EscaperExtension),
@@ -161,7 +162,6 @@ impl Environment {
             c if c == b"UTF8" || c.is_empty() => b"UTF-8".to_vec(),
             _ => options.charset.clone(),
         };
-        static NEXT_ID: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(1);
         Self {
             id: NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
             extension_set,

@@ -7,7 +7,7 @@
 //!
 //! It also compiles the template sets of `tests/data/sandbox_templates.json`
 //! (the templates of tests/Sandbox/SandboxTest.php, run by
-//! tests/sandbox_test.rs) into `sandbox_sets.rs`: a set marked `sandbox`
+//! `tests/sandbox_test.rs`) into `sandbox_sets.rs`: a set marked `sandbox`
 //! with the sandbox extension, as the environment of a `Sandbox` has it.
 //!
 //! Upstream: none
@@ -142,12 +142,15 @@ fn main() {
 
 /// The template sets of `tests/data/sandbox_templates.json`.
 fn sandbox_sets() {
-    let data = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/data/sandbox_templates.json");
+    let data = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/tests/data/sandbox_templates.json"
+    );
     println!("cargo:rerun-if-changed={data}");
     println!("cargo:rerun-if-changed=src/sandbox_extension.rs");
     let sets: Vec<Json> = serde_json::from_str(&std::fs::read_to_string(data).unwrap()).unwrap();
     let mut code = String::from(
-        "/// The compiled template sets, by name, or why a set did not compile.\npub static SANDBOX_SETS: &[(&str, Result<&[::twig::loader::CompiledEntry], &[u8]>)] = &[\n",
+        "/// A set's compiled templates, or why the set did not compile.\npub type Set = Result<&'static [::twig::loader::CompiledEntry], &'static [u8]>;\n\n/// The compiled template sets, by name.\npub static SANDBOX_SETS: &[(&str, Set)] = &[\n",
     );
     let mut modules = String::new();
     for (i, set) in sets.iter().enumerate() {
@@ -172,7 +175,12 @@ fn sandbox_sets() {
             .as_object()
             .unwrap()
             .iter()
-            .map(|(n, t)| (n.as_bytes().to_vec(), t.as_str().unwrap().as_bytes().to_vec()))
+            .map(|(n, t)| {
+                (
+                    n.as_bytes().to_vec(),
+                    t.as_str().unwrap().as_bytes().to_vec(),
+                )
+            })
             .collect();
         match twig::compiler::compile_set(&env, &templates) {
             Ok(module) => {

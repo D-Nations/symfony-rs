@@ -40,7 +40,10 @@ fn templates(name: &str) -> &'static [CompiledEntry] {
         .unwrap_or_else(|| panic!("no template set \"{name}\""));
     match set {
         Ok(templates) => templates,
-        Err(e) => panic!("set \"{name}\" did not compile: {}", String::from_utf8_lossy(e)),
+        Err(e) => panic!(
+            "set \"{name}\" did not compile: {}",
+            String::from_utf8_lossy(e)
+        ),
     }
 }
 
@@ -87,9 +90,11 @@ fn sandbox_with(
     policy: Rc<dyn SecurityPolicyInterface>,
 ) -> Result<Sandbox, Error> {
     let sandbox = Sandbox::new(extensions(), options(autoescape), policy)?;
-    sandbox.environment().set_loader(Rc::new(CompiledArrayLoader {
-        templates: templates(set),
-    }));
+    sandbox
+        .environment()
+        .set_loader(Rc::new(CompiledArrayLoader {
+            templates: templates(set),
+        }));
     Ok(sandbox)
 }
 
@@ -133,7 +138,10 @@ fn assert_error(result: Result<impl std::fmt::Debug, Error>, kind: ErrorKind, me
     let error = result.expect_err("an error");
     assert_eq!(error.kind(), kind, "{error}");
     let text = String::from_utf8_lossy(error.message()).into_owned();
-    assert!(text.contains(message), "\"{text}\" does not contain \"{message}\"");
+    assert!(
+        text.contains(message),
+        "\"{text}\" does not contain \"{message}\""
+    );
 }
 
 #[test]
@@ -147,7 +155,12 @@ fn testRendersAllowedConstructs() {
         }),
     );
     assert_eq!(
-        render(&sandbox, "index", &[("greet", Value::Bool(true)), ("name", s("fabien"))]).unwrap(),
+        render(
+            &sandbox,
+            "index",
+            &[("greet", Value::Bool(true)), ("name", s("fabien"))]
+        )
+        .unwrap(),
         "Hello FABIEN"
     );
 }
@@ -155,8 +168,12 @@ fn testRendersAllowedConstructs() {
 #[test]
 fn testNonStrictSecurityPolicyIsRejected() {
     assert_error(
-        Sandbox::new(extensions(), options(Autoescape::Off), Rc::new(SecurityPolicy::default()))
-            .map(|_| ()),
+        Sandbox::new(
+            extensions(),
+            options(Autoescape::Off),
+            Rc::new(SecurityPolicy::default()),
+        )
+        .map(|_| ()),
         ErrorKind::Logic,
         "The sandbox requires a strict security policy, call \"setStrict(true)\" on a dedicated policy for this sandbox.",
     );
@@ -203,7 +220,10 @@ impl SecurityPolicyInterface for FilterRefusingPolicy {
         match filters.first() {
             Some(filter) => Err(Error::security_not_allowed(
                 ErrorKind::SecurityNotAllowedFilter,
-                format!("Filter \"{}\" is not allowed.", String::from_utf8_lossy(filter)),
+                format!(
+                    "Filter \"{}\" is not allowed.",
+                    String::from_utf8_lossy(filter)
+                ),
                 filter,
             )),
             None => Ok(()),
@@ -239,7 +259,10 @@ fn testCustomSecurityPolicyImplementationsAreAccepted() {
 
 #[test]
 fn testDisallowedTagIsRejected() {
-    let sandbox = sandbox("testDisallowedTagIsRejected", strict_policy(&Allow::default()));
+    let sandbox = sandbox(
+        "testDisallowedTagIsRejected",
+        strict_policy(&Allow::default()),
+    );
     assert_error(
         render(&sandbox, "index", &[]),
         ErrorKind::SecurityNotAllowedTag,
@@ -260,7 +283,10 @@ fn testSecurityCheckerAddsTheSourceToPolicyErrors() {
 
 #[test]
 fn testDisallowedFilterIsRejected() {
-    let sandbox = sandbox("testDisallowedFilterIsRejected", strict_policy(&Allow::default()));
+    let sandbox = sandbox(
+        "testDisallowedFilterIsRejected",
+        strict_policy(&Allow::default()),
+    );
     assert_error(
         render(&sandbox, "index", &[]),
         ErrorKind::SecurityNotAllowedFilter,
@@ -270,7 +296,10 @@ fn testDisallowedFilterIsRejected() {
 
 #[test]
 fn testDisallowedFunctionIsRejected() {
-    let sandbox = sandbox("testDisallowedFunctionIsRejected", strict_policy(&Allow::default()));
+    let sandbox = sandbox(
+        "testDisallowedFunctionIsRejected",
+        strict_policy(&Allow::default()),
+    );
     assert_error(
         render(&sandbox, "index", &[]),
         ErrorKind::SecurityNotAllowedFunction,
@@ -280,7 +309,10 @@ fn testDisallowedFunctionIsRejected() {
 
 #[test]
 fn testDisallowedTestIsRejected() {
-    let sandbox = sandbox("testDisallowedTestIsRejected", strict_policy(&Allow::default()));
+    let sandbox = sandbox(
+        "testDisallowedTestIsRejected",
+        strict_policy(&Allow::default()),
+    );
     assert_error(
         render(&sandbox, "index", &[]),
         ErrorKind::SecurityNotAllowedTest,
@@ -310,7 +342,10 @@ fn testMethodCallsAreGovernedByThePolicy() {
             ..Allow::default()
         }),
     );
-    assert_eq!(render(&allowing, "index", &[("obj", object())]).unwrap(), "fabien");
+    assert_eq!(
+        render(&allowing, "index", &[("obj", object())]).unwrap(),
+        "fabien"
+    );
 
     let denying = sandbox(name, strict_policy(&Allow::default()));
     assert_error(
@@ -330,7 +365,10 @@ fn testPropertyAccessesAreGovernedByThePolicy() {
             ..Allow::default()
         }),
     );
-    assert_eq!(render(&allowing, "index", &[("obj", object())]).unwrap(), "fabien");
+    assert_eq!(
+        render(&allowing, "index", &[("obj", object())]).unwrap(),
+        "fabien"
+    );
 
     let denying = sandbox(name, strict_policy(&Allow::default()));
     assert_error(
@@ -350,7 +388,10 @@ fn testToStringCoercionIsGovernedByThePolicy() {
             ..Allow::default()
         }),
     );
-    assert_eq!(render(&allowing, "index", &[("obj", object())]).unwrap(), "object");
+    assert_eq!(
+        render(&allowing, "index", &[("obj", object())]).unwrap(),
+        "object"
+    );
 
     let denying = sandbox(name, strict_policy(&Allow::default()));
     assert_error(
@@ -362,9 +403,15 @@ fn testToStringCoercionIsGovernedByThePolicy() {
 
 #[test]
 fn testMarkupValuesCanBePrinted() {
-    let sandbox = sandbox("testMarkupValuesCanBePrinted", strict_policy(&Allow::default()));
+    let sandbox = sandbox(
+        "testMarkupValuesCanBePrinted",
+        strict_policy(&Allow::default()),
+    );
     let markup = Markup::value(b"<b>b</b>".to_vec(), b"UTF-8".to_vec());
-    assert_eq!(render(&sandbox, "index", &[("m", markup)]).unwrap(), "<b>b</b>");
+    assert_eq!(
+        render(&sandbox, "index", &[("m", markup)]).unwrap(),
+        "<b>b</b>"
+    );
 }
 
 #[test]
@@ -410,7 +457,11 @@ fn testRejectsTemplateWrapperFromAnotherEnvironment() {
             }),
         );
         let wrapper = foreign.load(b"foreign").unwrap();
-        let result = render(&sandbox, "index", &[("foreign", Value::Object(Arc::new(wrapper)))]);
+        let result = render(
+            &sandbox,
+            "index",
+            &[("foreign", Value::Object(Arc::new(wrapper)))],
+        );
         let error = result.expect_err(case);
         assert_eq!(error.kind(), ErrorKind::Runtime, "{case}: {error}");
         let text = String::from_utf8_lossy(error.message()).into_owned();
@@ -453,7 +504,10 @@ fn testTheUseTagMustBeAllowed() {
     );
     assert_eq!(render(&allowing, "index", &[]).unwrap(), "trait content");
 
-    let denying = sandbox("testTheUseTagMustBeAllowed denying", strict_policy(&Allow::default()));
+    let denying = sandbox(
+        "testTheUseTagMustBeAllowed denying",
+        strict_policy(&Allow::default()),
+    );
     assert_error(
         render(&denying, "index", &[]),
         ErrorKind::SecurityNotAllowedTag,
@@ -533,8 +587,8 @@ fn testAPolicyFailureWhileResolvingTraitsKeepsItsTwigContext() {
         "testAPolicyFailureWhileResolvingTraitsKeepsItsTwigContext",
         Rc::new(ThrowingOnUseSecurityPolicy),
     );
-    let error = render(&sandbox, "index", &[])
-        .expect_err("The policy failure should have been reported.");
+    let error =
+        render(&sandbox, "index", &[]).expect_err("The policy failure should have been reported.");
     assert_eq!(error.kind(), ErrorKind::Runtime, "{error}");
     let text = String::from_utf8_lossy(error.message()).into_owned();
     assert!(text.contains("Policy backend unreachable"), "{text}");
@@ -567,8 +621,12 @@ fn testAnEnvironmentWithASandboxExtensionIsRejected() {
         None,
     )));
     assert_error(
-        Sandbox::new(extensions, options(Autoescape::Off), strict_policy(&Allow::default()))
-            .map(|_| ()),
+        Sandbox::new(
+            extensions,
+            options(Autoescape::Off),
+            strict_policy(&Allow::default()),
+        )
+        .map(|_| ()),
         ErrorKind::Logic,
         "must be dedicated to it",
     );
@@ -594,7 +652,10 @@ fn testAutoEscapingRequiresTheEscapeFilterToBeAllowed() {
         }),
     )
     .unwrap();
-    assert_eq!(render(&allowing, "index", &[("v", s("a&b"))]).unwrap(), "a&amp;b");
+    assert_eq!(
+        render(&allowing, "index", &[("v", s("a&b"))]).unwrap(),
+        "a&amp;b"
+    );
 }
 
 fn display_sandbox() -> Sandbox {

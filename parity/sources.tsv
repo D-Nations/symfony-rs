@@ -999,8 +999,11 @@ crates/twig-integration/src/callables.rs	twig/twig	tests/IntegrationTest.php	8c7
 crates/twig-integration/src/classes.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/extension.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/lib.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig-integration/src/sandbox.rs	twig/twig	tests/Sandbox/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig-integration/src/sandbox_extension.rs	twig/twig	tests/Sandbox/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/tests/integration.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/tests/integration.rs	twig/twig	src/Test/IntegrationTestCase.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig-integration/tests/sandbox_test.rs	twig/twig	tests/Sandbox/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/callable.rs	twig/twig	src/AbstractTwigCallable.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/callable.rs	twig/twig	src/TwigFilter.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/callable.rs	twig/twig	src/TwigFunction.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
@@ -1198,6 +1201,9 @@ crates/twig/src/node_visitor/sandbox.rs	twig/twig	src/Node/CoercesChildrenToStri
 crates/twig/src/parser.rs	twig/twig	src/Parser.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/runtime/core.rs	twig/twig	src/Extension/CoreExtension.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/runtime/escaper.rs	twig/twig	src/Runtime/EscaperRuntime.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/runtime/sandbox.rs	twig/twig	src/Node/CheckSecurityNode.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/runtime/sandbox.rs	twig/twig	src/Node/CheckSecurityCallNode.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/runtime/sandbox.rs	twig/twig	src/Node/CheckToStringNode.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/sandbox/mod.rs	twig/twig	src/Sandbox/SecurityPolicyInterface.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/sandbox/mod.rs	twig/twig	src/Sandbox/SourcePolicyInterface.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/sandbox/sandbox.rs	twig/twig	src/Sandbox/Sandbox.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
