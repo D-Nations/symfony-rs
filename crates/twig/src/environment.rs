@@ -190,10 +190,14 @@ impl Environment {
         self.strict_variables
     }
 
-    /// `hasExtension(SandboxExtension::class)`: the sandbox is not ported
-    /// yet.
+    /// `hasExtension(SandboxExtension::class)`.
     pub fn has_sandbox(&self) -> bool {
-        false
+        self.extension_set.sandbox().is_some()
+    }
+
+    /// `getExtension(SandboxExtension::class)`.
+    pub fn sandbox(&self) -> Option<&crate::extension::sandbox::SandboxExtension> {
+        self.extension_set.sandbox()
     }
 
     /// `setLoader()`: where compiled templates come from.

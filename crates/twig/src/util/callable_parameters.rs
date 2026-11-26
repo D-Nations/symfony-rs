@@ -39,17 +39,16 @@ pub fn from_node(node: &Node, env: &Environment) -> Option<Vec<Parameter>> {
     if !filter && !function && !test {
         return None;
     }
-    let callable = match node.attr("twig_callable") {
-        Some(crate::node::Attr::Callable(c)) => c,
-        _ => {
-            let name = node.attr("name")?.to_php_string()?;
-            if filter {
-                env.filter(&name)?
-            } else if function {
-                env.function(&name)?
-            } else {
-                env.test(&name)?
-            }
+    let callable = if let Some(crate::node::Attr::Callable(c)) = node.attr("twig_callable") {
+        c
+    } else {
+        let name = node.attr("name")?.to_php_string()?;
+        if filter {
+            env.filter(&name)?
+        } else if function {
+            env.function(&name)?
+        } else {
+            env.test(&name)?
         }
     };
     of_callable(&callable)

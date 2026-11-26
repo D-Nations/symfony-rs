@@ -21,6 +21,10 @@ use crate::{
 
 /// A parameter of a PHP callable, as reflection shows it.
 #[derive(Debug, Clone)]
+#[allow(
+    clippy::struct_excessive_bools,
+    reason = "one flag for each ReflectionParameter answer"
+)]
 pub struct Parameter {
     pub name: String,
     /// `getDefaultValue()`, when `isDefaultValueAvailable()`.

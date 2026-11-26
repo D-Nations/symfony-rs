@@ -206,7 +206,7 @@ fn key_of(key: &Value) -> R<Key> {
 }
 
 /// `iterator_to_array($value, $preserveKeys)`.
-fn iterator_to_array(value: &Value, preserve_keys: bool) -> R<PhpArray> {
+pub(crate) fn iterator_to_array(value: &Value, preserve_keys: bool) -> R<PhpArray> {
     let mut out = PhpArray::new();
     for (k, v) in traverse(value)? {
         if preserve_keys {

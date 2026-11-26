@@ -52,7 +52,7 @@
 #   scripts/record.sh password-hasher crates/password-hasher/tests/data/php.json (needs upstream/; verifies tests/data/rust_hashes.json)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
 #   scripts/record.sh twig-lexer   crates/twig/tests/data/lexer.json (Twig\Lexer on the upstream fixtures and lexer_extra.json)
-#   scripts/record.sh twig-parser  crates/twig/tests/data/parser.json and parser_visitors.json (Twig\Parser trees without and with the node visitors)
+#   scripts/record.sh twig-parser  crates/twig/tests/data/parser.json, parser_visitors.json and parser_sandbox.json (Twig\Parser trees without and with the node visitors, and with the sandbox visitor too)
 #   scripts/record.sh twig-integration crates/twig-integration/tests/data/integration.json (Twig's integration fixtures run by real Twig)
 #   scripts/record.sh twig-callable-parameters crates/twig/tests/data/callable_parameters.json (the sandbox's view of the core callables' parameters)
 #   scripts/record.sh di-parameter-bag crates/dependency-injection/tests/data/parameter_bag.json (ParameterBag)
@@ -776,9 +776,10 @@ di_dumpers() {
 twig_parser() {
     local out tmp mode
     mkdir -p oracle/out
-    for mode in plain visitors; do
+    for mode in plain visitors sandbox; do
         out=crates/twig/tests/data/parser.json
         [[ "$mode" == visitors ]] && out=crates/twig/tests/data/parser_visitors.json
+        [[ "$mode" == sandbox ]] && out=crates/twig/tests/data/parser_sandbox.json
         tmp=$(mktemp -p oracle/out)
         oracle oracle/recorders/twig_parser.php "$mode" > "$tmp"
         python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "templates")' "$tmp"
