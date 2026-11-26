@@ -43,9 +43,9 @@ resolver = "3"
 # in code. To work on both repositories, override the git source with a
 # local path in an uncommitted .cargo/config.toml (see README.md).
 [workspace.dependencies]
-php-value = { package = "php2rust-value", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "977342827ba414362c6af60f38dd376f2fbcfd72" }
-php-pcre = { package = "php2rust-regex", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "977342827ba414362c6af60f38dd376f2fbcfd72" }
-php-dom = { package = "php2rust-dom", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "977342827ba414362c6af60f38dd376f2fbcfd72" }
+php-value = { package = "php2rust-value", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "3fc1939b5549415a903ea99acb5c560c453eaf76" }
+php-pcre = { package = "php2rust-regex", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "3fc1939b5549415a903ea99acb5c560c453eaf76" }
+php-dom = { package = "php2rust-dom", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "3fc1939b5549415a903ea99acb5c560c453eaf76" }
 
 # Lints for every member that sets `[lints] workspace = true`. Members opt in
 # one at a time, once they pass with `-D warnings`; see PLAN.md

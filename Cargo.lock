@@ -931,12 +931,12 @@ dependencies = [
 [[package]]
 name = "php2rust-dom"
 version = "0.1.0"
-source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=977342827ba414362c6af60f38dd376f2fbcfd72#977342827ba414362c6af60f38dd376f2fbcfd72"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=3fc1939b5549415a903ea99acb5c560c453eaf76#3fc1939b5549415a903ea99acb5c560c453eaf76"
 
 [[package]]
 name = "php2rust-regex"
 version = "0.1.0"
-source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=977342827ba414362c6af60f38dd376f2fbcfd72#977342827ba414362c6af60f38dd376f2fbcfd72"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=3fc1939b5549415a903ea99acb5c560c453eaf76#3fc1939b5549415a903ea99acb5c560c453eaf76"
 dependencies = [
  "fancy-regex",
 ]
@@ -944,7 +944,7 @@ dependencies = [
 [[package]]
 name = "php2rust-value"
 version = "0.1.0"
-source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=977342827ba414362c6af60f38dd376f2fbcfd72#977342827ba414362c6af60f38dd376f2fbcfd72"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=3fc1939b5549415a903ea99acb5c560c453eaf76#3fc1939b5549415a903ea99acb5c560c453eaf76"
 dependencies = [
  "serde_json",
 ]
