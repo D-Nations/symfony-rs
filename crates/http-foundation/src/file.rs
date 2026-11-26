@@ -42,9 +42,14 @@ pub trait FileLike: std::fmt::Debug + Send + Sync {
         }
     }
 
-    /// `getRealPath()`; `None` is PHP's `false`.
+    /// `getRealPath()`; `None` is PHP's `false`, which a URL also gives,
+    /// `file://` included (`tests/data/binary_file.json`).
     fn get_real_path(&self) -> Option<Vec<u8>> {
-        fs::realpath(self.get_pathname())
+        let pathname = self.get_pathname();
+        if fs::scheme(pathname).is_some() {
+            return None;
+        }
+        fs::realpath(pathname)
     }
 
     /// `isReadable()`.
@@ -154,9 +159,10 @@ impl File {
         symfony_finder::php::extension(self.get_filename())
     }
 
-    /// `getRealPath()`; `None` is PHP's `false`.
+    /// `getRealPath()`; `None` is PHP's `false` (see
+    /// [`FileLike::get_real_path`]).
     pub fn get_real_path(&self) -> Option<Vec<u8>> {
-        fs::realpath(&self.pathname)
+        FileLike::get_real_path(self)
     }
 
     /// `isReadable()`.
