@@ -22,7 +22,7 @@ use std::sync::Arc;
 use common::{array, data, provider, text};
 use doctrine_dbal::deprecations;
 use doctrine_dbal::platforms::{AbstractPlatform, SQLitePlatform, TrimMode};
-use doctrine_dbal::schema::name::{Identifier, OptionallyQualifiedName, UnqualifiedName};
+use doctrine_dbal::schema::name::UnqualifiedName;
 use doctrine_dbal::schema::{
     Column, ColumnDiff, ColumnEditor, CurrentDate, CurrentTimestamp, Deferrability,
     ForeignKeyConstraint, Index, IndexType, PrimaryKeyConstraint, Table, TableDiff, TableDiffParts,
@@ -909,29 +909,11 @@ fn testQuotesAlterTableRenameIndex() {
     );
 }
 
-#[test]
-#[ignore = "markTestIncomplete upstream: SQLitePlatform::getAlterTable() is broken when used with schemas"]
-fn testAlterTableRenameIndexInSchema() {
-    let table = mytable_with_id("mytable", Some("myschema"));
-    let table_diff = TableDiff::new(table, renamed(&[("idx_foo", "idx_bar")]));
-    let _ = platform().get_alter_table_sql(&table_diff);
-}
+// testAlterTableRenameIndexInSchema: not run upstream on SQLite (markTestIncomplete:
+// SQLitePlatform::getAlterTable() is broken when used with schemas).
 
-#[test]
-#[ignore = "markTestIncomplete upstream: SQLitePlatform::getAlterTable() is broken when used with schemas"]
-fn testQuotesAlterTableRenameIndexInSchema() {
-    let table = Table::editor()
-        .set_name(OptionallyQualifiedName::new(
-            Identifier::unquoted("table").unwrap(),
-            Some(Identifier::quoted("schema").unwrap()),
-        ))
-        .set_columns(vec![column("id", Types::INTEGER).create().unwrap()])
-        .set_primary_key_constraint(pk(&["id"]))
-        .create()
-        .unwrap();
-    let table_diff = TableDiff::new(table, renamed(&[("create", "select"), ("`foo`", "`bar`")]));
-    let _ = platform().get_alter_table_sql(&table_diff);
-}
+// testQuotesAlterTableRenameIndexInSchema: not run upstream on SQLite (markTestIncomplete:
+// SQLitePlatform::getAlterTable() is broken when used with schemas).
 
 #[test]
 fn testGetCommentOnColumnSQLWithoutQuoteCharacter() {
@@ -987,11 +969,8 @@ fn testGeneratesInlineColumnCommentSQL() {
     }
 }
 
-#[test]
-#[ignore = "markTestSkipped upstream: SQLitePlatform supports inline column comments"]
-fn testThrowsExceptionOnGeneratingInlineColumnCommentSQLIfUnsupported() {
-    assert!(!platform().supports_inline_column_comments());
-}
+// testThrowsExceptionOnGeneratingInlineColumnCommentSQLIfUnsupported: not run upstream on
+// SQLite (markTestSkipped: SQLitePlatform supports inline column comments).
 
 #[test]
 fn testQuoteStringLiteral() {
@@ -1721,9 +1700,8 @@ fn testAddedDateTimeColumnWithCurrentDefaultTriggersTableRebuild() {
     }
 }
 
-#[test]
-#[ignore = "markTestSkipped upstream: SQLite does not support altering foreign key constraints"]
-fn testQuotesDropForeignKeySQL() {}
+// testQuotesDropForeignKeySQL: not run upstream on SQLite (markTestSkipped: SQLite does not
+// support altering foreign key constraints).
 
 #[test]
 fn testDateAddStaticNumberOfDays() {
