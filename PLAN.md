@@ -1777,6 +1777,15 @@ Stack rows (searched November 22):
       docs/milestones/m2-a-event-stream-response.md. Next:
       StreamedJsonResponse (needs generators and `JsonSerializable` objects
       inside PHP data).
+- [x] StreamedJsonResponse (November 26): `StreamedJsonResponse.php`
+      on php-value data. A lazy `\Generator` object (http-foundation's
+      `generator` module) runs its body as `foreach` asks, so what it
+      echoes lands between the pairs, with `foreach`'s rewind rules and
+      exceptions. StreamedJsonResponseTest 15 of 15; 1,500 scripts recorded
+      from PHP 8.4.27 (5,105 answers, each echo a chunk of its own); nine
+      mutations, each caught. Stage log
+      docs/milestones/m2-a-streamed-json-response.md. Next:
+      `BinaryFileResponse.php`.
 
 ## M6 progress
 
