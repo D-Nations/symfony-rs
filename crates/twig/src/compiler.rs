@@ -439,6 +439,54 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
     })
 }
 
+/// The first node of `class` in a tree.
+fn find_class(node: &Node, class: NodeClass) -> Option<Node> {
+    if node.is(class) {
+        return Some(node.clone());
+    }
+    node.child_nodes()
+        .iter()
+        .find_map(|child| find_class(child, class))
+}
+
+/// The `(name, line)` list of a `CheckSecurityNode` attribute.
+fn used_list(check: &Node, name: &str) -> (String, Option<i64>) {
+    let mut items = Vec::new();
+    let mut use_line = None;
+    if let Some(Attr::Array(used)) = check.attr(name) {
+        for (key, line) in used {
+            let line = line.as_int().unwrap_or(0);
+            let key = key.to_php_string();
+            if key == b"use" {
+                use_line = Some(line);
+            }
+            items.push(format!("(&{}[..], {line})", byte_lit(&key)));
+        }
+    }
+    (format!("&[{}]", items.join(", ")), use_line)
+}
+
+/// `CheckSecurityNode::compile()`: the template's `checkTraitsAllowed()`
+/// (with a `use` tag) and `ensureSecurityChecked()`.
+fn compile_check_security(check: &Node) -> String {
+    let (tags, use_line) = used_list(check, "usedTags");
+    let (filters, _) = used_list(check, "usedFilters");
+    let (functions, _) = used_list(check, "usedFunctions");
+    let (tests, _) = used_list(check, "usedTests");
+    let mut out = String::new();
+    if let Some(line) = use_line {
+        let _ = writeln!(
+            out,
+            "        fn check_traits_allowed(&self, this: &rt::Rc<rt::Template>, env: &rt::Environment) -> Result<(), rt::Error> {{\n            rt::sandbox::check_traits_allowed(env, this.source(), {line})\n        }}\n"
+        );
+    }
+    let _ = writeln!(
+        out,
+        "        fn ensure_security_checked(&self, this: &rt::Rc<rt::Template>, env: &rt::Environment) -> Result<(), rt::Error> {{\n            rt::sandbox::ensure_security_checked(env, this.source(), {tags}, {filters}, {functions}, {tests})\n        }}\n"
+    );
+    out
+}
+
 /// The Rust path and PHP parameters of a callable.
 fn resolve_callable(node: &Node, callable: &TwigCallable) -> R<(String, Vec<Parameter>)> {
     if let Some(rust) = callable.rust_callable() {
@@ -739,6 +787,9 @@ impl<'a> Compiler<'a> {
             }
             out.push_str("            ]\n        }\n");
         }
+        if let Some(check) = find_class(&module.get_node("class_end")?, NodeClass::CheckSecurityNode) {
+            out.push_str(&compile_check_security(&check));
+        }
         out.push_str("    }\n\n");
         for function in std::mem::take(&mut self.functions) {
             out.push_str(&function);
@@ -778,6 +829,9 @@ impl<'a> Compiler<'a> {
                 c.line("this.set_parent(None);");
             }
             let count = traits.count();
+            if count > 0 {
+                c.line("this.ensure_traits_allowed(env)?;");
+            }
             for (i, (_, trait_node)) in traits.children().into_iter().enumerate() {
                 let template = trait_node.get_node("template")?;
                 c.add_debug_info(&template);
@@ -840,6 +894,25 @@ impl<'a> Compiler<'a> {
         out.push_str(&wrap_method(&body, "()"));
         out.push_str("        }\n\n");
         Ok(out)
+    }
+
+    /// `SandboxNode::compile()` (the deprecated `sandbox` tag): the legacy
+    /// sandbox state is on while the body runs.
+    fn compile_sandbox(&mut self, node: &Node) -> R<()> {
+        self.add_debug_info(node);
+        let var = self.var_name();
+        self.line(&format!("let {var}_sb = rt::sandbox::checker(env)?;"));
+        self.line(&format!("let {var}_already = {var}_sb.is_sandboxed(None);"));
+        self.line(&format!("if !{var}_already {{ {var}_sb.set_sandboxed(true); }}"));
+        self.line(&format!("let {var}_r = (|| -> Result<(), rt::Error> {{"));
+        self.indentation += 1;
+        self.compile_statement(&node.get_node("body")?)?;
+        self.line("Ok(())");
+        self.indentation -= 1;
+        self.line("})();");
+        self.line(&format!("if !{var}_already {{ {var}_sb.set_sandboxed(false); }}"));
+        self.line(&format!("{var}_r?;"));
+        Ok(())
     }
 
     fn compile_block(&mut self, name: &[u8], block: &Node) -> R {
@@ -945,10 +1018,14 @@ impl<'a> Compiler<'a> {
             | C::NameDeprecation
             | C::NodeDocumentation
             | C::FlushNode
-            | C::CheckSecurityCallNode => {
+            | C::CheckSecurityNode => {
                 if node.is(C::FlushNode) {
                     self.add_debug_info(node);
                 }
+            }
+            // `$this->sandbox = $env->getExtension(SandboxExtension::class)->getChecker();`
+            C::CheckSecurityCallNode => {
+                self.line("rt::sandbox::checker(env)?;");
             }
             C::TextNode => {
                 self.add_debug_info(node);
@@ -1019,9 +1096,7 @@ impl<'a> Compiler<'a> {
             C::BlockNode | C::MacroNode | C::MacrosNode | C::ModuleNode => {
                 return Err(unsupported(node, "A nested block, macro or module node"));
             }
-            C::SandboxNode | C::CheckSecurityNode | C::CheckToStringNode => {
-                return Err(unsupported(node, "The sandbox"));
-            }
+            C::SandboxNode => self.compile_sandbox(node)?,
             other if node.is_expression() => {
                 // an expression used as a statement (`InlinePrint`)
                 self.add_debug_info(node);
@@ -1431,6 +1506,19 @@ impl<'a> Compiler<'a> {
             | C::AssignNameExpression => self.name_expr(node)?,
             C::LocalVariable | C::TempNameExpression => self.local_name(node),
             C::GetAttrExpression => self.get_attr(node)?,
+            C::CheckToStringNode => {
+                let expr = node.get_node("expr")?;
+                let code = self.expr(&expr)?;
+                let function = if node.attr_true("spread") {
+                    "ensure_spread_allowed"
+                } else {
+                    "ensure_to_string_allowed"
+                };
+                format!(
+                    "rt::sandbox::{function}(env, {code}, {}, this.source())?",
+                    expr.line()
+                )
+            }
             C::ConditionalExpression => {
                 let test = self.cond(&node.get_node("expr1")?)?;
                 let left = self.expr(&node.get_node("expr2")?)?;
@@ -1488,8 +1576,9 @@ impl<'a> Compiler<'a> {
                     let property = key.attr("value").unwrap_or(Attr::Null);
                     let _ = write!(
                         code,
-                        " let __m{i} = rt::core::get_attribute(env, this.source(), &__s, &{}, &rt::PhpArray::new(), \"any\", false, false, {line})?; __values.push(__m{i}.clone());",
-                        repr(&property)?
+                        " let __m{i} = rt::core::get_attribute(env, this.source(), &__s, &{}, &rt::PhpArray::new(), \"any\", false, false, {}, {line})?; __values.push(__m{i}.clone());",
+                        repr(&property)?,
+                        self.env.has_sandbox()
                     );
                     let _ = write!(
                         assigns,
@@ -1619,7 +1708,7 @@ impl<'a> Compiler<'a> {
                 } else {
                     "array_every"
                 };
-                format!("rt::Value::Bool(rt::core::{function}(env, &{left}, &{right})?)")
+                format!("rt::Value::Bool(rt::core::{function}(env, this.source(), &{left}, &{right})?)")
             }
             C::RangeBinary => {
                 let left = self.expr(&node.get_node("left")?)?;
@@ -1867,10 +1956,11 @@ impl<'a> Compiler<'a> {
         };
         let kind = node.attr_bytes("type").unwrap_or_else(|| b"any".to_vec());
         Ok(format!(
-            "{prefix}rt::core::get_attribute(env, this.source(), &{object}, &{attribute}, {arguments}, {}, {}, {}, {})?{suffix}",
+            "{prefix}rt::core::get_attribute(env, this.source(), &{object}, &{attribute}, {arguments}, {}, {}, {}, {}, {})?{suffix}",
             str_lit(&String::from_utf8_lossy(&kind)),
             node.is_defined_test_enabled(),
             node.attr_true("ignore_strict_check"),
+            self.env.has_sandbox(),
             inner.line()
         ))
     }

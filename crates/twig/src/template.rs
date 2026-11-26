@@ -11,8 +11,7 @@
 //! debug info they passed instead ([`Error::guess_line`]).
 //!
 //! Not ported: `use_yield` (output is always collected), `loadTemplate()`
-//! (deprecated), the sandbox hooks (`ensureSecurityChecked()`,
-//! `checkTraitsAllowed()`: the sandbox is not ported yet).
+//! (deprecated).
 //!
 //! Upstream: twig/twig src/Template.php src/TemplateWrapper.php
 
@@ -173,6 +172,20 @@ pub trait CompiledTemplate: Sync {
     fn load_declared_macros(&self) -> Vec<TwigMacro> {
         Vec::new()
     }
+
+    /// `ensureSecurityChecked()`: the sandbox check of what the template
+    /// uses (generated for a template compiled with the sandbox
+    /// extension).
+    fn ensure_security_checked(&self, this: &Rc<Template>, env: &Environment) -> Result<(), Error> {
+        let _ = (this, env);
+        Ok(())
+    }
+
+    /// `checkTraitsAllowed()`: the sandbox check of the `use` tag.
+    fn check_traits_allowed(&self, this: &Rc<Template>, env: &Environment) -> Result<(), Error> {
+        let _ = (this, env);
+        Ok(())
+    }
 }
 
 /// An instance of a compiled template (`Twig\Template`).
@@ -311,6 +324,9 @@ impl Template {
         if let Some(parent) = self.parent.borrow().clone() {
             return Ok(parent);
         }
+        // a dynamic parent name runs template code: check the sandbox
+        // policy first
+        self.ensure_security_checked(env)?;
         let parent = self
             .compiled
             .do_get_parent(&self.rc(), env, context)
@@ -326,6 +342,19 @@ impl Template {
             parents.push((name, Rc::clone(&parent)));
         }
         Ok(Some(parent))
+    }
+
+    /// `ensureSecurityChecked()`.
+    pub fn ensure_security_checked(&self, env: &Environment) -> Result<(), Error> {
+        self.compiled.ensure_security_checked(&self.rc(), env)
+    }
+
+    /// `ensureTraitsAllowed()`: called by the constructor before it loads
+    /// the traits.
+    pub fn ensure_traits_allowed(&self, env: &Environment) -> Result<(), Error> {
+        self.compiled
+            .check_traits_allowed(&self.rc(), env)
+            .map_err(|e| self.handle_exception(e, -1))
     }
 
     /// `handleException()` for errors that leave a method without a line
@@ -431,7 +460,8 @@ impl Template {
         let blocks = self.blocks.borrow().merge(blocks);
         let this = self.rc();
         self.compiled
-            .do_display(&this, env, context, &blocks, out)
+            .ensure_security_checked(&this, env)
+            .and_then(|()| self.compiled.do_display(&this, env, context, &blocks, out))
             .map_err(|e| self.handle_exception(e, -1))
     }
 
@@ -460,7 +490,12 @@ impl Template {
             let template = &block.template;
             return template
                 .compiled
-                .call_block(&block.name, template, env, context, &blocks, out)
+                .ensure_security_checked(template, env)
+                .and_then(|()| {
+                    template
+                        .compiled
+                        .call_block(&block.name, template, env, context, &blocks, out)
+                })
                 .map_err(|e| template.handle_exception(e, -1));
         }
         if let Some(parent) = self.get_parent(env, &context)? {
