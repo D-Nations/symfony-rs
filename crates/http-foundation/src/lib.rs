@@ -10,12 +10,14 @@
 
 pub mod accept_header;
 pub mod accept_language;
+pub mod binary_file_response;
 pub mod cookie;
 pub mod cookies;
 pub mod event_stream_response;
 pub mod exception;
 pub mod file;
 pub mod file_bag;
+pub mod file_stream;
 pub mod generator;
 pub mod header_bag;
 pub mod header_utils;
