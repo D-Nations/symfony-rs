@@ -925,7 +925,8 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     hides the header as nginx does but has no locations, so the client
     gets an empty response. Recommended: leave it unsupported, and do not
     call `trustXSendfileTypeHeader()` behind the adapter (a converter can
-    refuse that call at build time). Not decided.
+    refuse that call at build time). **Owner, November 26: (e) accepted
+    as recommended.**
 
 21. **PCRE limits in Doctrine's SQL parser (M6, November 25; accepted
     November 25: do not copy the limits).** DBAL's
@@ -1805,6 +1806,14 @@ Stack rows (searched November 22):
       not serve `X-Accel-Redirect`. Stage log
       docs/milestones/m2-a-binary-file-response.md. Next: the rest of
       HttpFoundation's open files (RequestMatcher, Session, RateLimiter).
+- [x] RequestMatchers (November 26): `RequestMatcherInterface.php`,
+      `ChainRequestMatcher.php` and the eleven `RequestMatcher/` classes;
+      http-foundation now depends on `symfony-expression-language` for
+      `ExpressionRequestMatcher`, whose `request` is a `MethodObject`
+      over a copy of the request. The upstream tests 20 of 20; 1,500
+      scripts recorded from PHP 8.4.27 (9,000 answers); eleven mutations,
+      each caught. Stage log docs/milestones/m2-a-request-matchers.md.
+      Next: Session, then RateLimiter.
 
 ## M6 progress
 
