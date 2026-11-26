@@ -289,73 +289,11 @@ impl State<'_> {
         let token = self.stream.current().clone();
         let node = match token.kind {
             TokenType::Name => {
-                self.stream.next()?;
-                let name = token.value_bytes();
-                match name {
-                    b"true" | b"TRUE" => return Ok(Node::Constant(ConstantNode::new(true))),
-                    b"false" | b"FALSE" => return Ok(Node::Constant(ConstantNode::new(false))),
-                    b"null" | b"NULL" => return Ok(Node::Constant(ConstantNode::new(Value::Null))),
-                    _ => {}
+                let (node, postfix) = self.parse_name(&token)?;
+                if !postfix {
+                    return Ok(node);
                 }
-                if self.stream.current().value.identical(&Value::from("(")) {
-                    if self.flags & IGNORE_UNKNOWN_FUNCTIONS == 0 && !self.functions.contains(name)
-                    {
-                        let mut message = b"The function \"".to_vec();
-                        message.extend_from_slice(name);
-                        message.extend_from_slice(b"\" does not exist.");
-                        return Err(Error::syntax_with_proposals(
-                            message,
-                            token.cursor(),
-                            self.expression(),
-                            Some((name, &self.functions.names())),
-                        ));
-                    }
-                    let arguments = self.parse_arguments()?;
-                    Node::Function(FunctionNode::new(PhpString::from(name), arguments))
-                } else {
-                    let compiled_name = if self.flags & IGNORE_UNKNOWN_VARIABLES == 0 {
-                        let value = &token.value;
-                        if !self.names.values().any(|n| n.identical(value)) {
-                            if self
-                                .stream
-                                .current()
-                                .test(TokenType::Punctuation, Some("??"))
-                            {
-                                return Ok(Node::NullCoalescedName(NullCoalescedNameNode::new(
-                                    PhpString::from(name),
-                                )));
-                            }
-                            let mut message = b"Variable \"".to_vec();
-                            message.extend_from_slice(name);
-                            message.extend_from_slice(b"\" is not valid.");
-                            let proposals: Vec<PhpString> = self
-                                .names
-                                .values()
-                                .filter_map(Value::to_php_string)
-                                .collect();
-                            return Err(Error::syntax_with_proposals(
-                                message,
-                                token.cursor(),
-                                self.expression(),
-                                Some((name, &proposals)),
-                            ));
-                        }
-                        // is the name used in the compiled code different
-                        // from the name used in the expression?
-                        match self
-                            .names
-                            .iter()
-                            .find(|(_, n)| loose_equals(n, value))
-                            .map(|(k, _)| k)
-                        {
-                            Some(Key::Str(key)) => key.clone(),
-                            _ => PhpString::from(name),
-                        }
-                    } else {
-                        PhpString::from(name)
-                    };
-                    Node::Name(NameNode::new(compiled_name))
-                }
+                node
             }
             TokenType::Number | TokenType::String => {
                 self.stream.next()?;
@@ -377,6 +315,86 @@ impl State<'_> {
             }
         };
         self.parse_postfix_expression(node)
+    }
+
+    /// The name branch of `parsePrimaryExpression()`: a constant, a
+    /// function call or a variable. The flag says if postfix operators
+    /// follow. It is a separate function so that the frame of the
+    /// recursive path (arrays, hashes) stays small.
+    #[inline(never)]
+    fn parse_name(&mut self, token: &crate::token::Token) -> Result<(Node, bool), Error> {
+        self.stream.next()?;
+        let name = token.value_bytes();
+        match name {
+            b"true" | b"TRUE" => return Ok((Node::Constant(ConstantNode::new(true)), false)),
+            b"false" | b"FALSE" => return Ok((Node::Constant(ConstantNode::new(false)), false)),
+            b"null" | b"NULL" => {
+                return Ok((Node::Constant(ConstantNode::new(Value::Null)), false));
+            }
+            _ => {}
+        }
+        let node = if self.stream.current().value.identical(&Value::from("(")) {
+            if self.flags & IGNORE_UNKNOWN_FUNCTIONS == 0 && !self.functions.contains(name) {
+                let mut message = b"The function \"".to_vec();
+                message.extend_from_slice(name);
+                message.extend_from_slice(b"\" does not exist.");
+                return Err(Error::syntax_with_proposals(
+                    message,
+                    token.cursor(),
+                    self.expression(),
+                    Some((name, &self.functions.names())),
+                ));
+            }
+            let arguments = self.parse_arguments()?;
+            Node::Function(FunctionNode::new(PhpString::from(name), arguments))
+        } else {
+            let compiled_name = if self.flags & IGNORE_UNKNOWN_VARIABLES == 0 {
+                let value = &token.value;
+                if !self.names.values().any(|n| n.identical(value)) {
+                    if self
+                        .stream
+                        .current()
+                        .test(TokenType::Punctuation, Some("??"))
+                    {
+                        return Ok((
+                            Node::NullCoalescedName(NullCoalescedNameNode::new(PhpString::from(
+                                name,
+                            ))),
+                            false,
+                        ));
+                    }
+                    let mut message = b"Variable \"".to_vec();
+                    message.extend_from_slice(name);
+                    message.extend_from_slice(b"\" is not valid.");
+                    let proposals: Vec<PhpString> = self
+                        .names
+                        .values()
+                        .filter_map(Value::to_php_string)
+                        .collect();
+                    return Err(Error::syntax_with_proposals(
+                        message,
+                        token.cursor(),
+                        self.expression(),
+                        Some((name, &proposals)),
+                    ));
+                }
+                // is the name used in the compiled code different
+                // from the name used in the expression?
+                match self
+                    .names
+                    .iter()
+                    .find(|(_, n)| loose_equals(n, value))
+                    .map(|(k, _)| k)
+                {
+                    Some(Key::Str(key)) => key.clone(),
+                    _ => PhpString::from(name),
+                }
+            } else {
+                PhpString::from(name)
+            };
+            Node::Name(NameNode::new(compiled_name))
+        };
+        Ok((node, true))
     }
 
     fn parse_array_expression(&mut self) -> Result<ArrayNode, Error> {
