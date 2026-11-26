@@ -412,6 +412,10 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
                 def("ignoreMissing", Attr::Bool(false)).coercion_safe(),
             ],
         ),
+        "Twig\\Extension\\DebugExtension::dump" => (
+            path("rt::debug::dump"),
+            vec![env(), req("context"), P::variadic("vars")],
+        ),
         "Twig\\Extension\\CoreExtension::source" => (
             path("rt::core::source"),
             vec![env(), req("name"), def("ignoreMissing", Attr::Bool(false))],

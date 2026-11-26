@@ -9,6 +9,7 @@
 //! Upstream: twig/twig src/Extension/ExtensionInterface.php src/Extension/AbstractExtension.php src/ExtensionSet.php
 
 pub mod core;
+pub mod debug;
 pub mod escaper;
 pub mod optimizer;
 pub mod sandbox;

@@ -6,9 +6,10 @@
 //!
 //! [`extensions`] are the ones `IntegrationTest::getExtensions()` gives:
 //! the sandbox extension (off, with the test's policy) and this one.
-//! `DebugExtension` (`dump`) and `StringLoaderExtension`
-//! (`template_from_string`) are not ported: their callables have no Rust
-//! function, so a fixture that calls them does not compile.
+//! `dump` is `DebugExtension`'s function, defined here as the recorder
+//! saw it (CLI: safe for HTML). `StringLoaderExtension`
+//! (`template_from_string`) is not ported: its callable has no Rust
+//! function, so a fixture that calls it does not compile.
 //!
 //! Upstream: twig/twig tests/IntegrationTest.php
 
@@ -131,7 +132,7 @@ impl Extension for FixtureExtension {
 
     fn functions(&self) -> Vec<TwigCallable> {
         vec![
-            // DebugExtension and StringLoaderExtension: no Rust function
+            // DebugExtension (CLI), and StringLoaderExtension: no Rust function
             TwigCallable::function("dump", Some("Twig\\Extension\\DebugExtension::dump"))
                 .safe(&["html"])
                 .needs_context()

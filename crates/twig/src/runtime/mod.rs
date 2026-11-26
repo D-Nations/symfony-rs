@@ -9,6 +9,7 @@
 //! Upstream: none
 
 pub mod core;
+pub mod debug;
 pub mod escaper;
 pub mod sandbox;
 pub mod string;
