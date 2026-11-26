@@ -328,26 +328,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "di-trial-compiler"
-version = "0.1.0"
-dependencies = [
- "php2rust-dom",
- "php2rust-value",
- "prettyplease",
- "proc-macro2",
- "quote",
- "symfony-config",
- "syn 2.0.119",
-]
-
-[[package]]
 name = "di-trial-demo"
 version = "0.1.0"
 dependencies = [
- "di-trial-compiler",
  "di-trial-runtime",
  "php2rust-value",
  "serde_json",
+ "symfony-di-emitter",
 ]
 
 [[package]]
@@ -1362,6 +1349,21 @@ dependencies = [
 [[package]]
 name = "symfony-deprecation-contracts"
 version = "0.1.0"
+
+[[package]]
+name = "symfony-di-emitter"
+version = "0.1.0"
+dependencies = [
+ "php2rust-dom",
+ "php2rust-value",
+ "prettyplease",
+ "proc-macro2",
+ "quote",
+ "serde_json",
+ "symfony-config",
+ "symfony-dependency-injection",
+ "syn 2.0.119",
+]
 
 [[package]]
 name = "symfony-dotenv"

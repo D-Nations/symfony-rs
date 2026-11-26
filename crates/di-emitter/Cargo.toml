@@ -1,0 +1,25 @@
+[package]
+name = "symfony-di-emitter"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "Build-time emitter of a Rust container from a compiled Symfony service graph"
+
+[dependencies]
+php-dom = { workspace = true }
+php-value = { workspace = true }
+symfony-config = { path = "../config" }
+symfony-dependency-injection = { path = "../dependency-injection" }
+prettyplease = "0.2.37"
+proc-macro2 = "1.0.107"
+quote = "1.0.47"
+syn = { version = "2.0.119", default-features = false, features = ["full", "parsing", "printing"] }
+
+[dev-dependencies]
+# The DI crate's test containers (its tests/support/containers.rs) read
+# their recorded dumps with it.
+serde_json = "1.0.154"
+
+[lints]
+workspace = true

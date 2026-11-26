@@ -10,6 +10,16 @@ done in another tree and this trial does not touch it.
 Code: [spikes/di-trial/](../../spikes/di-trial/README.md). This trial
 marks nothing complete.
 
+**November 26:** the trial compiler is now the workspace crate
+[crates/di-emitter](../../crates/di-emitter/README.md)
+(`symfony-di-emitter`; `spikes/di-trial/compiler` is gone). It also reads
+a compiled Rust `ContainerBuilder` directly, and tests show the same graph
+and the same emitted Rust as for that container's `XmlDumper` file. This
+answers finding 2 for M3: the Rust builder is the input, and it holds the
+resolved tagged iterators and the exact scalar types that the XML file
+loses. The demo still compiles its PHP recording,
+with byte-identical output.
+
 ## Existing alternatives (searched November 24)
 
 No Rust crate reads a service graph from outside and emits a container.
@@ -170,5 +180,5 @@ recorder fixes were needed first:
 ## New dependency
 
 None beyond the twig trial's: `quote`, `syn`, `proc-macro2` and
-`prettyplease` in the trial compiler (see the stack row "Twig trial
+`prettyplease` in the trial compiler (now `symfony-di-emitter`; see the stack row "Twig trial
 emission"; the DI trial row repeats the choice), `serde_json` in tests.

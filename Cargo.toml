@@ -13,6 +13,7 @@ members = [
     "crates/filesystem",
     "crates/config",
     "crates/dependency-injection",
+    "crates/di-emitter",
     "crates/translation",
     "crates/console",
     "crates/http-foundation",
@@ -32,7 +33,6 @@ members = [
     "spikes/twig-trial/compiler",
     "spikes/twig-trial/runtime",
     "spikes/twig-trial/demo",
-    "spikes/di-trial/compiler",
     "spikes/di-trial/runtime",
     "spikes/di-trial/demo",
 ]
