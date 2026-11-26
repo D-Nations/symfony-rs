@@ -21,6 +21,13 @@ pub mod query;
 pub mod sql;
 pub mod types;
 
+// Slice SQLite platform.
+pub mod deprecations;
+pub mod schema;
+mod transaction_isolation_level;
+
+pub use transaction_isolation_level::{LockMode, TransactionIsolationLevel};
+
 pub use array_parameter_type::ArrayParameterType;
 pub use connection_stand_in::ConnectionStandIn;
 pub use exception::{Exception, InvalidArgumentException};

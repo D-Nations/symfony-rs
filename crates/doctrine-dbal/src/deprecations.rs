@@ -7,9 +7,11 @@
 //! doctrine/deprecations is not a pinned package of this repository, so
 //! this is written from its documented behaviour. Differences: the
 //! counts are per thread (PHP has one process-wide state; Rust tests run
-//! in parallel threads), messages are not kept, and
-//! `Deprecation::triggerIfCalledFromOutside()` is never raised (every
-//! call here comes from inside the package).
+//! in parallel threads) and messages are not kept.
+//! `Deprecation::triggerIfCalledFromOutside()` is raised only by the
+//! public entry points; the package's own code calls internal variants
+//! that do not raise it, which gives PHP's result for callers outside
+//! the package (an application or a test).
 //!
 //! Upstream: none
 

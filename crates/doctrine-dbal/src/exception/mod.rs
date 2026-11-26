@@ -89,6 +89,10 @@ impl Exception {
         if self.class == class {
             return true;
         }
+        // Slice SQLite platform: the Schema and Platforms exceptions.
+        if crate::schema::exception::ancestors(self.class).contains(&class) {
+            return true;
+        }
         let column_type = [
             Self::COLUMN_LENGTH_REQUIRED,
             Self::COLUMN_PRECISION_REQUIRED,
@@ -233,5 +237,12 @@ impl From<QueryException> for Exception {
 impl From<NotSupported> for Exception {
     fn from(value: NotSupported) -> Self {
         Self::new(NotSupported::CLASS, value.message().to_owned())
+    }
+}
+
+// Slice SQLite platform.
+impl From<crate::types::TypesException> for Exception {
+    fn from(value: crate::types::TypesException) -> Self {
+        Self::new(value.class(), value.message())
     }
 }

@@ -104,8 +104,8 @@ impl<V> ArrayMap<V> {
         self.next_index = 0;
     }
 
-    /// Replaces the key at `position` (as `array_combine()` of changed
-    /// keys does), keeping the order.
+    /// Replaces the entry under `old_key` by `new_key => value` in the
+    /// same position (as `array_combine()` of changed keys does).
     pub(crate) fn rekey(&mut self, old_key: &str, new_key: String, value: V) {
         if let Some(entry) = self.entries.iter_mut().find(|(k, _)| k == old_key) {
             *entry = (new_key, value);
