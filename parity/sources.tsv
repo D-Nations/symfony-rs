@@ -696,6 +696,7 @@ crates/http-foundation/src/response.rs	symfony/http-foundation	Response.php	30fa
 crates/http-foundation/src/scheme.rs	symfony/http-foundation	Request.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/server_bag.rs	symfony/http-foundation	ServerBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/server_event.rs	symfony/http-foundation	ServerEvent.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/src/streamed_json_response.rs	symfony/http-foundation	StreamedJsonResponse.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/streamed_response.rs	symfony/http-foundation	StreamedResponse.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/uploaded_file.rs	symfony/http-foundation	File/UploadedFile.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/accept_header_item_test.rs	symfony/http-foundation	Tests/AcceptHeaderItemTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
@@ -726,6 +727,7 @@ crates/http-foundation/tests/response_test.rs	symfony/http-foundation	Tests/Resp
 crates/http-foundation/tests/response_test.rs	symfony/http-foundation	Tests/ResponseTestCase.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/server_bag_recorded.rs	symfony/http-foundation	ServerBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/server_bag_test.rs	symfony/http-foundation	Tests/ServerBagTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/tests/streamed_json_response_test.rs	symfony/http-foundation	Tests/StreamedJsonResponseTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/streamed_response_test.rs	symfony/http-foundation	Tests/StreamedResponseTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/uploaded_file_test.rs	symfony/http-foundation	Tests/File/UploadedFileTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-kernel/src/argument_resolver.rs	symfony/http-kernel	Controller/ArgumentResolver.php	460658504e26a2794aa614b4fbe6cf9bac2076fe

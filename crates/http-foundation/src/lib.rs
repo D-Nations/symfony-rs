@@ -16,6 +16,7 @@ pub mod event_stream_response;
 pub mod exception;
 pub mod file;
 pub mod file_bag;
+pub mod generator;
 pub mod header_bag;
 pub mod header_utils;
 pub mod input_bag;
@@ -33,6 +34,7 @@ pub mod sapi;
 pub mod scheme;
 pub mod server_bag;
 pub mod server_event;
+pub mod streamed_json_response;
 pub mod streamed_response;
 pub mod uploaded_file;
 

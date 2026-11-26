@@ -412,6 +412,7 @@ impl Response {
     pub fn class(&self) -> &'static str {
         match self.stream.as_deref() {
             Some(stream) if stream.event_stream().is_some() => crate::event_stream_response::CLASS,
+            Some(stream) if stream.is_json() => crate::streamed_json_response::CLASS,
             Some(_) => crate::streamed_response::CLASS,
             None => CLASS,
         }

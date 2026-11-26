@@ -164,7 +164,7 @@ impl From<JsonResponse> for Response {
     }
 }
 
-fn json_exception(error: JsonError) -> Error {
+pub(crate) fn json_exception(error: JsonError) -> Error {
     Error::new(Class::PhpJson, error.message()).with_code(error.code())
 }
 
