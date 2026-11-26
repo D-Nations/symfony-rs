@@ -17,10 +17,12 @@
 mod dumper;
 mod dumper_interface;
 mod xml_dumper;
+mod yaml_dumper;
 
 pub use dumper::Dumper;
 pub use dumper_interface::DumperInterface;
 pub use xml_dumper::XmlDumper;
+pub use yaml_dumper::YamlDumper;
 
 use php_value::{PhpString, Value};
 
