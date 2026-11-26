@@ -563,68 +563,68 @@ Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuth	ported	crates/http-fo
 Tests/ServerBagTest.php	ServerBagTest::testOAuthBearerAuthWithRedirect	ported	crates/http-foundation/tests/server_bag_test.rs::testOAuthBearerAuthWithRedirect
 Tests/ServerBagTest.php	ServerBagTest::testRequestWithoutContentTypeAndContentLength	ported	crates/http-foundation/tests/server_bag_test.rs::testRequestWithoutContentTypeAndContentLength
 Tests/ServerBagTest.php	ServerBagTest::testShouldExtractHeadersFromServerArray	ported	crates/http-foundation/tests/server_bag_test.rs::testShouldExtractHeadersFromServerArray
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testAll	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testClear	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testCount	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGet	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetDefaults	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetIterator	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetSetName	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetStorageKey	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testHas	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testInitialize	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testRemove	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testReplace	pending	
-Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testSet	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testAll	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testClear	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testDoNotRemoveTheNewFlashesWhenDisplayingTheExistingOnes	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testGet	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testGetSetName	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testGetStorageKey	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testHas	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testInitialize	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testKeys	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testPeek	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testPeekAll	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testSet	pending	
-Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testSetAll	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testAdd	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testAll	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testGet	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testGetSetName	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testGetStorageKey	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testHas	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testInitialize	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testKeys	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testPeek	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testPeekAll	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testSet	pending	
-Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testSetAll	pending	
-Tests/Session/SessionTest.php	SessionTest::testAll	pending	
-Tests/Session/SessionTest.php	SessionTest::testClear	pending	
-Tests/Session/SessionTest.php	SessionTest::testGet	pending	
-Tests/Session/SessionTest.php	SessionTest::testGetBagWithBagImplementingGetBag	pending	
-Tests/Session/SessionTest.php	SessionTest::testGetBagWithBagNotImplementingGetBag	pending	
-Tests/Session/SessionTest.php	SessionTest::testGetCount	pending	
-Tests/Session/SessionTest.php	SessionTest::testGetFlashBag	pending	
-Tests/Session/SessionTest.php	SessionTest::testGetId	pending	
-Tests/Session/SessionTest.php	SessionTest::testGetIterator	pending	
-Tests/Session/SessionTest.php	SessionTest::testGetMeta	pending	
-Tests/Session/SessionTest.php	SessionTest::testHas	pending	
-Tests/Session/SessionTest.php	SessionTest::testInvalidate	pending	
-Tests/Session/SessionTest.php	SessionTest::testIsEmpty	pending	
-Tests/Session/SessionTest.php	SessionTest::testIsStarted	pending	
-Tests/Session/SessionTest.php	SessionTest::testMigrate	pending	
-Tests/Session/SessionTest.php	SessionTest::testMigrateDestroy	pending	
-Tests/Session/SessionTest.php	SessionTest::testRemove	pending	
-Tests/Session/SessionTest.php	SessionTest::testReplace	pending	
-Tests/Session/SessionTest.php	SessionTest::testSave	pending	
-Tests/Session/SessionTest.php	SessionTest::testSet	pending	
-Tests/Session/SessionTest.php	SessionTest::testSetId	pending	
-Tests/Session/SessionTest.php	SessionTest::testSetIdAfterStart	pending	
-Tests/Session/SessionTest.php	SessionTest::testSetName	pending	
-Tests/Session/SessionTest.php	SessionTest::testStart	pending	
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testAll	ported	crates/http-foundation/tests/attribute_bag_test.rs::testAll
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testClear	ported	crates/http-foundation/tests/attribute_bag_test.rs::testClear
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testCount	ported	crates/http-foundation/tests/attribute_bag_test.rs::testCount
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGet	ported	crates/http-foundation/tests/attribute_bag_test.rs::testGet
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetDefaults	ported	crates/http-foundation/tests/attribute_bag_test.rs::testGetDefaults
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetIterator	ported	crates/http-foundation/tests/attribute_bag_test.rs::testGetIterator
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetSetName	ported	crates/http-foundation/tests/attribute_bag_test.rs::testGetSetName
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testGetStorageKey	ported	crates/http-foundation/tests/attribute_bag_test.rs::testGetStorageKey
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testHas	ported	crates/http-foundation/tests/attribute_bag_test.rs::testHas
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testInitialize	ported	crates/http-foundation/tests/attribute_bag_test.rs::testInitialize
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testRemove	ported	crates/http-foundation/tests/attribute_bag_test.rs::testRemove
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testReplace	ported	crates/http-foundation/tests/attribute_bag_test.rs::testReplace
+Tests/Session/Attribute/AttributeBagTest.php	AttributeBagTest::testSet	ported	crates/http-foundation/tests/attribute_bag_test.rs::testSet
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testAll	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testAll
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testClear	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testClear
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testDoNotRemoveTheNewFlashesWhenDisplayingTheExistingOnes	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testDoNotRemoveTheNewFlashesWhenDisplayingTheExistingOnes
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testGet	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testGet
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testGetSetName	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testGetSetName
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testGetStorageKey	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testGetStorageKey
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testHas	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testHas
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testInitialize	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testInitialize
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testKeys	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testKeys
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testPeek	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testPeek
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testPeekAll	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testPeekAll
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testSet	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testSet
+Tests/Session/Flash/AutoExpireFlashBagTest.php	AutoExpireFlashBagTest::testSetAll	ported	crates/http-foundation/tests/auto_expire_flash_bag_test.rs::testSetAll
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testAdd	ported	crates/http-foundation/tests/flash_bag_test.rs::testAdd
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testAll	ported	crates/http-foundation/tests/flash_bag_test.rs::testAll
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testGet	ported	crates/http-foundation/tests/flash_bag_test.rs::testGet
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testGetSetName	ported	crates/http-foundation/tests/flash_bag_test.rs::testGetSetName
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testGetStorageKey	ported	crates/http-foundation/tests/flash_bag_test.rs::testGetStorageKey
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testHas	ported	crates/http-foundation/tests/flash_bag_test.rs::testHas
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testInitialize	ported	crates/http-foundation/tests/flash_bag_test.rs::testInitialize
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testKeys	ported	crates/http-foundation/tests/flash_bag_test.rs::testKeys
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testPeek	ported	crates/http-foundation/tests/flash_bag_test.rs::testPeek
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testPeekAll	ported	crates/http-foundation/tests/flash_bag_test.rs::testPeekAll
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testSet	ported	crates/http-foundation/tests/flash_bag_test.rs::testSet
+Tests/Session/Flash/FlashBagTest.php	FlashBagTest::testSetAll	ported	crates/http-foundation/tests/flash_bag_test.rs::testSetAll
+Tests/Session/SessionTest.php	SessionTest::testAll	ported	crates/http-foundation/tests/session_test.rs::testAll
+Tests/Session/SessionTest.php	SessionTest::testClear	ported	crates/http-foundation/tests/session_test.rs::testClear
+Tests/Session/SessionTest.php	SessionTest::testGet	ported	crates/http-foundation/tests/session_test.rs::testGet
+Tests/Session/SessionTest.php	SessionTest::testGetBagWithBagImplementingGetBag	ported	crates/http-foundation/tests/session_test.rs::testGetBagWithBagImplementingGetBag
+Tests/Session/SessionTest.php	SessionTest::testGetBagWithBagNotImplementingGetBag	ported	crates/http-foundation/tests/session_test.rs::testGetBagWithBagNotImplementingGetBag
+Tests/Session/SessionTest.php	SessionTest::testGetCount	ported	crates/http-foundation/tests/session_test.rs::testGetCount
+Tests/Session/SessionTest.php	SessionTest::testGetFlashBag	ported	crates/http-foundation/tests/session_test.rs::testGetFlashBag
+Tests/Session/SessionTest.php	SessionTest::testGetId	ported	crates/http-foundation/tests/session_test.rs::testGetId
+Tests/Session/SessionTest.php	SessionTest::testGetIterator	ported	crates/http-foundation/tests/session_test.rs::testGetIterator
+Tests/Session/SessionTest.php	SessionTest::testGetMeta	ported	crates/http-foundation/tests/session_test.rs::testGetMeta
+Tests/Session/SessionTest.php	SessionTest::testHas	ported	crates/http-foundation/tests/session_test.rs::testHas
+Tests/Session/SessionTest.php	SessionTest::testInvalidate	ported	crates/http-foundation/tests/session_test.rs::testInvalidate
+Tests/Session/SessionTest.php	SessionTest::testIsEmpty	ported	crates/http-foundation/tests/session_test.rs::testIsEmpty
+Tests/Session/SessionTest.php	SessionTest::testIsStarted	ported	crates/http-foundation/tests/session_test.rs::testIsStarted
+Tests/Session/SessionTest.php	SessionTest::testMigrate	ported	crates/http-foundation/tests/session_test.rs::testMigrate
+Tests/Session/SessionTest.php	SessionTest::testMigrateDestroy	ported	crates/http-foundation/tests/session_test.rs::testMigrateDestroy
+Tests/Session/SessionTest.php	SessionTest::testRemove	ported	crates/http-foundation/tests/session_test.rs::testRemove
+Tests/Session/SessionTest.php	SessionTest::testReplace	ported	crates/http-foundation/tests/session_test.rs::testReplace
+Tests/Session/SessionTest.php	SessionTest::testSave	ported	crates/http-foundation/tests/session_test.rs::testSave
+Tests/Session/SessionTest.php	SessionTest::testSet	ported	crates/http-foundation/tests/session_test.rs::testSet
+Tests/Session/SessionTest.php	SessionTest::testSetId	ported	crates/http-foundation/tests/session_test.rs::testSetId
+Tests/Session/SessionTest.php	SessionTest::testSetIdAfterStart	ported	crates/http-foundation/tests/session_test.rs::testSetIdAfterStart
+Tests/Session/SessionTest.php	SessionTest::testSetName	ported	crates/http-foundation/tests/session_test.rs::testSetName
+Tests/Session/SessionTest.php	SessionTest::testStart	ported	crates/http-foundation/tests/session_test.rs::testStart
 Tests/Session/Storage/Handler/AbstractSessionHandlerTest.php	AbstractSessionHandlerTest::testSession	pending	
 Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testMarshall	pending	
 Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testMarshallInvalidData	pending	
@@ -803,33 +803,33 @@ Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerT
 Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWrite	pending	
 Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWriteEmptyExistingSession	pending	
 Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWriteEmptyNewSession	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testClear	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testCookieLifetimeFromConstructor	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testDoesNotSkipLastUsedUpdate	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetCreated	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetLastUsed	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetLifetime	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetSetName	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetStorageKey	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testInitialize	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testLifetimeIsInt	pending	
-Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testSkipLastUsedUpdate	pending	
-Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testClearClearsBags	pending	
-Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testClearStartsSession	pending	
-Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testClearWithNoBagsStartsSession	pending	
-Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testGetId	pending	
-Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testRegenerate	pending	
-Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testStart	pending	
-Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testUnstartedSave	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testAnIdThatIsNotUsableAsAFileNameStartsANewSession	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testGetId	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testMultipleInstances	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testRegenerate	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSave	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSaveWithoutStart	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSetIdIgnoresAnIdThatIsNotUsableAsAFileName	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSetIdIgnoresAnIdThatIsTooLongForAFileName	pending	
-Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testStart	pending	
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testClear	ported	crates/http-foundation/tests/metadata_bag_test.rs::testClear
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testCookieLifetimeFromConstructor	ported	crates/http-foundation/tests/metadata_bag_test.rs::testCookieLifetimeFromConstructor
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testDoesNotSkipLastUsedUpdate	ported	crates/http-foundation/tests/metadata_bag_test.rs::testDoesNotSkipLastUsedUpdate
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetCreated	ported	crates/http-foundation/tests/metadata_bag_test.rs::testGetCreated
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetLastUsed	ported	crates/http-foundation/tests/metadata_bag_test.rs::testGetLastUsed
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetLifetime	ported	crates/http-foundation/tests/metadata_bag_test.rs::testGetLifetime
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetSetName	ported	crates/http-foundation/tests/metadata_bag_test.rs::testGetSetName
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testGetStorageKey	ported	crates/http-foundation/tests/metadata_bag_test.rs::testGetStorageKey
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testInitialize	ported	crates/http-foundation/tests/metadata_bag_test.rs::testInitialize
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testLifetimeIsInt	ported	crates/http-foundation/tests/metadata_bag_test.rs::testLifetimeIsInt
+Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testSkipLastUsedUpdate	ported	crates/http-foundation/tests/metadata_bag_test.rs::testSkipLastUsedUpdate
+Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testClearClearsBags	ported	crates/http-foundation/tests/mock_array_session_storage_test.rs::testClearClearsBags
+Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testClearStartsSession	ported	crates/http-foundation/tests/mock_array_session_storage_test.rs::testClearStartsSession
+Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testClearWithNoBagsStartsSession	ported	crates/http-foundation/tests/mock_array_session_storage_test.rs::testClearWithNoBagsStartsSession
+Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testGetId	ported	crates/http-foundation/tests/mock_array_session_storage_test.rs::testGetId
+Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testRegenerate	ported	crates/http-foundation/tests/mock_array_session_storage_test.rs::testRegenerate
+Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testStart	ported	crates/http-foundation/tests/mock_array_session_storage_test.rs::testStart
+Tests/Session/Storage/MockArraySessionStorageTest.php	MockArraySessionStorageTest::testUnstartedSave	ported	crates/http-foundation/tests/mock_array_session_storage_test.rs::testUnstartedSave
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testAnIdThatIsNotUsableAsAFileNameStartsANewSession	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testAnIdThatIsNotUsableAsAFileNameStartsANewSession
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testGetId	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testGetId
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testMultipleInstances	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testMultipleInstances
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testRegenerate	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testRegenerate
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSave	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testSave
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSaveWithoutStart	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testSaveWithoutStart
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSetIdIgnoresAnIdThatIsNotUsableAsAFileName	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testSetIdIgnoresAnIdThatIsNotUsableAsAFileName
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testSetIdIgnoresAnIdThatIsTooLongForAFileName	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testSetIdIgnoresAnIdThatIsTooLongForAFileName
+Tests/Session/Storage/MockFileSessionStorageTest.php	MockFileSessionStorageTest::testStart	ported	crates/http-foundation/tests/mock_file_session_storage_test.rs::testStart
 Tests/Session/Storage/NativeSessionStorageTest.php	NativeSessionStorageTest::testBag	pending	
 Tests/Session/Storage/NativeSessionStorageTest.php	NativeSessionStorageTest::testCacheExpireOption	pending	
 Tests/Session/Storage/NativeSessionStorageTest.php	NativeSessionStorageTest::testCanCreateNativeSessionStorageWhenSessionAlreadyStarted	pending	
