@@ -1722,6 +1722,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "twig-integration"
+version = "0.1.0"
+dependencies = [
+ "php-value",
+ "serde_json",
+ "symfony-deprecation-contracts",
+ "twig",
+]
+
+[[package]]
 name = "twig-trial-compiler"
 version = "0.1.0"
 dependencies = [

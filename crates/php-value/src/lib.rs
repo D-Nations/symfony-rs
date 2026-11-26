@@ -25,6 +25,7 @@ pub mod json;
 pub mod net;
 pub mod numeric;
 pub mod object;
+pub mod ops;
 pub mod path;
 pub mod pcre;
 pub mod serialize;
