@@ -76,3 +76,9 @@ tests are `n/a`: they test PHP's `serialize()` of objects.
 - PHP functions that `fromPhp()` can find are a `PhpFunctions` table;
   `PhpFunctions::define()` adds a user function.
 - `compile()` returns `PhpString` (bytes), as PHP strings are.
+- The parser and the node walks recurse, as upstream's do, up to the
+  256 nesting levels that the parser accepts. A debug build can need
+  more than 1 MiB of stack for an expression near that limit (Windows
+  gives 1 MiB to the main thread). Parse such expressions on a thread
+  with a larger stack (`std::thread::Builder::stack_size`).
+  `testDeeplyNestedExpressionIsRejected` runs on a 16 MiB thread.

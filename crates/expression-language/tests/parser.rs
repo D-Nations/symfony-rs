@@ -486,17 +486,28 @@ fn get_deeply_nested_expressions() -> Vec<(&'static str, String)> {
 
 #[test]
 fn testDeeplyNestedExpressionIsRejected() {
-    for (label, expression) in get_deeply_nested_expressions() {
-        let error = lint(&expression, &PhpArray::new(), IGNORE_UNKNOWN_VARIABLES).expect_err(label);
-        assert_eq!(error.class(), &Class::SyntaxError, "{label}");
-        assert!(
-            error
-                .message()
-                .to_string_lossy()
-                .contains("Expression is nested too deeply, the maximum nesting level is 256"),
-            "{label}: {error}"
-        );
-    }
+    // The parser recurses up to 256 levels before it refuses the
+    // expression. A debug build needs more stack for that than the default
+    // test thread has on Windows (and more than its 1 MiB main thread), so
+    // the test runs on a thread with a stack of known size.
+    std::thread::Builder::new()
+        .stack_size(16 * 1024 * 1024)
+        .spawn(|| {
+            for (label, expression) in get_deeply_nested_expressions() {
+                let error =
+                    lint(&expression, &PhpArray::new(), IGNORE_UNKNOWN_VARIABLES).expect_err(label);
+                assert_eq!(error.class(), &Class::SyntaxError, "{label}");
+                assert!(
+                    error.message().to_string_lossy().contains(
+                        "Expression is nested too deeply, the maximum nesting level is 256"
+                    ),
+                    "{label}: {error}"
+                );
+            }
+        })
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 #[test]
