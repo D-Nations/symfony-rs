@@ -6,7 +6,7 @@
 //! An exception class is checked by its class name.
 //!
 //! testDiscardedEnvInConfig's `compile()` is `support::compile()`
-//! (nothing is autowired), with `support::EnvDefaults` reading env vars.
+//! (nothing is autowired), with `support::EnvProcessor` reading env vars.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/ValidateEnvPlaceholdersPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used, clippy::too_many_lines)]
@@ -568,7 +568,7 @@ fn testEmptyConfigFromMoreThanOneSource() {
 #[test]
 fn testDiscardedEnvInConfig() {
     let mut container = ContainerBuilder::new();
-    container.set_env_var_resolver(Arc::new(support::EnvDefaults));
+    container.set_env_var_resolver(Arc::new(support::EnvProcessor::new()));
     container.set_parameter("env(BOOLISH)", "1").unwrap();
     container.set_parameter("boolish", "%env(BOOLISH)%").unwrap();
     container.register_extension(Arc::new(EnvExtension::new()));
