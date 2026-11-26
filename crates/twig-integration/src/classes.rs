@@ -341,7 +341,7 @@ impl PhpObject for MagicCallStub {
     }
 }
 
-/// `TestClassForMagicCallAttributes` (expressions/magic_call.test):
+/// `TestClassForMagicCallAttributes` (`expressions/magic_call.test`):
 /// `getBar()`, and `__call()` that answers `foo` (else `false`).
 #[derive(Debug, Clone, Default)]
 pub struct TestClassForMagicCallAttributes;
@@ -369,7 +369,7 @@ impl PhpObject for TestClassForMagicCallAttributes {
 }
 
 /// A class of a fixture's `--DATA--` with only `__toString()`:
-/// `MyObj` (regression/block-inheritance-issue.test).
+/// `MyObj` (`regression/block-inheritance-issue.test`).
 #[derive(Debug, Clone)]
 pub struct StringOnly {
     pub class: &'static str,
@@ -403,7 +403,7 @@ impl PhpObject for StringOnly {
     }
 }
 
-/// `UserForAutoEscapeTest` (tags/autoescape/objects.test): `getName()`
+/// `UserForAutoEscapeTest` (`tags/autoescape/objects.test`): `getName()`
 /// and `__toString()` give `Fabien<br />`.
 #[derive(Debug, Clone, Default)]
 pub struct UserForAutoEscapeTest;
@@ -435,7 +435,7 @@ impl PhpObject for UserForAutoEscapeTest {
     }
 }
 
-/// `ItemsIterator` and `ItemsIteratorCountable` (tags/for/objects*.test):
+/// `ItemsIterator` and `ItemsIteratorCountable` (`tags/for/objects*.test`):
 /// an `Iterator` over `['foo' => 'bar', 'bar' => 'foo']`, `Countable` or
 /// not.
 #[derive(Debug, Clone)]
@@ -493,7 +493,7 @@ impl PhpObject for ItemsIterator {
     }
 }
 
-/// `TwigTestStringy` (expressions/array_dynamic_keys.test): a
+/// `TwigTestStringy` (`expressions/array_dynamic_keys.test`): a
 /// `Stringable` with a private `$v`.
 #[derive(Debug, Clone)]
 pub struct TwigTestStringy {
@@ -527,7 +527,7 @@ impl PhpObject for TwigTestStringy {
     }
 }
 
-/// `TwigTestHolder` (expressions/array_dynamic_keys.test): `$name =
+/// `TwigTestHolder` (`expressions/array_dynamic_keys.test`): `$name =
 /// 'attr'`, `$stringable` (`attr_obj`), `getStringable()` (`method_obj`).
 #[derive(Debug, Clone, Default)]
 pub struct TwigTestHolder;
@@ -562,7 +562,7 @@ impl PhpObject for TwigTestHolder {
     }
 }
 
-/// The anonymous class of expressions/set.test with `getName()`.
+/// The anonymous class of `expressions/set.test` with `getName()`.
 #[derive(Debug, Clone, Default)]
 pub struct AnonymousNamed;
 

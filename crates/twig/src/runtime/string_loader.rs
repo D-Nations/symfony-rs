@@ -37,6 +37,10 @@ pub fn template_name(template: &[u8], name: Option<&[u8]>) -> Vec<u8> {
 
 /// `templateFromString($env, $template, $name)`: the template compiled
 /// from this string, as a `TemplateWrapper`.
+#[allow(
+    clippy::needless_pass_by_value,
+    reason = "the runtime functions share one signature"
+)]
 pub fn template_from_string(call: &Call<'_>, args: Vec<Value>) -> R {
     let template = match args.first() {
         Some(Value::String(s)) => s.as_bytes().to_vec(),
