@@ -478,6 +478,19 @@ impl Stream {
         out
     }
 
+    /// `fseek($stream, $offset)` from the start; past the end is allowed,
+    /// as on a file.
+    pub fn seek(&self, offset: usize) {
+        let mut state = self.state();
+        state.position = offset;
+        state.eof = false;
+    }
+
+    /// `fstat($stream)['size']`.
+    pub fn size(&self) -> usize {
+        self.state().bytes.len()
+    }
+
     /// `feof()`.
     pub fn eof(&self) -> bool {
         self.state().eof
