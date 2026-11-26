@@ -17,8 +17,10 @@
 
 use php_value::{Key, PhpArray, PhpString, Value};
 
+use crate::TransactionIsolationLevel;
 use crate::exception::Exception;
 use crate::exception::InvalidArgumentException;
+use crate::sql::Parser;
 use crate::sql::builder::{
     DefaultSelectSQLBuilder, DefaultUnionSQLBuilder, SelectSQLBuilder, UnionSQLBuilder,
     WithSQLBuilder,
@@ -364,6 +366,98 @@ pub trait AbstractPlatform {
     fn get_union_distinct_sql(&self) -> String {
         "UNION".to_owned()
     }
+
+    // End of slice Query.
+
+    // Slice Connection: the transaction, savepoint, identifier and dummy
+    // select methods that Connection.php calls.
+
+    /// Returns the SQL expression which represents the currently selected
+    /// database.
+    fn get_current_database_expression(&self) -> String;
+
+    /// Gets the SQL statement to change the session's transaction
+    /// isolation level.
+    fn get_set_transaction_isolation_sql(&self, level: TransactionIsolationLevel) -> String;
+
+    /// Returns the SQL for a given transaction isolation level
+    /// (`_getTransactionIsolationLevelSQL()`, protected in PHP).
+    fn get_transaction_isolation_level_sql(&self, level: TransactionIsolationLevel) -> String {
+        match level {
+            TransactionIsolationLevel::ReadUncommitted => "READ UNCOMMITTED",
+            TransactionIsolationLevel::ReadCommitted => "READ COMMITTED",
+            TransactionIsolationLevel::RepeatableRead => "REPEATABLE READ",
+            TransactionIsolationLevel::Serializable => "SERIALIZABLE",
+        }
+        .to_owned()
+    }
+
+    /// Gets the default transaction isolation level of the platform.
+    fn get_default_transaction_isolation_level(&self) -> TransactionIsolationLevel {
+        TransactionIsolationLevel::ReadCommitted
+    }
+
+    /// Whether the platform supports savepoints.
+    fn supports_savepoints(&self) -> bool {
+        true
+    }
+
+    /// Whether the platform supports releasing savepoints.
+    fn supports_release_savepoints(&self) -> bool {
+        self.supports_savepoints()
+    }
+
+    /// Whether the platform supports identity columns (auto-increment).
+    fn supports_identity_columns(&self) -> bool {
+        false
+    }
+
+    /// Returns the SQL to create a savepoint.
+    fn create_save_point(&self, savepoint: &str) -> String {
+        format!("SAVEPOINT {savepoint}")
+    }
+
+    /// Returns the SQL to release a savepoint.
+    fn release_save_point(&self, savepoint: &str) -> String {
+        format!("RELEASE SAVEPOINT {savepoint}")
+    }
+
+    /// Returns the SQL to rollback a savepoint.
+    fn rollback_save_point(&self, savepoint: &str) -> String {
+        format!("ROLLBACK TO SAVEPOINT {savepoint}")
+    }
+
+    /// Makes any fixed SQL query a valid one (`getDummySelectSQL()`, whose
+    /// expression defaults to `'1'`).
+    fn get_dummy_select_sql(&self, expression: &str) -> String {
+        format!("SELECT {expression}")
+    }
+
+    /// Creates the SQL parser of the platform.
+    fn create_sql_parser(&self) -> Parser {
+        Parser::new(false)
+    }
+
+    /// Quotes a string so that it can be safely used as an identifier in
+    /// SQL.
+    fn quote_single_identifier(&self, str: &str) -> String {
+        format!("\"{}\"", str.replace('"', "\"\""))
+    }
+
+    /// Quotes a (possibly qualified) identifier, each part on its own
+    /// (deprecated in PHP; the deprecation is not raised).
+    fn quote_identifier(&self, identifier: &str) -> String {
+        if identifier.contains('.') {
+            return identifier
+                .split('.')
+                .map(|part| self.quote_single_identifier(part))
+                .collect::<Vec<_>>()
+                .join(".");
+        }
+        self.quote_single_identifier(identifier)
+    }
+
+    // End of slice Connection.
 }
 
 /// `empty($column[$name])` negated.

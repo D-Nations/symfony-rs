@@ -10,6 +10,8 @@
 //! One [`Exception`] value stands for a thrown object: its class (one of
 //! the constants below, or a PHP engine error such as `TypeError` that a
 //! `strict_types` call raises), its message and its previous exception.
+//! The Connection slice adds `getCode()`, the driver's SQLSTATE and the
+//! query of a `DriverException` (`driver_exception.rs`).
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!
@@ -24,8 +26,11 @@ use std::fmt;
 
 use php_value::PhpString;
 
+use crate::Query;
 use crate::platforms::NotSupported;
 use crate::query::{QueryException, QueryExceptionKind};
+
+mod driver_exception;
 
 /// A thrown DBAL exception (or PHP error).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -33,6 +38,11 @@ pub struct Exception {
     class: &'static str,
     message: PhpString,
     previous: Option<Box<Exception>>,
+    // Slice Connection: `getCode()`, a driver exception's SQLSTATE and a
+    // `DriverException`'s query.
+    code: i64,
+    sql_state: Option<String>,
+    query: Option<Box<Query>>,
 }
 
 impl Exception {
@@ -60,6 +70,9 @@ impl Exception {
             class,
             message: message.into(),
             previous: None,
+            code: 0,
+            sql_state: None,
+            query: None,
         }
     }
 
@@ -84,41 +97,10 @@ impl Exception {
         self.previous.as_deref()
     }
 
-    /// `$e instanceof $class`, for the classes and interfaces above.
+    /// `$e instanceof $class`, for the classes and interfaces above and
+    /// those of `driver_exception.rs`.
     pub fn is_instance_of(&self, class: &str) -> bool {
-        if self.class == class {
-            return true;
-        }
-        let column_type = [
-            Self::COLUMN_LENGTH_REQUIRED,
-            Self::COLUMN_PRECISION_REQUIRED,
-            Self::COLUMN_SCALE_REQUIRED,
-            Self::COLUMN_VALUES_REQUIRED,
-        ]
-        .contains(&self.class);
-        let query = [
-            QueryExceptionKind::Query,
-            QueryExceptionKind::NonUniqueAlias,
-            QueryExceptionKind::UnknownAlias,
-        ]
-        .iter()
-        .any(|kind| kind.class() == self.class);
-        let dbal = column_type
-            || query
-            || [
-                Self::INVALID_ARGUMENT_EXCEPTION,
-                Self::INVALID_COLUMN_DECLARATION,
-                NotSupported::CLASS,
-            ]
-            .contains(&self.class);
-        match class {
-            "Doctrine\\DBAL\\Exception\\InvalidColumnType" => column_type,
-            "Doctrine\\DBAL\\Query\\QueryException" => query,
-            "Doctrine\\DBAL\\Exception" => dbal,
-            "LogicException" => column_type || self.class == Self::INVALID_COLUMN_DECLARATION,
-            "InvalidArgumentException" => self.class == Self::INVALID_ARGUMENT_EXCEPTION,
-            _ => false,
-        }
+        class_is_a(self.class, class)
     }
 
     /// `ColumnLengthRequired::new($platform, $type)`; `platform` is
@@ -233,5 +215,49 @@ impl From<QueryException> for Exception {
 impl From<NotSupported> for Exception {
     fn from(value: NotSupported) -> Self {
         Self::new(NotSupported::CLASS, value.message().to_owned())
+    }
+}
+
+/// `is_a($sub, $class, true)`: the classes above, then (Slice Connection)
+/// the parents that `driver_exception.rs` lists.
+fn class_is_a(sub: &str, class: &str) -> bool {
+    if sub == class {
+        return true;
+    }
+    let column_type = [
+        Exception::COLUMN_LENGTH_REQUIRED,
+        Exception::COLUMN_PRECISION_REQUIRED,
+        Exception::COLUMN_SCALE_REQUIRED,
+        Exception::COLUMN_VALUES_REQUIRED,
+    ]
+    .contains(&sub);
+    let query = [
+        QueryExceptionKind::Query,
+        QueryExceptionKind::NonUniqueAlias,
+        QueryExceptionKind::UnknownAlias,
+    ]
+    .iter()
+    .any(|kind| kind.class() == sub);
+    let dbal = column_type
+        || query
+        || [
+            Exception::INVALID_ARGUMENT_EXCEPTION,
+            Exception::INVALID_COLUMN_DECLARATION,
+            NotSupported::CLASS,
+        ]
+        .contains(&sub);
+    if driver_exception::parents(sub)
+        .iter()
+        .any(|parent| class_is_a(parent, class))
+    {
+        return true;
+    }
+    match class {
+        "Doctrine\\DBAL\\Exception\\InvalidColumnType" => column_type,
+        "Doctrine\\DBAL\\Query\\QueryException" => query,
+        "Doctrine\\DBAL\\Exception" => dbal,
+        "LogicException" => column_type || sub == Exception::INVALID_COLUMN_DECLARATION,
+        "InvalidArgumentException" => sub == Exception::INVALID_ARGUMENT_EXCEPTION,
+        _ => false,
     }
 }
