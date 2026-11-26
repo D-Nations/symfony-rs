@@ -10,6 +10,8 @@
 //! Upstream: none
 
 mod abstract_recursive_pass;
+mod add_behavior_describing_tags_pass;
+mod auto_alias_service_pass;
 #[expect(clippy::module_inception, reason = "one module per upstream file")]
 mod compiler;
 mod compiler_pass_interface;
@@ -20,11 +22,15 @@ mod priority_tagged_service_trait;
 mod register_env_var_processors_pass;
 mod register_reverse_container_pass;
 mod register_service_subscribers_pass;
+mod resettable_service_pass;
 mod resolve_tagged_iterator_argument_pass;
 mod service_locator_tag_pass;
 mod service_reference_graph;
+mod tag_decorator_pass;
 
 pub use abstract_recursive_pass::{AbstractRecursivePass, RecursivePassState, recursive_process};
+pub use add_behavior_describing_tags_pass::AddBehaviorDescribingTagsPass;
+pub use auto_alias_service_pass::AutoAliasServicePass;
 pub use compiler::Compiler;
 pub use compiler_pass_interface::{CompilerPassInterface, Pass};
 pub use extension_compiler_pass::ExtensionCompilerPass;
@@ -37,9 +43,11 @@ pub use priority_tagged_service_trait::{
 pub use register_env_var_processors_pass::RegisterEnvVarProcessorsPass;
 pub use register_reverse_container_pass::RegisterReverseContainerPass;
 pub use register_service_subscribers_pass::RegisterServiceSubscribersPass;
+pub use resettable_service_pass::ResettableServicePass;
 pub use resolve_tagged_iterator_argument_pass::ResolveTaggedIteratorArgumentPass;
 pub use service_locator_tag_pass::ServiceLocatorTagPass;
 pub use service_reference_graph::{
     EdgeFlags, EdgeId, NodeId, ServiceReferenceGraph, ServiceReferenceGraphEdge,
     ServiceReferenceGraphNode,
 };
+pub use tag_decorator_pass::TagDecoratorPass;

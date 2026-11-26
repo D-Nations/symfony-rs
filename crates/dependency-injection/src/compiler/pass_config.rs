@@ -142,7 +142,7 @@ impl PassConfig {
         let optimization = BTreeMap::from([(
             0,
             vec![
-                pending("AutoAliasServicePass"),
+                Pass::new(super::AutoAliasServicePass),
                 pending("ValidateEnvPlaceholdersPass"),
                 pending("ResolveDecoratorStackPass"),
                 pending("ResolveAutowireInlineAttributesPass"),
@@ -155,7 +155,7 @@ impl PassConfig {
                 pending("AutowireRequiredPropertiesPass"),
                 pending("ResolveBindingsPass"),
                 Pass::new(super::ServiceLocatorTagPass::new()),
-                pending("TagDecoratorPass"),
+                Pass::new(super::TagDecoratorPass),
                 pending("DecoratorServicePass"),
                 pending("CheckDefinitionValidityPass"),
                 pending_with("AutowirePass", "false"),
