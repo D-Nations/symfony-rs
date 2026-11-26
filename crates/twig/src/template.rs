@@ -191,6 +191,8 @@ pub trait CompiledTemplate: Sync {
 /// An instance of a compiled template (`Twig\Template`).
 pub struct Template {
     compiled: &'static dyn CompiledTemplate,
+    /// [`Environment::id`] of the environment that loaded it.
+    env_id: usize,
     source: Arc<Source>,
     this: Weak<Template>,
     /// `$this->parent`: `None` is null (not resolved yet), `Some(None)`
@@ -221,6 +223,7 @@ impl Template {
     ) -> Result<Rc<Self>, Error> {
         let template = Rc::new_cyclic(|this| Self {
             compiled,
+            env_id: env.id(),
             source: Arc::new(compiled.source_context()),
             this: this.clone(),
             parent: RefCell::new(None),
@@ -626,21 +629,31 @@ impl Template {
 pub struct TemplateWrapper {
     name: Vec<u8>,
     index: Option<i64>,
+    /// [`Environment::id`] of the environment that made it.
+    env_id: usize,
 }
 
 impl TemplateWrapper {
     pub const CLASS: &'static str = "Twig\\TemplateWrapper";
 
-    pub fn new(name: impl Into<Vec<u8>>, index: Option<i64>) -> Self {
+    /// The wrapper of the template `name` of the environment `env_id`.
+    pub fn new(name: impl Into<Vec<u8>>, index: Option<i64>, env_id: usize) -> Self {
         Self {
             name: name.into(),
             index,
+            env_id,
         }
     }
 
     /// The wrapper of a template.
     pub fn of(template: &Template) -> Self {
-        Self::new(template.name(), None)
+        Self::new(template.name(), None, template.env_id)
+    }
+
+    /// `isOwnedBy($env)`.
+    #[must_use]
+    pub fn is_owned_by(&self, env: &Environment) -> bool {
+        self.env_id == env.id()
     }
 
     /// The wrapper as a value.
@@ -655,8 +668,15 @@ impl TemplateWrapper {
         &self.name
     }
 
-    /// `unwrap($env)`.
+    /// `unwrap($env)`: only for the environment that made the wrapper.
     pub fn unwrap_template(&self, env: &Environment) -> Result<Rc<Template>, Error> {
+        if !self.is_owned_by(env) {
+            return Err(Error::runtime(
+                "A \"Twig\\TemplateWrapper\" can only be used with the \"Twig\\Environment\" that created it.",
+                -1,
+                None,
+            ));
+        }
         env.load_template(&self.name, self.index)
     }
 

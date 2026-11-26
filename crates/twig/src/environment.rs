@@ -88,6 +88,9 @@ pub type ArrowFn = dyn Fn(&Environment, &[Value]) -> Result<Value, Error>;
 
 /// `Environment`, for parsing.
 pub struct Environment {
+    /// Which environment this is (PHP compares the objects): a
+    /// `TemplateWrapper` works only with the environment that made it.
+    id: usize,
     extension_set: ExtensionSet,
     lexer: Lexer,
     autoescape: Autoescape,
@@ -158,7 +161,9 @@ impl Environment {
             c if c == b"UTF8" || c.is_empty() => b"UTF-8".to_vec(),
             _ => options.charset.clone(),
         };
+        static NEXT_ID: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(1);
         Self {
+            id: NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
             extension_set,
             lexer,
             autoescape: options.autoescape,
@@ -173,6 +178,12 @@ impl Environment {
             arrows: RefCell::new(Vec::new()),
             core: RefCell::new(CoreOptions::default()),
         }
+    }
+
+    /// The environment's identity, for `TemplateWrapper::isOwnedBy()`.
+    #[must_use]
+    pub fn id(&self) -> usize {
+        self.id
     }
 
     /// `isDebug()`.

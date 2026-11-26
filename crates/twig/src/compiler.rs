@@ -468,7 +468,7 @@ fn used_list(check: &Node, name: &str) -> (String, Option<i64>) {
 
 /// `CheckSecurityNode::compile()`: the template's `checkTraitsAllowed()`
 /// (with a `use` tag) and `ensureSecurityChecked()`.
-fn compile_check_security(check: &Node) -> String {
+fn compile_check_security(check: &Node, guessed_line: i64) -> String {
     let (tags, use_line) = used_list(check, "usedTags");
     let (filters, _) = used_list(check, "usedFilters");
     let (functions, _) = used_list(check, "usedFunctions");
@@ -477,12 +477,12 @@ fn compile_check_security(check: &Node) -> String {
     if let Some(line) = use_line {
         let _ = writeln!(
             out,
-            "        fn check_traits_allowed(&self, this: &rt::Rc<rt::Template>, env: &rt::Environment) -> Result<(), rt::Error> {{\n            rt::sandbox::check_traits_allowed(env, this.source(), {line})\n        }}\n"
+            "        fn check_traits_allowed(&self, this: &rt::Rc<rt::Template>, env: &rt::Environment) -> Result<(), rt::Error> {{\n            rt::guess(rt::sandbox::check_traits_allowed(env, this.source(), {line}), {guessed_line}, this)\n        }}\n"
         );
     }
     let _ = writeln!(
         out,
-        "        fn ensure_security_checked(&self, this: &rt::Rc<rt::Template>, env: &rt::Environment) -> Result<(), rt::Error> {{\n            rt::sandbox::ensure_security_checked(env, this.source(), {tags}, {filters}, {functions}, {tests})\n        }}\n"
+        "        fn ensure_security_checked(&self, this: &rt::Rc<rt::Template>, env: &rt::Environment) -> Result<(), rt::Error> {{\n            rt::guess(rt::sandbox::ensure_security_checked(env, this.source(), {tags}, {filters}, {functions}, {tests}), {guessed_line}, this)\n        }}\n"
     );
     out
 }
@@ -527,6 +527,10 @@ pub struct Compiler<'a> {
     /// statement is compiled (`__line = \0N\0;`).
     lines: Vec<i64>,
     current_line_slot: Option<usize>,
+    /// The template line of the last debug info of the module: PHP's line
+    /// guess for an error of the methods generated after it
+    /// (`checkSecurity()`, `checkTraitsAllowed()` at the end of the class).
+    last_debug_line: i64,
     scope: Scope,
     /// The functions of the module (blocks, macros), after the impl.
     functions: Vec<String>,
@@ -543,6 +547,7 @@ impl<'a> Compiler<'a> {
             var_name_salt: 0,
             lines: Vec::new(),
             current_line_slot: None,
+            last_debug_line: -1,
             scope: Scope::Method,
             functions: Vec::new(),
         }
@@ -590,6 +595,7 @@ impl<'a> Compiler<'a> {
         let slot = self.lines.len();
         self.lines.push(node.line());
         self.current_line_slot = Some(slot);
+        self.last_debug_line = node.line();
         self.line(&format!("__line = {LINE_MARK}{slot}{LINE_MARK};"));
     }
 
@@ -600,6 +606,9 @@ impl<'a> Compiler<'a> {
             && let Some(line) = self.lines.get_mut(slot)
         {
             *line = node.line();
+            if slot + 1 == self.lines.len() {
+                self.last_debug_line = node.line();
+            }
         }
     }
 
@@ -790,7 +799,7 @@ impl<'a> Compiler<'a> {
         if let Some(check) =
             find_class(&module.get_node("class_end")?, NodeClass::CheckSecurityNode)
         {
-            out.push_str(&compile_check_security(&check));
+            out.push_str(&compile_check_security(&check, self.last_debug_line));
         }
         out.push_str("    }\n\n");
         for function in std::mem::take(&mut self.functions) {
