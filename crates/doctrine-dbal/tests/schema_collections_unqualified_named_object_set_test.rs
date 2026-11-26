@@ -64,7 +64,7 @@ fn assert_does_not_exist(result: Result<(), CollectionError>) {
 fn testInstantiationWithoutArguments() {
     let set = UnqualifiedNamedObjectSet::<Object>::default();
     assert!(set.is_empty());
-    assert!(set.to_list().is_empty());
+    assert_eq!(set.to_list(), [] as [&Object; 0]);
 }
 
 #[test]

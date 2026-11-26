@@ -51,7 +51,7 @@ async fn testFetchAllAssociative() {
         .fetch_all_associative(&query(), &none(), &no_types())
         .await
         .unwrap();
-    assert!(all.is_empty());
+    assert_eq!(all, [] as [php_value::PhpArray; 0]);
 }
 
 #[tokio::test]
@@ -60,7 +60,7 @@ async fn testFetchAllNumeric() {
         .fetch_all_numeric(&query(), &none(), &no_types())
         .await
         .unwrap();
-    assert!(all.is_empty());
+    assert_eq!(all, [] as [php_value::PhpArray; 0]);
 }
 
 #[tokio::test]
@@ -69,5 +69,5 @@ async fn testFetchFirstColumn() {
         .fetch_first_column(&query(), &none(), &no_types())
         .await
         .unwrap();
-    assert!(all.is_empty());
+    assert_eq!(all, [] as [php_value::Value; 0]);
 }

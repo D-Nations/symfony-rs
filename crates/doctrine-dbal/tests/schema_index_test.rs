@@ -213,7 +213,7 @@ fn testFulfilledWithLength() {
 fn testFlags() {
     let mut idx1 = create_index(false, false, PhpArray::new());
     assert!(!idx1.has_flag("clustered"));
-    assert!(idx1.get_flags().is_empty());
+    assert_eq!(idx1.get_flags(), [] as [std::string::String; 0]);
 
     idx1.add_flag("clustered");
     assert!(idx1.has_flag("clustered"));
@@ -223,7 +223,7 @@ fn testFlags() {
 
     idx1.remove_flag("clustered");
     assert!(!idx1.has_flag("clustered"));
-    assert!(idx1.get_flags().is_empty());
+    assert_eq!(idx1.get_flags(), [] as [std::string::String; 0]);
     assert!(!idx1.is_clustered());
 }
 

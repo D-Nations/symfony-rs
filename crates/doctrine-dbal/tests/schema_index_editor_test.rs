@@ -144,7 +144,7 @@ fn testPreservesRegularIndexProperties() {
     assert_eq!(index2.get_columns(), ["user_name".to_owned()]);
     assert!(!index2.is_unique());
     assert!(!index2.is_primary());
-    assert!(index2.get_flags().is_empty());
+    assert_eq!(index2.get_flags(), [] as [std::string::String; 0]);
     assert_eq!(index2.get_options(), &options);
     // assertSame() also compares the types of the values.
     assert_eq!(

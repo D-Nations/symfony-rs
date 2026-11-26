@@ -29,7 +29,7 @@ async fn create_test_table(connection: &Connection) {
 #[tokio::test]
 async fn testServerVersion() {
     let connection = sqlite();
-    assert!(!connection.get_server_version().await.unwrap().is_empty());
+    assert_ne!(connection.get_server_version().await.unwrap(), "");
 }
 
 #[tokio::test]

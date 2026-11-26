@@ -33,7 +33,7 @@ fn testDatabaseUrl() {
     let rows = data()["providers"]["Tools/DsnParserTest"]["testDatabaseUrl"]["rows"]
         .as_array()
         .unwrap();
-    assert!(!rows.is_empty());
+    assert_ne!(rows.as_slice(), &[] as &[serde_json::Value]);
     for row in rows {
         let name = row[0].as_str().unwrap();
         let args = row[1].as_array().unwrap();

@@ -388,7 +388,7 @@ fn provider(method: &str) -> &'static Vec<serde_json::Value> {
 async fn testTrimExpression() {
     let connection = set_up().await;
     let rows = provider("testTrimExpression");
-    assert!(!rows.is_empty());
+    assert_ne!(rows.as_slice(), &[] as &[serde_json::Value]);
     for (index, row) in rows.iter().enumerate() {
         let expected = decode(&row[1][3]).unwrap();
         let sql = sql(&format!("trim_{index}"));
@@ -554,7 +554,7 @@ async fn testLocateExpression() {
 async fn testSubstringExpression() {
     let connection = set_up().await;
     let rows = provider("testSubstringExpression");
-    assert!(!rows.is_empty());
+    assert_ne!(rows.as_slice(), &[] as &[serde_json::Value]);
     for row in rows {
         let name = row[0].as_str().unwrap();
         let expected = decode(&row[1][3]).unwrap();
