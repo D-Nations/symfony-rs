@@ -4,8 +4,9 @@
 //! PHP instantiates the class names it is given. Here a driver class is a
 //! [`DriverClass`]: the name and how to build it. `pdo_sqlite` (and its
 //! class, `Doctrine\DBAL\Driver\PDO\SQLite\Driver`) builds the sqlx `SQLite`
-//! driver; the other drivers of the map are known by name but not ported,
-//! so they are refused. A program's own driver class is given to
+//! driver; the other drivers of the map are known by name but not ported:
+//! their connection can be built, as PHP builds it without connecting, and
+//! refuses to connect. A program's own driver class is given to
 //! [`DriverManager::get_connection_with`]. A wrapper class other than
 //! `Doctrine\DBAL\Connection` is refused, as Rust has no subclasses
 //! (README.md, Differences). Middlewares are not ported.
@@ -18,8 +19,10 @@ use std::sync::Arc;
 
 use php_value::{Key, PhpArray, PhpString, Value};
 
-use crate::driver::{Driver, pdo_sqlite};
+use crate::driver::api::ExceptionConverter;
+use crate::driver::{BoxFuture, Connection as DriverConnection, Driver, PlatformBox, pdo_sqlite};
 use crate::{Configuration, Connection, Exception};
+use crate::{Query, ServerVersionProvider};
 
 /// A driver class name and how `new $driverClass()` builds it.
 #[derive(Clone, Copy)]
@@ -163,15 +166,61 @@ impl DriverManager {
         {
             return Ok((class.construct)());
         }
-        if is_dbal_driver_class(driver_class.as_bytes()) {
-            return Err(Exception::new(
-                Exception::UNSUPPORTED,
-                format!(
-                    "the driver {} is not ported",
-                    driver_class.to_string_lossy()
-                ),
-            ));
+        if let Some((_, class)) = DRIVER_MAP
+            .iter()
+            .find(|(_, class)| class.as_bytes() == driver_class.as_bytes())
+        {
+            return Ok(Arc::new(NotPortedDriver { class }));
         }
         Err(Exception::invalid_driver_class(driver_class.as_bytes()))
+    }
+}
+
+/// A driver of the map that is not ported: it has its class, and refuses
+/// to connect or to give a platform.
+struct NotPortedDriver {
+    class: &'static str,
+}
+
+impl NotPortedDriver {
+    fn refusal(&self) -> Exception {
+        Exception::new(
+            Exception::UNSUPPORTED,
+            format!("the driver {} is not ported", self.class),
+        )
+    }
+}
+
+/// The converter of a driver that is not ported: it never has an
+/// exception to convert, and keeps one as it is.
+struct NoConversion;
+
+impl ExceptionConverter for NoConversion {
+    fn convert(&self, exception: Exception, _query: Option<Query>) -> Exception {
+        exception
+    }
+}
+
+impl Driver for NotPortedDriver {
+    fn class(&self) -> &str {
+        self.class
+    }
+
+    fn connect<'a>(
+        &'a self,
+        _params: &'a PhpArray,
+    ) -> BoxFuture<'a, Result<Arc<dyn DriverConnection>, Exception>> {
+        Box::pin(async move { Err(self.refusal()) })
+    }
+
+    fn get_database_platform<'a>(
+        &'a self,
+        _version_provider: &'a dyn ServerVersionProvider,
+    ) -> BoxFuture<'a, Result<PlatformBox, Exception>> {
+        Box::pin(async move { Err(self.refusal()) })
+    }
+
+    fn get_exception_converter(&self) -> Arc<dyn ExceptionConverter> {
+        Arc::new(NoConversion)
     }
 }
