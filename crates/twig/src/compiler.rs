@@ -787,7 +787,9 @@ impl<'a> Compiler<'a> {
             }
             out.push_str("            ]\n        }\n");
         }
-        if let Some(check) = find_class(&module.get_node("class_end")?, NodeClass::CheckSecurityNode) {
+        if let Some(check) =
+            find_class(&module.get_node("class_end")?, NodeClass::CheckSecurityNode)
+        {
             out.push_str(&compile_check_security(&check));
         }
         out.push_str("    }\n\n");
@@ -903,14 +905,18 @@ impl<'a> Compiler<'a> {
         let var = self.var_name();
         self.line(&format!("let {var}_sb = rt::sandbox::checker(env)?;"));
         self.line(&format!("let {var}_already = {var}_sb.is_sandboxed(None);"));
-        self.line(&format!("if !{var}_already {{ {var}_sb.set_sandboxed(true); }}"));
+        self.line(&format!(
+            "if !{var}_already {{ {var}_sb.set_sandboxed(true); }}"
+        ));
         self.line(&format!("let {var}_r = (|| -> Result<(), rt::Error> {{"));
         self.indentation += 1;
         self.compile_statement(&node.get_node("body")?)?;
         self.line("Ok(())");
         self.indentation -= 1;
         self.line("})();");
-        self.line(&format!("if !{var}_already {{ {var}_sb.set_sandboxed(false); }}"));
+        self.line(&format!(
+            "if !{var}_already {{ {var}_sb.set_sandboxed(false); }}"
+        ));
         self.line(&format!("{var}_r?;"));
         Ok(())
     }
@@ -943,7 +949,10 @@ impl<'a> Compiler<'a> {
     /// `MacroNode::compile()`: the registration and the function.
     fn compile_macro(&mut self, node: &Node) -> R<(String, String)> {
         let name = name_of(node);
-        let variadic_name = node.attr("variadic_name").and_then(|a| a.to_php_string());
+        let variadic_name = node
+            .attr("variadic_name")
+            .filter(|a| !matches!(a, Attr::Null))
+            .and_then(|a| a.to_php_string());
         let bucket_name = variadic_name.clone().unwrap_or_else(|| b"varargs".to_vec());
         let arguments = node.get_node("arguments")?;
         let pairs = arguments.key_value_pairs();
@@ -1708,7 +1717,9 @@ impl<'a> Compiler<'a> {
                 } else {
                     "array_every"
                 };
-                format!("rt::Value::Bool(rt::core::{function}(env, this.source(), &{left}, &{right})?)")
+                format!(
+                    "rt::Value::Bool(rt::core::{function}(env, this.source(), &{left}, &{right})?)"
+                )
             }
             C::RangeBinary => {
                 let left = self.expr(&node.get_node("left")?)?;

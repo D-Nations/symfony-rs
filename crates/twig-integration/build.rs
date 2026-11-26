@@ -9,7 +9,7 @@
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use std::{fmt::Write as _, rc::Rc};
+use std::fmt::Write as _;
 
 use serde_json::Value as Json;
 use twig::{Autoescape, Environment, EnvironmentOptions};
@@ -90,14 +90,13 @@ fn main() {
                 continue;
             }
         };
-        let env =
-            match Environment::with_options(vec![Rc::new(extension::FixtureExtension)], options) {
-                Ok(env) => env,
-                Err(e) => {
-                    entries.push(format!("Err({})", byte_lit(&error_text(&e))));
-                    continue;
-                }
-            };
+        let env = match Environment::with_options(extension::extensions(), options) {
+            Ok(env) => env,
+            Err(e) => {
+                entries.push(format!("Err({})", byte_lit(&error_text(&e))));
+                continue;
+            }
+        };
         extension::register_enums(&env);
         let templates: Vec<(Vec<u8>, Vec<u8>)> = record["templates"]
             .as_array()
