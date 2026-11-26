@@ -34,11 +34,13 @@ use crate::exception::{Error, ErrorKind};
 pub mod closure_loader;
 pub mod file_loader;
 pub mod glob_file_loader;
+pub mod ini_file_loader;
 pub mod undefined_extension_handler;
 
 pub use closure_loader::ClosureLoader;
 pub use file_loader::{FileLoader, IgnoreErrors};
 pub use glob_file_loader::GlobFileLoader;
+pub use ini_file_loader::IniFileLoader;
 pub use undefined_extension_handler::UndefinedExtensionHandler;
 
 /// The container the loaders of one build fill (PHP passes the same
