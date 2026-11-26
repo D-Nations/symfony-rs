@@ -153,6 +153,10 @@ pub struct PropertyMetadata {
     pub visibility: Visibility,
     pub is_static: bool,
     pub is_readonly: bool,
+    /// The asymmetric set visibility (`private(set)`, `protected(set)`),
+    /// when declared; a readonly property without one is
+    /// `protected(set)`.
+    pub set_visibility: Option<Visibility>,
     pub type_: Option<String>,
     pub attributes: Vec<AttributeMetadata>,
 }

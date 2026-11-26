@@ -152,7 +152,7 @@ impl PassConfig {
                 pending("ResolveFactoryClassPass"),
                 pending("ResolveNamedArgumentsPass"),
                 Pass::new(super::AutowireRequiredMethodsPass::new()),
-                pending("AutowireRequiredPropertiesPass"),
+                Pass::new(super::AutowireRequiredPropertiesPass::new()),
                 pending("ResolveBindingsPass"),
                 Pass::new(super::ServiceLocatorTagPass::new()),
                 Pass::new(super::TagDecoratorPass),
