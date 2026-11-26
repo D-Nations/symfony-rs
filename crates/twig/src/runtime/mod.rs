@@ -13,6 +13,7 @@ pub mod debug;
 pub mod escaper;
 pub mod sandbox;
 pub mod string;
+pub mod string_loader;
 
 use std::sync::Arc;
 

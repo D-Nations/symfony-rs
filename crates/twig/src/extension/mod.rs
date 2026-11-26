@@ -13,6 +13,7 @@ pub mod debug;
 pub mod escaper;
 pub mod optimizer;
 pub mod sandbox;
+pub mod string_loader;
 
 use std::{collections::HashMap, rc::Rc};
 

@@ -6,8 +6,7 @@
 //! exception ("Class: message"), and the deprecations.
 //!
 //! A case is skipped when its `--CONDITION--` is false in PHP, when the
-//! Rust compiler does not support a part of it yet (`dump`,
-//! `template_from_string`), or when its `--DATA--` holds an
+//! Rust compiler does not support a part of it yet, or when its `--DATA--` holds an
 //! object of a class the port does not have (`src/classes.rs` has the
 //! test classes). The cases listed in
 //! `data/integration_pending.txt` must still fail: the list stays exact.
