@@ -31,6 +31,7 @@ use php_value::object::StdClass;
 use php_value::{PhpArray, Value, array::Key, php_array};
 use symfony_config::definition::Processor;
 use symfony_config::definition::builder::TreeBuilder;
+use symfony_config::resource::FileResource;
 use symfony_dependency_injection::class_metadata::{ClassMetadata, ClassRegistry};
 use symfony_dependency_injection::compiler::{
     CompilerPassInterface, MergeExtensionConfigurationPass,
@@ -262,8 +263,13 @@ fn testExtensionLoadGetAMergeExtensionConfigurationContainerBuilderInstance() {
 
 #[test]
 fn testExtensionConfigurationIsTrackedByDefault() {
-    let file = file!().rsplit('/').next().unwrap();
-    let file = format!("{}/tests/{file}", env!("CARGO_MANIFEST_DIR"));
+    // `file!()` uses `\\` on Windows: take the file name portably.
+    let name = std::path::Path::new(file!()).file_name().unwrap();
+    let file = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("tests")
+        .join(name)
+        .to_string_lossy()
+        .into_owned();
     let mut registry = ClassRegistry::new();
     registry.add_class(ClassMetadata::class(&format!("{NS}FooExtension")).with_file(&file));
     registry.add_class(ClassMetadata::class(&format!("{NS}FooConfiguration")).with_file(&file));
@@ -277,12 +283,13 @@ fn testExtensionConfigurationIsTrackedByDefault() {
     pass.process(&mut container).unwrap();
 
     assert_eq!(2, extension.get_configuration_calls.load(Ordering::SeqCst));
-    let real = std::fs::canonicalize(&file).unwrap();
+    // `new FileResource(__FILE__)`: the same real path as PHP's realpath().
+    let expected = FileResource::new(file.as_bytes()).unwrap();
     assert!(
         container
             .get_resources()
             .iter()
-            .any(|r| r.to_string() == real.to_string_lossy().as_bytes()),
+            .any(|r| r.to_string() == expected.get_resource()),
         "assertContainsEquals(new FileResource(__FILE__))"
     );
 }

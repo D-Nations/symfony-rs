@@ -51,6 +51,32 @@ def run_checks(commands: list[tuple[str, ...]]) -> int:
     return int(bool(failed))
 
 
+# `cargo fmt --all` passes every target's root file to one rustfmt call;
+# on Windows that command line passes the 32,767-character limit
+# (os error 206). Batches of packages keep each call well under it.
+FMT_COMMAND_LIMIT = 16_000
+
+
+def fmt_commands(metadata: dict) -> list[tuple[str, ...]]:
+    """`cargo fmt --check` over all workspace members, in batches."""
+    members = set(metadata["workspace_members"])
+    packages = sorted(
+        (p for p in metadata["packages"] if p["id"] in members), key=lambda p: p["name"])
+    commands: list[tuple[str, ...]] = []
+    batch: list[str] = []
+    size = 0
+    for package in packages:
+        length = sum(len(t["src_path"]) + 1 for t in package["targets"])
+        if batch and size + length > FMT_COMMAND_LIMIT:
+            commands.append(("cargo", "fmt", "--check", *batch))
+            batch, size = [], 0
+        batch.extend(("-p", package["name"]))
+        size += length
+    if batch:
+        commands.append(("cargo", "fmt", "--check", *batch))
+    return commands
+
+
 def bash_executable(requested: str | None) -> str:
     if requested:
         return requested
@@ -190,7 +216,8 @@ def main() -> int:
         if options.mode == "full":
             commands.extend([
                 (sys.executable, "-m", "unittest", "discover", "-s", "scripts", "-p", "test_*.py"),
-                ("cargo", "fmt", "--all", "--check"),
+                *fmt_commands(json.loads(capture(
+                    "cargo", "metadata", "--locked", "--no-deps", "--format-version", "1"))),
                 ("cargo", "clippy", "--locked", "--workspace", "--all-targets", "--", "-D", "warnings"),
                 ("cargo", "test", "--locked", "--workspace", "--no-fail-fast"),
             ])

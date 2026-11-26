@@ -8,7 +8,7 @@ description = "Symfony Runtime's HttpKernelRunner, and an Axum adapter that serv
 
 [dependencies]
 axum = "0.8.9"
-php-value = { path = "../php-value" }
+php-value = { workspace = true }
 symfony-http-foundation = { path = "../http-foundation" }
 symfony-http-kernel = { path = "../http-kernel" }
 # spawn_blocking (a PHP request runs on one thread, whose per-thread
@@ -17,7 +17,7 @@ symfony-http-kernel = { path = "../http-kernel" }
 tokio = { version = "1.54.1", features = ["rt", "sync"] }
 
 [dev-dependencies]
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 symfony-event-dispatcher = { path = "../event-dispatcher" }
 tokio = { version = "1.54.1", features = ["macros", "rt", "rt-multi-thread", "time"] }
 tower = { version = "0.5.3", features = ["util"] }

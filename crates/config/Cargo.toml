@@ -12,9 +12,9 @@ description = "Port of the symfony/config component"
 yaml = ["dep:symfony-yaml"]
 
 [dependencies]
-php-dom = { path = "../php-dom" }
-php-pcre = { path = "../php-pcre" }
-php-value = { path = "../php-value" }
+php-dom = { workspace = true }
+php-pcre = { workspace = true }
+php-value = { workspace = true }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 # GlobResource (Glob::toRegex(), the Finder fallback) and the filesystem
 # as PHP's stream layer presents it.
@@ -31,7 +31,7 @@ symfony-yaml = { path = "../yaml", optional = true }
 # The tests cover YamlReferenceDumper too.
 symfony-config = { path = ".", features = ["yaml"] }
 symfony-yaml = { path = "../yaml" }
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 serde_json = "1.0.154"
 
 [lints]

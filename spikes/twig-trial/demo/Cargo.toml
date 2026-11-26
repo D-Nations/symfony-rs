@@ -7,7 +7,7 @@ publish = false
 description = "Twig trial: symfony/demo's blog/_post.html.twig compiled to Rust at build time"
 
 [dependencies]
-php-value = { path = "../../../crates/php-value" }
+php-value = { workspace = true }
 twig-trial-runtime = { path = "../runtime" }
 
 [build-dependencies]

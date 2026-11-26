@@ -35,8 +35,20 @@ Nothing outside those tables is claimed.
 | [`doctrine-dbal`](crates/doctrine-dbal/README.md) | `doctrine/dbal` | M6 started: the SQL parser and list-parameter expansion |
 | [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md), [`symfony-clock`](crates/clock/README.md), [`symfony-expression-language`](crates/expression-language/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
 | [`symfony-deprecation-contracts`](crates/deprecation-contracts/README.md), [`psr-log`](crates/psr-log/README.md) | `symfony/deprecation-contracts`, `psr/log` | The contracts |
-| [`php-value`](crates/php-value/README.md), [`php-dom`](crates/php-dom/README.md), [`php-pcre`](crates/php-pcre/README.md) | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source |
+| `php-value`, `php-dom`, `php-pcre` | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source. Moved on November 26 to [php2rust-compatibility-tools](https://github.com/D-Nations/php2rust-compatibility-tools) (packages `php2rust-value`, `php2rust-dom`, `php2rust-regex`), used here by a git dependency pinned in the root `Cargo.toml` |
 | [`request-lab`](examples/request-lab/README.md) | — | Independent example application on the ported kernel (RouterListener, ControllerResolver, ArgumentResolver, HttpKernel) through the HTTP adapter |
+
+To change a php2rust-compatibility-tools crate and see the result here at
+once, add an uncommitted `.cargo/config.toml`:
+
+```toml
+[patch."https://github.com/D-Nations/php2rust-compatibility-tools"]
+php2rust-value = { path = "../php2rust-compatibility-tools/crates/php2rust-value" }
+php2rust-regex = { path = "../php2rust-compatibility-tools/crates/php2rust-regex" }
+php2rust-dom = { path = "../php2rust-compatibility-tools/crates/php2rust-dom" }
+```
+
+When the change is merged there, update `rev` in the root `Cargo.toml`.
 
 Upstream pins are each package's exact version and reference from the demo's
 `composer.lock`, recorded in `parity/packages.tsv`; split Symfony packages
@@ -69,7 +81,7 @@ python scripts/dev_check.py list
 python scripts/dev_check.py check
 python scripts/dev_check.py test
 python scripts/dev_check.py test --nextest
-python scripts/dev_check.py check -p php-value
+python scripts/dev_check.py check -p symfony-yaml
 python scripts/dev_check.py full
 python scripts/dev_check.py parity
 python -m unittest discover -s scripts -p "test_*.py"
@@ -110,7 +122,7 @@ For repeated Linux parity replays:
 
 ```sh
 bash scripts/linux-test.sh --cached -p symfony-filesystem
-bash scripts/linux-test.sh --cached -p symfony-filesystem -p php-value
+bash scripts/linux-test.sh --cached -p symfony-filesystem -p symfony-yaml
 bash scripts/linux-test.sh                 # fresh pre-merge acceptance
 ```
 

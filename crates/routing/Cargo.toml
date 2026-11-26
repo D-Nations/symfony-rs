@@ -12,8 +12,8 @@ description = "Typed subset of Symfony routing and URL generation"
 config = ["dep:symfony-config"]
 
 [dependencies]
-php-pcre = { path = "../php-pcre" }
-php-value = { path = "../php-value" }
+php-pcre = { workspace = true }
+php-value = { workspace = true }
 psr-log = { path = "../psr-log" }
 symfony-config = { path = "../config", optional = true }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
@@ -23,7 +23,7 @@ symfony-http-foundation = { path = "../http-foundation" }
 # The tests cover RouteCollection's resources too.
 symfony-routing = { path = ".", features = ["config"] }
 symfony-config = { path = "../config" }
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 serde_json = "1.0.154"
 
 [lints]

@@ -1,4 +1,5 @@
 """Selection unit tests: python scripts/test_dev_check.py."""
+import json
 import subprocess
 import sys
 import unittest
@@ -8,6 +9,14 @@ from tempfile import TemporaryDirectory
 
 import dev_check
 from dev_check import affected
+
+METADATA = {
+    "workspace_members": ["a", "b"],
+    "packages": [
+        {"id": "b", "name": "b", "targets": [{"src_path": "/w/b/src/lib.rs"}]},
+        {"id": "a", "name": "a", "targets": [{"src_path": "/w/a/src/lib.rs"}]},
+    ],
+}
 
 
 class SelectionTests(unittest.TestCase):
@@ -127,17 +136,35 @@ class RunnerTests(unittest.TestCase):
 
     def test_full_includes_tool_tests_and_all_gates(self):
         with patch.object(sys, "argv", ["dev_check.py", "full", "--bash", "/chosen/bash"]):
-            with patch.object(dev_check, "run") as run:
+            with patch.object(dev_check, "capture", return_value=json.dumps(METADATA).encode()), \
+                    patch.object(dev_check, "run") as run:
                 self.assertEqual(dev_check.main(), 0)
         commands = [args.args for args in run.call_args_list]
         self.assertEqual(commands, [
             (sys.executable, "-m", "unittest", "discover", "-s", "scripts", "-p", "test_*.py"),
-            ("cargo", "fmt", "--all", "--check"),
+            ("cargo", "fmt", "--check", "-p", "a", "-p", "b"),
             ("cargo", "clippy", "--locked", "--workspace", "--all-targets", "--", "-D", "warnings"),
             ("cargo", "test", "--locked", "--workspace", "--no-fail-fast"),
             ("/chosen/bash", "scripts/sources.sh", "--check"),
             ("/chosen/bash", "scripts/parity-check.sh"),
             (sys.executable, "scripts/classes.py", "check"),
+        ])
+
+    def test_fmt_is_batched_under_the_windows_command_line_limit(self):
+        long = "C:/" + "x" * 9_000 + ".rs"
+        metadata = {
+            "workspace_members": ["a", "b", "c"],
+            "packages": [
+                {"id": "c", "name": "c", "targets": [{"src_path": long}]},
+                {"id": "a", "name": "a", "targets": [{"src_path": long}]},
+                {"id": "b", "name": "b", "targets": [{"src_path": long}]},
+                {"id": "x", "name": "outside", "targets": [{"src_path": long}]},
+            ],
+        }
+        self.assertEqual(dev_check.fmt_commands(metadata), [
+            ("cargo", "fmt", "--check", "-p", "a"),
+            ("cargo", "fmt", "--check", "-p", "b"),
+            ("cargo", "fmt", "--check", "-p", "c"),
         ])
 
     def test_parity_does_not_start_cargo(self):

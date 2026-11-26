@@ -12,14 +12,14 @@ description = "Port of the symfony/dotenv component"
 console = ["dep:symfony-console", "dep:serde_json"]
 
 [dependencies]
-php-value = { path = "../php-value" }
+php-value = { workspace = true }
 symfony-console = { path = "../console", optional = true }
 serde_json = { version = "1.0.154", optional = true }
 
 [dev-dependencies]
 # The tests cover the commands too.
 symfony-dotenv = { path = ".", features = ["console"] }
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 serde_json = "1.0.154"
 
 [lints]
