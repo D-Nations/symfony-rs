@@ -53,7 +53,7 @@ fn text(json: &Json) -> Result<&str, TestError> {
 }
 
 fn bytes(json: &Json) -> Result<Vec<u8>, TestError> {
-    Ok(vectors::base64(text(json)?)?)
+    vectors::base64(text(json)?)
 }
 
 fn items(json: &Json) -> Result<&Vec<Json>, TestError> {
@@ -513,12 +513,15 @@ fn handler_chains_answer_as_php() -> Result<(), TestError> {
             }
             other => return Err(format!("unknown top {other}").into()),
         };
-        let build = &script["build"];
+        let recorded_build = &script["build"];
         let handler = match built {
-            Ok(h) if build[0] == "ok" => h,
-            Err(e) if throws_as(build, &e)? => continue,
+            Ok(h) if recorded_build[0] == "ok" => h,
+            Err(e) if throws_as(recorded_build, &e)? => continue,
             other => {
-                failures.push(format!("script {n}: build {build}, got {:?}", other.err()));
+                failures.push(format!(
+                    "script {n}: build {recorded_build}, got {:?}",
+                    other.err()
+                ));
                 continue;
             }
         };
