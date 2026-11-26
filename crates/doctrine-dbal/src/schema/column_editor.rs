@@ -111,6 +111,9 @@ impl ColumnEditor {
     /// `setType($type)` (deprecated upstream: use `setTypeName()`).
     #[must_use]
     pub fn set_type(mut self, type_: &Arc<dyn Type>) -> Self {
+        crate::deprecations::trigger("https://github.com/doctrine/dbal/pull/7490", || {
+            "Doctrine\\DBAL\\Schema\\ColumnEditor::setType is deprecated. Use ColumnEditor::setTypeName() instead.".to_owned()
+        });
         match types::get_type_registry().lookup_name(type_) {
             Ok(name) => self.type_name = Some(name),
             Err(e) => {
