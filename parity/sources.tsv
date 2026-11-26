@@ -657,6 +657,7 @@ crates/finder/tests/vcs_ignored_filter_iterator.rs	symfony/finder	Tests/Iterator
 crates/http-foundation/src/accept_header.rs	symfony/http-foundation	AcceptHeader.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/accept_header.rs	symfony/http-foundation	AcceptHeaderItem.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/accept_language.rs	symfony/http-foundation	Request.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/src/binary_file_response.rs	symfony/http-foundation	BinaryFileResponse.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/cookie.rs	symfony/http-foundation	Cookie.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/event_stream_response.rs	symfony/http-foundation	EventStreamResponse.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/exception.rs	symfony/http-foundation	Exception/BadRequestException.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
@@ -680,6 +681,7 @@ crates/http-foundation/src/exception.rs	symfony/http-foundation	File/Exception/U
 crates/http-foundation/src/exception.rs	symfony/http-foundation	File/Exception/UploadException.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/file.rs	symfony/http-foundation	File/File.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/file_bag.rs	symfony/http-foundation	FileBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/src/file_stream.rs	symfony/http-foundation	File/Stream.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/header_bag.rs	symfony/http-foundation	HeaderBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/header_bag.rs	symfony/http-foundation	ResponseHeaderBag.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/src/header_utils.rs	symfony/http-foundation	HeaderUtils.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
@@ -701,6 +703,7 @@ crates/http-foundation/src/streamed_response.rs	symfony/http-foundation	Streamed
 crates/http-foundation/src/uploaded_file.rs	symfony/http-foundation	File/UploadedFile.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/accept_header_item_test.rs	symfony/http-foundation	Tests/AcceptHeaderItemTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/accept_header_test.rs	symfony/http-foundation	Tests/AcceptHeaderTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
+crates/http-foundation/tests/binary_file_response_test.rs	symfony/http-foundation	Tests/BinaryFileResponseTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/cookie_recorded.rs	symfony/http-foundation	Cookie.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/cookie_test.rs	symfony/http-foundation	Tests/CookieTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
 crates/http-foundation/tests/event_stream_response_test.rs	symfony/http-foundation	Tests/EventStreamResponseTest.php	30fa3efe6e736b0d06f5331cc6abe813582c0a26
