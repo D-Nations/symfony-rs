@@ -1059,11 +1059,14 @@ crates/translation/tests/xliff_utils_test.rs	symfony/translation	Tests/Util/Xlif
 crates/twig-integration/src/callables.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/classes.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/extension.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig-integration/src/legacy_sandbox.rs	twig/twig	tests/Extension/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig-integration/src/legacy_sandbox_extension.rs	twig/twig	tests/Extension/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/lib.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/sandbox.rs	twig/twig	tests/Sandbox/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/sandbox_extension.rs	twig/twig	tests/Sandbox/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/tests/integration.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/tests/integration.rs	twig/twig	src/Test/IntegrationTestCase.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig-integration/tests/legacy_sandbox_test.rs	twig/twig	tests/Extension/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/tests/sandbox_test.rs	twig/twig	tests/Sandbox/SandboxTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/callable.rs	twig/twig	src/AbstractTwigCallable.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/callable.rs	twig/twig	src/TwigFilter.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
