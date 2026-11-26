@@ -947,6 +947,7 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     shape but cannot be called from inside a tokio task (the kernel's)
     without `spawn_blocking`, and holds a thread per query. One connection
     serves one task at a time either way, as PHP's does.
+    **Accepted by the owner, November 26**: the DBAL stays async.
 
 ## M0 progress
 
