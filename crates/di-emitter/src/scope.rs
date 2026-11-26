@@ -1,9 +1,10 @@
 //! Checks the graph and splits it into the two scopes of converter
 //! contract 0.2, section 4.
 //!
-//! Upstream: none (the two messages are Symfony's:
-//! ServiceCircularReferenceException.php and
-//! CheckExceptionOnInvalidReferenceBehaviorPass.php)
+//! The two messages are Symfony's (ServiceCircularReferenceException.php
+//! and CheckExceptionOnInvalidReferenceBehaviorPass.php).
+//!
+//! Upstream: none
 
 use std::collections::{BTreeSet, HashMap};
 
@@ -81,12 +82,12 @@ fn edges_of(
         ArgDef::Ref {
             id,
             on_invalid,
-            line,
+            origin,
         }
         | ArgDef::Closure {
             id,
             on_invalid,
-            line,
+            origin,
         } => match an.resolve(id) {
             Some(target) => {
                 let lazy = matches!(arg, ArgDef::Closure { .. })
@@ -95,12 +96,12 @@ fn edges_of(
                 out.push((target, if lazy { Edge::Lazy } else { kind }));
             }
             None if *on_invalid == OnInvalid::Exception => {
-                return Err(Error {
-                    line: *line,
-                    message: format!(
+                return Err(Error::new(
+                    origin.location(),
+                    format!(
                         "The service \"{from}\" has a dependency on a non-existent service \"{id}\"."
                     ),
-                });
+                ));
             }
             None => report.missing_optional.push(format!("{from} -> {id}")),
         },
@@ -153,13 +154,13 @@ pub fn analyse(graph: &Graph, config: &Config) -> Result<Analysis, Error> {
             match next {
                 Some(b) if seen.insert(b.id.clone()) => target = &b.target,
                 _ => {
-                    return Err(Error {
-                        line: 0,
-                        message: format!(
+                    return Err(Error::new(
+                        a.origin.location(),
+                        format!(
                             "The service \"{}\" has a dependency on a non-existent service \"{}\".",
                             a.id, a.target
                         ),
-                    });
+                    ));
                 }
             }
         };
@@ -219,14 +220,14 @@ pub fn analyse(graph: &Graph, config: &Config) -> Result<Analysis, Error> {
                         .map(|&p| graph.services[p].id.as_str())
                         .collect();
                     ids.push(&graph.services[t].id);
-                    return Err(Error {
-                        line: graph.services[t].line,
-                        message: format!(
+                    return Err(Error::new(
+                        graph.services[t].origin.location(),
+                        format!(
                             "Circular reference detected for service \"{}\", path: \"{}\".",
                             graph.services[t].id,
                             ids.join(" -> ")
                         ),
-                    });
+                    ));
                 }
                 if state[t] == 0 {
                     dfs(t, edges, state, path, graph)?;
@@ -296,7 +297,7 @@ pub fn analyse(graph: &Graph, config: &Config) -> Result<Analysis, Error> {
             || config.request_scoped_ids.contains(&d.id)
             || d.tags
                 .iter()
-                .any(|(t, _)| config.request_scoped_tags.contains(t));
+                .any(|t| config.request_scoped_tags.contains(t));
         if seed {
             request[i] = true;
             report.request_seeds += 1;

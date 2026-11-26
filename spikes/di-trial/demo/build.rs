@@ -6,7 +6,7 @@
 
 use std::{env, fmt::Write as _, fs, path::Path, process::ExitCode};
 
-use symfony_di_emitter::{Config, compile};
+use symfony_di_emitter::{Config, DumperParameters, Graph, compile};
 
 fn main() -> ExitCode {
     let input = "data/container.xml";
@@ -24,7 +24,10 @@ fn main() -> ExitCode {
         request_scoped_tags: vec!["kernel.reset".into()],
         request_scoped_ids: Vec::new(),
     };
-    let output = match compile(&xml, &config) {
+    // The recorded container's build id and hash come from the file.
+    let output = match Graph::from_xml(&xml, &DumperParameters::from_seed(&xml))
+        .and_then(|graph| compile(&graph, &config))
+    {
         Ok(output) => output,
         Err(e) => {
             println!("cargo::error={input}: {e}");

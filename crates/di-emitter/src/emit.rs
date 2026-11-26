@@ -3,9 +3,10 @@
 //! with one accessor per service, in the shape of the converter fixture's
 //! hand-written `container.rs`.
 //!
-//! Upstream: none (the order of properties, calls and configurator is
-//! `PhpDumper`'s: addServiceProperties, addServiceMethodCalls,
-//! addServiceConfigurator)
+//! The order of properties, calls and configurator is `PhpDumper`'s
+//! (addServiceProperties, addServiceMethodCalls, addServiceConfigurator).
+//!
+//! Upstream: none
 
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
@@ -14,8 +15,8 @@ use proc_macro2::{Ident, Literal, Span, TokenStream};
 use quote::quote;
 
 use crate::{
-    Error,
-    model::{ArgDef, Definition, FactoryDef, Graph, OnInvalid, StrPart},
+    Error, Location,
+    model::{ArgDef, Definition, FactoryDef, Graph, OnInvalid, Origin, StrPart},
     scope::{Analysis, Scope},
 };
 
@@ -181,10 +182,10 @@ fn value_tokens(v: &Value) -> Result<TokenStream, Error> {
             quote! { { let mut a = PhpArray::new(); #(#items)* Value::Array(a) } }
         }
         Value::Object(_) => {
-            return Err(Error {
-                line: 0,
-                message: "an object value cannot be compiled".into(),
-            });
+            return Err(Error::new(
+                Location::Unknown,
+                "an object value cannot be compiled",
+            ));
         }
     })
 }
@@ -223,17 +224,17 @@ impl Emitter<'_> {
     }
 
     /// `self.x` or `self.app.x` for target `t` from code in scope `ctx`.
-    fn owner(&self, t: usize, ctx: Scope, line: u32) -> Result<TokenStream, Error> {
+    fn owner(&self, t: usize, ctx: Scope, origin: &Origin) -> Result<TokenStream, Error> {
         match (ctx, self.an.scope[t]) {
             (a, b) if a == b => Ok(quote! { self }),
             (Scope::Request, Scope::App) => Ok(quote! { self.app }),
-            _ => Err(Error {
-                line,
-                message: format!(
+            _ => Err(Error::new(
+                origin.location(),
+                format!(
                     "internal: application-scoped code reaches request-scoped \"{}\"",
                     self.graph.services[t].id
                 ),
-            }),
+            )),
         }
     }
 
@@ -242,7 +243,7 @@ impl Emitter<'_> {
         id: &str,
         on_invalid: OnInvalid,
         ctx: Scope,
-        line: u32,
+        origin: &Origin,
     ) -> Result<TokenStream, Error> {
         let Some(t) = self.an.resolve(id) else {
             return Ok(quote! { { let f: ServiceClosure = Arc::new(|| None); f } });
@@ -251,7 +252,7 @@ impl Emitter<'_> {
         let via = if self.an.scope[t] == ctx {
             quote! { c }
         } else {
-            self.owner(t, ctx, line)?;
+            self.owner(t, ctx, origin)?;
             quote! { c.app }
         };
         let body = if target.id == CONTAINER_ID {
@@ -317,20 +318,20 @@ impl Emitter<'_> {
                         ArgDef::Ref {
                             id,
                             on_invalid,
-                            line,
+                            origin,
                         } => {
                             // A missing reference drops the element.
                             if self.an.resolve(id).is_none() {
                                 continue;
                             }
-                            let c = self.closure(id, *on_invalid, ctx, *line)?;
+                            let c = self.closure(id, *on_invalid, ctx, origin)?;
                             out.push(quote! { (#k, Arg::Closure(#c)) });
                         }
                         ArgDef::Inline(_) | ArgDef::Closure { .. } | ArgDef::Iterator(_) => {
-                            return Err(Error {
-                                line: 0,
-                                message: "an inline service, closure or iterator inside an iterator is not supported".into(),
-                            });
+                            return Err(Error::new(
+                                Location::Unknown,
+                                "an inline service, closure or iterator inside an iterator is not supported",
+                            ));
                         }
                         other => {
                             if let Some(a) = self.arg(other, ctx)? {
@@ -344,7 +345,7 @@ impl Emitter<'_> {
             ArgDef::Ref {
                 id,
                 on_invalid,
-                line,
+                origin,
             } => {
                 let Some(t) = self.an.resolve(id) else {
                     return Ok(match on_invalid {
@@ -357,17 +358,17 @@ impl Emitter<'_> {
                     quote! { self.this.upgrade().map_or(Arg::Null, |c| Arg::Service(erase(c))) }
                 } else if *on_invalid == OnInvalid::IgnoreUninitialized {
                     if target.shared {
-                        let owner = self.owner(t, ctx, *line)?;
+                        let owner = self.owner(t, ctx, origin)?;
                         let ib = self.if_built(t);
                         quote! { #owner.#ib().map_or(Arg::Null, |s| Arg::Service(erase(s))) }
                     } else {
                         quote! { Arg::Null }
                     }
                 } else if target.lazy {
-                    let c = self.closure(id, *on_invalid, ctx, *line)?;
+                    let c = self.closure(id, *on_invalid, ctx, origin)?;
                     quote! { Arg::Lazy(#c) }
                 } else {
-                    let owner = self.owner(t, ctx, *line)?;
+                    let owner = self.owner(t, ctx, origin)?;
                     let acc = &self.names.accessor[t];
                     quote! { Arg::Service(erase(#owner.#acc())) }
                 }
@@ -375,9 +376,9 @@ impl Emitter<'_> {
             ArgDef::Closure {
                 id,
                 on_invalid,
-                line,
+                origin,
             } => {
-                let c = self.closure(id, *on_invalid, ctx, *line)?;
+                let c = self.closure(id, *on_invalid, ctx, origin)?;
                 quote! { Arg::Closure(#c) }
             }
             ArgDef::Inline(i) => {
@@ -508,10 +509,10 @@ impl Emitter<'_> {
                 ));
             }
             if ctx == Scope::Request {
-                return Err(Error {
-                    line: d.line,
-                    message: format!("synthetic service \"{}\" is request-scoped", d.id),
-                });
+                return Err(Error::new(
+                    d.origin.location(),
+                    format!("synthetic service \"{}\" is request-scoped", d.id),
+                ));
             }
             let cell = self.cell(i);
             return Ok((
@@ -764,9 +765,11 @@ pub fn emit(graph: &Graph, an: &Analysis) -> Result<String, Error> {
             #(#rm)*
         }
     };
-    let file = syn::parse2::<syn::File>(tokens).map_err(|err| Error {
-        line: 0,
-        message: format!("internal: emitted code does not parse: {err}"),
+    let file = syn::parse2::<syn::File>(tokens).map_err(|err| {
+        Error::new(
+            Location::Unknown,
+            format!("internal: emitted code does not parse: {err}"),
+        )
     })?;
     Ok(prettyplease::unparse(&file))
 }

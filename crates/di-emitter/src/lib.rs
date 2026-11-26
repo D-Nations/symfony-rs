@@ -1,9 +1,13 @@
-//! Trial build-time DI compiler: reads the container Symfony compiled
-//! (after its compiler passes, as `XmlDumper` writes it) and emits a Rust
-//! container with one accessor per service, for `build.rs`.
+//! Build-time emitter of a Rust container from a compiled Symfony service
+//! graph, for `build.rs`: the part of PLAN.md's M3 that replaces
+//! `PhpDumper`.
 //!
-//! **This is not the M3 port.** It tests the design in PLAN.md (M3, and
-//! converter contract 0.2 section 4) on symfony/demo's real container:
+//! The graph ([`model::Graph`]) is read from a compiled
+//! `ContainerBuilder` of `symfony-dependency-injection`
+//! ([`Graph::from_container_builder`]), or from the `XmlDumper` file of a
+//! container compiled by PHP ([`Graph::from_xml`]), and gives the same
+//! graph either way. [`compile`] checks it and emits Rust with one
+//! accessor per service:
 //!
 //! - every reference is checked at build time (a missing service is a
 //!   build error, with Symfony's message);
@@ -16,37 +20,94 @@
 //!   service is stored before its calls run); constructor cycles are
 //!   refused.
 //!
-//! Classes are placeholders (`di-trial-runtime`): the emitted code builds
-//! a recorded `Instance` where the real container would call the ported
-//! class's constructor.
+//! Classes are still the DI trial's placeholders (`di-trial-runtime`):
+//! the emitted code builds a recorded `Instance` where the real container
+//! would call the ported class's constructor.
 //!
 //! Upstream: none
 
+mod builder;
 mod emit;
 pub mod model;
 mod scope;
+mod xml;
 
 use std::fmt;
 
+use symfony_dependency_injection::ContainerBuilder;
+
+pub use model::{DumperParameters, Graph};
 pub use scope::Scope;
 
-/// A refusal at build time, with the line in the container file.
+/// Where a refusal points.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Location {
+    /// Nothing more precise is known.
+    Unknown,
+    /// A line of the container file.
+    Line(u32),
+    /// A service (or alias) id of a `ContainerBuilder`; for an inline
+    /// definition, the named service that holds it.
+    Service(String),
+    /// A parameter of a `ContainerBuilder`.
+    Parameter(String),
+}
+
+impl fmt::Display for Location {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Unknown => Ok(()),
+            Self::Line(line) => write!(f, "line {line}"),
+            Self::Service(id) => write!(f, "service \"{id}\""),
+            Self::Parameter(name) => write!(f, "parameter \"{name}\""),
+        }
+    }
+}
+
+/// A refusal at build time, with where it is.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Error {
-    pub line: u32,
+    pub location: Location,
     pub message: String,
+}
+
+impl Error {
+    pub fn new(location: Location, message: impl Into<String>) -> Self {
+        Self {
+            location,
+            message: message.into(),
+        }
+    }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "line {}: {}", self.line, self.message)
+        match self.location {
+            Location::Unknown => f.write_str(&self.message),
+            _ => write!(f, "{}: {}", self.location, self.message),
+        }
     }
 }
 
 impl std::error::Error for Error {}
 
-/// What the application tells the compiler that the container file does
-/// not say.
+impl Graph {
+    /// The graph of a compiled `ContainerBuilder`.
+    pub fn from_container_builder(
+        container: &ContainerBuilder,
+        dumper_parameters: &DumperParameters,
+    ) -> Result<Self, Error> {
+        builder::read(container, dumper_parameters)
+    }
+
+    /// The graph of a compiled container as `XmlDumper` writes it (for
+    /// containers recorded from PHP).
+    pub fn from_xml(xml: &[u8], dumper_parameters: &DumperParameters) -> Result<Self, Error> {
+        xml::read(xml, dumper_parameters)
+    }
+}
+
+/// What the application tells the emitter that the graph does not say.
 #[derive(Debug, Clone, Default)]
 pub struct Config {
     /// Tags whose services keep state between uses (Symfony's own list
@@ -56,7 +117,7 @@ pub struct Config {
     pub request_scoped_ids: Vec<String>,
 }
 
-/// The emitted code and what the compiler found.
+/// The emitted code and what the emitter found.
 #[derive(Debug)]
 pub struct Output {
     pub code: String,
@@ -84,38 +145,19 @@ pub struct Report {
     pub missing_optional: Vec<String>,
 }
 
-fn fnv1a(bytes: &[u8]) -> u64 {
-    bytes.iter().fold(0xcbf2_9ce4_8422_2325, |h, &b| {
-        (h ^ u64::from(b)).wrapping_mul(0x0100_0000_01b3)
-    })
-}
-
-/// Compiles the container file into Rust source.
-pub fn compile(xml: &[u8], config: &Config) -> Result<Output, Error> {
-    // PhpDumper adds these when it writes the PHP container; they are not
-    // in the ContainerBuilder. Symfony derives them from a hash of the
-    // dumped code; here, from the input file.
-    let hash = fnv1a(xml);
-    #[expect(
-        clippy::cast_possible_truncation,
-        reason = "the low 32 bits name the build"
-    )]
-    let build_id = format!("{:08x}", hash as u32);
-    let dumper_parameters = [
-        (
-            "container.build_hash".to_owned(),
-            php_value::Value::string(format!("{hash:016x}")),
-        ),
-        (
-            "container.build_id".to_owned(),
-            php_value::Value::string(build_id),
-        ),
-    ];
-    let graph = model::read(xml, &dumper_parameters)?;
-    let analysis = scope::analyse(&graph, config)?;
-    let code = emit::emit(&graph, &analysis)?;
+/// Checks the graph and emits it as Rust source.
+pub fn compile(graph: &Graph, config: &Config) -> Result<Output, Error> {
+    let analysis = scope::analyse(graph, config)?;
+    let code = emit::emit(graph, &analysis)?;
     Ok(Output {
         code,
         report: analysis.report,
     })
+}
+
+/// Reads an `XmlDumper` file and compiles it, with the dumper parameters
+/// derived from the file.
+pub fn compile_xml(xml: &[u8], config: &Config) -> Result<Output, Error> {
+    let graph = Graph::from_xml(xml, &DumperParameters::from_seed(xml))?;
+    compile(&graph, config)
 }
