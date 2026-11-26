@@ -12,6 +12,7 @@
 mod abstract_recursive_pass;
 mod add_behavior_describing_tags_pass;
 mod auto_alias_service_pass;
+mod autowire_as_decorator_pass;
 mod autowire_required_methods_pass;
 mod autowire_required_properties_pass;
 #[expect(clippy::module_inception, reason = "one module per upstream file")]
@@ -21,6 +22,7 @@ mod extension_compiler_pass;
 mod merge_extension_configuration_pass;
 mod pass_config;
 mod priority_tagged_service_trait;
+mod register_autoconfigure_attributes_pass;
 mod register_env_var_processors_pass;
 mod register_reverse_container_pass;
 mod register_service_subscribers_pass;
@@ -34,6 +36,7 @@ mod validate_env_placeholders_pass;
 pub use abstract_recursive_pass::{AbstractRecursivePass, RecursivePassState, recursive_process};
 pub use add_behavior_describing_tags_pass::AddBehaviorDescribingTagsPass;
 pub use auto_alias_service_pass::AutoAliasServicePass;
+pub use autowire_as_decorator_pass::AutowireAsDecoratorPass;
 pub use autowire_required_methods_pass::AutowireRequiredMethodsPass;
 pub use autowire_required_properties_pass::AutowireRequiredPropertiesPass;
 pub use compiler::Compiler;
@@ -45,6 +48,7 @@ pub use priority_tagged_service_trait::{
     AS_TAGGED_ITEM, TagName, attribute_argument, class_attributes, find_and_sort_tagged_services,
     get_default,
 };
+pub use register_autoconfigure_attributes_pass::RegisterAutoconfigureAttributesPass;
 pub use register_env_var_processors_pass::RegisterEnvVarProcessorsPass;
 pub use register_reverse_container_pass::RegisterReverseContainerPass;
 pub use register_service_subscribers_pass::RegisterServiceSubscribersPass;

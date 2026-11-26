@@ -130,8 +130,8 @@ impl PassConfig {
                 100,
                 vec![
                     pending("ResolveClassPass"),
-                    pending("RegisterAutoconfigureAttributesPass"),
-                    pending("AutowireAsDecoratorPass"),
+                    Pass::new(super::RegisterAutoconfigureAttributesPass),
+                    Pass::new(super::AutowireAsDecoratorPass),
                     pending("AttributeAutoconfigurationPass"),
                     pending("ResolveInstanceofConditionalsPass"),
                     Pass::new(super::RegisterEnvVarProcessorsPass),
