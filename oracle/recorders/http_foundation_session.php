@@ -10,7 +10,8 @@
 // tampered or not (strings where bags expect arrays, metadata without a
 // creation time). Then 4 to 20 operations from a pool: the session's
 // methods, its flash bag's and its metadata bag's, setId() with ids that
-// are not usable as file names, and "reopen" (a new storage and session
+// are not usable as file names, the usage index set (as
+// SessionListener sets it to PHP_INT_MIN), and "reopen" (a new storage and session
 // on the same id and directory, as the next request makes). The clock
 // (time() in the Storage namespace) moves on 0 to 40 seconds between
 // operations. Recorded: each operation's result or exception, the usage
@@ -111,7 +112,7 @@ namespace {
 
         $ops = [];
         for ($i = mt_rand(4, 20); $i > 0; --$i) {
-            $ops[] = match ($pick(['start', 'set', 'set', 'set', 'get', 'has', 'remove', 'all', 'replace', 'clear', 'invalidate', 'migrate', 'save', 'save', 'id', 'set_id', 'name', 'is_started', 'is_empty', 'count', 'f_add', 'f_add', 'f_set', 'f_peek', 'f_peek_all', 'f_get', 'f_all', 'f_set_all', 'f_has', 'f_keys', 'm_created', 'm_last_used', 'm_lifetime', 'reopen', 'reopen'])) {
+            $ops[] = match ($pick(['start', 'set', 'set', 'set', 'get', 'has', 'remove', 'all', 'replace', 'clear', 'invalidate', 'migrate', 'save', 'save', 'id', 'set_id', 'name', 'is_started', 'is_empty', 'count', 'f_add', 'f_add', 'f_set', 'f_peek', 'f_peek_all', 'f_get', 'f_all', 'f_set_all', 'f_has', 'f_keys', 'm_created', 'm_last_used', 'm_lifetime', 'reopen', 'reopen', 'usage'])) {
                 'start' => ['start'],
                 'set' => ['set', $b64($pick($keys)), $specOut($pick($values))],
                 'get' => ['get', $b64($pick($keys)), $specOut($pick([['n'], ['s', 'dflt']]))],
@@ -142,6 +143,7 @@ namespace {
                 'm_last_used' => ['m_last_used'],
                 'm_lifetime' => ['m_lifetime'],
                 'reopen' => ['reopen'],
+                'usage' => ['usage', $pick([\PHP_INT_MIN, -2, 0])],
             };
             $ops[count($ops) - 1][] = mt_rand(0, 3) * mt_rand(0, 13); // seconds before
         }
@@ -211,6 +213,13 @@ namespace {
                     'm_created' => $typed($session->getMetadataBag()->getCreated()),
                     'm_last_used' => $typed($session->getMetadataBag()->getLastUsed()),
                     'm_lifetime' => $typed($session->getMetadataBag()->getLifetime()),
+                    'usage' => (static function () use ($session, $op, $typed) {
+                        // as SessionListener does, through &getUsageIndex()
+                        $index = &$session->getUsageIndex();
+                        $index = $op[1];
+
+                        return $typed(null);
+                    })(),
                     'reopen' => (static function () use (&$storage, &$session, $make, $typed) {
                         $id = $storage->getId();
                         [$storage, $session] = $make();

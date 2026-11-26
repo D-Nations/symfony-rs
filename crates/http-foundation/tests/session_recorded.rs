@@ -7,7 +7,8 @@
 //! bag, a flash bag or an auto-expiring one, storage keys from a pool, a
 //! metadata bag with a threshold and a cookie lifetime, a usage reporter
 //! that counts its calls), sometimes on tampered session data. It then
-//! runs 4 to 20 operations, with the clock moving on between them, and
+//! runs 4 to 20 operations, with the clock moving on between them, the
+//! usage index set (as `SessionListener` sets it to `PHP_INT_MIN`), and
 //! "reopen" starting a new storage on the same id.
 //!
 //! Compared: each result or exception, the usage index and the reporter's
@@ -271,6 +272,13 @@ fn run(
         "m_created" => session.get_metadata_bag().get_created().map(Value::Int),
         "m_last_used" => session.get_metadata_bag().get_last_used().map(Value::Int),
         "m_lifetime" => session.get_metadata_bag().get_lifetime().map(Value::Int),
+        "usage" => {
+            // as SessionListener does, through &getUsageIndex()
+            session
+                .get_usage_index()
+                .store(op[1].as_i64().ok_or("index")?, Ordering::Relaxed);
+            Ok(Value::Null)
+        }
         "reopen" => {
             let id = storage.get_id();
             let (new_storage, new_session, _) = make(config, reported)?;
