@@ -1835,6 +1835,18 @@ Stack rows (searched November 22):
       Next, stage 2b: NativeSessionStorage, `session_start()`, the
       proxies and NativeFileSessionHandler, then `Request`'s session
       methods.
+- [x] Session, stage 2b (November 27): `NativeSessionStorage`,
+      `PhpBridgeSessionStorage` and their factories, `AbstractProxy`,
+      `SessionHandlerProxy`, `NativeFileSessionHandler`, and PHP's session
+      extension written from the manual and recorded answers
+      (`php_session`: `session_start()` to `session_regenerate_id()`, the
+      `files` handler, the `php` and `php_serialize` serializers). The
+      upstream tests 55 (1 `n/a`: `memory_get_usage()`), with
+      AbstractSessionHandlerTest's 13 PHP-server fixtures; 1,500 requests
+      recorded from PHP 8.4.27's built-in web server (11,277 operations),
+      which found eleven behaviours of the extension; 24 of 24 mutations
+      caught. Stage log docs/milestones/m2-a-native-session.md.
+      Next: `Request`'s session methods.
 
 ## M6 progress
 
