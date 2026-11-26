@@ -227,6 +227,8 @@ pub struct Globals {
     pub variables_order: PhpString,
     /// What `Response` sends, and the SAPI it sends it to.
     pub output: Output,
+    /// The session extension's state ([`crate::php_session`]).
+    pub session: crate::php_session::SessionState,
 }
 
 /// `ob_get_status(true)`'s entry for one output buffer, as far as
@@ -287,6 +289,8 @@ pub enum OutputCall {
     /// `@ob_flush()`: the innermost buffer's content passed to the next
     /// level; without a buffer, nothing (the notice is silenced).
     ObFlush,
+    /// `setcookie(...)`, as the session extension calls it.
+    SetCookie(crate::sapi::SetCookie),
 }
 
 /// The SAPI as `Response` sees it, and the calls it made. Nothing here
@@ -381,6 +385,7 @@ impl Default for Globals {
             request_order: PhpString::default(),
             variables_order: PhpString::from("EGPCS"),
             output: Output::default(),
+            session: crate::php_session::SessionState::default(),
         }
     }
 }

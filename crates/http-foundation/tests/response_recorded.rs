@@ -272,6 +272,10 @@ fn calls(output: &Output) -> Json {
             OutputCall::ObEndClean => list.push(serde_json::json!(["ob_end_clean"])),
             OutputCall::Flush => list.push(serde_json::json!(["flush"])),
             OutputCall::ObFlush => list.push(serde_json::json!(["ob_flush"])),
+            // never made by Response: shown, so a stray one differs
+            OutputCall::SetCookie(cookie) => {
+                list.push(serde_json::json!(["setcookie", b64(&cookie.name)]));
+            }
             OutputCall::FastcgiFinishRequest => {
                 list.push(serde_json::json!(["fastcgi_finish_request"]));
             }
