@@ -12,6 +12,7 @@
 mod abstract_recursive_pass;
 mod add_behavior_describing_tags_pass;
 mod auto_alias_service_pass;
+mod autowire_required_methods_pass;
 #[expect(clippy::module_inception, reason = "one module per upstream file")]
 mod compiler;
 mod compiler_pass_interface;
@@ -32,6 +33,7 @@ mod validate_env_placeholders_pass;
 pub use abstract_recursive_pass::{AbstractRecursivePass, RecursivePassState, recursive_process};
 pub use add_behavior_describing_tags_pass::AddBehaviorDescribingTagsPass;
 pub use auto_alias_service_pass::AutoAliasServicePass;
+pub use autowire_required_methods_pass::AutowireRequiredMethodsPass;
 pub use compiler::Compiler;
 pub use compiler_pass_interface::{CompilerPassInterface, Pass};
 pub use extension_compiler_pass::ExtensionCompilerPass;

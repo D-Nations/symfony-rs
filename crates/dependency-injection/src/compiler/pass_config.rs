@@ -151,7 +151,7 @@ impl PassConfig {
                 pending_with("ResolveParameterPlaceHoldersPass", "false, false"),
                 pending("ResolveFactoryClassPass"),
                 pending("ResolveNamedArgumentsPass"),
-                pending("AutowireRequiredMethodsPass"),
+                Pass::new(super::AutowireRequiredMethodsPass::new()),
                 pending("AutowireRequiredPropertiesPass"),
                 pending("ResolveBindingsPass"),
                 Pass::new(super::ServiceLocatorTagPass::new()),
