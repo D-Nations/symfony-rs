@@ -1,8 +1,9 @@
 //! Port of Doctrine\DBAL\Query\QueryBuilder.php: SQL building, parameters
 //! and state. The execution methods (`executeQuery()`,
-//! `executeStatement()`, `fetch*()`) and the result cache
-//! (`enableResultCache()`, `disableResultCache()`) need `Connection`,
-//! `Result` and `QueryCacheProfile`, which are not ported (README.md).
+//! `executeStatement()`, `fetch*()`) are those of a builder over a
+//! `Connection` (Slice Connection, at the end); the result cache
+//! (`enableResultCache()`, `disableResultCache()`) needs
+//! `QueryCacheProfile`, which is not ported (README.md).
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!
@@ -1047,4 +1048,70 @@ fn append_to_predicate(
     };
 
     ExpressionPart::Composite(CompositeExpression::new(r#type, first, predicates))
+}
+
+// Slice Connection: the execution methods, for a builder over a
+// `Connection`.
+impl<'c> QueryBuilder<'c, crate::Connection> {
+    /// The parameter types as the connection takes them; a key typed twice
+    /// keeps its last type, as PHP's array does.
+    fn connection_types(&self) -> crate::ParameterTypes {
+        self.types.iter().cloned().collect()
+    }
+
+    /// Executes an SQL query (SELECT) and returns its result.
+    pub async fn execute_query(&self) -> Result<crate::Result<'c>, Exception> {
+        let sql = self.get_sql()?;
+        self.connection
+            .execute_query(&sql, &self.params, &self.connection_types())
+            .await
+    }
+
+    /// Executes an SQL statement and returns the number of affected rows.
+    pub async fn execute_statement(&self) -> Result<i64, Exception> {
+        let sql = self.get_sql()?;
+        self.connection
+            .execute_statement(&sql, &self.params, &self.connection_types())
+            .await
+    }
+
+    /// The first row of the result as an associative array.
+    pub async fn fetch_associative(&self) -> Result<Option<PhpArray>, Exception> {
+        self.execute_query().await?.fetch_associative()
+    }
+
+    /// The first row of the result as a list.
+    pub async fn fetch_numeric(&self) -> Result<Option<PhpArray>, Exception> {
+        self.execute_query().await?.fetch_numeric()
+    }
+
+    /// The value of the first column of the first row.
+    pub async fn fetch_one(&self) -> Result<Option<Value>, Exception> {
+        self.execute_query().await?.fetch_one()
+    }
+
+    /// Every row as a list.
+    pub async fn fetch_all_numeric(&self) -> Result<Vec<PhpArray>, Exception> {
+        self.execute_query().await?.fetch_all_numeric()
+    }
+
+    /// Every row as an associative array.
+    pub async fn fetch_all_associative(&self) -> Result<Vec<PhpArray>, Exception> {
+        self.execute_query().await?.fetch_all_associative()
+    }
+
+    /// The first column as keys and the second as values.
+    pub async fn fetch_all_key_value(&self) -> Result<PhpArray, Exception> {
+        self.execute_query().await?.fetch_all_key_value()
+    }
+
+    /// The rows by their first column.
+    pub async fn fetch_all_associative_indexed(&self) -> Result<PhpArray, Exception> {
+        self.execute_query().await?.fetch_all_associative_indexed()
+    }
+
+    /// The values of the first column.
+    pub async fn fetch_first_column(&self) -> Result<Vec<Value>, Exception> {
+        self.execute_query().await?.fetch_first_column()
+    }
 }
