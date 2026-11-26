@@ -41,7 +41,7 @@ Compiler/AnalyzeServiceReferencesPass.php	AnalyzeServiceReferencesPass	159	porte
 Compiler/AttributeAutoconfigurationPass.php	AttributeAutoconfigurationPass	122	ported	crates/dependency-injection/src/compiler/attribute_autoconfiguration_pass.rs
 Compiler/AutoAliasServicePass.php	AutoAliasServicePass	22	ported	crates/dependency-injection/src/compiler/auto_alias_service_pass.rs
 Compiler/AutowireAsDecoratorPass.php	AutowireAsDecoratorPass	54	ported	crates/dependency-injection/src/compiler/autowire_as_decorator_pass.rs
-Compiler/AutowirePass.php	AutowirePass	616	pending	
+Compiler/AutowirePass.php	AutowirePass	616	ported	crates/dependency-injection/src/compiler/autowire_pass.rs
 Compiler/AutowireRequiredMethodsPass.php	AutowireRequiredMethodsPass	62	ported	crates/dependency-injection/src/compiler/autowire_required_methods_pass.rs
 Compiler/AutowireRequiredPropertiesPass.php	AutowireRequiredPropertiesPass	49	ported	crates/dependency-injection/src/compiler/autowire_required_properties_pass.rs
 Compiler/CheckAliasValidityPass.php	CheckAliasValidityPass	30	ported	crates/dependency-injection/src/compiler/check_alias_validity_pass.rs
@@ -71,7 +71,7 @@ Compiler/RemovePrivateAliasesPass.php	RemovePrivateAliasesPass	15	ported	crates/
 Compiler/RemoveUnusedDefinitionsPass.php	RemoveUnusedDefinitionsPass	58	ported	crates/dependency-injection/src/compiler/remove_unused_definitions_pass.rs
 Compiler/ReplaceAliasByActualDefinitionPass.php	ReplaceAliasByActualDefinitionPass	63	ported	crates/dependency-injection/src/compiler/replace_alias_by_actual_definition_pass.rs
 Compiler/ResettableServicePass.php	ResettableServicePass	53	ported	crates/dependency-injection/src/compiler/resettable_service_pass.rs
-Compiler/ResolveAutowireInlineAttributesPass.php	ResolveAutowireInlineAttributesPass	89	pending	
+Compiler/ResolveAutowireInlineAttributesPass.php	ResolveAutowireInlineAttributesPass	89	ported	crates/dependency-injection/src/compiler/resolve_autowire_inline_attributes_pass.rs
 Compiler/ResolveBindingsPass.php	ResolveBindingsPass	206	ported	crates/dependency-injection/src/compiler/resolve_bindings_pass.rs
 Compiler/ResolveChildDefinitionsPass.php	ResolveChildDefinitionsPass	144	ported	crates/dependency-injection/src/compiler/resolve_child_definitions_pass.rs
 Compiler/ResolveClassPass.php	ResolveClassPass	40	ported	crates/dependency-injection/src/compiler/resolve_class_pass.rs
