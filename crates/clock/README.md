@@ -2,8 +2,10 @@
 
 Private workspace crate: a port of `symfony/clock` v8.1.9 (`945ea3b6`), as
 installed by symfony/demo. MIT; Symfony source and tests copyright Fabien
-Potencier. No PHP source code is used: the PHP date layer in `src/php/` is
-written from the PHP manual and from recorded PHP answers. Unofficial, not
+Potencier. No PHP source code is used: the PHP date layer
+(`symfony_clock::php`, now the php2rust-date crate of
+php2rust-compatibility-tools) is written from the PHP manual and from
+recorded PHP answers. Unofficial, not
 affiliated with or endorsed by Symfony or PHP.
 
 ```rust
@@ -33,7 +35,7 @@ assert!(DatePoint::new("Bad Date", None, None).is_err());
 | `DatePoint`: the constructor (the clock's now as reference, `date_parse()`, midnight default, the DST fall-back hour), `createFromFormat()`, `createFromTimestamp()`, `modify()`, the setters, `setMicrosecond()` | `DatePoint.php` | DatePointTest (11); oracle `datepoint` (2,464), `setters` (264) |
 | `now()` | `Resources/now.php` | ClockTest `testNowModifier`, `testInvalidNowModifier` |
 | `ClockSensitiveTrait::mock_time()`, save and restore of the global clock | `Test/ClockSensitiveTrait.php` | ClockTest, DatePointTest |
-| PHP's `DateTimeImmutable` and `DateTimeZone` subset: identifiers, offsets and abbreviations; `format()` (all characters); `createFromFormat()` with its warnings and errors; `createFromTimestamp()`; `modify()`; gap and fold rules | `src/php/` (Upstream: none) | Oracle `timezones`, `parse`, `modify` (5,840), `format`, `from_format`, `timestamps` |
+| PHP's `DateTimeImmutable` and `DateTimeZone` subset: identifiers, offsets and abbreviations; `format()` (all characters); `createFromFormat()` with its warnings and errors; `createFromTimestamp()`; `modify()`; gap and fold rules | php2rust-date (Upstream: none) | Oracle `timezones`, `parse`, `modify` (5,840), `format`, `from_format`, `timestamps` |
 | Exception messages, e.g. `Failed to parse time string (Bad Date) at position 0 (B): The timezone could not be found in the database` | All | Upstream tests; oracle answers compare class and message |
 
 Vectors: `scripts/record.sh clock` runs `oracle/recorders/clock.php` on

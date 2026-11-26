@@ -18,7 +18,7 @@ mod mock_clock;
 mod monotonic_clock;
 mod native_clock;
 mod now;
-pub mod php;
+pub use php_date as php;
 pub mod test;
 
 pub use clock::{AnyClock, Clock};

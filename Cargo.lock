@@ -929,14 +929,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "php2rust-date"
+version = "0.1.0"
+dependencies = [
+ "jiff 1.0.3",
+ "php2rust-value",
+]
+
+[[package]]
 name = "php2rust-dom"
 version = "0.1.0"
-source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=3fc1939b5549415a903ea99acb5c560c453eaf76#3fc1939b5549415a903ea99acb5c560c453eaf76"
 
 [[package]]
 name = "php2rust-regex"
 version = "0.1.0"
-source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=3fc1939b5549415a903ea99acb5c560c453eaf76#3fc1939b5549415a903ea99acb5c560c453eaf76"
 dependencies = [
  "fancy-regex",
 ]
@@ -944,7 +950,6 @@ dependencies = [
 [[package]]
 name = "php2rust-value"
 version = "0.1.0"
-source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=3fc1939b5549415a903ea99acb5c560c453eaf76#3fc1939b5549415a903ea99acb5c560c453eaf76"
 dependencies = [
  "serde_json",
 ]
@@ -1293,7 +1298,7 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 name = "symfony-clock"
 version = "0.1.0"
 dependencies = [
- "jiff 1.0.3",
+ "php2rust-date",
  "serde_json",
 ]
 
@@ -1710,6 +1715,7 @@ dependencies = [
 name = "twig"
 version = "0.1.0"
 dependencies = [
+ "php2rust-date",
  "php2rust-regex",
  "php2rust-value",
  "serde_json",
@@ -1720,6 +1726,7 @@ dependencies = [
 name = "twig-integration"
 version = "0.1.0"
 dependencies = [
+ "php2rust-date",
  "php2rust-value",
  "serde_json",
  "symfony-deprecation-contracts",
