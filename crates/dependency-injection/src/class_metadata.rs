@@ -95,6 +95,10 @@ pub struct MethodMetadata {
     pub return_type: Option<String>,
     pub doc_comment: Option<String>,
     pub attributes: Vec<AttributeMetadata>,
+    /// What calling it returns, for the static methods a compiler pass
+    /// calls at build time (`getDefaultName()`, `getSubscribedServices()`);
+    /// `None` when unknown, and the pass refuses to call it.
+    pub returns: Option<Value>,
 }
 
 impl MethodMetadata {
@@ -124,6 +128,13 @@ impl MethodMetadata {
         self
     }
 
+    /// The same method, returning `value` when called.
+    #[must_use]
+    pub fn with_returns(mut self, value: Value) -> Self {
+        self.returns = Some(value);
+        self
+    }
+
     #[must_use]
     pub fn with_return_type(mut self, return_type: &str) -> Self {
         self.return_type = Some(return_type.to_string());
@@ -142,6 +153,10 @@ pub struct PropertyMetadata {
     pub visibility: Visibility,
     pub is_static: bool,
     pub is_readonly: bool,
+    /// The asymmetric set visibility (`private(set)`, `protected(set)`),
+    /// when declared; a readonly property without one is
+    /// `protected(set)`.
+    pub set_visibility: Option<Visibility>,
     pub type_: Option<String>,
     pub attributes: Vec<AttributeMetadata>,
 }

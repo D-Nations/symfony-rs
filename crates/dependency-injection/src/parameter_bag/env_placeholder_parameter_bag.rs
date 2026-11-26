@@ -203,6 +203,14 @@ impl ParameterBag {
         }
     }
 
+    /// The `$envPlaceholders` that `MergeExtensionConfigurationParameterBag`
+    /// reports once frozen (its `getEnvPlaceholders()` override).
+    pub fn set_env_placeholders(&self, placeholders: EnvPlaceholderMap) {
+        if let Some(env) = &self.env {
+            env.lock().placeholders = placeholders;
+        }
+    }
+
     /// The `$unusedEnvPlaceholders` a subclass sets
     /// (`MergeExtensionConfigurationParameterBag`).
     pub fn set_unused_env_placeholders(&self, unused: EnvPlaceholderMap) {

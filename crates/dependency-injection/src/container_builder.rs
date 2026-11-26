@@ -129,6 +129,31 @@ pub trait EnvVarResolver: Send + Sync {
 pub type AttributeConfigurator =
     Arc<dyn Fn(&Definition, &AttributeMetadata, &Reflector) -> Result<()> + Send + Sync>;
 
+/// The third parameter of an attribute configurator, which upstream's
+/// `AttributeAutoconfigurationPass` reflects to choose the reflectors the
+/// configurator is called with.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub enum AttributeConfiguratorReflector {
+    /// Two parameters or fewer: called for class attributes.
+    #[default]
+    None,
+    /// The third parameter's declared types (`ReflectionClass`,
+    /// `ReflectionMethod`, `ReflectionProperty`, `ReflectionParameter`,
+    /// `Reflector`).
+    Typed(Vec<String>),
+    /// An untyped third parameter: its name, and the callable's file and
+    /// start line.
+    Untyped {
+        name: String,
+        file: String,
+        line: i64,
+    },
+}
+
+fn configurator_key(configurator: &AttributeConfigurator) -> usize {
+    Arc::as_ptr(configurator).cast::<()>() as usize
+}
+
 /// The target of `setAlias()`: an id or an `Alias`.
 #[derive(Debug, Clone)]
 pub enum AliasTarget {
@@ -225,6 +250,10 @@ pub struct ContainerBuilder {
     class_reflectors: HashMap<String, Option<Arc<ClassMetadata>>>,
     classes: Arc<ClassRegistry>,
     env_var_resolver: Option<Arc<dyn EnvVarResolver>>,
+    /// `MergeExtensionConfigurationContainerBuilder`'s `$extensionClass`.
+    merge_extension_class: Option<String>,
+    /// The third parameter of each attribute configurator, by its address.
+    attribute_configurator_reflectors: HashMap<usize, AttributeConfiguratorReflector>,
 }
 
 impl std::fmt::Debug for ContainerBuilder {
@@ -281,11 +310,29 @@ impl ContainerBuilder {
             class_reflectors: HashMap::new(),
             classes: Arc::new(ClassRegistry::new()),
             env_var_resolver: None,
+            merge_extension_class: None,
+            attribute_configurator_reflectors: HashMap::new(),
         };
         let container = Definition::with_class(CONTAINER_INTERFACE);
         container.set_synthetic(true).set_public(true);
         builder.definitions.insert("service_container", container);
         builder
+    }
+
+    /// `new MergeExtensionConfigurationContainerBuilder($extension,
+    /// $parameterBag)`: the container an extension loads into, which
+    /// refuses the methods that would have no effect from an extension
+    /// (`registerExtension()` is not refused: it cannot fail here).
+    pub fn for_extension(extension_class: &str, parameter_bag: ParameterBag) -> Self {
+        let mut builder = Self::with_parameter_bag(parameter_bag);
+        builder.merge_extension_class = Some(extension_class.to_string());
+        builder
+    }
+
+    /// `$container instanceof MergeExtensionConfigurationContainerBuilder`:
+    /// the extension class it was created for.
+    pub fn merge_extension_class(&self) -> Option<&str> {
+        self.merge_extension_class.as_deref()
     }
 
     // ----- build-time inputs of this port -----
@@ -593,6 +640,11 @@ impl ContainerBuilder {
         priority: i64,
     ) -> Result<&mut Self> {
         let class = pass.class();
+        if let Some(extension_class) = &self.merge_extension_class {
+            return Err(Error::logic(format!(
+                "You cannot add compiler pass \"{class}\" from extension \"{extension_class}\". Compiler passes must be registered before the container is compiled."
+            )));
+        }
         self.compiler.add_pass(pass, type_, priority);
         self.add_object_resource(&class)?;
         Ok(self)
@@ -936,6 +988,11 @@ impl ContainerBuilder {
                 .get_or_insert_with(attribute, Vec::new)
                 .extend(configurators.iter().cloned());
         }
+        for (key, reflector) in &container.attribute_configurator_reflectors {
+            self.attribute_configurator_reflectors
+                .entry(*key)
+                .or_insert_with(|| reflector.clone());
+        }
         Ok(())
     }
 
@@ -973,6 +1030,11 @@ impl ContainerBuilder {
 
     /// `compile($resolveEnvPlaceholders)`.
     pub fn compile(&mut self, resolve_env_placeholders: bool) -> Result<()> {
+        if let Some(extension_class) = &self.merge_extension_class {
+            return Err(Error::logic(format!(
+                "Cannot compile the container in extension \"{extension_class}\"."
+            )));
+        }
         if self.track_resources {
             for pass in self.compiler.get_pass_config().get_passes() {
                 self.add_object_resource(&pass.class())?;
@@ -1395,6 +1457,30 @@ impl ContainerBuilder {
         &self.autoconfigured_attributes
     }
 
+    /// `registerAttributeForAutoconfiguration()` for a configurator with a
+    /// third parameter, which upstream reflects.
+    pub fn register_attribute_for_autoconfiguration_with_reflector(
+        &mut self,
+        attribute_class: &str,
+        configurator: AttributeConfigurator,
+        reflector: AttributeConfiguratorReflector,
+    ) {
+        self.attribute_configurator_reflectors
+            .insert(configurator_key(&configurator), reflector);
+        self.register_attribute_for_autoconfiguration(attribute_class, configurator);
+    }
+
+    /// The third parameter of a registered attribute configurator.
+    pub fn attribute_configurator_reflector(
+        &self,
+        configurator: &AttributeConfigurator,
+    ) -> AttributeConfiguratorReflector {
+        self.attribute_configurator_reflectors
+            .get(&configurator_key(configurator))
+            .cloned()
+            .unwrap_or_default()
+    }
+
     // ----- env vars -----
 
     /// `resolveEnvPlaceholders($value, $format, $usedEnvs)`: env
@@ -1403,10 +1489,40 @@ impl ContainerBuilder {
     #[expect(clippy::too_many_lines, reason = "one upstream method")]
     pub fn resolve_env_placeholders(
         &mut self,
-        value: Value,
+        mut value: Value,
         format: &EnvFormat,
         mut used_envs: Option<&mut Vec<String>>,
     ) -> Result<Value> {
+        if let Some(extension_class) = &self.merge_extension_class
+            && *format == EnvFormat::Resolve
+            && let Value::String(s) = &value
+        {
+            // MergeExtensionConfigurationContainerBuilder::resolveEnvPlaceholders()
+            let resolved = self.parameter_bag.resolve_value(&value, &[])?;
+            if self.parameter_bag.is_env_placeholder() {
+                let haystack = match &resolved {
+                    Value::String(r) => r.as_bytes().to_ascii_lowercase(),
+                    _ => s.as_bytes().to_ascii_lowercase(),
+                };
+                for (env, placeholders) in self.parameter_bag.get_env_placeholders().iter() {
+                    if !env.contains(':') {
+                        continue;
+                    }
+                    for placeholder in placeholders {
+                        let needle = placeholder.to_ascii_lowercase();
+                        if haystack
+                            .windows(needle.len().max(1))
+                            .any(|w| w == needle.as_bytes())
+                        {
+                            return Err(Error::runtime(format!(
+                                "Using a cast in \"env({env})\" is incompatible with resolution at compile time in \"{extension_class}\". The logic in the extension should be moved to a compiler pass, or an env parameter with no cast should be used instead."
+                            )));
+                        }
+                    }
+                }
+            }
+            value = resolved;
+        }
         let mut value = if *format == EnvFormat::Resolve {
             self.parameter_bag.resolve_value(&value, &[])?
         } else {
