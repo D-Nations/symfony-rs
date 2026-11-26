@@ -541,3 +541,11 @@ pub fn assert_outcome(
         (_, actual) => panic!("{context}: expected {expected}, got {actual:?}"),
     }
 }
+
+/// `new DateTime($text)` as a value.
+pub fn date_time(text: &str) -> Value {
+    let date = php_value::date_create::date_create(text.as_bytes(), None)
+        .expect("a text php_value reads")
+        .expect("a valid date");
+    php_value::datetime::DateTime::object(date)
+}

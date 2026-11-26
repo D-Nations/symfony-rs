@@ -271,6 +271,11 @@ impl Connection {
         })
     }
 
+    /// The version of the database server, from the driver connection.
+    pub async fn get_server_version(&self) -> StdResult<String> {
+        self.connect().await?.get_server_version().await
+    }
+
     /// Returns the current auto-commit mode for this connection.
     pub fn is_auto_commit(&self) -> bool {
         self.state().auto_commit
@@ -1106,7 +1111,7 @@ impl Connection {
 impl ServerVersionProvider for Connection {
     /// The version of the database server, from the driver connection.
     fn get_server_version(&self) -> BoxFuture<'_, StdResult<String>> {
-        Box::pin(async move { self.connect().await?.get_server_version().await })
+        Box::pin(Connection::get_server_version(self))
     }
 }
 

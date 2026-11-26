@@ -4408,6 +4408,8 @@
         "dummy_select": "U0VMRUNUIDE=",
         "dummy_select_foo": "U0VMRUNUIDpmb28=",
         "length_length": "U0VMRUNUIExFTkdUSCg/KSwgTEVOR1RIKD8p",
+        "empty_identity_insert": "SU5TRVJUIElOVE8gdGVzdF9lbXB0eV9pZGVudGl0eSAoaWQpIFZBTFVFUyAobnVsbCk=",
+        "datetime_format": "WS1tLWQgSDppOnM=",
         "current_database": "U0VMRUNUICdtYWluJw==",
         "create_savepoint": "U0FWRVBPSU5UIERPQ1RSSU5FXzI=",
         "release_savepoint": "UkVMRUFTRSBTQVZFUE9JTlQgRE9DVFJJTkVfMg==",

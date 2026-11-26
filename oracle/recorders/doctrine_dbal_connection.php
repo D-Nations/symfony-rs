@@ -238,6 +238,8 @@ namespace {
         'length_length' => $platform->getDummySelectSQL(
             $platform->getLengthExpression('?') . ', ' . $platform->getLengthExpression('?'),
         ),
+        'empty_identity_insert' => $platform->getEmptyIdentityInsertSQL('test_empty_identity', 'id'),
+        'datetime_format' => $platform->getDateTimeFormatString(),
         'current_database' => $platform->getDummySelectSQL($platform->getCurrentDatabaseExpression()),
         'create_savepoint' => $platform->createSavePoint('DOCTRINE_2'),
         'release_savepoint' => $platform->releaseSavePoint('DOCTRINE_2'),
