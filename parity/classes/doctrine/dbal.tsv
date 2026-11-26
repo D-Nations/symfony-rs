@@ -9,34 +9,34 @@ src/Cache/Exception/NoCacheKey.php	NoCacheKey	10	pending
 src/Cache/Exception/NoResultDriverConfigured.php	NoResultDriverConfigured	10	pending	
 src/Cache/QueryCacheProfile.php	QueryCacheProfile	56	pending	
 src/ColumnCase.php	ColumnCase	7	pending	
-src/Configuration.php	Configuration	73	pending	
-src/Connection.php	Connection	710	pending	
-src/Connection/StaticServerVersionProvider.php	StaticServerVersionProvider	13	pending	
-src/ConnectionException.php	ConnectionException	5	pending	
+src/Configuration.php	Configuration	73	ported	crates/doctrine-dbal/src/configuration.rs
+src/Connection.php	Connection	710	ported	crates/doctrine-dbal/src/connection.rs
+src/Connection/StaticServerVersionProvider.php	StaticServerVersionProvider	13	ported	crates/doctrine-dbal/src/server_version_provider.rs
+src/ConnectionException.php	ConnectionException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
 src/Connections/PrimaryReadReplicaConnection.php	PrimaryReadReplicaConnection	166	pending	
-src/Driver.php	Driver	17	pending	
-src/Driver/API/ExceptionConverter.php	ExceptionConverter	9	pending	
+src/Driver.php	Driver	17	ported	crates/doctrine-dbal/src/driver/mod.rs
+src/Driver/API/ExceptionConverter.php	ExceptionConverter	9	ported	crates/doctrine-dbal/src/driver/api/mod.rs
 src/Driver/API/IBMDB2/ExceptionConverter.php	ExceptionConverter	37	pending	
 src/Driver/API/MySQL/ExceptionConverter.php	ExceptionConverter	91	pending	
 src/Driver/API/OCI/ExceptionConverter.php	ExceptionConverter	66	pending	
 src/Driver/API/PostgreSQL/ExceptionConverter.php	ExceptionConverter	65	pending	
 src/Driver/API/SQLSrv/ExceptionConverter.php	ExceptionConverter	39	pending	
-src/Driver/API/SQLite/ExceptionConverter.php	ExceptionConverter	66	pending	
+src/Driver/API/SQLite/ExceptionConverter.php	ExceptionConverter	66	ported	crates/doctrine-dbal/src/driver/api/sqlite.rs
 src/Driver/AbstractDB2Driver.php	AbstractDB2Driver	18	pending	
-src/Driver/AbstractException.php	AbstractException	19	pending	
+src/Driver/AbstractException.php	AbstractException	19	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
 src/Driver/AbstractMySQLDriver.php	AbstractMySQLDriver	84	pending	
 src/Driver/AbstractOracleDriver.php	AbstractOracleDriver	23	pending	
 src/Driver/AbstractOracleDriver/EasyConnectString.php	EasyConnectString	96	pending	
 src/Driver/AbstractPostgreSQLDriver.php	AbstractPostgreSQLDriver	42	pending	
 src/Driver/AbstractSQLServerDriver.php	AbstractSQLServerDriver	18	pending	
 src/Driver/AbstractSQLServerDriver/Exception/PortWithoutHost.php	PortWithoutHost	10	pending	
-src/Driver/AbstractSQLiteDriver.php	AbstractSQLiteDriver	18	pending	
+src/Driver/AbstractSQLiteDriver.php	AbstractSQLiteDriver	18	ported	crates/doctrine-dbal/src/driver/abstract_sqlite_driver.rs
 src/Driver/AbstractSQLiteDriver/Middleware/EnableForeignKeys.php	EnableForeignKeys	23	pending	
-src/Driver/Connection.php	Connection	15	pending	
-src/Driver/Exception.php	Exception	7	pending	
-src/Driver/Exception/IdentityColumnsNotSupported.php	IdentityColumnsNotSupported	11	pending	
-src/Driver/Exception/NoIdentityValue.php	NoIdentityValue	11	pending	
-src/Driver/FetchUtils.php	FetchUtils	37	pending	
+src/Driver/Connection.php	Connection	15	ported	crates/doctrine-dbal/src/driver/connection.rs
+src/Driver/Exception.php	Exception	7	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Driver/Exception/IdentityColumnsNotSupported.php	IdentityColumnsNotSupported	11	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Driver/Exception/NoIdentityValue.php	NoIdentityValue	11	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Driver/FetchUtils.php	FetchUtils	37	ported	crates/doctrine-dbal/src/driver/fetch_utils.rs
 src/Driver/IBMDB2/Connection.php	Connection	97	pending	
 src/Driver/IBMDB2/DataSourceName.php	DataSourceName	51	pending	
 src/Driver/IBMDB2/Driver.php	Driver	28	pending	
@@ -82,19 +82,19 @@ src/Driver/OCI8/ExecutionMode.php	ExecutionMode	18	pending
 src/Driver/OCI8/Middleware/InitializeSession.php	InitializeSession	30	pending	
 src/Driver/OCI8/Result.php	Result	93	pending	
 src/Driver/OCI8/Statement.php	Statement	77	pending	
-src/Driver/PDO/Connection.php	Connection	102	pending	
-src/Driver/PDO/Exception.php	Exception	18	pending	
-src/Driver/PDO/Exception/InvalidConfiguration.php	InvalidConfiguration	16	pending	
+src/Driver/PDO/Connection.php	Connection	102	ported	crates/doctrine-dbal/src/driver/pdo_sqlite.rs
+src/Driver/PDO/Exception.php	Exception	18	ported	crates/doctrine-dbal/src/driver/pdo_sqlite.rs
+src/Driver/PDO/Exception/InvalidConfiguration.php	InvalidConfiguration	16	ported	crates/doctrine-dbal/src/driver/pdo_sqlite.rs
 src/Driver/PDO/MySQL/Driver.php	Driver	62	pending	
 src/Driver/PDO/OCI/Driver.php	Driver	50	pending	
 src/Driver/PDO/PDOConnect.php	PDOConnect	21	pending	
 src/Driver/PDO/PgSQL/Driver.php	Driver	92	pending	
-src/Driver/PDO/Result.php	Result	88	pending	
+src/Driver/PDO/Result.php	Result	88	ported	crates/doctrine-dbal/src/driver/pdo_sqlite.rs
 src/Driver/PDO/SQLSrv/Connection.php	Connection	22	pending	
 src/Driver/PDO/SQLSrv/Driver.php	Driver	81	pending	
 src/Driver/PDO/SQLSrv/Statement.php	Statement	37	pending	
-src/Driver/PDO/SQLite/Driver.php	Driver	46	pending	
-src/Driver/PDO/Statement.php	Statement	57	pending	
+src/Driver/PDO/SQLite/Driver.php	Driver	46	ported	crates/doctrine-dbal/src/driver/pdo_sqlite.rs
+src/Driver/PDO/Statement.php	Statement	57	ported	crates/doctrine-dbal/src/driver/pdo_sqlite.rs
 src/Driver/PgSQL/Connection.php	Connection	98	pending	
 src/Driver/PgSQL/ConvertParameters.php	ConvertParameters	34	pending	
 src/Driver/PgSQL/Driver.php	Driver	75	pending	
@@ -103,7 +103,7 @@ src/Driver/PgSQL/Exception/UnexpectedValue.php	UnexpectedValue	20	pending
 src/Driver/PgSQL/Exception/UnknownParameter.php	UnknownParameter	13	pending	
 src/Driver/PgSQL/Result.php	Result	187	pending	
 src/Driver/PgSQL/Statement.php	Statement	75	pending	
-src/Driver/Result.php	Result	14	pending	
+src/Driver/Result.php	Result	14	ported	crates/doctrine-dbal/src/driver/result.rs
 src/Driver/SQLSrv/Connection.php	Connection	78	pending	
 src/Driver/SQLSrv/Driver.php	Driver	49	pending	
 src/Driver/SQLSrv/Exception/Error.php	Error	26	pending	
@@ -114,52 +114,52 @@ src/Driver/SQLite3/Driver.php	Driver	35	pending
 src/Driver/SQLite3/Exception.php	Exception	10	pending	
 src/Driver/SQLite3/Result.php	Result	76	pending	
 src/Driver/SQLite3/Statement.php	Statement	46	pending	
-src/Driver/Statement.php	Statement	8	pending	
-src/DriverManager.php	DriverManager	70	pending	
+src/Driver/Statement.php	Statement	8	ported	crates/doctrine-dbal/src/driver/statement.rs
+src/DriverManager.php	DriverManager	70	ported	crates/doctrine-dbal/src/driver_manager.rs
 src/Exception.php	Exception	6	ported	crates/doctrine-dbal/src/exception/mod.rs
-src/Exception/CommitFailedRollbackOnly.php	CommitFailedRollbackOnly	10	pending	
-src/Exception/ConnectionException.php	ConnectionException	5	pending	
-src/Exception/ConnectionLost.php	ConnectionLost	5	pending	
-src/Exception/ConstraintViolationException.php	ConstraintViolationException	5	pending	
-src/Exception/DatabaseDoesNotExist.php	DatabaseDoesNotExist	5	pending	
-src/Exception/DatabaseObjectExistsException.php	DatabaseObjectExistsException	5	pending	
-src/Exception/DatabaseObjectNotFoundException.php	DatabaseObjectNotFoundException	5	pending	
-src/Exception/DatabaseRequired.php	DatabaseRequired	16	pending	
-src/Exception/DeadlockException.php	DeadlockException	5	pending	
-src/Exception/DriverException.php	DriverException	30	pending	
-src/Exception/DriverRequired.php	DriverRequired	22	pending	
-src/Exception/ForeignKeyConstraintViolationException.php	ForeignKeyConstraintViolationException	5	pending	
+src/Exception/CommitFailedRollbackOnly.php	CommitFailedRollbackOnly	10	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/ConnectionException.php	ConnectionException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/ConnectionLost.php	ConnectionLost	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/ConstraintViolationException.php	ConstraintViolationException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/DatabaseDoesNotExist.php	DatabaseDoesNotExist	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/DatabaseObjectExistsException.php	DatabaseObjectExistsException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/DatabaseObjectNotFoundException.php	DatabaseObjectNotFoundException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/DatabaseRequired.php	DatabaseRequired	16	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/DeadlockException.php	DeadlockException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/DriverException.php	DriverException	30	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/DriverRequired.php	DriverRequired	22	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/ForeignKeyConstraintViolationException.php	ForeignKeyConstraintViolationException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
 src/Exception/InvalidArgumentException.php	InvalidArgumentException	6	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/InvalidColumnDeclaration.php	InvalidColumnDeclaration	19	ported	crates/doctrine-dbal/src/exception/mod.rs
-src/Exception/InvalidColumnIndex.php	InvalidColumnIndex	13	pending	
+src/Exception/InvalidColumnIndex.php	InvalidColumnIndex	13	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
 src/Exception/InvalidColumnType.php	InvalidColumnType	7	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/InvalidColumnType/ColumnLengthRequired.php	ColumnLengthRequired	19	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/InvalidColumnType/ColumnPrecisionRequired.php	ColumnPrecisionRequired	10	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/InvalidColumnType/ColumnScaleRequired.php	ColumnScaleRequired	10	ported	crates/doctrine-dbal/src/exception/mod.rs
 src/Exception/InvalidColumnType/ColumnValuesRequired.php	ColumnValuesRequired	19	ported	crates/doctrine-dbal/src/exception/mod.rs
-src/Exception/InvalidDriverClass.php	InvalidDriverClass	17	pending	
-src/Exception/InvalidFieldNameException.php	InvalidFieldNameException	5	pending	
-src/Exception/InvalidWrapperClass.php	InvalidWrapperClass	17	pending	
-src/Exception/LockWaitTimeoutException.php	LockWaitTimeoutException	5	pending	
-src/Exception/MalformedDsnException.php	MalformedDsnException	9	pending	
-src/Exception/NoActiveTransaction.php	NoActiveTransaction	10	pending	
-src/Exception/NoKeyValue.php	NoKeyValue	16	pending	
-src/Exception/NonUniqueFieldNameException.php	NonUniqueFieldNameException	5	pending	
-src/Exception/NotNullConstraintViolationException.php	NotNullConstraintViolationException	5	pending	
-src/Exception/ParseError.php	ParseError	11	pending	
-src/Exception/ReadOnlyException.php	ReadOnlyException	5	pending	
-src/Exception/RetryableException.php	RetryableException	6	pending	
-src/Exception/SavepointsNotSupported.php	SavepointsNotSupported	10	pending	
-src/Exception/SchemaDoesNotExist.php	SchemaDoesNotExist	5	pending	
-src/Exception/ServerException.php	ServerException	5	pending	
-src/Exception/SyntaxErrorException.php	SyntaxErrorException	5	pending	
-src/Exception/TableExistsException.php	TableExistsException	5	pending	
-src/Exception/TableNotFoundException.php	TableNotFoundException	5	pending	
-src/Exception/TransactionRolledBack.php	TransactionRolledBack	5	pending	
-src/Exception/UniqueConstraintViolationException.php	UniqueConstraintViolationException	5	pending	
-src/Exception/UnknownDriver.php	UnknownDriver	17	pending	
+src/Exception/InvalidDriverClass.php	InvalidDriverClass	17	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/InvalidFieldNameException.php	InvalidFieldNameException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/InvalidWrapperClass.php	InvalidWrapperClass	17	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/LockWaitTimeoutException.php	LockWaitTimeoutException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/MalformedDsnException.php	MalformedDsnException	9	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/NoActiveTransaction.php	NoActiveTransaction	10	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/NoKeyValue.php	NoKeyValue	16	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/NonUniqueFieldNameException.php	NonUniqueFieldNameException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/NotNullConstraintViolationException.php	NotNullConstraintViolationException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/ParseError.php	ParseError	11	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/ReadOnlyException.php	ReadOnlyException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/RetryableException.php	RetryableException	6	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/SavepointsNotSupported.php	SavepointsNotSupported	10	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/SchemaDoesNotExist.php	SchemaDoesNotExist	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/ServerException.php	ServerException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/SyntaxErrorException.php	SyntaxErrorException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/TableExistsException.php	TableExistsException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/TableNotFoundException.php	TableNotFoundException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/TransactionRolledBack.php	TransactionRolledBack	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/UniqueConstraintViolationException.php	UniqueConstraintViolationException	5	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
+src/Exception/UnknownDriver.php	UnknownDriver	17	ported	crates/doctrine-dbal/src/exception/driver_exception.rs
 src/ExpandArrayParameters.php	ExpandArrayParameters	84	ported	crates/doctrine-dbal/src/expand_array_parameters.rs
-src/LockMode.php	LockMode	9	pending	
+src/LockMode.php	LockMode	9	ported	crates/doctrine-dbal/src/transaction_isolation_level.rs
 src/Logging/Connection.php	Connection	51	pending	
 src/Logging/Driver.php	Driver	32	pending	
 src/Logging/Middleware.php	Middleware	15	pending	
@@ -168,14 +168,14 @@ src/ParameterType.php	ParameterType	12	ported	crates/doctrine-dbal/src/parameter
 src/Platforms/AbstractMySQLPlatform.php	AbstractMySQLPlatform	620	pending	
 src/Platforms/AbstractPlatform.php	AbstractPlatform	1312	ported	crates/doctrine-dbal/src/platforms/abstract_platform.rs
 src/Platforms/DB2Platform.php	DB2Platform	420	pending	
-src/Platforms/DateIntervalUnit.php	DateIntervalUnit	13	pending	
+src/Platforms/DateIntervalUnit.php	DateIntervalUnit	13	ported	crates/doctrine-dbal/src/platforms/date_interval_unit.rs
 src/Platforms/Db2/Db2MetadataProvider.php	Db2MetadataProvider	416	pending	
 src/Platforms/Exception/InvalidPlatformVersion.php	InvalidPlatformVersion	15	pending	
-src/Platforms/Exception/NoColumnsSpecifiedForTable.php	NoColumnsSpecifiedForTable	11	pending	
+src/Platforms/Exception/NoColumnsSpecifiedForTable.php	NoColumnsSpecifiedForTable	11	ported	crates/doctrine-dbal/src/platforms/no_columns_specified_for_table.rs
 src/Platforms/Exception/NotSupported.php	NotSupported	11	ported	crates/doctrine-dbal/src/platforms/exception.rs
 src/Platforms/Exception/PlatformException.php	PlatformException	6	ported	crates/doctrine-dbal/src/platforms/exception.rs
 src/Platforms/Keywords/DB2Keywords.php	DB2Keywords	404	pending	
-src/Platforms/Keywords/KeywordList.php	KeywordList	31	pending	
+src/Platforms/Keywords/KeywordList.php	KeywordList	31	ported	crates/doctrine-dbal/src/platforms/keywords/mod.rs
 src/Platforms/Keywords/MariaDB117Keywords.php	MariaDB117Keywords	12	pending	
 src/Platforms/Keywords/MariaDB123Keywords.php	MariaDB123Keywords	12	pending	
 src/Platforms/Keywords/MariaDBKeywords.php	MariaDBKeywords	257	pending	
@@ -185,7 +185,7 @@ src/Platforms/Keywords/MySQLKeywords.php	MySQLKeywords	245	pending
 src/Platforms/Keywords/OracleKeywords.php	OracleKeywords	123	pending	
 src/Platforms/Keywords/PostgreSQLKeywords.php	PostgreSQLKeywords	109	pending	
 src/Platforms/Keywords/SQLServerKeywords.php	SQLServerKeywords	195	pending	
-src/Platforms/Keywords/SQLiteKeywords.php	SQLiteKeywords	131	pending	
+src/Platforms/Keywords/SQLiteKeywords.php	SQLiteKeywords	131	ported	crates/doctrine-dbal/src/platforms/keywords/mod.rs
 src/Platforms/MariaDB1010Platform.php	MariaDB1010Platform	32	pending	
 src/Platforms/MariaDB1052Platform.php	MariaDB1052Platform	19	pending	
 src/Platforms/MariaDB1060Platform.php	MariaDB1060Platform	10	pending	
@@ -217,8 +217,8 @@ src/Platforms/SQLServerPlatform.php	SQLServerPlatform	883	pending
 src/Platforms/SQLite/Comparator.php	Comparator	35	pending	
 src/Platforms/SQLite/SQLiteMetadataProvider.php	SQLiteMetadataProvider	582	pending	
 src/Platforms/SQLite/SQLiteMetadataProvider/ForeignKeyConstraintDetails.php	ForeignKeyConstraintDetails	23	pending	
-src/Platforms/SQLitePlatform.php	SQLitePlatform	713	pending	
-src/Platforms/TrimMode.php	TrimMode	9	pending	
+src/Platforms/SQLitePlatform.php	SQLitePlatform	713	ported	crates/doctrine-dbal/src/platforms/sqlite_platform.rs
+src/Platforms/TrimMode.php	TrimMode	9	ported	crates/doctrine-dbal/src/platforms/date_interval_unit.rs
 src/Portability/Connection.php	Connection	30	pending	
 src/Portability/Converter.php	Converter	143	pending	
 src/Portability/Driver.php	Driver	53	pending	
@@ -226,7 +226,7 @@ src/Portability/Middleware.php	Middleware	18	pending
 src/Portability/OptimizeFlags.php	OptimizeFlags	28	pending	
 src/Portability/Result.php	Result	53	pending	
 src/Portability/Statement.php	Statement	19	pending	
-src/Query.php	Query	23	pending	
+src/Query.php	Query	23	ported	crates/doctrine-dbal/src/sql_query.rs
 src/Query/CommonTableExpression.php	CommonTableExpression	16	ported	crates/doctrine-dbal/src/query/common_table_expression.rs
 src/Query/Exception/NonUniqueAlias.php	NonUniqueAlias	19	ported	crates/doctrine-dbal/src/query/query_exception.rs
 src/Query/Exception/UnknownAlias.php	UnknownAlias	19	ported	crates/doctrine-dbal/src/query/query_exception.rs
@@ -244,7 +244,7 @@ src/Query/SelectQuery.php	SelectQuery	53	ported	crates/doctrine-dbal/src/query/s
 src/Query/Union.php	Union	10	ported	crates/doctrine-dbal/src/query/union.rs
 src/Query/UnionQuery.php	UnionQuery	23	ported	crates/doctrine-dbal/src/query/union_query.rs
 src/Query/UnionType.php	UnionType	7	ported	crates/doctrine-dbal/src/query/union.rs
-src/Result.php	Result	160	pending	
+src/Result.php	Result	160	ported	crates/doctrine-dbal/src/result.rs
 src/SQL/Builder/CreateSchemaObjectsSQLBuilder.php	CreateSchemaObjectsSQLBuilder	43	pending	
 src/SQL/Builder/DefaultSelectSQLBuilder.php	DefaultSelectSQLBuilder	65	ported	crates/doctrine-dbal/src/sql/builder/select_sql_builder.rs
 src/SQL/Builder/DefaultUnionSQLBuilder.php	DefaultUnionSQLBuilder	36	ported	crates/doctrine-dbal/src/sql/builder/union_sql_builder.rs
@@ -256,71 +256,71 @@ src/SQL/Parser.php	Parser	82	ported	crates/doctrine-dbal/src/sql/parser.rs
 src/SQL/Parser/Exception.php	Exception	6	pending	
 src/SQL/Parser/Exception/RegularExpressionError.php	RegularExpressionError	13	pending	
 src/SQL/Parser/Visitor.php	Visitor	8	ported	crates/doctrine-dbal/src/sql/parser.rs
-src/Schema/AbstractAsset.php	AbstractAsset	283	pending	
-src/Schema/AbstractNamedObject.php	AbstractNamedObject	26	pending	
-src/Schema/AbstractOptionallyNamedObject.php	AbstractOptionallyNamedObject	22	pending	
+src/Schema/AbstractAsset.php	AbstractAsset	283	ported	crates/doctrine-dbal/src/schema/abstract_asset.rs
+src/Schema/AbstractNamedObject.php	AbstractNamedObject	26	ported	crates/doctrine-dbal/src/schema/abstract_asset.rs
+src/Schema/AbstractOptionallyNamedObject.php	AbstractOptionallyNamedObject	22	ported	crates/doctrine-dbal/src/schema/abstract_asset.rs
 src/Schema/AbstractSchemaManager.php	AbstractSchemaManager	712	pending	
-src/Schema/Collections/Exception.php	Exception	6	pending	
-src/Schema/Collections/Exception/ObjectAlreadyExists.php	ObjectAlreadyExists	21	pending	
-src/Schema/Collections/Exception/ObjectDoesNotExist.php	ObjectDoesNotExist	21	pending	
-src/Schema/Collections/ObjectSet.php	ObjectSet	16	pending	
-src/Schema/Collections/OptionallyUnqualifiedNamedObjectSet.php	OptionallyUnqualifiedNamedObjectSet	106	pending	
-src/Schema/Collections/UnqualifiedNamedObjectSet.php	UnqualifiedNamedObjectSet	95	pending	
-src/Schema/Column.php	Column	406	pending	
-src/Schema/ColumnDiff.php	ColumnDiff	108	pending	
-src/Schema/ColumnEditor.php	ColumnEditor	195	pending	
+src/Schema/Collections/Exception.php	Exception	6	ported	crates/doctrine-dbal/src/schema/collections.rs crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Collections/Exception/ObjectAlreadyExists.php	ObjectAlreadyExists	21	ported	crates/doctrine-dbal/src/schema/collections.rs crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Collections/Exception/ObjectDoesNotExist.php	ObjectDoesNotExist	21	ported	crates/doctrine-dbal/src/schema/collections.rs crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Collections/ObjectSet.php	ObjectSet	16	ported	crates/doctrine-dbal/src/schema/collections.rs
+src/Schema/Collections/OptionallyUnqualifiedNamedObjectSet.php	OptionallyUnqualifiedNamedObjectSet	106	ported	crates/doctrine-dbal/src/schema/collections.rs
+src/Schema/Collections/UnqualifiedNamedObjectSet.php	UnqualifiedNamedObjectSet	95	ported	crates/doctrine-dbal/src/schema/collections.rs
+src/Schema/Column.php	Column	406	ported	crates/doctrine-dbal/src/schema/column.rs
+src/Schema/ColumnDiff.php	ColumnDiff	108	ported	crates/doctrine-dbal/src/schema/column_diff.rs
+src/Schema/ColumnEditor.php	ColumnEditor	195	ported	crates/doctrine-dbal/src/schema/column_editor.rs
 src/Schema/Comparator.php	Comparator	323	pending	
 src/Schema/ComparatorConfig.php	ComparatorConfig	47	pending	
 src/Schema/DB2SchemaManager.php	DB2SchemaManager	287	pending	
-src/Schema/DefaultExpression.php	DefaultExpression	7	pending	
-src/Schema/DefaultExpression/CurrentDate.php	CurrentDate	11	pending	
-src/Schema/DefaultExpression/CurrentTime.php	CurrentTime	11	pending	
-src/Schema/DefaultExpression/CurrentTimestamp.php	CurrentTimestamp	11	pending	
+src/Schema/DefaultExpression.php	DefaultExpression	7	ported	crates/doctrine-dbal/src/schema/default_expression.rs
+src/Schema/DefaultExpression/CurrentDate.php	CurrentDate	11	ported	crates/doctrine-dbal/src/schema/default_expression.rs
+src/Schema/DefaultExpression/CurrentTime.php	CurrentTime	11	ported	crates/doctrine-dbal/src/schema/default_expression.rs
+src/Schema/DefaultExpression/CurrentTimestamp.php	CurrentTimestamp	11	ported	crates/doctrine-dbal/src/schema/default_expression.rs
 src/Schema/DefaultSchemaManagerFactory.php	DefaultSchemaManagerFactory	11	pending	
-src/Schema/Exception/ColumnAlreadyExists.php	ColumnAlreadyExists	12	pending	
-src/Schema/Exception/ColumnDoesNotExist.php	ColumnDoesNotExist	12	pending	
-src/Schema/Exception/ForeignKeyDoesNotExist.php	ForeignKeyDoesNotExist	14	pending	
+src/Schema/Exception/ColumnAlreadyExists.php	ColumnAlreadyExists	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/ColumnDoesNotExist.php	ColumnDoesNotExist	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/ForeignKeyDoesNotExist.php	ForeignKeyDoesNotExist	14	ported	crates/doctrine-dbal/src/schema/exception.rs
 src/Schema/Exception/ImproperlyQualifiedName.php	ImproperlyQualifiedName	17	pending	
-src/Schema/Exception/IncomparableNames.php	IncomparableNames	19	pending	
-src/Schema/Exception/IndexAlreadyExists.php	IndexAlreadyExists	14	pending	
-src/Schema/Exception/IndexDoesNotExist.php	IndexDoesNotExist	12	pending	
-src/Schema/Exception/IndexNameInvalid.php	IndexNameInvalid	12	pending	
-src/Schema/Exception/InvalidColumnDefinition.php	InvalidColumnDefinition	17	pending	
-src/Schema/Exception/InvalidForeignKeyConstraintDefinition.php	InvalidForeignKeyConstraintDefinition	34	pending	
-src/Schema/Exception/InvalidIdentifier.php	InvalidIdentifier	11	pending	
-src/Schema/Exception/InvalidIndexDefinition.php	InvalidIndexDefinition	25	pending	
-src/Schema/Exception/InvalidName.php	InvalidName	11	pending	
-src/Schema/Exception/InvalidPrimaryKeyConstraintDefinition.php	InvalidPrimaryKeyConstraintDefinition	11	pending	
+src/Schema/Exception/IncomparableNames.php	IncomparableNames	19	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/IndexAlreadyExists.php	IndexAlreadyExists	14	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/IndexDoesNotExist.php	IndexDoesNotExist	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/IndexNameInvalid.php	IndexNameInvalid	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidColumnDefinition.php	InvalidColumnDefinition	17	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidForeignKeyConstraintDefinition.php	InvalidForeignKeyConstraintDefinition	34	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidIdentifier.php	InvalidIdentifier	11	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidIndexDefinition.php	InvalidIndexDefinition	25	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidName.php	InvalidName	11	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidPrimaryKeyConstraintDefinition.php	InvalidPrimaryKeyConstraintDefinition	11	ported	crates/doctrine-dbal/src/schema/exception.rs
 src/Schema/Exception/InvalidSchemaModification.php	InvalidSchemaModification	42	pending	
 src/Schema/Exception/InvalidSequenceDefinition.php	InvalidSequenceDefinition	16	pending	
-src/Schema/Exception/InvalidState.php	InvalidState	77	pending	
-src/Schema/Exception/InvalidTableDefinition.php	InvalidTableDefinition	17	pending	
-src/Schema/Exception/InvalidTableModification.php	InvalidTableModification	109	pending	
-src/Schema/Exception/InvalidTableName.php	InvalidTableName	12	pending	
-src/Schema/Exception/InvalidUniqueConstraintDefinition.php	InvalidUniqueConstraintDefinition	16	pending	
+src/Schema/Exception/InvalidState.php	InvalidState	77	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidTableDefinition.php	InvalidTableDefinition	17	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidTableModification.php	InvalidTableModification	109	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidTableName.php	InvalidTableName	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/InvalidUniqueConstraintDefinition.php	InvalidUniqueConstraintDefinition	16	ported	crates/doctrine-dbal/src/schema/exception.rs
 src/Schema/Exception/InvalidViewDefinition.php	InvalidViewDefinition	17	pending	
 src/Schema/Exception/NamespaceAlreadyExists.php	NamespaceAlreadyExists	12	pending	
-src/Schema/Exception/NotImplemented.php	NotImplemented	12	pending	
-src/Schema/Exception/PrimaryKeyAlreadyExists.php	PrimaryKeyAlreadyExists	14	pending	
+src/Schema/Exception/NotImplemented.php	NotImplemented	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/PrimaryKeyAlreadyExists.php	PrimaryKeyAlreadyExists	14	ported	crates/doctrine-dbal/src/schema/exception.rs
 src/Schema/Exception/SequenceAlreadyExists.php	SequenceAlreadyExists	12	pending	
 src/Schema/Exception/SequenceDoesNotExist.php	SequenceDoesNotExist	12	pending	
 src/Schema/Exception/TableAlreadyExists.php	TableAlreadyExists	12	pending	
 src/Schema/Exception/TableDoesNotExist.php	TableDoesNotExist	12	pending	
-src/Schema/Exception/UniqueConstraintDoesNotExist.php	UniqueConstraintDoesNotExist	14	pending	
-src/Schema/Exception/UnknownColumnOption.php	UnknownColumnOption	14	pending	
+src/Schema/Exception/UniqueConstraintDoesNotExist.php	UniqueConstraintDoesNotExist	14	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Exception/UnknownColumnOption.php	UnknownColumnOption	14	ported	crates/doctrine-dbal/src/schema/exception.rs
 src/Schema/Exception/UnsupportedName.php	UnsupportedName	16	pending	
 src/Schema/Exception/UnsupportedSchema.php	UnsupportedSchema	26	pending	
-src/Schema/ForeignKeyConstraint.php	ForeignKeyConstraint	424	pending	
-src/Schema/ForeignKeyConstraint/Deferrability.php	Deferrability	12	pending	
-src/Schema/ForeignKeyConstraint/MatchType.php	MatchType	12	pending	
-src/Schema/ForeignKeyConstraint/ReferentialAction.php	ReferentialAction	14	pending	
-src/Schema/ForeignKeyConstraintEditor.php	ForeignKeyConstraintEditor	201	pending	
-src/Schema/Identifier.php	Identifier	19	pending	
-src/Schema/Index.php	Index	482	pending	
-src/Schema/Index/IndexType.php	IndexType	9	pending	
-src/Schema/Index/IndexedColumn.php	IndexedColumn	21	pending	
-src/Schema/IndexEditor.php	IndexEditor	152	pending	
-src/Schema/IndexRename.php	IndexRename	17	pending	
+src/Schema/ForeignKeyConstraint.php	ForeignKeyConstraint	424	ported	crates/doctrine-dbal/src/schema/foreign_key_constraint.rs
+src/Schema/ForeignKeyConstraint/Deferrability.php	Deferrability	12	ported	crates/doctrine-dbal/src/schema/foreign_key_constraint.rs
+src/Schema/ForeignKeyConstraint/MatchType.php	MatchType	12	ported	crates/doctrine-dbal/src/schema/foreign_key_constraint.rs
+src/Schema/ForeignKeyConstraint/ReferentialAction.php	ReferentialAction	14	ported	crates/doctrine-dbal/src/schema/foreign_key_constraint.rs
+src/Schema/ForeignKeyConstraintEditor.php	ForeignKeyConstraintEditor	201	ported	crates/doctrine-dbal/src/schema/foreign_key_constraint_editor.rs
+src/Schema/Identifier.php	Identifier	19	ported	crates/doctrine-dbal/src/schema/identifier.rs
+src/Schema/Index.php	Index	482	ported	crates/doctrine-dbal/src/schema/index.rs
+src/Schema/Index/IndexType.php	IndexType	9	ported	crates/doctrine-dbal/src/schema/index.rs
+src/Schema/Index/IndexedColumn.php	IndexedColumn	21	ported	crates/doctrine-dbal/src/schema/index.rs
+src/Schema/IndexEditor.php	IndexEditor	152	ported	crates/doctrine-dbal/src/schema/index_editor.rs
+src/Schema/IndexRename.php	IndexRename	17	ported	crates/doctrine-dbal/src/schema/table_diff.rs
 src/Schema/Introspection/IntrospectingSchemaProvider.php	IntrospectingSchemaProvider	328	pending	
 src/Schema/Introspection/MetadataProcessor/ForeignKeyConstraintColumnMetadataProcessor.php	ForeignKeyConstraintColumnMetadataProcessor	50	pending	
 src/Schema/Introspection/MetadataProcessor/IndexColumnMetadataProcessor.php	IndexColumnMetadataProcessor	23	pending	
@@ -340,55 +340,55 @@ src/Schema/Metadata/TableMetadataRow.php	TableMetadataRow	23	pending
 src/Schema/Metadata/UniqueConstraintColumnMetadataRow.php	UniqueConstraintColumnMetadataRow	44	pending	
 src/Schema/Metadata/ViewMetadataRow.php	ViewMetadataRow	23	pending	
 src/Schema/MySQLSchemaManager.php	MySQLSchemaManager	405	pending	
-src/Schema/Name.php	Name	8	pending	
-src/Schema/Name/GenericName.php	GenericName	32	pending	
-src/Schema/Name/Identifier.php	Identifier	61	pending	
-src/Schema/Name/OptionallyQualifiedName.php	OptionallyQualifiedName	64	pending	
-src/Schema/Name/Parser.php	Parser	8	pending	
-src/Schema/Name/Parser/Exception.php	Exception	6	pending	
-src/Schema/Name/Parser/Exception/ExpectedDot.php	ExpectedDot	12	pending	
-src/Schema/Name/Parser/Exception/ExpectedNextIdentifier.php	ExpectedNextIdentifier	11	pending	
-src/Schema/Name/Parser/Exception/InvalidName.php	InvalidName	18	pending	
-src/Schema/Name/Parser/Exception/UnableToParseIdentifier.php	UnableToParseIdentifier	12	pending	
-src/Schema/Name/Parser/GenericNameParser.php	GenericNameParser	62	pending	
-src/Schema/Name/Parser/OptionallyQualifiedNameParser.php	OptionallyQualifiedNameParser	22	pending	
-src/Schema/Name/Parser/UnqualifiedNameParser.php	UnqualifiedNameParser	21	pending	
-src/Schema/Name/Parsers.php	Parsers	35	pending	
-src/Schema/Name/UnqualifiedName.php	UnqualifiedName	37	pending	
-src/Schema/Name/UnquotedIdentifierFolding.php	UnquotedIdentifierFolding	18	pending	
-src/Schema/NamedObject.php	NamedObject	6	pending	
-src/Schema/OptionallyNamedObject.php	OptionallyNamedObject	6	pending	
+src/Schema/Name.php	Name	8	ported	crates/doctrine-dbal/src/schema/name/names.rs
+src/Schema/Name/GenericName.php	GenericName	32	ported	crates/doctrine-dbal/src/schema/name/names.rs
+src/Schema/Name/Identifier.php	Identifier	61	ported	crates/doctrine-dbal/src/schema/name/identifier.rs
+src/Schema/Name/OptionallyQualifiedName.php	OptionallyQualifiedName	64	ported	crates/doctrine-dbal/src/schema/name/names.rs
+src/Schema/Name/Parser.php	Parser	8	ported	crates/doctrine-dbal/src/schema/name/parser.rs
+src/Schema/Name/Parser/Exception.php	Exception	6	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Name/Parser/Exception/ExpectedDot.php	ExpectedDot	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Name/Parser/Exception/ExpectedNextIdentifier.php	ExpectedNextIdentifier	11	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Name/Parser/Exception/InvalidName.php	InvalidName	18	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Name/Parser/Exception/UnableToParseIdentifier.php	UnableToParseIdentifier	12	ported	crates/doctrine-dbal/src/schema/exception.rs
+src/Schema/Name/Parser/GenericNameParser.php	GenericNameParser	62	ported	crates/doctrine-dbal/src/schema/name/parser.rs
+src/Schema/Name/Parser/OptionallyQualifiedNameParser.php	OptionallyQualifiedNameParser	22	ported	crates/doctrine-dbal/src/schema/name/parser.rs
+src/Schema/Name/Parser/UnqualifiedNameParser.php	UnqualifiedNameParser	21	ported	crates/doctrine-dbal/src/schema/name/parser.rs
+src/Schema/Name/Parsers.php	Parsers	35	ported	crates/doctrine-dbal/src/schema/name/parser.rs
+src/Schema/Name/UnqualifiedName.php	UnqualifiedName	37	ported	crates/doctrine-dbal/src/schema/name/names.rs
+src/Schema/Name/UnquotedIdentifierFolding.php	UnquotedIdentifierFolding	18	ported	crates/doctrine-dbal/src/schema/name/identifier.rs
+src/Schema/NamedObject.php	NamedObject	6	ported	crates/doctrine-dbal/src/schema/abstract_asset.rs
+src/Schema/OptionallyNamedObject.php	OptionallyNamedObject	6	ported	crates/doctrine-dbal/src/schema/abstract_asset.rs
 src/Schema/OracleSchemaManager.php	OracleSchemaManager	363	pending	
 src/Schema/PostgreSQLSchemaManager.php	PostgreSQLSchemaManager	413	pending	
-src/Schema/PrimaryKeyConstraint.php	PrimaryKeyConstraint	40	pending	
-src/Schema/PrimaryKeyConstraintEditor.php	PrimaryKeyConstraintEditor	81	pending	
+src/Schema/PrimaryKeyConstraint.php	PrimaryKeyConstraint	40	ported	crates/doctrine-dbal/src/schema/primary_key_constraint.rs
+src/Schema/PrimaryKeyConstraintEditor.php	PrimaryKeyConstraintEditor	81	ported	crates/doctrine-dbal/src/schema/primary_key_constraint.rs
 src/Schema/SQLServerSchemaManager.php	SQLServerSchemaManager	381	pending	
 src/Schema/SQLiteSchemaManager.php	SQLiteSchemaManager	463	pending	
 src/Schema/Schema.php	Schema	315	pending	
-src/Schema/SchemaConfig.php	SchemaConfig	36	pending	
+src/Schema/SchemaConfig.php	SchemaConfig	36	ported	crates/doctrine-dbal/src/schema/schema_config.rs
 src/Schema/SchemaDiff.php	SchemaDiff	65	pending	
 src/Schema/SchemaEditor.php	SchemaEditor	210	pending	
-src/Schema/SchemaException.php	SchemaException	6	pending	
+src/Schema/SchemaException.php	SchemaException	6	ported	crates/doctrine-dbal/src/schema/exception.rs
 src/Schema/SchemaManagerFactory.php	SchemaManagerFactory	7	pending	
 src/Schema/SchemaProvider.php	SchemaProvider	20	pending	
 src/Schema/Sequence.php	Sequence	126	pending	
 src/Schema/SequenceEditor.php	SequenceEditor	59	pending	
-src/Schema/Table.php	Table	876	pending	
-src/Schema/TableConfiguration.php	TableConfiguration	12	pending	
-src/Schema/TableDiff.php	TableDiff	197	pending	
-src/Schema/TableEditor.php	TableEditor	432	pending	
-src/Schema/UniqueConstraint.php	UniqueConstraint	204	pending	
-src/Schema/UniqueConstraintEditor.php	UniqueConstraintEditor	86	pending	
+src/Schema/Table.php	Table	876	ported	crates/doctrine-dbal/src/schema/table.rs
+src/Schema/TableConfiguration.php	TableConfiguration	12	ported	crates/doctrine-dbal/src/schema/schema_config.rs
+src/Schema/TableDiff.php	TableDiff	197	ported	crates/doctrine-dbal/src/schema/table_diff.rs
+src/Schema/TableEditor.php	TableEditor	432	ported	crates/doctrine-dbal/src/schema/table_editor.rs
+src/Schema/UniqueConstraint.php	UniqueConstraint	204	ported	crates/doctrine-dbal/src/schema/unique_constraint.rs
+src/Schema/UniqueConstraintEditor.php	UniqueConstraintEditor	86	ported	crates/doctrine-dbal/src/schema/unique_constraint_editor.rs
 src/Schema/View.php	View	30	pending	
 src/Schema/ViewEditor.php	ViewEditor	45	pending	
-src/ServerVersionProvider.php	ServerVersionProvider	6	pending	
-src/Statement.php	Statement	63	pending	
+src/ServerVersionProvider.php	ServerVersionProvider	6	ported	crates/doctrine-dbal/src/server_version_provider.rs
+src/Statement.php	Statement	63	ported	crates/doctrine-dbal/src/statement.rs
 src/Tools/Console/Command/RunSqlCommand.php	RunSqlCommand	86	pending	
 src/Tools/Console/ConnectionNotFound.php	ConnectionNotFound	6	pending	
 src/Tools/Console/ConnectionProvider.php	ConnectionProvider	8	pending	
 src/Tools/Console/ConnectionProvider/SingleConnectionProvider.php	SingleConnectionProvider	25	pending	
-src/Tools/DsnParser.php	DsnParser	112	pending	
-src/TransactionIsolationLevel.php	TransactionIsolationLevel	9	pending	
+src/Tools/DsnParser.php	DsnParser	112	ported	crates/doctrine-dbal/src/tools/dsn_parser.rs
+src/TransactionIsolationLevel.php	TransactionIsolationLevel	9	ported	crates/doctrine-dbal/src/transaction_isolation_level.rs
 src/Types/AsciiStringType.php	AsciiStringType	15	ported	crates/doctrine-dbal/src/types/string_type.rs
 src/Types/BigIntType.php	BigIntType	34	ported	crates/doctrine-dbal/src/types/integer_type.rs
 src/Types/BinaryType.php	BinaryType	32	ported	crates/doctrine-dbal/src/types/binary_type.rs

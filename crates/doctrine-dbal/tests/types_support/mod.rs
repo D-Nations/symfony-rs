@@ -88,6 +88,17 @@ impl AbstractPlatform for StubPlatform {
         "MockObject_AbstractPlatform"
     }
 
+    fn get_current_database_expression(&self) -> Result<String, doctrine_dbal::Exception> {
+        Ok(String::new())
+    }
+
+    fn get_set_transaction_isolation_sql(
+        &self,
+        _level: doctrine_dbal::TransactionIsolationLevel,
+    ) -> Result<String, doctrine_dbal::Exception> {
+        Ok(String::new())
+    }
+
     fn get_boolean_type_declaration_sql(&self, column: &PhpArray) -> Result<PhpString, Exception> {
         self.declaration("getBooleanTypeDeclarationSQL", column)
     }
