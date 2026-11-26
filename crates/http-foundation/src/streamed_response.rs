@@ -66,8 +66,19 @@ pub struct Stream {
     pub(crate) streamed: bool,
     /// `$this->headersSent`.
     pub(crate) headers_sent: bool,
-    /// The `EventStreamResponse` state, for an instance of that subclass.
-    events: Option<EventStream>,
+    /// The subclass this response is an instance of.
+    subclass: Subclass,
+}
+
+/// The subclass of `StreamedResponse` a streamed response is.
+#[derive(Debug, Clone, PartialEq)]
+pub(crate) enum Subclass {
+    /// `StreamedResponse` itself.
+    None,
+    /// `EventStreamResponse`, with its state.
+    EventStream(EventStream),
+    /// `StreamedJsonResponse`.
+    Json,
 }
 
 impl fmt::Debug for Stream {
@@ -76,7 +87,7 @@ impl fmt::Debug for Stream {
             .field("callback", &self.callback.as_ref().map(Arc::as_ptr))
             .field("streamed", &self.streamed)
             .field("headers_sent", &self.headers_sent)
-            .field("events", &self.events)
+            .field("subclass", &self.subclass)
             .finish()
     }
 }
@@ -92,7 +103,7 @@ impl PartialEq for Stream {
         };
         same && self.streamed == other.streamed
             && self.headers_sent == other.headers_sent
-            && self.events == other.events
+            && self.subclass == other.subclass
     }
 }
 
@@ -120,7 +131,15 @@ impl Stream {
     /// The `EventStreamResponse` state: `Some` for `instanceof
     /// EventStreamResponse`.
     pub fn event_stream(&self) -> Option<&EventStream> {
-        self.events.as_ref()
+        match &self.subclass {
+            Subclass::EventStream(events) => Some(events),
+            _ => None,
+        }
+    }
+
+    /// `instanceof StreamedJsonResponse`.
+    pub fn is_json(&self) -> bool {
+        self.subclass == Subclass::Json
     }
 
     /// `getCallback()`: the callback, or `None` when none is set.
@@ -156,7 +175,7 @@ pub fn new(
     status: i64,
     headers: ResponseHeaderBag,
 ) -> Result<Response> {
-    construct(callback_or_chunks, status, headers, None)
+    construct(callback_or_chunks, status, headers, Subclass::None)
 }
 
 /// `new StreamedResponse(...)` for the `EventStreamResponse` subclass.
@@ -166,20 +185,35 @@ pub(crate) fn new_with_events(
     headers: ResponseHeaderBag,
     events: EventStream,
 ) -> Result<Response> {
-    construct(callback_or_chunks, status, headers, Some(events))
+    construct(
+        callback_or_chunks,
+        status,
+        headers,
+        Subclass::EventStream(events),
+    )
+}
+
+/// `parent::__construct(...)` for a subclass.
+pub(crate) fn new_subclass(
+    callback_or_chunks: CallbackOrChunks,
+    status: i64,
+    headers: ResponseHeaderBag,
+    subclass: Subclass,
+) -> Result<Response> {
+    construct(callback_or_chunks, status, headers, subclass)
 }
 
 fn construct(
     callback_or_chunks: CallbackOrChunks,
     status: i64,
     headers: ResponseHeaderBag,
-    events: Option<EventStream>,
+    subclass: Subclass,
 ) -> Result<Response> {
     let mut stream = Stream {
         callback: None,
         streamed: false,
         headers_sent: false,
-        events,
+        subclass,
     };
     match callback_or_chunks {
         CallbackOrChunks::Callback(callback) => {
