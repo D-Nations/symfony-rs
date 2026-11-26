@@ -48,7 +48,11 @@ pub fn fixtures_path() -> PathBuf {
 /// when upstream/ is not fetched (the dumps print it as `%path%`).
 pub fn real_fixtures_path() -> PathBuf {
     let path = fixtures_path();
-    path.canonicalize().unwrap_or(path)
+    // realpath() as the ported code computes it: std's canonicalize()
+    // gives verbatim `\\?\` paths on Windows, which PHP never prints.
+    symfony_config::resource::FileResource::new(path.to_string_lossy().as_bytes())
+        .map(|real| PathBuf::from(String::from_utf8_lossy(real.get_resource()).into_owned()))
+        .unwrap_or(path)
 }
 
 /// A PHP dump of `oracle/recorders/di_dumpers.php`

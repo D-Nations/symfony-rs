@@ -10,3 +10,5 @@
 **/tests/fixtures/** -text
 # Rendered from upstream and served byte for byte.
 crates/http-kernel/resources/** -text
+# The DI trial demo's container is recorded from PHP and seeds the build hash.
+spikes/di-trial/demo/data/** -text
