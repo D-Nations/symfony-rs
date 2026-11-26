@@ -58,6 +58,19 @@ the debug and string loader extensions, the filesystem loader and the
 cache, the undefined-callable callbacks (GuardTokenParserTest pending),
 the `path()`/`app.request` hooks (after the HTTP path merges).
 
+## Known differences from PHP
+
+To revisit later; each is a choice made for the ahead-of-time compiler or
+a gap in the PHP behaviour crates.
+
+| Area | PHP | This port | Why |
+|---|---|---|---|
+| `template_from_string()` (StringLoaderExtension) | Compiles any string at run time | A string literal is compiled at build time; a string that is only known at run time gives a runtime error (owner's choice, 26 Nov) | Templates are compiled to Rust ahead of time; a second engine (an interpreter) would duplicate the compiler |
+| `dump()` (DebugExtension) | `var_dump()` of any value | Objects are refused (a logic error) | php2rust-value's `var_dump()` has no object handles (`#3`) or property visibility |
+| `convert_encoding` | glibc's `iconv()`, any charset | UTF-8, UTF-16/32, UCS-2, ASCII, Latin-1, Latin-9, Windows-1252, ISO-2022-JP (php2rust-iconv); other charsets are a logic error | Only these charsets are checked against glibc's answers |
+| Errors | A `RuntimeError` keeps the exception it wraps (`getPrevious()`) | The wrapped exception's message only | `Error` has no `previous` field yet |
+| Traversables | A generator is read only as far as needed (destructuring stops early) | `PhpObject::traverse()` reads all items | php2rust-value's objects give their items as one list |
+
 Vectors: `scripts/record.sh twig-lexer` runs
 `oracle/recorders/twig_lexer.php` and writes `tests/data/lexer.json`;
 `scripts/record.sh twig-parser` runs `oracle/recorders/twig_parser.php` and

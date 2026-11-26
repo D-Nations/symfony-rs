@@ -110,6 +110,18 @@ fn object(json: &Json, env: &Environment) -> Option<Value> {
         }),
         "Twig\\Tests\\SimpleIteratorForTesting" => Arc::new(c::SimpleIteratorForTesting),
         "Twig\\Tests\\MagicCallStub" => Arc::new(c::MagicCallStub),
+        // classes of the fixtures' own `--DATA--` sections
+        "TestClassForMagicCallAttributes" => Arc::new(c::TestClassForMagicCallAttributes),
+        "MyObj" => Arc::new(c::StringOnly {
+            class: "MyObj",
+            string: "foo",
+        }),
+        "UserForAutoEscapeTest" => Arc::new(c::UserForAutoEscapeTest),
+        "ItemsIterator" => Arc::new(c::ItemsIterator { countable: false }),
+        "ItemsIteratorCountable" => Arc::new(c::ItemsIterator { countable: true }),
+        "TwigTestStringy" => Arc::new(c::TwigTestStringy { v: string("v") }),
+        "TwigTestHolder" => Arc::new(c::TwigTestHolder),
+        _ if class.starts_with("class@anonymous") => Arc::new(c::AnonymousNamed),
         "DateTime" | "DateTimeImmutable" => {
             let zone = php_date::DateTimeZone::new(&text(&string("timezone"))).ok()?;
             let date =
