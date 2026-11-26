@@ -50,6 +50,12 @@ impl From<RedirectResponse> for Response {
 }
 
 impl RedirectResponse {
+    /// `getContent()`: always a string, as the class is not a
+    /// `StreamedResponse`.
+    pub fn get_content(&self) -> &PhpString {
+        self.response.content()
+    }
+
     /// `new RedirectResponse($url, $status, $headers)`: a redirect so
     /// that it conforms to the rules defined for a redirect status code
     /// (RFC 2616 section 10.3). The URL should be a full URL, with schema
@@ -123,7 +129,7 @@ impl RedirectResponse {
             b"</a>.\n    </body>\n</html>",
         ]
         .concat();
-        self.response.set_content(Some(PhpString::from(content)));
+        self.response.set_content(Some(PhpString::from(content)))?;
 
         self.response.headers_mut().set(b"Location", url, true)?;
         self.response

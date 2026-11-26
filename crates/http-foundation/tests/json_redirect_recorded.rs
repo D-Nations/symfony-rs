@@ -171,7 +171,7 @@ fn json_scripts(data: &Json, failures: &mut Vec<String>) -> Result<usize, TestEr
                     }
                 }
                 "content" => {
-                    response.set_content(Some(bytes(&op[1])?));
+                    response.set_content(Some(bytes(&op[1])?))?;
                     result[0] == "self"
                 }
                 other => return Err(format!("unknown op {other}").into()),

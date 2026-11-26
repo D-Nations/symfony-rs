@@ -100,7 +100,7 @@ Session/Storage/Proxy/SessionHandlerProxy.php	SessionHandlerProxy	51	pending
 Session/Storage/SessionStorageFactoryInterface.php	SessionStorageFactoryInterface	6	pending	
 Session/Storage/SessionStorageInterface.php	SessionStorageInterface	17	pending	
 StreamedJsonResponse.php	StreamedJsonResponse	79	pending	
-StreamedResponse.php	StreamedResponse	75	pending	
+StreamedResponse.php	StreamedResponse	75	ported	crates/http-foundation/src/streamed_response.rs
 Test/Constraint/RequestAttributeValueSame.php	RequestAttributeValueSame	23	pending	
 Test/Constraint/ResponseCookieValueSame.php	ResponseCookieValueSame	43	pending	
 Test/Constraint/ResponseFormatSame.php	ResponseFormatSame	29	pending	

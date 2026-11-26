@@ -891,19 +891,19 @@ Tests/StreamedJsonResponseTest.php	StreamedJsonResponseTest::testResponseStatusC
 Tests/StreamedJsonResponseTest.php	StreamedJsonResponseTest::testResponseWithMixedKeyType	pending	
 Tests/StreamedJsonResponseTest.php	StreamedJsonResponseTest::testResponseWithPlaceholder	pending	
 Tests/StreamedJsonResponseTest.php	StreamedJsonResponseTest::testResponseWithoutGenerator	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testConstructor	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testConstructorWithChunks	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testGetContent	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWith10Protocol	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWith11Protocol	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWithCacheHeaders	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWithHeadRequest	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testReturnThis	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testSendContent	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testSendContentWithNonCallable	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testSendInformationalResponse	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testSetContent	pending	
-Tests/StreamedResponseTest.php	StreamedResponseTest::testSetNotModified	pending	
+Tests/StreamedResponseTest.php	StreamedResponseTest::testConstructor	ported	crates/http-foundation/tests/streamed_response_test.rs::testConstructor
+Tests/StreamedResponseTest.php	StreamedResponseTest::testConstructorWithChunks	ported	crates/http-foundation/tests/streamed_response_test.rs::testConstructorWithChunks
+Tests/StreamedResponseTest.php	StreamedResponseTest::testGetContent	ported	crates/http-foundation/tests/streamed_response_test.rs::testGetContent
+Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWith10Protocol	ported	crates/http-foundation/tests/streamed_response_test.rs::testPrepareWith10Protocol
+Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWith11Protocol	ported	crates/http-foundation/tests/streamed_response_test.rs::testPrepareWith11Protocol
+Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWithCacheHeaders	ported	crates/http-foundation/tests/streamed_response_test.rs::testPrepareWithCacheHeaders
+Tests/StreamedResponseTest.php	StreamedResponseTest::testPrepareWithHeadRequest	ported	crates/http-foundation/tests/streamed_response_test.rs::testPrepareWithHeadRequest
+Tests/StreamedResponseTest.php	StreamedResponseTest::testReturnThis	ported	crates/http-foundation/tests/streamed_response_test.rs::testReturnThis
+Tests/StreamedResponseTest.php	StreamedResponseTest::testSendContent	ported	crates/http-foundation/tests/streamed_response_test.rs::testSendContent
+Tests/StreamedResponseTest.php	StreamedResponseTest::testSendContentWithNonCallable	ported	crates/http-foundation/tests/streamed_response_test.rs::testSendContentWithNonCallable
+Tests/StreamedResponseTest.php	StreamedResponseTest::testSendInformationalResponse	ported	crates/http-foundation/tests/streamed_response_test.rs::testSendInformationalResponse
+Tests/StreamedResponseTest.php	StreamedResponseTest::testSetContent	ported	crates/http-foundation/tests/streamed_response_test.rs::testSetContent
+Tests/StreamedResponseTest.php	StreamedResponseTest::testSetNotModified	ported	crates/http-foundation/tests/streamed_response_test.rs::testSetNotModified
 Tests/Test/Constraint/RequestAttributeValueSameTest.php	RequestAttributeValueSameTest::testConstraint	pending	
 Tests/Test/Constraint/ResponseCookieValueSameTest.php	ResponseCookieValueSameTest::testConstraint	pending	
 Tests/Test/Constraint/ResponseCookieValueSameTest.php	ResponseCookieValueSameTest::testCookieWithNullValueIsComparedAsEmptyString	pending	

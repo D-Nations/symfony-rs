@@ -177,6 +177,12 @@ fn callback_pattern() -> std::result::Result<&'static Pcre, Error> {
 }
 
 impl JsonResponse {
+    /// `getContent()`: always a string, as the class is not a
+    /// `StreamedResponse`.
+    pub fn get_content(&self) -> &PhpString {
+        self.response.content()
+    }
+
     /// `JsonResponse::DEFAULT_ENCODING_OPTIONS`: `JSON_HEX_TAG |
     /// JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT`.
     pub const DEFAULT_ENCODING_OPTIONS: i64 = 15;
@@ -346,7 +352,8 @@ impl JsonResponse {
                 b");",
             ]
             .concat();
-            self.response.set_content(Some(PhpString::from(content)));
+            // A plain response takes any content.
+            let _ = self.response.set_content(Some(PhpString::from(content)));
             return self;
         }
 
@@ -364,7 +371,8 @@ impl JsonResponse {
                 .set(b"Content-Type", "application/json", true);
         }
 
-        self.response.set_content(Some(self.data.clone()));
+        // A plain response takes any content.
+        let _ = self.response.set_content(Some(self.data.clone()));
         self
     }
 }

@@ -15,9 +15,9 @@
 //! for a throwable that escaped.
 //!
 //! The kernel is shared (`Arc`), as the events hand it to listeners.
-//! Not ported: the default `ArgumentResolver` (one is passed in), and
-//! the `StreamedResponse` callback that re-pushes the request (no
-//! `StreamedResponse` yet). `X-Php-Ob-Level` is the number of output buffers
+//! A `StreamedResponse`'s callback is wrapped to push the request back
+//! on the stack while it runs. Not ported: the default `ArgumentResolver`
+//! (one is passed in). `X-Php-Ob-Level` is the number of output buffers
 //! in `php::Output`.
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
@@ -239,7 +239,33 @@ impl HttpKernel {
             }
         };
         self.request_stack.pop();
+
+        if let Ok(response) = &result {
+            self.restore_request_in_stream(request, response);
+        }
         result
+    }
+
+    /// `handle()`'s `finally`: a `StreamedResponse`'s callback, which runs
+    /// after the request left the stack, is wrapped to push it back while
+    /// the callback runs.
+    fn restore_request_in_stream(&self, request: &RequestHandle, response: &ResponseHandle) {
+        response.with_mut(|r| {
+            let Some(stream) = r.stream_mut() else {
+                return;
+            };
+            let Some(callback) = stream.get_callback() else {
+                return;
+            };
+            let request_stack = self.request_stack.clone();
+            let request = request.clone();
+            stream.set_callback(Arc::new(move || {
+                request_stack.push(request.clone());
+                let result = callback();
+                request_stack.pop();
+                result
+            }));
+        });
     }
 
     /// `terminateWithException($exception, $request)`: an error response
@@ -289,9 +315,7 @@ impl HttpKernel {
                 .with_mut(|r| r.send_headers(None).map(|_| ()))
                 .map_err(foundation)?;
         }
-        response.with_mut(|r| {
-            r.send_content();
-        });
+        response.with_mut(|r| r.send_content().map(|_| ()))?;
 
         self.terminate(&request, &response)
     }
