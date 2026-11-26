@@ -4402,6 +4402,13 @@
         ],
         "no_connection": [
             "Q1JFQVRFIFRBQkxFIG5vX2Nvbm5lY3Rpb24gKGlkIElOVEVHRVIgTk9UIE5VTEwp"
+        ],
+        "boolean_test_table": [
+            "Q1JFQVRFIFRBQkxFIGJvb2xlYW5fdGVzdF90YWJsZSAodmFsIEJPT0xFQU4gREVGQVVMVCBOVUxMKQ=="
+        ],
+        "auto_increment_table": [
+            "Q1JFQVRFIFRBQkxFIGF1dG9faW5jcmVtZW50X3RhYmxlIChpZCBJTlRFR0VSIFBSSU1BUlkgS0VZIEFVVE9JTkNSRU1FTlQgTk9UIE5VTEwsIHZhbCBJTlRFR0VSIE5PVCBOVUxMKQ==",
+            "Q1JFQVRFIFRBQkxFIHNxbGl0ZV9zZXF1ZW5jZShuYW1lLHNlcSk="
         ]
     },
     "sql": {

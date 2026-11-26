@@ -219,6 +219,13 @@ namespace {
             ->addIndex(Index::editor()->setType(IndexType::UNIQUE)->setUnquotedColumnNames('id'))->create(),
         table('syntax_error_table', [column('id', Types::INTEGER)], null),
         table('no_connection', [column('id', Types::INTEGER)], null),
+        // Functional/BooleanBindingTest
+        table('boolean_test_table', [column('val', Types::BOOLEAN, ['notnull' => false])], null),
+        // Functional/AutoIncrementColumnTest
+        table('auto_increment_table', [
+            column('id', Types::INTEGER, ['autoincrement' => true]),
+            column('val', Types::INTEGER),
+        ], 'id'),
     ];
     $ddl = [];
     foreach ($tables as $table) {
