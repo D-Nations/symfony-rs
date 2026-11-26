@@ -13,11 +13,13 @@
 //! or object where PHP wants a string is refused (`Class::NotPorted`)
 //! rather than approximated.
 //!
-//! Not ported: the session methods (`getSession()`, `hasSession()`,
-//! `hasPreviousSession()`, `setSession()`, `setSessionFactory()`), which
-//! need `HttpFoundation`'s Session classes, and `setPhpDefaultLocale()`'s
-//! `\Locale::setDefault()` (intl has no port: setting a locale does not
-//! change a process-wide ICU default here).
+//! The session is PHP's `SessionInterface|\Closure|null` property: an
+//! object a clone shares (`duplicate()` and `clone` keep it, as PHP copies
+//! the handle), or a factory `getSession()` calls until it gives one.
+//!
+//! Not ported: `setPhpDefaultLocale()`'s `\Locale::setDefault()` (intl has
+//! no port: setting a locale does not change a process-wide ICU default
+//! here).
 //!
 //! The URL methods follow PHP on Linux, where the oracle runs:
 //! `DIRECTORY_SEPARATOR` is `/`, so `prepareBasePath()`'s Windows branch is
@@ -60,6 +62,7 @@ use crate::{
     parameter_bag::ParameterBag,
     php::{Stream, with_globals},
     server_bag::ServerBag,
+    session::session_interface::SessionInterface,
 };
 
 pub const CLASS: &str = "Symfony\\Component\\HttpFoundation\\Request";
@@ -145,6 +148,29 @@ pub struct Duplicate {
 /// `setFactory()`'s callable. PHP checks that it returns a `Request`; the
 /// type does here.
 pub type Factory = Rc<dyn Fn(Parameters) -> Result<Request>>;
+
+/// `setSessionFactory()`'s callable: `Ok(None)` is a factory that returns
+/// `null`, which `setSession()`'s parameter type refuses.
+pub type SessionFactory = Arc<dyn Fn() -> Result<Option<Arc<dyn SessionInterface>>> + Send + Sync>;
+
+/// `Request::$session`.
+#[derive(Clone, Default)]
+enum SessionSlot {
+    #[default]
+    None,
+    Factory(SessionFactory),
+    Session(Arc<dyn SessionInterface>),
+}
+
+impl std::fmt::Debug for SessionSlot {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::None => f.write_str("None"),
+            Self::Factory(_) => f.write_str("Factory"),
+            Self::Session(session) => f.debug_tuple("Session").field(session).finish(),
+        }
+    }
+}
 
 /// The client IPs `getClientIps()` returns: an entry is `null` where PHP's
 /// is.
@@ -615,6 +641,7 @@ pub struct Request {
     is_safe_content_preferred: Option<bool>,
     trusted_values_cache: HashMap<Vec<u8>, Vec<Value>>,
     is_iis_rewrite: bool,
+    session: SessionSlot,
 }
 
 impl Default for Request {
@@ -647,6 +674,7 @@ impl Default for Request {
             is_safe_content_preferred: None,
             trusted_values_cache: HashMap::new(),
             is_iis_rewrite: false,
+            session: SessionSlot::None,
         }
     }
 }
@@ -1865,6 +1893,60 @@ impl Request {
     pub fn get_content_type_format(&self) -> Option<PhpString> {
         let content_type = self.headers.get("CONTENT_TYPE", Some(""));
         self.get_format(content_type.as_ref().map(PhpString::as_bytes), false)
+    }
+
+    /// `getSession()`: the session, from the factory the first time; a
+    /// `SessionNotFoundException` without either. A factory's exception, or
+    /// the `\TypeError` for one that returns `null`, leaves the factory in
+    /// place.
+    pub fn get_session(&mut self) -> Result<Arc<dyn SessionInterface>> {
+        match &self.session {
+            SessionSlot::Session(session) => Ok(Arc::clone(session)),
+            SessionSlot::None => Err(Error::new(
+                Class::SessionNotFound,
+                "Session has not been set.",
+            )),
+            SessionSlot::Factory(factory) => {
+                let session = factory()?.ok_or_else(|| {
+                    Error::new(
+                        Class::PhpTypeError,
+                        "Symfony\\Component\\HttpFoundation\\Request::setSession(): Argument #1 ($session) must be of type Symfony\\Component\\HttpFoundation\\Session\\SessionInterface, null given",
+                    )
+                })?;
+                self.set_session(Arc::clone(&session));
+                Ok(session)
+            }
+        }
+    }
+
+    /// `hasPreviousSession()`: a session, and a cookie of its name (which
+    /// calls the factory).
+    pub fn has_previous_session(&mut self) -> Result<bool> {
+        if !self.has_session(false) {
+            return Ok(false);
+        }
+        let name = self.get_session()?.get_name();
+        Ok(self.cookies.has(&name))
+    }
+
+    /// `hasSession($skipIfUninitialized)`: a session or a factory; with
+    /// `skip_if_uninitialized`, a session only.
+    pub fn has_session(&self, skip_if_uninitialized: bool) -> bool {
+        match self.session {
+            SessionSlot::None => false,
+            SessionSlot::Factory(_) => !skip_if_uninitialized,
+            SessionSlot::Session(_) => true,
+        }
+    }
+
+    /// `setSession($session)`.
+    pub fn set_session(&mut self, session: Arc<dyn SessionInterface>) {
+        self.session = SessionSlot::Session(session);
+    }
+
+    /// `setSessionFactory($factory)`.
+    pub fn set_session_factory(&mut self, factory: SessionFactory) {
+        self.session = SessionSlot::Factory(factory);
     }
 
     /// `setDefaultLocale($locale)`.

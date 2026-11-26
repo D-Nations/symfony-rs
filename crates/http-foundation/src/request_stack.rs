@@ -3,20 +3,20 @@
 //!
 //! Requests are PHP objects that the stack, the kernel and listeners
 //! share: the stack holds [`RequestHandle`]s, and [`RequestStack`] itself
-//! is shared the same way (cloning it gives the same stack). Sessions are
-//! not ported, so no request has one and `getSession()` always throws
-//! `SessionNotFoundException`, as PHP does for a request without a
-//! session.
+//! is shared the same way (cloning it gives the same stack).
 //!
 //! Symfony source copyright (c) Fabien Potencier; distributed under MIT.
 //!
 //! Upstream: symfony/http-foundation RequestStack.php
+
+use std::sync::Arc;
 
 use php_value::Handle;
 
 use crate::{
     exception::{Class, Error, Result},
     request::Request,
+    session::session_interface::SessionInterface,
 };
 
 /// A PHP `Request` object handle.
@@ -82,8 +82,14 @@ impl RequestStack {
         })
     }
 
-    /// `getSession()`. No ported request has a session.
-    pub fn get_session(&self) -> Result<()> {
+    /// `getSession()`: the current request's session, when it has one
+    /// (or a factory, which this calls).
+    pub fn get_session(&self) -> Result<Arc<dyn SessionInterface>> {
+        if let Some(request) = self.get_current_request()
+            && request.with(|r| r.has_session(false))
+        {
+            return request.with_mut(Request::get_session);
+        }
         Err(Error::new(
             Class::SessionNotFound,
             "There is currently no session available.",

@@ -14,6 +14,8 @@
 // the providers' rows are tuples of slices, as PHPUnit's are arrays
 #![allow(clippy::type_complexity)]
 
+use std::sync::Arc;
+
 use php_value::{PhpArray, PhpString, Value, compare::loose_equals, php_array};
 use symfony_http_foundation::{
     exception::Error,
@@ -25,6 +27,10 @@ use symfony_http_foundation::{
     php::{Globals, Stream, set_globals, with_globals},
     request::{Content, ContentValue, Create, Duplicate, Parameters, Request},
     server_bag::ServerBag,
+    session::{
+        Session, session_interface::SessionInterface,
+        storage::mock_array_session_storage::MockArraySessionStorage,
+    },
 };
 
 type TestResult = Result<(), Box<dyn std::error::Error>>;
@@ -2625,6 +2631,61 @@ fn testGetRequestFormat() -> TestResult {
         ..Parameters::default()
     })?;
     assert_eq!(some("html"), request.get_request_format(Some("html"))?);
+    Ok(())
+}
+
+/// `new Session(new MockArraySessionStorage())`.
+fn mock_session() -> Result<Arc<dyn SessionInterface>, Error> {
+    Ok(Arc::new(Session::new(
+        Arc::new(MockArraySessionStorage::default()),
+        None,
+        None,
+        None,
+    )?))
+}
+
+#[test]
+fn testHasSession() -> TestResult {
+    let mut request = Request::default();
+
+    assert!(!request.has_session(false));
+    assert!(!request.has_session(true));
+
+    // `static function () {}`: a factory that returns null.
+    request.set_session_factory(Arc::new(|| Ok(None)));
+    assert!(request.has_session(false));
+    assert!(!request.has_session(true));
+
+    request.set_session(mock_session()?);
+    assert!(request.has_session(false));
+    assert!(request.has_session(true));
+    Ok(())
+}
+
+#[test]
+fn testGetSession() -> TestResult {
+    let mut request = Request::default();
+
+    let session = mock_session()?;
+    request.set_session(Arc::clone(&session));
+    assert!(request.has_session(false));
+
+    // assertInstanceOf(Session::class): the Session given back.
+    assert!(Arc::ptr_eq(&session, &request.get_session()?));
+    Ok(())
+}
+
+#[test]
+fn testHasPreviousSession() -> TestResult {
+    let mut request = Request::default();
+
+    assert!(!request.has_previous_session()?);
+    request
+        .cookies_mut()
+        .set("MOCKSESSID", Value::string("foo"))?;
+    assert!(!request.has_previous_session()?);
+    request.set_session(mock_session()?);
+    assert!(request.has_previous_session()?);
     Ok(())
 }
 
