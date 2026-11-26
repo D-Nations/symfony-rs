@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 publish = false
-description = "Trial DI runtime for code emitted by di-trial-compiler; not the M3 port"
+description = "Trial DI runtime for code emitted by symfony-di-emitter; not the M3 port"
 
 [dependencies]
 php-value = { workspace = true }

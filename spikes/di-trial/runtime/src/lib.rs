@@ -1,4 +1,4 @@
-//! What code emitted by `di-trial-compiler` calls: the cells that hold
+//! What code emitted by `symfony-di-emitter` calls: the cells that hold
 //! shared services, the re-entrant "configure once" guard, and placeholder
 //! instances that record how each service was built.
 //!
