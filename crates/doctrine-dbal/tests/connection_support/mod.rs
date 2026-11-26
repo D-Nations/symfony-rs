@@ -124,7 +124,10 @@ impl AbstractPlatform for TestPlatform {
         Ok(String::new())
     }
 
-    fn get_set_transaction_isolation_sql(&self, _level: TransactionIsolationLevel) -> Result<String, doctrine_dbal::Exception> {
+    fn get_set_transaction_isolation_sql(
+        &self,
+        _level: TransactionIsolationLevel,
+    ) -> Result<String, doctrine_dbal::Exception> {
         Ok(String::new())
     }
 
