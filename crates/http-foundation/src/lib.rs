@@ -28,6 +28,7 @@ pub mod json_response;
 pub mod multipart;
 pub mod parameter_bag;
 pub mod php;
+pub mod php_session;
 pub mod query;
 pub mod redirect_response;
 pub mod request;
