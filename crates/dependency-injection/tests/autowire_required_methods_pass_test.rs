@@ -3,9 +3,7 @@
 //! PHPUnit's.
 //!
 //! The fixture classes of `autowiring_classes.php` and
-//! `WitherStaticReturnType.php` are given as class metadata. Upstream
-//! first runs `ResolveClassPass`, which another port owns; it changes
-//! nothing here since every definition names its class.
+//! `WitherStaticReturnType.php` are given as class metadata.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/AutowireRequiredMethodsPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
@@ -17,7 +15,7 @@ use symfony_dependency_injection::ContainerBuilder;
 use symfony_dependency_injection::class_metadata::{
     AttributeMetadata, ClassMetadata, ClassRegistry, MethodMetadata, ParameterMetadata,
 };
-use symfony_dependency_injection::compiler::{AutowireRequiredMethodsPass, CompilerPassInterface};
+use symfony_dependency_injection::compiler::{AutowireRequiredMethodsPass, CompilerPassInterface, ResolveClassPass};
 
 const NS: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\";
 const FIXTURES: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\";
@@ -126,6 +124,7 @@ fn testSetterInjectionWithAttribute() {
         .unwrap()
         .set_autowired(true);
 
+    ResolveClassPass::new().process(&mut container).unwrap();
     AutowireRequiredMethodsPass::new()
         .process(&mut container)
         .unwrap();
@@ -152,6 +151,7 @@ fn testExplicitMethodInjectionAttribute() {
         .add_method_call("notASetter", PhpArray::new(), false)
         .unwrap();
 
+    ResolveClassPass::new().process(&mut container).unwrap();
     AutowireRequiredMethodsPass::new()
         .process(&mut container)
         .unwrap();
@@ -204,6 +204,7 @@ fn testWitherWithStaticReturnTypeInjection() {
         .unwrap()
         .set_autowired(true);
 
+    ResolveClassPass::new().process(&mut container).unwrap();
     AutowireRequiredMethodsPass::new()
         .process(&mut container)
         .unwrap();
@@ -224,6 +225,7 @@ fn testWitherInjectionWithAttribute() {
         .unwrap()
         .set_autowired(true);
 
+    ResolveClassPass::new().process(&mut container).unwrap();
     AutowireRequiredMethodsPass::new()
         .process(&mut container)
         .unwrap();
