@@ -8,6 +8,7 @@ description = "A tested subset of Symfony HttpFoundation and PHP request semanti
 
 [dependencies]
 axum = "0.8.9"
+getrandom = "0.4.3"
 php-pcre = { workspace = true }
 php-value = { workspace = true }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
