@@ -933,11 +933,11 @@ Tests/DefinitionTest.php	DefinitionTest::testSetIsSynthetic	ported	crates/depend
 Tests/DefinitionTest.php	DefinitionTest::testSetProperty	ported	crates/dependency-injection/tests/definition_test.rs::testSetProperty
 Tests/DefinitionTest.php	DefinitionTest::testShouldAutoconfigure	ported	crates/dependency-injection/tests/definition_test.rs::testShouldAutoconfigure
 Tests/DefinitionTest.php	DefinitionTest::testTags	ported	crates/dependency-injection/tests/definition_test.rs::testTags
-Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDump	pending	
-Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithFrozenContainer	pending	
-Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithFrozenCustomClassContainer	pending	
-Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithInlineDefinition	pending	
-Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithUnresolvedParameter	pending	
+Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDump	ported	crates/dependency-injection/tests/graphviz_dumper_test.rs::testDump
+Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithFrozenContainer	ported	crates/dependency-injection/tests/graphviz_dumper_test.rs::testDumpWithFrozenContainer
+Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithFrozenCustomClassContainer	ported	crates/dependency-injection/tests/graphviz_dumper_test.rs::testDumpWithFrozenCustomClassContainer
+Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithInlineDefinition	ported	crates/dependency-injection/tests/graphviz_dumper_test.rs::testDumpWithInlineDefinition
+Tests/Dumper/GraphvizDumperTest.php	GraphvizDumperTest::testDumpWithUnresolvedParameter	ported	crates/dependency-injection/tests/graphviz_dumper_test.rs::testDumpWithUnresolvedParameter
 Tests/Dumper/PhpDumperTest.php	PhpDumperTest::testAdawsonContainer	pending	
 Tests/Dumper/PhpDumperTest.php	PhpDumperTest::testAddParameters	pending	
 Tests/Dumper/PhpDumperTest.php	PhpDumperTest::testAddService	pending	
@@ -1069,41 +1069,41 @@ Tests/Dumper/PreloaderTest.php	PreloaderTest::testPreload	pending
 Tests/Dumper/PreloaderTest.php	PreloaderTest::testPreloadIntersection	pending	
 Tests/Dumper/PreloaderTest.php	PreloaderTest::testPreloadSkipsNonExistingInterface	pending	
 Tests/Dumper/PreloaderTest.php	PreloaderTest::testPreloadUnion	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testAddService	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testCompiledContainerCanBeDumped	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDump	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpAbstractServices	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpAnonymousServices	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpAutowireData	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpDecoratedServices	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpEntities	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpHandlesDefaultAttribute	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpHandlesEnumeration	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpInlinedServices	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpNonScalarTags	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpServiceWithAbstractArgument	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testEnvClosure	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testExportParameters	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testLegacyTaggedArguments	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testServiceClosure	pending	
-Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testTaggedArguments	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testAddParameters	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testAddService	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDeprecatedTaggedArguments	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDump	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpAutowireData	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpDecoratedServices	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpHandlesDefaultAttribute	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpHandlesEnumeration	pending	
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testAddService	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testAddService
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testCompiledContainerCanBeDumped	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testCompiledContainerCanBeDumped
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDump	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDump
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpAbstractServices	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpAbstractServices
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpAnonymousServices	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpAnonymousServices
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpAutowireData	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpAutowireData
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpDecoratedServices	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpDecoratedServices
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpEntities	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpEntities
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpHandlesDefaultAttribute	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpHandlesDefaultAttribute
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpHandlesEnumeration	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpHandlesEnumeration
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpInlinedServices	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpInlinedServices
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpNonScalarTags	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpNonScalarTags
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testDumpServiceWithAbstractArgument	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testDumpServiceWithAbstractArgument
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testEnvClosure	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testEnvClosure
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testExportParameters	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testExportParameters
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testLegacyTaggedArguments	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testLegacyTaggedArguments
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testServiceClosure	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testServiceClosure
+Tests/Dumper/XmlDumperTest.php	XmlDumperTest::testTaggedArguments	ported	crates/dependency-injection/tests/xml_dumper_test.rs::testTaggedArguments
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testAddParameters	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testAddParameters
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testAddService	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testAddService
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDeprecatedTaggedArguments	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDeprecatedTaggedArguments
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDump	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDump
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpAutowireData	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDumpAutowireData
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpDecoratedServices	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDumpDecoratedServices
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpHandlesDefaultAttribute	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDumpHandlesDefaultAttribute
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpHandlesEnumeration	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDumpHandlesEnumeration
 Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpLoad	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpNonScalarTags	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpResolvedEnvPlaceholders	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpServiceWithAbstractArgument	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testEnvClosure	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testInlineServices	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testServiceClosure	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testTaggedArguments	pending	
-Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testTaggedArgumentsOmitsAutoDerivedDefaultMethods	pending	
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpNonScalarTags	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDumpNonScalarTags
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpResolvedEnvPlaceholders	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDumpResolvedEnvPlaceholders
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testDumpServiceWithAbstractArgument	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testDumpServiceWithAbstractArgument
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testEnvClosure	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testEnvClosure
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testInlineServices	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testInlineServices
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testServiceClosure	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testServiceClosure
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testTaggedArguments	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testTaggedArguments
+Tests/Dumper/YamlDumperTest.php	YamlDumperTest::testTaggedArgumentsOmitsAutoDerivedDefaultMethods	ported	crates/dependency-injection/tests/yaml_dumper_test.rs::testTaggedArgumentsOmitsAutoDerivedDefaultMethods
 Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testCircularEnvLoader	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testCircularEnvLoader
 Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testEnvLoader	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testEnvLoader
 Tests/EnvVarProcessorTest.php	EnvVarProcessorTest::testGetEnvBadUrl	ported	crates/dependency-injection/tests/env_var_processor_test.rs::testGetEnvBadUrl
