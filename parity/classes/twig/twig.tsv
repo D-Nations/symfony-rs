@@ -73,9 +73,9 @@ src/Node/BlockNode.php	BlockNode	29	ported	crates/twig/src/compiler.rs crates/tw
 src/Node/BlockReferenceNode.php	BlockReferenceNode	18	ported	crates/twig/src/node/statement.rs
 src/Node/BodyNode.php	BodyNode	6	ported	crates/twig/src/node/statement.rs
 src/Node/CaptureNode.php	CaptureNode	37	ported	crates/twig/src/compiler.rs crates/twig/src/node/statement.rs
-src/Node/CheckSecurityCallNode.php	CheckSecurityCallNode	13	pending	
-src/Node/CheckSecurityNode.php	CheckSecurityNode	107	pending	
-src/Node/CheckToStringNode.php	CheckToStringNode	24	ported	crates/twig/src/node/statement.rs
+src/Node/CheckSecurityCallNode.php	CheckSecurityCallNode	13	ported	crates/twig/src/runtime/sandbox.rs
+src/Node/CheckSecurityNode.php	CheckSecurityNode	107	ported	crates/twig/src/runtime/sandbox.rs
+src/Node/CheckToStringNode.php	CheckToStringNode	24	ported	crates/twig/src/node/statement.rs crates/twig/src/runtime/sandbox.rs
 src/Node/CoercesChildrenToStringInterface.php	CoercesChildrenToStringInterface	6	ported	crates/twig/src/node_visitor/sandbox.rs
 src/Node/ConfigNode.php	ConfigNode	10	ported	crates/twig/src/node/statement.rs
 src/Node/DeprecatedNode.php	DeprecatedNode	60	ported	crates/twig/src/node/statement.rs
