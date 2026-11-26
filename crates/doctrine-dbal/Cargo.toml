@@ -7,10 +7,10 @@ publish = false
 description = "Port of the doctrine/dbal database abstraction layer"
 
 [dependencies]
-php-value = { path = "../php-value" }
+php-value = { workspace = true }
 
 [dev-dependencies]
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 serde_json = "1.0.154"
 
 [lints]

@@ -258,7 +258,7 @@ name = "converter-fixture-app"
 version = "0.1.0"
 dependencies = [
  "axum",
- "php-value",
+ "php2rust-value",
  "psr-container",
  "serde_json",
  "symfony-event-dispatcher",
@@ -331,8 +331,8 @@ dependencies = [
 name = "di-trial-compiler"
 version = "0.1.0"
 dependencies = [
- "php-dom",
- "php-value",
+ "php2rust-dom",
+ "php2rust-value",
  "prettyplease",
  "proc-macro2",
  "quote",
@@ -346,7 +346,7 @@ version = "0.1.0"
 dependencies = [
  "di-trial-compiler",
  "di-trial-runtime",
- "php-value",
+ "php2rust-value",
  "serde_json",
 ]
 
@@ -354,7 +354,7 @@ dependencies = [
 name = "di-trial-runtime"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
 ]
 
 [[package]]
@@ -372,7 +372,7 @@ dependencies = [
 name = "doctrine-dbal"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "serde_json",
 ]
 
@@ -950,25 +950,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "php-dom"
+name = "php2rust-dom"
 version = "0.1.0"
-dependencies = [
- "php-value",
- "serde_json",
-]
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=977342827ba414362c6af60f38dd376f2fbcfd72#977342827ba414362c6af60f38dd376f2fbcfd72"
 
 [[package]]
-name = "php-pcre"
+name = "php2rust-regex"
 version = "0.1.0"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=977342827ba414362c6af60f38dd376f2fbcfd72#977342827ba414362c6af60f38dd376f2fbcfd72"
 dependencies = [
  "fancy-regex",
 ]
 
 [[package]]
-name = "php-value"
+name = "php2rust-value"
 version = "0.1.0"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=977342827ba414362c6af60f38dd376f2fbcfd72#977342827ba414362c6af60f38dd376f2fbcfd72"
 dependencies = [
- "php-value",
  "serde_json",
 ]
 
@@ -1038,14 +1036,14 @@ dependencies = [
 name = "psr-container"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
 ]
 
 [[package]]
 name = "psr-log"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
 ]
 
 [[package]]
@@ -1123,7 +1121,7 @@ name = "request-lab"
 version = "0.1.0"
 dependencies = [
  "axum",
- "php-value",
+ "php2rust-value",
  "serde_json",
  "symfony-event-dispatcher",
  "symfony-http-foundation",
@@ -1324,9 +1322,9 @@ dependencies = [
 name = "symfony-config"
 version = "0.1.0"
 dependencies = [
- "php-dom",
- "php-pcre",
- "php-value",
+ "php2rust-dom",
+ "php2rust-regex",
+ "php2rust-value",
  "serde_json",
  "symfony-config",
  "symfony-deprecation-contracts",
@@ -1341,7 +1339,7 @@ name = "symfony-console"
 version = "0.1.0"
 dependencies = [
  "fancy-regex",
- "php-value",
+ "php2rust-value",
  "serde_json",
  "symfony-deprecation-contracts",
  "symfony-string",
@@ -1351,7 +1349,7 @@ dependencies = [
 name = "symfony-css-selector"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "regex",
  "serde_json",
 ]
@@ -1360,7 +1358,7 @@ dependencies = [
 name = "symfony-dependency-injection"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "psr-container",
  "serde_json",
  "symfony-config",
@@ -1376,7 +1374,7 @@ version = "0.1.0"
 name = "symfony-dotenv"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "serde_json",
  "symfony-console",
  "symfony-dotenv",
@@ -1400,8 +1398,8 @@ version = "0.1.0"
 name = "symfony-expression-language"
 version = "0.1.0"
 dependencies = [
- "php-pcre",
- "php-value",
+ "php2rust-regex",
+ "php2rust-value",
  "serde_json",
 ]
 
@@ -1410,7 +1408,7 @@ name = "symfony-filesystem"
 version = "0.1.0"
 dependencies = [
  "getrandom",
- "php-value",
+ "php2rust-value",
  "symfony-finder",
 ]
 
@@ -1418,8 +1416,8 @@ dependencies = [
 name = "symfony-finder"
 version = "0.1.0"
 dependencies = [
- "php-pcre",
- "php-value",
+ "php2rust-regex",
+ "php2rust-value",
  "serde_json",
 ]
 
@@ -1429,8 +1427,8 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "base64",
- "php-pcre",
- "php-value",
+ "php2rust-regex",
+ "php2rust-value",
  "serde",
  "serde_json",
  "symfony-deprecation-contracts",
@@ -1445,7 +1443,7 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "base64",
- "php-value",
+ "php2rust-value",
  "psr-container",
  "psr-log",
  "serde_json",
@@ -1471,7 +1469,7 @@ dependencies = [
 name = "symfony-options-resolver"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "serde_json",
  "symfony-deprecation-contracts",
 ]
@@ -1485,7 +1483,7 @@ dependencies = [
  "getrandom",
  "hmac",
  "md-5",
- "php-value",
+ "php2rust-value",
  "serde_json",
  "sha-crypt",
  "sha1",
@@ -1497,8 +1495,8 @@ dependencies = [
 name = "symfony-routing"
 version = "0.1.0"
 dependencies = [
- "php-pcre",
- "php-value",
+ "php2rust-regex",
+ "php2rust-value",
  "psr-log",
  "serde_json",
  "symfony-config",
@@ -1512,7 +1510,7 @@ name = "symfony-runtime"
 version = "0.1.0"
 dependencies = [
  "axum",
- "php-value",
+ "php2rust-value",
  "symfony-event-dispatcher",
  "symfony-http-foundation",
  "symfony-http-kernel",
@@ -1532,8 +1530,8 @@ name = "symfony-string"
 version = "0.1.0"
 dependencies = [
  "getrandom",
- "php-pcre",
- "php-value",
+ "php2rust-regex",
+ "php2rust-value",
  "serde_json",
  "unicode-normalization",
  "unicode-segmentation",
@@ -1543,8 +1541,8 @@ dependencies = [
 name = "symfony-translation"
 version = "0.1.0"
 dependencies = [
- "php-dom",
- "php-value",
+ "php2rust-dom",
+ "php2rust-value",
  "serde_json",
  "symfony-config",
  "symfony-finder",
@@ -1554,7 +1552,7 @@ dependencies = [
 name = "symfony-yaml"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "regex",
  "serde_json",
  "symfony-console",
@@ -1715,8 +1713,8 @@ dependencies = [
 name = "twig"
 version = "0.1.0"
 dependencies = [
- "php-pcre",
- "php-value",
+ "php2rust-regex",
+ "php2rust-value",
  "serde_json",
  "symfony-deprecation-contracts",
 ]
@@ -1725,7 +1723,7 @@ dependencies = [
 name = "twig-integration"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "serde_json",
  "symfony-deprecation-contracts",
  "twig",
@@ -1745,7 +1743,7 @@ dependencies = [
 name = "twig-trial-demo"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
  "serde_json",
  "twig-trial-compiler",
  "twig-trial-runtime",
@@ -1755,7 +1753,7 @@ dependencies = [
 name = "twig-trial-runtime"
 version = "0.1.0"
 dependencies = [
- "php-value",
+ "php2rust-value",
 ]
 
 [[package]]

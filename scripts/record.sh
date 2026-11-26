@@ -15,9 +15,6 @@
 #   scripts/record.sh event-dispatcher  crates/event-dispatcher/tests/data/edges.txt
 #   scripts/record.sh stopwatch    crates/stopwatch/tests/data/php.json
 #   scripts/record.sh clock        crates/clock/tests/data/php.json (dates, zones, DatePoint, MockClock)
-#   scripts/record.sh php-value    crates/php-value/tests/data/{php,filter,parse_str,parse_url,loose_equals,http_build_query}.json
-#   scripts/record.sh php-value-decode crates/php-value/tests/data/{html_entity_decode,json_decode}.json
-#   scripts/record.sh php-value-json crates/php-value/tests/data/json_encode.json (json_encode(), json_decode() to objects)
 #   scripts/record.sh yaml         crates/yaml/tests/data/*.json (lint:yaml included)
 #   scripts/record.sh yaml-unreadable crates/yaml/tests/data/unreadable_file.json (unprivileged oracle)
 #   scripts/record.sh dotenv       crates/dotenv/tests/data/*.json (commands included)
@@ -33,9 +30,7 @@
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
 #   scripts/record.sh finder       crates/finder/tests/data/{providers,php}.json
-#   scripts/record.sh php-dom      crates/php-dom/tests/data/parse.json
-#   scripts/record.sh php-dom-schema crates/php-dom/tests/data/schema.json
-#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag,ip_utils,accept_header}.json, crates/php-value/tests/data/dates.json
+#   scripts/record.sh http-foundation crates/http-foundation/tests/data/{bags,header_utils,cookie,header_bags,server_bag,ip_utils,accept_header}.json
 #   scripts/record.sh http-foundation-files crates/http-foundation/tests/data/files.json (UploadedFile, FileBag)
 #   scripts/record.sh http-foundation-request crates/http-foundation/tests/data/request.json (Request)
 #   scripts/record.sh http-foundation-response crates/http-foundation/tests/data/response.json (Response)
@@ -213,62 +208,7 @@ stopwatch() {
     echo "Stopwatch vectors written to $out"
 }
 
-php_value() {
-    local out=crates/php-value/tests/data/php.json tmp
-    mkdir -p oracle/out "$(dirname "$out")"
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value.php > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
-    mv "$tmp" "$out"
-    echo "PHP value vectors written to $out"
-    out=crates/php-value/tests/data/filter.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/filter_var.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["cases"]), "filter_var() cases")' "$tmp"
-    mv "$tmp" "$out"
-    echo "filter_var() vectors written to $out"
-    out=crates/php-value/tests/data/parse_str.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value_parse_str.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "parse_str() cases")' "$tmp"
-    mv "$tmp" "$out"
-    echo "parse_str() vectors written to $out"
-    out=crates/php-value/tests/data/parse_url.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value_parse_url.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "parse_url() cases")' "$tmp"
-    mv "$tmp" "$out"
-    echo "parse_url() vectors written to $out"
-    out=crates/php-value/tests/data/loose_equals.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value_loose_equals.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "== pairs")' "$tmp"
-    mv "$tmp" "$out"
-    echo "loose equality vectors written to $out"
-    out=crates/php-value/tests/data/http_build_query.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value_http_build_query.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "http_build_query() cases")' "$tmp"
-    mv "$tmp" "$out"
-    echo "http_build_query() vectors written to $out"
-}
 
-php_value_decode() {
-    local out tmp
-    mkdir -p oracle/out crates/php-value/tests/data
-    out=crates/php-value/tests/data/html_entity_decode.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value_html_entity_decode.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "html_entity_decode() cases")' "$tmp"
-    mv "$tmp" "$out"
-    echo "html_entity_decode() vectors written to $out"
-    out=crates/php-value/tests/data/json_decode.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value_json_decode.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))), "json_decode() cases")' "$tmp"
-    mv "$tmp" "$out"
-    echo "json_decode() vectors written to $out"
-}
 
 http_foundation_request() {
     local out=crates/http-foundation/tests/data/request.json tmp
@@ -280,15 +220,6 @@ http_foundation_request() {
     echo "Request vectors written to $out"
 }
 
-php_value_json() {
-    local out=crates/php-value/tests/data/json_encode.json tmp
-    mkdir -p oracle/out "$(dirname "$out")"
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_value_json.php > "$tmp"
-    python -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d["encode"]), "json_encode() calls,", len(d["decode"]), "json_decode() calls")' "$tmp"
-    mv "$tmp" "$out"
-    echo "json_encode() and json_decode() vectors written to $out"
-}
 
 http_foundation_response() {
     local out=crates/http-foundation/tests/data/response.json tmp
@@ -676,25 +607,7 @@ finder() {
     done
 }
 
-php_dom() {
-    local out=crates/php-dom/tests/data/parse.json tmp
-    mkdir -p oracle/out "$(dirname "$out")"
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_dom_parse.php > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
-    mv "$tmp" "$out"
-    echo "DOMDocument::loadXML() answers written to $out"
-}
 
-php_dom_schema() {
-    local out=crates/php-dom/tests/data/schema.json tmp
-    mkdir -p oracle/out "$(dirname "$out")"
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/php_dom_schema.php > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$tmp"
-    mv "$tmp" "$out"
-    echo "DOMDocument::schemaValidateSource() answers written to $out"
-}
 
 # IpUtils (isPrivateIp(), checkIp()) and HeaderUtils (makeDisposition())
 # answers of earlier releases: before GHSA-38cx-cq6f-5755's fix (v8.0.8,
@@ -727,12 +640,6 @@ http_foundation() {
         mv "$tmp" "$out"
         echo "HttpFoundation $name vectors written to $out"
     done
-    out=crates/php-value/tests/data/dates.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/http_foundation_dates.php > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
-    mv "$tmp" "$out"
-    echo "Date vectors written to $out"
 }
 
 http_foundation_files() {
@@ -879,9 +786,6 @@ case "${1:-}" in
     event-dispatcher) event_dispatcher ;;
     stopwatch) stopwatch ;;
     clock) clock ;;
-    php-value) php_value ;;
-    php-value-decode) php_value_decode ;;
-    php-value-json) php_value_json ;;
     yaml) yaml ;;
     yaml-unreadable) yaml_unreadable ;;
     dotenv) dotenv ;;
@@ -897,8 +801,6 @@ case "${1:-}" in
     css-selector) css_selector ;;
     options-resolver) options_resolver ;;
     finder) finder ;;
-    php-dom) php_dom ;;
-    php-dom-schema) php_dom_schema ;;
     http-foundation) http_foundation ;;
     http-foundation-files) http_foundation_files ;;
     http-foundation-request) http_foundation_request ;;
@@ -923,6 +825,6 @@ case "${1:-}" in
     di-parameter-bag) di_parameter_bag ;;
     di-env-var-processor) di_env_var_processor ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; php_value; php_value_decode; php_value_json; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; php_dom; php_dom_schema; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; twig_lexer; twig_parser; twig_integration; doctrine_dbal; di_parameter_bag; di_env_var_processor ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|php-value|php-value-decode|php-value-json|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|php-dom|php-dom-schema|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|twig-lexer|twig-parser|twig-integration|doctrine-dbal|di-parameter-bag|di-env-var-processor|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; twig_lexer; twig_parser; twig_integration; doctrine_dbal; di_parameter_bag; di_env_var_processor ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|twig-lexer|twig-parser|twig-integration|doctrine-dbal|di-parameter-bag|di-env-var-processor|all" >&2; exit 2 ;;
 esac

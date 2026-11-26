@@ -7,8 +7,8 @@ publish = false
 description = "Trial build-time DI container compiler, emitting Rust; not the M3 port"
 
 [dependencies]
-php-dom = { path = "../../../crates/php-dom" }
-php-value = { path = "../../../crates/php-value" }
+php-dom = { workspace = true }
+php-value = { workspace = true }
 symfony-config = { path = "../../../crates/config" }
 prettyplease = "0.2.37"
 proc-macro2 = "1.0.107"

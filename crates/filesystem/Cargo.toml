@@ -11,7 +11,7 @@ description = "Port of the symfony/filesystem component (the subset Config's cac
 # "Atomic file writes"; the crate decision 15 chose for OS randomness).
 getrandom = "0.4"
 # PHP's path bytes as std paths, basename() (php_value::path).
-php-value = { path = "../php-value" }
+php-value = { workspace = true }
 # PHP's view of the filesystem (stat(), is_link(), dirname(), file://).
 symfony-finder = { path = "../finder" }
 

@@ -7,7 +7,7 @@ publish = false
 description = "Independent consumer of the ported Symfony kernel, served by the Axum adapter"
 
 [dependencies]
-php-value = { path = "../../crates/php-value" }
+php-value = { workspace = true }
 symfony-event-dispatcher = { path = "../../crates/event-dispatcher" }
 symfony-http-foundation = { path = "../../crates/http-foundation" }
 symfony-routing = { path = "../../crates/routing" }
