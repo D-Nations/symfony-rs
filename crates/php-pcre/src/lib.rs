@@ -44,7 +44,8 @@ impl fmt::Display for PcreError {
 impl std::error::Error for PcreError {}
 
 /// `preg_match()` returned `false` while matching: a subject that is not
-/// UTF-8 under `/u`, or the backtracking limit.
+/// UTF-8 under `/u`, or the backtracking limit; the message is
+/// `preg_last_error_msg()`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MatchError(pub String);
 
@@ -192,8 +193,9 @@ impl Pcre {
     ) -> Result<Option<Groups>, MatchError> {
         let runtime = |e: fancy_regex::Error| MatchError(e.to_string());
         if self.utf8 {
-            let text = std::str::from_utf8(subject)
-                .map_err(|_| MatchError("Malformed UTF-8 characters".into()))?;
+            let text = std::str::from_utf8(subject).map_err(|_| {
+                MatchError("Malformed UTF-8 characters, possibly incorrectly encoded".into())
+            })?;
             let Some(caps) = self
                 .regex
                 .captures_from_pos(text, offset)

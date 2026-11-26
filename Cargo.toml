@@ -25,6 +25,7 @@ members = [
     "crates/php-pcre",
     "crates/mime",
     "crates/twig",
+    "crates/twig-integration",
     "crates/doctrine-dbal",
     "examples/request-lab",
     "fixtures/converter-app",
