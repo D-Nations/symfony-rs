@@ -33,6 +33,7 @@ use crate::exception::{Error, ErrorKind};
 
 pub mod closure_loader;
 mod content_loader_trait;
+pub mod directory_loader;
 pub mod file_loader;
 pub mod glob_file_loader;
 pub mod ini_file_loader;
@@ -40,6 +41,7 @@ pub mod undefined_extension_handler;
 pub mod yaml_file_loader;
 
 pub use closure_loader::ClosureLoader;
+pub use directory_loader::DirectoryLoader;
 pub use file_loader::{FileLoader, IgnoreErrors};
 pub use glob_file_loader::GlobFileLoader;
 pub use ini_file_loader::IniFileLoader;
