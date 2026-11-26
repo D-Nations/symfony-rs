@@ -60,6 +60,7 @@ impl SQLiteKeywords {
     }
 
     /// `getKeywords()`.
+    #[allow(clippy::too_many_lines, reason = "the upstream keyword list")]
     pub fn get_keywords() -> &'static [&'static str] {
         &[
             "ABORT",

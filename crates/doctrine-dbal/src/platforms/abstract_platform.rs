@@ -163,6 +163,12 @@ pub trait AbstractPlatform: AsDynPlatform {
     /// (Upstream also reports the deprecated `jsonb` column option through
     /// doctrine/deprecations, which is silent unless enabled; not ported.)
     fn get_json_type_declaration_sql(&self, column: &PhpArray) -> Result<PhpString, Exception> {
+        if column_flag(column, "jsonb") {
+            deprecations::trigger("https://github.com/doctrine/dbal/pull/6939", || {
+                "The \"jsonb\" column platform option is deprecated. Use the \"JSONB\" type instead."
+                    .to_owned()
+            });
+        }
         self.get_clob_type_declaration_sql(column)
     }
 

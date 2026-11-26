@@ -144,6 +144,22 @@ pub fn ancestors(class: &str) -> &'static [&'static str] {
         OBJECT_ALREADY_EXISTS | OBJECT_DOES_NOT_EXIST => LOGIC_COLLECTION,
         EXPECTED_DOT | EXPECTED_NEXT_IDENTIFIER | UNABLE_TO_PARSE_IDENTIFIER => LOGIC_PARSER,
         PARSER_INVALID_NAME => ARGUMENT_PARSER,
+        crate::platforms::NO_COLUMNS_SPECIFIED_FOR_TABLE => &[
+            LOGIC,
+            crate::platforms::PLATFORM_EXCEPTION,
+            DBAL,
+            "Exception",
+        ],
+        "Doctrine\\DBAL\\Types\\Exception\\TypeAlreadyRegistered"
+        | "Doctrine\\DBAL\\Types\\Exception\\TypeArgumentCountError"
+        | "Doctrine\\DBAL\\Types\\Exception\\TypeNotFound"
+        | "Doctrine\\DBAL\\Types\\Exception\\TypeNotRegistered"
+        | "Doctrine\\DBAL\\Types\\Exception\\TypesAlreadyExists"
+        | "Doctrine\\DBAL\\Types\\Exception\\UnknownColumnType" => &[
+            "Doctrine\\DBAL\\Types\\Exception\\TypesException",
+            DBAL,
+            "Exception",
+        ],
         _ => &[],
     }
 }
