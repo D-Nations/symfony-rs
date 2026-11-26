@@ -7,6 +7,14 @@
 //! read the upstream fixture files skip, with a note, when `upstream/`
 //! is not fetched.
 //!
+//! `$container->compile()` is `support::compile()`: the default passes
+//! without the pending `ResolveAutowireInlineAttributesPass` and
+//! `AutowirePass` (nothing is autowired in these containers). The env
+//! tests that compile read env vars through `support::EnvProcessor`
+//! (`EnvVarProcessor`, with `putenv()` on its own `getenv()` table);
+//! testEnvInId builds `Fixtures/containers/container_env_in_id.php`'s
+//! container in Rust.
+//!
 //! Pending, by reason:
 //!
 //! - needs PHP object creation (the Rust emitter replaces
@@ -22,36 +30,27 @@
 //!   testCreateServiceProperties, testCreateServiceConfigurator, testCreateServiceWithIteratorArgument,
 //!   testCreateServiceWithExpression, testResolveServices, testResolveServicesWithCustomDefinitionClass,
 //!   testInlinedDefinitions, testNamedArgumentBeforeCompile;
-//! - needs compiler passes that are not ported yet (`compile()` stops at
-//!   the first `PendingPass`): testParameterDeprecationIsTrgiggeredWhenCompiled,
-//!   testGetEvictsPrivateSharedServiceWhenSetupFails, testClosureProxy, testClosureProxyWithStaticMethod,
-//!   testEnvExpressionFunction, testCreateServiceWithAbstractArgument, testMerge,
-//!   testCompileWithResolveEnv, testCompileWithArrayResolveEnv, testCompileWithArrayAndAnotherResolveEnv,
-//!   testCompileWithArrayInStringResolveEnv, testCompileWithResolveMissingEnv, testDynamicEnv,
-//!   testFallbackEnv, testCastEnv, testEnvAreNullable, testEnvInId, testCircularDynamicEnv,
-//!   testEnvVarProcessorsRegisteredAfterResolvingEnvPlaceholders, testMergeLogicException,
-//!   testCompilesClassDefinitionsOfLazyServices, testRegisteredButNotLoadedExtension,
-//!   testRegisteredAndLoadedExtension, testPrivateServiceUser,
-//!   testThrowsExceptionWhenSetServiceOnACompiledContainer, testNoExceptionWhenAddServiceOnACompiledContainer,
-//!   testNoExceptionWhenSetSyntheticServiceOnACompiledContainer,
-//!   testThrowsExceptionWhenSetDefinitionOnACompiledContainer, testAbstractAlias,
-//!   testLazyLoadedService, testInitializePropertiesBeforeMethodCalls, testAutowiring, testClassFromId,
-//!   testNoClassFromGlobalNamespaceClassId, testNoClassFromGlobalNamespaceClassIdWithLeadingSlash,
-//!   testNoClassFromNamespaceClassIdWithLeadingSlash, testNoClassFromNonClassId,
-//!   testNoClassFromNsSeparatorId, testGetThrownServiceNotFoundExceptionWithCorrectServiceId,
-//!   testUnusedServiceRemovedByPassAndServiceNotFoundExceptionWasNotThrown, testEnvClosureAutowire,
-//!   testEnvClosureAutowireRefreshesAcrossEnvCacheReset, testServiceLocator, testUninitializedReference,
-//!   testAlmostCircular, testCaseSensitivity, testParameterWithMixedCase,
+//! - also needs PHP object creation, after `compile()`: testGetEvictsPrivateSharedServiceWhenSetupFails,
+//!   testClosureProxy, testClosureProxyWithStaticMethod, testCreateServiceWithAbstractArgument, testMerge,
+//!   testCompileWithResolveEnv, testCastEnv, testEnvAreNullable,
+//!   testEnvVarProcessorsRegisteredAfterResolvingEnvPlaceholders (the processor is a service),
+//!   testPrivateServiceUser, testInitializePropertiesBeforeMethodCalls, testServiceLocator,
+//!   testUninitializedReference, testAlmostCircular, testCaseSensitivity, testParameterWithMixedCase,
 //!   testArgumentsHaveHigherPriorityThanBindings, testUninitializedSyntheticReference,
-//!   testServiceLocatorArgument, testDecoratedSelfReferenceInvolvingPrivateServices, testScalarService,
-//!   testWither, testLazyWither, testWitherWithStaticReturnType, testAutoAliasing,
+//!   testServiceLocatorArgument, testScalarService, testAutoAliasing,
 //!   testDirectlyAccessingDeprecatedPublicService, testReferencingDeprecatedPublicService,
-//!   testExpressionInFactory, testNamedArgumentAfterCompile, testLazyClosure, testProxyAndInheritance
-//!   (most of these also create services);
+//!   testNamedArgumentAfterCompile, testLazyClosure;
+//! - needs `AutowirePass`, not ported yet (and object creation): testAutowiring,
+//!   testEnvClosureAutowire, testEnvClosureAutowireRefreshesAcrossEnvCacheReset, testWither,
+//!   testLazyWither, testWitherWithStaticReturnType, testProxyAndInheritance;
+//! - needs `ExpressionLanguage` (and object creation): testEnvExpressionFunction,
+//!   testExpressionInFactory;
+//! - needs a loader (and object creation): testLazyLoadedService;
 //! - needs a custom `ParameterBagInterface` (the bag is the crate's
 //!   `ParameterBag`): testDeprecateParameterThrowsWhenParameterBagIsNotInternal;
 //! - needs symfony-config's `ClassExistenceResource` and
-//!   `ReflectionClassResource`: testGetReflectionClass.
+//!   `ReflectionClassResource`: testGetReflectionClass,
+//!   testCompilesClassDefinitionsOfLazyServices.
 //!
 //! Upstream: symfony/dependency-injection Tests/ContainerBuilderTest.php
 #![allow(
@@ -60,6 +59,8 @@
     clippy::too_many_lines,
     clippy::disallowed_names
 )]
+
+mod support;
 
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -1533,4 +1534,512 @@ fn compile_failure_with_env_placeholder() {
         e.message()
     );
     assert_eq!("bad value %env(FOO)%", e.previous().unwrap().message());
+}
+
+/// `compile()` reading env vars through `EnvVarProcessor`, with these
+/// `putenv()` settings.
+fn env_container(settings: &[&str]) -> ContainerBuilder {
+    let env = support::EnvProcessor::new();
+    for setting in settings {
+        env.putenv(setting);
+    }
+    let mut container = ContainerBuilder::new();
+    container.set_env_var_resolver(Arc::new(env));
+    container
+}
+
+#[track_caller]
+fn assert_message(e: &Error, class: &str, message: &str) {
+    assert!(e.instance_of(class), "{} is not a {class}", e.class());
+    assert_eq!(message, e.message());
+}
+
+#[test]
+fn testParameterDeprecationIsTrgiggeredWhenCompiled() {
+    let mut builder = ContainerBuilder::new();
+    builder.set_parameter("foo", "%bar%").unwrap();
+    builder.set_parameter("bar", "baz").unwrap();
+
+    builder
+        .deprecate_parameter("bar", "symfony/test", "6.3", None)
+        .unwrap();
+
+    let (result, deprecations) = collect(|| support::compile(&mut builder, false));
+    result.unwrap();
+    let messages: Vec<String> = deprecations
+        .iter()
+        .map(|d| String::from_utf8_lossy(&d.message).into_owned())
+        .collect();
+    assert!(
+        messages.contains(&"Since symfony/test 6.3: The parameter \"bar\" is deprecated.".to_string()),
+        "{messages:?}"
+    );
+}
+
+#[test]
+fn testCompileWithArrayResolveEnv() {
+    let mut container = env_container(&["ARRAY={\"foo\":\"bar\"}"]);
+    container
+        .set_parameter("foo", "%env(json:ARRAY)%")
+        .unwrap();
+    support::compile(&mut container, true).unwrap();
+
+    let mut expected = PhpArray::new();
+    expected.insert("foo", s("bar"));
+    assert!(Value::Array(expected).identical(&container.get_parameter("foo").unwrap()));
+}
+
+#[test]
+fn testCompileWithArrayAndAnotherResolveEnv() {
+    let mut container = env_container(&["DUMMY_ENV_VAR=abc", "ARRAY={\"foo\":\"bar\"}"]);
+    container
+        .set_parameter("foo", "%env(json:ARRAY)%")
+        .unwrap();
+    container
+        .set_parameter("bar", "%env(DUMMY_ENV_VAR)%")
+        .unwrap();
+    support::compile(&mut container, true).unwrap();
+
+    let mut expected = PhpArray::new();
+    expected.insert("foo", s("bar"));
+    assert!(Value::Array(expected).identical(&container.get_parameter("foo").unwrap()));
+    assert!(s("abc").identical(&container.get_parameter("bar").unwrap()));
+}
+
+#[test]
+fn testCompileWithArrayInStringResolveEnv() {
+    let mut container = env_container(&["ARRAY={\"foo\":\"bar\"}"]);
+    container
+        .set_parameter("foo", "ABC %env(json:ARRAY)%")
+        .unwrap();
+
+    let e = support::compile(&mut container, true).unwrap_err();
+    assert_message(
+        &e,
+        "Symfony\\Component\\DependencyInjection\\Exception\\RuntimeException",
+        "A string value must be composed of strings and/or numbers, but found parameter \"env(json:ARRAY)\" of type \"array\" inside string value \"ABC %env(json:ARRAY)%\".",
+    );
+}
+
+#[test]
+fn testCompileWithResolveMissingEnv() {
+    let mut container = env_container(&[]);
+    container.set_parameter("foo", "%env(FOO)%").unwrap();
+
+    let e = support::compile(&mut container, true).unwrap_err();
+    assert_message(
+        &e,
+        "Symfony\\Component\\DependencyInjection\\Exception\\EnvNotFoundException",
+        "Environment variable not found: \"FOO\".",
+    );
+}
+
+#[test]
+fn testDynamicEnv() {
+    let mut container = env_container(&["DUMMY_FOO=some%foo%", "DUMMY_BAR=%bar%"]);
+    container
+        .set_parameter("foo", "Foo%env(resolve:DUMMY_BAR)%")
+        .unwrap();
+    container.set_parameter("bar", "Bar").unwrap();
+    container
+        .set_parameter("baz", "%env(resolve:DUMMY_FOO)%")
+        .unwrap();
+
+    support::compile(&mut container, true).unwrap();
+
+    assert!(s("someFooBar").identical(&container.get_parameter("baz").unwrap()));
+}
+
+#[test]
+fn testFallbackEnv() {
+    let mut container = env_container(&["DUMMY_FOO=foo"]);
+    container
+        .set_parameter("foo", "%env(DUMMY_FOO)%")
+        .unwrap();
+    container
+        .set_parameter("bar", "bar%env(default:foo:DUMMY_BAR)%")
+        .unwrap();
+
+    support::compile(&mut container, true).unwrap();
+
+    assert!(s("barfoo").identical(&container.get_parameter("bar").unwrap()));
+}
+
+#[test]
+fn testEnvInId() {
+    // Fixtures/containers/container_env_in_id.php
+    let mut container = env_container(&[]);
+    container.set_parameter("env(BAR)", "bar").unwrap();
+    let mut baz = PhpArray::new();
+    baz.insert("baz_%env(BAR)%", Reference::new("baz_%env(BAR)%").into());
+    container
+        .register("foo", Some("stdClass"))
+        .unwrap()
+        .set_public(true)
+        .add_argument(Reference::new("bar_%env(BAR)%"))
+        .add_argument(Value::Array(baz));
+    container
+        .register("bar", Some("stdClass"))
+        .unwrap()
+        .set_public(true)
+        .add_argument(Reference::new("bar_%env(BAR)%"));
+    container
+        .register("bar_%env(BAR)%", Some("stdClass"))
+        .unwrap();
+    container
+        .register("baz_%env(BAR)%", Some("stdClass"))
+        .unwrap();
+
+    support::compile(&mut container, true).unwrap();
+
+    let expected = vec!["service_container", "foo", "bar", "bar_%env(BAR)%"];
+    assert_eq!(
+        expected,
+        container.get_definitions().keys().collect::<Vec<_>>()
+    );
+
+    let removed: Vec<(&str, bool)> = container
+        .get_removed_ids()
+        .iter()
+        .map(|(id, removed)| (id, *removed))
+        .collect();
+    assert_eq!(
+        vec![("baz_%env(BAR)%", true), ("bar_%env(BAR)%", true)],
+        removed
+    );
+
+    let Value::Array(argument) = container
+        .get_definition("foo")
+        .unwrap()
+        .argument(1)
+        .unwrap()
+    else {
+        panic!("not an array");
+    };
+    assert_eq!(
+        vec![Key::from("baz_bar")],
+        argument.keys().cloned().collect::<Vec<_>>()
+    );
+}
+
+#[test]
+fn testCircularDynamicEnv() {
+    let mut container = env_container(&["DUMMY_ENV_VAR=some%foo%"]);
+    container.set_parameter("foo", "%bar%").unwrap();
+    container
+        .set_parameter("bar", "%env(resolve:DUMMY_ENV_VAR)%")
+        .unwrap();
+
+    let e = support::compile(&mut container, true).unwrap_err();
+    assert_message(
+        &e,
+        "Symfony\\Component\\DependencyInjection\\Exception\\ParameterCircularReferenceException",
+        "Circular reference detected for parameter \"env(resolve:DUMMY_ENV_VAR)\" (\"env(resolve:DUMMY_ENV_VAR)\" > \"env(resolve:DUMMY_ENV_VAR)\").",
+    );
+}
+
+#[test]
+fn testMergeLogicException() {
+    let mut container = ContainerBuilder::new();
+    container.set_resource_tracking(false);
+    support::compile(&mut container, false).unwrap();
+
+    let e = container.merge(&ContainerBuilder::new()).unwrap_err();
+    assert!(e.instance_of("LogicException"), "{}", e.class());
+}
+
+/// `$this->createMock(ExtensionInterface::class)` aliased `project`: it
+/// counts `getAlias()` calls and records `load()` calls.
+#[derive(Default)]
+struct MockExtension {
+    get_alias: std::sync::atomic::AtomicUsize,
+    loads: std::sync::Mutex<Vec<Vec<PhpArray>>>,
+}
+
+impl ExtensionInterface for MockExtension {
+    fn class(&self) -> &'static str {
+        "MockObject_ExtensionInterface"
+    }
+
+    fn load(&self, configs: &[PhpArray], _container: &mut ContainerBuilder) -> Result<()> {
+        self.loads.lock().unwrap().push(configs.to_vec());
+        Ok(())
+    }
+
+    fn get_alias(&self) -> String {
+        self.get_alias
+            .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        "project".to_string()
+    }
+}
+
+#[test]
+fn testRegisteredButNotLoadedExtension() {
+    let extension = Arc::new(MockExtension::default());
+
+    let mut container = ContainerBuilder::new();
+    container.set_resource_tracking(false);
+    container.register_extension(extension.clone());
+    support::compile(&mut container, false).unwrap();
+
+    assert_eq!(
+        1,
+        extension
+            .get_alias
+            .load(std::sync::atomic::Ordering::SeqCst)
+    );
+    assert!(extension.loads.lock().unwrap().is_empty());
+}
+
+#[test]
+fn testRegisteredAndLoadedExtension() {
+    let extension = Arc::new(MockExtension::default());
+
+    let mut container = ContainerBuilder::new();
+    container.set_resource_tracking(false);
+    container.register_extension(extension.clone());
+    let mut config = PhpArray::new();
+    config.insert("foo", s("bar"));
+    container
+        .load_from_extension("project", Some(config.clone()))
+        .unwrap();
+    support::compile(&mut container, false).unwrap();
+
+    assert_eq!(
+        2,
+        extension
+            .get_alias
+            .load(std::sync::atomic::Ordering::SeqCst)
+    );
+    assert_eq!(vec![vec![config]], *extension.loads.lock().unwrap());
+}
+
+#[test]
+fn testThrowsExceptionWhenSetServiceOnACompiledContainer() {
+    let mut container = ContainerBuilder::new();
+    container.set_resource_tracking(false);
+    container
+        .register("a", Some("stdClass"))
+        .unwrap()
+        .set_public(true);
+    support::compile(&mut container, false).unwrap();
+
+    let e = container.set("a", Some(std_class())).unwrap_err();
+    assert!(e.instance_of("BadMethodCallException"), "{}", e.class());
+}
+
+#[test]
+fn testNoExceptionWhenAddServiceOnACompiledContainer() {
+    let mut container = ContainerBuilder::new();
+    support::compile(&mut container, false).unwrap();
+    let foo = std_class();
+    container.set("a", Some(foo.clone())).unwrap();
+    assert!(
+        foo.identical(
+            &container
+                .get("a", InvalidBehavior::Exception)
+                .unwrap()
+                .unwrap()
+        )
+    );
+}
+
+#[test]
+fn testNoExceptionWhenSetSyntheticServiceOnACompiledContainer() {
+    let mut container = ContainerBuilder::new();
+    let def = Definition::with_class("stdClass");
+    def.set_synthetic(true).set_public(true);
+    container.set_definition("a", def).unwrap();
+    support::compile(&mut container, false).unwrap();
+    let a = std_class();
+    container.set("a", Some(a.clone())).unwrap();
+    assert!(
+        a.identical(
+            &container
+                .get("a", InvalidBehavior::Exception)
+                .unwrap()
+                .unwrap()
+        )
+    );
+}
+
+#[test]
+fn testThrowsExceptionWhenSetDefinitionOnACompiledContainer() {
+    let mut container = ContainerBuilder::new();
+    container.set_resource_tracking(false);
+    support::compile(&mut container, false).unwrap();
+
+    let e = container
+        .set_definition("a", Definition::new(None, PhpArray::new()))
+        .unwrap_err();
+    assert!(e.instance_of("BadMethodCallException"), "{}", e.class());
+}
+
+#[test]
+fn testAbstractAlias() {
+    let mut container = ContainerBuilder::new();
+
+    let abstract_ = Definition::with_class("AbstractClass");
+    abstract_.set_abstract(true).set_public(true);
+
+    container
+        .set_definition("abstract_service", abstract_)
+        .unwrap();
+    container
+        .set_alias("abstract_alias", "abstract_service")
+        .unwrap()
+        .set_public(true);
+
+    support::compile(&mut container, false).unwrap();
+
+    assert_eq!(
+        "abstract_service",
+        container.get_alias("abstract_alias").unwrap().to_string()
+    );
+}
+
+/// A container whose class registry has the classes the class-from-id
+/// tests name.
+fn class_from_id_container() -> ContainerBuilder {
+    let mut registry = ClassRegistry::new();
+    registry.add_class(ClassMetadata::class(
+        "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\CaseSensitiveClass",
+    ));
+    registry.add_class(ClassMetadata::class("DateTimeImmutable"));
+    registry.add_class(ClassMetadata::class(
+        "Symfony\\Component\\DependencyInjection\\Tests\\FooClass",
+    ));
+    let mut container = ContainerBuilder::new();
+    container.set_class_registry(Arc::new(registry));
+    container
+}
+
+#[test]
+fn testClassFromId() {
+    let class = "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\CaseSensitiveClass";
+    let mut container = class_from_id_container();
+
+    let autoload_class = container.register(class, None).unwrap();
+    support::compile(&mut container, false).unwrap();
+
+    assert_eq!(Some(class.to_string()), autoload_class.class());
+}
+
+/// `expectException(RuntimeException::class)` and
+/// `expectExceptionMessage($message)` (a substring).
+#[track_caller]
+fn assert_no_class(id: &str, message: &str) {
+    let mut container = class_from_id_container();
+
+    container.register(id, None).unwrap();
+
+    let e = support::compile(&mut container, false).unwrap_err();
+    assert!(e.instance_of("RuntimeException"), "{}", e.class());
+    assert!(e.message().contains(message), "{}", e.message());
+}
+
+#[test]
+fn testNoClassFromGlobalNamespaceClassId() {
+    assert_no_class(
+        "DateTimeImmutable",
+        "The definition for \"DateTimeImmutable\" has no class attribute, and appears to reference a class or interface in the global namespace.",
+    );
+}
+
+#[test]
+fn testNoClassFromGlobalNamespaceClassIdWithLeadingSlash() {
+    assert_no_class(
+        "\\DateTimeImmutable",
+        "The definition for \"\\DateTimeImmutable\" has no class attribute, and appears to reference a class or interface in the global namespace.",
+    );
+}
+
+#[test]
+fn testNoClassFromNamespaceClassIdWithLeadingSlash() {
+    assert_no_class(
+        "\\Symfony\\Component\\DependencyInjection\\Tests\\FooClass",
+        "The definition for \"\\Symfony\\Component\\DependencyInjection\\Tests\\FooClass\" has no class attribute, and appears to reference a class or interface. Please specify the class attribute explicitly or remove the leading backslash by renaming the service to \"Symfony\\Component\\DependencyInjection\\Tests\\FooClass\" to get rid of this error.",
+    );
+}
+
+#[test]
+fn testNoClassFromNonClassId() {
+    assert_no_class("123_abc", "The definition for \"123_abc\" has no class.");
+}
+
+#[test]
+fn testNoClassFromNsSeparatorId() {
+    assert_no_class("\\foo", "The definition for \"\\foo\" has no class.");
+}
+
+#[test]
+fn testGetThrownServiceNotFoundExceptionWithCorrectServiceId() {
+    let mut container = ContainerBuilder::new();
+    let mut child_argument = PhpArray::new();
+    child_argument.insert(
+        "non_existent",
+        Reference::new("non_existent_service").into(),
+    );
+    container
+        .register("child_service", Some("stdClass"))
+        .unwrap()
+        .add_argument(Value::Array(child_argument));
+    let mut parent_argument = PhpArray::new();
+    parent_argument.insert("child_service", Reference::new("child_service").into());
+    container
+        .register("parent_service", Some("stdClass"))
+        .unwrap()
+        .set_public(true)
+        .add_argument(Value::Array(parent_argument));
+
+    let e = support::compile(&mut container, false).unwrap_err();
+    assert!(e.is(&ErrorKind::ServiceNotFound));
+    assert!(
+        e.message().contains(
+            "The service \"child_service\" has a dependency on a non-existent service \"non_existent_service\"."
+        ),
+        "{}",
+        e.message()
+    );
+}
+
+#[test]
+fn testUnusedServiceRemovedByPassAndServiceNotFoundExceptionWasNotThrown() {
+    let mut container = ContainerBuilder::new();
+    let mut argument = PhpArray::new();
+    argument.insert(
+        "non_existent_service",
+        Reference::new("non_existent_service").into(),
+    );
+    container
+        .register("service", Some("stdClass"))
+        .unwrap()
+        .add_argument(Value::Array(argument));
+
+    if let Err(e) = support::compile(&mut container, false) {
+        assert!(!e.is(&ErrorKind::ServiceNotFound), "Should not be thrown");
+        panic!("{e:?}");
+    }
+}
+
+#[test]
+fn testDecoratedSelfReferenceInvolvingPrivateServices() {
+    let mut container = ContainerBuilder::new();
+    container
+        .register("foo", Some("stdClass"))
+        .unwrap()
+        .set_property("bar", Reference::new("foo"));
+    container
+        .register("baz", Some("stdClass"))
+        .unwrap()
+        .set_property("inner", Reference::new("baz.inner"))
+        .set_decorated_service(Some("foo"), None, 0, InvalidBehavior::Exception)
+        .unwrap();
+
+    support::compile(&mut container, false).unwrap();
+
+    assert_eq!(
+        vec!["service_container"],
+        container.get_definitions().keys().collect::<Vec<_>>()
+    );
 }
