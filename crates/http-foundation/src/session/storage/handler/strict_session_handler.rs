@@ -65,6 +65,10 @@ impl Backend for StrictSessionHandler {
         CLASS.to_owned()
     }
 
+    fn read(&self, session_id: &[u8]) -> HandlerResult<Option<PhpString>> {
+        self.parent.read(self, session_id)
+    }
+
     fn do_read(&self, session_id: &[u8]) -> HandlerResult<Option<PhpString>> {
         self.handler.read(session_id)
     }
@@ -125,6 +129,10 @@ impl SessionHandlerInterface for StrictSessionHandler {
     }
 
     fn as_update_timestamp(&self) -> Option<&dyn SessionUpdateTimestampHandlerInterface> {
+        Some(self)
+    }
+
+    fn as_session_id(&self) -> Option<&dyn SessionIdInterface> {
         Some(self)
     }
 }

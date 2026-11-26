@@ -246,6 +246,9 @@ fn calls(output: &Output) -> Json {
             OutputCall::ObFlush => json!(["ob_flush"]),
             // never made by Response: shown, so a stray one differs
             OutputCall::SetCookie(cookie) => json!(["setcookie", b64(cookie.name.as_bytes())]),
+            OutputCall::SessionCookie { name, .. } => {
+                json!(["session_cookie", b64(name.as_bytes())])
+            }
             OutputCall::Flush => json!(["flush"]),
             OutputCall::FastcgiFinishRequest => json!(["fastcgi_finish_request"]),
             OutputCall::LitespeedFinishRequest => json!(["litespeed_finish_request"]),

@@ -184,6 +184,10 @@ impl Backend for RecorderBackend {
         "RecorderBackend".to_owned()
     }
 
+    fn read(&self, session_id: &[u8]) -> HandlerResult<Option<PhpString>> {
+        self.parent.read(self, session_id)
+    }
+
     fn do_read(&self, session_id: &[u8]) -> HandlerResult<Option<PhpString>> {
         self.script.log(format!("doRead {}", show(session_id)));
         self.script.read()

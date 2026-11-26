@@ -49,6 +49,8 @@ pub const CLASS: &str =
 pub trait Backend {
     /// `static::class`.
     fn class(&self) -> String;
+    /// `$this->read($sessionId)`, which a subclass may override.
+    fn read(&self, session_id: &[u8]) -> HandlerResult<Option<PhpString>>;
     /// `doRead($sessionId)`.
     fn do_read(&self, session_id: &[u8]) -> HandlerResult<Option<PhpString>>;
     /// `doWrite($sessionId, $data)`.
@@ -108,7 +110,7 @@ impl AbstractSessionHandler {
 
     /// `validateId($sessionId)`: the session read now, kept for `read()`.
     pub fn validate_id(&self, backend: &dyn Backend, session_id: &[u8]) -> bool {
-        let (data, error) = match self.read(backend, session_id) {
+        let (data, error) = match backend.read(session_id) {
             Ok(data) => (data, None),
             Err(error) => (None, Some(error)),
         };
@@ -225,6 +227,7 @@ impl AbstractSessionHandler {
                     domain: text("domain"),
                     secure: flag("secure"),
                     httponly: flag("httponly"),
+                    samesite: text("samesite"),
                 });
             }
         }

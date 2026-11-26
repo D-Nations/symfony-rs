@@ -332,6 +332,7 @@ fn run(sapi: &mut Sapi, script: &[Json], answers: &mut Vec<Json>) -> Result<(), 
                     domain: PhpString::from(arg(5)?),
                     secure: call[6].as_bool().ok_or("secure")?,
                     httponly: call[7].as_bool().ok_or("httponly")?,
+                    samesite: PhpString::default(),
                 };
                 if let Ok(done) = sapi.setcookie(&cookie, op == "setrawcookie") {
                     answers.push(Json::from(done));

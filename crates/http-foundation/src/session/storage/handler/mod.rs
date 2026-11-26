@@ -14,7 +14,7 @@
 
 use std::fmt;
 
-use php_value::PhpString;
+use php_value::{PhpString, Value};
 
 use crate::streamed_response::Throwable;
 
@@ -65,6 +65,12 @@ pub trait SessionHandlerInterface: fmt::Debug + Send + Sync {
         self.class()
     }
 
+    /// The handler as a `\SessionIdInterface`, if it is one: PHP then
+    /// asks it for new ids (`create_sid()`).
+    fn as_session_id(&self) -> Option<&dyn SessionIdInterface> {
+        None
+    }
+
     /// `$handler instanceof \SessionHandler`.
     fn is_native(&self) -> bool {
         false
@@ -89,10 +95,11 @@ pub trait SessionIdInterface {
 /// `session_create_id() ?: throw new \RuntimeException(...)`, which every
 /// handler's `create_sid()` is.
 pub(crate) fn create_sid() -> HandlerResult<PhpString> {
-    crate::php_session::session_create_id(b"").ok_or_else(|| {
-        std::sync::Arc::new(crate::exception::Error::new(
+    match crate::php_session::session_create_id(b"")? {
+        Some(id) if Value::String(id.clone()).is_truthy() => Ok(id),
+        _ => Err(std::sync::Arc::new(crate::exception::Error::new(
             crate::exception::Class::PhpRuntime,
             "Unable to create a session ID.",
-        )) as Throwable
-    })
+        )) as Throwable),
+    }
 }

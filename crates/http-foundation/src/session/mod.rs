@@ -129,6 +129,32 @@ impl Data {
         reference
     }
 
+    /// The keys and the references that hold their values, in order.
+    pub fn entries(&self) -> impl Iterator<Item = (&Key, &Reference)> {
+        self.entries.iter().map(|(k, r)| (k, r))
+    }
+
+    /// `$data[$key] = $value`: through the reference already there, as
+    /// PHP assigns to an element that is a reference.
+    pub fn assign(&mut self, key: Key, value: Value) {
+        match self.position(&key) {
+            Some(i) => self.entries[i].1.set(value),
+            None => self.entries.push((key, Reference::new(value))),
+        }
+    }
+
+    /// `unset($data[$key])`, for any key.
+    pub fn unset(&mut self, key: &Key) {
+        if let Some(i) = self.position(key) {
+            self.entries.remove(i);
+        }
+    }
+
+    /// `$data[$key]`, for any key.
+    pub fn value(&self, key: &Key) -> Option<Value> {
+        self.position(key).map(|i| self.entries[i].1.get())
+    }
+
     /// `$data[$key] = &$reference`.
     pub fn bind(&mut self, key: &str, reference: Reference) {
         let key = Key::from_bytes(key.as_bytes());
