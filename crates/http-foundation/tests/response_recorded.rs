@@ -276,6 +276,9 @@ fn calls(output: &Output) -> Json {
             OutputCall::SetCookie(cookie) => {
                 list.push(serde_json::json!(["setcookie", b64(&cookie.name)]));
             }
+            OutputCall::SessionCookie { name, .. } => {
+                list.push(serde_json::json!(["session_cookie", b64(name)]));
+            }
             OutputCall::FastcgiFinishRequest => {
                 list.push(serde_json::json!(["fastcgi_finish_request"]));
             }

@@ -37,7 +37,7 @@ fn map(pairs: Vec<(&str, Value)>) -> PhpArray {
     array
 }
 
-fn set_up() -> Session {
+fn set_up() -> Result<Session, symfony_http_foundation::exception::Error> {
     let storage = Arc::new(MockArraySessionStorage::default());
     Session::new(
         storage,
@@ -65,7 +65,7 @@ fn set_provider() -> Vec<(&'static str, Value, PhpArray)> {
 
 #[test]
 fn testStart() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     assert_eq!("", session.get_id());
     assert!(session.start()?);
     assert_ne!("", session.get_id());
@@ -74,7 +74,7 @@ fn testStart() -> TestResult {
 
 #[test]
 fn testIsStarted() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     assert!(!session.is_started());
     session.start()?;
     assert!(session.is_started());
@@ -83,7 +83,7 @@ fn testIsStarted() -> TestResult {
 
 #[test]
 fn testSetId() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     assert_eq!("", session.get_id());
     session.set_id("0123456789abcdef")?;
     session.start()?;
@@ -93,7 +93,7 @@ fn testSetId() -> TestResult {
 
 #[test]
 fn testSetIdAfterStart() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     session.start()?;
     let id = session.get_id();
 
@@ -110,9 +110,9 @@ fn testSetIdAfterStart() -> TestResult {
 
 #[test]
 fn testSetName() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     assert_eq!("MOCKSESSID", session.get_name());
-    session.set_name("session.test.com");
+    session.set_name("session.test.com")?;
     session.start()?;
     assert_eq!("session.test.com", session.get_name());
     Ok(())
@@ -120,7 +120,7 @@ fn testSetName() -> TestResult {
 
 #[test]
 fn testGet() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     // tests defaults
     assert_eq!(Value::Null, session.get("foo", Value::Null)?);
     assert_eq!(Value::Int(1), session.get("foo", Value::Int(1))?);
@@ -130,7 +130,7 @@ fn testGet() -> TestResult {
 #[test]
 fn testSet() -> TestResult {
     for (key, value, _result) in set_provider() {
-        let session = set_up();
+        let session = set_up()?;
         session.set(key, value.clone())?;
         assert_eq!(value, session.get(key, Value::Null)?, "{key}");
     }
@@ -140,7 +140,7 @@ fn testSet() -> TestResult {
 #[test]
 fn testHas() -> TestResult {
     for (key, value, _result) in set_provider() {
-        let session = set_up();
+        let session = set_up()?;
         session.set(key, value)?;
         assert!(session.has(key)?, "{key}");
         assert!(!session.has(&format!("{key}non_value"))?, "{key}");
@@ -150,7 +150,7 @@ fn testHas() -> TestResult {
 
 #[test]
 fn testReplace() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     let attributes = map(vec![("happiness", s("be good")), ("symfony", s("awesome"))]);
     session.replace(&attributes)?;
     assert_eq!(attributes, session.all()?);
@@ -162,7 +162,7 @@ fn testReplace() -> TestResult {
 #[test]
 fn testAll() -> TestResult {
     for (key, value, result) in set_provider() {
-        let session = set_up();
+        let session = set_up()?;
         session.set(key, value)?;
         assert_eq!(result, session.all()?, "{key}");
     }
@@ -172,7 +172,7 @@ fn testAll() -> TestResult {
 #[test]
 fn testClear() -> TestResult {
     for (key, value, _result) in set_provider() {
-        let session = set_up();
+        let session = set_up()?;
         session.set("hi", s("fabien"))?;
         session.set(key, value)?;
         session.clear()?;
@@ -184,7 +184,7 @@ fn testClear() -> TestResult {
 #[test]
 fn testRemove() -> TestResult {
     for (key, value, _result) in set_provider() {
-        let session = set_up();
+        let session = set_up()?;
         session.set("hi.world", s("have a nice day"))?;
         session.set(key, value)?;
         session.remove(key)?;
@@ -199,7 +199,7 @@ fn testRemove() -> TestResult {
 
 #[test]
 fn testInvalidate() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     session.set("invalidate", Value::Int(123))?;
     session.invalidate(None)?;
     assert_eq!(PhpArray::new(), session.all()?);
@@ -208,7 +208,7 @@ fn testInvalidate() -> TestResult {
 
 #[test]
 fn testMigrate() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     session.set("migrate", Value::Int(321))?;
     session.migrate(false, None)?;
     assert_eq!(Value::Int(321), session.get("migrate", Value::Null)?);
@@ -217,7 +217,7 @@ fn testMigrate() -> TestResult {
 
 #[test]
 fn testMigrateDestroy() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     session.set("migrate", Value::Int(333))?;
     session.migrate(true, None)?;
     assert_eq!(Value::Int(333), session.get("migrate", Value::Null)?);
@@ -226,7 +226,7 @@ fn testMigrateDestroy() -> TestResult {
 
 #[test]
 fn testSave() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     session.start()?;
     session.save()?;
 
@@ -236,7 +236,7 @@ fn testSave() -> TestResult {
 
 #[test]
 fn testGetId() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     assert_eq!("", session.get_id());
     session.start()?;
     assert_ne!("", session.get_id());
@@ -246,13 +246,13 @@ fn testGetId() -> TestResult {
 #[test]
 fn testGetFlashBag() -> TestResult {
     // a FlashBagInterface
-    set_up().get_flash_bag()?;
+    set_up()?.get_flash_bag()?;
     Ok(())
 }
 
 #[test]
 fn testGetIterator() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     let attributes = map(vec![("hello", s("world")), ("symfony", s("rocks"))]);
     for (key, val) in attributes.iter() {
         session.set(
@@ -278,7 +278,7 @@ fn testGetIterator() -> TestResult {
 
 #[test]
 fn testGetCount() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     session.set("hello", s("world"))?;
     session.set("symfony", s("rocks"))?;
 
@@ -287,14 +287,15 @@ fn testGetCount() -> TestResult {
 }
 
 #[test]
-fn testGetMeta() {
+fn testGetMeta() -> TestResult {
     // a MetadataBag
-    let _bag = set_up().get_metadata_bag();
+    let _bag = set_up()?.get_metadata_bag();
+    Ok(())
 }
 
 #[test]
 fn testIsEmpty() -> TestResult {
-    let session = set_up();
+    let session = set_up()?;
     assert!(session.is_empty());
 
     session.set("hello", s("world"))?;
@@ -318,12 +319,12 @@ fn testGetBagWithBagImplementingGetBag() -> TestResult {
     bag.set_name("foo");
 
     let storage = Arc::new(MockArraySessionStorage::default());
-    storage.register_bag(bag.clone());
+    storage.register_bag(bag.clone())?;
 
     let bag: Arc<dyn SessionBagInterface> = bag;
     assert!(same_bag(
         &bag,
-        &Session::new(storage, None, None, None).get_bag("foo")?
+        &Session::new(storage, None, None, None)?.get_bag("foo")?
     ));
     Ok(())
 }
@@ -342,12 +343,12 @@ fn testGetBagWithBagNotImplementingGetBag() -> TestResult {
         data,
         Arc::new(AtomicI64::new(0)),
         None,
-    )));
+    )))?;
 
     let bag: Arc<dyn SessionBagInterface> = bag;
     assert!(same_bag(
         &bag,
-        &Session::new(storage, None, None, None).get_bag("foo")?
+        &Session::new(storage, None, None, None)?.get_bag("foo")?
     ));
     Ok(())
 }

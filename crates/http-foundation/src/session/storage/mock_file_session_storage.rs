@@ -162,8 +162,8 @@ impl SessionStorageInterface for MockFileSessionStorage {
         self.base.get_name()
     }
 
-    fn set_name(&self, name: &str) {
-        self.base.set_name(name);
+    fn set_name(&self, name: &str) -> Result<()> {
+        self.base.set_name(name)
     }
 
     fn regenerate(&self, destroy: bool, lifetime: Option<i64>) -> Result<bool> {
@@ -237,8 +237,8 @@ impl SessionStorageInterface for MockFileSessionStorage {
         self.base.get_bag_with(name, || self.start())
     }
 
-    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) {
-        self.base.register_bag(bag);
+    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) -> Result<()> {
+        self.base.register_bag(bag)
     }
 
     fn get_metadata_bag(&self) -> Arc<MetadataBag> {

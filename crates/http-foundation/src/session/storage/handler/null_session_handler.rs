@@ -28,6 +28,10 @@ impl Backend for NullSessionHandler {
         CLASS.to_owned()
     }
 
+    fn read(&self, session_id: &[u8]) -> HandlerResult<Option<PhpString>> {
+        self.parent.read(self, session_id)
+    }
+
     fn do_read(&self, _session_id: &[u8]) -> HandlerResult<Option<PhpString>> {
         Ok(Some(PhpString::default()))
     }
@@ -79,6 +83,10 @@ impl SessionHandlerInterface for NullSessionHandler {
     }
 
     fn as_update_timestamp(&self) -> Option<&dyn SessionUpdateTimestampHandlerInterface> {
+        Some(self)
+    }
+
+    fn as_session_id(&self) -> Option<&dyn SessionIdInterface> {
         Some(self)
     }
 }

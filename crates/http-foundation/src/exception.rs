@@ -90,6 +90,9 @@ pub enum Class {
     /// Input this port does not reproduce; not a PHP class. It is refused
     /// rather than approximated.
     NotPorted,
+    /// An exception of another type a callback threw (a save handler's),
+    /// passed on as it is ([`Error::thrown`]).
+    Thrown,
 }
 
 impl Class {
@@ -157,6 +160,7 @@ impl Class {
             }
             Self::MimeRuntime => "Symfony\\Component\\Mime\\Exception\\RuntimeException",
             Self::NotPorted => "NotPorted",
+            Self::Thrown => "Throwable",
         }
     }
 
@@ -344,17 +348,34 @@ impl Class {
                 "Throwable",
             ],
             Self::NotPorted => &["NotPorted"],
+            Self::Thrown => &["Throwable"],
         }
     }
 }
 
 /// An exception thrown by a bag.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone)]
 pub struct Error {
     class: Class,
     message: PhpString,
     code: i64,
     previous: Option<Box<Error>>,
+    /// The exception of another type this one carries (`Class::Thrown`).
+    thrown: Option<crate::streamed_response::Throwable>,
+}
+
+impl PartialEq for Error {
+    fn eq(&self, other: &Self) -> bool {
+        self.class == other.class
+            && self.message == other.message
+            && self.code == other.code
+            && self.previous == other.previous
+            && match (&self.thrown, &other.thrown) {
+                (None, None) => true,
+                (Some(a), Some(b)) => std::sync::Arc::ptr_eq(a, b),
+                _ => false,
+            }
+    }
 }
 
 impl Error {
@@ -364,7 +385,26 @@ impl Error {
             message: message.into(),
             code: 0,
             previous: None,
+            thrown: None,
         }
+    }
+
+    /// An exception a callback threw: this type's as it is, any other
+    /// carried in a `Class::Thrown` ([`Error::thrown`]).
+    pub fn from_throwable(error: crate::streamed_response::Throwable) -> Self {
+        if let Some(own) = error.downcast_ref::<Self>() {
+            return own.clone();
+        }
+        let message = error.to_string();
+        Self {
+            thrown: Some(error),
+            ..Self::new(Class::Thrown, message)
+        }
+    }
+
+    /// The exception of another type this one carries.
+    pub fn thrown(&self) -> Option<&crate::streamed_response::Throwable> {
+        self.thrown.as_ref()
     }
 
     /// `new $class($message, $code, $previous)`.

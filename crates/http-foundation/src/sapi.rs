@@ -645,6 +645,8 @@ pub struct SetCookie {
     pub domain: PhpString,
     pub secure: bool,
     pub httponly: bool,
+    /// The `samesite` option (`''` for none).
+    pub samesite: PhpString,
 }
 
 /// The `\ValueError` or refusal a cookie function raises.
@@ -920,6 +922,18 @@ impl Sapi {
             .retain(|l| !line_name(l.as_bytes()).eq_ignore_ascii_case(name));
     }
 
+    /// The session extension's cookie: earlier `Set-Cookie` headers for
+    /// `name` removed in place, then `line` added.
+    pub fn session_cookie(&mut self, name: &[u8], line: &[u8]) {
+        if self.sent.is_some() {
+            self.warnings.push(SENT.to_owned());
+            return;
+        }
+        let prefix = [&b"Set-Cookie: "[..], name, b"="].concat();
+        self.lines.retain(|l| !l.as_bytes().starts_with(&prefix));
+        self.header(line, false, 0);
+    }
+
     /// `setcookie()` (`raw` false) or `setrawcookie()`; `expires` other
     /// than 0 is not ported.
     pub fn setcookie(&mut self, cookie: &SetCookie, raw: bool) -> Result<bool, CookieError> {
@@ -979,6 +993,10 @@ impl Sapi {
         }
         if cookie.httponly {
             line.extend_from_slice(b"; HttpOnly");
+        }
+        if !cookie.samesite.as_bytes().is_empty() {
+            line.extend_from_slice(b"; SameSite=");
+            line.extend_from_slice(cookie.samesite.as_bytes());
         }
         if self.sent.is_some() {
             self.warnings.push(SENT.to_owned());
@@ -1113,6 +1131,9 @@ impl Sapi {
             }
             OutputCall::Flush => self.flush(),
             OutputCall::ObFlush => self.ob_flush(),
+            OutputCall::SessionCookie { name, line } => {
+                self.session_cookie(name.as_bytes(), line.as_bytes());
+            }
             OutputCall::SetCookie(cookie) => {
                 // the refusals are PHP's warnings: the cookie is not sent
                 let _ = self.setcookie(cookie, false);

@@ -165,6 +165,10 @@ impl SessionHandlerInterface for MarshallingSessionHandler {
     fn as_update_timestamp(&self) -> Option<&dyn SessionUpdateTimestampHandlerInterface> {
         Some(self)
     }
+
+    fn as_session_id(&self) -> Option<&dyn SessionIdInterface> {
+        Some(self)
+    }
 }
 
 impl SessionUpdateTimestampHandlerInterface for MarshallingSessionHandler {

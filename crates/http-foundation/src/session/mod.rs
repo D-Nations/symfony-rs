@@ -129,6 +129,43 @@ impl Data {
         reference
     }
 
+    /// The keys and the references that hold their values, in order.
+    pub fn entries(&self) -> impl Iterator<Item = (&Key, &Reference)> {
+        self.entries.iter().map(|(k, r)| (k, r))
+    }
+
+    /// `$data[$key] = $value`: through the reference already there, as
+    /// PHP assigns to an element that is a reference.
+    pub fn assign(&mut self, key: Key, value: Value) {
+        match self.position(&key) {
+            Some(i) => self.entries[i].1.set(value),
+            None => self.entries.push((key, Reference::new(value))),
+        }
+    }
+
+    /// `unset($data[$key])`, for any key.
+    pub fn unset(&mut self, key: &Key) {
+        if let Some(i) = self.position(key) {
+            self.entries.remove(i);
+        }
+    }
+
+    /// `&$data[$key]`: the reference that holds the value, made (holding
+    /// `null`) when there is none.
+    pub fn reference(&mut self, key: &Key) -> Reference {
+        if let Some(i) = self.position(key) {
+            return self.entries[i].1.clone();
+        }
+        let reference = Reference::new(Value::Null);
+        self.entries.push((key.clone(), reference.clone()));
+        reference
+    }
+
+    /// `$data[$key]`, for any key.
+    pub fn value(&self, key: &Key) -> Option<Value> {
+        self.position(key).map(|i| self.entries[i].1.get())
+    }
+
     /// `$data[$key] = &$reference`.
     pub fn bind(&mut self, key: &str, reference: Reference) {
         let key = Key::from_bytes(key.as_bytes());
@@ -193,7 +230,7 @@ impl Session {
         attributes: Option<Arc<dyn AttributeBagInterface>>,
         flashes: Option<Arc<dyn FlashBagInterface>>,
         usage_reporter: Option<UsageReporter>,
-    ) -> Self {
+    ) -> Result<Self> {
         let attributes = attributes.unwrap_or_else(|| Arc::new(AttributeBag::default()));
         let flashes = flashes.unwrap_or_else(|| Arc::new(FlashBag::default()));
         let session = Self {
@@ -204,9 +241,9 @@ impl Session {
             usage_index: Arc::new(AtomicI64::new(0)),
             usage_reporter,
         };
-        session.register_bag(attributes);
-        session.register_bag(flashes);
-        session
+        session.register_bag(attributes)?;
+        session.register_bag(flashes)?;
+        Ok(session)
     }
 
     /// `++$this->usageIndex`, then the reporter when it is not negative.
@@ -283,8 +320,8 @@ impl SessionInterface for Session {
         self.storage.get_name()
     }
 
-    fn set_name(&self, name: &str) {
-        self.storage.set_name(name);
+    fn set_name(&self, name: &str) -> Result<()> {
+        self.storage.set_name(name)
     }
 
     fn invalidate(&self, lifetime: Option<i64>) -> Result<bool> {
@@ -336,13 +373,13 @@ impl SessionInterface for Session {
 
     /// `registerBag($bag)`: the bag, in a proxy that shares this
     /// session's data and usage index.
-    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) {
+    fn register_bag(&self, bag: Arc<dyn SessionBagInterface>) -> Result<()> {
         self.storage.register_bag(Arc::new(SessionBagProxy::new(
             bag,
             Arc::clone(&self.data),
             Arc::clone(&self.usage_index),
             self.usage_reporter.clone(),
-        )));
+        )))
     }
 
     /// `getBag($name)`: the storage's bag, or the bag a proxy holds.

@@ -81,7 +81,7 @@ Session/Storage/Handler/MarshallingSessionHandler.php	MarshallingSessionHandler	
 Session/Storage/Handler/MemcachedSessionHandler.php	MemcachedSessionHandler	61	pending	
 Session/Storage/Handler/MigratingSessionHandler.php	MigratingSessionHandler	73	ported	crates/http-foundation/src/session/storage/handler/migrating_session_handler.rs
 Session/Storage/Handler/MongoDbSessionHandler.php	MongoDbSessionHandler	113	pending	
-Session/Storage/Handler/NativeFileSessionHandler.php	NativeFileSessionHandler	23	pending	
+Session/Storage/Handler/NativeFileSessionHandler.php	NativeFileSessionHandler	23	ported	crates/http-foundation/src/session/storage/handler/native_file_session_handler.rs
 Session/Storage/Handler/NullSessionHandler.php	NullSessionHandler	28	ported	crates/http-foundation/src/session/storage/handler/null_session_handler.rs
 Session/Storage/Handler/PdoSessionHandler.php	PdoSessionHandler	615	pending	
 Session/Storage/Handler/RedisSessionHandler.php	RedisSessionHandler	61	pending	
@@ -91,12 +91,12 @@ Session/Storage/MetadataBag.php	MetadataBag	68	ported	crates/http-foundation/src
 Session/Storage/MockArraySessionStorage.php	MockArraySessionStorage	117	ported	crates/http-foundation/src/session/storage/mock_array_session_storage.rs
 Session/Storage/MockFileSessionStorage.php	MockFileSessionStorage	95	ported	crates/http-foundation/src/session/storage/mock_file_session_storage.rs
 Session/Storage/MockFileSessionStorageFactory.php	MockFileSessionStorageFactory	16	ported	crates/http-foundation/src/session/storage/mock_file_session_storage_factory.rs
-Session/Storage/NativeSessionStorage.php	NativeSessionStorage	214	pending	
-Session/Storage/NativeSessionStorageFactory.php	NativeSessionStorageFactory	22	pending	
-Session/Storage/PhpBridgeSessionStorage.php	PhpBridgeSessionStorage	28	pending	
-Session/Storage/PhpBridgeSessionStorageFactory.php	PhpBridgeSessionStorageFactory	21	pending	
-Session/Storage/Proxy/AbstractProxy.php	AbstractProxy	44	pending	
-Session/Storage/Proxy/SessionHandlerProxy.php	SessionHandlerProxy	51	pending	
+Session/Storage/NativeSessionStorage.php	NativeSessionStorage	214	ported	crates/http-foundation/src/session/storage/native_session_storage.rs
+Session/Storage/NativeSessionStorageFactory.php	NativeSessionStorageFactory	22	ported	crates/http-foundation/src/session/storage/native_session_storage_factory.rs
+Session/Storage/PhpBridgeSessionStorage.php	PhpBridgeSessionStorage	28	ported	crates/http-foundation/src/session/storage/php_bridge_session_storage.rs
+Session/Storage/PhpBridgeSessionStorageFactory.php	PhpBridgeSessionStorageFactory	21	ported	crates/http-foundation/src/session/storage/php_bridge_session_storage_factory.rs
+Session/Storage/Proxy/AbstractProxy.php	AbstractProxy	44	ported	crates/http-foundation/src/session/storage/proxy/abstract_proxy.rs
+Session/Storage/Proxy/SessionHandlerProxy.php	SessionHandlerProxy	51	ported	crates/http-foundation/src/session/storage/proxy/session_handler_proxy.rs
 Session/Storage/SessionStorageFactoryInterface.php	SessionStorageFactoryInterface	6	ported	crates/http-foundation/src/session/storage/session_storage_factory_interface.rs
 Session/Storage/SessionStorageInterface.php	SessionStorageInterface	17	ported	crates/http-foundation/src/session/storage/session_storage_interface.rs
 StreamedJsonResponse.php	StreamedJsonResponse	79	ported	crates/http-foundation/src/streamed_json_response.rs

@@ -162,7 +162,7 @@ fn make(config: &Config, reported: &Arc<AtomicI64>) -> Result<Made, TestError> {
         Some(Arc::new(move || {
             counter.fetch_add(1, Ordering::Relaxed);
         })),
-    );
+    )?;
     Ok((storage, session, array))
 }
 

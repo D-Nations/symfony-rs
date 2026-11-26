@@ -291,6 +291,10 @@ pub enum OutputCall {
     ObFlush,
     /// `setcookie(...)`, as the session extension calls it.
     SetCookie(crate::sapi::SetCookie),
+    /// The session extension's own cookie: the `Set-Cookie` headers for
+    /// the session's name already there are taken out where they stand,
+    /// then `line` is added.
+    SessionCookie { name: PhpString, line: PhpString },
 }
 
 /// The SAPI as `Response` sees it, and the calls it made. Nothing here

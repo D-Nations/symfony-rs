@@ -53,8 +53,8 @@ impl Drop for Fixture {
 
 fn get_storage(dir: &str) -> Result<MockFileSessionStorage, Box<dyn std::error::Error>> {
     let storage = MockFileSessionStorage::new(Some(dir.as_bytes().to_vec()), "MOCKSESSID", None)?;
-    storage.register_bag(Arc::new(FlashBag::default()));
-    storage.register_bag(Arc::new(AttributeBag::default()));
+    storage.register_bag(Arc::new(FlashBag::default()))?;
+    storage.register_bag(Arc::new(AttributeBag::default()))?;
     Ok(storage)
 }
 
