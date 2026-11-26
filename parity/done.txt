@@ -5,3 +5,5 @@ symfony/options-resolver
 symfony/finder
 symfony/yaml
 symfony/dotenv
+symfony/expression-language
+symfony/clock

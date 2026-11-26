@@ -34,7 +34,8 @@ use crate::{
     listener::{Listener, Object},
 };
 
-type Slot = Arc<Mutex<Listener>>;
+/// A stored listener, shared by reference with every list built from it.
+pub(crate) type Slot = Arc<Mutex<Listener>>;
 
 struct EventListeners {
     name: String,
@@ -261,7 +262,39 @@ impl EventDispatcher {
         found
     }
 
-    fn subscriptions(
+    /// `addListener()` with a slot another table shares: a compiled
+    /// dispatcher's thaw, so that resolving a lazy listener in either
+    /// updates both, as PHP's references do.
+    pub(crate) fn add_slot(&self, event_name: &str, slot: Slot, priority: i64) {
+        let mut state = self.lock();
+        let index = if let Some(&index) = state.index.get(event_name) {
+            index
+        } else {
+            let index = state.listeners.len();
+            state.listeners.push(EventListeners {
+                name: event_name.to_owned(),
+                buckets: Vec::new(),
+                generation: 0,
+            });
+            state.index.insert(event_name.to_owned(), index);
+            index
+        };
+        let buckets = &mut state.listeners[index].buckets;
+        match buckets.iter_mut().find(|(p, _)| *p == priority) {
+            Some((_, slots)) => slots.push(slot),
+            None => buckets.push((priority, vec![slot])),
+        }
+        state.invalidate(event_name);
+    }
+
+    /// `optimizeListeners()`'s effect on the table, for a compiled
+    /// dispatcher's thaw: the event's priority buckets `krsort()`ed in place,
+    /// as a first dispatch leaves them.
+    pub(crate) fn optimize(&self, name: &str) {
+        self.optimized(name);
+    }
+
+    pub(crate) fn subscriptions(
         subscriber: &Arc<dyn EventSubscriber>,
     ) -> impl Iterator<Item = (&'static str, Listener, i64)> {
         let object: Object = subscriber.clone();
@@ -314,26 +347,7 @@ impl EventDispatcherInterface for EventDispatcher {
         listener: Listener,
         priority: i64,
     ) -> Result<(), BadMethodCallException> {
-        let mut state = self.lock();
-        let index = if let Some(&index) = state.index.get(event_name) {
-            index
-        } else {
-            let index = state.listeners.len();
-            state.listeners.push(EventListeners {
-                name: event_name.to_owned(),
-                buckets: Vec::new(),
-                generation: 0,
-            });
-            state.index.insert(event_name.to_owned(), index);
-            index
-        };
-        let buckets = &mut state.listeners[index].buckets;
-        let slot = Arc::new(Mutex::new(listener));
-        match buckets.iter_mut().find(|(p, _)| *p == priority) {
-            Some((_, slots)) => slots.push(slot),
-            None => buckets.push((priority, vec![slot])),
-        }
-        state.invalidate(event_name);
+        self.add_slot(event_name, Arc::new(Mutex::new(listener)), priority);
         Ok(())
     }
 
@@ -442,7 +456,7 @@ impl EventDispatcherInterface for EventDispatcher {
 
 /// `$listener[0] = $listener[0](); $listener[1] ??= '__invoke';` through
 /// the reference PHP holds. The factory runs with no lock held.
-fn resolve(slot: &Slot) -> Listener {
+pub(crate) fn resolve(slot: &Slot) -> Listener {
     let current = lock(slot).clone();
     let Some(resolved) = current.resolve() else {
         return current;

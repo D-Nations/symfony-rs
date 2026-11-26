@@ -97,6 +97,6 @@ pub(crate) fn string_property(data: &PhpArray, class: &str, name: &str) -> Resul
 }
 
 /// `hash('xxh128', $data)`.
-pub(crate) fn xxh128(data: &[u8]) -> Vec<u8> {
+pub fn xxh128(data: &[u8]) -> Vec<u8> {
     format!("{:032x}", twox_hash::XxHash3_128::oneshot(data)).into_bytes()
 }

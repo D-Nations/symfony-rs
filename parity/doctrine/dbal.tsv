@@ -2183,38 +2183,38 @@ tests/Portability/ResultTest.php	ResultTest::testFree	pending
 tests/Portability/ResultTest.php	ResultTest::testRowCount	pending	
 tests/Portability/StatementTest.php	StatementTest::testBindValue	pending	
 tests/Portability/StatementTest.php	StatementTest::testExecute	pending	
-tests/Query/Expression/CompositeExpressionTest.php	CompositeExpressionTest::testCompositeUsageAndGeneration	pending	
-tests/Query/Expression/CompositeExpressionTest.php	CompositeExpressionTest::testCount	pending	
-tests/Query/Expression/CompositeExpressionTest.php	CompositeExpressionTest::testWith	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testAnd	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testComparison	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testEq	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testGt	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testGte	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testIn	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testInWithPlaceholder	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testIsNotNull	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testIsNull	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLikeWithEscape	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLikeWithoutEscape	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLt	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLte	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNeq	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotIn	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotInWithPlaceholder	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotLikeWithEscape	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotLikeWithoutEscape	pending	
-tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testOr	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testArrayParameters	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testClone	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testComplexSelectWithSomeTableAliases	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testComplexSelectWithoutTableAliases	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testCreateNamedParameter	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testCreateNamedParameterCustomPlaceholder	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testCreatePositionalParameter	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testDelete	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testDeleteWhere	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testEmptySelect	pending	
+tests/Query/Expression/CompositeExpressionTest.php	CompositeExpressionTest::testCompositeUsageAndGeneration	ported	crates/doctrine-dbal/tests/composite_expression_test.rs::testCompositeUsageAndGeneration
+tests/Query/Expression/CompositeExpressionTest.php	CompositeExpressionTest::testCount	ported	crates/doctrine-dbal/tests/composite_expression_test.rs::testCount
+tests/Query/Expression/CompositeExpressionTest.php	CompositeExpressionTest::testWith	ported	crates/doctrine-dbal/tests/composite_expression_test.rs::testWith
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testAnd	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testAnd
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testComparison	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testComparison
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testEq	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testEq
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testGt	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testGt
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testGte	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testGte
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testIn	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testIn
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testInWithPlaceholder	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testInWithPlaceholder
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testIsNotNull	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testIsNotNull
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testIsNull	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testIsNull
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLikeWithEscape	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testLikeWithEscape
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLikeWithoutEscape	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testLikeWithoutEscape
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLt	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testLt
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testLte	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testLte
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNeq	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testNeq
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotIn	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testNotIn
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotInWithPlaceholder	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testNotInWithPlaceholder
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotLikeWithEscape	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testNotLikeWithEscape
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testNotLikeWithoutEscape	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testNotLikeWithoutEscape
+tests/Query/Expression/ExpressionBuilderTest.php	ExpressionBuilderTest::testOr	ported	crates/doctrine-dbal/tests/expression_builder_test.rs::testOr
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testArrayParameters	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testArrayParameters
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testClone	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testClone
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testComplexSelectWithSomeTableAliases	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testComplexSelectWithSomeTableAliases
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testComplexSelectWithoutTableAliases	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testComplexSelectWithoutTableAliases
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testCreateNamedParameter	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testCreateNamedParameter
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testCreateNamedParameterCustomPlaceholder	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testCreateNamedParameterCustomPlaceholder
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testCreatePositionalParameter	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testCreatePositionalParameter
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testDelete	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testDelete
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testDeleteWhere	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testDeleteWhere
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testEmptySelect	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testEmptySelect
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testExecuteQuery	pending	
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testExecuteQueryWithResultCaching	pending	
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testExecuteStatement	pending	
@@ -2226,69 +2226,69 @@ tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAssociative	pending
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchFirstColumn	pending	
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchNumeric	pending	
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchOne	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testGetParameterType	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testGetParameterTypes	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertReplaceValues	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertSetValue	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertValues	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertValuesSetValue	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testJoinWithNonUniqueAliasThrowsException	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testOnlyAddUnionThrowQueryException	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testReferenceJoinFromJoin	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetDistinct	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetGroupBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetHaving	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetOrderBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetWhere	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddAddOrderBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddGroupBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddGroupBys	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddOrderBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddSelect	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAllFromTableWithoutTableAlias	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAllWithoutTableAlias	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAndHaving	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectFromMasterWithWhereOnJoinedTables	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectGroupBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHaving	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHavingAndHaving	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHavingAndOrHaving	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHavingOrHaving	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectMultipleFrom	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectOrHavingOrHaving	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectOrderBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithAndOrWhereConditions	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithAndWhereConditions	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithCTE	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithCTEAndEmptyColumns	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithFullJoin	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithInnerJoin	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithJoin	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithJoinNoCondition	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithJoinsWithMultipleOnConditionsParseOrder	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithLeftJoin	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithMultipleFromAndJoins	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithMultipleFromsAndJoinsWithMultipleOnConditionsParseOrder	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithOrOrWhereConditions	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithOrWhereConditions	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithRightJoin	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithSimpleWhere	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithSimpleWhereWithoutTableAlias	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSetFirstResult	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSetMaxResults	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelect	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithDistinct	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithMatchingTableAlias	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithoutFrom	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithoutTableAlias	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionAllWithOrderByReturnsUnionAllQueryWithOrderBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionAndAddUnionReturnsUnionQuery	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionAndOrderByReturnsUnionQueryWithOrderBy	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionIsDistinctByDefault	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionOnlyThrowException	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionWAllAndLimitClauseReturnsUnionAllQuery	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUpdate	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUpdateWhere	pending	
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testGetParameterType	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testGetParameterType
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testGetParameterTypes	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testGetParameterTypes
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertReplaceValues	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testInsertReplaceValues
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertSetValue	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testInsertSetValue
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertValues	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testInsertValues
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertValuesSetValue	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testInsertValuesSetValue
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testJoinWithNonUniqueAliasThrowsException	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testJoinWithNonUniqueAliasThrowsException
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testOnlyAddUnionThrowQueryException	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testOnlyAddUnionThrowQueryException
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testReferenceJoinFromJoin	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testReferenceJoinFromJoin
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetDistinct	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testResetDistinct
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetGroupBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testResetGroupBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetHaving	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testResetHaving
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetOrderBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testResetOrderBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testResetWhere	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testResetWhere
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddAddOrderBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAddAddOrderBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddGroupBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAddGroupBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddGroupBys	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAddGroupBys
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddOrderBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAddOrderBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAddSelect	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAddSelect
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAllFromTableWithoutTableAlias	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAllFromTableWithoutTableAlias
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAllWithoutTableAlias	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAllWithoutTableAlias
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectAndHaving	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectAndHaving
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectFromMasterWithWhereOnJoinedTables	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectFromMasterWithWhereOnJoinedTables
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectGroupBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectGroupBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHaving	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectHaving
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHavingAndHaving	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectHavingAndHaving
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHavingAndOrHaving	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectHavingAndOrHaving
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectHavingOrHaving	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectHavingOrHaving
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectMultipleFrom	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectMultipleFrom
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectOrHavingOrHaving	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectOrHavingOrHaving
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectOrderBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectOrderBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithAndOrWhereConditions	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithAndOrWhereConditions
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithAndWhereConditions	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithAndWhereConditions
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithCTE	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithCTE
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithCTEAndEmptyColumns	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithCTEAndEmptyColumns
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithFullJoin	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithFullJoin
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithInnerJoin	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithInnerJoin
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithJoin	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithJoin
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithJoinNoCondition	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithJoinNoCondition
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithJoinsWithMultipleOnConditionsParseOrder	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithJoinsWithMultipleOnConditionsParseOrder
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithLeftJoin	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithLeftJoin
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithMultipleFromAndJoins	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithMultipleFromAndJoins
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithMultipleFromsAndJoinsWithMultipleOnConditionsParseOrder	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithMultipleFromsAndJoinsWithMultipleOnConditionsParseOrder
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithOrOrWhereConditions	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithOrOrWhereConditions
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithOrWhereConditions	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithOrWhereConditions
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithRightJoin	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithRightJoin
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithSimpleWhere	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithSimpleWhere
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSelectWithSimpleWhereWithoutTableAlias	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSelectWithSimpleWhereWithoutTableAlias
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSetFirstResult	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSetFirstResult
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSetMaxResults	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSetMaxResults
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelect	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSimpleSelect
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithDistinct	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSimpleSelectWithDistinct
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithMatchingTableAlias	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSimpleSelectWithMatchingTableAlias
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithoutFrom	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSimpleSelectWithoutFrom
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testSimpleSelectWithoutTableAlias	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testSimpleSelectWithoutTableAlias
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionAllWithOrderByReturnsUnionAllQueryWithOrderBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUnionAllWithOrderByReturnsUnionAllQueryWithOrderBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionAndAddUnionReturnsUnionQuery	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUnionAndAddUnionReturnsUnionQuery
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionAndOrderByReturnsUnionQueryWithOrderBy	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUnionAndOrderByReturnsUnionQueryWithOrderBy
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionIsDistinctByDefault	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUnionIsDistinctByDefault
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionOnlyThrowException	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUnionOnlyThrowException
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUnionWAllAndLimitClauseReturnsUnionAllQuery	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUnionWAllAndLimitClauseReturnsUnionAllQuery
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUpdate	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUpdate
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testUpdateWhere	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testUpdateWhere
 tests/SQL/ParserTest.php	ParserTest::testAnsiEscaping	ported	crates/doctrine-dbal/tests/parser_test.rs::testAnsiEscaping
 tests/SQL/ParserTest.php	ParserTest::testMySQLEscaping	ported	crates/doctrine-dbal/tests/parser_test.rs::testMySQLEscaping
 tests/SQL/ParserTest.php	ParserTest::testStatementsWithParameters	ported	crates/doctrine-dbal/tests/parser_test.rs::testStatementsWithParameters
@@ -2682,198 +2682,198 @@ tests/Tools/Console/RunSqlCommandTest.php	RunSqlCommandTest::testStatementsWithF
 tests/Tools/Console/RunSqlCommandTest.php	RunSqlCommandTest::testUpdateStatementsPrintsAffectedLines	pending	
 tests/Tools/DsnParserTest.php	DsnParserTest::testDatabaseUrl	pending	
 tests/Tools/DsnParserTest.php	DsnParserTest::testDriverClassScheme	pending	
-tests/Types/AsciiStringTest.php	AsciiStringTest::testDelegateToPlatformForSqlDeclaration	pending	
-tests/Types/AsciiStringTest.php	AsciiStringTest::testReturnCorrectBindingType	pending	
-tests/Types/BinaryTest.php	BinaryTest::testBinaryNullConvertsToPHPValue	pending	
+tests/Types/AsciiStringTest.php	AsciiStringTest::testDelegateToPlatformForSqlDeclaration	ported	crates/doctrine-dbal/tests/types_ascii_string_test.rs::testDelegateToPlatformForSqlDeclaration
+tests/Types/AsciiStringTest.php	AsciiStringTest::testReturnCorrectBindingType	ported	crates/doctrine-dbal/tests/types_ascii_string_test.rs::testReturnCorrectBindingType
+tests/Types/BinaryTest.php	BinaryTest::testBinaryNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_binary_test.rs::testBinaryNullConvertsToPHPValue
 tests/Types/BinaryTest.php	BinaryTest::testBinaryResourceConvertsToPHPValue	pending	
-tests/Types/BinaryTest.php	BinaryTest::testBinaryStringConvertsToPHPValue	pending	
-tests/Types/BinaryTest.php	BinaryTest::testReturnsBindingType	pending	
-tests/Types/BinaryTest.php	BinaryTest::testThrowsConversionExceptionOnInvalidDatabaseValue	pending	
-tests/Types/BlobTest.php	BlobTest::testBlobNullConvertsToPHPValue	pending	
-tests/Types/BooleanTest.php	BooleanTest::testBooleanConvertsToDatabaseValue	pending	
-tests/Types/BooleanTest.php	BooleanTest::testBooleanConvertsToPHPValue	pending	
-tests/Types/BooleanTest.php	BooleanTest::testBooleanNullConvertsToPHPValue	pending	
-tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedFormatPreservesPreviousException	pending	
-tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedInvalidTypePreviousException	pending	
+tests/Types/BinaryTest.php	BinaryTest::testBinaryStringConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_binary_test.rs::testBinaryStringConvertsToPHPValue
+tests/Types/BinaryTest.php	BinaryTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_binary_test.rs::testReturnsBindingType
+tests/Types/BinaryTest.php	BinaryTest::testThrowsConversionExceptionOnInvalidDatabaseValue	ported	crates/doctrine-dbal/tests/types_binary_test.rs::testThrowsConversionExceptionOnInvalidDatabaseValue
+tests/Types/BlobTest.php	BlobTest::testBlobNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_blob_test.rs::testBlobNullConvertsToPHPValue
+tests/Types/BooleanTest.php	BooleanTest::testBooleanConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_boolean_test.rs::testBooleanConvertsToDatabaseValue
+tests/Types/BooleanTest.php	BooleanTest::testBooleanConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_boolean_test.rs::testBooleanConvertsToPHPValue
+tests/Types/BooleanTest.php	BooleanTest::testBooleanNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_boolean_test.rs::testBooleanNullConvertsToPHPValue
+tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedFormatPreservesPreviousException	ported	crates/doctrine-dbal/tests/types_conversion_exception_test.rs::testConversionFailedFormatPreservesPreviousException
+tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedInvalidTypePreviousException	ported	crates/doctrine-dbal/tests/types_conversion_exception_test.rs::testConversionFailedInvalidTypePreviousException
 tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedInvalidTypeWithNonScalar	pending	
-tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedInvalidTypeWithScalar	pending	
-tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedPreviousException	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsDateStringToPHPValue	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsNullToDatabaseValue	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsNullToPHPValue	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testFactoryCreatesCorrectType	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testResetTimeFractionsWhenConvertingToPHPValue	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testReturnsBindingType	pending	
-tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateString	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalConvertsToDatabaseValue	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalConvertsToPHPValue	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalEmptyStringConversion	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalFormatWithoutSignConvertsToPHPValue	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalNullConversion	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testInvalidDateIntervalFormatConversion	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testInvalidTypeConversionToDatabaseValue	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testNegativeDateIntervalConvertsToDatabaseValue	pending	
-tests/Types/DateIntervalTest.php	DateIntervalTest::testNegativeDateIntervalConvertsToPHPValue	pending	
-tests/Types/DateTest.php	DateTest::testConvertDateTimeToPHPValue	pending	
-tests/Types/DateTest.php	DateTest::testDateConvertsToDatabaseValue	pending	
-tests/Types/DateTest.php	DateTest::testDateConvertsToPHPValue	pending	
-tests/Types/DateTest.php	DateTest::testDateResetsNonDatePartsToZeroUnixTimeValues	pending	
+tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedInvalidTypeWithScalar	ported	crates/doctrine-dbal/tests/types_conversion_exception_test.rs::testConversionFailedInvalidTypeWithScalar
+tests/Types/ConversionExceptionTest.php	ConversionExceptionTest::testConversionFailedPreviousException	ported	crates/doctrine-dbal/tests/types_conversion_exception_test.rs::testConversionFailedPreviousException
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsDateStringToPHPValue	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testConvertsDateStringToPHPValue
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToDatabaseValue
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToPHPValue
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsNullToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testConvertsNullToDatabaseValue
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testConvertsNullToPHPValue	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testConvertsNullToPHPValue
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testDoesNotSupportMutableDateTimeToDatabaseValueConversion
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testFactoryCreatesCorrectType	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testFactoryCreatesCorrectType
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testResetTimeFractionsWhenConvertingToPHPValue	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testResetTimeFractionsWhenConvertingToPHPValue
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testReturnsBindingType
+tests/Types/DateImmutableTypeTest.php	DateImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateString	ported	crates/doctrine-dbal/tests/types_date_immutable_type_test.rs::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateString
+tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testDateIntervalConvertsToDatabaseValue
+tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testDateIntervalConvertsToPHPValue
+tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalEmptyStringConversion	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testDateIntervalEmptyStringConversion
+tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalFormatWithoutSignConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testDateIntervalFormatWithoutSignConvertsToPHPValue
+tests/Types/DateIntervalTest.php	DateIntervalTest::testDateIntervalNullConversion	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testDateIntervalNullConversion
+tests/Types/DateIntervalTest.php	DateIntervalTest::testInvalidDateIntervalFormatConversion	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testInvalidDateIntervalFormatConversion
+tests/Types/DateIntervalTest.php	DateIntervalTest::testInvalidTypeConversionToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testInvalidTypeConversionToDatabaseValue
+tests/Types/DateIntervalTest.php	DateIntervalTest::testNegativeDateIntervalConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testNegativeDateIntervalConvertsToDatabaseValue
+tests/Types/DateIntervalTest.php	DateIntervalTest::testNegativeDateIntervalConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_date_interval_test.rs::testNegativeDateIntervalConvertsToPHPValue
+tests/Types/DateTest.php	DateTest::testConvertDateTimeToPHPValue	ported	crates/doctrine-dbal/tests/types_date_test.rs::testConvertDateTimeToPHPValue
+tests/Types/DateTest.php	DateTest::testDateConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_test.rs::testDateConvertsToDatabaseValue
+tests/Types/DateTest.php	DateTest::testDateConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_date_test.rs::testDateConvertsToPHPValue
+tests/Types/DateTest.php	DateTest::testDateResetsNonDatePartsToZeroUnixTimeValues	ported	crates/doctrine-dbal/tests/types_date_test.rs::testDateResetsNonDatePartsToZeroUnixTimeValues
 tests/Types/DateTest.php	DateTest::testDateRestsSummerTimeAffection	pending	
-tests/Types/DateTest.php	DateTest::testInvalidDateFormatConversion	pending	
-tests/Types/DateTest.php	DateTest::testInvalidTypeConversionToDatabaseValue	pending	
-tests/Types/DateTest.php	DateTest::testNullConversion	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeStringToPHPValue	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeStringWithMicrosecondsToPHPValue	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsNullToDatabaseValue	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsNullToPHPValue	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testFactoryCreatesCorrectType	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testReturnsBindingType	pending	
-tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateTimeString	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testConvertDateTimeToPHPValue	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testConvertsNonMatchingFormatToPhpValueWithParser	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testDateConvertsToDatabaseValue	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testDateTimeConvertsToDatabaseValue	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testDateTimeConvertsToPHPValue	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testInvalidDateTimeFormatConversion	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testInvalidTypeConversionToDatabaseValue	pending	
-tests/Types/DateTimeTest.php	DateTimeTest::testNullConversion	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsDateTimeWithTimezoneStringToPHPValue	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsNullToDatabaseValue	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsNullToPHPValue	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testFactoryCreatesCorrectType	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testReturnsBindingType	pending	
-tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateTimeWithTimezoneString	pending	
-tests/Types/DateTimeTzTest.php	DateTimeTzTest::testConvertDateTimeToPHPValue	pending	
-tests/Types/DateTimeTzTest.php	DateTimeTzTest::testDateConvertsToDatabaseValue	pending	
-tests/Types/DateTimeTzTest.php	DateTimeTzTest::testDateTimeConvertsToDatabaseValue	pending	
-tests/Types/DateTimeTzTest.php	DateTimeTzTest::testDateTimeConvertsToPHPValue	pending	
-tests/Types/DateTimeTzTest.php	DateTimeTzTest::testInvalidDateFormatConversion	pending	
-tests/Types/DateTimeTzTest.php	DateTimeTzTest::testInvalidTypeConversionToDatabaseValue	pending	
-tests/Types/DateTimeTzTest.php	DateTimeTzTest::testNullConversion	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsDatabaseValueToUtcDateTimeImmutable	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValueUnchanged	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsNonUtcDateTimeToUtcDatabaseValue	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsNullToDatabaseValue	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsNullToPHPValue	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testDelegatesSQLDeclarationToTheDateTimeTypeDeclaration	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testReturnsBindingType	pending	
-tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testThrowsExceptionForInvalidDateTimeString	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsDatabaseValueToUtcDateTime	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsDateTimeInstanceToPHPValueUnchanged	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsNonUtcDateTimeToUtcDatabaseValue	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsNullToDatabaseValue	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsNullToPHPValue	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testDelegatesSQLDeclarationToTheDateTimeTypeDeclaration	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testDoesNotMutateTheGivenDateTime	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testReturnsBindingType	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testThrowsExceptionForInvalidDateTimeString	pending	
-tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testThrowsForInvalidValueOnConversionToDatabaseValue	pending	
-tests/Types/DecimalTest.php	DecimalTest::testDecimalConvertsToPHPValue	pending	
-tests/Types/DecimalTest.php	DecimalTest::testDecimalNullConvertsToPHPValue	pending	
-tests/Types/Exception/SerializationFailedTest.php	SerializationFailedTest::testNew	pending	
-tests/Types/Exception/TypeAlreadyRegisteredTest.php	TypeAlreadyRegisteredTest::testNew	pending	
-tests/Types/Exception/TypeNotRegisteredTest.php	TypeNotRegisteredTest::testNew	pending	
-tests/Types/FloatTest.php	FloatTest::testFloatConvertToDatabaseValue	pending	
-tests/Types/FloatTest.php	FloatTest::testFloatConvertsToPHPValue	pending	
-tests/Types/FloatTest.php	FloatTest::testFloatNullConvertToDatabaseValue	pending	
-tests/Types/FloatTest.php	FloatTest::testFloatNullConvertsToPHPValue	pending	
-tests/Types/GuidTypeTest.php	GuidTypeTest::testConvertToPHPValue	pending	
-tests/Types/GuidTypeTest.php	GuidTypeTest::testNullConversion	pending	
-tests/Types/IntegerTest.php	IntegerTest::testIntegerConvertsToPHPValue	pending	
-tests/Types/IntegerTest.php	IntegerTest::testIntegerNullConvertsToPHPValue	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testConversionFailure	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testJsonEmptyStringConvertsToPHPValue	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testJsonNullConvertsToPHPValue	pending	
+tests/Types/DateTest.php	DateTest::testInvalidDateFormatConversion	ported	crates/doctrine-dbal/tests/types_date_test.rs::testInvalidDateFormatConversion
+tests/Types/DateTest.php	DateTest::testInvalidTypeConversionToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_test.rs::testInvalidTypeConversionToDatabaseValue
+tests/Types/DateTest.php	DateTest::testNullConversion	ported	crates/doctrine-dbal/tests/types_date_test.rs::testNullConversion
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToDatabaseValue
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToPHPValue
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeStringToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testConvertsDateTimeStringToPHPValue
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsDateTimeStringWithMicrosecondsToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testConvertsDateTimeStringWithMicrosecondsToPHPValue
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsNullToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testConvertsNullToDatabaseValue
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testConvertsNullToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testConvertsNullToPHPValue
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testDoesNotSupportMutableDateTimeToDatabaseValueConversion
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testFactoryCreatesCorrectType	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testFactoryCreatesCorrectType
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testReturnsBindingType
+tests/Types/DateTimeImmutableTypeTest.php	DateTimeImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateTimeString	ported	crates/doctrine-dbal/tests/types_date_time_immutable_type_test.rs::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateTimeString
+tests/Types/DateTimeTest.php	DateTimeTest::testConvertDateTimeToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testConvertDateTimeToPHPValue
+tests/Types/DateTimeTest.php	DateTimeTest::testConvertsNonMatchingFormatToPhpValueWithParser	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testConvertsNonMatchingFormatToPhpValueWithParser
+tests/Types/DateTimeTest.php	DateTimeTest::testDateConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testDateConvertsToDatabaseValue
+tests/Types/DateTimeTest.php	DateTimeTest::testDateTimeConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testDateTimeConvertsToDatabaseValue
+tests/Types/DateTimeTest.php	DateTimeTest::testDateTimeConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testDateTimeConvertsToPHPValue
+tests/Types/DateTimeTest.php	DateTimeTest::testInvalidDateTimeFormatConversion	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testInvalidDateTimeFormatConversion
+tests/Types/DateTimeTest.php	DateTimeTest::testInvalidTypeConversionToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testInvalidTypeConversionToDatabaseValue
+tests/Types/DateTimeTest.php	DateTimeTest::testNullConversion	ported	crates/doctrine-dbal/tests/types_date_time_test.rs::testNullConversion
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToDatabaseValue
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToPHPValue
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsDateTimeWithTimezoneStringToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testConvertsDateTimeWithTimezoneStringToPHPValue
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsNullToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testConvertsNullToDatabaseValue
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testConvertsNullToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testConvertsNullToPHPValue
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testDoesNotSupportMutableDateTimeToDatabaseValueConversion
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testFactoryCreatesCorrectType	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testFactoryCreatesCorrectType
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testReturnsBindingType
+tests/Types/DateTimeTzImmutableTypeTest.php	DateTimeTzImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateTimeWithTimezoneString	ported	crates/doctrine-dbal/tests/types_date_time_tz_immutable_type_test.rs::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateTimeWithTimezoneString
+tests/Types/DateTimeTzTest.php	DateTimeTzTest::testConvertDateTimeToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_test.rs::testConvertDateTimeToPHPValue
+tests/Types/DateTimeTzTest.php	DateTimeTzTest::testDateConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_test.rs::testDateConvertsToDatabaseValue
+tests/Types/DateTimeTzTest.php	DateTimeTzTest::testDateTimeConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_test.rs::testDateTimeConvertsToDatabaseValue
+tests/Types/DateTimeTzTest.php	DateTimeTzTest::testDateTimeConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_test.rs::testDateTimeConvertsToPHPValue
+tests/Types/DateTimeTzTest.php	DateTimeTzTest::testInvalidDateFormatConversion	ported	crates/doctrine-dbal/tests/types_date_time_tz_test.rs::testInvalidDateFormatConversion
+tests/Types/DateTimeTzTest.php	DateTimeTzTest::testInvalidTypeConversionToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_tz_test.rs::testInvalidTypeConversionToDatabaseValue
+tests/Types/DateTimeTzTest.php	DateTimeTzTest::testNullConversion	ported	crates/doctrine-dbal/tests/types_date_time_tz_test.rs::testNullConversion
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsDatabaseValueToUtcDateTimeImmutable	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testConvertsDatabaseValueToUtcDateTimeImmutable
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValueUnchanged	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToPHPValueUnchanged
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsNonUtcDateTimeToUtcDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testConvertsNonUtcDateTimeToUtcDatabaseValue
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsNullToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testConvertsNullToDatabaseValue
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testConvertsNullToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testConvertsNullToPHPValue
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testDelegatesSQLDeclarationToTheDateTimeTypeDeclaration	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testDelegatesSQLDeclarationToTheDateTimeTypeDeclaration
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testDoesNotSupportMutableDateTimeToDatabaseValueConversion
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testReturnsBindingType
+tests/Types/DateTimeUtcImmutableTypeTest.php	DateTimeUtcImmutableTypeTest::testThrowsExceptionForInvalidDateTimeString	ported	crates/doctrine-dbal/tests/types_date_time_utc_immutable_type_test.rs::testThrowsExceptionForInvalidDateTimeString
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsDatabaseValueToUtcDateTime	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testConvertsDatabaseValueToUtcDateTime
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsDateTimeInstanceToPHPValueUnchanged	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testConvertsDateTimeInstanceToPHPValueUnchanged
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsNonUtcDateTimeToUtcDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testConvertsNonUtcDateTimeToUtcDatabaseValue
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsNullToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testConvertsNullToDatabaseValue
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testConvertsNullToPHPValue	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testConvertsNullToPHPValue
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testDelegatesSQLDeclarationToTheDateTimeTypeDeclaration	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testDelegatesSQLDeclarationToTheDateTimeTypeDeclaration
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testDoesNotMutateTheGivenDateTime	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testDoesNotMutateTheGivenDateTime
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testReturnsBindingType
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testThrowsExceptionForInvalidDateTimeString	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testThrowsExceptionForInvalidDateTimeString
+tests/Types/DateTimeUtcTypeTest.php	DateTimeUtcTypeTest::testThrowsForInvalidValueOnConversionToDatabaseValue	ported	crates/doctrine-dbal/tests/types_date_time_utc_type_test.rs::testThrowsForInvalidValueOnConversionToDatabaseValue
+tests/Types/DecimalTest.php	DecimalTest::testDecimalConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_decimal_test.rs::testDecimalConvertsToPHPValue
+tests/Types/DecimalTest.php	DecimalTest::testDecimalNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_decimal_test.rs::testDecimalNullConvertsToPHPValue
+tests/Types/Exception/SerializationFailedTest.php	SerializationFailedTest::testNew	ported	crates/doctrine-dbal/tests/types_exception_serialization_failed_test.rs::testNew
+tests/Types/Exception/TypeAlreadyRegisteredTest.php	TypeAlreadyRegisteredTest::testNew	ported	crates/doctrine-dbal/tests/types_exception_type_already_registered_test.rs::testNew
+tests/Types/Exception/TypeNotRegisteredTest.php	TypeNotRegisteredTest::testNew	ported	crates/doctrine-dbal/tests/types_exception_type_not_registered_test.rs::testNew
+tests/Types/FloatTest.php	FloatTest::testFloatConvertToDatabaseValue	ported	crates/doctrine-dbal/tests/types_float_test.rs::testFloatConvertToDatabaseValue
+tests/Types/FloatTest.php	FloatTest::testFloatConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_float_test.rs::testFloatConvertsToPHPValue
+tests/Types/FloatTest.php	FloatTest::testFloatNullConvertToDatabaseValue	ported	crates/doctrine-dbal/tests/types_float_test.rs::testFloatNullConvertToDatabaseValue
+tests/Types/FloatTest.php	FloatTest::testFloatNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_float_test.rs::testFloatNullConvertsToPHPValue
+tests/Types/GuidTypeTest.php	GuidTypeTest::testConvertToPHPValue	ported	crates/doctrine-dbal/tests/types_guid_type_test.rs::testConvertToPHPValue
+tests/Types/GuidTypeTest.php	GuidTypeTest::testNullConversion	ported	crates/doctrine-dbal/tests/types_guid_type_test.rs::testNullConversion
+tests/Types/IntegerTest.php	IntegerTest::testIntegerConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_integer_test.rs::testIntegerConvertsToPHPValue
+tests/Types/IntegerTest.php	IntegerTest::testIntegerNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_integer_test.rs::testIntegerNullConvertsToPHPValue
+tests/Types/JsonObjectTest.php	JsonObjectTest::testConversionFailure	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testConversionFailure
+tests/Types/JsonObjectTest.php	JsonObjectTest::testJsonEmptyStringConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testJsonEmptyStringConvertsToPHPValue
+tests/Types/JsonObjectTest.php	JsonObjectTest::testJsonNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testJsonNullConvertsToPHPValue
 tests/Types/JsonObjectTest.php	JsonObjectTest::testJsonResourceConvertsToPHPValue	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testJsonStringConvertsToPHPValue	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testPHPFloatValueConvertsToJsonString	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testPHPNullValueConvertsToJsonNull	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testPHPValueConvertsToJsonString	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testReturnsBindingType	pending	
-tests/Types/JsonObjectTest.php	JsonObjectTest::testReturnsSQLDeclaration	pending	
+tests/Types/JsonObjectTest.php	JsonObjectTest::testJsonStringConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testJsonStringConvertsToPHPValue
+tests/Types/JsonObjectTest.php	JsonObjectTest::testPHPFloatValueConvertsToJsonString	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testPHPFloatValueConvertsToJsonString
+tests/Types/JsonObjectTest.php	JsonObjectTest::testPHPNullValueConvertsToJsonNull	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testPHPNullValueConvertsToJsonNull
+tests/Types/JsonObjectTest.php	JsonObjectTest::testPHPValueConvertsToJsonString	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testPHPValueConvertsToJsonString
+tests/Types/JsonObjectTest.php	JsonObjectTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testReturnsBindingType
+tests/Types/JsonObjectTest.php	JsonObjectTest::testReturnsSQLDeclaration	ported	crates/doctrine-dbal/tests/types_json_object_test.rs::testReturnsSQLDeclaration
 tests/Types/JsonObjectTest.php	JsonObjectTest::testSerializationFailure	pending	
-tests/Types/JsonTest.php	JsonTest::testConversionFailure	pending	
-tests/Types/JsonTest.php	JsonTest::testJsonEmptyStringConvertsToPHPValue	pending	
-tests/Types/JsonTest.php	JsonTest::testJsonNullConvertsToPHPValue	pending	
+tests/Types/JsonTest.php	JsonTest::testConversionFailure	ported	crates/doctrine-dbal/tests/types_json_test.rs::testConversionFailure
+tests/Types/JsonTest.php	JsonTest::testJsonEmptyStringConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_json_test.rs::testJsonEmptyStringConvertsToPHPValue
+tests/Types/JsonTest.php	JsonTest::testJsonNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_json_test.rs::testJsonNullConvertsToPHPValue
 tests/Types/JsonTest.php	JsonTest::testJsonResourceConvertsToPHPValue	pending	
-tests/Types/JsonTest.php	JsonTest::testJsonStringConvertsToPHPValue	pending	
-tests/Types/JsonTest.php	JsonTest::testPHPFloatValueConvertsToJsonString	pending	
-tests/Types/JsonTest.php	JsonTest::testPHPNullValueConvertsToJsonNull	pending	
-tests/Types/JsonTest.php	JsonTest::testPHPValueConvertsToJsonString	pending	
-tests/Types/JsonTest.php	JsonTest::testReturnsBindingType	pending	
-tests/Types/JsonTest.php	JsonTest::testReturnsSQLDeclaration	pending	
+tests/Types/JsonTest.php	JsonTest::testJsonStringConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_json_test.rs::testJsonStringConvertsToPHPValue
+tests/Types/JsonTest.php	JsonTest::testPHPFloatValueConvertsToJsonString	ported	crates/doctrine-dbal/tests/types_json_test.rs::testPHPFloatValueConvertsToJsonString
+tests/Types/JsonTest.php	JsonTest::testPHPNullValueConvertsToJsonNull	ported	crates/doctrine-dbal/tests/types_json_test.rs::testPHPNullValueConvertsToJsonNull
+tests/Types/JsonTest.php	JsonTest::testPHPValueConvertsToJsonString	ported	crates/doctrine-dbal/tests/types_json_test.rs::testPHPValueConvertsToJsonString
+tests/Types/JsonTest.php	JsonTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_json_test.rs::testReturnsBindingType
+tests/Types/JsonTest.php	JsonTest::testReturnsSQLDeclaration	ported	crates/doctrine-dbal/tests/types_json_test.rs::testReturnsSQLDeclaration
 tests/Types/JsonTest.php	JsonTest::testSerializationFailure	pending	
-tests/Types/NumberTest.php	NumberTest::testDecimalConvertsToPHPValue	pending	
-tests/Types/NumberTest.php	NumberTest::testDecimalNullConvertsToPHPValue	pending	
-tests/Types/NumberTest.php	NumberTest::testInvalidPhpValuesTriggerException	pending	
-tests/Types/NumberTest.php	NumberTest::testNumberConvertsToDecimalString	pending	
-tests/Types/NumberTest.php	NumberTest::testNumberNullConvertsToNull	pending	
-tests/Types/NumberTest.php	NumberTest::testUnexpectedValuesReturnedByTheDatabaseTriggerException	pending	
-tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatConvertToDatabaseValue	pending	
-tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatConvertsToPHPValue	pending	
-tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatNullConvertToDatabaseValue	pending	
-tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatNullConvertsToPHPValue	pending	
-tests/Types/SmallIntTest.php	SmallIntTest::testSmallIntConvertsToPHPValue	pending	
-tests/Types/SmallIntTest.php	SmallIntTest::testSmallIntNullConvertsToPHPValue	pending	
-tests/Types/StringTest.php	StringTest::testConvertToPHPValue	pending	
-tests/Types/StringTest.php	StringTest::testNullConversion	pending	
-tests/Types/StringTest.php	StringTest::testReturnsSQLDeclaration	pending	
-tests/Types/StringTest.php	StringTest::testSQLConversion	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsNullToDatabaseValue	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsNullToPHPValue	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsTimeStringToPHPValue	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testFactoryCreatesCorrectType	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testResetDateFractionsWhenConvertingToPHPValue	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testReturnsBindingType	pending	
-tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidTimeString	pending	
-tests/Types/TimeTest.php	TimeTest::testConvertDateTimeToPHPValue	pending	
-tests/Types/TimeTest.php	TimeTest::testDateConvertsToDatabaseValue	pending	
-tests/Types/TimeTest.php	TimeTest::testDateFieldResetInPHPValue	pending	
-tests/Types/TimeTest.php	TimeTest::testInvalidTimeFormatConversion	pending	
-tests/Types/TimeTest.php	TimeTest::testInvalidTypeConversionToDatabaseValue	pending	
-tests/Types/TimeTest.php	TimeTest::testNullConversion	pending	
-tests/Types/TimeTest.php	TimeTest::testTimeConvertsToPHPValue	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testConstructorWithDuplicateInstance	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testGet	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testGetMap	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testGetReturnsSameInstances	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testHas	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testLookupName	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverride	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverrideAllowsExistingInstance	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverrideWithAlreadyRegisteredInstance	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverrideWithUnknownType	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testRegister	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testRegisterWithAlreadyRegisteredInstance	pending	
-tests/Types/TypeRegistryTest.php	TypeRegistryTest::testRegisterWithAlreadyRegisteredName	pending	
-tests/Types/TypeTest.php	TypeTest::testAddTypeInstance	pending	
-tests/Types/TypeTest.php	TypeTest::testAddTypeWhenTypeRequiresArguments	pending	
-tests/Types/TypeTest.php	TypeTest::testDefaultTypesAreRegistered	pending	
-tests/Types/TypeTest.php	TypeTest::testDefaultTypesReverseLookup	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsDateishStringToPHPValue	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsNullToDatabaseValue	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsNullToPHPValue	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testReturnsBindingType	pending	
-tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateishString	pending	
-tests/Types/VarDateTimeTest.php	VarDateTimeTest::testConversionWithMicroseconds	pending	
-tests/Types/VarDateTimeTest.php	VarDateTimeTest::testConvertDateTimeToPHPValue	pending	
-tests/Types/VarDateTimeTest.php	VarDateTimeTest::testDateTimeConvertsToDatabaseValue	pending	
-tests/Types/VarDateTimeTest.php	VarDateTimeTest::testDateTimeConvertsToPHPValue	pending	
-tests/Types/VarDateTimeTest.php	VarDateTimeTest::testInvalidDateTimeFormatConversion	pending	
-tests/Types/VarDateTimeTest.php	VarDateTimeTest::testNullConversion	pending	
+tests/Types/NumberTest.php	NumberTest::testDecimalConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_number_test.rs::testDecimalConvertsToPHPValue
+tests/Types/NumberTest.php	NumberTest::testDecimalNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_number_test.rs::testDecimalNullConvertsToPHPValue
+tests/Types/NumberTest.php	NumberTest::testInvalidPhpValuesTriggerException	ported	crates/doctrine-dbal/tests/types_number_test.rs::testInvalidPhpValuesTriggerException
+tests/Types/NumberTest.php	NumberTest::testNumberConvertsToDecimalString	ported	crates/doctrine-dbal/tests/types_number_test.rs::testNumberConvertsToDecimalString
+tests/Types/NumberTest.php	NumberTest::testNumberNullConvertsToNull	ported	crates/doctrine-dbal/tests/types_number_test.rs::testNumberNullConvertsToNull
+tests/Types/NumberTest.php	NumberTest::testUnexpectedValuesReturnedByTheDatabaseTriggerException	ported	crates/doctrine-dbal/tests/types_number_test.rs::testUnexpectedValuesReturnedByTheDatabaseTriggerException
+tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatConvertToDatabaseValue	ported	crates/doctrine-dbal/tests/types_small_float_test.rs::testFloatConvertToDatabaseValue
+tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_small_float_test.rs::testFloatConvertsToPHPValue
+tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatNullConvertToDatabaseValue	ported	crates/doctrine-dbal/tests/types_small_float_test.rs::testFloatNullConvertToDatabaseValue
+tests/Types/SmallFloatTest.php	SmallFloatTest::testFloatNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_small_float_test.rs::testFloatNullConvertsToPHPValue
+tests/Types/SmallIntTest.php	SmallIntTest::testSmallIntConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_small_int_test.rs::testSmallIntConvertsToPHPValue
+tests/Types/SmallIntTest.php	SmallIntTest::testSmallIntNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_small_int_test.rs::testSmallIntNullConvertsToPHPValue
+tests/Types/StringTest.php	StringTest::testConvertToPHPValue	ported	crates/doctrine-dbal/tests/types_string_test.rs::testConvertToPHPValue
+tests/Types/StringTest.php	StringTest::testNullConversion	ported	crates/doctrine-dbal/tests/types_string_test.rs::testNullConversion
+tests/Types/StringTest.php	StringTest::testReturnsSQLDeclaration	ported	crates/doctrine-dbal/tests/types_string_test.rs::testReturnsSQLDeclaration
+tests/Types/StringTest.php	StringTest::testSQLConversion	ported	crates/doctrine-dbal/tests/types_string_test.rs::testSQLConversion
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToDatabaseValue
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToPHPValue
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsNullToDatabaseValue	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testConvertsNullToDatabaseValue
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsNullToPHPValue	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testConvertsNullToPHPValue
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testConvertsTimeStringToPHPValue	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testConvertsTimeStringToPHPValue
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testDoesNotSupportMutableDateTimeToDatabaseValueConversion
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testFactoryCreatesCorrectType	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testFactoryCreatesCorrectType
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testResetDateFractionsWhenConvertingToPHPValue	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testResetDateFractionsWhenConvertingToPHPValue
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testReturnsBindingType
+tests/Types/TimeImmutableTypeTest.php	TimeImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidTimeString	ported	crates/doctrine-dbal/tests/types_time_immutable_type_test.rs::testThrowsExceptionDuringConversionToPHPValueWithInvalidTimeString
+tests/Types/TimeTest.php	TimeTest::testConvertDateTimeToPHPValue	ported	crates/doctrine-dbal/tests/types_time_test.rs::testConvertDateTimeToPHPValue
+tests/Types/TimeTest.php	TimeTest::testDateConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_time_test.rs::testDateConvertsToDatabaseValue
+tests/Types/TimeTest.php	TimeTest::testDateFieldResetInPHPValue	ported	crates/doctrine-dbal/tests/types_time_test.rs::testDateFieldResetInPHPValue
+tests/Types/TimeTest.php	TimeTest::testInvalidTimeFormatConversion	ported	crates/doctrine-dbal/tests/types_time_test.rs::testInvalidTimeFormatConversion
+tests/Types/TimeTest.php	TimeTest::testInvalidTypeConversionToDatabaseValue	ported	crates/doctrine-dbal/tests/types_time_test.rs::testInvalidTypeConversionToDatabaseValue
+tests/Types/TimeTest.php	TimeTest::testNullConversion	ported	crates/doctrine-dbal/tests/types_time_test.rs::testNullConversion
+tests/Types/TimeTest.php	TimeTest::testTimeConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_time_test.rs::testTimeConvertsToPHPValue
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testConstructorWithDuplicateInstance	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testConstructorWithDuplicateInstance
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testGet	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testGet
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testGetMap	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testGetMap
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testGetReturnsSameInstances	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testGetReturnsSameInstances
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testHas	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testHas
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testLookupName	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testLookupName
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverride	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testOverride
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverrideAllowsExistingInstance	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testOverrideAllowsExistingInstance
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverrideWithAlreadyRegisteredInstance	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testOverrideWithAlreadyRegisteredInstance
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testOverrideWithUnknownType	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testOverrideWithUnknownType
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testRegister	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testRegister
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testRegisterWithAlreadyRegisteredInstance	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testRegisterWithAlreadyRegisteredInstance
+tests/Types/TypeRegistryTest.php	TypeRegistryTest::testRegisterWithAlreadyRegisteredName	ported	crates/doctrine-dbal/tests/types_type_registry_test.rs::testRegisterWithAlreadyRegisteredName
+tests/Types/TypeTest.php	TypeTest::testAddTypeInstance	ported	crates/doctrine-dbal/tests/types_type_test.rs::testAddTypeInstance
+tests/Types/TypeTest.php	TypeTest::testAddTypeWhenTypeRequiresArguments	ported	crates/doctrine-dbal/tests/types_type_test.rs::testAddTypeWhenTypeRequiresArguments
+tests/Types/TypeTest.php	TypeTest::testDefaultTypesAreRegistered	ported	crates/doctrine-dbal/tests/types_type_test.rs::testDefaultTypesAreRegistered
+tests/Types/TypeTest.php	TypeTest::testDefaultTypesReverseLookup	ported	crates/doctrine-dbal/tests/types_type_test.rs::testDefaultTypesReverseLookup
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToDatabaseValue	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToDatabaseValue
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsDateTimeImmutableInstanceToPHPValue	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testConvertsDateTimeImmutableInstanceToPHPValue
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsDateishStringToPHPValue	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testConvertsDateishStringToPHPValue
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsNullToDatabaseValue	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testConvertsNullToDatabaseValue
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testConvertsNullToPHPValue	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testConvertsNullToPHPValue
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testDoesNotSupportMutableDateTimeToDatabaseValueConversion	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testDoesNotSupportMutableDateTimeToDatabaseValueConversion
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testReturnsBindingType	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testReturnsBindingType
+tests/Types/VarDateTimeImmutableTypeTest.php	VarDateTimeImmutableTypeTest::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateishString	ported	crates/doctrine-dbal/tests/types_var_date_time_immutable_type_test.rs::testThrowsExceptionDuringConversionToPHPValueWithInvalidDateishString
+tests/Types/VarDateTimeTest.php	VarDateTimeTest::testConversionWithMicroseconds	ported	crates/doctrine-dbal/tests/types_var_date_time_test.rs::testConversionWithMicroseconds
+tests/Types/VarDateTimeTest.php	VarDateTimeTest::testConvertDateTimeToPHPValue	ported	crates/doctrine-dbal/tests/types_var_date_time_test.rs::testConvertDateTimeToPHPValue
+tests/Types/VarDateTimeTest.php	VarDateTimeTest::testDateTimeConvertsToDatabaseValue	ported	crates/doctrine-dbal/tests/types_var_date_time_test.rs::testDateTimeConvertsToDatabaseValue
+tests/Types/VarDateTimeTest.php	VarDateTimeTest::testDateTimeConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_var_date_time_test.rs::testDateTimeConvertsToPHPValue
+tests/Types/VarDateTimeTest.php	VarDateTimeTest::testInvalidDateTimeFormatConversion	ported	crates/doctrine-dbal/tests/types_var_date_time_test.rs::testInvalidDateTimeFormatConversion
+tests/Types/VarDateTimeTest.php	VarDateTimeTest::testNullConversion	ported	crates/doctrine-dbal/tests/types_var_date_time_test.rs::testNullConversion
