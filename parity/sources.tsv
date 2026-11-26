@@ -1098,6 +1098,7 @@ crates/translation/tests/target_operation_test.rs	symfony/translation	Tests/Cata
 crates/translation/tests/xliff_file_loader_test.rs	symfony/translation	Tests/Loader/XliffFileLoaderTest.php	d9e1caba0d6b6f9a26710af8a2f88d37f001215a
 crates/translation/tests/xliff_utils_test.rs	symfony/translation	Tests/Util/XliffUtilsTest.php	d9e1caba0d6b6f9a26710af8a2f88d37f001215a
 crates/twig-integration/src/callables.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig-integration/src/classes.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/extension.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/src/lib.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig-integration/tests/integration.rs	twig/twig	tests/IntegrationTest.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
