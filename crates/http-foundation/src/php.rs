@@ -284,6 +284,9 @@ pub enum OutputCall {
     ObEndClean,
     /// `flush()`.
     Flush,
+    /// `@ob_flush()`: the innermost buffer's content passed to the next
+    /// level; without a buffer, nothing (the notice is silenced).
+    ObFlush,
 }
 
 /// The SAPI as `Response` sees it, and the calls it made. Nothing here

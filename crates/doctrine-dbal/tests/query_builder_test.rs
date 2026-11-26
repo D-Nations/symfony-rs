@@ -2,9 +2,8 @@
 //! c435cd7ea33e17d2a89288caf994cf3d4549b879. Names and assertions are
 //! PHPUnit's; the provider rows are upstream's, recorded by running its
 //! providers (tests/data/php.json). `(string) $qb` is `get_sql()`. The
-//! tests that execute the query (`testFetch*`, `testExecute*`) need a
-//! Connection and a Result, which are not ported (parity manifest:
-//! pending).
+//! tests that execute the query (`testFetch*`, `testExecuteQuery`) are in
+//! `query_builder_execution_test.rs`.
 //!
 //! Upstream: doctrine/dbal tests/Query/QueryBuilderTest.php
 

@@ -186,6 +186,15 @@ macro_rules! abstract_platform_stub_methods {
             get_date_type_declaration_sql,
             get_time_type_declaration_sql
         );
+        fn get_current_database_expression(&self) -> Result<String, doctrine_dbal::Exception> {
+            Ok(String::new())
+        }
+        fn get_set_transaction_isolation_sql(
+            &self,
+            _level: doctrine_dbal::TransactionIsolationLevel,
+        ) -> Result<String, doctrine_dbal::Exception> {
+            Ok(String::new())
+        }
     };
     ($($name:ident),*) => {
         $(

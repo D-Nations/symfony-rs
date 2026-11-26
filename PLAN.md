@@ -923,6 +923,21 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     `crates/doctrine-dbal/tests/parser_vectors.rs` fails on any other
     difference.
 
+22. **An async DBAL (M6, November 26).** DBAL's `Connection`, `Statement`
+    and `Result` are blocking PHP calls; sqlx is async. Recommended: an
+    async API. `Connection` methods that reach the database are `async fn`
+    (`connect()`, `executeQuery()`, `fetch*()`, `transactional()`, ...)
+    and the driver traits return boxed futures; a driver `Result` is read
+    at execute time, so `fetch*()` on a `Result` and the `iterate*()`
+    iterators are synchronous. Argument order, defaults, exception classes
+    and messages stay DBAL's; the ORM, Messenger's Doctrine transport and
+    the demo's controllers then await these calls, as the axum adapter
+    already runs them in tokio. Alternative: a blocking API over a runtime
+    the connection owns (`block_on` on every call), which keeps PHP's call
+    shape but cannot be called from inside a tokio task (the kernel's)
+    without `spawn_blocking`, and holds a thread per query. One connection
+    serves one task at a time either way, as PHP's does.
+
 ## M0 progress
 
 - [x] Repository created from symfony-demo-rs with the history of
@@ -1367,6 +1382,7 @@ Stack rows (searched November 22):
 | RouteCollection's name-keyed arrays (routes, aliases, priorities, resources; November 24) | [indexmap](https://docs.rs/indexmap) (already in the lock as a transitive dependency: O(1) lookup, but `shift_remove()`, the removal that keeps order, is O(n), and `swap_remove()` breaks PHP's order), [hashlink](https://docs.rs/hashlink)'s `LinkedHashMap` (O(1) ordered removal; a new dependency), `php_value::PhpArray` (its `remove()` shifts and reindexes, O(n)), a vector with holes and a hash index | The vector with holes and a hash index (`routing::ordered`, private), no dependency | It is how PHP keeps an array: insertion order, assignment in place, `unset()` then append, all O(1); compacted when holes outnumber entries. About 150 lines with its tests, against a dependency for one internal structure |
 | ExpressionLanguage (searched November 25: crates.io, docs.rs) | No Rust port of Symfony's ExpressionLanguage. Expression crates with their own grammars and value rules: [evalexpr](https://docs.rs/evalexpr) (no `matches`, `..`, `?.`, `??`, attribute or method access, no compilation to PHP), [cel](https://docs.rs/cel) (Common Expression Language), [zen-expression](https://docs.rs/zen-expression) (ZEN rules) | Port of every PHP file except `SerializedParsedExpression.php`, on php-value and php-pcre (workspace crates); no new dependency (serde_json is already a test dependency) | Routing conditions and security expressions need Symfony's grammar, error texts, the PHP source `compile()` writes and PHP 8.4's operator semantics; 69,024 binary operations and 1,730 other cases recorded from PHP 8.4.27 pin them |
 | The listener execution seam: `CompiledEventDispatcher` (event-dispatcher; November 26) | Upstream's own [`CompiledEventDispatcher`](https://github.com/symfony/symfony/pull/66122) (Symfony 8.2, after the pinned 8.1: an ordered listener map built by the container, dispatch from it, thaw into a plain `EventDispatcher` on anything but `dispatch()`/`hasListeners()`); its rejected alternative [#66121](https://github.com/symfony/symfony/pull/66121) (the `addListener()` calls folded into `EventDispatcher`'s constructor, closures kept); Drupal's `ContainerAwareEventDispatcher` (a precompiled array changed in place, no fallback); on crates.io, [mod-events](https://docs.rs/crate/mod-events) (run-time registration behind a lock, typed handlers, no PHP identity or ordering semantics). The PLAN's `Kernel<C, L>` shape no longer applies: the ported kernel takes a dispatcher | 8.2's design, adapted to 8.1's behaviour: `ListenerMap` (sorted once; a dispatch takes no table lock and copies no list), `CompiledEventDispatcher<P: ListenerPipeline = ListenerMap>`, a thaw that shares the stored listener slots and re-sorts dispatched events' buckets; no deprecation notices; no new dependency | Upstream took this path, so M3's container output maps onto it; the fallback keeps every dynamic call exact without a second implementation of the table; the trait is where M3-A's generated per-event pipelines go |
+| HttpFoundation's `StreamedResponse.php` (November 26; no new search: the `Response.php` row covers the component) | A Rust type of its own converting into `Response` (as `JsonResponse` does), which loses the overrides `Response`'s own methods call (`prepare()` and `setNotModified()` call `setContent(null)`, `send()` calls `sendHeaders()`/`sendContent()`) once the kernel holds it as a `Response`; a trait object for every response; or `Response` carrying the subclass's state | `Response` holds an optional `Stream` (the subclass's properties) and its methods check for it as PHP's late binding does; the callback is an `Arc<dyn Fn>` writing through `php::Output`; no new dependency | One `Response` type for the kernel and listeners, every override applied where PHP applies it; `JsonResponse` and `RedirectResponse` override nothing `Response` calls, so they stay wrappers |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1716,6 +1732,17 @@ Stack rows (searched November 22):
       1,500 recorded lifecycles in both modes; the converter fixture on it
       (converter contract 0.4); eight mutations, each caught. Next:
       StreamedResponse.
+- [x] StreamedResponse (November 26): `StreamedResponse.php` as a
+      `Response` carrying the subclass's state, so `prepare()`,
+      `setNotModified()` and `send()` reach its overrides; `setContent()`
+      is fallible and `getContent()` PHP's `string|false`; `HttpKernel`
+      wraps the callback to push the request back while it runs.
+      StreamedResponseTest 13 of 13, HttpKernelTest's streamed test; 1,500
+      scripts recorded from PHP 8.4.27; seven mutations, each caught. The
+      front controller sends the output whole, not at each `flush()`
+      (runtime README). Stage log docs/milestones/m2-a-streamed-response.md.
+      Next: incremental delivery of flushed output in the front controller;
+      StreamedJsonResponse and EventStreamResponse.
 
 ## M6 progress
 
@@ -1724,6 +1751,7 @@ Stack rows (searched November 25):
 | Component | Options compared | Choice | Reason |
 |---|---|---|---|
 | Doctrine DBAL (`doctrine/dbal` 4.5.0) | No Rust port of DBAL on GitHub or crates.io (searches for a DBAL, Doctrine or data-mapper port find only PHP packages). Rust database layers: [sqlx](https://github.com/launchbadge/sqlx) (the demo's driver), rusqlite, diesel, SeaORM / sea-query (own query builders and type mappings) | Port DBAL's behaviour (parser, types, platforms' SQL, schema, QueryBuilder, Connection) in `doctrine-dbal`. Drivers (D1: SQLite) later go on sqlx, behind DBAL's `Driver` interfaces, when the Connection is ported; this slice adds no dependency | DBAL's observable behaviour (generated SQL, type conversions, error classes and messages) is what the ORM, migrations and the demo depend on, and no crate reproduces it. sqlx stays the driver choice of PLAN.md's architecture (bound parameters only) |
+| SQLite driver under `Connection` (`pdo_sqlite`; searched November 26) | [sqlx](https://github.com/launchbadge/sqlx) 0.9.0 `sqlite` (async, bound parameters, bundled SQLite through `libsqlite3-sys` 0.37; the architecture's driver choice); [rusqlite](https://github.com/rusqlite/rusqlite) (blocking, same bundled SQLite; an async DBAL would run it with `spawn_blocking`); `libsqlite3-sys` directly (FFI, needs `unsafe`, excluded) | `sqlx` 0.9.0 (`default-features = false`, `runtime-tokio`, `sqlite`) and `tokio` 1.54.1 (`sync`; tests: `macros`, `rt`) in `doctrine-dbal`; PDO's SQLite behaviour is ported on top (`src/driver/pdo_sqlite.rs`) and checked against recorded `pdo_sqlite` answers | sqlx is the stack's database layer for the other drivers too (MySQL, PostgreSQL), has bound parameters only, and is async, which decision 22 recommends; rusqlite would give a second driver stack for one database |
 | Doctrine ORM (`doctrine/orm` 3.7.5) | No Rust port. Unit-of-work crates: [sqlmodel-session](https://docs.rs/sqlmodel-session) (identity map and session for its own models), [tideorm](https://docs.rs/tideorm), [rust-ef](https://docs.rs/rust-ef), reinhardt-db (Django-style); SeaORM, Diesel (no unit of work, see M6) | Port the ORM on `doctrine-dbal` (D2) | None has Doctrine's metadata, DQL, hydration or UnitOfWork semantics; using one would mean a second behaviour to keep equal to Doctrine's |
 
 - [x] D1 slice 1 (`doctrine-dbal`): `ParameterType.php`,
@@ -1755,8 +1783,36 @@ Stack rows (searched November 25):
       guessed (counts in the crate README). `Doctrine\DBAL\Exception` is
       one struct (class, message, previous); the Query slice's typed
       exceptions convert into it.
-- [ ] D1 next: the SQLite platform; Connection on
-      sqlx's SQLite driver; schema manager. The demo comparison stays
+- [x] D1 slice 4 (Connection): the `Driver` interfaces, the `pdo_sqlite`
+      driver on sqlx, `Connection.php`, `Result.php`, `Statement.php`,
+      `DriverManager.php`, `Tools/DsnParser.php`, the `Configuration.php`
+      parts the connection reads, `Exception/*`, `ConnectionException`,
+      `TransactionIsolationLevel`, and the `QueryBuilder` execution
+      methods; async (decision 22). Unit ConnectionTest 29 of 33,
+      DriverManagerTest 7 of 8, DsnParserTest, ConfigurationTest, the
+      QueryBuilderTest execution tests (82 of 84 in all), and the SQLite
+      functional Connection, Transaction, Write, NamedParameters, Result,
+      Statement, Exception, DataAccess, Fetch, FetchEmpty, BooleanBinding
+      and AutoIncrementColumn tests on `pdo_sqlite` in memory; the
+      `SQLitePlatform` SQL they need is recorded
+      (`scripts/record.sh doctrine-dbal-connection`), with PDO's answers
+      for bindings, errors, sequences and connect parameters. The driver uses the
+      ported `SQLitePlatform` (slice 5). Differences in the crate README.
+- [x] D1 slice 5 (SQLite platform): the rest of `AbstractPlatform.php`
+      (not the `SchemaDiff`, `Sequence` and `Connection` methods),
+      `SQLitePlatform.php`, `KeywordList` and `SQLiteKeywords`,
+      `DateIntervalUnit`, `TrimMode`, `TransactionIsolationLevel`,
+      `LockMode`, the platform exceptions, and the Schema value objects
+      (names and parser, `AbstractAsset`, `Column`, `Index`, the
+      constraints, `Table`, `TableDiff`, their editors, the collections,
+      the Schema exceptions). SQLitePlatformTest with the inherited
+      AbstractPlatformTestCase tests 92 of 96 (4 not run upstream on
+      SQLite); 292 Schema tests; 2,500 recorded `SQLitePlatform` outputs
+      (expressions, `CREATE TABLE`, `ALTER TABLE`) match. Differences in
+      the crate README (editor errors at `create()`, value equality for
+      identity). No new dependency.
+- [ ] D1 next: schema manager, Comparator, Schema/Sequence/View;
+      then D2 (ORM). The demo comparison stays
       paused (owner, November 23).
 
 ## Local development performance

@@ -31,6 +31,7 @@ pub mod response;
 pub mod sapi;
 pub mod scheme;
 pub mod server_bag;
+pub mod streamed_response;
 pub mod uploaded_file;
 
 /// PHP's default `post_max_size`. HTTP adapters must bound body reads to

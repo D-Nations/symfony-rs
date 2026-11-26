@@ -156,7 +156,7 @@ fn op(response: &mut Response, op: &Json) -> Result<Got, TestError> {
             this(response.set_status_code(int(&op[1])?, op[2].as_str().map(PhpString::from)))
         }
         "content" => {
-            response.set_content(nullable_bytes(&op[1])?);
+            response.set_content(nullable_bytes(&op[1])?)?;
             Got::This
         }
         "version" => {
@@ -231,12 +231,15 @@ fn op(response: &mut Response, op: &Json) -> Result<Got, TestError> {
             this(response.send_headers(op[1].as_i64()))
         }
         "send_content" => {
-            response.send_content();
+            response.send_content()?;
             Got::This
         }
         "send" => {
             with_output(|o| o.headers_sent = op[2].as_bool().unwrap_or(false));
-            this(response.send(boolean(&op[1])?))
+            match response.send(boolean(&op[1])?) {
+                Ok(_) => Got::This,
+                Err(e) => Got::Throws(e.downcast_ref::<Error>().ok_or("not an Error")?.clone()),
+            }
         }
         other => return Err(format!("unknown op {other}").into()),
     })
@@ -268,6 +271,7 @@ fn calls(output: &Output) -> Json {
             OutputCall::ObEndFlush => list.push(serde_json::json!(["ob_end_flush"])),
             OutputCall::ObEndClean => list.push(serde_json::json!(["ob_end_clean"])),
             OutputCall::Flush => list.push(serde_json::json!(["flush"])),
+            OutputCall::ObFlush => list.push(serde_json::json!(["ob_flush"])),
             OutputCall::FastcgiFinishRequest => {
                 list.push(serde_json::json!(["fastcgi_finish_request"]));
             }
@@ -319,7 +323,11 @@ fn reader(response: &Response, name: &str) -> Result<Got, TestError> {
                 .cloned()
                 .map_or(Value::Null, Value::String),
         ),
-        "content" => Got::Value(Value::String(response.get_content().clone())),
+        "content" => Got::Value(
+            response
+                .get_content()
+                .map_or(Value::Bool(false), |c| Value::String(c.clone())),
+        ),
         "headers" => {
             let mut headers = PhpArray::new();
             for (name, values) in response.headers().all_preserve_case().iter() {

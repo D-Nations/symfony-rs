@@ -33,6 +33,7 @@ use symfony_http_foundation::{
     request_stack::RequestHandle,
     response::Response,
     sapi::{CgiResponse, Ini},
+    streamed_response::{self, CallbackOrChunks},
 };
 use symfony_http_kernel::{
     controller::ResponseHandle,
@@ -246,6 +247,48 @@ async fn serves_the_kernel_and_terminates_after_the_response() {
     assert_eq!(
         Ok("terminated"),
         terminated.recv_timeout(Duration::from_secs(5))
+    );
+}
+
+/// A kernel that answers with a `StreamedResponse` of chunks.
+struct StreamingKernel;
+
+impl HttpKernelInterface for StreamingKernel {
+    fn handle(&self, _: &RequestHandle, _: i64, _: bool) -> Result<ResponseHandle, Throwable> {
+        let chunks = ["first ", "second ", "third"].map(PhpString::from).to_vec();
+        let response = streamed_response::new(
+            CallbackOrChunks::Chunks(chunks),
+            200,
+            ResponseHeaderBag::new([("Content-Type", "text/plain")]).unwrap(),
+        )
+        .unwrap();
+        Ok(Handle::new(response))
+    }
+}
+
+impl RunnableKernel for StreamingKernel {}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn a_streamed_response_is_sent_by_its_callback() {
+    let kernel = Arc::new(|| {
+        let kernel: Arc<dyn RunnableKernel> = Arc::new(StreamingKernel);
+        Ok(kernel)
+    });
+    let front = FrontController::new(ServerConfig::default(), Ini::default(), kernel);
+    let response = Arc::new(front)
+        .router()
+        .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
+        .await
+        .unwrap();
+    assert_eq!(StatusCode::OK, response.status());
+    // PHP-FPM adds `default_charset` to a text type set by `header()`.
+    assert_eq!(
+        response.headers()["content-type"],
+        "text/plain;charset=UTF-8"
+    );
+    assert_eq!(
+        &to_bytes(response.into_body(), 64).await.unwrap()[..],
+        b"first second third"
     );
 }
 

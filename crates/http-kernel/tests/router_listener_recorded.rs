@@ -410,8 +410,16 @@ fn run(script: &Json, welcome: &[u8]) -> Json {
     );
     listener.on_kernel_exception(&mut event).unwrap();
     if let Some(response) = event.get_response() {
-        let (status, page) =
-            response.with(|r| (r.get_status_code(), r.get_content().as_bytes().to_vec()));
+        let (status, page) = response.with(|r| {
+            (
+                r.get_status_code(),
+                r.get_content()
+                    .cloned()
+                    .unwrap_or_default()
+                    .as_bytes()
+                    .to_vec(),
+            )
+        });
         out["exception"] = json!([status, normalize_welcome(&page) == welcome]);
     }
     out

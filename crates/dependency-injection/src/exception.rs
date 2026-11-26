@@ -650,6 +650,15 @@ impl Error {
     pub fn has_pending_message_callback(&self) -> bool {
         matches!(&self.message, Message::Lazy(lazy) if lazy.is_pending())
     }
+
+    /// `AutowiringFailedException::getMessageCallback()`: the lazy
+    /// message while its callback has not run.
+    pub fn message_callback(&self) -> Option<LazyMessage> {
+        match &self.message {
+            Message::Lazy(lazy) if lazy.is_pending() => Some(lazy.clone()),
+            _ => None,
+        }
+    }
 }
 
 impl fmt::Display for Error {
