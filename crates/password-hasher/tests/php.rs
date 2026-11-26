@@ -641,7 +641,7 @@ fn hashes_made_by_rust_verified_by_php() {
     let Some(recorded) = data().get("rust_hashes").and_then(Json::as_array) else {
         panic!("tests/data/php.json has no rust_hashes: run write_rust_hashes, then record");
     };
-    assert!(!recorded.is_empty());
+    assert_ne!(0, recorded.len());
     let native = NativePasswordHasher::new(None, None, None, None).unwrap();
     for case in recorded {
         assert_eq!(json!(true), case["php_native_verify"], "{case}");
