@@ -35,6 +35,7 @@ use symfony_expression_language::{
 
 use crate::{
     exception::{Class, Error},
+    input_bag::InputBag,
     request::Request,
     request_matcher_interface::RequestMatcherInterface,
     streamed_response::Throwable,
@@ -97,7 +98,7 @@ fn nullable(value: Option<PhpString>) -> Value {
 
 /// A bag as an object: its entries, and how `get()` and `has()` look a
 /// key up (header names without case).
-fn bag(class: &str, all: PhpArray, headers: bool) -> Value {
+fn bag(class: &str, all: PhpArray, headers: bool) -> MethodObject {
     let lookup = move |all: &PhpArray, key: &Value| -> Option<Value> {
         let key = key.to_php_string().unwrap_or_default();
         if headers {
@@ -140,7 +141,26 @@ fn bag(class: &str, all: PhpArray, headers: bool) -> Value {
                 i64::try_from(for_count.len()).unwrap_or(i64::MAX),
             ))
         })
-        .into_value()
+}
+
+/// An `InputBag` as an object: `get()` is the bag's own, which refuses a
+/// value that is not a scalar.
+fn input_bag(input: &InputBag) -> MethodObject {
+    let copy = input.clone();
+    bag(
+        "Symfony\\Component\\HttpFoundation\\InputBag",
+        input.all().clone(),
+        false,
+    )
+    .method("get", move |arguments| {
+        let key = arguments
+            .first()
+            .and_then(Value::to_php_string)
+            .unwrap_or_default();
+        let default = arguments.get(1).cloned().unwrap_or(Value::Null);
+        copy.get(&String::from_utf8_lossy(key.as_bytes()), default)
+            .map_err(crate_error)
+    })
 }
 
 trait Underscores {
@@ -209,47 +229,37 @@ fn request_object(request: &Request) -> Value {
             .map_err(crate_error)
         });
 
-    let bags = [
-        (
+    object = object
+        .property(
             "attributes",
-            "Symfony\\Component\\HttpFoundation\\ParameterBag",
-            request.attributes().all().clone(),
-            false,
-        ),
-        (
-            "query",
-            "Symfony\\Component\\HttpFoundation\\InputBag",
-            request.query().all().clone(),
-            false,
-        ),
-        (
-            "request",
-            "Symfony\\Component\\HttpFoundation\\InputBag",
-            request.request().all().clone(),
-            false,
-        ),
-        (
-            "cookies",
-            "Symfony\\Component\\HttpFoundation\\InputBag",
-            request.cookies().all().clone(),
-            false,
-        ),
-        (
+            bag(
+                "Symfony\\Component\\HttpFoundation\\ParameterBag",
+                request.attributes().all().clone(),
+                false,
+            )
+            .into_value(),
+        )
+        .property("query", input_bag(request.query()).into_value())
+        .property("request", input_bag(request.request()).into_value())
+        .property("cookies", input_bag(request.cookies()).into_value())
+        .property(
             "server",
-            "Symfony\\Component\\HttpFoundation\\ServerBag",
-            request.server().all().clone(),
-            false,
-        ),
-        (
+            bag(
+                "Symfony\\Component\\HttpFoundation\\ServerBag",
+                request.server().all().clone(),
+                false,
+            )
+            .into_value(),
+        )
+        .property(
             "headers",
-            "Symfony\\Component\\HttpFoundation\\HeaderBag",
-            headers_array(request),
-            true,
-        ),
-    ];
-    for (name, class, all, headers) in bags {
-        object = object.property(name, bag(class, all, headers));
-    }
+            bag(
+                "Symfony\\Component\\HttpFoundation\\HeaderBag",
+                headers_array(request),
+                true,
+            )
+            .into_value(),
+        );
     object.into_value()
 }
 
