@@ -1,6 +1,6 @@
 //! Port of tests/Schema/ColumnTest.php at doctrine/dbal
 //! c435cd7ea33e17d2a89288caf994cf3d4549b879. Names and assertions are
-//! PHPUnit's. `testQuotedColumnName` needs the MySQL and SQL Server
+//! PHPUnit's. `testQuotedColumnName` needs the `MySQL` and SQL Server
 //! platforms, which are not ported (pending).
 //!
 //! Upstream: doctrine/dbal tests/Schema/ColumnTest.php

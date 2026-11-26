@@ -2,7 +2,7 @@
 //! c435cd7ea33e17d2a89288caf994cf3d4549b879. Names and assertions are
 //! PHPUnit's; the anonymous subclasses of `AbstractAsset` are
 //! `AbstractAsset::new()` with `AssetKind::Bare`. The name parsing tests
-//! need the Oracle, PostgreSQL and MySQL platforms, which are not ported
+//! need the Oracle, `PostgreSQL` and `MySQL` platforms, which are not ported
 //! (pending).
 //!
 //! Upstream: doctrine/dbal tests/Schema/AbstractAssetTest.php

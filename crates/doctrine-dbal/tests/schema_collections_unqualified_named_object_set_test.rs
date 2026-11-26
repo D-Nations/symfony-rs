@@ -11,6 +11,7 @@
     reason = "test helpers; a panic is a test failure"
 )]
 #![allow(non_snake_case)]
+#![allow(clippy::similar_names, reason = "the upstream variable names")]
 
 use doctrine_dbal::Exception;
 use doctrine_dbal::schema::name::UnqualifiedName;

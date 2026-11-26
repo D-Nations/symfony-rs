@@ -35,12 +35,14 @@ pub fn expect_no_deprecation<T>(link: &str, f: impl FnOnce() -> T) -> T {
 }
 
 /// `$this->expectException($class)`: `result` fails with an instance of
-/// `class` (a short name is taken from `Doctrine\DBAL\Schema\Exception`).
+/// `class` (a short name other than PHP's own exception classes is taken
+/// from `Doctrine\DBAL\Schema\Exception`).
 pub fn expect_exception<T: std::fmt::Debug>(
     class: &str,
     result: Result<T, Exception>,
 ) -> Exception {
-    let class = if class.contains('\\') {
+    const GLOBAL: [&str; 2] = ["LogicException", "InvalidArgumentException"];
+    let class = if class.contains('\\') || GLOBAL.contains(&class) {
         class.to_owned()
     } else {
         format!("Doctrine\\DBAL\\Schema\\Exception\\{class}")
