@@ -16,11 +16,13 @@
 )]
 mod dumper;
 mod dumper_interface;
+mod graphviz_dumper;
 mod xml_dumper;
 mod yaml_dumper;
 
 pub use dumper::Dumper;
 pub use dumper_interface::DumperInterface;
+pub use graphviz_dumper::GraphvizDumper;
 pub use xml_dumper::XmlDumper;
 pub use yaml_dumper::YamlDumper;
 
