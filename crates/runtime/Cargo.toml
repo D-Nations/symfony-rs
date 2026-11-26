@@ -8,6 +8,9 @@ description = "Symfony Runtime's HttpKernelRunner, and an Axum adapter that serv
 
 [dependencies]
 axum = "0.8.9"
+# The Body trait's Frame, for a body passed on as PHP flushes it; axum
+# re-exports the trait but not Frame. Already in the lock through axum.
+http-body = "1.1.0"
 php-value = { workspace = true }
 symfony-http-foundation = { path = "../http-foundation" }
 symfony-http-kernel = { path = "../http-kernel" }

@@ -21,7 +21,19 @@
 //!   [`ServerConfig::client_max_body_size`] is answered 413, as nginx does.
 //! - [`into_response`]: the CGI response as nginx passes it on: the
 //!   `Status:` line gives the status (502 when it is not a code from 100
-//!   to 999); other lines become headers.
+//!   to 999); other lines become headers, except the `X-Accel-*` ones
+//!   nginx hides by default (`fastcgi_hide_header`). Of those, only
+//!   `X-Accel-Buffering` is acted on; `X-Accel-Redirect`,
+//!   `X-Accel-Expires`, `X-Accel-Limit-Rate` and `X-Accel-Charset` are
+//!   hidden and logged as not applied.
+//! - Delivery: nginx answers the client once PHP-FPM sent the headers
+//!   (the first output, or `flush()`), and passes the body on as it
+//!   comes: at each `flush()` with `X-Accel-Buffering: no`, otherwise
+//!   (`fastcgi_buffering` on, nginx's default) in pieces of
+//!   [`NGINX_BUFFER`] bytes and the rest at the end. A body without
+//!   `Content-Length` goes to the client chunked. The bytes are PHP's;
+//!   where nginx cuts the buffered pieces is approximated (PHP-FPM's own
+//!   8 KiB write buffer between flushes is not modelled).
 //! - The front controller's own path (`/index.php`, `/index.php/...`)
 //!   and any other path ending in `.php` are answered 404 (empty) by the
 //!   web server, as Symfony's location (`internal`, `location ~ \.php$ {
@@ -35,26 +47,33 @@
 //! a blocking thread of its own, as a PHP-FPM worker runs one at a time:
 //! the superglobals are set (`php::set_globals`), the bootstrap runs,
 //! `Request::createFromGlobals()` builds the request, a new kernel from
-//! the factory handles it through [`HttpKernelRunner`], the response is
-//! sent to the client at `fastcgi_finish_request()` while `terminate()`
-//! runs, and then the request's state is cleared (superglobals, uploaded
+//! the factory handles it through [`HttpKernelRunner`], the output goes
+//! to the client as it is flushed and ends at `fastcgi_finish_request()`
+//! while `terminate()` runs, and then the request's state is cleared (superglobals, uploaded
 //! files, `Request`'s statics). A throwable that escapes is PHP's uncaught
 //! exception: logged, and a 500 if nothing was sent.
 //!
 //! Upstream: none
 
-use std::{net::SocketAddr, sync::Arc};
+use std::{
+    cell::RefCell,
+    net::SocketAddr,
+    pin::Pin,
+    rc::Rc,
+    sync::Arc,
+    task::{Context, Poll},
+};
 
 use axum::{
     Router,
-    body::{Body, to_bytes},
+    body::{Body, Bytes, HttpBody, to_bytes},
     extract::{ConnectInfo, Request},
     http::{HeaderName, HeaderValue, StatusCode, Version, request::Parts},
     response::{IntoResponse, Response},
 };
 use php_value::{Handle, PhpString, clock::microtime};
 use symfony_http_foundation::{
-    php::{set_globals, take_globals, with_output},
+    php::{set_flush_hook, set_globals, take_globals, with_output},
     request::Request as PhpRequest,
     sapi::{self, CgiRequest, CgiResponse, Ini, Sapi},
 };
@@ -205,6 +224,40 @@ pub fn fastcgi_params(
     params
 }
 
+/// The headers nginx does not pass from PHP-FPM to the client
+/// (`fastcgi_hide_header`'s default, besides `Status`).
+const HIDDEN: [&str; 5] = [
+    "X-Accel-Expires",
+    "X-Accel-Redirect",
+    "X-Accel-Limit-Rate",
+    "X-Accel-Buffering",
+    "X-Accel-Charset",
+];
+
+/// nginx's `fastcgi_buffer_size` and each of its `fastcgi_buffers` by
+/// default: one memory page (4 KiB on Linux x86-64). With buffering on, a
+/// piece of the body is passed on once this much is waiting.
+pub const NGINX_BUFFER: usize = 4096;
+
+/// `X-Accel-Buffering: no` (nginx compares the value without case).
+fn unbuffered(cgi: &CgiResponse) -> bool {
+    cgi.headers.iter().any(|line| {
+        let line = line.as_bytes();
+        let name = line_name(line);
+        name.eq_ignore_ascii_case(b"x-accel-buffering")
+            && line[name.len()..]
+                .strip_prefix(b":")
+                .map(<[u8]>::trim_ascii)
+                .is_some_and(|value| value.eq_ignore_ascii_case(b"no"))
+    })
+}
+
+/// A header line's name: the bytes before `:`, without trailing blanks.
+fn line_name(line: &[u8]) -> &[u8] {
+    let end = line.iter().position(|&b| b == b':').unwrap_or(line.len());
+    line[..end].trim_ascii_end()
+}
+
 /// The HTTP response nginx makes of PHP-FPM's CGI response.
 pub fn into_response(cgi: &CgiResponse, head: bool) -> Response {
     let mut status = StatusCode::OK;
@@ -232,6 +285,15 @@ pub fn into_response(cgi: &CgiResponse, head: bool) -> Response {
                 .filter(|code| (100..=999).contains(code))
                 .and_then(|code| StatusCode::from_u16(code).ok());
             status = code.unwrap_or(StatusCode::BAD_GATEWAY);
+            continue;
+        }
+        if let Some(hidden) = HIDDEN
+            .iter()
+            .find(|h| name.eq_ignore_ascii_case(h.as_bytes()))
+        {
+            if *hidden != "X-Accel-Buffering" {
+                eprintln!("symfony-runtime: {hidden} is hidden from the client but not applied");
+            }
             continue;
         }
         match (HeaderName::from_bytes(name), HeaderValue::from_bytes(value)) {
@@ -323,10 +385,14 @@ impl FrontController {
         let (sender, receiver) = tokio::sync::oneshot::channel();
         let front = self.clone();
         let worker = tokio::task::spawn_blocking(move || front.run(&cgi, head, sender));
-        if let Ok(response) = receiver.await {
+        if let Ok(start) = receiver.await {
             // terminate() may still run: the worker finishes on its own.
             drop(worker);
-            into_response(&response, head)
+            let mut response = into_response(&start.response, head);
+            if let (Some(rest), false) = (start.rest, head) {
+                *response.body_mut() = Body::new(ChannelBody(rest));
+            }
+            response
         } else {
             eprintln!("symfony-runtime: the PHP request ended without a response");
             StatusCode::INTERNAL_SERVER_ERROR.into_response()
@@ -345,14 +411,17 @@ impl FrontController {
     }
 
     /// One PHP request on this (blocking) thread.
-    fn run(&self, cgi: &CgiRequest, head: bool, sender: tokio::sync::oneshot::Sender<CgiResponse>) {
+    fn run(&self, cgi: &CgiRequest, head: bool, sender: tokio::sync::oneshot::Sender<Start>) {
         let startup = match sapi::start(cgi, &self.ini) {
             Ok(startup) => startup,
             Err(error) => {
                 eprintln!("symfony-runtime: cannot write an uploaded file: {error}");
                 let mut sapi = Sapi::new(&self.ini, head);
                 sapi.fatal_error();
-                let _ = sender.send(sapi.end());
+                let _ = sender.send(Start {
+                    response: sapi.end(),
+                    rest: None,
+                });
                 return;
             }
         };
@@ -360,20 +429,24 @@ impl FrontController {
             eprintln!("symfony-runtime: PHP Warning: {warning}");
         }
         set_globals(startup.globals);
-        let ini = self.ini.clone();
-        let sender = Arc::new(std::sync::Mutex::new(Some(sender)));
-        let hook_sender = sender.clone();
+        let delivery = Rc::new(RefCell::new(Delivery::new(&self.ini, head, sender)));
+        let on_finish = delivery.clone();
         crate::set_finish_hook(Some(Box::new(move || {
-            send(&hook_sender, || output_response(&ini, head, false));
+            on_finish.borrow_mut().advance(Point::Finish);
+        })));
+        let on_flush = delivery.clone();
+        set_flush_hook(Some(Box::new(move || {
+            on_flush.borrow_mut().advance(Point::Flush);
         })));
 
         let outcome = self.run_script();
         crate::set_finish_hook(None);
+        set_flush_hook(None);
         let failed = outcome.is_err();
         if let Err(error) = outcome {
             eprintln!("symfony-runtime: PHP Fatal error: Uncaught {error}");
         }
-        send(&sender, || output_response(&self.ini, head, failed));
+        delivery.borrow_mut().advance(Point::End { fatal: failed });
 
         sapi::finish(&startup.uploaded);
         take_globals();
@@ -390,35 +463,130 @@ impl FrontController {
     }
 }
 
-type Sender = Arc<std::sync::Mutex<Option<tokio::sync::oneshot::Sender<CgiResponse>>>>;
+/// What the web server answers with first: the head (and, when the
+/// script ended before, the whole body), then the rest as it comes.
+struct Start {
+    response: CgiResponse,
+    rest: Option<tokio::sync::mpsc::Receiver<Bytes>>,
+}
 
-/// Sends the response once; later calls (the end of the script after
-/// `fastcgi_finish_request()`) send nothing.
-fn send(sender: &Sender, response: impl FnOnce() -> CgiResponse) {
-    let taken = sender
-        .lock()
-        .unwrap_or_else(std::sync::PoisonError::into_inner)
-        .take();
-    if let Some(sender) = taken {
-        // The client may be gone; PHP-FPM ignores that too.
-        let _ = sender.send(response());
+/// Where the script is when the output is looked at.
+#[derive(Clone, Copy)]
+enum Point {
+    /// `flush()`.
+    Flush,
+    /// `fastcgi_finish_request()`.
+    Finish,
+    /// The end of the script; `fatal` for an uncaught throwable.
+    End { fatal: bool },
+}
+
+/// The SAPI and the web server for one request: the calls the script made
+/// are applied as they come, and what PHP-FPM sent is passed on as nginx
+/// passes it.
+struct Delivery {
+    sapi: Sapi,
+    head: bool,
+    start: Option<tokio::sync::oneshot::Sender<Start>>,
+    body: Option<tokio::sync::mpsc::Sender<Bytes>>,
+    buffering: bool,
+    pending: Vec<u8>,
+    warned: usize,
+}
+
+impl Delivery {
+    fn new(ini: &Ini, head: bool, start: tokio::sync::oneshot::Sender<Start>) -> Self {
+        Self {
+            sapi: Sapi::new(ini, head),
+            head,
+            start: Some(start),
+            body: None,
+            buffering: true,
+            pending: Vec::new(),
+            warned: 0,
+        }
+    }
+
+    fn advance(&mut self, point: Point) {
+        let (calls, mimetype) =
+            with_output(|o| (std::mem::take(&mut o.calls), o.default_mimetype.clone()));
+        self.sapi.set_default_mimetype(mimetype);
+        for call in &calls {
+            self.sapi.apply(call);
+        }
+        if matches!(point, Point::End { fatal: true }) {
+            self.sapi.fatal_error();
+        }
+        let ending = !matches!(point, Point::Flush) || self.sapi.is_finished();
+        for warning in &self.sapi.warnings()[self.warned..] {
+            eprintln!("symfony-runtime: PHP Warning: {warning}");
+        }
+        self.warned = self.sapi.warnings().len();
+
+        if let Some(start) = self.start.take() {
+            if ending {
+                let _ = start.send(Start {
+                    response: self.sapi.end(),
+                    rest: None,
+                });
+                return;
+            }
+            if !self.sapi.headers_sent() {
+                self.start = Some(start);
+                return;
+            }
+            let mut response = self.sapi.response();
+            self.sapi.take_body();
+            self.pending = std::mem::take(&mut response.body);
+            self.buffering = !unbuffered(&response);
+            let (sender, receiver) = tokio::sync::mpsc::channel(16);
+            if start
+                .send(Start {
+                    response,
+                    rest: Some(receiver),
+                })
+                .is_ok()
+            {
+                self.body = Some(sender);
+            }
+        }
+        let Some(body) = &self.body else {
+            return;
+        };
+        if ending {
+            self.sapi.end();
+        }
+        let written = self.sapi.take_body();
+        if !self.head {
+            self.pending.extend_from_slice(&written);
+        }
+        let pass = ending || !self.buffering || self.pending.len() >= NGINX_BUFFER;
+        if pass && !self.pending.is_empty() {
+            let piece = Bytes::from(std::mem::take(&mut self.pending));
+            // The client may be gone; PHP-FPM is not told either.
+            if body.blocking_send(piece).is_err() {
+                self.body = None;
+            }
+        }
+        if ending {
+            self.body = None;
+        }
     }
 }
 
-/// The CGI response for what the script output so far (this thread's
-/// `php::Output`), as PHP-FPM writes it; `fatal` for an uncaught error.
-fn output_response(ini: &Ini, head: bool, fatal: bool) -> CgiResponse {
-    let output = with_output(|o| o.clone());
-    let mut sapi = Sapi::new(ini, head);
-    sapi.set_default_mimetype(output.default_mimetype.clone());
-    for call in &output.calls {
-        sapi.apply(call);
+/// The rest of a body, as the PHP thread passes it on.
+struct ChannelBody(tokio::sync::mpsc::Receiver<Bytes>);
+
+impl HttpBody for ChannelBody {
+    type Data = Bytes;
+    type Error = std::convert::Infallible;
+
+    fn poll_frame(
+        mut self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<http_body::Frame<Bytes>, Self::Error>>> {
+        self.0
+            .poll_recv(cx)
+            .map(|piece| piece.map(|bytes| Ok(http_body::Frame::data(bytes))))
     }
-    if fatal {
-        sapi.fatal_error();
-    }
-    for warning in sapi.warnings() {
-        eprintln!("symfony-runtime: PHP Warning: {warning}");
-    }
-    sapi.end()
 }

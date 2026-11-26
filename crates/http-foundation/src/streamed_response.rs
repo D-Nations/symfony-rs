@@ -169,5 +169,5 @@ pub fn echo(text: impl Into<PhpString>) {
 
 /// `flush()`, for a callback.
 pub fn flush() {
-    with_output(|o| o.calls.push(OutputCall::Flush));
+    crate::php::flush();
 }
