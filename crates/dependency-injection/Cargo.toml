@@ -17,7 +17,8 @@ psr-container = { path = "../psr-container" }
 # Globals: $_ENV, $_SERVER and getenv() for EnvVarProcessor.
 symfony-dotenv = { path = "../dotenv" }
 # YamlDumper writes through symfony/yaml's Dumper and reads inline
-# services back with its Parser.
+# services back with its Parser; YamlFileLoader parses with it (and
+# its TaggedValue).
 symfony-yaml = { path = "../yaml" }
 
 [dev-dependencies]

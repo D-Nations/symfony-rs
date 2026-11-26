@@ -150,7 +150,7 @@ LazyProxy/Instantiator/RealServiceInstantiator.php	RealServiceInstantiator	10	pe
 LazyProxy/PhpDumper/DumperInterface.php	DumperInterface	8	pending	
 LazyProxy/PhpDumper/LazyServiceDumper.php	LazyServiceDumper	141	pending	
 LazyProxy/PhpDumper/NullDumper.php	NullDumper	17	pending	
-Loader/ClosureLoader.php	ClosureLoader	20	pending	
+Loader/ClosureLoader.php	ClosureLoader	20	ported	crates/dependency-injection/src/loader/closure_loader.rs
 Loader/Configurator/AbstractConfigurator.php	AbstractConfigurator	92	pending	
 Loader/Configurator/AbstractServiceConfigurator.php	AbstractServiceConfigurator	60	pending	
 Loader/Configurator/AliasConfigurator.php	AliasConfigurator	13	pending	
@@ -190,14 +190,14 @@ Loader/Configurator/Traits/PublicTrait.php	PublicTrait	14	pending
 Loader/Configurator/Traits/ShareTrait.php	ShareTrait	9	pending	
 Loader/Configurator/Traits/SyntheticTrait.php	SyntheticTrait	9	pending	
 Loader/Configurator/Traits/TagTrait.php	TagTrait	34	pending	
-Loader/ContentLoaderTrait.php	ContentLoaderTrait	770	pending	
-Loader/DirectoryLoader.php	DirectoryLoader	27	pending	
-Loader/FileLoader.php	FileLoader	339	pending	
-Loader/GlobFileLoader.php	GlobFileLoader	16	pending	
-Loader/IniFileLoader.php	IniFileLoader	61	pending	
+Loader/ContentLoaderTrait.php	ContentLoaderTrait	770	ported	crates/dependency-injection/src/loader/content_loader_trait.rs
+Loader/DirectoryLoader.php	DirectoryLoader	27	ported	crates/dependency-injection/src/loader/directory_loader.rs
+Loader/FileLoader.php	FileLoader	339	ported	crates/dependency-injection/src/loader/file_loader.rs
+Loader/GlobFileLoader.php	GlobFileLoader	16	ported	crates/dependency-injection/src/loader/glob_file_loader.rs
+Loader/IniFileLoader.php	IniFileLoader	61	ported	crates/dependency-injection/src/loader/ini_file_loader.rs
 Loader/PhpFileLoader.php	PhpFileLoader	158	pending	
-Loader/UndefinedExtensionHandler.php	UndefinedExtensionHandler	29	pending	
-Loader/YamlFileLoader.php	YamlFileLoader	84	pending	
+Loader/UndefinedExtensionHandler.php	UndefinedExtensionHandler	29	ported	crates/dependency-injection/src/loader/undefined_extension_handler.rs
+Loader/YamlFileLoader.php	YamlFileLoader	84	ported	crates/dependency-injection/src/loader/yaml_file_loader.rs
 Parameter.php	Parameter	12	ported	crates/dependency-injection/src/reference.rs
 ParameterBag/ContainerBag.php	ContainerBag	21	ported	crates/dependency-injection/src/parameter_bag/container_bag.rs
 ParameterBag/ContainerBagInterface.php	ContainerBagInterface	10	ported	crates/dependency-injection/src/parameter_bag/container_bag.rs

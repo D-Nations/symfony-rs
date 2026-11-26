@@ -1844,7 +1844,7 @@ fn sprintf_env(format: &[u8], env: &str) -> Result<Value> {
 
 /// `Target::getParsedName()`: `lcfirst(str_replace(' ', '',
 /// ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $name))))`.
-fn target_parsed_name(name: &str) -> String {
+pub(crate) fn target_parsed_name(name: &str) -> String {
     let mut out = Vec::with_capacity(name.len());
     let mut upper_next = true;
     for &b in name.as_bytes() {

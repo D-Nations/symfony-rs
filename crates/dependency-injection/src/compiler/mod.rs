@@ -19,7 +19,7 @@ mod autowire_required_properties_pass;
 #[expect(clippy::module_inception, reason = "one module per upstream file")]
 mod compiler;
 mod compiler_pass_interface;
-mod deep_clone;
+pub(crate) mod deep_clone;
 mod export_type;
 mod extension_compiler_pass;
 mod merge_extension_configuration_pass;
