@@ -165,3 +165,6 @@ pub use validate_env_placeholders_pass::ValidateEnvPlaceholdersPass;
 
 mod autowire_pass;
 pub use autowire_pass::{AutowirePass, new_autowire_attribute};
+
+mod resolve_autowire_inline_attributes_pass;
+pub use resolve_autowire_inline_attributes_pass::ResolveAutowireInlineAttributesPass;

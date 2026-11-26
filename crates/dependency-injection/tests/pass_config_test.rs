@@ -55,8 +55,7 @@ fn testPassOrderingWithoutPasses() {
     assert!(config.get_removing_passes().is_empty());
 }
 
-/// Upstream's default list: its order, and passes that are not ported
-/// yet refusing to run.
+/// Upstream's default list: its order, and a compilation through it.
 #[test]
 fn default_passes_in_upstream_order() {
     let config = PassConfig::new();
@@ -123,19 +122,10 @@ fn default_passes_in_upstream_order() {
         names
     );
 
+    // Every default pass is ported: an empty container compiles.
     let mut container = ContainerBuilder::new();
-    let e = container.compile(false).unwrap_err();
-    // The first pass that is not ported yet stops the compilation.
-    let message = e.message();
-    assert!(
-        message
-            .starts_with("The compiler pass \"Symfony\\Component\\DependencyInjection\\Compiler\\")
-            && message.ends_with(
-                "\" is not ported yet: this build cannot compile a container that needs it."
-            ),
-        "{message}"
-    );
-    assert!(!container.is_compiled());
+    container.compile(false).unwrap();
+    assert!(container.is_compiled());
 }
 
 #[test]

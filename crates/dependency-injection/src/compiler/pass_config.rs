@@ -110,10 +110,18 @@ impl CompilerPassInterface for PendingPass {
     }
 }
 
+#[expect(
+    dead_code,
+    reason = "every default pass is ported; kept for passes added later"
+)]
 fn pending(short: &str) -> Pass {
     Pass::new(PendingPass::new(short, ""))
 }
 
+#[expect(
+    dead_code,
+    reason = "every default pass is ported; kept for passes added later"
+)]
 fn pending_with(short: &str, arguments: &'static str) -> Pass {
     Pass::new(PendingPass::new(short, arguments))
 }
@@ -161,7 +169,7 @@ impl PassConfig {
                 Pass::new(super::AutoAliasServicePass),
                 Pass::new(super::ValidateEnvPlaceholdersPass::new()),
                 Pass::new(super::ResolveDecoratorStackPass::new()),
-                pending("ResolveAutowireInlineAttributesPass"),
+                Pass::new(super::ResolveAutowireInlineAttributesPass::new()),
                 Pass::new(super::ResolveChildDefinitionsPass::new()),
                 Pass::new(super::RegisterServiceSubscribersPass::new()),
                 Pass::new(super::ResolveParameterPlaceHoldersPass::new(false, false)),
@@ -174,7 +182,7 @@ impl PassConfig {
                 Pass::new(super::TagDecoratorPass),
                 Pass::new(DecoratorServicePass::new()),
                 Pass::new(CheckDefinitionValidityPass),
-                pending_with("AutowirePass", "false"),
+                Pass::new(super::AutowirePass::new(false)),
                 Pass::new(super::ServiceLocatorTagPass::new()),
                 Pass::new(super::ResolveTaggedIteratorArgumentPass::new()),
                 Pass::new(super::ResolveServiceSubscribersPass::new()),
