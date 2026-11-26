@@ -6,17 +6,6 @@
 //! `#[AsTaggedItem]` attributes are class attributes. `assertEquals()` on
 //! references compares their ids, types and names.
 //!
-//! testAttributesAreMergedWithTags, testAttributesAreFallbacks,
-//! testMergingAsTaggedItemWithEmptyTagAndNonStaticBusinessMethod,
-//! testDecoratedServiceAsTaggedItemIndex and
-//! testMultiLevelDecoratedServiceAsTaggedItemIndex skip their
-//! `ResolveInstanceofConditionalsPass` run: there are no instanceof
-//! conditionals, so upstream's pass returns each definition unchanged.
-//!
-//! Pending: testTagAddedByAutoconfigurationDoesNotOverrideThePriority and
-//! testTaggedItemAttributes (they need `ResolveInstanceofConditionalsPass`
-//! to apply instanceof conditionals; it is not ported yet).
-//!
 //! Upstream: symfony/dependency-injection Tests/Compiler/PriorityTaggedServiceTraitTest.php
 #![allow(
     non_snake_case,
@@ -33,9 +22,12 @@ use symfony_dependency_injection::class_metadata::{
     AttributeMetadata, ClassMetadata, ClassRegistry, MethodMetadata, Visibility,
 };
 use symfony_dependency_injection::compiler::{
-    AS_TAGGED_ITEM, TagName, find_and_sort_tagged_services,
+    AS_TAGGED_ITEM, CompilerPassInterface, ResolveInstanceofConditionalsPass, TagName,
+    find_and_sort_tagged_services,
 };
-use symfony_dependency_injection::{ContainerBuilder, ErrorKind, InvalidBehavior, Reference};
+use symfony_dependency_injection::{
+    ContainerBuilder, Definition, ErrorKind, InvalidBehavior, Reference,
+};
 
 const TESTS: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\";
 const FIXTURES: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\";
@@ -186,6 +178,13 @@ fn container() -> ContainerBuilder {
     let mut container = ContainerBuilder::new();
     container.set_class_registry(fixtures());
     container
+}
+
+/// `(new ResolveInstanceofConditionalsPass())->process($container)`.
+fn resolve_instanceof(container: &mut ContainerBuilder) {
+    ResolveInstanceofConditionalsPass::new()
+        .process(container)
+        .unwrap();
 }
 
 /// `PriorityTaggedServiceTraitImplementation::test()`.
@@ -340,6 +339,38 @@ fn testOnlyTheFirstNonIndexedTagIsListed() {
 }
 
 #[test]
+fn testTagAddedByAutoconfigurationDoesNotOverrideThePriority() {
+    let mut container = container();
+    container
+        .register_for_autoconfiguration("stdClass")
+        .add_tag("my_custom_tag", PhpArray::new());
+    container
+        .register("service1", Some("stdClass"))
+        .unwrap()
+        .set_autoconfigured(true)
+        .add_tag("my_custom_tag", php_array!["priority" => -70]);
+    container
+        .register("service2", Some("stdClass"))
+        .unwrap()
+        .set_autoconfigured(true);
+
+    resolve_instanceof(&mut container);
+
+    let expected = [reference("service2"), reference("service1")];
+    assert_list(&expected, &test("my_custom_tag", &mut container));
+
+    let expected = [
+        ("service2", typed("service2", "stdClass")),
+        ("service1", typed("service1", "stdClass")),
+    ];
+    let services = test(
+        &IteratorArgument::tagged("my_custom_tag", None, true, Vec::new(), true),
+        &mut container,
+    );
+    assert_refs(&expected, &services);
+}
+
+#[test]
 fn testOnlyTheIndexedTagsAreListed() {
     let mut container = container();
     container
@@ -475,6 +506,68 @@ fn testTheIndexedTagsByDefaultIndexMethodFailure() {
 }
 
 #[test]
+fn testTaggedItemAttributes() {
+    let mut container = container();
+    let (hello, hello2, multi) = (
+        t("HelloNamedService"),
+        t("HelloNamedService2"),
+        t("MultiTagHelloNamedService"),
+    );
+    container
+        .register("service1", Some(&f("FooTagClass")))
+        .unwrap()
+        .add_tag("my_custom_tag", PhpArray::new());
+    let conditional = Definition::child("");
+    conditional.add_tag("my_custom_tag", PhpArray::new());
+    let conditional2 = Definition::child("");
+    conditional2.add_tag("my_custom_tag2", PhpArray::new());
+    let mut instanceof = PhpArray::new();
+    instanceof.insert(hello.as_str(), conditional.to_value());
+    instanceof.insert("stdClass", conditional2.to_value());
+    container
+        .register("service2", Some(&hello))
+        .unwrap()
+        .set_autoconfigured(true)
+        .set_instanceof_conditionals(instanceof);
+    for id in ["service3", "service4", "service5"] {
+        container
+            .register(id, Some(&hello2))
+            .unwrap()
+            .set_autoconfigured(true)
+            .add_tag("my_custom_tag", PhpArray::new());
+    }
+    container
+        .register("service6", Some(&multi))
+        .unwrap()
+        .set_autoconfigured(true)
+        .add_tag("my_custom_tag", PhpArray::new());
+
+    resolve_instanceof(&mut container);
+
+    let tag = IteratorArgument::tagged_legacy(
+        "my_custom_tag",
+        Some("foo"),
+        Some("getFooBar"),
+        false,
+        None,
+        vec!["service4".to_string(), "service5".to_string()],
+        true,
+    );
+    let expected = [
+        ("service3", typed("service3", &hello2)),
+        ("multi_hello_2", typed("service6", &multi)),
+        ("hello", typed("service2", &hello)),
+        ("multi_hello_1", typed("service6", &multi)),
+        ("service1", typed("service1", &f("FooTagClass"))),
+        ("multi_hello_0", typed("service6", &multi)),
+    ];
+
+    let services = test(&tag, &mut container);
+    assert_refs(&expected, &services);
+    assert_refs(&expected, &test(&tag, &mut container));
+}
+
+#[test]
 fn testResolveIndexedTags() {
     let mut container = container();
     container
@@ -534,6 +627,8 @@ fn testAttributesAreMergedWithTags() {
     definition.add_tag("my_custom_tag", php_array!["foo" => "z"]);
     definition.add_tag("my_custom_tag", PhpArray::new());
 
+    resolve_instanceof(&mut container);
+
     let tag = tagged("my_custom_tag", Some("foo"), Some("getFooBar"));
     let services = test(&tag, &mut container);
 
@@ -555,6 +650,8 @@ fn testAttributesAreFallbacks() {
         .unwrap();
     definition.set_autoconfigured(true);
     definition.add_tag("my_custom_tag", php_array!["foo" => "z"]);
+
+    resolve_instanceof(&mut container);
 
     let tag = tagged("my_custom_tag", Some("foo"), Some("getFooBar"));
     let services = test(&tag, &mut container);
@@ -688,6 +785,8 @@ fn testMergingAsTaggedItemWithEmptyTagAndNonStaticBusinessMethod() {
         .set_autoconfigured(true)
         .add_tag("my_custom_tag", PhpArray::new());
 
+    resolve_instanceof(&mut container);
+
     let tag = IteratorArgument::tagged("my_custom_tag", Some("index"), false, Vec::new(), true);
 
     let services = test(&tag, &mut container);
@@ -771,6 +870,8 @@ fn testDecoratedServiceAsTaggedItemIndex() {
         php_array!["id" => class.as_str(), "inner" => "inner.tagged_service"],
     );
 
+    resolve_instanceof(&mut container);
+
     let tag = IteratorArgument::tagged("my_custom_tag", Some("foo"), false, Vec::new(), true);
     let services = test(&tag, &mut container);
 
@@ -809,6 +910,8 @@ fn testMultiLevelDecoratedServiceAsTaggedItemIndex() {
         "container.decorator",
         php_array!["id" => class.as_str(), "inner" => "decorator1.tagged_service"],
     );
+
+    resolve_instanceof(&mut container);
 
     let tag = IteratorArgument::tagged("my_custom_tag", Some("foo"), false, Vec::new(), true);
     let services = test(&tag, &mut container);
