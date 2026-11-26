@@ -5,9 +5,7 @@
 //! attributes, are class metadata; `FooUnitEnum::BAR` is an enum case
 //! object. `assertEquals()` on argument objects compares what they hold.
 //!
-//! Pending: testScalarSetterAttribute needs `AutowireRequiredMethodsPass`
-//! and testSyntheticServiceWithBind needs `DefinitionErrorExceptionPass`,
-//! which are not ported in this slice. testIterableBindingTypehint's
+//! testIterableBindingTypehint's
 //! autoloader (that `iterable` is never looked up as a class) has no
 //! counterpart: the class registry is never asked for it either.
 //!
@@ -24,7 +22,10 @@ use symfony_dependency_injection::argument::{
 use symfony_dependency_injection::class_metadata::{
     AttributeMetadata, ClassKind, ClassMetadata, ClassRegistry, MethodMetadata, ParameterMetadata,
 };
-use symfony_dependency_injection::compiler::{CompilerPassInterface, ResolveBindingsPass};
+use symfony_dependency_injection::compiler::{
+    AutowireRequiredMethodsPass, CompilerPassInterface, DefinitionErrorExceptionPass,
+    ResolveBindingsPass,
+};
 use symfony_dependency_injection::{
     ContainerBuilder, Definition, ErrorKind, InvalidBehavior, Reference, Result,
 };
@@ -32,6 +33,7 @@ use symfony_dependency_injection::{
 const FIXTURES: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\";
 const PSR_CONTAINER: &str = "Psr\\Container\\ContainerInterface";
 const TARGET: &str = "Symfony\\Component\\DependencyInjection\\Attribute\\Target";
+const REQUIRED: &str = "Symfony\\Contracts\\Service\\Attribute\\Required";
 const TARGETED_BINDINGS_SERVICE: &str =
     "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\TargetedBindingsService";
 
@@ -119,6 +121,13 @@ fn registry() -> Arc<ClassRegistry> {
             target(param("commonName", None), "commonName"),
         ])),
     );
+    let mut set_default_locale =
+        MethodMetadata::public("setDefaultLocale").with_parameters(vec![param("defaultLocale", None)]);
+    set_default_locale.attributes.push(AttributeMetadata {
+        class: REQUIRED.to_string(),
+        arguments: PhpArray::new(),
+    });
+    registry.add_class(ClassMetadata::class(&fixture("ScalarSetter")).with_method(set_default_locale));
     Arc::new(registry)
 }
 
@@ -343,6 +352,28 @@ fn testTypedReferenceSupport() {
 }
 
 #[test]
+fn testScalarSetterAttribute() {
+    let mut container = container();
+
+    let definition = container
+        .autowire("foo", Some(&fixture("ScalarSetter")))
+        .unwrap();
+    definition.set_bindings(&php_array!["$defaultLocale" => "fr"]);
+
+    AutowireRequiredMethodsPass::new()
+        .process(&mut container)
+        .unwrap();
+    ResolveBindingsPass::new().process(&mut container).unwrap();
+
+    let expected = php_array![php_array!["setDefaultLocale", php_array!["fr"]]];
+    let actual = definition.method_calls();
+    assert!(
+        php_value::compare::loose_equals(&Value::Array(expected), &Value::Array(actual.clone())),
+        "{actual:?}"
+    );
+}
+
+#[test]
 fn testWithNonExistingSetterAndBinding() {
     let mut container = container();
 
@@ -361,6 +392,44 @@ fn testWithNonExistingSetterAndBinding() {
         process(&mut container),
         &ErrorKind::Runtime,
         "Invalid service \"Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\NamedArgumentsDummy\": method \"setLogger()\" does not exist.",
+    );
+}
+
+#[test]
+fn testSyntheticServiceWithBind() {
+    let mut container = container();
+    let argument = BoundArgument::new(Value::from("bar"), true, 0, None);
+
+    container
+        .register("foo", Some("stdClass"))
+        .unwrap()
+        .add_argument(Reference::new("synthetic.service"));
+
+    let mut bindings = PhpArray::new();
+    bindings.insert("$apiKey", argument.to_value());
+    container
+        .register("synthetic.service", None)
+        .unwrap()
+        .set_synthetic(true)
+        .set_bindings(&bindings);
+
+    let class = fixture("NamedArgumentsDummy");
+    container
+        .register(&class, Some(&class))
+        .unwrap()
+        .set_bindings(&bindings);
+
+    ResolveBindingsPass::new().process(&mut container).unwrap();
+    DefinitionErrorExceptionPass::new()
+        .process(&mut container)
+        .unwrap();
+
+    let mut expected = PhpArray::new();
+    expected.insert(1, Value::from("bar"));
+    assert!(
+        Value::Array(expected).identical(&Value::Array(
+            container.get_definition(&class).unwrap().arguments()
+        ))
     );
 }
 
