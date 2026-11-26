@@ -9,6 +9,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use php_value::{PhpArray, php_array};
+use symfony_config::resource::FileResource;
 use symfony_config::{Class, Error as ConfigError};
 use symfony_dependency_injection::class_metadata::{
     AttributeMetadata, ClassMetadata, ClassRegistry,
@@ -20,9 +21,15 @@ use symfony_dependency_injection::loader::from_config_error;
 pub fn fixtures() -> Option<String> {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../upstream/symfony/dependency-injection/Tests/Fixtures");
-    match dir.canonicalize() {
-        Ok(dir) if dir.is_dir() => Some(dir.to_string_lossy().into_owned()),
-        _ => {
+    // realpath() as the ported code computes it (not std::fs::canonicalize,
+    // whose Windows paths are verbatim `\\?\` ones).
+    let real = dir
+        .is_dir()
+        .then(|| FileResource::new(dir.to_string_lossy().as_bytes()).ok())
+        .flatten();
+    match real {
+        Some(real) => Some(String::from_utf8_lossy(real.get_resource()).into_owned()),
+        None => {
             eprintln!("skipped: upstream/ is not fetched (scripts/fetch-upstream.sh)");
             None
         }
