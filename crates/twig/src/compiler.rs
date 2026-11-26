@@ -218,7 +218,7 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
             path("rt::core::convert_date"),
             vec![null("date"), null("timezone")],
         ),
-        "abs" => (path("rt::core::abs"), vec![req("num")]),
+        "abs" => (path("rt::core::abs"), vec![req("num").coercion_safe()]),
         "Twig\\Extension\\CoreExtension::round" => (
             path("rt::core::round"),
             vec![
@@ -234,8 +234,8 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
             path("rt::core::json_encode"),
             vec![
                 req("value"),
-                def("flags", Attr::Int(0)),
-                def("depth", Attr::Int(512)),
+                def("flags", Attr::Int(0)).coercion_safe(),
+                def("depth", Attr::Int(512)).coercion_safe(),
             ],
         ),
         "Twig\\Extension\\CoreExtension::titleCase" => {
@@ -353,7 +353,7 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
         "Twig\\Extension\\CoreExtension::keys" => (path("rt::core::keys"), vec![req("array")]),
         "Twig\\Extension\\CoreExtension::invoke" => (
             path("rt::core::invoke"),
-            vec![req("arrow"), P::variadic("arguments")],
+            vec![req("arrow").coercion_safe(), P::variadic("arguments")],
         ),
         "max" => (
             path("rt::core::max"),
@@ -365,7 +365,11 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
         ),
         "range" => (
             path("rt::core::range"),
-            vec![req("start"), req("end"), def("step", Attr::Int(1))],
+            vec![
+                req("start"),
+                req("end"),
+                def("step", Attr::Int(1)).coercion_safe(),
+            ],
         ),
         "Twig\\Extension\\CoreExtension::enum" => (path("rt::core::enum_first"), vec![req("enum")]),
         "Twig\\Extension\\CoreExtension::enumCases" => {
@@ -376,7 +380,7 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
             vec![
                 req("constant"),
                 null("object"),
-                def("checkDefined", Attr::Bool(false)),
+                def("checkDefined", Attr::Bool(false)).coercion_safe(),
             ],
         ),
         "Twig\\Extension\\CoreExtension::cycle" => (
@@ -405,7 +409,7 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
                 env(),
                 req("template"),
                 P::array_default("variables"),
-                def("ignoreMissing", Attr::Bool(false)),
+                def("ignoreMissing", Attr::Bool(false)).coercion_safe(),
             ],
         ),
         "Twig\\Extension\\CoreExtension::source" => (
@@ -428,7 +432,7 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
                 req("string"),
                 def("strategy", Attr::str("html")),
                 null("charset"),
-                def("autoescape", Attr::Bool(false)),
+                def("autoescape", Attr::Bool(false)).coercion_safe(),
             ],
         ),
         _ => return None,

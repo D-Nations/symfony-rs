@@ -32,6 +32,11 @@ pub struct Parameter {
     pub variadic: bool,
     /// An `array` type with `[]` as default.
     pub array_default_empty: bool,
+    /// `CallableParameters::isStringCoercionSafe()` of the declared type:
+    /// a value of this type is never a `Stringable` or `Traversable`
+    /// (`int`, `float`, `bool`, `null`, a final class such as `\Closure`),
+    /// so the sandbox does not check what it passes.
+    pub coercion_safe: bool,
 }
 
 impl Parameter {
@@ -43,6 +48,7 @@ impl Parameter {
             optional_without_default: false,
             variadic: false,
             array_default_empty: false,
+            coercion_safe: false,
         }
     }
 
@@ -69,6 +75,14 @@ impl Parameter {
         }
     }
 
+    /// The same parameter with a type that cannot be coerced to a string
+    /// (see [`Self::coercion_safe`]).
+    #[must_use]
+    pub fn coercion_safe(mut self) -> Self {
+        self.coercion_safe = true;
+        self
+    }
+
     /// `...$name`.
     #[must_use]
     pub fn variadic(name: &str) -> Self {
@@ -91,8 +105,11 @@ fn required_count(params: &[Parameter]) -> usize {
         .map_or(0, |i| i + 1)
 }
 
-/// `ReflectionCallable::getTwigParameters()`.
-fn twig_parameters<'a>(
+/// `ReflectionCallable::getTwigParameters()`: the parameters without the
+/// ones Twig passes itself (charset, environment, context, sandbox state,
+/// the callable's own `arguments`) and, with `strip_input`, the input
+/// value of a filter or test.
+pub fn twig_parameters<'a>(
     callable: &TwigCallable,
     params: &'a [Parameter],
     strip_input: bool,
