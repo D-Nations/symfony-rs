@@ -307,6 +307,9 @@ pub struct Output {
     /// `ini_get('default_mimetype')`, which `Response::prepare()` empties
     /// for a response without a body.
     pub default_mimetype: PhpString,
+    /// `connection_aborted()`: the HTTP adapter sets it once the client is
+    /// gone.
+    pub connection_aborted: bool,
     pub calls: Vec<OutputCall>,
 }
 
@@ -321,6 +324,7 @@ impl Default for Output {
             finish_request: FinishRequest::None,
             buffers: Vec::new(),
             default_mimetype: PhpString::from("text/html"),
+            connection_aborted: false,
             calls: Vec::new(),
         }
     }

@@ -4,7 +4,7 @@ AcceptHeaderItem.php	AcceptHeaderItem	78	ported	crates/http-foundation/src/accep
 BinaryFileResponse.php	BinaryFileResponse	260	pending	
 ChainRequestMatcher.php	ChainRequestMatcher	16	pending	
 Cookie.php	Cookie	278	ported	crates/http-foundation/src/cookie.rs crates/http-foundation/tests/cookie_recorded.rs
-EventStreamResponse.php	EventStreamResponse	59	pending	
+EventStreamResponse.php	EventStreamResponse	59	ported	crates/http-foundation/src/event_stream_response.rs
 Exception/BadRequestException.php	BadRequestException	4	ported	crates/http-foundation/src/exception.rs
 Exception/ConflictingHeadersException.php	ConflictingHeadersException	4	ported	crates/http-foundation/src/exception.rs
 Exception/ExceptionInterface.php	ExceptionInterface	4	pending	
@@ -61,7 +61,7 @@ RequestStack.php	RequestStack	53	ported	crates/http-foundation/src/request_stack
 Response.php	Response	689	ported	crates/http-foundation/src/response.rs crates/http-kernel/src/lib.rs
 ResponseHeaderBag.php	ResponseHeaderBag	171	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs
 ServerBag.php	ServerBag	48	ported	crates/http-foundation/src/server_bag.rs crates/http-foundation/tests/server_bag_recorded.rs
-ServerEvent.php	ServerEvent	90	pending	
+ServerEvent.php	ServerEvent	90	ported	crates/http-foundation/src/server_event.rs
 Session/Attribute/AttributeBag.php	AttributeBag	72	pending	
 Session/Attribute/AttributeBagInterface.php	AttributeBagInterface	11	pending	
 Session/Flash/AutoExpireFlashBag.php	AutoExpireFlashBag	78	pending	

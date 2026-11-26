@@ -410,10 +410,10 @@ impl Response {
 
     /// `$response::class`.
     pub fn class(&self) -> &'static str {
-        if self.stream.is_some() {
-            crate::streamed_response::CLASS
-        } else {
-            CLASS
+        match self.stream.as_deref() {
+            Some(stream) if stream.event_stream().is_some() => crate::event_stream_response::CLASS,
+            Some(_) => crate::streamed_response::CLASS,
+            None => CLASS,
         }
     }
 

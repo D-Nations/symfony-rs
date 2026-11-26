@@ -563,9 +563,11 @@ impl Delivery {
         let pass = ending || !self.buffering || self.pending.len() >= NGINX_BUFFER;
         if pass && !self.pending.is_empty() {
             let piece = Bytes::from(std::mem::take(&mut self.pending));
-            // The client may be gone; PHP-FPM is not told either.
+            // The client is gone: nginx closes the connection to PHP-FPM,
+            // and `connection_aborted()` answers 1 from then on.
             if body.blocking_send(piece).is_err() {
                 self.body = None;
+                with_output(|o| o.connection_aborted = true);
             }
         }
         if ending {

@@ -27,12 +27,14 @@ use axum::{
 };
 use php_value::{Handle, PhpString};
 use symfony_http_foundation::{
+    event_stream_response::{self, EventCallback, Events},
     header_bag::ResponseHeaderBag,
     php::{FinishRequest, OutputCall, set_globals, take_globals, with_output},
     request::Request as PhpRequest,
     request_stack::RequestHandle,
     response::Response,
     sapi::{CgiResponse, Ini},
+    server_event::ServerEvent,
     streamed_response::{self, CallbackOrChunks},
 };
 use symfony_http_kernel::{
@@ -443,6 +445,103 @@ async fn nginx_hides_the_x_accel_headers() {
         .map(axum::http::HeaderName::as_str)
         .collect();
     assert_eq!(vec!["x-accel-other", "content-type"], names);
+}
+
+/// A kernel answering with an `EventStreamResponse` whose generator
+/// waits for the test before each event after the first, and counts the
+/// events it yields.
+struct EventKernel {
+    go: Arc<Mutex<Receiver<()>>>,
+    yielded: Arc<std::sync::atomic::AtomicUsize>,
+}
+
+impl HttpKernelInterface for EventKernel {
+    fn handle(&self, _: &RequestHandle, _: i64, _: bool) -> Result<ResponseHandle, Throwable> {
+        let (go, yielded) = (self.go.clone(), self.yielded.clone());
+        let callback: EventCallback = Arc::new(move |_| {
+            let (go, yielded) = (go.clone(), yielded.clone());
+            let events: Events = Box::new((0..5).map(move |i| {
+                if i > 0 {
+                    let _ = go.lock().unwrap().recv_timeout(Duration::from_secs(5));
+                }
+                yielded.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                Ok(ServerEvent::data(format!("event {i}").as_str()))
+            }));
+            Ok(Some(events))
+        });
+        let response =
+            event_stream_response::new(Some(callback), 200, [("", ""); 0], None).unwrap();
+        Ok(Handle::new(response))
+    }
+}
+
+impl RunnableKernel for EventKernel {}
+
+async fn events() -> (
+    axum::response::Response,
+    std::sync::mpsc::Sender<()>,
+    Arc<std::sync::atomic::AtomicUsize>,
+) {
+    let (go, wait) = channel();
+    let wait = Arc::new(Mutex::new(wait));
+    let yielded = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let counter = yielded.clone();
+    let kernel = Arc::new(move || {
+        let kernel: Arc<dyn RunnableKernel> = Arc::new(EventKernel {
+            go: wait.clone(),
+            yielded: counter.clone(),
+        });
+        Ok(kernel)
+    });
+    let front = FrontController::new(ServerConfig::default(), Ini::default(), kernel);
+    let response = Arc::new(front)
+        .router()
+        .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
+        .await
+        .unwrap();
+    (response, go, yielded)
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn server_events_reach_the_client_as_they_are_sent() {
+    let (response, go, _) = events().await;
+    // PHP-FPM adds `default_charset` to a text type set by `header()`.
+    assert_eq!(
+        response.headers()["content-type"],
+        "text/event-stream;charset=UTF-8"
+    );
+    assert!(response.headers().get("x-accel-buffering").is_none());
+    let mut body = response.into_body();
+    let mut seen = Vec::new();
+    // Each event is passed on before the generator is let go on.
+    for i in 0..5 {
+        while !String::from_utf8_lossy(&seen).contains(&format!("data: event {i}\n\n")) {
+            let piece = next_piece(&mut body, Duration::from_secs(5)).await;
+            seen.extend(piece.unwrap().unwrap());
+        }
+        let _ = go.send(());
+    }
+    assert_eq!(
+        "data: event 0\n\ndata: event 1\n\ndata: event 2\n\ndata: event 3\n\ndata: event 4\n\n",
+        String::from_utf8_lossy(&seen)
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn a_client_gone_ends_the_event_loop() {
+    let (response, go, yielded) = events().await;
+    let mut body = response.into_body();
+    let first = next_piece(&mut body, Duration::from_secs(5)).await;
+    assert!(first.unwrap().is_some());
+    drop(body);
+    // The next event's flush finds the client gone; connection_aborted()
+    // then ends the loop before the event after it.
+    for _ in 0..4 {
+        let _ = go.send(());
+    }
+    tokio::time::sleep(Duration::from_millis(300)).await;
+    let count = yielded.load(std::sync::atomic::Ordering::SeqCst);
+    assert!(count < 5, "{count} events yielded");
 }
 
 #[tokio::test(flavor = "multi_thread")]
