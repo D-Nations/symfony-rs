@@ -2,17 +2,14 @@
 //! at symfony/dependency-injection 9b34cad8. Names and assertions are
 //! PHPUnit's.
 //!
-//! Pending: testWithErroredServiceLocator and testWithErroredHiddenService
-//! (both cases of each; they build the locator with
-//! `ServiceLocatorTagPass::register()`, ported in another slice).
-//!
 //! Upstream: symfony/dependency-injection Tests/Compiler/CheckExceptionOnInvalidReferenceBehaviorPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
-use php_value::PhpArray;
+use php_value::{PhpArray, php_array};
 use symfony_dependency_injection::argument::BoundArgument;
 use symfony_dependency_injection::compiler::{
-    CheckExceptionOnInvalidReferenceBehaviorPass, CompilerPassInterface,
+    AnalyzeServiceReferencesPass, CheckExceptionOnInvalidReferenceBehaviorPass,
+    CompilerPassInterface, InlineServiceDefinitionsPass, ServiceLocatorTagPass,
 };
 use symfony_dependency_injection::{ContainerBuilder, Definition, ErrorKind, Reference, Result};
 
@@ -78,6 +75,61 @@ fn testProcessDefinitionWithBindings() {
         .to_value()]));
 
     process(&mut container).unwrap();
+}
+
+/// `ServiceLocatorTagPass::register()` of `['foo' => new Reference($id)]`
+/// for `bar`, analyzed and, with `$inline`, inlined.
+fn errored_locator(id: &str, inline: bool) -> ContainerBuilder {
+    let mut container = ContainerBuilder::new();
+
+    ServiceLocatorTagPass::register(
+        &mut container,
+        &php_array!["foo" => Reference::new(id)],
+        Some("bar"),
+    )
+    .unwrap();
+
+    AnalyzeServiceReferencesPass::default()
+        .process(&mut container)
+        .unwrap();
+    if inline {
+        InlineServiceDefinitionsPass::new(None)
+            .process(&mut container)
+            .unwrap();
+    }
+    container
+}
+
+#[test]
+fn testWithErroredServiceLocator() {
+    for inline in [true, false] {
+        let mut container = errored_locator("baz", inline);
+
+        let e = process(&mut container).unwrap_err();
+        assert!(e.is(&ErrorKind::ServiceNotFound));
+        assert!(
+            e.message().contains("The service \"foo\" in the container provided to \"bar\" has a dependency on a non-existent service \"baz\"."),
+            "{}",
+            e.message()
+        );
+    }
+}
+
+#[test]
+fn testWithErroredHiddenService() {
+    for inline in [true, false] {
+        let mut container = errored_locator("foo", inline);
+
+        let e = process(&mut container).unwrap_err();
+        assert!(e.is(&ErrorKind::ServiceNotFound));
+        assert!(
+            e.message().contains(
+                "The service \"bar\" has a dependency on a non-existent service \"foo\"."
+            ),
+            "{}",
+            e.message()
+        );
+    }
 }
 
 #[test]

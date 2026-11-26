@@ -2,28 +2,20 @@
 //! symfony/dependency-injection 9b34cad8. Names, comments and assertions
 //! are PHPUnit's.
 //!
-//! Upstream calls `$container->compile()`. Until the passes of the other
-//! slices are ported, `compile()` here runs the default pass list
-//! without its pending passes (`ResolveClassPass`, the `Resolve*`,
-//! `Autowire*`, `Register*` passes and the like, which change nothing in
-//! these containers): what decides these tests is the removing phase,
-//! inlining and this pass.
+//! `$container->compile()` is `support::compile()`: the default passes
+//! without `ResolveAutowireInlineAttributesPass` and `AutowirePass`, not
+//! ported yet (nothing is autowired in these containers).
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/CheckFactoryBuilderCircularReferencePassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
+mod support;
+
 use php_value::{PhpArray, Value};
-use symfony_dependency_injection::compiler::{Compiler, PassConfig, PendingPass};
 use symfony_dependency_injection::{ContainerBuilder, Definition, ErrorKind, Reference, Result};
 
-/// `$container->compile()` with the ported passes of the default list.
 fn compile(container: &mut ContainerBuilder) -> Result<()> {
-    let passes: Vec<_> = PassConfig::new()
-        .get_passes()
-        .into_iter()
-        .filter(|pass| pass.with::<PendingPass, _>(|_| ()).is_none())
-        .collect();
-    Compiler::run(&passes, container)
+    support::compile(container, false)
 }
 
 fn list(values: impl IntoIterator<Item = Value>) -> PhpArray {

@@ -1,18 +1,49 @@
 //! Tests/Compiler/RegisterReverseContainerPassTest.php at
 //! symfony/dependency-injection 9b34cad8.
 //!
-//! Pending: testCompileRemovesUnusedServices, testPublicServices and
-//! testReversibleServices call `compile()`, which stops at the first
-//! pass that is not ported yet, and the last two also create services.
+//! `compile()` is `support::compile()` (nothing is autowired).
+//!
+//! Pending: testPublicServices and testReversibleServices (they get the
+//! services, which needs PHP object creation).
 //! `fills_the_locator_argument` runs the pass alone on their container.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/RegisterReverseContainerPassTest.php
-#![allow(clippy::unwrap_used)]
+#![allow(non_snake_case, clippy::unwrap_used)]
+
+mod support;
 
 use php_value::{PhpArray, Value, array::Key};
 use symfony_dependency_injection::argument::ServiceLocatorArgument;
-use symfony_dependency_injection::compiler::{CompilerPassInterface, RegisterReverseContainerPass};
+use symfony_dependency_injection::compiler::{
+    CompilerPassInterface, Pass, PassType, RegisterReverseContainerPass,
+};
 use symfony_dependency_injection::{ContainerBuilder, InvalidBehavior, Reference};
+
+#[test]
+fn testCompileRemovesUnusedServices() {
+    let mut container = ContainerBuilder::new();
+    container.register("foo", Some("stdClass")).unwrap();
+    container
+        .register(
+            "reverse_container",
+            Some("Symfony\\Component\\DependencyInjection\\ReverseContainer"),
+        )
+        .unwrap()
+        .add_argument(Reference::new("service_container"))
+        .add_argument(ServiceLocatorArgument::new(PhpArray::new()).to_value())
+        .set_public(true);
+
+    container
+        .add_compiler_pass(
+            Pass::new(RegisterReverseContainerPass::new(true)),
+            PassType::BeforeOptimization,
+            0,
+        )
+        .unwrap();
+    support::compile(&mut container, false).unwrap();
+
+    assert!(!container.has("foo"));
+}
 
 /// testReversibleServices's container, with the pass run before removing.
 #[test]

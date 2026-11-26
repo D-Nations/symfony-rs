@@ -14,8 +14,8 @@
 //! `Clone` impl.
 //!
 //! Pending:
-//! - `testResetDoesNotInitializeLazyServices`: needs `ContainerBuilder`
-//!   (`register()`, `setLazy()`, `compile()`), ported separately.
+//! - `testResetDoesNotInitializeLazyServices`: it gets a lazy service
+//!   from a compiled `ContainerBuilder`, which needs PHP object creation.
 //!
 //! Upstream: symfony/dependency-injection Tests/ContainerTest.php
 #![allow(
