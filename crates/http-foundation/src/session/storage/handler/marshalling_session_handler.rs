@@ -142,14 +142,15 @@ impl SessionHandlerInterface for MarshallingSessionHandler {
         }
         let mut values = PhpArray::new();
         values.insert("data", Value::String(PhpString::from(data)));
-        let mut failed = Vec::new();
+        let mut failed = PhpArray::new();
         let marshalled = self.marshaller.marshall(&values, &mut failed)?;
         let key = Key::from_bytes(b"data");
-        if failed.contains(&key) {
+        // isset($failed['data']): a key, though symfony/cache's marshallers list the failed keys as values
+        if failed.get(&key).is_some_and(|v| !v.is_null()) {
             return Ok(false);
         }
         let value = marshalled.get(&key).cloned().unwrap_or(Value::Null);
-        let data = string_argument("SessionHandlerInterface::write", &value)?;
+        let data = string_argument(&format!("{}::write", self.handler.write_class()), &value)?;
         self.handler.write(session_id, data.as_bytes())
     }
 

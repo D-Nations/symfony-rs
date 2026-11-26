@@ -22,7 +22,7 @@ fn testMarshall() -> TestResult {
     let marshaller = IdentityMarshaller;
     let mut values = PhpArray::new();
     values.insert("data", Value::string("string_data"));
-    let mut failed = Vec::new();
+    let mut failed = PhpArray::new();
     let result = marshaller
         .marshall(&values, &mut failed)
         .map_err(|e| e.to_string())?;
@@ -38,7 +38,7 @@ fn testMarshallInvalidData() -> TestResult {
     array.insert("foo", Value::Array(PhpArray::list([Value::string("bar")])));
     for values in [object, array] {
         let marshaller = IdentityMarshaller;
-        let mut failed = Vec::new();
+        let mut failed = PhpArray::new();
         let error = marshaller
             .marshall(&values, &mut failed)
             .err()

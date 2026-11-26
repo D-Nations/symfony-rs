@@ -50,6 +50,10 @@ impl SessionHandlerInterface for NullSessionHandler {
         CLASS.to_owned()
     }
 
+    fn write_class(&self) -> String {
+        super::abstract_session_handler::CLASS.to_owned()
+    }
+
     fn open(&self, save_path: &[u8], session_name: &[u8]) -> HandlerResult<bool> {
         Ok(self.parent.open(save_path, session_name))
     }

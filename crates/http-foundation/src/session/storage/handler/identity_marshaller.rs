@@ -7,7 +7,7 @@
 
 use std::sync::Arc;
 
-use php_value::{Key, PhpArray, PhpString, Value};
+use php_value::{PhpArray, PhpString, Value};
 
 use super::{HandlerResult, marshaller_interface::MarshallerInterface};
 use crate::exception::{Class, Error};
@@ -23,7 +23,7 @@ pub struct IdentityMarshaller;
 impl MarshallerInterface for IdentityMarshaller {
     /// `marshall()`: the values, which must be strings
     /// (`\LogicException` otherwise).
-    fn marshall(&self, values: &PhpArray, _failed: &mut Vec<Key>) -> HandlerResult<PhpArray> {
+    fn marshall(&self, values: &PhpArray, _failed: &mut PhpArray) -> HandlerResult<PhpArray> {
         if values.values().any(|v| !matches!(v, Value::String(_))) {
             return Err(Arc::new(Error::new(
                 Class::PhpLogic,

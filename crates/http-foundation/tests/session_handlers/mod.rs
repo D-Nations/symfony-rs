@@ -15,7 +15,7 @@ use std::{
     sync::{Arc, Mutex, PoisonError},
 };
 
-use php_value::{Key, PhpArray, PhpString, Value};
+use php_value::{PhpArray, PhpString, Value};
 use symfony_http_foundation::{
     session::storage::handler::{
         HandlerResult, SessionHandlerInterface, SessionUpdateTimestampHandlerInterface,
@@ -195,7 +195,7 @@ impl MockMarshaller {
 }
 
 impl MarshallerInterface for MockMarshaller {
-    fn marshall(&self, values: &PhpArray, failed: &mut Vec<Key>) -> HandlerResult<PhpArray> {
+    fn marshall(&self, values: &PhpArray, failed: &mut PhpArray) -> HandlerResult<PhpArray> {
         let shown: Vec<String> = values
             .iter()
             .map(|(k, v)| {

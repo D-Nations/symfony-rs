@@ -40,6 +40,10 @@ use crate::{
     streamed_response::Throwable,
 };
 
+/// `AbstractSessionHandler::class`.
+pub const CLASS: &str =
+    "Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\AbstractSessionHandler";
+
 /// What a subclass gives `AbstractSessionHandler`: the abstract methods,
 /// its class, and its `destroy()`.
 pub trait Backend {

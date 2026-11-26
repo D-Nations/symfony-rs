@@ -58,6 +58,13 @@ pub trait SessionHandlerInterface: fmt::Debug + Send + Sync {
         None
     }
 
+    /// The class that declares `write()`, which a `TypeError` for its
+    /// arguments names (`AbstractSessionHandler` for its subclasses that
+    /// keep its `write()`).
+    fn write_class(&self) -> String {
+        self.class()
+    }
+
     /// `$handler instanceof \SessionHandler`.
     fn is_native(&self) -> bool {
         false
