@@ -3,8 +3,7 @@
 //! PHPUnit's.
 //!
 //! The fixture classes of `autowiring_classes.php` are given as class
-//! metadata. Upstream first runs `ResolveClassPass`, which another port
-//! owns; it changes nothing here since every definition names its class.
+//! metadata.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/AutowireRequiredPropertiesPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
@@ -16,7 +15,7 @@ use symfony_dependency_injection::class_metadata::{
     AttributeMetadata, ClassMetadata, ClassRegistry, PropertyMetadata, Visibility,
 };
 use symfony_dependency_injection::compiler::{
-    AutowireRequiredPropertiesPass, CompilerPassInterface,
+    AutowireRequiredPropertiesPass, CompilerPassInterface, ResolveClassPass,
 };
 use symfony_dependency_injection::{ContainerBuilder, ErrorKind, Reference};
 
@@ -94,6 +93,7 @@ fn testAttribute() {
         .unwrap()
         .set_autowired(true);
 
+    ResolveClassPass::new().process(&mut container).unwrap();
     AutowireRequiredPropertiesPass::new()
         .process(&mut container)
         .unwrap();
@@ -121,6 +121,7 @@ fn testTargetAttributeIsPropagatedOnRequiredProperty() {
         .unwrap()
         .set_autowired(true);
 
+    ResolveClassPass::new().process(&mut container).unwrap();
     AutowireRequiredPropertiesPass::new()
         .process(&mut container)
         .unwrap();

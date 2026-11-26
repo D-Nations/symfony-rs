@@ -2,16 +2,14 @@
 //! symfony/dependency-injection 9b34cad8. Names and assertions are
 //! PHPUnit's.
 //!
-//! Pending: testProcessSetDecoratedAsNullOnInvalid and
-//! testProcessSetOnlyDecoratedAsNullOnInvalid run `DecoratorServicePass`
-//! first, which is not ported in this slice.
-//!
 //! Upstream: symfony/dependency-injection Tests/Compiler/ResolveInvalidReferencesPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
 use php_value::{PhpArray, Value, array::Key, php_array};
 use symfony_dependency_injection::argument::ServiceClosureArgument;
-use symfony_dependency_injection::compiler::{CompilerPassInterface, ResolveInvalidReferencesPass};
+use symfony_dependency_injection::compiler::{
+    CompilerPassInterface, DecoratorServicePass, ResolveInvalidReferencesPass,
+};
 use symfony_dependency_injection::{ContainerBuilder, InvalidBehavior, Reference};
 
 fn process(container: &mut ContainerBuilder) {
@@ -137,6 +135,52 @@ fn testProcessRemovesArgumentsOnInvalid() {
     process(&mut container);
 
     assert_eq!(php_array![php_array![PhpArray::new()]], def.arguments());
+}
+
+#[test]
+fn testProcessSetDecoratedAsNullOnInvalid() {
+    let mut container = ContainerBuilder::new();
+    let decorator_definition = container.register("decorator", None).unwrap();
+    decorator_definition
+        .set_arguments(php_array![Reference::new("decorator.inner")])
+        .set_decorated_service(Some("unknown_decorated"), None, 0, InvalidBehavior::Null)
+        .unwrap();
+
+    DecoratorServicePass::new().process(&mut container).unwrap();
+    ResolveInvalidReferencesPass::new()
+        .process(&mut container)
+        .unwrap();
+
+    assert!(
+        Value::Array(php_array![Value::Null])
+            .identical(&Value::Array(decorator_definition.arguments()))
+    );
+}
+
+#[test]
+fn testProcessSetOnlyDecoratedAsNullOnInvalid() {
+    let mut container = ContainerBuilder::new();
+    let unknown_argument = Reference::new("unknown_argument");
+    let decorator_definition = container.register("decorator", None).unwrap();
+    decorator_definition
+        .set_arguments(php_array![
+            Reference::new("decorator.inner"),
+            unknown_argument.clone(),
+        ])
+        .set_decorated_service(Some("unknown_decorated"), None, 0, InvalidBehavior::Null)
+        .unwrap();
+
+    DecoratorServicePass::new().process(&mut container).unwrap();
+    ResolveInvalidReferencesPass::new()
+        .process(&mut container)
+        .unwrap();
+
+    let arguments = decorator_definition.arguments();
+    assert!(arguments.get(&Key::Int(0)).unwrap().is_null());
+    assert_eq!(
+        Some(&unknown_argument),
+        Reference::from_value(arguments.get(&Key::Int(1)).unwrap())
+    );
 }
 
 #[test]

@@ -2,21 +2,87 @@
 //! symfony/dependency-injection 9b34cad8. Names and assertions are
 //! PHPUnit's.
 //!
-//! Pending: testStackDecoratesExistingService and testStackDecoratesTag
-//! run `DecoratorServicePass` after this pass, which is not ported in
-//! this slice.
-//!
 //! Upstream: symfony/dependency-injection Tests/Compiler/ResolveDecoratorStackPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
-use php_value::{PhpArray, php_array};
-use symfony_dependency_injection::compiler::{CompilerPassInterface, ResolveDecoratorStackPass};
+use php_value::{PhpArray, Value, array::Key, php_array};
+use symfony_dependency_injection::compiler::{
+    CompilerPassInterface, DecoratorServicePass, ResolveDecoratorStackPass,
+};
 use symfony_dependency_injection::{
     ContainerBuilder, Definition, ErrorKind, InvalidBehavior, Reference,
 };
 
 fn std_class() -> Definition {
     Definition::with_class("stdClass")
+}
+
+/// `new Definition(\stdClass::class)` labelled `label` with an `.inner`
+/// property.
+fn labelled(label: &str) -> Definition {
+    let definition = std_class();
+    definition
+        .set_property("label", label)
+        .set_property("inner", Reference::new(".inner"));
+    definition
+}
+
+/// `str_ends_with($id, '.inner')` is case-sensitive.
+#[allow(clippy::case_sensitive_file_extension_comparisons)]
+fn has_inner_service(container: &ContainerBuilder) -> bool {
+    container
+        .get_definitions()
+        .keys()
+        .any(|id| id.ends_with(".inner"))
+}
+
+#[test]
+fn testStackDecoratesExistingService() {
+    let mut container = ContainerBuilder::new();
+
+    // The existing service that should be decorated
+    container
+        .register("original_service", Some("stdClass"))
+        .unwrap()
+        .set_public(true)
+        .set_property("label", "original");
+
+    // Define a stack that decorates the existing service
+    let stack = Definition::child("");
+    stack
+        .add_tag("container.stack", PhpArray::new())
+        .set_arguments(php_array![labelled("A"), labelled("B")])
+        .set_decorated_service(
+            Some("original_service"),
+            None,
+            0,
+            InvalidBehavior::Exception,
+        )
+        .unwrap();
+
+    container.set_definition("my_stack", stack).unwrap();
+
+    ResolveDecoratorStackPass::new()
+        .process(&mut container)
+        .unwrap();
+    DecoratorServicePass::new().process(&mut container).unwrap();
+
+    // The original service should now be decorated
+    assert!(container.has_alias("original_service"));
+
+    // The innermost definition should wrap the original service
+    // and the outermost should be the entry point
+    let alias = container.get_alias("my_stack").unwrap();
+    let outermost_id = alias.id();
+
+    // The outermost definition should have label 'A'
+    let outermost_def = container.get_definition(&outermost_id).unwrap();
+    assert!(
+        Value::from("A").identical(outermost_def.properties().get(&Key::from("label")).unwrap())
+    );
+
+    // Follow the chain: the original service should still be accessible
+    assert!(container.has_definition("original_service.inner") || has_inner_service(&container));
 }
 
 #[test]
@@ -136,6 +202,50 @@ fn testStackWithoutDecoratesStillWorks() {
 
     let innermost = &stack_defs[0];
     assert_eq!(None, innermost.decorated_service());
+}
+
+#[test]
+fn testStackDecoratesTag() {
+    let mut container = ContainerBuilder::new();
+
+    // Two services tagged with 'my_tag'
+    container
+        .register("foo", Some("stdClass"))
+        .unwrap()
+        .set_public(true)
+        .add_tag("my_tag", PhpArray::new())
+        .set_property("label", "foo");
+
+    container
+        .register("bar", Some("stdClass"))
+        .unwrap()
+        .set_public(true)
+        .add_tag("my_tag", PhpArray::new())
+        .set_property("label", "bar");
+
+    // A stack that decorates all services tagged 'my_tag'
+    let stack = Definition::child("");
+    stack
+        .add_tag("container.stack", PhpArray::new())
+        .add_resource_tag(
+            "container.tag_decorator",
+            php_array!["decorates_tag" => "my_tag"],
+        )
+        .set_arguments(php_array![labelled("A"), labelled("B")]);
+
+    container.set_definition("my_stack", stack).unwrap();
+
+    ResolveDecoratorStackPass::new()
+        .process(&mut container)
+        .unwrap();
+    DecoratorServicePass::new().process(&mut container).unwrap();
+
+    // The original stack definition should have been removed
+    assert!(!container.has_definition("my_stack"));
+
+    // Both foo and bar should be decorated
+    assert!(container.has_alias("foo"));
+    assert!(container.has_alias("bar"));
 }
 
 #[test]

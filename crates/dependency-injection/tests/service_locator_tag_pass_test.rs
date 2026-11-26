@@ -9,8 +9,8 @@
 //!   testProcessValue, testServiceWithKeyOverwritesPreviousInheritedKey,
 //!   testInheritedKeyOverwritesPreviousServiceWithKey, testTaggedServices,
 //!   testTaggedServicesKeysAreKept, testNestedServiceLocatorArgument;
-//! - they also call `compile()`, which stops at the first pass that is
-//!   not ported yet: testIndexedByServiceIdWithDecoration,
+//! - they compile the container and then get the locator service, which
+//!   needs PHP object creation too: testIndexedByServiceIdWithDecoration,
 //!   testIndexedByAsTaggedItemWithDecoration,
 //!   testExcludeSelfFromTaggedServiceLocator.
 //!

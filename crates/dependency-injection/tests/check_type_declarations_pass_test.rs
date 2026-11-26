@@ -20,10 +20,11 @@
 //!   testProcessDoesNotThrowsExceptionOnValidTypes;
 //! - need `ExpressionLanguage`'s `Expression`: testProcessResolveExpressions,
 //!   testProcessSuccessWhenExpressionReturnsObject,
-//!   testExpressionLanguageWithSyntheticService;
-//! - run `ResolveParameterPlaceHoldersPass`, ported in another slice:
-//!   testProcessHandleExistingEnvPlaceholder,
-//!   testProcessHandleNotFoundEnvPlaceholder, testProcessResolveParameters.
+//!   testExpressionLanguageWithSyntheticService.
+//!
+//! testProcessHandleExistingEnvPlaceholder and testProcessResolveParameters
+//! drop their `putenv()`: the pass checks env placeholders by their
+//! provided types and never reads the variable.
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/CheckTypeDeclarationsPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used, clippy::disallowed_names)]
@@ -35,7 +36,9 @@ use symfony_dependency_injection::argument::{IteratorArgument, ServiceClosureArg
 use symfony_dependency_injection::class_metadata::{
     ClassMetadata, ClassRegistry, FunctionMetadata, MethodMetadata, ParameterMetadata, Visibility,
 };
-use symfony_dependency_injection::compiler::{CheckTypeDeclarationsPass, CompilerPassInterface};
+use symfony_dependency_injection::compiler::{
+    CheckTypeDeclarationsPass, CompilerPassInterface, ResolveParameterPlaceHoldersPass,
+};
 use symfony_dependency_injection::parameter_bag::ParameterBag;
 use symfony_dependency_injection::{
     ContainerBuilder, Definition, DefinitionError, ErrorKind, Reference, Result,
@@ -861,6 +864,36 @@ fn testProcessHandleMultipleEnvPlaceholder() {
 }
 
 #[test]
+fn testProcessHandleExistingEnvPlaceholder() {
+    let mut container = container_with_env(&[("ccc", "%env(json:ARRAY)%")]);
+
+    let foobar = container
+        .register("foobar", Some(&fixture("BarMethodCall")))
+        .unwrap();
+    call(&foobar, "setArray", vec![s("%ccc%")]);
+
+    ResolveParameterPlaceHoldersPass::default()
+        .process(&mut container)
+        .unwrap();
+    process(&mut container).unwrap();
+}
+
+#[test]
+fn testProcessHandleNotFoundEnvPlaceholder() {
+    let mut container = container_with_env(&[("ccc", "%env(json:ARRAY)%")]);
+
+    let foobar = container
+        .register("foobar", Some(&fixture("BarMethodCall")))
+        .unwrap();
+    call(&foobar, "setArray", vec![s("%ccc%")]);
+
+    ResolveParameterPlaceHoldersPass::default()
+        .process(&mut container)
+        .unwrap();
+    process(&mut container).unwrap();
+}
+
+#[test]
 fn testProcessSkipSkippedIds() {
     let mut container = container();
     let foobar = container
@@ -928,6 +961,29 @@ fn testProcessSuccessWhenPassingServiceClosureArgumentToClosure() {
         "setClosure",
         vec![ServiceClosureArgument::new(r("foo")).to_value()],
     );
+
+    process(&mut container).unwrap();
+}
+
+#[test]
+fn testProcessResolveParameters() {
+    let mut container = container_with_env(&[("env_array_param", "%env(json:ARRAY)%")]);
+    container
+        .set_parameter("array_param", Value::Array(list([s("foobar")])))
+        .unwrap();
+    container.set_parameter("string_param", s("ccc")).unwrap();
+
+    let definition = container
+        .register("foobar", Some(&fixture("BarMethodCall")))
+        .unwrap();
+    call(&definition, "setArray", vec![s("%array_param%")]);
+    call(&definition, "setString", vec![s("%string_param%")]);
+
+    ResolveParameterPlaceHoldersPass::default()
+        .process(&mut container)
+        .unwrap();
+
+    call(&definition, "setArray", vec![s("%env_array_param%")]);
 
     process(&mut container).unwrap();
 }

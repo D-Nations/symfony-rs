@@ -53,7 +53,7 @@ use crate::argument::{
     ServiceLocatorArgument,
 };
 use crate::class_metadata::{AttributeMetadata, ClassMetadata, ClassRegistry, Reflector};
-use crate::compiler::{Compiler, Pass, PassConfig, PassType, PendingPass};
+use crate::compiler::{Compiler, Pass, PassConfig, PassType, ResolveEnvPlaceholdersPass};
 use crate::container_interface::{CONTAINER_INTERFACE, InvalidBehavior};
 use crate::definition::Definition;
 use crate::exception::{Error, ErrorKind, Result};
@@ -1042,7 +1042,7 @@ impl ContainerBuilder {
         }
         if resolve_env_placeholders && self.parameter_bag.is_env_placeholder() {
             self.compiler.add_pass(
-                Pass::new(PendingPass::new("ResolveEnvPlaceholdersPass", "")),
+                Pass::new(ResolveEnvPlaceholdersPass::default()),
                 PassType::AfterRemoving,
                 -1000,
             );
