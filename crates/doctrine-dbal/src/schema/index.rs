@@ -41,13 +41,13 @@ impl IndexedColumn {
     /// `new IndexedColumn($columnName, $length)`: the length must be
     /// positive.
     pub fn new(column_name: UnqualifiedName, length: Option<i64>) -> Result<Self, Exception> {
-        if let Some(length) = length {
-            if length <= 0 {
-                return Err(exception::index_non_positive_column_length(
-                    &column_name,
-                    length,
-                ));
-            }
+        if let Some(length) = length
+            && length <= 0
+        {
+            return Err(exception::index_non_positive_column_length(
+                &column_name,
+                length,
+            ));
         }
         Ok(Self {
             column_name,
@@ -412,7 +412,9 @@ impl Index {
         }
 
         if self.has_flag("clustered")
-            && (self.has_flag("nonclustered") || self.has_flag("fulltext") || self.has_flag("spatial"))
+            && (self.has_flag("nonclustered")
+                || self.has_flag("fulltext")
+                || self.has_flag("spatial"))
         {
             deprecations::trigger(LINK_FLAGS, || {
                 "A fulltext, spatial or non-clustered index cannot be clustered.".to_owned()
@@ -450,7 +452,9 @@ impl Index {
         if matches.len() > 1 {
             let list = matches.join(", ");
             deprecations::trigger(LINK_FLAGS, || {
-                format!("Configuring an index with mutually exclusive properties is deprecated: {list}")
+                format!(
+                    "Configuring an index with mutually exclusive properties is deprecated: {list}"
+                )
             });
             return None;
         }
@@ -459,12 +463,12 @@ impl Index {
     }
 
     fn same_partial_index(&self, other: &Index) -> bool {
-        if self.has_option("where") && other.has_option("where") {
-            if let (Some(a), Some(b)) = (self.get_option("where"), other.get_option("where")) {
-                if a.identical(b) {
-                    return true;
-                }
-            }
+        if self.has_option("where")
+            && other.has_option("where")
+            && let (Some(a), Some(b)) = (self.get_option("where"), other.get_option("where"))
+            && a.identical(b)
+        {
+            return true;
         }
         !self.has_option("where") && !other.has_option("where")
     }
@@ -510,7 +514,11 @@ impl Deref for Index {
 
 /// `parseColumns()`: the indexed columns, or none (with a deprecation)
 /// when a name or a length is invalid.
-fn parse_columns(is_primary: bool, column_names: &[String], lengths: Vec<Value>) -> Vec<IndexedColumn> {
+fn parse_columns(
+    is_primary: bool,
+    column_names: &[String],
+    lengths: Vec<Value>,
+) -> Vec<IndexedColumn> {
     let mut lengths = lengths.into_iter();
     let mut columns = Vec::new();
     for column_name in column_names {
@@ -547,14 +555,18 @@ fn parse_columns(is_primary: bool, column_names: &[String], lengths: Vec<Value>)
                             Value::Null => "NULL".to_owned(),
                         };
                         deprecations::trigger("https://github.com/doctrine/dbal/pull/6787", || {
-                            format!("Indexed column length should be an integer, {type_name} given.")
+                            format!(
+                                "Indexed column length should be an integer, {type_name} given."
+                            )
                         });
                         php_value::numeric::int_cast(&other)
                     }
                 };
                 if length < 1 {
                     deprecations::trigger("https://github.com/doctrine/dbal/pull/6787", || {
-                        format!("Indexed column length should be a positive integer, {length} given.")
+                        format!(
+                            "Indexed column length should be a positive integer, {length} given."
+                        )
                     });
                     return Vec::new();
                 }

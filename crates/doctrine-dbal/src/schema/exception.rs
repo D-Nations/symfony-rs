@@ -1,4 +1,4 @@
-//! Port of the Schema exceptions the SQLite platform slice reaches:
+//! Port of the Schema exceptions the `SQLite` platform slice reaches:
 //! Schema\SchemaException.php, Schema\Exception\*.php (those named below),
 //! Schema\Collections\Exception.php and its Exception\*.php, and
 //! Schema\Name\Parser\Exception.php and its Exception\*.php.
@@ -96,13 +96,8 @@ const INVALID_ARGUMENT: &str = "InvalidArgumentException";
 /// itself and `Throwable` (empty for a class this module does not know).
 pub fn ancestors(class: &str) -> &'static [&'static str] {
     const LOGIC_SCHEMA: &[&str] = &[LOGIC, SCHEMA_EXCEPTION, DBAL, "Exception"];
-    const ARGUMENT_SCHEMA: &[&str] = &[
-        INVALID_ARGUMENT,
-        LOGIC,
-        SCHEMA_EXCEPTION,
-        DBAL,
-        "Exception",
-    ];
+    const ARGUMENT_SCHEMA: &[&str] =
+        &[INVALID_ARGUMENT, LOGIC, SCHEMA_EXCEPTION, DBAL, "Exception"];
     const LOGIC_COLLECTION: &[&str] = &[
         LOGIC,
         COLLECTIONS_EXCEPTION,
@@ -114,8 +109,12 @@ pub fn ancestors(class: &str) -> &'static [&'static str] {
     const ARGUMENT_PARSER: &[&str] = &[INVALID_ARGUMENT, LOGIC, PARSER_EXCEPTION, "Exception"];
     if let Some(short) = class.strip_prefix(NS) {
         return match short {
-            "IncomparableNames" | "InvalidIdentifier" | "InvalidName" | "IndexNameInvalid"
-            | "InvalidTableName" | "UnknownColumnOption" => {
+            "IncomparableNames"
+            | "InvalidIdentifier"
+            | "InvalidName"
+            | "IndexNameInvalid"
+            | "InvalidTableName"
+            | "UnknownColumnOption" => {
                 if short == "IncomparableNames" {
                     LOGIC_SCHEMA
                 } else {
@@ -186,11 +185,7 @@ pub fn incomparable_names(
 ) -> Exception {
     new(
         INCOMPARABLE_NAMES,
-        format!(
-            "Non-equally qualified names are incomparable: {}, {}.",
-            name1.to_string(),
-            name2.to_string()
-        ),
+        format!("Non-equally qualified names are incomparable: {name1}, {name2}."),
     )
 }
 
@@ -230,10 +225,7 @@ pub fn column_name_not_specified() -> Exception {
 pub fn column_data_type_not_specified(column_name: &UnqualifiedName) -> Exception {
     new(
         INVALID_COLUMN_DEFINITION,
-        format!(
-            "Data type is not specified for column {}.",
-            column_name.to_string()
-        ),
+        format!("Data type is not specified for column {column_name}."),
     )
 }
 
@@ -281,14 +273,17 @@ pub fn identifier_from_empty() -> Exception {
 
 /// `InvalidIndexDefinition::nameNotSet()`.
 pub fn index_name_not_set() -> Exception {
-    new(INVALID_INDEX_DEFINITION, "Index name is not set.".to_owned())
+    new(
+        INVALID_INDEX_DEFINITION,
+        "Index name is not set.".to_owned(),
+    )
 }
 
 /// `InvalidIndexDefinition::columnsNotSet($indexName)`.
 pub fn index_columns_not_set(index_name: &UnqualifiedName) -> Exception {
     new(
         INVALID_INDEX_DEFINITION,
-        format!("Columns are not set for index {}.", index_name.to_string()),
+        format!("Columns are not set for index {index_name}."),
     )
 }
 
@@ -297,8 +292,7 @@ pub fn index_non_positive_column_length(column_name: &UnqualifiedName, length: i
     new(
         INVALID_INDEX_DEFINITION,
         format!(
-            "Indexed column length must be a positive integer, {length} given for column {}.",
-            column_name.to_string()
+            "Indexed column length must be a positive integer, {length} given for column {column_name}."
         ),
     )
 }
@@ -433,14 +427,17 @@ pub mod invalid_state {
 
 /// `InvalidTableDefinition::nameNotSet()`.
 pub fn table_name_not_set() -> Exception {
-    new(INVALID_TABLE_DEFINITION, "Table name is not set.".to_owned())
+    new(
+        INVALID_TABLE_DEFINITION,
+        "Table name is not set.".to_owned(),
+    )
 }
 
 /// `InvalidTableDefinition::columnsNotSet($tableName)`.
 pub fn table_columns_not_set(table_name: &OptionallyQualifiedName) -> Exception {
     new(
         INVALID_TABLE_DEFINITION,
-        format!("Columns are not set for table {}.", table_name.to_string()),
+        format!("Columns are not set for table {table_name}."),
     )
 }
 
@@ -484,7 +481,7 @@ pub fn table_object_already_exists(
         format!(
             "{} {} already exists on table {}.",
             object.label(),
-            object_name.to_string(),
+            object_name,
             format_table_name(table_name)
         ),
     )
@@ -504,7 +501,7 @@ pub fn table_object_does_not_exist(
         format!(
             "{} {} does not exist on table {}.",
             object.label(),
-            object_name.to_string(),
+            object_name,
             format_table_name(table_name)
         ),
     )
@@ -594,7 +591,7 @@ pub fn unknown_column_option(name: &str) -> Exception {
 pub fn object_already_exists(object_name: &UnqualifiedName) -> Exception {
     new(
         OBJECT_ALREADY_EXISTS,
-        format!("Object {} already exists.", object_name.to_string()),
+        format!("Object {object_name} already exists."),
     )
 }
 
@@ -602,7 +599,7 @@ pub fn object_already_exists(object_name: &UnqualifiedName) -> Exception {
 pub fn object_does_not_exist(object_name: &UnqualifiedName) -> Exception {
     new(
         OBJECT_DOES_NOT_EXIST,
-        format!("Object {} does not exist.", object_name.to_string()),
+        format!("Object {object_name} does not exist."),
     )
 }
 
@@ -634,7 +631,9 @@ pub fn invalid_unqualified_name(count: usize) -> Exception {
 pub fn invalid_optionally_qualified_name(count: usize) -> Exception {
     new(
         PARSER_INVALID_NAME,
-        format!("An optionally qualified name must consist of one or two identifiers, {count} given."),
+        format!(
+            "An optionally qualified name must consist of one or two identifiers, {count} given."
+        ),
     )
 }
 

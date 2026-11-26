@@ -121,7 +121,11 @@ impl OptionallyQualifiedName {
 
     /// Returns whether this name is equal to the other; throws
     /// `IncomparableNames` when one is qualified and the other is not.
-    pub fn equals(&self, other: &Self, folding: UnquotedIdentifierFolding) -> Result<bool, Exception> {
+    pub fn equals(
+        &self,
+        other: &Self,
+        folding: UnquotedIdentifierFolding,
+    ) -> Result<bool, Exception> {
         if self.qualifier.is_none() != other.qualifier.is_none() {
             return Err(exception::incomparable_names(self, other));
         }

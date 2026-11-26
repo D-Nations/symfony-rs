@@ -34,7 +34,8 @@ pub struct UniqueConstraint {
 }
 
 fn method_deprecated(method: &str, hint: &str) -> impl FnOnce() -> String {
-    let message = format!("Doctrine\\DBAL\\Schema\\UniqueConstraint::{method} is deprecated.{hint}");
+    let message =
+        format!("Doctrine\\DBAL\\Schema\\UniqueConstraint::{method} is deprecated.{hint}");
     move || message
 }
 
@@ -131,7 +132,10 @@ impl UniqueConstraint {
         self.quoted_columns(platform)
     }
 
-    pub(crate) fn quoted_columns(&self, platform: &(impl AbstractPlatform + ?Sized)) -> Vec<String> {
+    pub(crate) fn quoted_columns(
+        &self,
+        platform: &(impl AbstractPlatform + ?Sized),
+    ) -> Vec<String> {
         self.columns
             .values()
             .map(|column| column.get_quoted_name(platform))
@@ -198,7 +202,8 @@ impl UniqueConstraint {
     pub fn has_option(&self, name: &str) -> bool {
         deprecations::trigger(LINK, method_deprecated("hasOption", ""));
         !matches!(
-            self.options.get(&Key::from(name.to_ascii_lowercase().as_str())),
+            self.options
+                .get(&Key::from(name.to_ascii_lowercase().as_str())),
             None | Some(Value::Null)
         )
     }

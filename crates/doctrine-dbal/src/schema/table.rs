@@ -16,7 +16,9 @@ use php_value::{Key, PhpArray, Value};
 use crate::deprecations;
 use crate::exception::Exception;
 
-use super::abstract_asset::{AbstractAsset, AssetKind, NameParser, generate_identifier_name, trim_quotes};
+use super::abstract_asset::{
+    AbstractAsset, AssetKind, NameParser, generate_identifier_name, trim_quotes,
+};
 use super::array_map::ArrayMap;
 use super::collections::{NamedObject, OptionallyNamedObject};
 use super::column::{Column, array_merge_into};
@@ -73,7 +75,8 @@ pub struct TableParts {
 
 /// `preg_match('(([^a-zA-Z0-9_]+))', $name) === 1`.
 fn has_invalid_index_name_chars(name: &str) -> bool {
-    name.bytes().any(|b| !(b.is_ascii_alphanumeric() || b == b'_'))
+    name.bytes()
+        .any(|b| !(b.is_ascii_alphanumeric() || b == b'_'))
 }
 
 impl Table {
@@ -151,9 +154,12 @@ impl Table {
 
     /// `setSchemaConfig($schemaConfig)` (deprecated).
     pub fn set_schema_config(&mut self, schema_config: SchemaConfig) {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6635", || {
-            "Doctrine\\DBAL\\Schema\\Table::setSchemaConfig is deprecated. Pass TableConfiguration to the constructor instead.".to_owned()
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6635",
+            || {
+                "Doctrine\\DBAL\\Schema\\Table::setSchemaConfig is deprecated. Pass TableConfiguration to the constructor instead.".to_owned()
+            },
+        );
         self.max_identifier_length = schema_config.get_max_identifier_length();
         self.schema_config = Some(schema_config);
     }
@@ -164,9 +170,12 @@ impl Table {
         column_names: &[&str],
         index_name: Option<&str>,
     ) -> Result<&mut Self, Exception> {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6867", || {
-            "Doctrine\\DBAL\\Schema\\Table::setPrimaryKey() is deprecated. Use Table::addPrimaryKeyConstraint() instead.".to_owned()
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6867",
+            || {
+                "Doctrine\\DBAL\\Schema\\Table::setPrimaryKey() is deprecated. Use Table::addPrimaryKeyConstraint() instead.".to_owned()
+            },
+        );
         let column_names: Vec<String> = column_names.iter().map(|s| (*s).to_owned()).collect();
         self.set_primary_key_inner(&column_names, index_name)?;
         Ok(self)
@@ -178,7 +187,14 @@ impl Table {
         index_name: Option<&str>,
     ) -> Result<(), Exception> {
         let index_name = index_name.unwrap_or("primary");
-        let index = self.create_index(column_names, index_name, true, true, Vec::new(), PhpArray::new())?;
+        let index = self.create_index(
+            column_names,
+            index_name,
+            true,
+            true,
+            Vec::new(),
+            PhpArray::new(),
+        )?;
         self.add_index_object(index)?;
 
         let table_name = self.get_name();
@@ -222,10 +238,10 @@ impl Table {
 
         // there is no way to set a primary index with flags. we have to
         // set it and then add the flag
-        if !constraint.is_clustered() {
-            if let Some(index) = self.primary_key_index_mut() {
-                index.add_flag("nonclustered");
-            }
+        if !constraint.is_clustered()
+            && let Some(index) = self.primary_key_index_mut()
+        {
+            index.add_flag("nonclustered");
         }
         self.primary_key_constraint = Some(constraint);
         Ok(())
@@ -249,7 +265,8 @@ impl Table {
             Some(name) => name.to_owned(),
             None => self.generate_name(&column_names, "uniq"),
         };
-        let constraint = self.create_unique_constraint(&column_names, &index_name, flags, options)?;
+        let constraint =
+            self.create_unique_constraint(&column_names, &index_name, flags, options)?;
         self.add_unique_constraint_object(constraint)?;
         Ok(self)
     }
@@ -267,7 +284,10 @@ impl Table {
         C: IntoIterator,
         C::Item: Into<String>,
     {
-        deprecations::trigger_if_called_from_outside(LINK_EDIT, edit_deprecated("addIndex", "addIndex"));
+        deprecations::trigger_if_called_from_outside(
+            LINK_EDIT,
+            edit_deprecated("addIndex", "addIndex"),
+        );
         let column_names: Vec<String> = column_names.into_iter().map(Into::into).collect();
         self.add_index_inner(&column_names, index_name, flags, options)?;
         Ok(self)
@@ -308,7 +328,10 @@ impl Table {
 
     /// `dropIndex($name)` (deprecated).
     pub fn drop_index(&mut self, name: &str) -> Result<(), Exception> {
-        deprecations::trigger_if_called_from_outside(LINK_EDIT, edit_deprecated("dropIndex", "dropIndex"));
+        deprecations::trigger_if_called_from_outside(
+            LINK_EDIT,
+            edit_deprecated("dropIndex", "dropIndex"),
+        );
         self.drop_index_inner(name)
     }
 
@@ -332,7 +355,10 @@ impl Table {
         C: IntoIterator,
         C::Item: Into<String>,
     {
-        deprecations::trigger_if_called_from_outside(LINK_EDIT, edit_deprecated("addUniqueIndex", "addIndex"));
+        deprecations::trigger_if_called_from_outside(
+            LINK_EDIT,
+            edit_deprecated("addUniqueIndex", "addIndex"),
+        );
         let column_names: Vec<String> = column_names.into_iter().map(Into::into).collect();
         self.add_unique_index_inner(&column_names, index_name, options)?;
         Ok(self)
@@ -348,12 +374,17 @@ impl Table {
             Some(name) => name.to_owned(),
             None => self.generate_name(column_names, "uniq"),
         };
-        let index = self.create_index(column_names, &index_name, true, false, Vec::new(), options)?;
+        let index =
+            self.create_index(column_names, &index_name, true, false, Vec::new(), options)?;
         self.add_index_object(index)
     }
 
     /// `renameIndex($oldName, $newName)` (deprecated).
-    pub fn rename_index(&mut self, old_name: &str, new_name: Option<&str>) -> Result<&mut Self, Exception> {
+    pub fn rename_index(
+        &mut self,
+        old_name: &str,
+        new_name: Option<&str>,
+    ) -> Result<&mut Self, Exception> {
         deprecations::trigger(LINK_EDIT, edit_deprecated("renameIndex", "renameIndex"));
         if !self.has_index(old_name) {
             return Err(exception::index_does_not_exist(old_name, &self.asset.name));
@@ -372,11 +403,14 @@ impl Table {
             return Err(exception::index_does_not_exist(old_name, &self.asset.name));
         };
         if old_index.is_primary() {
-            deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6867", || {
-                "Renaming primary key constraint via Doctrine\\DBAL\\Schema\\Table::renameIndex() is deprecated. \
+            deprecations::trigger_if_called_from_outside(
+                "https://github.com/doctrine/dbal/pull/6867",
+                || {
+                    "Renaming primary key constraint via Doctrine\\DBAL\\Schema\\Table::renameIndex() is deprecated. \
                  Use Table::dropPrimaryKey() and  Table::addPrimaryKeyConstraint() instead."
                     .to_owned()
-            });
+                },
+            );
             self.drop_primary_key_inner()?;
             self.set_primary_key_inner(&old_index.get_columns(), new_name)?;
             return Ok(self);
@@ -384,7 +418,11 @@ impl Table {
 
         self.indexes.remove(&normalized_old_name);
         if old_index.is_unique() {
-            self.add_unique_index_inner(&old_index.get_columns(), new_name, old_index.get_options().clone())?;
+            self.add_unique_index_inner(
+                &old_index.get_columns(),
+                new_name,
+                old_index.get_options().clone(),
+            )?;
             return Ok(self);
         }
         self.add_index_inner(
@@ -401,11 +439,18 @@ impl Table {
         deprecations::trigger("https://github.com/doctrine/dbal/pull/6710", || {
             "Doctrine\\DBAL\\Schema\\Table::columnsAreIndexed is deprecated.".to_owned()
         });
-        self.indexes.values().any(|index| index.spans_columns(column_names))
+        self.indexes
+            .values()
+            .any(|index| index.spans_columns(column_names))
     }
 
     /// `addColumn($name, $typeName, $options)` (deprecated).
-    pub fn add_column(&mut self, name: &str, type_name: &str, options: &PhpArray) -> Result<&mut Column, Exception> {
+    pub fn add_column(
+        &mut self,
+        name: &str,
+        type_name: &str,
+        options: &PhpArray,
+    ) -> Result<&mut Column, Exception> {
         deprecations::trigger(LINK_EDIT, edit_deprecated("addColumn", "addColumn"));
         let column = Column::new(name, type_name, options)?;
         let key = self.add_column_object(column)?;
@@ -420,7 +465,11 @@ impl Table {
     }
 
     /// `renameColumn($oldName, $newName)` (deprecated).
-    pub fn rename_column(&mut self, old_name: &str, new_name: &str) -> Result<&mut Column, Exception> {
+    pub fn rename_column(
+        &mut self,
+        old_name: &str,
+        new_name: &str,
+    ) -> Result<&mut Column, Exception> {
         deprecations::trigger(LINK_EDIT, edit_deprecated("renameColumn", "renameColumn"));
         let mut old_name = normalize_identifier(old_name);
         let new_name = normalize_identifier(new_name);
@@ -457,7 +506,11 @@ impl Table {
     }
 
     /// `modifyColumn($name, $options)` (deprecated).
-    pub fn modify_column(&mut self, name: &str, options: &PhpArray) -> Result<&mut Self, Exception> {
+    pub fn modify_column(
+        &mut self,
+        name: &str,
+        options: &PhpArray,
+    ) -> Result<&mut Self, Exception> {
         deprecations::trigger(LINK_EDIT, edit_deprecated("modifyColumn", "modifyColumn"));
         self.get_column_mut(name)?.set_options(options)?;
         Ok(self)
@@ -490,7 +543,10 @@ impl Table {
                 ));
             }
             if !unique_constraint_names.is_empty() {
-                constraints.push(format!("unique constraints: {}", unique_constraint_names.join(", ")));
+                constraints.push(format!(
+                    "unique constraints: {}",
+                    unique_constraint_names.join(", ")
+                ));
             }
             let constraints = constraints.join("; ");
             deprecations::trigger("https://github.com/doctrine/dbal/pull/6559", || {
@@ -526,7 +582,10 @@ impl Table {
         };
         for column_name in &local {
             if !self.has_column(column_name) {
-                return Err(exception::column_does_not_exist(column_name, &self.asset.name));
+                return Err(exception::column_does_not_exist(
+                    column_name,
+                    &self.asset.name,
+                ));
             }
         }
         let constraint = ForeignKeyConstraint::new(
@@ -542,7 +601,10 @@ impl Table {
 
     /// `addOption($name, $value)` (deprecated).
     pub fn add_option(&mut self, name: &str, value: Value) -> &mut Self {
-        deprecations::trigger_if_called_from_outside(LINK_EDIT, edit_deprecated("addOption", "setOptions"));
+        deprecations::trigger_if_called_from_outside(
+            LINK_EDIT,
+            edit_deprecated("addOption", "setOptions"),
+        );
         self.add_option_inner(name, value);
         self
     }
@@ -552,7 +614,8 @@ impl Table {
     }
 
     pub fn has_foreign_key(&self, name: &str) -> bool {
-        self.fk_constraints.contains_key(&normalize_identifier(name))
+        self.fk_constraints
+            .contains_key(&normalize_identifier(name))
     }
 
     pub fn get_foreign_key(&self, name: &str) -> Result<&ForeignKeyConstraint, Exception> {
@@ -565,7 +628,8 @@ impl Table {
     /// `removeForeignKey($name)` (deprecated).
     pub fn remove_foreign_key(&mut self, name: &str) -> Result<(), Exception> {
         deprecations::trigger("https://github.com/doctrine/dbal/pull/6560", || {
-            "Table::removeForeignKey() is deprecated. Use Table::dropForeignKey() instead.".to_owned()
+            "Table::removeForeignKey() is deprecated. Use Table::dropForeignKey() instead."
+                .to_owned()
         });
         self.drop_foreign_key_inner(name)
     }
@@ -582,13 +646,17 @@ impl Table {
     fn drop_foreign_key_inner(&mut self, name: &str) -> Result<(), Exception> {
         let name = normalize_identifier(name);
         if self.fk_constraints.remove(&name).is_none() {
-            return Err(exception::foreign_key_does_not_exist(&name, &self.asset.name));
+            return Err(exception::foreign_key_does_not_exist(
+                &name,
+                &self.asset.name,
+            ));
         }
         Ok(())
     }
 
     pub fn has_unique_constraint(&self, name: &str) -> bool {
-        self.unique_constraints.contains_key(&normalize_identifier(name))
+        self.unique_constraints
+            .contains_key(&normalize_identifier(name))
     }
 
     pub fn get_unique_constraint(&self, name: &str) -> Result<&UniqueConstraint, Exception> {
@@ -619,7 +687,10 @@ impl Table {
     fn drop_unique_constraint_inner(&mut self, name: &str) -> Result<(), Exception> {
         let name = normalize_identifier(name);
         if self.unique_constraints.remove(&name).is_none() {
-            return Err(exception::unique_constraint_does_not_exist(&name, &self.asset.name));
+            return Err(exception::unique_constraint_does_not_exist(
+                &name,
+                &self.asset.name,
+            ));
         }
         Ok(())
     }
@@ -651,9 +722,12 @@ impl Table {
 
     /// `getPrimaryKey()` (deprecated).
     pub fn get_primary_key(&self) -> Option<&Index> {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6867", || {
-            "Doctrine\\DBAL\\Schema\\Table::getPrimaryKey() is deprecated. Use Table::getPrimaryKeyConstraint() instead.".to_owned()
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6867",
+            || {
+                "Doctrine\\DBAL\\Schema\\Table::getPrimaryKey() is deprecated. Use Table::getPrimaryKeyConstraint() instead.".to_owned()
+            },
+        );
         self.primary_key_index()
     }
 
@@ -671,7 +745,9 @@ impl Table {
     /// `getPrimaryKeyConstraint()`.
     pub fn get_primary_key_constraint(&self) -> Result<Option<&PrimaryKeyConstraint>, Exception> {
         if self.failed_to_parse_primary_key_constraint {
-            return Err(invalid_state::table_has_invalid_primary_key_constraint(&self.get_name()));
+            return Err(invalid_state::table_has_invalid_primary_key_constraint(
+                &self.get_name(),
+            ));
         }
         Ok(self.primary_key_constraint.as_ref())
     }
@@ -716,7 +792,10 @@ impl Table {
 
     /// `getOption($name)`.
     pub fn get_option(&self, name: &str) -> Value {
-        self.options.get(&Key::from(name)).cloned().unwrap_or(Value::Null)
+        self.options
+            .get(&Key::from(name))
+            .cloned()
+            .unwrap_or(Value::Null)
     }
 
     pub fn get_options(&self) -> &PhpArray {
@@ -725,9 +804,10 @@ impl Table {
 
     /// `_getMaxIdentifierLength()` (deprecated).
     pub fn get_max_identifier_length(&self) -> i64 {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6635", || {
-            "Doctrine\\DBAL\\Schema\\Table::_getMaxIdentifierLength is deprecated.".to_owned()
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6635",
+            || "Doctrine\\DBAL\\Schema\\Table::_getMaxIdentifierLength is deprecated.".to_owned(),
+        );
         self.max_identifier_length
     }
 
@@ -745,7 +825,10 @@ impl Table {
     fn add_column_object(&mut self, column: Column) -> Result<String, Exception> {
         let column_name = normalize_identifier(&column.get_name());
         if self.columns.contains_key(&column_name) {
-            return Err(exception::column_already_exists(&self.get_name(), &column_name));
+            return Err(exception::column_already_exists(
+                &self.get_name(),
+                &column_name,
+            ));
         }
         self.columns.insert(column_name.clone(), column);
         Ok(column_name)
@@ -770,8 +853,13 @@ impl Table {
             return Err(exception::primary_key_already_exists(&self.asset.name));
         }
 
-        if self.indexes.contains_key(&index_name) && !replaced_implicit_index_names.contains(&index_name) {
-            return Err(exception::index_already_exists(&index_name, &self.asset.name));
+        if self.indexes.contains_key(&index_name)
+            && !replaced_implicit_index_names.contains(&index_name)
+        {
+            return Err(exception::index_already_exists(
+                &index_name,
+                &self.asset.name,
+            ));
         }
 
         for name in &replaced_implicit_index_names {
@@ -799,7 +887,10 @@ impl Table {
     }
 
     /// `_addUniqueConstraint($constraint)`.
-    fn add_unique_constraint_object(&mut self, constraint: UniqueConstraint) -> Result<(), Exception> {
+    fn add_unique_constraint_object(
+        &mut self,
+        constraint: UniqueConstraint,
+    ) -> Result<(), Exception> {
         let columns = constraint.columns();
         let name = if constraint.get_name().is_empty() {
             self.generate_name(&columns, "fk")
@@ -816,7 +907,14 @@ impl Table {
         // overhead in this case, however no duplicate indexes are ever
         // added (column based).
         let index_name = self.generate_name(&columns, "idx");
-        let index_candidate = self.create_index(&columns, &index_name, true, false, Vec::new(), PhpArray::new())?;
+        let index_candidate = self.create_index(
+            &columns,
+            &index_name,
+            true,
+            false,
+            Vec::new(),
+            PhpArray::new(),
+        )?;
         if self
             .indexes
             .values()
@@ -843,7 +941,9 @@ impl Table {
         let name = normalize_identifier(&name);
         if self.fk_constraints.contains_key(&name) {
             deprecations::trigger("https://github.com/doctrine/dbal/pull/7125", || {
-                format!("Overwriting an existing foreign key constraint (\"{name}\") is deprecated.")
+                format!(
+                    "Overwriting an existing foreign key constraint (\"{name}\") is deprecated."
+                )
             });
         }
         self.fk_constraints.insert(name, constraint);
@@ -852,8 +952,14 @@ impl Table {
         // already an index that fulfills this requirements drop the
         // request (see _addUniqueConstraint()).
         let index_name = self.generate_name(&local_columns, "idx");
-        let index_candidate =
-            self.create_index(&local_columns, &index_name, false, false, Vec::new(), PhpArray::new())?;
+        let index_candidate = self.create_index(
+            &local_columns,
+            &index_name,
+            false,
+            false,
+            Vec::new(),
+            PhpArray::new(),
+        )?;
         if self
             .indexes
             .values()
@@ -942,10 +1048,18 @@ impl Table {
         }
         for column_name in columns {
             if !self.has_column(column_name) {
-                return Err(exception::column_does_not_exist(column_name, &self.asset.name));
+                return Err(exception::column_does_not_exist(
+                    column_name,
+                    &self.asset.name,
+                ));
             }
         }
-        Ok(UniqueConstraint::new(index_name, columns.iter().cloned(), flags, options))
+        Ok(UniqueConstraint::new(
+            index_name,
+            columns.iter().cloned(),
+            flags,
+            options,
+        ))
     }
 
     fn create_index(
@@ -962,7 +1076,10 @@ impl Table {
         }
         for column_name in columns {
             if !self.has_column(column_name) {
-                return Err(exception::column_does_not_exist(column_name, &self.asset.name));
+                return Err(exception::column_does_not_exist(
+                    column_name,
+                    &self.asset.name,
+                ));
             }
         }
         Index::new(
@@ -975,7 +1092,11 @@ impl Table {
         )
     }
 
-    fn rename_column_in_indexes(&mut self, old_name: &str, new_name: &str) -> Result<(), Exception> {
+    fn rename_column_in_indexes(
+        &mut self,
+        old_name: &str,
+        new_name: &str,
+    ) -> Result<(), Exception> {
         let keys: Vec<String> = self.indexes.keys().map(str::to_owned).collect();
         for key in keys {
             let Some(index) = self.indexes.get(&key) else {
@@ -987,7 +1108,13 @@ impl Table {
             }
             let columns: Vec<String> = columns
                 .into_iter()
-                .map(|c| if c == old_name { new_name.to_owned() } else { c })
+                .map(|c| {
+                    if c == old_name {
+                        new_name.to_owned()
+                    } else {
+                        c
+                    }
+                })
                 .collect();
             let renamed = Index::new(
                 Some(&index.get_name()),
@@ -1018,7 +1145,13 @@ impl Table {
             }
             let local_columns: Vec<String> = local_columns
                 .into_iter()
-                .map(|c| if c == old_name { new_name.to_owned() } else { c })
+                .map(|c| {
+                    if c == old_name {
+                        new_name.to_owned()
+                    } else {
+                        c
+                    }
+                })
                 .collect();
             let renamed = ForeignKeyConstraint::new(
                 local_columns,
@@ -1044,7 +1177,13 @@ impl Table {
             }
             let columns: Vec<String> = columns
                 .into_iter()
-                .map(|c| if c == old_name { new_name.to_owned() } else { c })
+                .map(|c| {
+                    if c == old_name {
+                        new_name.to_owned()
+                    } else {
+                        c
+                    }
+                })
                 .collect();
             let renamed = UniqueConstraint::new(
                 &constraint.get_name(),

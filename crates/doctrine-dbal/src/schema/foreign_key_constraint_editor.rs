@@ -143,7 +143,11 @@ impl ForeignKeyConstraintEditor {
     }
 
     #[must_use]
-    pub fn set_unquoted_referenced_table_name(mut self, name: &str, qualifier: Option<&str>) -> Self {
+    pub fn set_unquoted_referenced_table_name(
+        mut self,
+        name: &str,
+        qualifier: Option<&str>,
+    ) -> Self {
         if let Some(name) = self.keep(OptionallyQualifiedName::unquoted(name, qualifier)) {
             self.referenced_table_name = Some(name);
         }
@@ -267,10 +271,16 @@ impl ForeignKeyConstraintEditor {
         }
 
         ForeignKeyConstraint::new(
-            self.referencing_column_names.iter().map(ToString::to_string),
+            self.referencing_column_names
+                .iter()
+                .map(ToString::to_string),
             &referenced_table_name.to_string(),
             self.referenced_column_names.iter().map(ToString::to_string),
-            &self.name.as_ref().map(ToString::to_string).unwrap_or_default(),
+            &self
+                .name
+                .as_ref()
+                .map(ToString::to_string)
+                .unwrap_or_default(),
             options,
         )
     }

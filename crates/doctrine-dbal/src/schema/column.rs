@@ -55,6 +55,10 @@ const LINK_JSONB: &str = "https://github.com/doctrine/dbal/pull/6939";
 
 /// Object representation of a database column.
 #[derive(Debug, Clone)]
+#[allow(
+    clippy::struct_excessive_bools,
+    reason = "the properties of Column.php"
+)]
 pub struct Column {
     asset: AbstractAsset,
     type_name: String,
@@ -68,6 +72,7 @@ pub struct Column {
     autoincrement: bool,
     values: PhpArray,
     platform_options: PhpArray,
+    #[allow(clippy::struct_field_names, reason = "Column::$_columnDefinition")]
     column_definition: Option<String>,
     comment: String,
 }
@@ -119,16 +124,21 @@ fn boolean(method: &str, parameter: &str, value: &Value) -> Result<bool, Excepti
 }
 
 fn utf8(value: &php_value::PhpString) -> Result<String, Exception> {
-    value.to_str().map(str::to_owned).ok_or_else(|| {
-        Exception::new(Exception::UNSUPPORTED, "a column option that is not UTF-8")
-    })
+    value
+        .to_str()
+        .map(str::to_owned)
+        .ok_or_else(|| Exception::new(Exception::UNSUPPORTED, "a column option that is not UTF-8"))
 }
 
 impl Column {
     pub const CLASS: &'static str = "Doctrine\\DBAL\\Schema\\Column";
 
     /// `new Column($name, $type, $options)`: creates a new column.
-    pub fn new(name: &str, type_: impl Into<ColumnType>, options: &PhpArray) -> Result<Self, Exception> {
+    pub fn new(
+        name: &str,
+        type_: impl Into<ColumnType>,
+        options: &PhpArray,
+    ) -> Result<Self, Exception> {
         let asset = AbstractAsset::new(
             Self::CLASS,
             AssetKind::Named,
@@ -200,6 +210,7 @@ impl Column {
 
     /// `$this->{'set' . $name}($value)` (PHP method names are
     /// case-insensitive).
+    #[allow(clippy::too_many_lines, reason = "one arm per setter of Column.php")]
     fn set_option(&mut self, name: &str, value: &Value) -> Result<(), Exception> {
         match name.to_ascii_lowercase().as_str() {
             "options" => match value {
@@ -319,7 +330,7 @@ impl Column {
     }
 
     pub fn set_type_name(&mut self, type_name: &str) -> &mut Self {
-        self.type_name = type_name.to_owned();
+        type_name.clone_into(&mut self.type_name);
         self
     }
 

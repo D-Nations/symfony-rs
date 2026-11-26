@@ -189,12 +189,11 @@ impl IndexEditor {
             return Err(error);
         }
         let default_name;
-        let name = match &self.name {
-            Some(name) => name,
-            None => {
-                default_name = UnqualifiedName::unquoted("index")?;
-                &default_name
-            }
+        let name = if let Some(name) = &self.name {
+            name
+        } else {
+            default_name = UnqualifiedName::unquoted("index")?;
+            &default_name
         };
         let (column_names, flags, options) = self.to_index_parameters(name)?;
         let index_name = self.name.as_ref().map(ToString::to_string);

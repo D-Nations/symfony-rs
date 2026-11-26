@@ -16,6 +16,7 @@
 //! Upstream: doctrine/dbal src/Platforms/AbstractPlatform.php
 
 use std::collections::BTreeMap;
+use std::fmt::Write as _;
 use std::sync::Arc;
 
 use php_value::{Key, PhpArray, PhpString, Value};
@@ -32,10 +33,12 @@ use super::date_interval_unit::{DateIntervalUnit, TrimMode};
 use super::exception::NotSupported;
 use super::keywords::KeywordList;
 use super::no_columns_specified_for_table::no_columns_specified_for_table;
-use super::platform_state::{CreateTableOptions, PlatformState, concat_value, string_argument, utf8};
+use super::platform_state::{
+    CreateTableOptions, PlatformState, concat_value, string_argument, utf8,
+};
 use crate::deprecations;
-use crate::schema::name::UnquotedIdentifierFolding;
 use crate::schema::column_array_merge as array_merge_into;
+use crate::schema::name::UnquotedIdentifierFolding;
 use crate::schema::{
     Column, DefaultExpressionObject, ForeignKeyConstraint, Identifier, Index, Table, TableDiff,
     TypeObject, UniqueConstraint,
@@ -446,7 +449,7 @@ pub trait AbstractPlatform: AsDynPlatform {
         for (type_name, _) in types::get_types_map() {
             let type_ = types::get_type(&type_name).map_err(Exception::from)?;
             for db_type in type_.get_mapped_database_types(self.as_dyn()) {
-                mapping.insert(utf8(db_type)?.to_ascii_lowercase(), type_name.clone());
+                mapping.insert(utf8(&db_type)?.to_ascii_lowercase(), type_name.clone());
             }
         }
         Ok(mapping)
@@ -460,18 +463,21 @@ pub trait AbstractPlatform: AsDynPlatform {
     where
         Self: Sized,
     {
-        match self.platform_state() {
-            Some(state) => state.with_type_mapping(|| self.initialize_all_doctrine_type_mappings(), f),
-            None => {
-                let mut mapping = self.initialize_all_doctrine_type_mappings()?;
-                Ok(f(&mut mapping))
-            }
+        if let Some(state) = self.platform_state() {
+            state.with_type_mapping(|| self.initialize_all_doctrine_type_mappings(), f)
+        } else {
+            let mut mapping = self.initialize_all_doctrine_type_mappings()?;
+            Ok(f(&mut mapping))
         }
     }
 
     /// Registers a doctrine type to be used in conjunction with a column
     /// type of this platform.
-    fn register_doctrine_type_mapping(&self, db_type: &str, doctrine_type: &str) -> Result<(), Exception>
+    fn register_doctrine_type_mapping(
+        &self,
+        db_type: &str,
+        doctrine_type: &str,
+    ) -> Result<(), Exception>
     where
         Self: Sized,
     {
@@ -575,19 +581,35 @@ pub trait AbstractPlatform: AsDynPlatform {
         Err(not_supported("getDateDiffExpression"))
     }
 
-    fn get_date_add_seconds_expression(&self, date: &str, seconds: &str) -> Result<String, Exception> {
+    fn get_date_add_seconds_expression(
+        &self,
+        date: &str,
+        seconds: &str,
+    ) -> Result<String, Exception> {
         self.get_date_arithmetic_interval_expression(date, "+", seconds, DateIntervalUnit::Second)
     }
 
-    fn get_date_sub_seconds_expression(&self, date: &str, seconds: &str) -> Result<String, Exception> {
+    fn get_date_sub_seconds_expression(
+        &self,
+        date: &str,
+        seconds: &str,
+    ) -> Result<String, Exception> {
         self.get_date_arithmetic_interval_expression(date, "-", seconds, DateIntervalUnit::Second)
     }
 
-    fn get_date_add_minutes_expression(&self, date: &str, minutes: &str) -> Result<String, Exception> {
+    fn get_date_add_minutes_expression(
+        &self,
+        date: &str,
+        minutes: &str,
+    ) -> Result<String, Exception> {
         self.get_date_arithmetic_interval_expression(date, "+", minutes, DateIntervalUnit::Minute)
     }
 
-    fn get_date_sub_minutes_expression(&self, date: &str, minutes: &str) -> Result<String, Exception> {
+    fn get_date_sub_minutes_expression(
+        &self,
+        date: &str,
+        minutes: &str,
+    ) -> Result<String, Exception> {
         self.get_date_arithmetic_interval_expression(date, "-", minutes, DateIntervalUnit::Minute)
     }
 
@@ -623,11 +645,19 @@ pub trait AbstractPlatform: AsDynPlatform {
         self.get_date_arithmetic_interval_expression(date, "-", months, DateIntervalUnit::Month)
     }
 
-    fn get_date_add_quarters_expression(&self, date: &str, quarters: &str) -> Result<String, Exception> {
+    fn get_date_add_quarters_expression(
+        &self,
+        date: &str,
+        quarters: &str,
+    ) -> Result<String, Exception> {
         self.get_date_arithmetic_interval_expression(date, "+", quarters, DateIntervalUnit::Quarter)
     }
 
-    fn get_date_sub_quarters_expression(&self, date: &str, quarters: &str) -> Result<String, Exception> {
+    fn get_date_sub_quarters_expression(
+        &self,
+        date: &str,
+        quarters: &str,
+    ) -> Result<String, Exception> {
         self.get_date_arithmetic_interval_expression(date, "-", quarters, DateIntervalUnit::Quarter)
     }
 
@@ -672,7 +702,7 @@ pub trait AbstractPlatform: AsDynPlatform {
         Err(not_supported("getCurrentDatabaseExpression"))
     }
 
-    /// Honors that some SQL vendors such as MsSql use table hints for
+    /// Honors that some SQL vendors such as `MsSql` use table hints for
     /// locking instead of the `FOR UPDATE` and `FOR SHARE` clause.
     fn append_lock_hint(&self, from_clause: &str, _lock_mode: LockMode) -> String {
         from_clause.to_owned()
@@ -700,8 +730,14 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// Returns the SQL to drop a foreign key.
-    fn get_drop_foreign_key_sql(&self, foreign_key: &str, table: &str) -> Result<String, Exception> {
-        Ok(format!("ALTER TABLE {table} DROP FOREIGN KEY {foreign_key}"))
+    fn get_drop_foreign_key_sql(
+        &self,
+        foreign_key: &str,
+        table: &str,
+    ) -> Result<String, Exception> {
+        Ok(format!(
+            "ALTER TABLE {table} DROP FOREIGN KEY {foreign_key}"
+        ))
     }
 
     /// Returns the SQL to drop a unique constraint.
@@ -716,30 +752,37 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// `getCreateTableWithoutForeignKeysSQL()` (final, protected).
-    fn get_create_table_without_foreign_keys_sql(&self, table: &Table) -> Result<Vec<String>, Exception> {
+    fn get_create_table_without_foreign_keys_sql(
+        &self,
+        table: &Table,
+    ) -> Result<Vec<String>, Exception> {
         self.build_create_table_sql(table, false)
     }
 
     /// `getColumnType($column)` of a column definition array (final,
     /// protected).
     fn get_column_type(&self, column: &PhpArray) -> Result<Arc<dyn Type>, Exception> {
-        match self.get_column_type_or_null(column)? {
-            Some(type_) => Ok(type_),
-            None => {
-                let name = match column.get(&Key::from("name")) {
-                    Some(Value::String(name)) => name.as_bytes().to_vec(),
-                    _ => Vec::new(),
-                };
-                Err(Exception::missing_column_type(&name))
-            }
+        if let Some(type_) = self.get_column_type_or_null(column)? {
+            Ok(type_)
+        } else {
+            let name = match column.get(&Key::from("name")) {
+                Some(Value::String(name)) => name.as_bytes().to_vec(),
+                _ => Vec::new(),
+            };
+            Err(Exception::missing_column_type(&name))
         }
     }
 
     /// `getColumnTypeOrNull($column)` (final, protected).
-    fn get_column_type_or_null(&self, column: &PhpArray) -> Result<Option<Arc<dyn Type>>, Exception> {
+    fn get_column_type_or_null(
+        &self,
+        column: &PhpArray,
+    ) -> Result<Option<Arc<dyn Type>>, Exception> {
         if let Some(Value::String(type_name)) = column.get(&Key::from("typeName")) {
-            let type_name = utf8(type_name.clone())?;
-            return types::get_type(&type_name).map(Some).map_err(Exception::from);
+            let type_name = utf8(type_name)?;
+            return types::get_type(&type_name)
+                .map(Some)
+                .map_err(Exception::from);
         }
         if let Some(type_) = column.get(&Key::from("type")).and_then(TypeObject::of) {
             deprecations::trigger("https://github.com/doctrine/dbal/pull/7490", || {
@@ -751,7 +794,11 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// `buildCreateTableSQL($table, $createForeignKeys)` (private).
-    fn build_create_table_sql(&self, table: &Table, create_foreign_keys: bool) -> Result<Vec<String>, Exception> {
+    fn build_create_table_sql(
+        &self,
+        table: &Table,
+        create_foreign_keys: bool,
+    ) -> Result<Vec<String>, Exception> {
         if table.get_columns().is_empty() {
             return Err(no_columns_specified_for_table(&table.get_name()));
         }
@@ -768,14 +815,18 @@ pub trait AbstractPlatform: AsDynPlatform {
 
         for index in table.get_indexes().values() {
             if !index.is_primary() {
-                options.indexes.get_or_insert_with(Vec::new).push(index.clone());
+                options
+                    .indexes
+                    .get_or_insert_with(Vec::new)
+                    .push(index.clone());
                 continue;
             }
             options.primary = Some(index.get_quoted_columns(self));
             options.primary_index = Some(index.clone());
         }
 
-        options.unique_constraints = Some(table.get_unique_constraints().values().cloned().collect());
+        options.unique_constraints =
+            Some(table.get_unique_constraints().values().cloned().collect());
 
         if create_foreign_keys {
             options.foreign_keys = Some(table.get_foreign_keys().values().cloned().collect());
@@ -802,7 +853,11 @@ pub trait AbstractPlatform: AsDynPlatform {
             for column in table.get_columns() {
                 let comment = column.get_comment();
                 if !comment.is_empty() {
-                    sql.push(self.get_comment_on_column_sql(&table_name, &column.get_quoted_name(self), comment));
+                    sql.push(self.get_comment_on_column_sql(
+                        &table_name,
+                        &column.get_quoted_name(self),
+                        comment,
+                    ));
                 }
             }
         }
@@ -819,7 +874,9 @@ pub trait AbstractPlatform: AsDynPlatform {
         }
         for table in tables {
             for foreign_key in table.get_foreign_keys().values() {
-                sql.push(self.get_create_foreign_key_sql(foreign_key, &table.get_quoted_name(self))?);
+                sql.push(
+                    self.get_create_foreign_key_sql(foreign_key, &table.get_quoted_name(self))?,
+                );
             }
         }
         Ok(sql)
@@ -853,7 +910,12 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// `getCommentOnColumnSQL()`.
-    fn get_comment_on_column_sql(&self, table_name: &str, column_name: &str, comment: &str) -> String {
+    fn get_comment_on_column_sql(
+        &self,
+        table_name: &str,
+        column_name: &str,
+        comment: &str,
+    ) -> String {
         let table_name = Identifier::new(table_name, false);
         let column_name = Identifier::new(column_name, false);
         format!(
@@ -880,7 +942,10 @@ pub trait AbstractPlatform: AsDynPlatform {
         columns: &[PhpArray],
         options: CreateTableOptions,
     ) -> Result<Vec<String>, Exception> {
-        validate_create_table_options(&options, "Doctrine\\DBAL\\Platforms\\AbstractPlatform::_getCreateTableSQL");
+        validate_create_table_options(
+            &options,
+            "Doctrine\\DBAL\\Platforms\\AbstractPlatform::_getCreateTableSQL",
+        );
 
         let mut column_list_sql = self.get_column_declaration_list_sql(columns)?;
 
@@ -890,7 +955,11 @@ pub trait AbstractPlatform: AsDynPlatform {
         }
 
         if let Some(primary) = options.primary.as_ref().filter(|p| !p.is_empty()) {
-            column_list_sql.push_str(&format!(", PRIMARY KEY ({})", array_unique(primary).join(", ")));
+            let _ = write!(
+                column_list_sql,
+                ", PRIMARY KEY ({})",
+                array_unique(primary).join(", ")
+            );
         }
 
         for definition in options.indexes.iter().flatten() {
@@ -1044,14 +1113,21 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// `getPreAlterTableIndexForeignKeySQL()` (protected).
-    fn get_pre_alter_table_index_foreign_key_sql(&self, diff: &TableDiff) -> Result<Vec<String>, Exception> {
+    fn get_pre_alter_table_index_foreign_key_sql(
+        &self,
+        diff: &TableDiff,
+    ) -> Result<Vec<String>, Exception> {
         let table_name_sql = diff.get_old_table().get_quoted_name(self);
         let mut sql = Vec::new();
         for foreign_key in diff.get_dropped_foreign_keys() {
-            sql.push(self.get_drop_foreign_key_sql(&foreign_key.get_quoted_name(self), &table_name_sql)?);
+            sql.push(
+                self.get_drop_foreign_key_sql(&foreign_key.get_quoted_name(self), &table_name_sql)?,
+            );
         }
         for foreign_key in diff.modified_foreign_keys() {
-            sql.push(self.get_drop_foreign_key_sql(&foreign_key.get_quoted_name(self), &table_name_sql)?);
+            sql.push(
+                self.get_drop_foreign_key_sql(&foreign_key.get_quoted_name(self), &table_name_sql)?,
+            );
         }
         for index in diff.get_dropped_indexes() {
             sql.push(self.get_drop_index_sql(&index.get_quoted_name(self), &table_name_sql));
@@ -1063,7 +1139,10 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// `getPostAlterTableIndexForeignKeySQL()` (protected).
-    fn get_post_alter_table_index_foreign_key_sql(&self, diff: &TableDiff) -> Result<Vec<String>, Exception> {
+    fn get_post_alter_table_index_foreign_key_sql(
+        &self,
+        diff: &TableDiff,
+    ) -> Result<Vec<String>, Exception> {
         let mut sql = Vec::new();
         let table_name_sql = diff.get_old_table().get_quoted_name(self);
         for foreign_key in diff.get_added_foreign_keys() {
@@ -1080,7 +1159,11 @@ pub trait AbstractPlatform: AsDynPlatform {
         }
         for (old_index_name, index) in diff.renamed_indexes() {
             let old_index_name = Identifier::new(old_index_name, false);
-            sql.extend(self.get_rename_index_sql(&old_index_name.get_quoted_name(self), index, &table_name_sql)?);
+            sql.extend(self.get_rename_index_sql(
+                &old_index_name.get_quoted_name(self),
+                index,
+                &table_name_sql,
+            )?);
         }
         Ok(sql)
     }
@@ -1099,7 +1182,12 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// Returns the SQL for renaming a column (protected).
-    fn get_rename_column_sql(&self, table_name: &str, old_column_name: &str, new_column_name: &str) -> Vec<String> {
+    fn get_rename_column_sql(
+        &self,
+        table_name: &str,
+        old_column_name: &str,
+        new_column_name: &str,
+    ) -> Vec<String> {
         vec![format!(
             "ALTER TABLE {table_name} RENAME COLUMN {old_column_name} TO {new_column_name}"
         )]
@@ -1130,7 +1218,11 @@ pub trait AbstractPlatform: AsDynPlatform {
 
     /// Obtains DBMS specific SQL code portion needed to declare a generic
     /// type column to be used in statements like CREATE TABLE.
-    fn get_column_declaration_sql(&self, name: &str, column: &PhpArray) -> Result<String, Exception> {
+    fn get_column_declaration_sql(
+        &self,
+        name: &str,
+        column: &PhpArray,
+    ) -> Result<String, Exception> {
         let declaration = match column.get(&Key::from("columnDefinition")) {
             Some(definition) if !definition.is_null() => concat_value(definition)?,
             _ => {
@@ -1159,25 +1251,30 @@ pub trait AbstractPlatform: AsDynPlatform {
                     ),
                     _ => String::new(),
                 };
-                let notnull = if column_flag(column, "notnull") { " NOT NULL" } else { "" };
+                let notnull = if column_flag(column, "notnull") {
+                    " NOT NULL"
+                } else {
+                    ""
+                };
                 let type_decl = utf8(
-                    self.get_column_type(column)?
+                    &self
+                        .get_column_type(column)?
                         .get_sql_declaration(column, self.as_dyn())?,
                 )?;
                 let mut declaration = format!("{type_decl}{charset}{default}{notnull}{collation}");
-                if self.supports_inline_column_comments() {
-                    if let Some(comment) = column.get(&Key::from("comment")) {
-                        let is_empty = matches!(comment, Value::String(s) if s.is_empty());
-                        if !comment.is_null() && !is_empty {
-                            let comment = string_argument(
-                                comment,
-                                "Doctrine\\DBAL\\Platforms\\AbstractPlatform::getInlineColumnCommentSQL",
-                                1,
-                                "comment",
-                            )?;
-                            declaration.push(' ');
-                            declaration.push_str(&self.get_inline_column_comment_sql(&comment)?);
-                        }
+                if self.supports_inline_column_comments()
+                    && let Some(comment) = column.get(&Key::from("comment"))
+                {
+                    let is_empty = matches!(comment, Value::String(s) if s.is_empty());
+                    if !comment.is_null() && !is_empty {
+                        let comment = string_argument(
+                            comment,
+                            "Doctrine\\DBAL\\Platforms\\AbstractPlatform::getInlineColumnCommentSQL",
+                            1,
+                            "comment",
+                        )?;
+                        declaration.push(' ');
+                        declaration.push_str(&self.get_inline_column_comment_sql(&comment)?);
                     }
                 }
                 declaration
@@ -1213,23 +1310,41 @@ pub trait AbstractPlatform: AsDynPlatform {
             return Ok(format!(" DEFAULT {}", concat_value(default)?));
         }
 
-        let is = |sql: String| matches!(default, Value::String(s) if s.as_bytes() == sql.as_bytes());
+        let is =
+            |sql: String| matches!(default, Value::String(s) if s.as_bytes() == sql.as_bytes());
         let current = [
-            (PhpMappingType::DateTime, self.get_current_timestamp_sql(), "CurrentTimestamp"),
-            (PhpMappingType::Time, self.get_current_time_sql(), "CurrentTime"),
-            (PhpMappingType::Date, self.get_current_date_sql(), "CurrentDate"),
+            (
+                PhpMappingType::DateTime,
+                self.get_current_timestamp_sql(),
+                "CurrentTimestamp",
+            ),
+            (
+                PhpMappingType::Time,
+                self.get_current_time_sql(),
+                "CurrentTime",
+            ),
+            (
+                PhpMappingType::Date,
+                self.get_current_date_sql(),
+                "CurrentDate",
+            ),
         ];
         for (kind, sql, class) in current {
             if mapping == Some(kind) && is(sql.clone()) {
                 deprecations::trigger("https://github.com/doctrine/dbal/pull/7195", || {
-                    format!("Using \"{sql}\" as a column default value is deprecated. Use a {class} instance instead.")
+                    format!(
+                        "Using \"{sql}\" as a column default value is deprecated. Use a {class} instance instead."
+                    )
                 });
                 return Ok(format!(" DEFAULT {sql}"));
             }
         }
 
         if type_.class() == "Doctrine\\DBAL\\Types\\BooleanType" {
-            return Ok(format!(" DEFAULT {}", concat_value(&self.convert_booleans(default))?));
+            return Ok(format!(
+                " DEFAULT {}",
+                concat_value(&self.convert_booleans(default))?
+            ));
         }
 
         if matches!(default, Value::Int(_) | Value::Float(_)) {
@@ -1263,15 +1378,23 @@ pub trait AbstractPlatform: AsDynPlatform {
                     deprecations::trigger("https://github.com/doctrine/dbal/pull/6805", || {
                         "Passing column definition to Doctrine\\DBAL\\Platforms\\AbstractPlatform::getCheckDeclarationSQL() as string is deprecated. Pass the definition as array instead.".to_owned()
                     });
-                    constraints.push(format!("CHECK ({})", utf8(def.clone())?));
+                    constraints.push(format!("CHECK ({})", utf8(def)?));
                 }
                 Value::Array(def) => {
                     let name = def.get(&Key::from("name")).cloned().unwrap_or(Value::Null);
                     if let Some(min) = def.get(&Key::from("min")).filter(|v| !v.is_null()) {
-                        constraints.push(format!("CHECK ({} >= {})", concat_value(&name)?, concat_value(min)?));
+                        constraints.push(format!(
+                            "CHECK ({} >= {})",
+                            concat_value(&name)?,
+                            concat_value(min)?
+                        ));
                     }
                     if let Some(max) = def.get(&Key::from("max")).filter(|v| !v.is_null()) {
-                        constraints.push(format!("CHECK ({} <= {})", concat_value(&name)?, concat_value(max)?));
+                        constraints.push(format!(
+                            "CHECK ({} <= {})",
+                            concat_value(&name)?,
+                            concat_value(max)?
+                        ));
                     }
                 }
                 other => {
@@ -1288,10 +1411,15 @@ pub trait AbstractPlatform: AsDynPlatform {
     /// Obtains DBMS specific SQL code portion needed to set a unique
     /// constraint declaration to be used in statements like CREATE
     /// TABLE.
-    fn get_unique_constraint_declaration_sql(&self, constraint: &UniqueConstraint) -> Result<String, Exception> {
+    fn get_unique_constraint_declaration_sql(
+        &self,
+        constraint: &UniqueConstraint,
+    ) -> Result<String, Exception> {
         let columns = constraint.quoted_columns(self);
         if columns.is_empty() {
-            return Err(Exception::invalid_argument("Incomplete definition. \"columns\" required."));
+            return Err(Exception::invalid_argument(
+                "Incomplete definition. \"columns\" required.",
+            ));
         }
         let mut chunks = Vec::new();
         if !constraint.get_name().is_empty() {
@@ -1310,7 +1438,9 @@ pub trait AbstractPlatform: AsDynPlatform {
     /// declaration to be used in statements like CREATE TABLE.
     fn get_index_declaration_sql(&self, index: &Index) -> Result<String, Exception> {
         if index.get_columns().is_empty() {
-            return Err(Exception::invalid_argument("Incomplete definition. \"columns\" required."));
+            return Err(Exception::invalid_argument(
+                "Incomplete definition. \"columns\" required.",
+            ));
         }
         Ok(format!(
             "{}INDEX {} ({}){}",
@@ -1330,7 +1460,10 @@ pub trait AbstractPlatform: AsDynPlatform {
     /// Obtain DBMS specific SQL code portion needed to set the FOREIGN
     /// KEY constraint of a column declaration to be used in statements
     /// like CREATE TABLE.
-    fn get_foreign_key_declaration_sql(&self, foreign_key: &ForeignKeyConstraint) -> Result<String, Exception> {
+    fn get_foreign_key_declaration_sql(
+        &self,
+        foreign_key: &ForeignKeyConstraint,
+    ) -> Result<String, Exception> {
         Ok(format!(
             "{}{}",
             self.get_foreign_key_base_declaration_sql(foreign_key)?,
@@ -1340,7 +1473,10 @@ pub trait AbstractPlatform: AsDynPlatform {
 
     /// Returns the FOREIGN KEY query section dealing with non-standard
     /// options as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
-    fn get_advanced_foreign_key_options_sql(&self, foreign_key: &ForeignKeyConstraint) -> Result<String, Exception> {
+    fn get_advanced_foreign_key_options_sql(
+        &self,
+        foreign_key: &ForeignKeyConstraint,
+    ) -> Result<String, Exception> {
         let mut query = String::new();
         for (option, clause) in [("onUpdate", "ON UPDATE"), ("onDelete", "ON DELETE")] {
             if foreign_key.has_option_inner(option) {
@@ -1350,7 +1486,11 @@ pub trait AbstractPlatform: AsDynPlatform {
                     1,
                     "action",
                 )?;
-                query.push_str(&format!(" {clause} {}", self.get_foreign_key_referential_action_sql(&action)?));
+                let _ = write!(
+                    query,
+                    " {clause} {}",
+                    self.get_foreign_key_referential_action_sql(&action)?
+                );
             }
         }
         Ok(query)
@@ -1382,28 +1522,39 @@ pub trait AbstractPlatform: AsDynPlatform {
         let upper = action.to_ascii_uppercase();
         match upper.as_str() {
             "CASCADE" | "SET NULL" | "NO ACTION" | "RESTRICT" | "SET DEFAULT" => Ok(upper),
-            _ => Err(Exception::invalid_argument(format!("Invalid foreign key action \"{upper}\"."))),
+            _ => Err(Exception::invalid_argument(format!(
+                "Invalid foreign key action \"{upper}\"."
+            ))),
         }
     }
 
     /// Obtains DBMS specific SQL code portion needed to set the FOREIGN
     /// KEY constraint of a column declaration to be used in statements
     /// like CREATE TABLE.
-    fn get_foreign_key_base_declaration_sql(&self, foreign_key: &ForeignKeyConstraint) -> Result<String, Exception> {
+    fn get_foreign_key_base_declaration_sql(
+        &self,
+        foreign_key: &ForeignKeyConstraint,
+    ) -> Result<String, Exception> {
         let mut sql = String::new();
         if !foreign_key.get_name().is_empty() {
-            sql.push_str(&format!("CONSTRAINT {} ", foreign_key.get_quoted_name(self)));
+            let _ = write!(sql, "CONSTRAINT {} ", foreign_key.get_quoted_name(self));
         }
         sql.push_str("FOREIGN KEY (");
 
         if foreign_key.local_columns().is_empty() {
-            return Err(Exception::invalid_argument("Incomplete definition. \"local\" required."));
+            return Err(Exception::invalid_argument(
+                "Incomplete definition. \"local\" required.",
+            ));
         }
         if foreign_key.foreign_columns().is_empty() {
-            return Err(Exception::invalid_argument("Incomplete definition. \"foreign\" required."));
+            return Err(Exception::invalid_argument(
+                "Incomplete definition. \"foreign\" required.",
+            ));
         }
         if foreign_key.foreign_table_name().is_empty() {
-            return Err(Exception::invalid_argument("Incomplete definition. \"foreignTable\" required."));
+            return Err(Exception::invalid_argument(
+                "Incomplete definition. \"foreignTable\" required.",
+            ));
         }
 
         Ok(format!(
@@ -1494,7 +1645,10 @@ pub trait AbstractPlatform: AsDynPlatform {
 
     /// Returns the SQL to set the transaction isolation level
     /// (abstract).
-    fn get_set_transaction_isolation_sql(&self, _level: TransactionIsolationLevel) -> Result<String, Exception> {
+    fn get_set_transaction_isolation_sql(
+        &self,
+        _level: TransactionIsolationLevel,
+    ) -> Result<String, Exception> {
         Err(not_supported("getSetTransactionIsolationSQL"))
     }
 
@@ -1553,7 +1707,11 @@ pub trait AbstractPlatform: AsDynPlatform {
     }
 
     /// Returns the insert SQL for an empty insert statement.
-    fn get_empty_identity_insert_sql(&self, quoted_table_name: &str, quoted_identifier_column_name: &str) -> String {
+    fn get_empty_identity_insert_sql(
+        &self,
+        quoted_table_name: &str,
+        quoted_identifier_column_name: &str,
+    ) -> String {
         format!("INSERT INTO {quoted_table_name} ({quoted_identifier_column_name}) VALUES (null)")
     }
 
@@ -1628,7 +1786,10 @@ pub trait AbstractPlatform: AsDynPlatform {
         extra.insert(
             "version",
             if column.has_platform_option("version") {
-                column.get_platform_option("version").cloned().unwrap_or(Value::Null)
+                column
+                    .get_platform_option("version")
+                    .cloned()
+                    .unwrap_or(Value::Null)
             } else {
                 Value::Bool(false)
             },
@@ -1746,7 +1907,10 @@ fn mb_strlen(value: &Value) -> Result<i64, Exception> {
 
 /// `NotSupported::new('Doctrine\DBAL\Platforms\AbstractPlatform::' . $method)`.
 fn not_supported(method: &str) -> Exception {
-    NotSupported::new(&format!("Doctrine\\DBAL\\Platforms\\AbstractPlatform::{method}")).into()
+    NotSupported::new(&format!(
+        "Doctrine\\DBAL\\Platforms\\AbstractPlatform::{method}"
+    ))
+    .into()
 }
 
 /// `validateCreateTableOptions($options, $methodName)` (final,

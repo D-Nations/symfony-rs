@@ -129,7 +129,8 @@ impl PrimaryKeyConstraintEditor {
 
     #[must_use]
     pub fn set_unquoted_column_names(mut self, names: &[&str]) -> Self {
-        let parsed: Result<Vec<_>, _> = names.iter().map(|n| UnqualifiedName::unquoted(n)).collect();
+        let parsed: Result<Vec<_>, _> =
+            names.iter().map(|n| UnqualifiedName::unquoted(n)).collect();
         if let Some(names) = self.keep(parsed) {
             self.column_names = names;
         }

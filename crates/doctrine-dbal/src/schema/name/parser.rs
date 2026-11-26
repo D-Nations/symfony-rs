@@ -68,15 +68,12 @@ fn is_unquoted_byte(byte: u8) -> bool {
 /// `IDENTIFIER_PATTERN` matched at `offset`: the end of the match.
 fn match_identifier(input: &[u8], offset: usize) -> Option<(usize, Matched<'_>)> {
     match input.get(offset)? {
-        b'"' => {
-            match_quoted(input, offset, b'"').map(|(end, inner)| (end, Matched::Quoted { inner, quote: b'"' }))
-        }
-        b'`' => {
-            match_quoted(input, offset, b'`').map(|(end, inner)| (end, Matched::Quoted { inner, quote: b'`' }))
-        }
-        b'[' => {
-            match_quoted(input, offset, b']').map(|(end, inner)| (end, Matched::Quoted { inner, quote: b']' }))
-        }
+        b'"' => match_quoted(input, offset, b'"')
+            .map(|(end, inner)| (end, Matched::Quoted { inner, quote: b'"' })),
+        b'`' => match_quoted(input, offset, b'`')
+            .map(|(end, inner)| (end, Matched::Quoted { inner, quote: b'`' })),
+        b'[' => match_quoted(input, offset, b']')
+            .map(|(end, inner)| (end, Matched::Quoted { inner, quote: b']' })),
         _ => {
             let end = offset
                 + input[offset..]

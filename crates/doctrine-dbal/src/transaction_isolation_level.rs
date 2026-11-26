@@ -25,7 +25,7 @@ impl TransactionIsolationLevel {
     }
 }
 
-/// Contains all DBAL LockModes.
+/// Contains all DBAL `LockModes`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum LockMode {
     None,

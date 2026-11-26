@@ -60,10 +60,10 @@ impl<V> ArrayMap<V> {
     /// `$array[$key] = $value`.
     pub fn insert(&mut self, key: impl Into<String>, value: V) {
         let key = key.into();
-        if let Some(i) = int_key(&key) {
-            if i >= self.next_index {
-                self.next_index = i.saturating_add(1);
-            }
+        if let Some(i) = int_key(&key)
+            && i >= self.next_index
+        {
+            self.next_index = i.saturating_add(1);
         }
         match self.entries.iter_mut().find(|(k, _)| *k == key) {
             Some(entry) => entry.1 = value,

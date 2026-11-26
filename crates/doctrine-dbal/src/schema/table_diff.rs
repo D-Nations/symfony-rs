@@ -53,7 +53,10 @@ pub struct IndexRename {
 
 impl IndexRename {
     pub fn new(old_name: UnqualifiedName, new_index: Index) -> Self {
-        Self { old_name, new_index }
+        Self {
+            old_name,
+            new_index,
+        }
     }
 
     pub fn get_old_name(&self) -> &UnqualifiedName {
@@ -84,7 +87,8 @@ impl TableDiff {
             .any(|fk| fk.get_name().is_empty())
         {
             deprecations::trigger("https://github.com/doctrine/dbal/pull/7143", || {
-                "Dropping a foreign key constraints without specifying its name is deprecated.".to_owned()
+                "Dropping a foreign key constraints without specifying its name is deprecated."
+                    .to_owned()
             });
         }
         if !parts.modified_foreign_keys.is_empty() {
@@ -112,9 +116,14 @@ impl TableDiff {
 
     /// `getModifiedColumns()` (deprecated).
     pub fn get_modified_columns(&self) -> Vec<&ColumnDiff> {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6280", || {
-            format!("{METHOD}::getModifiedColumns is deprecated, use `getChangedColumns()` instead.")
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6280",
+            || {
+                format!(
+                    "{METHOD}::getModifiedColumns is deprecated, use `getChangedColumns()` instead."
+                )
+            },
+        );
         self.parts
             .changed_columns
             .iter()
@@ -124,9 +133,14 @@ impl TableDiff {
 
     /// `getRenamedColumns()` (deprecated): old column name => new column.
     pub fn get_renamed_columns(&self) -> Vec<(String, &Column)> {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6280", || {
-            format!("{METHOD}::getRenamedColumns is deprecated, you should use `getChangedColumns()` instead.")
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6280",
+            || {
+                format!(
+                    "{METHOD}::getRenamedColumns is deprecated, you should use `getChangedColumns()` instead."
+                )
+            },
+        );
         let mut renamed: Vec<(String, &Column)> = Vec::new();
         for diff in &self.parts.changed_columns {
             if !diff.has_name_changed() {
@@ -155,9 +169,14 @@ impl TableDiff {
 
     /// `getModifiedIndexes()` (deprecated).
     pub fn get_modified_indexes(&self) -> &[Index] {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6831", || {
-            format!("{METHOD}::getModifiedIndexes() is deprecated, use getAddedIndexes() and getDroppedIndexes() instead.")
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6831",
+            || {
+                format!(
+                    "{METHOD}::getModifiedIndexes() is deprecated, use getAddedIndexes() and getDroppedIndexes() instead."
+                )
+            },
+        );
         &self.parts.modified_indexes
     }
 
@@ -170,14 +189,21 @@ impl TableDiff {
     }
 
     pub fn unset_dropped_index(&mut self, index: &Index) {
-        self.parts.dropped_indexes.retain(|dropped| dropped != index);
+        self.parts
+            .dropped_indexes
+            .retain(|dropped| dropped != index);
     }
 
     /// `getRenamedIndexes()` (deprecated): old name => new index.
     pub fn get_renamed_indexes(&self) -> &[(String, Index)] {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/7368", || {
-            format!("{METHOD}::getRenamedIndexes() is deprecated, use getIndexRenames() instead.")
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/7368",
+            || {
+                format!(
+                    "{METHOD}::getRenamedIndexes() is deprecated, use getIndexRenames() instead."
+                )
+            },
+        );
         &self.parts.renamed_indexes
     }
 
@@ -191,7 +217,10 @@ impl TableDiff {
             .renamed_indexes
             .iter()
             .map(|(old_name, new_index)| {
-                Ok(IndexRename::new(UnqualifiedName::unquoted(old_name)?, new_index.clone()))
+                Ok(IndexRename::new(
+                    UnqualifiedName::unquoted(old_name)?,
+                    new_index.clone(),
+                ))
             })
             .collect()
     }
@@ -202,11 +231,14 @@ impl TableDiff {
 
     /// `getModifiedForeignKeys()` (deprecated).
     pub fn get_modified_foreign_keys(&self) -> &[ForeignKeyConstraint] {
-        deprecations::trigger_if_called_from_outside("https://github.com/doctrine/dbal/pull/6827", || {
-            format!(
-                "{METHOD}::getModifiedForeignKeys() is deprecated, use getDroppedForeignKeys() and getAddedForeignKeys() instead."
-            )
-        });
+        deprecations::trigger_if_called_from_outside(
+            "https://github.com/doctrine/dbal/pull/6827",
+            || {
+                format!(
+                    "{METHOD}::getModifiedForeignKeys() is deprecated, use getDroppedForeignKeys() and getAddedForeignKeys() instead."
+                )
+            },
+        );
         &self.parts.modified_foreign_keys
     }
 
@@ -219,7 +251,9 @@ impl TableDiff {
     }
 
     /// `getDroppedForeignKeyConstraintNames()`.
-    pub fn get_dropped_foreign_key_constraint_names(&self) -> Result<Vec<UnqualifiedName>, Exception> {
+    pub fn get_dropped_foreign_key_constraint_names(
+        &self,
+    ) -> Result<Vec<UnqualifiedName>, Exception> {
         self.parts
             .dropped_foreign_keys
             .iter()

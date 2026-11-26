@@ -17,7 +17,9 @@ use crate::deprecations;
 use crate::exception::Exception;
 use crate::platforms::AbstractPlatform;
 
-use super::abstract_asset::{AbstractAsset, AssetKind, NameParser, is_identifier_quoted, trim_quotes};
+use super::abstract_asset::{
+    AbstractAsset, AssetKind, NameParser, is_identifier_quoted, trim_quotes,
+};
 use super::array_map::ArrayMap;
 use super::exception::invalid_state;
 use super::foreign_key_constraint_editor::ForeignKeyConstraintEditor;
@@ -257,7 +259,9 @@ impl ForeignKeyConstraint {
 
     pub fn get_referenced_table_name(&self) -> Result<&OptionallyQualifiedName, Exception> {
         self.referenced_table_name.as_ref().ok_or_else(|| {
-            invalid_state::foreign_key_constraint_has_invalid_referenced_table_name(&self.get_name())
+            invalid_state::foreign_key_constraint_has_invalid_referenced_table_name(
+                &self.get_name(),
+            )
         })
     }
 
@@ -298,13 +302,18 @@ impl ForeignKeyConstraint {
 
     fn outside(method: &str, message: &str) {
         deprecations::trigger_if_called_from_outside(LINK, || {
-            format!("Doctrine\\DBAL\\Schema\\ForeignKeyConstraint::{method} is deprecated.{message}")
+            format!(
+                "Doctrine\\DBAL\\Schema\\ForeignKeyConstraint::{method} is deprecated.{message}"
+            )
         });
     }
 
     /// `getLocalColumns()` (deprecated).
     pub fn get_local_columns(&self) -> Vec<String> {
-        Self::outside("getLocalColumns", " Use getReferencingColumnNames() instead.");
+        Self::outside(
+            "getLocalColumns",
+            " Use getReferencingColumnNames() instead.",
+        );
         self.local_columns()
     }
 
@@ -313,7 +322,10 @@ impl ForeignKeyConstraint {
     }
 
     /// `getQuotedLocalColumns($platform)` (deprecated).
-    pub fn get_quoted_local_columns(&self, platform: &(impl AbstractPlatform + ?Sized)) -> Vec<String> {
+    pub fn get_quoted_local_columns(
+        &self,
+        platform: &(impl AbstractPlatform + ?Sized),
+    ) -> Vec<String> {
         Self::outside(
             "getQuotedLocalColumns",
             " Use getReferencingColumnNames() and UnqualifiedName::toSQL() instead.",
@@ -321,7 +333,10 @@ impl ForeignKeyConstraint {
         self.quoted_local_columns(platform)
     }
 
-    pub(crate) fn quoted_local_columns(&self, platform: &(impl AbstractPlatform + ?Sized)) -> Vec<String> {
+    pub(crate) fn quoted_local_columns(
+        &self,
+        platform: &(impl AbstractPlatform + ?Sized),
+    ) -> Vec<String> {
         self.local_column_names
             .values()
             .map(|column| column.get_quoted_name(platform))
@@ -330,23 +345,41 @@ impl ForeignKeyConstraint {
 
     /// `getUnquotedLocalColumns()` (deprecated).
     pub fn get_unquoted_local_columns(&self) -> Vec<String> {
-        Self::outside("getUnquotedLocalColumns", " Use getReferencingColumnNames() instead.");
-        self.local_columns().iter().map(|c| trim_quotes(c)).collect()
+        Self::outside(
+            "getUnquotedLocalColumns",
+            " Use getReferencingColumnNames() instead.",
+        );
+        self.local_columns()
+            .iter()
+            .map(|c| trim_quotes(c))
+            .collect()
     }
 
     pub(crate) fn unquoted_local_columns(&self) -> Vec<String> {
-        self.local_columns().iter().map(|c| trim_quotes(c)).collect()
+        self.local_columns()
+            .iter()
+            .map(|c| trim_quotes(c))
+            .collect()
     }
 
     /// `getUnquotedForeignColumns()` (deprecated).
     pub fn get_unquoted_foreign_columns(&self) -> Vec<String> {
-        Self::outside("getUnquotedForeignColumns", " Use getReferencedColumnNames() instead.");
-        self.foreign_columns().iter().map(|c| trim_quotes(c)).collect()
+        Self::outside(
+            "getUnquotedForeignColumns",
+            " Use getReferencedColumnNames() instead.",
+        );
+        self.foreign_columns()
+            .iter()
+            .map(|c| trim_quotes(c))
+            .collect()
     }
 
     /// `getForeignTableName()` (deprecated).
     pub fn get_foreign_table_name(&self) -> String {
-        Self::outside("getForeignTableName", " Use getReferencedTableName() instead.");
+        Self::outside(
+            "getForeignTableName",
+            " Use getReferencedTableName() instead.",
+        );
         self.foreign_table_name()
     }
 
@@ -356,7 +389,10 @@ impl ForeignKeyConstraint {
 
     /// `getUnqualifiedForeignTableName()` (deprecated).
     pub fn get_unqualified_foreign_table_name(&self) -> String {
-        Self::outside("getUnqualifiedForeignTableName", " Use getReferencedTableName() instead.");
+        Self::outside(
+            "getUnqualifiedForeignTableName",
+            " Use getReferencedTableName() instead.",
+        );
         let full = self.foreign_table_name.get_name();
         let mut name = match full.rfind('.') {
             Some(position) => full[position + 1..].to_owned(),
@@ -369,7 +405,10 @@ impl ForeignKeyConstraint {
     }
 
     /// `getQuotedForeignTableName($platform)` (deprecated).
-    pub fn get_quoted_foreign_table_name(&self, platform: &(impl AbstractPlatform + ?Sized)) -> String {
+    pub fn get_quoted_foreign_table_name(
+        &self,
+        platform: &(impl AbstractPlatform + ?Sized),
+    ) -> String {
         Self::outside(
             "getQuotedForeignTableName",
             " Use getReferencedTableName() and OptionallyQualifiedName::toSQL() instead.",
@@ -377,22 +416,34 @@ impl ForeignKeyConstraint {
         self.quoted_foreign_table_name(platform)
     }
 
-    pub(crate) fn quoted_foreign_table_name(&self, platform: &(impl AbstractPlatform + ?Sized)) -> String {
+    pub(crate) fn quoted_foreign_table_name(
+        &self,
+        platform: &(impl AbstractPlatform + ?Sized),
+    ) -> String {
         self.foreign_table_name.get_quoted_name(platform)
     }
 
     /// `getForeignColumns()` (deprecated).
     pub fn get_foreign_columns(&self) -> Vec<String> {
-        Self::outside("getForeignColumns", " Use getReferencedColumnNames() instead.");
+        Self::outside(
+            "getForeignColumns",
+            " Use getReferencedColumnNames() instead.",
+        );
         self.foreign_columns()
     }
 
     pub(crate) fn foreign_columns(&self) -> Vec<String> {
-        self.foreign_column_names.keys().map(str::to_owned).collect()
+        self.foreign_column_names
+            .keys()
+            .map(str::to_owned)
+            .collect()
     }
 
     /// `getQuotedForeignColumns($platform)` (deprecated).
-    pub fn get_quoted_foreign_columns(&self, platform: &(impl AbstractPlatform + ?Sized)) -> Vec<String> {
+    pub fn get_quoted_foreign_columns(
+        &self,
+        platform: &(impl AbstractPlatform + ?Sized),
+    ) -> Vec<String> {
         Self::outside(
             "getQuotedForeignColumns",
             " Use getReferencedColumnNames() and UnqualifiedName::toSQL() instead.",
@@ -400,7 +451,10 @@ impl ForeignKeyConstraint {
         self.quoted_foreign_columns(platform)
     }
 
-    pub(crate) fn quoted_foreign_columns(&self, platform: &(impl AbstractPlatform + ?Sized)) -> Vec<String> {
+    pub(crate) fn quoted_foreign_columns(
+        &self,
+        platform: &(impl AbstractPlatform + ?Sized),
+    ) -> Vec<String> {
         self.foreign_column_names
             .values()
             .map(|column| column.get_quoted_name(platform))
@@ -428,7 +482,10 @@ impl ForeignKeyConstraint {
     }
 
     pub(crate) fn option(&self, name: &str) -> Value {
-        self.options.get(&Key::from(name)).cloned().unwrap_or(Value::Null)
+        self.options
+            .get(&Key::from(name))
+            .cloned()
+            .unwrap_or(Value::Null)
     }
 
     /// `getOptions()` (deprecated).
@@ -531,7 +588,7 @@ impl ForeignKeyConstraint {
         index.get_columns().iter().any(|index_column| {
             self.local_column_names
                 .values()
-                .any(|local| index_column.to_ascii_lowercase() == local.get_name().to_ascii_lowercase())
+                .any(|local| index_column.eq_ignore_ascii_case(&local.get_name()))
         })
     }
 
@@ -575,14 +632,19 @@ fn parse_referenced_table_name(name: &str) -> Option<OptionallyQualifiedName> {
         Ok(name) => Some(name),
         Err(e) => {
             let message = e.message().to_string_lossy().into_owned();
-            deprecations::trigger(LINK, || format!("Unable to parse referenced table name: {message}."));
+            deprecations::trigger(LINK, || {
+                format!("Unable to parse referenced table name: {message}.")
+            });
             None
         }
     }
 }
 
 fn parse_column_names(names: &[String]) -> Vec<UnqualifiedName> {
-    let parsed: Result<Vec<_>, _> = names.iter().map(|name| parse_unqualified_name(name)).collect();
+    let parsed: Result<Vec<_>, _> = names
+        .iter()
+        .map(|name| parse_unqualified_name(name))
+        .collect();
     match parsed {
         Ok(names) => names,
         Err(e) => {

@@ -173,7 +173,11 @@ impl TableEditor {
     }
 
     #[must_use]
-    pub fn rename_column(mut self, old_column_name: &UnqualifiedName, new_column_name: &UnqualifiedName) -> Self {
+    pub fn rename_column(
+        mut self,
+        old_column_name: &UnqualifiedName,
+        new_column_name: &UnqualifiedName,
+    ) -> Self {
         let new_name = new_column_name.clone();
         self = self.modify_column(old_column_name, move |editor| editor.set_name(new_name));
         if self.error.is_some() {
@@ -183,10 +187,14 @@ impl TableEditor {
         if let Err(e) = self.rename_column_in_indexes(old_column_name, new_column_name) {
             self.fail(e);
         }
-        if let Err(e) = self.rename_column_in_primary_key_constraint(old_column_name, new_column_name) {
+        if let Err(e) =
+            self.rename_column_in_primary_key_constraint(old_column_name, new_column_name)
+        {
             self.fail(e);
         }
-        if let Err(e) = self.rename_column_in_foreign_key_constraints(old_column_name, new_column_name) {
+        if let Err(e) =
+            self.rename_column_in_foreign_key_constraints(old_column_name, new_column_name)
+        {
             self.fail(e);
         }
         if let Err(e) = self.rename_column_in_unique_constraints(old_column_name, new_column_name) {
@@ -221,7 +229,10 @@ impl TableEditor {
             let mut columns = Vec::new();
             for column in index.get_indexed_columns()? {
                 if names_equal(column.get_column_name(), old_column_name) {
-                    columns.push(IndexedColumn::new(new_column_name.clone(), column.get_length())?);
+                    columns.push(IndexedColumn::new(
+                        new_column_name.clone(),
+                        column.get_length(),
+                    )?);
                     modified = true;
                 } else {
                     columns.push(column.clone());
@@ -261,7 +272,8 @@ impl TableEditor {
             })
             .collect();
         if modified {
-            self.primary_key_constraint = Some(constraint.edit().set_column_names(column_names).create()?);
+            self.primary_key_constraint =
+                Some(constraint.edit().set_column_names(column_names).create()?);
         }
         Ok(())
     }
@@ -274,8 +286,11 @@ impl TableEditor {
         let mut constraints = Vec::new();
         let mut any_modified = false;
         for constraint in self.unique_constraints.iter() {
-            let (names, modified) =
-                replace_name(constraint.get_column_names()?, old_column_name, new_column_name);
+            let (names, modified) = replace_name(
+                constraint.get_column_names()?,
+                old_column_name,
+                new_column_name,
+            );
             if modified {
                 constraints.push(constraint.edit()?.set_column_names(names).create()?);
                 any_modified = true;
@@ -306,7 +321,12 @@ impl TableEditor {
                 new_column_name,
             );
             if modified {
-                constraints.push(constraint.edit()?.set_referencing_column_names(names).create()?);
+                constraints.push(
+                    constraint
+                        .edit()?
+                        .set_referencing_column_names(names)
+                        .create()?,
+                );
                 any_modified = true;
             } else {
                 constraints.push(constraint.clone());
@@ -322,7 +342,11 @@ impl TableEditor {
     }
 
     #[must_use]
-    pub fn rename_column_by_unquoted_name(mut self, old_column_name: &str, new_column_name: &str) -> Self {
+    pub fn rename_column_by_unquoted_name(
+        mut self,
+        old_column_name: &str,
+        new_column_name: &str,
+    ) -> Self {
         match (
             UnqualifiedName::unquoted(old_column_name),
             UnqualifiedName::unquoted(new_column_name),
@@ -376,16 +400,27 @@ impl TableEditor {
     }
 
     #[must_use]
-    pub fn rename_index(mut self, old_index_name: &UnqualifiedName, new_index_name: &UnqualifiedName) -> Self {
+    pub fn rename_index(
+        mut self,
+        old_index_name: &UnqualifiedName,
+        new_index_name: &UnqualifiedName,
+    ) -> Self {
         let result = self.indexes.modify(old_index_name, |index| {
-            index.edit()?.set_name(Some(new_index_name.clone())).create()
+            index
+                .edit()?
+                .set_name(Some(new_index_name.clone()))
+                .create()
         });
         self.check(TableObject::Index, result);
         self
     }
 
     #[must_use]
-    pub fn rename_index_by_unquoted_name(mut self, old_index_name: &str, new_index_name: &str) -> Self {
+    pub fn rename_index_by_unquoted_name(
+        mut self,
+        old_index_name: &str,
+        new_index_name: &str,
+    ) -> Self {
         match (
             UnqualifiedName::unquoted(old_index_name),
             UnqualifiedName::unquoted(new_index_name),

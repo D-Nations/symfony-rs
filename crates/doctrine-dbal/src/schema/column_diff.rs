@@ -109,7 +109,8 @@ impl ColumnDiff {
     }
 
     pub fn has_platform_options_changed(&self) -> bool {
-        !Value::Array(self.new_column.get_platform_options().clone())
-            .identical(&Value::Array(self.old_column.get_platform_options().clone()))
+        !Value::Array(self.new_column.get_platform_options().clone()).identical(&Value::Array(
+            self.old_column.get_platform_options().clone(),
+        ))
     }
 }

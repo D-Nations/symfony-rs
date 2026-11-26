@@ -1,15 +1,18 @@
-//! Port of Doctrine\DBAL\Platforms\SQLitePlatform.php: the SQLite
+//! Port of Doctrine\DBAL\Platforms\SQLitePlatform.php: the `SQLite`
 //! dialect.
 //!
 //! Not ported: `createSchemaManager()` and `createMetadataProvider()`
-//! (SQLiteSchemaManager and SQLiteMetadataProvider need a Connection).
+//! (`SQLiteSchemaManager` and `SQLiteMetadataProvider` need a Connection).
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!
 //! Upstream: doctrine/dbal src/Platforms/SQLitePlatform.php
 
+use std::fmt::Write as _;
+
 use php_value::{Key, PhpArray, PhpString, Value};
 
+use crate::TransactionIsolationLevel;
 use crate::deprecations;
 use crate::exception::Exception;
 use crate::schema::exception::column_does_not_exist;
@@ -20,7 +23,6 @@ use crate::schema::{
 };
 use crate::sql::builder::{DefaultSelectSQLBuilder, SelectSQLBuilder};
 use crate::types::PhpMappingType;
-use crate::TransactionIsolationLevel;
 
 use super::abstract_platform::{AbstractPlatform, array_unique, validate_create_table_options};
 use super::date_interval_unit::{DateIntervalUnit, TrimMode};
@@ -28,19 +30,22 @@ use super::exception::NotSupported;
 use super::keywords::{KeywordList, SQLiteKeywords};
 use super::platform_state::{CreateTableOptions, PlatformState, string_argument};
 
-/// PHP's global `\InvalidArgumentException` (which SQLitePlatform
-/// throws, unlike AbstractPlatform's DBAL one).
+/// PHP's global `\InvalidArgumentException` (which `SQLitePlatform`
+/// throws, unlike `AbstractPlatform`'s DBAL one).
 pub const GLOBAL_INVALID_ARGUMENT_EXCEPTION: &str = "InvalidArgumentException";
 
-/// The SQLitePlatform class describes the specifics and dialects of the
-/// SQLite database platform.
+/// The `SQLitePlatform` class describes the specifics and dialects of the
+/// `SQLite` database platform.
 #[derive(Debug, Default)]
 pub struct SQLitePlatform {
     state: PlatformState,
 }
 
 fn not_supported(method: &str) -> Exception {
-    NotSupported::new(&format!("Doctrine\\DBAL\\Platforms\\SQLitePlatform::{method}")).into()
+    NotSupported::new(&format!(
+        "Doctrine\\DBAL\\Platforms\\SQLitePlatform::{method}"
+    ))
+    .into()
 }
 
 fn flag(column: &PhpArray, name: &str) -> bool {
@@ -114,7 +119,10 @@ impl SQLitePlatform {
     }
 
     /// `getSimpleAlterTableSQL()` (private): `None` for PHP's `false`.
-    fn get_simple_alter_table_sql(&self, diff: &TableDiff) -> Result<Option<Vec<String>>, Exception> {
+    fn get_simple_alter_table_sql(
+        &self,
+        diff: &TableDiff,
+    ) -> Result<Option<Vec<String>>, Exception> {
         if !diff.get_changed_columns().is_empty()
             || !diff.get_dropped_columns().is_empty()
             || !diff.get_added_indexes().is_empty()
@@ -135,9 +143,7 @@ impl SQLitePlatform {
             let mut definition = column.to_array(true)?;
             let mapping = self.get_column_type(&definition)?.php_mapping_type();
             let default = column.get_default();
-            let is = |expected: String| {
-                matches!(default, Value::String(s) if s.as_bytes() == expected.as_bytes())
-            };
+            let is = |expected: String| matches!(default, Value::String(s) if s.as_bytes() == expected.as_bytes());
 
             // A non-constant default expression (e.g. CURRENT_TIMESTAMP)
             // cannot be used with ALTER TABLE ... ADD COLUMN on a
@@ -146,7 +152,8 @@ impl SQLitePlatform {
                 || column.get_autoincrement()
                 || !column.get_comment().is_empty()
                 || DefaultExpressionObject::of(default).is_some()
-                || (mapping == Some(PhpMappingType::DateTime) && is(self.get_current_timestamp_sql()))
+                || (mapping == Some(PhpMappingType::DateTime)
+                    && is(self.get_current_timestamp_sql()))
                 || (mapping == Some(PhpMappingType::Date) && is(self.get_current_date_sql()))
                 || (mapping == Some(PhpMappingType::Time) && is(self.get_current_time_sql()))
             {
@@ -199,7 +206,7 @@ impl SQLitePlatform {
         for (key, index) in old_table.get_indexes().iter() {
             let index_name = index.get_name();
             for (old_index_name, _) in diff.renamed_indexes() {
-                if index_name.to_ascii_lowercase() == old_index_name.to_ascii_lowercase() {
+                if index_name.eq_ignore_ascii_case(old_index_name) {
                     indexes.remove(key);
                 }
             }
@@ -267,7 +274,9 @@ impl SQLitePlatform {
     }
 
     /// `getForeignKeysInAlteredTable()` (private).
-    fn get_foreign_keys_in_altered_table(diff: &TableDiff) -> Result<ArrayMap<ForeignKeyConstraint>, Exception> {
+    fn get_foreign_keys_in_altered_table(
+        diff: &TableDiff,
+    ) -> Result<ArrayMap<ForeignKeyConstraint>, Exception> {
         let old_table = diff.get_old_table();
         let mut foreign_keys = old_table.get_foreign_keys().clone();
         let name_map = Self::get_diff_column_name_map(diff);
@@ -417,7 +426,9 @@ impl AbstractPlatform for SQLitePlatform {
     ) -> Result<String, Exception> {
         let (interval, unit) = match unit {
             DateIntervalUnit::Week => (self.multiply_interval(interval, 7), DateIntervalUnit::Day),
-            DateIntervalUnit::Quarter => (self.multiply_interval(interval, 3), DateIntervalUnit::Month),
+            DateIntervalUnit::Quarter => {
+                (self.multiply_interval(interval, 3), DateIntervalUnit::Month)
+            }
             unit => (interval.to_owned(), unit),
         };
         Ok(format!(
@@ -454,7 +465,10 @@ impl AbstractPlatform for SQLitePlatform {
         .to_owned()
     }
 
-    fn get_set_transaction_isolation_sql(&self, level: TransactionIsolationLevel) -> Result<String, Exception> {
+    fn get_set_transaction_isolation_sql(
+        &self,
+        level: TransactionIsolationLevel,
+    ) -> Result<String, Exception> {
         Ok(format!(
             "PRAGMA read_uncommitted = {}",
             self.get_transaction_isolation_level_sql(level)
@@ -467,7 +481,10 @@ impl AbstractPlatform for SQLitePlatform {
 
     fn get_integer_type_declaration_sql(&self, column: &PhpArray) -> Result<PhpString, Exception> {
         let mut sql = b"INTEGER".to_vec();
-        sql.extend_from_slice(self.get_common_integer_type_declaration_sql(column)?.as_bytes());
+        sql.extend_from_slice(
+            self.get_common_integer_type_declaration_sql(column)?
+                .as_bytes(),
+        );
         Ok(PhpString::from(sql))
     }
 
@@ -478,22 +495,34 @@ impl AbstractPlatform for SQLitePlatform {
             return self.get_integer_type_declaration_sql(column);
         }
         let mut sql = b"BIGINT".to_vec();
-        sql.extend_from_slice(self.get_common_integer_type_declaration_sql(column)?.as_bytes());
+        sql.extend_from_slice(
+            self.get_common_integer_type_declaration_sql(column)?
+                .as_bytes(),
+        );
         Ok(PhpString::from(sql))
     }
 
-    fn get_small_int_type_declaration_sql(&self, column: &PhpArray) -> Result<PhpString, Exception> {
+    fn get_small_int_type_declaration_sql(
+        &self,
+        column: &PhpArray,
+    ) -> Result<PhpString, Exception> {
         // SQLite autoincrement is implicit for INTEGER PKs, but not for
         // SMALLINT fields.
         if flag(column, "autoincrement") {
             return self.get_integer_type_declaration_sql(column);
         }
         let mut sql = b"SMALLINT".to_vec();
-        sql.extend_from_slice(self.get_common_integer_type_declaration_sql(column)?.as_bytes());
+        sql.extend_from_slice(
+            self.get_common_integer_type_declaration_sql(column)?
+                .as_bytes(),
+        );
         Ok(PhpString::from(sql))
     }
 
-    fn get_date_time_type_declaration_sql(&self, _column: &PhpArray) -> Result<PhpString, Exception> {
+    fn get_date_time_type_declaration_sql(
+        &self,
+        _column: &PhpArray,
+    ) -> Result<PhpString, Exception> {
         Ok(PhpString::from("DATETIME"))
     }
 
@@ -505,12 +534,19 @@ impl AbstractPlatform for SQLitePlatform {
         Ok(PhpString::from("TIME"))
     }
 
-    fn get_common_integer_type_declaration_sql(&self, column: &PhpArray) -> Result<PhpString, Exception> {
+    fn get_common_integer_type_declaration_sql(
+        &self,
+        column: &PhpArray,
+    ) -> Result<PhpString, Exception> {
         // SQLite autoincrement is only possible for the primary key
         if flag(column, "autoincrement") {
             return Ok(PhpString::from(" PRIMARY KEY AUTOINCREMENT"));
         }
-        Ok(PhpString::from(if flag(column, "unsigned") { " UNSIGNED" } else { "" }))
+        Ok(PhpString::from(if flag(column, "unsigned") {
+            " UNSIGNED"
+        } else {
+            ""
+        }))
     }
 
     fn get_create_table_sql_internal(
@@ -519,7 +555,10 @@ impl AbstractPlatform for SQLitePlatform {
         columns: &[PhpArray],
         mut options: CreateTableOptions,
     ) -> Result<Vec<String>, Exception> {
-        validate_create_table_options(&options, "Doctrine\\DBAL\\Platforms\\SQLitePlatform::_getCreateTableSQL");
+        validate_create_table_options(
+            &options,
+            "Doctrine\\DBAL\\Platforms\\SQLitePlatform::_getCreateTableSQL",
+        );
 
         if Self::has_auto_increment_column(columns, &options) {
             options.primary = Some(Vec::new());
@@ -533,7 +572,11 @@ impl AbstractPlatform for SQLitePlatform {
         }
 
         if let Some(primary) = options.primary.as_ref().filter(|p| !p.is_empty()) {
-            query_fields.push_str(&format!(", PRIMARY KEY ({})", array_unique(primary).join(", ")));
+            let _ = write!(
+                query_fields,
+                ", PRIMARY KEY ({})",
+                array_unique(primary).join(", ")
+            );
         }
 
         for foreign_key in options.foreign_keys.iter().flatten() {
@@ -542,7 +585,11 @@ impl AbstractPlatform for SQLitePlatform {
         }
 
         let mut table_comment = String::new();
-        if let Some(comment) = options.table.get(&Key::from("comment")).filter(|c| !c.is_null()) {
+        if let Some(comment) = options
+            .table
+            .get(&Key::from("comment"))
+            .filter(|c| !c.is_null())
+        {
             let comment = string_argument(
                 comment,
                 "Doctrine\\DBAL\\Platforms\\SQLitePlatform::getInlineCommentSQL",
@@ -554,13 +601,19 @@ impl AbstractPlatform for SQLitePlatform {
 
         let mut sql = format!("CREATE TABLE {name} {table_comment}({query_fields})");
 
-        if matches!(options.table.get(&Key::from("without_rowid")), Some(Value::Bool(true))) {
+        if matches!(
+            options.table.get(&Key::from("without_rowid")),
+            Some(Value::Bool(true))
+        ) {
             sql.push_str(" WITHOUT ROWID");
         }
 
         let mut query = vec![sql];
 
-        if matches!(options.table.get(&Key::from("alter")), Some(Value::Bool(true))) {
+        if matches!(
+            options.table.get(&Key::from("alter")),
+            Some(Value::Bool(true))
+        ) {
             return Ok(query);
         }
 
@@ -571,18 +624,27 @@ impl AbstractPlatform for SQLitePlatform {
         Ok(query)
     }
 
-    fn get_binary_type_declaration_sql_snippet(&self, _length: Option<i64>) -> Result<PhpString, Exception> {
+    fn get_binary_type_declaration_sql_snippet(
+        &self,
+        _length: Option<i64>,
+    ) -> Result<PhpString, Exception> {
         Ok(PhpString::from("BLOB"))
     }
 
-    fn get_varchar_type_declaration_sql_snippet(&self, length: Option<i64>) -> Result<PhpString, Exception> {
+    fn get_varchar_type_declaration_sql_snippet(
+        &self,
+        length: Option<i64>,
+    ) -> Result<PhpString, Exception> {
         Ok(PhpString::from(match length {
             Some(length) => format!("VARCHAR({length})"),
             None => "VARCHAR".to_owned(),
         }))
     }
 
-    fn get_varbinary_type_declaration_sql_snippet(&self, _length: Option<i64>) -> Result<PhpString, Exception> {
+    fn get_varbinary_type_declaration_sql_snippet(
+        &self,
+        _length: Option<i64>,
+    ) -> Result<PhpString, Exception> {
         Ok(PhpString::from("BLOB"))
     }
 
@@ -594,7 +656,10 @@ impl AbstractPlatform for SQLitePlatform {
         Ok("SELECT name, sql FROM sqlite_master WHERE type='view' AND sql NOT NULL".to_owned())
     }
 
-    fn get_advanced_foreign_key_options_sql(&self, foreign_key: &ForeignKeyConstraint) -> Result<String, Exception> {
+    fn get_advanced_foreign_key_options_sql(
+        &self,
+        foreign_key: &ForeignKeyConstraint,
+    ) -> Result<String, Exception> {
         let mut query = String::new();
         for (option, clause) in [("onUpdate", "ON UPDATE"), ("onDelete", "ON DELETE")] {
             if foreign_key.has_option_inner(option) {
@@ -604,7 +669,11 @@ impl AbstractPlatform for SQLitePlatform {
                     1,
                     "action",
                 )?;
-                query.push_str(&format!(" {clause} {}", self.get_foreign_key_referential_action_sql(&action)?));
+                let _ = write!(
+                    query,
+                    " {clause} {}",
+                    self.get_foreign_key_referential_action_sql(&action)?
+                );
             }
         }
 
@@ -687,11 +756,17 @@ impl AbstractPlatform for SQLitePlatform {
         SQLiteKeywords::new()
     }
 
-    fn get_pre_alter_table_index_foreign_key_sql(&self, _diff: &TableDiff) -> Result<Vec<String>, Exception> {
+    fn get_pre_alter_table_index_foreign_key_sql(
+        &self,
+        _diff: &TableDiff,
+    ) -> Result<Vec<String>, Exception> {
         Ok(Vec::new())
     }
 
-    fn get_post_alter_table_index_foreign_key_sql(&self, diff: &TableDiff) -> Result<Vec<String>, Exception> {
+    fn get_post_alter_table_index_foreign_key_sql(
+        &self,
+        diff: &TableDiff,
+    ) -> Result<Vec<String>, Exception> {
         let table = diff.get_old_table();
         let mut sql = Vec::new();
         for index in Self::get_indexes_in_altered_table(diff)?.values() {
@@ -703,7 +778,11 @@ impl AbstractPlatform for SQLitePlatform {
     }
 
     fn do_modify_limit_query(&self, query: &str, limit: Option<i64>, offset: i64) -> String {
-        let limit = if limit.is_none() && offset > 0 { Some(-1) } else { limit };
+        let limit = if limit.is_none() && offset > 0 {
+            Some(-1)
+        } else {
+            limit
+        };
         let mut query = query.to_owned();
         if let Some(limit) = limit {
             query = format!("{query} LIMIT {limit}");
@@ -765,15 +844,27 @@ impl AbstractPlatform for SQLitePlatform {
             .collect())
     }
 
-    fn get_create_primary_key_sql(&self, _index: &Index, _table: &str) -> Result<String, Exception> {
+    fn get_create_primary_key_sql(
+        &self,
+        _index: &Index,
+        _table: &str,
+    ) -> Result<String, Exception> {
         Err(not_supported("getCreatePrimaryKeySQL"))
     }
 
-    fn get_create_foreign_key_sql(&self, _foreign_key: &ForeignKeyConstraint, _table: &str) -> Result<String, Exception> {
+    fn get_create_foreign_key_sql(
+        &self,
+        _foreign_key: &ForeignKeyConstraint,
+        _table: &str,
+    ) -> Result<String, Exception> {
         Err(not_supported("getCreateForeignKeySQL"))
     }
 
-    fn get_drop_foreign_key_sql(&self, _foreign_key: &str, _table: &str) -> Result<String, Exception> {
+    fn get_drop_foreign_key_sql(
+        &self,
+        _foreign_key: &str,
+        _table: &str,
+    ) -> Result<String, Exception> {
         Err(not_supported("getDropForeignKeySQL"))
     }
 
@@ -808,7 +899,8 @@ impl AbstractPlatform for SQLitePlatform {
         for column_diff in diff.get_changed_columns() {
             let old_column_name = column_diff.get_old_column().get_name().to_ascii_lowercase();
             let new_column = column_diff.get_new_column();
-            columns = Self::replace_column(&table.get_name(), &columns, &old_column_name, new_column)?;
+            columns =
+                Self::replace_column(&table.get_name(), &columns, &old_column_name, new_column)?;
             if let Some(name) = new_column_names.get_mut(&old_column_name) {
                 *name = new_column.get_quoted_name(self);
             }
@@ -830,7 +922,10 @@ impl AbstractPlatform for SQLitePlatform {
             TableParts {
                 columns: columns.values().cloned().collect(),
                 indexes: Self::get_primary_index_in_altered_table(diff)?,
-                fk_constraints: Self::get_foreign_keys_in_altered_table(diff)?.values().cloned().collect(),
+                fk_constraints: Self::get_foreign_keys_in_altered_table(diff)?
+                    .values()
+                    .cloned()
+                    .collect(),
                 options: table.get_options().clone(),
                 ..TableParts::default()
             },

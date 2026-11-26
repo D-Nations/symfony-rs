@@ -72,7 +72,7 @@ pub struct CreateTableOptions {
 }
 
 /// A PHP string as UTF-8 text (identifiers and SQL here are `String`s).
-pub(crate) fn utf8(s: PhpString) -> Result<String, Exception> {
+pub(crate) fn utf8(s: &PhpString) -> Result<String, Exception> {
     match s.to_str() {
         Some(text) => Ok(text.to_owned()),
         None => Err(Exception::new(
@@ -91,7 +91,7 @@ pub(crate) fn string_argument(
     parameter: &str,
 ) -> Result<String, Exception> {
     match value {
-        Value::String(s) => utf8(s.clone()),
+        Value::String(s) => utf8(s),
         other => Err(Exception::new(
             Exception::TYPE_ERROR,
             format!(
@@ -106,7 +106,7 @@ pub(crate) fn string_argument(
 /// SQL.
 pub(crate) fn concat_value(value: &Value) -> Result<String, Exception> {
     match value.to_php_string_or_stringable() {
-        Some(s) => utf8(s),
+        Some(s) => utf8(&s),
         None => Err(Exception::new(
             Exception::UNSUPPORTED,
             format!("string conversion of {}", value.debug_type()),

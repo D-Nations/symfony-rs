@@ -13,6 +13,8 @@
 //! Upstream: doctrine/dbal src/Schema/AbstractOptionallyNamedObject.php src/Schema/NamedObject.php
 //! Upstream: doctrine/dbal src/Schema/OptionallyNamedObject.php
 
+use std::fmt::Write as _;
+
 use crate::deprecations;
 use crate::exception::Exception;
 use crate::platforms::AbstractPlatform;
@@ -138,12 +140,13 @@ impl AbstractAsset {
         }
 
         if name.contains('.') {
+            // [$this->_namespace, $name] = explode('.', $name)
             let mut parts = name.split('.');
             self.namespace = parts.next().map(str::to_owned);
-            name = parts.next().unwrap_or_default().to_owned();
+            parts.next().unwrap_or_default().clone_into(&mut self.name);
+        } else {
+            self.name = name;
         }
-
-        self.name = name;
         self.validate_future = false;
 
         let parsed_name = if input.is_empty() {
@@ -321,7 +324,11 @@ impl AbstractAsset {
     }
 
     /// `_generateIdentifierName($columnNames, $prefix, $maxSize)`.
-    pub fn generate_identifier_name(column_names: &[String], prefix: &str, max_size: usize) -> String {
+    pub fn generate_identifier_name(
+        column_names: &[String],
+        prefix: &str,
+        max_size: usize,
+    ) -> String {
         generate_identifier_name(column_names, prefix, max_size)
     }
 }
@@ -344,10 +351,10 @@ pub(crate) fn generate_identifier_name(
     prefix: &str,
     max_size: usize,
 ) -> String {
-    let hash: String = column_names
-        .iter()
-        .map(|column| format!("{:x}", crc32(column.as_bytes())))
-        .collect();
+    let hash = column_names.iter().fold(String::new(), |mut hash, column| {
+        let _ = write!(hash, "{:x}", crc32(column.as_bytes()));
+        hash
+    });
     let mut name = format!("{prefix}_{hash}").into_bytes();
     name.truncate(max_size);
     String::from_utf8_lossy(&name).to_ascii_uppercase()

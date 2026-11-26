@@ -20,6 +20,10 @@ use super::exception;
 use super::name::UnqualifiedName;
 
 #[derive(Debug, Clone)]
+#[allow(
+    clippy::struct_excessive_bools,
+    reason = "the properties of ColumnEditor.php"
+)]
 pub struct ColumnEditor {
     error: Option<Exception>,
     name: Option<UnqualifiedName>,

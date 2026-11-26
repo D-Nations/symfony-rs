@@ -31,14 +31,16 @@ pub use collections::{
     CollectionError, NamedObject, OptionallyNamedObject, OptionallyUnqualifiedNamedObjectSet,
     UnqualifiedNamedObjectSet,
 };
-pub use column::{Column, ColumnType, TypeObject};
 pub(crate) use column::array_merge_into as column_array_merge;
+pub use column::{Column, ColumnType, TypeObject};
 pub use column_diff::ColumnDiff;
 pub use column_editor::ColumnEditor;
 pub use default_expression::{
     CurrentDate, CurrentTime, CurrentTimestamp, DefaultExpression, DefaultExpressionObject,
 };
-pub use foreign_key_constraint::{Deferrability, ForeignKeyConstraint, MatchType, ReferentialAction};
+pub use foreign_key_constraint::{
+    Deferrability, ForeignKeyConstraint, MatchType, ReferentialAction,
+};
 pub use foreign_key_constraint_editor::ForeignKeyConstraintEditor;
 pub use identifier::Identifier;
 pub use index::{Index, IndexType, IndexedColumn};
