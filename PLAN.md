@@ -1766,6 +1766,15 @@ Stack rows (searched November 22):
       chunk it; the fixture's comparison rule counts on one; owner's
       call). Stage log docs/milestones/m2-a-streamed-delivery.md. Next:
       StreamedJsonResponse and EventStreamResponse.
+- [x] EventStreamResponse (November 26): `EventStreamResponse.php` and
+      `ServerEvent.php`; the callback gets an `EventStream` (PHP's
+      `$this`) and returns its events lazily; `connection_aborted()` is a
+      `php::Output` flag the front controller sets when the client is
+      gone. EventStreamResponseTest 14 of 14; 1,200 scripts recorded from
+      PHP 8.4.27; eight mutations, each caught; two server tests. Stage log
+      docs/milestones/m2-a-event-stream-response.md. Next:
+      StreamedJsonResponse (needs generators and `JsonSerializable` objects
+      inside PHP data).
 
 ## M6 progress
 
