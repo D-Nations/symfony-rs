@@ -8,15 +8,15 @@ description = "A tested subset of Symfony HttpFoundation and PHP request semanti
 
 [dependencies]
 axum = "0.8.9"
-php-pcre = { path = "../php-pcre" }
-php-value = { path = "../php-value" }
+php-pcre = { workspace = true }
+php-value = { workspace = true }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 symfony-filesystem = { path = "../filesystem" }
 symfony-finder = { path = "../finder" }
 symfony-mime = { path = "../mime" }
 
 [dev-dependencies]
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 base64 = "0.23.1"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.154", features = ["preserve_order", "unbounded_depth"] }

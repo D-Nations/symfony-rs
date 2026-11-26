@@ -11,14 +11,14 @@ description = "Port of the symfony/yaml component"
 console = ["dep:symfony-console"]
 
 [dependencies]
-php-value = { path = "../php-value" }
+php-value = { workspace = true }
 regex = "1.13.2"
 symfony-console = { path = "../console", optional = true }
 
 [dev-dependencies]
 # The tests cover the lint:yaml command too.
 symfony-yaml = { path = ".", features = ["console"] }
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 serde_json = { version = "1.0.154", features = ["unbounded_depth"] }
 
 [lints]

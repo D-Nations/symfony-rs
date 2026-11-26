@@ -8,7 +8,7 @@ description = "Symfony HttpKernel's request lifecycle on HttpFoundation, and a t
 
 [dependencies]
 axum = "0.8.9"
-php-value = { path = "../php-value" }
+php-value = { workspace = true }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
 symfony-event-dispatcher = { path = "../event-dispatcher" }
 symfony-http-foundation = { path = "../http-foundation" }
@@ -21,7 +21,7 @@ symfony-routing = { path = "../routing" }
 [dev-dependencies]
 base64 = "0.23.1"
 serde_json = { version = "1.0.154", features = ["preserve_order"] }
-php-value = { path = "../php-value", features = ["vectors"] }
+php-value = { workspace = true, features = ["vectors"] }
 tokio = { version = "1.54.1", features = ["macros", "rt"] }
 
 [lints]

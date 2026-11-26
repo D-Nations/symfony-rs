@@ -7,7 +7,7 @@ publish = false
 description = "Trial Twig runtime for code emitted by twig-trial-compiler; not the M4 port"
 
 [dependencies]
-php-value = { path = "../../../crates/php-value" }
+php-value = { workspace = true }
 
 [lints]
 workspace = true

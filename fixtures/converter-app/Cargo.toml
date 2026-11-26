@@ -8,7 +8,7 @@ description = "M1-D converter fixture: hand-authored, generated-code-shaped Rust
 
 [dependencies]
 axum = "0.8.9"
-php-value = { path = "../../crates/php-value" }
+php-value = { workspace = true }
 psr-container = { path = "../../crates/psr-container" }
 symfony-event-dispatcher = { path = "../../crates/event-dispatcher" }
 symfony-http-foundation = { path = "../../crates/http-foundation" }
