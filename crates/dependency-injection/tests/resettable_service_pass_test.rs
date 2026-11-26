@@ -2,10 +2,8 @@
 //! symfony/dependency-injection 9b34cad8. Names and assertions are
 //! PHPUnit's.
 //!
-//! Upstream adds the pass and calls `compile()`, which stops here at the
-//! first pass that is not ported yet; these tests run the pass with
-//! `process()` instead (the other passes leave `services_resetter`'s
-//! arguments and the tags as the pass sets them).
+//! `$container->compile()` is `support::compile()` (nothing is
+//! autowired). The fixture classes are class metadata.
 //!
 //! testIgnoreInvalidMethod drops its last part: it gets and resets the
 //! services, which needs PHP object creation.
@@ -16,11 +14,16 @@
 //! Upstream: symfony/dependency-injection Tests/Compiler/ResettableServicePassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
+mod support;
+
+use std::sync::Arc;
+
 use php_value::{PhpArray, Value, array::Key, php_array};
 use symfony_dependency_injection::argument::IteratorArgument;
-use symfony_dependency_injection::compiler::{CompilerPassInterface, ResettableServicePass};
+use symfony_dependency_injection::class_metadata::{ClassMetadata, ClassRegistry};
+use symfony_dependency_injection::compiler::{Pass, PassType, ResettableServicePass};
 use symfony_dependency_injection::{
-    ContainerBuilder, Definition, ErrorKind, InvalidBehavior, Reference,
+    ContainerBuilder, Definition, ErrorKind, InvalidBehavior, Reference, Result,
 };
 
 const FIXTURES: &str = "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\";
@@ -31,12 +34,39 @@ fn f(short: &str) -> String {
     format!("{FIXTURES}{short}")
 }
 
+/// A container that knows the fixture classes.
+fn container() -> ContainerBuilder {
+    let mut registry = ClassRegistry::new();
+    for class in [
+        f("ResettableService"),
+        f("ClearableService"),
+        f("MultiResettableService"),
+    ] {
+        registry.add_class(ClassMetadata::class(&class));
+    }
+    let mut container = ContainerBuilder::new();
+    container.set_class_registry(Arc::new(registry));
+    container
+}
+
 fn register_resetter(container: &mut ContainerBuilder) {
     container
         .register("services_resetter", Some(SERVICES_RESETTER))
         .unwrap()
         .set_public(true)
         .set_arguments(PhpArray::list([Value::Null, Value::Array(PhpArray::new())]));
+}
+
+/// `addCompilerPass(new ResettableServicePass())`, then `compile()`.
+fn compile(container: &mut ContainerBuilder) -> Result<()> {
+    container
+        .add_compiler_pass(
+            Pass::new(ResettableServicePass),
+            PassType::BeforeOptimization,
+            0,
+        )
+        .unwrap();
+    support::compile(container, false)
 }
 
 fn ignore_uninitialized(id: &str) -> Value {
@@ -67,7 +97,7 @@ fn list(items: &[&str]) -> Value {
 
 #[test]
 fn testCompilerPass() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register("one", Some(&f("ResettableService")))
         .unwrap()
@@ -86,7 +116,7 @@ fn testCompilerPass() {
         .add_tag("kernel.reset", php_array!["method" => "resetSecond"]);
 
     register_resetter(&mut container);
-    ResettableServicePass.process(&mut container).unwrap();
+    compile(&mut container).unwrap();
 
     let definition = container.get_definition("services_resetter").unwrap();
 
@@ -112,7 +142,7 @@ fn testCompilerPass() {
 
 #[test]
 fn testMissingMethod() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register(&f("ResettableService"), None)
         .unwrap()
@@ -122,7 +152,7 @@ fn testMissingMethod() {
         .unwrap()
         .set_arguments(PhpArray::list([Value::Null, Value::Array(PhpArray::new())]));
 
-    let e = ResettableServicePass.process(&mut container).unwrap_err();
+    let e = compile(&mut container).unwrap_err();
     assert!(e.is(&ErrorKind::Runtime));
     assert_eq!(
         "Tag \"kernel.reset\" requires the \"method\" attribute to be set on service \"Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\ResettableService\".",
@@ -132,7 +162,7 @@ fn testMissingMethod() {
 
 #[test]
 fn testIgnoreInvalidMethod() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register(&f("ResettableService"), None)
         .unwrap()
@@ -143,7 +173,7 @@ fn testIgnoreInvalidMethod() {
         );
     register_resetter(&mut container);
 
-    ResettableServicePass.process(&mut container).unwrap();
+    compile(&mut container).unwrap();
 
     let mut expected = PhpArray::new();
     expected.insert(f("ResettableService").as_str(), list(&["?missingMethod"]));
@@ -160,7 +190,7 @@ fn testIgnoreInvalidMethod() {
 
 #[test]
 fn testCompilerPassWithNonSharedServices() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register("shared", Some(&f("ResettableService")))
         .unwrap()
@@ -174,7 +204,7 @@ fn testCompilerPassWithNonSharedServices() {
         .add_tag("kernel.reset", php_array!["method" => "clear"]);
 
     register_resetter(&mut container);
-    ResettableServicePass.process(&mut container).unwrap();
+    compile(&mut container).unwrap();
 
     let definition = container.get_definition("services_resetter").unwrap();
 
@@ -224,7 +254,7 @@ fn assert_factory(definition: &Definition) {
 
 #[test]
 fn testCompilerPassWithOnlyNonSharedServices() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register("non_shared", Some(&f("ResettableService")))
         .unwrap()
@@ -233,7 +263,7 @@ fn testCompilerPassWithOnlyNonSharedServices() {
         .add_tag("kernel.reset", php_array!["method" => "reset"]);
 
     register_resetter(&mut container);
-    ResettableServicePass.process(&mut container).unwrap();
+    compile(&mut container).unwrap();
 
     // services_resetter should still exist even with only non-shared services
     assert!(container.has("services_resetter"));
@@ -253,7 +283,7 @@ fn testCompilerPassWithOnlyNonSharedServices() {
 
 #[test]
 fn testCompilerPassWithNonSharedMultipleResetMethods() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register("non_shared", Some(&f("ResettableService")))
         .unwrap()
@@ -263,7 +293,7 @@ fn testCompilerPassWithNonSharedMultipleResetMethods() {
         .add_tag("kernel.reset", php_array!["method" => "clear"]);
 
     register_resetter(&mut container);
-    ResettableServicePass.process(&mut container).unwrap();
+    compile(&mut container).unwrap();
 
     assert!(
         Value::Array(PhpArray::list([
@@ -281,7 +311,7 @@ fn testCompilerPassWithNonSharedMultipleResetMethods() {
 
 #[test]
 fn testCompilerPassWithNonSharedOnInvalidIgnore() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register("non_shared", Some(&f("ResettableService")))
         .unwrap()
@@ -293,7 +323,7 @@ fn testCompilerPassWithNonSharedOnInvalidIgnore() {
         );
 
     register_resetter(&mut container);
-    ResettableServicePass.process(&mut container).unwrap();
+    compile(&mut container).unwrap();
 
     assert!(
         Value::Array(PhpArray::list([Value::Array(
@@ -310,13 +340,13 @@ fn testCompilerPassWithNonSharedOnInvalidIgnore() {
 
 #[test]
 fn testCompilerPassWithoutResetters() {
-    let mut container = ContainerBuilder::new();
+    let mut container = container();
     container
         .register("services_resetter", Some(SERVICES_RESETTER))
         .unwrap()
         .set_arguments(PhpArray::list([Value::Null, Value::Array(PhpArray::new())]));
 
-    ResettableServicePass.process(&mut container).unwrap();
+    compile(&mut container).unwrap();
 
     assert!(!container.has("services_resetter"));
 }

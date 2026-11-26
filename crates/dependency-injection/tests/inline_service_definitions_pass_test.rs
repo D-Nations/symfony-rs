@@ -4,12 +4,13 @@
 //! `assertSame()` on definitions is object identity and on references
 //! equality (a `Reference` is an immutable value here).
 //!
-//! Pending: testDoNotInline (compiles the container, which needs passes
-//! of other slices: `ResolveDecoratorStackPass` and the `Resolve*`
-//! passes of the default list).
+//! testDoNotInline's `compile()` is `support::compile()` (nothing is
+//! autowired).
 //!
 //! Upstream: symfony/dependency-injection Tests/Compiler/InlineServiceDefinitionsPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
+
+mod support;
 
 use php_value::compare::loose_equals;
 use php_value::{PhpArray, Value, array::Key};
@@ -17,7 +18,9 @@ use symfony_dependency_injection::argument::{IteratorArgument, ServiceClosureArg
 use symfony_dependency_injection::compiler::{
     AnalyzeServiceReferencesPass, CompilerPassInterface, InlineServiceDefinitionsPass,
 };
-use symfony_dependency_injection::{ContainerBuilder, Definition, ErrorKind, Reference, Result};
+use symfony_dependency_injection::{
+    ContainerBuilder, Definition, ErrorKind, InvalidBehavior, Reference, Result,
+};
 
 fn process(container: &mut ContainerBuilder) -> Result<()> {
     InlineServiceDefinitionsPass::new(Some(AnalyzeServiceReferencesPass::default()))
@@ -398,4 +401,59 @@ fn testProcessDoesNotSetLazyArgumentValuesAfterInlining() {
     let value = values.get(&Key::Int(0)).unwrap();
     assert!(Reference::from_value(value).is_some());
     assert_eq!("inline", reference(value).id());
+}
+
+#[test]
+fn testDoNotInline() {
+    let mut container = ContainerBuilder::new();
+    container
+        .register("decorated1", Some("decorated1"))
+        .unwrap()
+        .add_tag("container.do_not_inline", PhpArray::new());
+    container
+        .register("decorated2", Some("decorated2"))
+        .unwrap()
+        .add_tag("container.do_not_inline", PhpArray::new());
+    container.set_alias("alias2", "decorated2").unwrap();
+
+    let s1 = container.register("s1", Some("s1")).unwrap();
+    s1.set_decorated_service(Some("decorated1"), None, 0, InvalidBehavior::Exception)
+        .unwrap();
+    s1.set_public(true);
+    let mut properties = PhpArray::new();
+    properties.insert("inner", Reference::new("s1.inner").into());
+    s1.set_properties(properties);
+
+    let s2 = container.register("s2", Some("s2")).unwrap();
+    s2.set_decorated_service(Some("alias2"), None, 0, InvalidBehavior::Exception)
+        .unwrap();
+    s2.set_public(true);
+    let mut properties = PhpArray::new();
+    properties.insert("inner", Reference::new("s2.inner").into());
+    s2.set_properties(properties);
+
+    support::compile(&mut container, false).unwrap();
+
+    assert!(!container.has_alias("alias2"));
+    let inner = |id: &str| {
+        reference(
+            &container
+                .get_definition(id)
+                .unwrap()
+                .properties()
+                .get(&Key::from("inner"))
+                .unwrap()
+                .clone(),
+        )
+    };
+    assert_eq!(Reference::new("decorated2"), inner("s2"));
+    assert_eq!(Reference::new("s1.inner"), inner("s1"));
+    assert_eq!(
+        Some("decorated2".to_string()),
+        container.get_definition("decorated2").unwrap().class()
+    );
+    assert_eq!(
+        Some("decorated1".to_string()),
+        container.get_definition("s1.inner").unwrap().class()
+    );
 }

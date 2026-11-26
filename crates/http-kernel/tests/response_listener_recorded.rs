@@ -150,7 +150,7 @@ fn run(script: &Json) -> Json {
             "version": lossy(response.get_protocol_version().as_bytes()),
             "charset": response.get_charset().map(|c| lossy(c.as_bytes())),
             "content": base64::engine::general_purpose::STANDARD
-                .encode(response.get_content().as_bytes()),
+                .encode(response.get_content().cloned().unwrap_or_default().as_bytes()),
             "headers": headers,
         })
     })

@@ -2,18 +2,15 @@
 //! symfony/dependency-injection 9b34cad8. Names and assertions are
 //! PHPUnit's.
 //!
-//! Pending: testProcessConsiderEnvVariablesAsUsedEvenInPrivateServices
-//! (runs `ResolveParameterPlaceHoldersPass`, ported in another slice).
-//! `env_variables_of_removed_services_are_counted` checks the same count
-//! with the placeholder resolved by the parameter bag.
-//!
 //! Upstream: symfony/dependency-injection Tests/Compiler/RemoveUnusedDefinitionsPassTest.php
 #![allow(non_snake_case, clippy::unwrap_used)]
 
 use std::sync::Arc;
 
 use php_value::{PhpArray, Value, object::StdClass};
-use symfony_dependency_injection::compiler::{CompilerPassInterface, RemoveUnusedDefinitionsPass};
+use symfony_dependency_injection::compiler::{
+    CompilerPassInterface, RemoveUnusedDefinitionsPass, ResolveParameterPlaceHoldersPass,
+};
 use symfony_dependency_injection::{ContainerBuilder, Definition, DefinitionError, Reference};
 
 fn process(container: &mut ContainerBuilder) {
@@ -113,21 +110,17 @@ fn testProcessWontRemovePrivateFactory() {
     assert!(container.has_definition("foobar"));
 }
 
-/// testProcessConsiderEnvVariablesAsUsedEvenInPrivateServices, with the
-/// parameter bag resolving `%env(FOOBAR)%` in place of
-/// `ResolveParameterPlaceHoldersPass`.
 #[test]
-fn env_variables_of_removed_services_are_counted() {
+fn testProcessConsiderEnvVariablesAsUsedEvenInPrivateServices() {
     let mut container = ContainerBuilder::new();
     container.set_parameter("env(FOOBAR)", "test").unwrap();
-    let placeholder = container
-        .get_parameter_bag()
-        .resolve_value(&Value::from("%env(FOOBAR)%"), &[])
-        .unwrap();
     container
         .register("foo", None)
         .unwrap()
-        .set_arguments(list([placeholder]));
+        .set_arguments(list([Value::from("%env(FOOBAR)%")]));
+
+    let mut resolve_pass = ResolveParameterPlaceHoldersPass::default();
+    resolve_pass.process(&mut container).unwrap();
 
     process(&mut container);
 
