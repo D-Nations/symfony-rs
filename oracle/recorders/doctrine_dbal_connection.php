@@ -240,6 +240,13 @@ namespace {
         ),
         'empty_identity_insert' => $platform->getEmptyIdentityInsertSQL('test_empty_identity', 'id'),
         'datetime_format' => $platform->getDateTimeFormatString(),
+        // Functional/Connection/FetchTest, FetchEmptyTest
+        'fetch_query' => Doctrine\DBAL\Tests\TestUtil::generateResultSetQuery(
+            ['a', 'b'],
+            [['foo', 1], ['bar', 2], ['baz', 3]],
+            $platform,
+        ),
+        'fetch_empty_query' => sprintf('SELECT * FROM (%s) t WHERE 1 = 0', $platform->getDummySelectSQL('1 c')),
         'current_database' => $platform->getDummySelectSQL($platform->getCurrentDatabaseExpression()),
         'create_savepoint' => $platform->createSavePoint('DOCTRINE_2'),
         'release_savepoint' => $platform->releaseSavePoint('DOCTRINE_2'),
@@ -247,6 +254,7 @@ namespace {
         'sqlite_date_math' => 'SELECT COUNT(*) FROM fetch_table_date_math WHERE '
             . $platform->getDateSubDaysExpression('test_date', 'test_days') . " < '2010-05-12'",
     ];
+    $sql['fetch_query_limit'] = $platform->modifyLimitQuery($sql['fetch_query'], 1, 1);
     foreach (TransactionIsolationLevel::cases() as $level) {
         $sql['isolation_' . $level->name] = $platform->getSetTransactionIsolationSQL($level);
     }
