@@ -28,6 +28,7 @@ pub mod env_var_processor_interface;
 pub mod exception;
 pub mod extension;
 pub mod id_map;
+pub mod loader;
 pub mod object;
 pub mod parameter_bag;
 pub mod reference;
