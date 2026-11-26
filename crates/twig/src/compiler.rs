@@ -2176,6 +2176,10 @@ impl<'a> Compiler<'a> {
                             pushes.push(format!("__a.push({code});"));
                         }
                     }
+                } else if argument.is(NodeClass::SpreadUnary) {
+                    // `...$expr` in the PHP call
+                    let code = self.expr(&argument.get_node("node")?)?;
+                    pushes.push(format!("__a.extend(rt::spread_values(&{code})?);"));
                 } else {
                     let code = self.expr(&argument)?;
                     pushes.push(format!("__a.push({code});"));
