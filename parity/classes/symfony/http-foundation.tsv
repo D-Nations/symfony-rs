@@ -74,19 +74,19 @@ Session/SessionBagProxy.php	SessionBagProxy	58	ported	crates/http-foundation/src
 Session/SessionFactory.php	SessionFactory	19	ported	crates/http-foundation/src/session/session_factory.rs
 Session/SessionFactoryInterface.php	SessionFactoryInterface	5	ported	crates/http-foundation/src/session/session_factory_interface.rs
 Session/SessionInterface.php	SessionInterface	24	ported	crates/http-foundation/src/session/session_interface.rs
-Session/SessionUtils.php	SessionUtils	32	pending	
-Session/Storage/Handler/AbstractSessionHandler.php	AbstractSessionHandler	99	pending	
-Session/Storage/Handler/IdentityMarshaller.php	IdentityMarshaller	18	pending	
-Session/Storage/Handler/MarshallingSessionHandler.php	MarshallingSessionHandler	69	pending	
+Session/SessionUtils.php	SessionUtils	32	ported	crates/http-foundation/src/session/session_utils.rs
+Session/Storage/Handler/AbstractSessionHandler.php	AbstractSessionHandler	99	ported	crates/http-foundation/src/session/storage/handler/abstract_session_handler.rs
+Session/Storage/Handler/IdentityMarshaller.php	IdentityMarshaller	18	ported	crates/http-foundation/src/session/storage/handler/identity_marshaller.rs
+Session/Storage/Handler/MarshallingSessionHandler.php	MarshallingSessionHandler	69	ported	crates/http-foundation/src/session/storage/handler/marshalling_session_handler.rs
 Session/Storage/Handler/MemcachedSessionHandler.php	MemcachedSessionHandler	61	pending	
-Session/Storage/Handler/MigratingSessionHandler.php	MigratingSessionHandler	73	pending	
+Session/Storage/Handler/MigratingSessionHandler.php	MigratingSessionHandler	73	ported	crates/http-foundation/src/session/storage/handler/migrating_session_handler.rs
 Session/Storage/Handler/MongoDbSessionHandler.php	MongoDbSessionHandler	113	pending	
 Session/Storage/Handler/NativeFileSessionHandler.php	NativeFileSessionHandler	23	pending	
-Session/Storage/Handler/NullSessionHandler.php	NullSessionHandler	28	pending	
+Session/Storage/Handler/NullSessionHandler.php	NullSessionHandler	28	ported	crates/http-foundation/src/session/storage/handler/null_session_handler.rs
 Session/Storage/Handler/PdoSessionHandler.php	PdoSessionHandler	615	pending	
 Session/Storage/Handler/RedisSessionHandler.php	RedisSessionHandler	61	pending	
 Session/Storage/Handler/SessionHandlerFactory.php	SessionHandlerFactory	69	pending	
-Session/Storage/Handler/StrictSessionHandler.php	StrictSessionHandler	52	pending	
+Session/Storage/Handler/StrictSessionHandler.php	StrictSessionHandler	52	ported	crates/http-foundation/src/session/storage/handler/strict_session_handler.rs
 Session/Storage/MetadataBag.php	MetadataBag	68	ported	crates/http-foundation/src/session/storage/metadata_bag.rs
 Session/Storage/MockArraySessionStorage.php	MockArraySessionStorage	117	ported	crates/http-foundation/src/session/storage/mock_array_session_storage.rs
 Session/Storage/MockFileSessionStorage.php	MockFileSessionStorage	95	ported	crates/http-foundation/src/session/storage/mock_file_session_storage.rs

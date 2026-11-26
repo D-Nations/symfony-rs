@@ -42,6 +42,9 @@ pub enum Class {
     PhpJson,
     /// PHP's `\LogicException`.
     PhpLogic,
+    /// PHP's `\DomainException`, a `\LogicException` (a marshaller's
+    /// unreadable data).
+    PhpDomain,
     /// PHP's `\UnexpectedValueException`.
     PhpUnexpectedValue,
     /// PHP's `\InvalidArgumentException`.
@@ -111,6 +114,7 @@ impl Class {
             }
             Self::PhpJson => "JsonException",
             Self::PhpLogic => "LogicException",
+            Self::PhpDomain => "DomainException",
             Self::PhpUnexpectedValue => "UnexpectedValueException",
             Self::PhpInvalidArgument => "InvalidArgumentException",
             Self::PhpRuntime => "RuntimeException",
@@ -212,6 +216,12 @@ impl Class {
             ],
             Self::PhpJson => &["JsonException", "Exception", "Throwable"],
             Self::PhpLogic => &["LogicException", "Exception", "Throwable"],
+            Self::PhpDomain => &[
+                "DomainException",
+                "LogicException",
+                "Exception",
+                "Throwable",
+            ],
             Self::PhpUnexpectedValue => &[
                 "UnexpectedValueException",
                 "RuntimeException",

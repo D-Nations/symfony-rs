@@ -313,6 +313,7 @@ pub fn start(request: &CgiRequest, ini: &Ini) -> std::io::Result<Startup> {
             default_mimetype: ini.default_mimetype.clone(),
             ..Output::default()
         },
+        session: crate::php_session::SessionState::default(),
     };
     Ok(Startup {
         globals,
@@ -635,7 +636,7 @@ impl CgiResponse {
 }
 
 /// `setcookie()`'s and `setrawcookie()`'s arguments.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct SetCookie {
     pub name: PhpString,
     pub value: PhpString,
@@ -1112,6 +1113,10 @@ impl Sapi {
             }
             OutputCall::Flush => self.flush(),
             OutputCall::ObFlush => self.ob_flush(),
+            OutputCall::SetCookie(cookie) => {
+                // the refusals are PHP's warnings: the cookie is not sent
+                let _ = self.setcookie(cookie, false);
+            }
         }
     }
 

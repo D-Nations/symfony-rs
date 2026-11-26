@@ -3,6 +3,7 @@
 //!
 //! Upstream: none
 
+pub mod handler;
 pub mod metadata_bag;
 pub mod mock_array_session_storage;
 pub mod mock_file_session_storage;

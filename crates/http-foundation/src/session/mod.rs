@@ -37,6 +37,7 @@ pub mod session_bag_proxy;
 pub mod session_factory;
 pub mod session_factory_interface;
 pub mod session_interface;
+pub mod session_utils;
 pub mod storage;
 
 use attribute::{attribute_bag::AttributeBag, attribute_bag_interface::AttributeBagInterface};
