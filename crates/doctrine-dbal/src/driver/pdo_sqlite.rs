@@ -36,7 +36,7 @@
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!
-//! Upstream: doctrine/dbal src/Driver/PDO/`SQLite`/Driver.php src/Driver/PDO/Connection.php
+//! Upstream: doctrine/dbal src/Driver/PDO/SQLite/Driver.php src/Driver/PDO/Connection.php
 //! Upstream: doctrine/dbal src/Driver/PDO/Statement.php src/Driver/PDO/Result.php
 //! Upstream: doctrine/dbal src/Driver/PDO/Exception.php src/Driver/PDO/Exception/InvalidConfiguration.php
 

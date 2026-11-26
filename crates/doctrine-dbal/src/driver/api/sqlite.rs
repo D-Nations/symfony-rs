@@ -3,7 +3,7 @@
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!
-//! Upstream: doctrine/dbal src/Driver/API/`SQLite`/ExceptionConverter.php
+//! Upstream: doctrine/dbal src/Driver/API/SQLite/ExceptionConverter.php
 
 use super::ExceptionConverter as ExceptionConverterInterface;
 use crate::{Exception, Query};

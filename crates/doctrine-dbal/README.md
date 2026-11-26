@@ -39,6 +39,12 @@ assert_eq!(visitor.get_parameters(), &[Value::Int(1), Value::Int(2)]);
 | The 31 built-in types' PHP and database conversions, binding types, SQL declarations (through the platform) and `ConversionException` messages: strings, GUID, integers, floats, decimal, `BcMath\Number`, boolean, binary, blob, JSON and JSON object, simple array, enum, date, time, date-time (mutable, immutable, tz, UTC, variable) and date interval | `Types/*Type.php`, `Types/ConversionException.php`, `Types/Exception/*.php` | 164 tests of the 27 type test files (`tests/types_*_test.rs`; the inherited `BaseDateTypeTestCase` tests repeated in each date class), ConversionExceptionTest (4), SerializationFailedTest (1) |
 | The `AbstractPlatform` methods the types call (declaration snippets, boolean conversion, date formats) and the column exceptions they throw (`ColumnLengthRequired`, `ColumnPrecisionRequired`, `ColumnScaleRequired`, `ColumnValuesRequired`, `InvalidColumnDeclaration`) | `Platforms/AbstractPlatform.php` (partly), `Exception/*.php` | The type tests above, through a stub platform as upstream mocks it; no concrete platform is ported |
 | `DateTime::createFromFormat()`, `new DateTime($text)` and `new DateInterval($duration)` as the date types use them (in php-value) | php-value | 12,036 + 89 + 1,602 recorded answers (`tests/date_vectors.rs`); the texts refused are counted there |
+| `Connection`: lazy connect, `executeQuery()`, `executeStatement()`, `prepare()`, the `fetch*()` and `iterate*()` helpers, `insert()`/`update()`/`delete()`, list parameter expansion, type conversion of bound values, `quote()`/`quoteIdentifier()`, `lastInsertId()`, auto-commit, nested transactions with savepoints, rollback-only, `transactional()` with upstream's rollback rules, isolation levels, `close()`, and the conversion of driver exceptions (with the query) | `Connection.php`, `ConnectionException.php`, `TransactionIsolationLevel.php` | ConnectionTest (29 of 33, over a recording test driver); functional ConnectionTest (17 of 21), TransactionTest (1 of 6), WriteTest (19 of 20), NamedParametersTest, DataAccessTest (36), BooleanBindingTest, AutoIncrementColumnTest on `pdo_sqlite` |
+| `Result` and `Statement`: `fetchNumeric/Associative/One()`, `fetchAll*()`, `fetchAllKeyValue()` (`NoKeyValue`), `fetchAllAssociativeIndexed()`, `fetchFirstColumn()`, the `iterate*()` forms, `rowCount()`, `columnCount()`, `getColumnName()`, `bindValue()` with wrapper types, `executeQuery()`/`executeStatement()` | `Result.php`, `Statement.php`, `Driver/FetchUtils.php` | Functional ResultTest, StatementTest (11 of 12), Connection/FetchTest (16), Connection/FetchEmptyTest (6) |
+| Exceptions: the `SQLite` exception converter (`UniqueConstraintViolation`, `NotNullConstraintViolation`, `TableNotFound`, `TableExists`, `InvalidFieldName`, `NonUniqueFieldName`, `SyntaxError`, `ReadOnly`, `LockWaitTimeout`, `ConnectionException`, ...), `DriverException`'s message (`An exception occurred while executing a query: ...`), the `Exception/*` messages | `Driver/API/SQLite/ExceptionConverter.php`, `Exception/*.php` | Functional ExceptionTest (9 of 12); the recorded `pdo_sqlite` errors |
+| The `pdo_sqlite` driver on sqlx: value storage classes, PDO's binding conversions, `SQLSTATE` messages, `rowCount()`, `lastInsertId()` (`NoIdentityValue`), `quote()`, `getServerVersion()`, `path`/`memory` parameters | `Driver/PDO/SQLite/Driver.php`, `Driver/PDO/*.php`, `Driver/AbstractSQLiteDriver.php`, `Driver/*.php` interfaces | `tests/pdo_sqlite_vectors.rs` (recorded `pdo_sqlite` answers) |
+| `DriverManager::getConnection()` (driver map, `driverClass`, `wrapperClass` checks, URL parameters through `DsnParser`), `getAvailableDrivers()`; `DsnParser::parse()`; the `Configuration` parts the connection reads (auto-commit, type comments) | `DriverManager.php`, `Tools/DsnParser.php`, `Configuration.php` | DriverManagerTest (7 of 8), DsnParserTest (2), ConfigurationTest (2) |
+| `QueryBuilder` execution: `executeQuery()`, `executeStatement()` and the `fetch*()` methods over a `Connection` | `Query/QueryBuilder.php` | QueryBuilderTest execution tests (9; `tests/query_builder_execution_test.rs`) |
 
 Vectors: `scripts/record.sh doctrine-dbal` runs `oracle/recorders/doctrine_dbal.php`
 and writes `tests/data/php.json`: the upstream data providers, the
@@ -48,10 +54,20 @@ exception, and the parameters, and PHP's answers for generated date
 formats, date texts and interval durations. Some date rows depend on the
 clock (`now`, an empty text), so a new recording changes them.
 
-`Connection.php` is not ported. `ConnectionStandIn` is the part of it the
-query builder uses (`getDatabasePlatform()`, `quote()`,
-`createExpressionBuilder()`, `createQueryBuilder()`); an application or a
-test implements it.
+`ConnectionStandIn` is the part of `Connection.php` the query builder
+uses (`getDatabasePlatform()`, `quote()`, `createExpressionBuilder()`,
+`createQueryBuilder()`); `Connection` implements it, and a test can too.
+
+Connection vectors: `scripts/record.sh doctrine-dbal-connection` runs
+`oracle/recorders/doctrine_dbal_connection.php` and writes
+`tests/data/connection.json`: the providers of DsnParserTest,
+DriverManagerTest, NamedParametersTest and DataAccessTest; the tables of
+the functional tests as `SQLitePlatform` creates them; the SQL that
+`SQLitePlatform` builds for those tests; and `pdo_sqlite`'s answers for
+bindings, errors, `lastInsertId()` and connect parameters
+(`tests/pdo_sqlite_vectors.rs`). `src/platforms/sqlite_platform_stand_in.rs`
+holds the place of `SQLitePlatform.php` until the platform slice is
+merged.
 
 ## Differences
 
@@ -79,13 +95,12 @@ these cases. Whether to copy these limits is a decision for the owner
 
 ### Query
 
-- Not ported yet, as they need `Connection`, `Result` and
-  `Cache\QueryCacheProfile`: `QueryBuilder::executeQuery()`,
-  `executeStatement()`, `fetchAssociative()`, `fetchNumeric()`,
-  `fetchOne()`, `fetchAllNumeric()`, `fetchAllAssociative()`,
-  `fetchAllKeyValue()`, `fetchAllAssociativeIndexed()`,
-  `fetchFirstColumn()`, `enableResultCache()` and `disableResultCache()`.
-  Their 11 tests stay pending in the parity manifest.
+- Not ported yet, as they need `Cache\QueryCacheProfile`:
+  `enableResultCache()` and `disableResultCache()`; their test stays
+  pending. QueryBuilderTest `testExecuteStatement` stays pending too: it
+  passes named parameters to `?` placeholders, which only a mocked
+  `Connection::executeStatement()` accepts (a real one throws
+  `MissingPositionalParameter`), and `Connection` cannot be mocked here.
 - `(string) $qb` is `get_sql()`, which returns the exceptions that PHP's
   `__toString()` throws; there is no `Display`.
 - A `QueryBuilder` given to `with()`, `union()` or `addUnion()` is moved
@@ -146,3 +161,57 @@ these cases. Whether to copy these limits is a decision for the owner
 - `BcMath\Number` is not in the oracle image; its parsing and comparison
   were checked on PHP 8.4.27 with the bcmath extension and are pinned in
   php-value's unit tests.
+
+### Connection
+
+- The API is async (PLAN.md, decision 22): the methods that may reach the
+  database are `async fn`; a driver result is read at execute time, so
+  `Result`'s `fetch*()` and `iterate*()` are synchronous. One connection
+  serves one task at a time, as one PDO handle does.
+- `pdo_sqlite` reads only the first statement given to `prepare()` or
+  `query()`; sqlx runs them all. The recorded vectors skip these inputs.
+- A string parameter that is not UTF-8 is refused (sqlx binds text as
+  Rust strings); PDO binds the bytes as TEXT. Bind it as `BINARY` or
+  `LARGE_OBJECT`.
+- `driverOptions` (PDO attributes) are ignored; `persistent` is not
+  supported (upstream skips its test on `SQLite`).
+- A column name that is not UTF-8 is read lossily (sqlx gives column
+  names as Rust strings).
+- `getColumnName()` past the last column: PDO answers `100 another row
+  available` when nothing was fetched yet and rows remain; that rule is
+  kept, but after every row was fetched the port throws
+  `InvalidColumnIndex` where PDO's message can depend on the statement's
+  state.
+- A `PDOException` is not a separate level of the `previous` chain: the
+  driver's exception is the `PDO\Exception` itself.
+- `wrapperClass` must be `Doctrine\DBAL\Connection`: Rust has no
+  `Connection` subclasses, so any other class is refused with
+  `InvalidWrapperClass` (DriverManagerTest `testCustomWrapper` and
+  ConnectionTest `testItFailsDuringCommitBeforeTouchingDb` stay pending).
+  A custom `driverClass` is registered with `DriverManager::get_connection_with()`
+  (a `DriverClass`), and a DSN's driver class must be declared to
+  `DsnParser`.
+- The drivers of the driver map other than `pdo_sqlite` build a
+  connection, but `connect()` refuses with `Unsupported` until they are
+  ported.
+- Parameter types are a `BTreeMap` (integer keys first), so
+  `is_string(key($types))` is true only when every key is a string; PHP
+  looks at the first key in insertion order. Mixed keys do not occur in
+  DBAL's own calls.
+- An `ArrayParameterType` that reaches `getBindingInfo()` (a value that
+  was not expanded) throws the `TypeError` of PHP's parameter check, with
+  its message but without the `called in <file> on line <n>` suffix.
+- `ConnectionStandIn` is synchronous: through it, `quote()` needs a
+  connection that is already open (otherwise `Unsupported`), and the
+  platform is known without the database only for a driver that does not
+  read the server version (the `SQLite` driver does not).
+- Not ported: the result cache (`executeCacheQuery()`,
+  `QueryCacheProfile`), the schema manager (`createSchemaManager()`, its
+  ConnectionTest tests pending), `getNativeConnection()`, middlewares,
+  the deprecation notices. A `BlobType` stream cannot be read
+  (StatementTest `testFetchLongBlob` pending).
+- Pending because upstream skips or needs other platforms on `SQLite`:
+  functional ConnectionTest's three savepoints-not-supported tests and
+  `testPersistentConnection`, TransactionTest's five connection-loss
+  tests, WriteTest `testLastInsertIdNotSupported`, ExceptionTest's
+  invalid user, password and host tests.

@@ -19,47 +19,47 @@ tests/Cache/QueryCacheProfileTest.php	QueryCacheProfileTest::testShouldGenerateD
 tests/Cache/QueryCacheProfileTest.php	QueryCacheProfileTest::testShouldGenerateDifferentPasswordInTheParams	pending	
 tests/Cache/QueryCacheProfileTest.php	QueryCacheProfileTest::testShouldGenerateSameKeysIfNoneOfTheParamsChanges	pending	
 tests/Cache/QueryCacheProfileTest.php	QueryCacheProfileTest::testShouldUseTheGivenCacheKeyIfPresent	pending	
-tests/ConfigurationTest.php	ConfigurationTest::testReturnsDefaultConnectionAutoCommitMode	pending	
-tests/ConfigurationTest.php	ConfigurationTest::testSetsDefaultConnectionAutoCommitMode	pending	
+tests/ConfigurationTest.php	ConfigurationTest::testReturnsDefaultConnectionAutoCommitMode	ported	crates/doctrine-dbal/tests/configuration_test.rs::testReturnsDefaultConnectionAutoCommitMode
+tests/ConfigurationTest.php	ConfigurationTest::testSetsDefaultConnectionAutoCommitMode	ported	crates/doctrine-dbal/tests/configuration_test.rs::testSetsDefaultConnectionAutoCommitMode
 tests/Connection/CachedQueryTest.php	CachedQueryTest::testCachedQuery	pending	
 tests/Connection/CachedQueryTest.php	CachedQueryTest::testCachedQueryWithChangedImplementationIsExecutedTwice	pending	
 tests/Connection/CachedQueryTest.php	CachedQueryTest::testOldCacheFormat	pending	
 tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testExpandListParameters	ported	crates/doctrine-dbal/tests/expand_array_parameters_test.rs::testExpandListParameters
 tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testMissingNamedParameter	ported	crates/doctrine-dbal/tests/expand_array_parameters_test.rs::testMissingNamedParameter
 tests/Connection/ExpandArrayParametersTest.php	ExpandArrayParametersTest::testMissingPositionalParameter	ported	crates/doctrine-dbal/tests/expand_array_parameters_test.rs::testMissingPositionalParameter
-tests/ConnectionTest.php	ConnectionTest::testBeginTransactionFailureAfterCommitInNoAutoCommitMode	pending	
-tests/ConnectionTest.php	ConnectionTest::testCallConnectOnce	pending	
-tests/ConnectionTest.php	ConnectionTest::testCommitStartsTransactionInNoAutoCommitMode	pending	
-tests/ConnectionTest.php	ConnectionTest::testCommitWithNoActiveTransactionThrowsException	pending	
-tests/ConnectionTest.php	ConnectionTest::testConnectStartsTransactionInNoAutoCommitMode	pending	
+tests/ConnectionTest.php	ConnectionTest::testBeginTransactionFailureAfterCommitInNoAutoCommitMode	ported	crates/doctrine-dbal/tests/connection_test.rs::testBeginTransactionFailureAfterCommitInNoAutoCommitMode
+tests/ConnectionTest.php	ConnectionTest::testCallConnectOnce	ported	crates/doctrine-dbal/tests/connection_test.rs::testCallConnectOnce
+tests/ConnectionTest.php	ConnectionTest::testCommitStartsTransactionInNoAutoCommitMode	ported	crates/doctrine-dbal/tests/connection_test.rs::testCommitStartsTransactionInNoAutoCommitMode
+tests/ConnectionTest.php	ConnectionTest::testCommitWithNoActiveTransactionThrowsException	ported	crates/doctrine-dbal/tests/connection_test.rs::testCommitWithNoActiveTransactionThrowsException
+tests/ConnectionTest.php	ConnectionTest::testConnectStartsTransactionInNoAutoCommitMode	ported	crates/doctrine-dbal/tests/connection_test.rs::testConnectStartsTransactionInNoAutoCommitMode
 tests/ConnectionTest.php	ConnectionTest::testConnectionParamsArePassedToTheQueryCacheProfileInExecuteCacheQuery	pending	
 tests/ConnectionTest.php	ConnectionTest::testCustomSchemaManagerFactory	pending	
 tests/ConnectionTest.php	ConnectionTest::testDefaultSchemaManagerFactory	pending	
-tests/ConnectionTest.php	ConnectionTest::testDeleteWithIsNull	pending	
-tests/ConnectionTest.php	ConnectionTest::testDriverExceptionIsWrapped	pending	
-tests/ConnectionTest.php	ConnectionTest::testEmptyInsert	pending	
-tests/ConnectionTest.php	ConnectionTest::testFetch	pending	
-tests/ConnectionTest.php	ConnectionTest::testGetDriver	pending	
-tests/ConnectionTest.php	ConnectionTest::testIsAutoCommit	pending	
-tests/ConnectionTest.php	ConnectionTest::testIsConnected	pending	
-tests/ConnectionTest.php	ConnectionTest::testIsRollbackOnlyNoActiveTransactionThrowsException	pending	
+tests/ConnectionTest.php	ConnectionTest::testDeleteWithIsNull	ported	crates/doctrine-dbal/tests/connection_test.rs::testDeleteWithIsNull
+tests/ConnectionTest.php	ConnectionTest::testDriverExceptionIsWrapped	ported	crates/doctrine-dbal/tests/connection_test.rs::testDriverExceptionIsWrapped
+tests/ConnectionTest.php	ConnectionTest::testEmptyInsert	ported	crates/doctrine-dbal/tests/connection_test.rs::testEmptyInsert
+tests/ConnectionTest.php	ConnectionTest::testFetch	ported	crates/doctrine-dbal/tests/connection_test.rs::testFetch
+tests/ConnectionTest.php	ConnectionTest::testGetDriver	ported	crates/doctrine-dbal/tests/connection_test.rs::testGetDriver
+tests/ConnectionTest.php	ConnectionTest::testIsAutoCommit	ported	crates/doctrine-dbal/tests/connection_test.rs::testIsAutoCommit
+tests/ConnectionTest.php	ConnectionTest::testIsConnected	ported	crates/doctrine-dbal/tests/connection_test.rs::testIsConnected
+tests/ConnectionTest.php	ConnectionTest::testIsRollbackOnlyNoActiveTransactionThrowsException	ported	crates/doctrine-dbal/tests/connection_test.rs::testIsRollbackOnlyNoActiveTransactionThrowsException
 tests/ConnectionTest.php	ConnectionTest::testItFailsDuringCommitBeforeTouchingDb	pending	
-tests/ConnectionTest.php	ConnectionTest::testItPreservesTheOriginalExceptionOnRollbackFailure	pending	
-tests/ConnectionTest.php	ConnectionTest::testNoTransactionActiveByDefault	pending	
-tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionDoesNotTriggerConnectionIfNotRequiredByTheDriver	pending	
-tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionFetchedFromParameters	pending	
-tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionFetchedFromPrimaryReplicaParameters	pending	
-tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionTriggersConnectionIfRequiredByTheDriver	pending	
-tests/ConnectionTest.php	ConnectionTest::testRollBackStartsTransactionInNoAutoCommitMode	pending	
-tests/ConnectionTest.php	ConnectionTest::testRollbackWithNoActiveTransactionThrowsException	pending	
-tests/ConnectionTest.php	ConnectionTest::testSetAutoCommit	pending	
-tests/ConnectionTest.php	ConnectionTest::testSetRollbackOnlyNoActiveTransactionThrowsException	pending	
-tests/ConnectionTest.php	ConnectionTest::testSwitchingAutoCommitModeCommitsAllCurrentTransactions	pending	
-tests/ConnectionTest.php	ConnectionTest::testTransactionIsActiveAfterTransactionalInNoAutoCommitMode	pending	
-tests/ConnectionTest.php	ConnectionTest::testTransactionIsNotActiveAfterTransactionalInAutoCommitMode	pending	
-tests/ConnectionTest.php	ConnectionTest::testUpdateWithDifferentColumnsInDataAndIdentifiers	pending	
-tests/ConnectionTest.php	ConnectionTest::testUpdateWithIsNull	pending	
-tests/ConnectionTest.php	ConnectionTest::testUpdateWithSameColumnInDataAndIdentifiers	pending	
+tests/ConnectionTest.php	ConnectionTest::testItPreservesTheOriginalExceptionOnRollbackFailure	ported	crates/doctrine-dbal/tests/connection_test.rs::testItPreservesTheOriginalExceptionOnRollbackFailure
+tests/ConnectionTest.php	ConnectionTest::testNoTransactionActiveByDefault	ported	crates/doctrine-dbal/tests/connection_test.rs::testNoTransactionActiveByDefault
+tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionDoesNotTriggerConnectionIfNotRequiredByTheDriver	ported	crates/doctrine-dbal/tests/connection_test.rs::testPlatformDetectionDoesNotTriggerConnectionIfNotRequiredByTheDriver
+tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionFetchedFromParameters	ported	crates/doctrine-dbal/tests/connection_test.rs::testPlatformDetectionFetchedFromParameters
+tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionFetchedFromPrimaryReplicaParameters	ported	crates/doctrine-dbal/tests/connection_test.rs::testPlatformDetectionFetchedFromPrimaryReplicaParameters
+tests/ConnectionTest.php	ConnectionTest::testPlatformDetectionTriggersConnectionIfRequiredByTheDriver	ported	crates/doctrine-dbal/tests/connection_test.rs::testPlatformDetectionTriggersConnectionIfRequiredByTheDriver
+tests/ConnectionTest.php	ConnectionTest::testRollBackStartsTransactionInNoAutoCommitMode	ported	crates/doctrine-dbal/tests/connection_test.rs::testRollBackStartsTransactionInNoAutoCommitMode
+tests/ConnectionTest.php	ConnectionTest::testRollbackWithNoActiveTransactionThrowsException	ported	crates/doctrine-dbal/tests/connection_test.rs::testRollbackWithNoActiveTransactionThrowsException
+tests/ConnectionTest.php	ConnectionTest::testSetAutoCommit	ported	crates/doctrine-dbal/tests/connection_test.rs::testSetAutoCommit
+tests/ConnectionTest.php	ConnectionTest::testSetRollbackOnlyNoActiveTransactionThrowsException	ported	crates/doctrine-dbal/tests/connection_test.rs::testSetRollbackOnlyNoActiveTransactionThrowsException
+tests/ConnectionTest.php	ConnectionTest::testSwitchingAutoCommitModeCommitsAllCurrentTransactions	ported	crates/doctrine-dbal/tests/connection_test.rs::testSwitchingAutoCommitModeCommitsAllCurrentTransactions
+tests/ConnectionTest.php	ConnectionTest::testTransactionIsActiveAfterTransactionalInNoAutoCommitMode	ported	crates/doctrine-dbal/tests/connection_test.rs::testTransactionIsActiveAfterTransactionalInNoAutoCommitMode
+tests/ConnectionTest.php	ConnectionTest::testTransactionIsNotActiveAfterTransactionalInAutoCommitMode	ported	crates/doctrine-dbal/tests/connection_test.rs::testTransactionIsNotActiveAfterTransactionalInAutoCommitMode
+tests/ConnectionTest.php	ConnectionTest::testUpdateWithDifferentColumnsInDataAndIdentifiers	ported	crates/doctrine-dbal/tests/connection_test.rs::testUpdateWithDifferentColumnsInDataAndIdentifiers
+tests/ConnectionTest.php	ConnectionTest::testUpdateWithIsNull	ported	crates/doctrine-dbal/tests/connection_test.rs::testUpdateWithIsNull
+tests/ConnectionTest.php	ConnectionTest::testUpdateWithSameColumnInDataAndIdentifiers	ported	crates/doctrine-dbal/tests/connection_test.rs::testUpdateWithSameColumnInDataAndIdentifiers
 tests/Driver/AbstractOracleDriver/EasyConnectStringTest.php	EasyConnectStringTest::testFromConnectionParameters	pending	
 tests/Driver/AbstractOracleDriver/EasyConnectStringTest.php	EasyConnectStringTest::testNoHostOrConnectStringSpecified	pending	
 tests/Driver/AbstractOracleDriver/EasyConnectStringTest.php	EasyConnectStringTest::testParameterDeprecation	pending	
@@ -107,18 +107,18 @@ tests/Driver/VersionAwarePlatformDriverTest.php	VersionAwarePlatformDriverTest::
 tests/Driver/VersionAwarePlatformDriverTest.php	VersionAwarePlatformDriverTest::testPDOMySQL	pending	
 tests/Driver/VersionAwarePlatformDriverTest.php	VersionAwarePlatformDriverTest::testPDOPgSQL	pending	
 tests/Driver/VersionAwarePlatformDriverTest.php	VersionAwarePlatformDriverTest::testPgSQL	pending	
-tests/DriverManagerTest.php	DriverManagerTest::testCheckParams	pending	
+tests/DriverManagerTest.php	DriverManagerTest::testCheckParams	ported	crates/doctrine-dbal/tests/driver_manager_test.rs::testCheckParams
 tests/DriverManagerTest.php	DriverManagerTest::testCustomWrapper	pending	
-tests/DriverManagerTest.php	DriverManagerTest::testDatabaseUrl	pending	
-tests/DriverManagerTest.php	DriverManagerTest::testDefaultWrapper	pending	
-tests/DriverManagerTest.php	DriverManagerTest::testInvalidDriver	pending	
-tests/DriverManagerTest.php	DriverManagerTest::testInvalidDriverClass	pending	
-tests/DriverManagerTest.php	DriverManagerTest::testInvalidWrapperClass	pending	
-tests/DriverManagerTest.php	DriverManagerTest::testValidDriverClass	pending	
+tests/DriverManagerTest.php	DriverManagerTest::testDatabaseUrl	ported	crates/doctrine-dbal/tests/driver_manager_test.rs::testDatabaseUrl
+tests/DriverManagerTest.php	DriverManagerTest::testDefaultWrapper	ported	crates/doctrine-dbal/tests/driver_manager_test.rs::testDefaultWrapper
+tests/DriverManagerTest.php	DriverManagerTest::testInvalidDriver	ported	crates/doctrine-dbal/tests/driver_manager_test.rs::testInvalidDriver
+tests/DriverManagerTest.php	DriverManagerTest::testInvalidDriverClass	ported	crates/doctrine-dbal/tests/driver_manager_test.rs::testInvalidDriverClass
+tests/DriverManagerTest.php	DriverManagerTest::testInvalidWrapperClass	ported	crates/doctrine-dbal/tests/driver_manager_test.rs::testInvalidWrapperClass
+tests/DriverManagerTest.php	DriverManagerTest::testValidDriverClass	ported	crates/doctrine-dbal/tests/driver_manager_test.rs::testValidDriverClass
 tests/Exception/DriverRequiredTest.php	DriverRequiredTest::testDriverRequiredWithUrl	pending	
 tests/ExceptionTest.php	ExceptionTest::testDriverRequiredWithUrl	pending	
-tests/Functional/AutoIncrementColumnTest.php	AutoIncrementColumnTest::testInsertAutoGeneratesValue	pending	
-tests/Functional/AutoIncrementColumnTest.php	AutoIncrementColumnTest::testInsertIdentityValue	pending	
+tests/Functional/AutoIncrementColumnTest.php	AutoIncrementColumnTest::testInsertAutoGeneratesValue	ported	crates/doctrine-dbal/tests/functional_auto_increment_column_test.rs::testInsertAutoGeneratesValue
+tests/Functional/AutoIncrementColumnTest.php	AutoIncrementColumnTest::testInsertIdentityValue	ported	crates/doctrine-dbal/tests/functional_auto_increment_column_test.rs::testInsertIdentityValue
 tests/Functional/BinaryDataAccessTest.php	BinaryDataAccessTest::testFetchAllAssociative	pending	
 tests/Functional/BinaryDataAccessTest.php	BinaryDataAccessTest::testFetchAllWithTypes	pending	
 tests/Functional/BinaryDataAccessTest.php	BinaryDataAccessTest::testFetchArray	pending	
@@ -139,90 +139,90 @@ tests/Functional/BlobTest.php	BlobTest::testInsertProcessesStream	pending
 tests/Functional/BlobTest.php	BlobTest::testSelect	pending	
 tests/Functional/BlobTest.php	BlobTest::testUpdate	pending	
 tests/Functional/BlobTest.php	BlobTest::testUpdateProcessesStream	pending	
-tests/Functional/BooleanBindingTest.php	BooleanBindingTest::testBooleanParameterInsert	pending	
-tests/Functional/BooleanBindingTest.php	BooleanBindingTest::testBooleanTypeInsert	pending	
+tests/Functional/BooleanBindingTest.php	BooleanBindingTest::testBooleanParameterInsert	ported	crates/doctrine-dbal/tests/functional_boolean_binding_test.rs::testBooleanParameterInsert
+tests/Functional/BooleanBindingTest.php	BooleanBindingTest::testBooleanTypeInsert	ported	crates/doctrine-dbal/tests/functional_boolean_binding_test.rs::testBooleanTypeInsert
 tests/Functional/Connection/ConnectionLostTest.php	ConnectionLostTest::testConnectionLost	pending	
 tests/Functional/Connection/ErrorHandlingTest.php	ErrorHandlingTest::testPreparedStatementFailsOnBrokenConnection	pending	
 tests/Functional/Connection/ErrorHandlingTest.php	ErrorHandlingTest::testQueryFailsOnBrokenConnection	pending	
-tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchAllAssociative	pending	
-tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchAllNumeric	pending	
-tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchAssociative	pending	
-tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchFirstColumn	pending	
-tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchNumeric	pending	
-tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchOne	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllAssociative	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllAssociativeIndexed	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllKeyValue	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllKeyValueOneColumn	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllKeyValueWithLimit	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllNumeric	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAssociative	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchFirstColumn	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchNumeric	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testFetchOne	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testIterateAssociative	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testIterateAssociativeIndexed	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testIterateColumn	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testIterateKeyValue	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testIterateKeyValueOneColumn	pending	
-tests/Functional/Connection/FetchTest.php	FetchTest::testIterateNumeric	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testCommitWithRollbackOnlyThrowsException	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testConnectWithoutExplicitDatabaseName	pending	
+tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchAllAssociative	ported	crates/doctrine-dbal/tests/functional_connection_fetch_empty_test.rs::testFetchAllAssociative
+tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchAllNumeric	ported	crates/doctrine-dbal/tests/functional_connection_fetch_empty_test.rs::testFetchAllNumeric
+tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchAssociative	ported	crates/doctrine-dbal/tests/functional_connection_fetch_empty_test.rs::testFetchAssociative
+tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchFirstColumn	ported	crates/doctrine-dbal/tests/functional_connection_fetch_empty_test.rs::testFetchFirstColumn
+tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchNumeric	ported	crates/doctrine-dbal/tests/functional_connection_fetch_empty_test.rs::testFetchNumeric
+tests/Functional/Connection/FetchEmptyTest.php	FetchEmptyTest::testFetchOne	ported	crates/doctrine-dbal/tests/functional_connection_fetch_empty_test.rs::testFetchOne
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllAssociative	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchAllAssociative
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllAssociativeIndexed	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchAllAssociativeIndexed
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllKeyValue	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchAllKeyValue
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllKeyValueOneColumn	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchAllKeyValueOneColumn
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllKeyValueWithLimit	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchAllKeyValueWithLimit
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAllNumeric	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchAllNumeric
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchAssociative	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchAssociative
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchFirstColumn	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchFirstColumn
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchNumeric	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchNumeric
+tests/Functional/Connection/FetchTest.php	FetchTest::testFetchOne	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testFetchOne
+tests/Functional/Connection/FetchTest.php	FetchTest::testIterateAssociative	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testIterateAssociative
+tests/Functional/Connection/FetchTest.php	FetchTest::testIterateAssociativeIndexed	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testIterateAssociativeIndexed
+tests/Functional/Connection/FetchTest.php	FetchTest::testIterateColumn	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testIterateColumn
+tests/Functional/Connection/FetchTest.php	FetchTest::testIterateKeyValue	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testIterateKeyValue
+tests/Functional/Connection/FetchTest.php	FetchTest::testIterateKeyValueOneColumn	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testIterateKeyValueOneColumn
+tests/Functional/Connection/FetchTest.php	FetchTest::testIterateNumeric	ported	crates/doctrine-dbal/tests/functional_connection_fetch_test.rs::testIterateNumeric
+tests/Functional/ConnectionTest.php	ConnectionTest::testCommitWithRollbackOnlyThrowsException	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testCommitWithRollbackOnlyThrowsException
+tests/Functional/ConnectionTest.php	ConnectionTest::testConnectWithoutExplicitDatabaseName	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testConnectWithoutExplicitDatabaseName
 tests/Functional/ConnectionTest.php	ConnectionTest::testCreateSavepointsNotSupportedThrowsException	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testDeterminesDatabasePlatformWhenConnectingToNonExistentDatabase	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testExceptionOnExecuteQuery	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testExceptionOnExecuteStatement	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testExceptionOnPrepareAndExecute	pending	
+tests/Functional/ConnectionTest.php	ConnectionTest::testDeterminesDatabasePlatformWhenConnectingToNonExistentDatabase	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testDeterminesDatabasePlatformWhenConnectingToNonExistentDatabase
+tests/Functional/ConnectionTest.php	ConnectionTest::testExceptionOnExecuteQuery	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testExceptionOnExecuteQuery
+tests/Functional/ConnectionTest.php	ConnectionTest::testExceptionOnExecuteStatement	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testExceptionOnExecuteStatement
+tests/Functional/ConnectionTest.php	ConnectionTest::testExceptionOnPrepareAndExecute	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testExceptionOnPrepareAndExecute
 tests/Functional/ConnectionTest.php	ConnectionTest::testPersistentConnection	pending	
 tests/Functional/ConnectionTest.php	ConnectionTest::testReleaseSavepointsNotSupportedThrowsException	pending	
 tests/Functional/ConnectionTest.php	ConnectionTest::testRollbackSavepointsNotSupportedThrowsException	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testServerVersion	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionBehaviorWithRollback	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionBehaviour	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionIsInactiveAfterConnectionClose	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionNestingBehavior	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionNestingBehaviorWithSavepoints	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionNestingLevelIsResetOnReconnect	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactional	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionalReturnValue	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionalWithException	pending	
-tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionalWithThrowable	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddDays	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddHours	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddMinutes	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddMonths	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddQuarters	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddSeconds	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddWeeks	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddYears	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubDays	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubHours	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubMinutes	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubMonths	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubQuarters	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubSeconds	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubWeeks	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubYears	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testExecuteQueryBindDateTimeType	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testExecuteStatementBindDateTimeType	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAllAssociative	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAllWithTypes	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchArray	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchArrayWithTypes	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAssocWithTypes	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAssociative	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchColumn	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testFetchOneWithTypes	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testLocateExpression	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testNativeArrayListSupport	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareQueryBindValueDateTimeType	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareWithBindValue	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareWithFetchAllAssociative	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareWithFetchOne	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testQuoteSQLInjection	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testSqliteDateArithmeticWithDynamicInterval	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testSubstringExpression	pending	
-tests/Functional/DataAccessTest.php	DataAccessTest::testTrimExpression	pending	
+tests/Functional/ConnectionTest.php	ConnectionTest::testServerVersion	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testServerVersion
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionBehaviorWithRollback	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionBehaviorWithRollback
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionBehaviour	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionBehaviour
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionIsInactiveAfterConnectionClose	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionIsInactiveAfterConnectionClose
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionNestingBehavior	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionNestingBehavior
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionNestingBehaviorWithSavepoints	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionNestingBehaviorWithSavepoints
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionNestingLevelIsResetOnReconnect	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionNestingLevelIsResetOnReconnect
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactional	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactional
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionalReturnValue	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionalReturnValue
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionalWithException	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionalWithException
+tests/Functional/ConnectionTest.php	ConnectionTest::testTransactionalWithThrowable	ported	crates/doctrine-dbal/tests/functional_connection_test.rs::testTransactionalWithThrowable
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddDays	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddDays
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddHours	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddHours
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddMinutes	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddMinutes
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddMonths	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddMonths
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddQuarters	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddQuarters
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddSeconds	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddSeconds
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddWeeks	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddWeeks
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateAddYears	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateAddYears
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubDays	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubDays
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubHours	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubHours
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubMinutes	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubMinutes
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubMonths	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubMonths
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubQuarters	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubQuarters
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubSeconds	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubSeconds
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubWeeks	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubWeeks
+tests/Functional/DataAccessTest.php	DataAccessTest::testDateSubYears	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testDateSubYears
+tests/Functional/DataAccessTest.php	DataAccessTest::testExecuteQueryBindDateTimeType	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testExecuteQueryBindDateTimeType
+tests/Functional/DataAccessTest.php	DataAccessTest::testExecuteStatementBindDateTimeType	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testExecuteStatementBindDateTimeType
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAllAssociative	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchAllAssociative
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAllWithTypes	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchAllWithTypes
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchArray	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchArray
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchArrayWithTypes	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchArrayWithTypes
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAssocWithTypes	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchAssocWithTypes
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchAssociative	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchAssociative
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchColumn	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchColumn
+tests/Functional/DataAccessTest.php	DataAccessTest::testFetchOneWithTypes	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testFetchOneWithTypes
+tests/Functional/DataAccessTest.php	DataAccessTest::testLocateExpression	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testLocateExpression
+tests/Functional/DataAccessTest.php	DataAccessTest::testNativeArrayListSupport	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testNativeArrayListSupport
+tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareQueryBindValueDateTimeType	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testPrepareQueryBindValueDateTimeType
+tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareWithBindValue	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testPrepareWithBindValue
+tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareWithFetchAllAssociative	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testPrepareWithFetchAllAssociative
+tests/Functional/DataAccessTest.php	DataAccessTest::testPrepareWithFetchOne	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testPrepareWithFetchOne
+tests/Functional/DataAccessTest.php	DataAccessTest::testQuoteSQLInjection	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testQuoteSQLInjection
+tests/Functional/DataAccessTest.php	DataAccessTest::testSqliteDateArithmeticWithDynamicInterval	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testSqliteDateArithmeticWithDynamicInterval
+tests/Functional/DataAccessTest.php	DataAccessTest::testSubstringExpression	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testSubstringExpression
+tests/Functional/DataAccessTest.php	DataAccessTest::testTrimExpression	ported	crates/doctrine-dbal/tests/functional_data_access_test.rs::testTrimExpression
 tests/Functional/Driver/DBAL6024Test.php	DBAL6024Test::testDropPrimaryKey	pending	
 tests/Functional/Driver/DBAL6044Test.php	DBAL6044Test::testUnloggedTables	pending	
 tests/Functional/Driver/IBMDB2/DriverTest.php	DriverTest::testConnectsWithoutDatabaseNameParameter	pending	
@@ -284,18 +284,18 @@ tests/Functional/Driver/SQLite3/DriverTest.php	DriverTest::testConnectsWithoutDa
 tests/Functional/Driver/SQLite3/DriverTest.php	DriverTest::testMissingMandatoryParams	pending	
 tests/Functional/Driver/SQLite3/DriverTest.php	DriverTest::testProvidesAccessToTheNativeConnection	pending	
 tests/Functional/Driver/SQLite3/DriverTest.php	DriverTest::testReturnsDatabaseNameWithoutDatabaseNameParameter	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testConnectionExceptionSqLite	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testInvalidFieldNameException	pending	
+tests/Functional/ExceptionTest.php	ExceptionTest::testConnectionExceptionSqLite	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testConnectionExceptionSqLite
+tests/Functional/ExceptionTest.php	ExceptionTest::testInvalidFieldNameException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testInvalidFieldNameException
 tests/Functional/ExceptionTest.php	ExceptionTest::testInvalidHost	pending	
 tests/Functional/ExceptionTest.php	ExceptionTest::testInvalidPassword	pending	
 tests/Functional/ExceptionTest.php	ExceptionTest::testInvalidUserName	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testNonUniqueFieldNameException	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testNotNullConstraintViolationException	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testPrimaryConstraintViolationException	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testSyntaxErrorException	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testTableExistsException	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testTableNotFoundException	pending	
-tests/Functional/ExceptionTest.php	ExceptionTest::testUniqueConstraintViolationException	pending	
+tests/Functional/ExceptionTest.php	ExceptionTest::testNonUniqueFieldNameException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testNonUniqueFieldNameException
+tests/Functional/ExceptionTest.php	ExceptionTest::testNotNullConstraintViolationException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testNotNullConstraintViolationException
+tests/Functional/ExceptionTest.php	ExceptionTest::testPrimaryConstraintViolationException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testPrimaryConstraintViolationException
+tests/Functional/ExceptionTest.php	ExceptionTest::testSyntaxErrorException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testSyntaxErrorException
+tests/Functional/ExceptionTest.php	ExceptionTest::testTableExistsException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testTableExistsException
+tests/Functional/ExceptionTest.php	ExceptionTest::testTableNotFoundException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testTableNotFoundException
+tests/Functional/ExceptionTest.php	ExceptionTest::testUniqueConstraintViolationException	ported	crates/doctrine-dbal/tests/functional_exception_test.rs::testUniqueConstraintViolationException
 tests/Functional/FetchBooleanTest.php	FetchBooleanTest::testBooleanConversionSqlLiteral	pending	
 tests/Functional/ForeignKeyConstraintViolationsTest.php	ForeignKeyConstraintViolationsTest::testCommitViolatesConstraintWhileUsingTransactionNesting	pending	
 tests/Functional/ForeignKeyConstraintViolationsTest.php	ForeignKeyConstraintViolationsTest::testCommitViolatesDeferredConstraint	pending	
@@ -320,7 +320,7 @@ tests/Functional/ModifyLimitQueryTest.php	ModifyLimitQueryTest::testModifyLimitQ
 tests/Functional/ModifyLimitQueryTest.php	ModifyLimitQueryTest::testModifyLimitQuerySimpleQuery	pending	
 tests/Functional/ModifyLimitQueryTest.php	ModifyLimitQueryTest::testModifyLimitQuerySubSelect	pending	
 tests/Functional/ModifyLimitQueryTest.php	ModifyLimitQueryTest::testModifyLimitQueryZeroOffsetNoLimit	pending	
-tests/Functional/NamedParametersTest.php	NamedParametersTest::testTicket	pending	
+tests/Functional/NamedParametersTest.php	NamedParametersTest::testTicket	ported	crates/doctrine-dbal/tests/functional_named_parameters_test.rs::testTicket
 tests/Functional/ParameterTypes/AsciiTest.php	AsciiTest::testAsciiBinding	pending	
 tests/Functional/Platform/AddColumnWithDefaultTest.php	AddColumnWithDefaultTest::testAddColumnWithCurrentTimestampDefaultToPopulatedTable	pending	
 tests/Functional/Platform/AddColumnWithDefaultTest.php	AddColumnWithDefaultTest::testAddColumnWithDefault	pending	
@@ -433,7 +433,7 @@ tests/Functional/ResultMetadataTest.php	ResultMetadataTest::testColumnNameAfterF
 tests/Functional/ResultMetadataTest.php	ResultMetadataTest::testColumnNameWithInvalidIndex	pending	
 tests/Functional/ResultMetadataTest.php	ResultMetadataTest::testColumnNameWithResults	pending	
 tests/Functional/ResultMetadataTest.php	ResultMetadataTest::testColumnNameWithoutResults	pending	
-tests/Functional/ResultTest.php	ResultTest::testExceptionHandling	pending	
+tests/Functional/ResultTest.php	ResultTest::testExceptionHandling	ported	crates/doctrine-dbal/tests/functional_result_test.rs::testExceptionHandling
 tests/Functional/SQL/Builder/CreateAndDropSchemaObjectsSQLBuilderTest.php	CreateAndDropSchemaObjectsSQLBuilderTest::testCreateAndDropTablesWithCircularForeignKeys	pending	
 tests/Functional/SQL/ParserTest.php	ParserTest::testMySQLEscaping	pending	
 tests/Functional/SQL/ParserTest.php	ParserTest::testPostgreSQLJSONBQuestionOperator	pending	
@@ -835,18 +835,18 @@ tests/Functional/Schema/SchemaManagerTest.php	SchemaManagerTest::testIntrospecti
 tests/Functional/Schema/SchemaManagerTest.php	SchemaManagerTest::testIntrospectionWithoutSchemaNameWithSchemaSupport	pending	
 tests/Functional/Schema/SchemaManagerTest.php	SchemaManagerTest::testReplaceIndexBackingForeignKey	pending	
 tests/Functional/SequenceTest.php	SequenceTest::testNextValue	pending	
-tests/Functional/StatementTest.php	StatementTest::testBindInvalidNamedParameter	pending	
-tests/Functional/StatementTest.php	StatementTest::testExecWithRedundantParameters	pending	
-tests/Functional/StatementTest.php	StatementTest::testExecuteQuery	pending	
-tests/Functional/StatementTest.php	StatementTest::testExecuteStatement	pending	
-tests/Functional/StatementTest.php	StatementTest::testFetchInColumnMode	pending	
+tests/Functional/StatementTest.php	StatementTest::testBindInvalidNamedParameter	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testBindInvalidNamedParameter
+tests/Functional/StatementTest.php	StatementTest::testExecWithRedundantParameters	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testExecWithRedundantParameters
+tests/Functional/StatementTest.php	StatementTest::testExecuteQuery	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testExecuteQuery
+tests/Functional/StatementTest.php	StatementTest::testExecuteStatement	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testExecuteStatement
+tests/Functional/StatementTest.php	StatementTest::testFetchInColumnMode	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testFetchInColumnMode
 tests/Functional/StatementTest.php	StatementTest::testFetchLongBlob	pending	
-tests/Functional/StatementTest.php	StatementTest::testIncompletelyFetchedStatementDoesNotBlockConnection	pending	
-tests/Functional/StatementTest.php	StatementTest::testParameterBindingOrder	pending	
-tests/Functional/StatementTest.php	StatementTest::testReuseStatementAfterFreeingResult	pending	
-tests/Functional/StatementTest.php	StatementTest::testReuseStatementWithLongerResults	pending	
-tests/Functional/StatementTest.php	StatementTest::testReuseStatementWithReboundValue	pending	
-tests/Functional/StatementTest.php	StatementTest::testStatementIsReusableAfterFreeingResult	pending	
+tests/Functional/StatementTest.php	StatementTest::testIncompletelyFetchedStatementDoesNotBlockConnection	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testIncompletelyFetchedStatementDoesNotBlockConnection
+tests/Functional/StatementTest.php	StatementTest::testParameterBindingOrder	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testParameterBindingOrder
+tests/Functional/StatementTest.php	StatementTest::testReuseStatementAfterFreeingResult	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testReuseStatementAfterFreeingResult
+tests/Functional/StatementTest.php	StatementTest::testReuseStatementWithLongerResults	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testReuseStatementWithLongerResults
+tests/Functional/StatementTest.php	StatementTest::testReuseStatementWithReboundValue	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testReuseStatementWithReboundValue
+tests/Functional/StatementTest.php	StatementTest::testStatementIsReusableAfterFreeingResult	ported	crates/doctrine-dbal/tests/functional_statement_test.rs::testStatementIsReusableAfterFreeingResult
 tests/Functional/TemporaryTableTest.php	TemporaryTableTest::testCreateTemporaryTableNotAutoCommitTransaction	pending	
 tests/Functional/TemporaryTableTest.php	TemporaryTableTest::testDropTemporaryTableNotAutoCommitTransaction	pending	
 tests/Functional/Ticket/DBAL202Test.php	DBAL202Test::testStatementCommit	pending	
@@ -854,7 +854,7 @@ tests/Functional/Ticket/DBAL202Test.php	DBAL202Test::testStatementRollback	pendi
 tests/Functional/Ticket/DBAL752Test.php	DBAL752Test::testUnsignedIntegerDetection	pending	
 tests/Functional/TransactionTest.php	TransactionTest::testBeginTransactionFailure	pending	
 tests/Functional/TransactionTest.php	TransactionTest::testCommitFailure	pending	
-tests/Functional/TransactionTest.php	TransactionTest::testNestedTransactionWalkthrough	pending	
+tests/Functional/TransactionTest.php	TransactionTest::testNestedTransactionWalkthrough	ported	crates/doctrine-dbal/tests/functional_transaction_test.rs::testNestedTransactionWalkthrough
 tests/Functional/TransactionTest.php	TransactionTest::testRollbackFailure	pending	
 tests/Functional/TransactionTest.php	TransactionTest::testTransactionalFailureDuringCallback	pending	
 tests/Functional/TransactionTest.php	TransactionTest::testTransactionalFailureDuringCommit	pending	
@@ -891,26 +891,26 @@ tests/Functional/UniqueConstraintViolationsTest.php	UniqueConstraintViolationsTe
 tests/Functional/UniqueConstraintViolationsTest.php	UniqueConstraintViolationsTest::testTransactionalViolatesConstraintWhileUsingTransactionNesting	pending	
 tests/Functional/UniqueConstraintViolationsTest.php	UniqueConstraintViolationsTest::testTransactionalViolatesDeferredConstraint	pending	
 tests/Functional/UniqueConstraintViolationsTest.php	UniqueConstraintViolationsTest::testTransactionalViolatesDeferredConstraintWhileUsingTransactionNesting	pending	
-tests/Functional/WriteTest.php	WriteTest::testDelete	pending	
-tests/Functional/WriteTest.php	WriteTest::testDeleteAll	pending	
-tests/Functional/WriteTest.php	WriteTest::testDeleteWhereIsNull	pending	
-tests/Functional/WriteTest.php	WriteTest::testDeleteWithKeyValueTypes	pending	
-tests/Functional/WriteTest.php	WriteTest::testEmptyIdentityInsert	pending	
-tests/Functional/WriteTest.php	WriteTest::testExecuteStatementWithTypes	pending	
-tests/Functional/WriteTest.php	WriteTest::testExecuteUpdate	pending	
-tests/Functional/WriteTest.php	WriteTest::testInsert	pending	
-tests/Functional/WriteTest.php	WriteTest::testInsertWithKeyValueTypes	pending	
-tests/Functional/WriteTest.php	WriteTest::testLastInsertId	pending	
-tests/Functional/WriteTest.php	WriteTest::testLastInsertIdNewConnection	pending	
+tests/Functional/WriteTest.php	WriteTest::testDelete	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testDelete
+tests/Functional/WriteTest.php	WriteTest::testDeleteAll	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testDeleteAll
+tests/Functional/WriteTest.php	WriteTest::testDeleteWhereIsNull	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testDeleteWhereIsNull
+tests/Functional/WriteTest.php	WriteTest::testDeleteWithKeyValueTypes	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testDeleteWithKeyValueTypes
+tests/Functional/WriteTest.php	WriteTest::testEmptyIdentityInsert	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testEmptyIdentityInsert
+tests/Functional/WriteTest.php	WriteTest::testExecuteStatementWithTypes	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testExecuteStatementWithTypes
+tests/Functional/WriteTest.php	WriteTest::testExecuteUpdate	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testExecuteUpdate
+tests/Functional/WriteTest.php	WriteTest::testInsert	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testInsert
+tests/Functional/WriteTest.php	WriteTest::testInsertWithKeyValueTypes	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testInsertWithKeyValueTypes
+tests/Functional/WriteTest.php	WriteTest::testLastInsertId	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testLastInsertId
+tests/Functional/WriteTest.php	WriteTest::testLastInsertIdNewConnection	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testLastInsertIdNewConnection
 tests/Functional/WriteTest.php	WriteTest::testLastInsertIdNotSupported	pending	
-tests/Functional/WriteTest.php	WriteTest::testPrepareRowCountReturnsAffectedRows	pending	
-tests/Functional/WriteTest.php	WriteTest::testPrepareWithDoctrineMappingTypeNames	pending	
-tests/Functional/WriteTest.php	WriteTest::testPrepareWithDoctrineMappingTypes	pending	
-tests/Functional/WriteTest.php	WriteTest::testPrepareWithPrimitiveTypes	pending	
-tests/Functional/WriteTest.php	WriteTest::testUpdate	pending	
-tests/Functional/WriteTest.php	WriteTest::testUpdateAll	pending	
-tests/Functional/WriteTest.php	WriteTest::testUpdateWhereIsNull	pending	
-tests/Functional/WriteTest.php	WriteTest::testUpdateWithKeyValueTypes	pending	
+tests/Functional/WriteTest.php	WriteTest::testPrepareRowCountReturnsAffectedRows	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testPrepareRowCountReturnsAffectedRows
+tests/Functional/WriteTest.php	WriteTest::testPrepareWithDoctrineMappingTypeNames	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testPrepareWithDoctrineMappingTypeNames
+tests/Functional/WriteTest.php	WriteTest::testPrepareWithDoctrineMappingTypes	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testPrepareWithDoctrineMappingTypes
+tests/Functional/WriteTest.php	WriteTest::testPrepareWithPrimitiveTypes	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testPrepareWithPrimitiveTypes
+tests/Functional/WriteTest.php	WriteTest::testUpdate	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testUpdate
+tests/Functional/WriteTest.php	WriteTest::testUpdateAll	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testUpdateAll
+tests/Functional/WriteTest.php	WriteTest::testUpdateWhereIsNull	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testUpdateWhereIsNull
+tests/Functional/WriteTest.php	WriteTest::testUpdateWithKeyValueTypes	ported	crates/doctrine-dbal/tests/functional_write_test.rs::testUpdateWithKeyValueTypes
 tests/Logging/MiddlewareTest.php	MiddlewareTest::testBeginCommitRollback	pending	
 tests/Logging/MiddlewareTest.php	MiddlewareTest::testConnectAndDisconnect	pending	
 tests/Logging/MiddlewareTest.php	MiddlewareTest::testExec	pending	
@@ -2215,17 +2215,17 @@ tests/Query/QueryBuilderTest.php	QueryBuilderTest::testCreatePositionalParameter
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testDelete	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testDelete
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testDeleteWhere	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testDeleteWhere
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testEmptySelect	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testEmptySelect
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testExecuteQuery	pending	
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testExecuteQuery	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testExecuteQuery
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testExecuteQueryWithResultCaching	pending	
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testExecuteStatement	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllAssociative	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllAssociativeIndexed	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllKeyValue	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllNumeric	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAssociative	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchFirstColumn	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchNumeric	pending	
-tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchOne	pending	
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllAssociative	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchAllAssociative
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllAssociativeIndexed	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchAllAssociativeIndexed
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllKeyValue	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchAllKeyValue
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAllNumeric	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchAllNumeric
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchAssociative	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchAssociative
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchFirstColumn	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchFirstColumn
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchNumeric	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchNumeric
+tests/Query/QueryBuilderTest.php	QueryBuilderTest::testFetchOne	ported	crates/doctrine-dbal/tests/query_builder_execution_test.rs::testFetchOne
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testGetParameterType	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testGetParameterType
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testGetParameterTypes	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testGetParameterTypes
 tests/Query/QueryBuilderTest.php	QueryBuilderTest::testInsertReplaceValues	ported	crates/doctrine-dbal/tests/query_builder_test.rs::testInsertReplaceValues
@@ -2680,8 +2680,8 @@ tests/Tools/Console/RunSqlCommandTest.php	RunSqlCommandTest::testSelectStatement
 tests/Tools/Console/RunSqlCommandTest.php	RunSqlCommandTest::testSelectWithEmptyResultSet	pending	
 tests/Tools/Console/RunSqlCommandTest.php	RunSqlCommandTest::testStatementsWithFetchResultPrintsResult	pending	
 tests/Tools/Console/RunSqlCommandTest.php	RunSqlCommandTest::testUpdateStatementsPrintsAffectedLines	pending	
-tests/Tools/DsnParserTest.php	DsnParserTest::testDatabaseUrl	pending	
-tests/Tools/DsnParserTest.php	DsnParserTest::testDriverClassScheme	pending	
+tests/Tools/DsnParserTest.php	DsnParserTest::testDatabaseUrl	ported	crates/doctrine-dbal/tests/tools_dsn_parser_test.rs::testDatabaseUrl
+tests/Tools/DsnParserTest.php	DsnParserTest::testDriverClassScheme	ported	crates/doctrine-dbal/tests/tools_dsn_parser_test.rs::testDriverClassScheme
 tests/Types/AsciiStringTest.php	AsciiStringTest::testDelegateToPlatformForSqlDeclaration	ported	crates/doctrine-dbal/tests/types_ascii_string_test.rs::testDelegateToPlatformForSqlDeclaration
 tests/Types/AsciiStringTest.php	AsciiStringTest::testReturnCorrectBindingType	ported	crates/doctrine-dbal/tests/types_ascii_string_test.rs::testReturnCorrectBindingType
 tests/Types/BinaryTest.php	BinaryTest::testBinaryNullConvertsToPHPValue	ported	crates/doctrine-dbal/tests/types_binary_test.rs::testBinaryNullConvertsToPHPValue
