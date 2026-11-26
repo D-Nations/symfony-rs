@@ -71,7 +71,7 @@ pub fn new<K: AsRef<[u8]>, V: Into<HeaderValues>>(
             Class::PhpTypeError,
             format!(
                 "{CLASS}::__construct(): Argument #1 ($data) must be of type Traversable|array, {} given",
-                data.debug_type()
+                data.value_name()
             ),
         ));
     }
