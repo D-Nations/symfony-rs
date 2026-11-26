@@ -93,7 +93,8 @@ The symfony-demo-rs comparison was not run: the owner paused it
 - **Framing of a response that ends before any `flush()`** (PLAN
   decision 20 (d)): nginx would send it chunked, but the adapter keeps
   axum's `Content-Length`. The converter fixture's comparison rule counts
-  on that header, so the change is the owner's call.
+  on that header, so the change was the owner's call. Owner, November
+  26: keep `Content-Length`.
 - **Approximations:** where nginx cuts buffered output (one page per
   piece), and PHP-FPM's own 8 KiB write buffer between flushes, which is
   not modelled.

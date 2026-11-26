@@ -913,8 +913,9 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     PHP's built-in server, which closed the connection instead).
     Recommended: send it chunked, as nginx does, and have the fixture's
     comparison skip framing headers. Until you decide, the adapter keeps
-    sending `Content-Length`. Also documented, not
-    decided: warnings are logged, never displayed (`display_errors` off,
+    sending `Content-Length`. **Owner, November 26: (d) kept as it is;
+    the adapter sends `Content-Length` and the comparison rule stays.**
+    Also documented, not decided: warnings are logged, never displayed (`display_errors` off,
     as in production); the web server's own 404 for `/index.php/...` and
     `*.php` has an empty body where nginx sends its HTML page.
 
@@ -1764,8 +1765,8 @@ Stack rows (searched November 22):
       passed on. New direct dependency `http-body` (stack row above). Four
       server tests; five mutations, each caught. A response that ends
       before any `flush()` keeps axum's `Content-Length` (nginx would
-      chunk it; the fixture's comparison rule counts on one; owner's
-      call). Stage log docs/milestones/m2-a-streamed-delivery.md. Next:
+      chunk it; the fixture's comparison rule counts on one; kept by
+      the owner, November 26). Stage log docs/milestones/m2-a-streamed-delivery.md. Next:
       StreamedJsonResponse and EventStreamResponse.
 - [x] EventStreamResponse (November 26): `EventStreamResponse.php` and
       `ServerEvent.php`; the callback gets an `EventStream` (PHP's
