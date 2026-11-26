@@ -53,6 +53,7 @@
 #   scripts/record.sh twig-integration crates/twig-integration/tests/data/integration.json (Twig's integration fixtures run by real Twig)
 #   scripts/record.sh di-parameter-bag crates/dependency-injection/tests/data/parameter_bag.json (ParameterBag)
 #   scripts/record.sh di-env-var-processor crates/dependency-injection/tests/data/env_var_processor.json (EnvVarProcessor)
+#   scripts/record.sh di-dumpers   crates/dependency-injection/tests/data/dumpers.json (XmlDumper, YamlDumper, GraphvizDumper; needs upstream/)
 #   scripts/record.sh twig-trial   spikes/twig-trial/demo/tests/data/php.json (Twig trial; not in "all")
 #   scripts/record.sh di-trial     spikes/di-trial/demo/data/container.xml (the demo's compiled container), demo/tests/data/php_classes.json
 #   scripts/record.sh all
@@ -726,6 +727,16 @@ di_env_var_processor() {
     echo "EnvVarProcessor vectors written to $out"
 }
 
+di_dumpers() {
+    local out=crates/dependency-injection/tests/data/dumpers.json tmp
+    mkdir -p oracle/out crates/dependency-injection/tests/data
+    tmp=$(mktemp -p oracle/out)
+    oracle oracle/recorders/di_dumpers.php > "$tmp"
+    python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "dumps")' "$tmp"
+    mv "$tmp" "$out"
+    echo "Dumper vectors written to $out"
+}
+
 
 
 twig_parser() {
@@ -826,7 +837,8 @@ case "${1:-}" in
     twig-integration) twig_integration ;;
     di-parameter-bag) di_parameter_bag ;;
     di-env-var-processor) di_env_var_processor ;;
+    di-dumpers) di_dumpers ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_streamed_response; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; twig_lexer; twig_parser; twig_integration; di_parameter_bag; di_env_var_processor ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-streamed-response|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|twig-lexer|twig-parser|twig-integration|di-parameter-bag|di-env-var-processor|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_streamed_response; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; twig_lexer; twig_parser; twig_integration; di_parameter_bag; di_env_var_processor; di_dumpers ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-streamed-response|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|twig-lexer|twig-parser|twig-integration|di-parameter-bag|di-env-var-processor|di-dumpers|all" >&2; exit 2 ;;
 esac

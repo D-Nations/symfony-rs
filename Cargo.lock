@@ -1356,6 +1356,7 @@ dependencies = [
  "symfony-config",
  "symfony-deprecation-contracts",
  "symfony-dotenv",
+ "symfony-yaml",
 ]
 
 [[package]]
