@@ -1,156 +1,65 @@
 //! Reads the compiled container as Symfony's `XmlDumper` writes it
-//! (`Dumper/XmlDumper.php`), after the compiler passes. Values are read as
-//! the DI component's `XmlFileLoader` read them (`XmlUtils::phpize()` for
-//! untyped text). Anything else is refused with its line.
+//! (`Dumper/XmlDumper.php`), after the compiler passes: the input for
+//! containers recorded from PHP. Values are read as the DI component's
+//! `XmlFileLoader` reads them (`XmlUtils::phpize()` for untyped text).
+//! Anything else is refused with its line.
 //!
-//! Upstream: symfony/dependency-injection Dumper/XmlDumper.php (the format)
-
-use std::collections::HashMap;
+//! Upstream: none
 
 use php_dom::{Document, LoadOptions, NodeId, NodeType, load_xml};
 use php_value::{Key, PhpArray, Value};
 use symfony_config::XmlUtils;
 
-use crate::Error;
-
-/// `on-invalid`: `ContainerInterface::*_REFERENCE`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum OnInvalid {
-    Exception,
-    Null,
-    Ignore,
-    IgnoreUninitialized,
-}
-
-/// One part of a string that may hold `%env(...)%` placeholders.
-#[derive(Clone, Debug, PartialEq)]
-pub enum StrPart {
-    Text(String),
-    Env(String),
-}
-
-#[derive(Clone, Debug)]
-pub enum ArgDef {
-    /// A scalar.
-    Value(Value),
-    /// A string holding at least one `%env(...)%`.
-    Env(Vec<StrPart>),
-    Collection(Vec<(Option<Key>, ArgDef)>),
-    Ref {
-        id: String,
-        on_invalid: OnInvalid,
-        line: u32,
-    },
-    Closure {
-        id: String,
-        on_invalid: OnInvalid,
-        line: u32,
-    },
-    Iterator(Vec<(Option<Key>, ArgDef)>),
-    /// An inline (anonymous) definition: index into `Graph::services`.
-    Inline(usize),
-    Constant(String),
-}
-
-#[derive(Clone, Debug)]
-pub enum FactoryDef {
-    /// A PHP function (`function="current"`).
-    Function(String),
-    Static {
-        class: String,
-        method: String,
-    },
-    Service {
-        service: ArgDef,
-        method: String,
-    },
-}
-
-#[derive(Clone, Debug)]
-pub struct CallDef {
-    pub method: String,
-    /// `returns-clone="true"`: a wither, `$service = $service->withX()`.
-    pub returns_clone: bool,
-    pub arguments: Vec<ArgDef>,
-}
-
-#[derive(Clone, Debug)]
-#[expect(clippy::struct_excessive_bools, reason = "upstream's flags")]
-pub struct Definition {
-    /// The service id; for an inline definition, a generated
-    /// `.inline.<n>` name (never visible to PHP).
-    pub id: String,
-    pub inline: bool,
-    pub class: String,
-    pub line: u32,
-    pub public: bool,
-    pub shared: bool,
-    pub synthetic: bool,
-    pub lazy: bool,
-    pub factory: Option<FactoryDef>,
-    pub arguments: Vec<ArgDef>,
-    pub calls: Vec<CallDef>,
-    pub properties: Vec<(String, ArgDef)>,
-    pub configurator: Option<FactoryDef>,
-    pub tags: Vec<(String, Vec<(String, String)>)>,
-}
-
-#[derive(Clone, Debug)]
-pub struct Alias {
-    pub id: String,
-    pub target: String,
-    pub public: bool,
-}
-
-#[derive(Debug, Default)]
-pub struct Graph {
-    pub parameters: Vec<(String, Value)>,
-    pub services: Vec<Definition>,
-    pub aliases: Vec<Alias>,
-}
+use crate::model::{
+    Alias, ArgDef, CallDef, Definition, DumperParameters, FactoryDef, Graph, OnInvalid, Origin,
+    Parameters, string_arg, unescape,
+};
+use crate::{Error, Location};
 
 struct Reader<'a> {
     doc: &'a Document,
     graph: Graph,
-    parameters: HashMap<String, Value>,
+    parameters: Parameters,
     inline_count: usize,
 }
 
 fn refuse(doc: &Document, node: NodeId, message: impl Into<String>) -> Error {
-    Error {
-        line: doc.line(node),
-        message: message.into(),
-    }
+    Error::new(Location::Line(doc.line(node)), message)
 }
 
-/// Parses the dump. Every element and attribute the trial does not
+fn origin(doc: &Document, node: NodeId) -> Origin {
+    Origin(Location::Line(doc.line(node)))
+}
+
+/// Parses the dump. Every element and attribute the emitter does not
 /// understand is refused.
-pub fn read(xml: &[u8], dumper_parameters: &[(String, Value)]) -> Result<Graph, Error> {
-    let loaded = load_xml(xml, LoadOptions::default()).map_err(|e| Error {
-        line: 0,
-        message: format!("the file is not XML: {e:?}"),
+pub fn read(xml: &[u8], dumper_parameters: &DumperParameters) -> Result<Graph, Error> {
+    let loaded = load_xml(xml, LoadOptions::default())
+        .map_err(|e| Error::new(Location::Unknown, format!("the file is not XML: {e:?}")))?;
+    let doc = loaded.document.ok_or_else(|| {
+        Error::new(
+            Location::Line(loaded.errors.first().map_or(0, |e| e.line)),
+            format!(
+                "the file is not well-formed XML: {:?}",
+                loaded.errors.first()
+            ),
+        )
     })?;
-    let doc = loaded.document.ok_or_else(|| Error {
-        line: loaded.errors.first().map_or(0, |e| e.line),
-        message: format!(
-            "the file is not well-formed XML: {:?}",
-            loaded.errors.first()
-        ),
-    })?;
-    let root = doc.document_element().ok_or_else(|| Error {
-        line: 0,
-        message: "the file has no root element".into(),
-    })?;
+    let root = doc
+        .document_element()
+        .ok_or_else(|| Error::new(Location::Unknown, "the file has no root element"))?;
     if doc.local_name(root) != Some("container") {
         return Err(refuse(&doc, root, "the root element is not <container>"));
     }
     let mut r = Reader {
         doc: &doc,
         graph: Graph::default(),
-        parameters: dumper_parameters.iter().cloned().collect(),
+        parameters: dumper_parameters.0.iter().cloned().collect(),
         inline_count: 0,
     };
-    r.graph.parameters.extend(dumper_parameters.iter().cloned());
+    r.graph
+        .parameters
+        .extend(dumper_parameters.0.iter().cloned());
     for child in r.elements(root) {
         match doc.local_name(child) {
             Some("parameters") => {
@@ -158,8 +67,8 @@ pub fn read(xml: &[u8], dumper_parameters: &[(String, Value)]) -> Result<Graph, 
                     r.expect(p, "parameter", &["key", "type"])?;
                     let key = doc.get_attribute(p, "key").to_owned();
                     let value = r.parameter_value(p)?;
-                    r.parameters.insert(key.clone(), value.clone());
-                    r.graph.parameters.push((key, value));
+                    r.graph.parameters.push((key.clone(), unescape(&value)));
+                    r.parameters.insert(key, value);
                 }
             }
             Some("services") => {
@@ -170,6 +79,7 @@ pub fn read(xml: &[u8], dumper_parameters: &[(String, Value)]) -> Result<Graph, 
                             id: doc.get_attribute(s, "id").to_owned(),
                             target: doc.get_attribute(s, "alias").to_owned(),
                             public: doc.get_attribute(s, "public") == "true",
+                            origin: origin(&doc, s),
                         });
                     } else {
                         let id = doc.get_attribute(s, "id").to_owned();
@@ -195,126 +105,6 @@ const SERVICE_ATTRIBUTES: &[&str] = &[
     "autoconfigure",
     "constructor",
 ];
-
-/// A string value as `PhpDumper`'s `export()` reads it, with
-/// `ParameterBag::resolveString()`'s pattern `/%%|%([^%\s]+)%/`: `%%` is
-/// a literal `%`, `%env(...)%` is an env placeholder, `%name%` is a
-/// parameter, and any other `%` is literal text (`"%d days"`).
-fn split(s: &str, parameters: &HashMap<String, Value>, depth: u32) -> Result<Vec<StrPart>, String> {
-    if depth > 32 {
-        return Err(format!(
-            "parameters refer to each other without end in \"{s}\""
-        ));
-    }
-    let mut parts = Vec::new();
-    let mut text = String::new();
-    let mut rest = s;
-    while let Some(i) = rest.find('%') {
-        text.push_str(&rest[..i]);
-        rest = &rest[i..];
-        if let Some(r) = rest.strip_prefix("%%") {
-            text.push('%');
-            rest = r;
-            continue;
-        }
-        let after = &rest[1..];
-        let name = after
-            .find('%')
-            .map(|end| &after[..end])
-            .filter(|n| !n.is_empty() && !n.chars().any(char::is_whitespace));
-        let Some(name) = name else {
-            text.push('%');
-            rest = after;
-            continue;
-        };
-        rest = &after[name.len() + 1..];
-        if let Some(env) = name.strip_prefix("env(").and_then(|e| e.strip_suffix(')')) {
-            if !text.is_empty() {
-                parts.push(StrPart::Text(std::mem::take(&mut text)));
-            }
-            parts.push(StrPart::Env(env.to_owned()));
-            continue;
-        }
-        match parameters.get(name) {
-            Some(Value::String(v)) => {
-                for p in split(
-                    &String::from_utf8_lossy(v.as_bytes()),
-                    parameters,
-                    depth + 1,
-                )? {
-                    match p {
-                        StrPart::Text(t) => text.push_str(&t),
-                        env @ StrPart::Env(_) => {
-                            if !text.is_empty() {
-                                parts.push(StrPart::Text(std::mem::take(&mut text)));
-                            }
-                            parts.push(env);
-                        }
-                    }
-                }
-            }
-            Some(Value::Int(n)) => text.push_str(&n.to_string()),
-            Some(Value::Null) => {}
-            Some(other) => {
-                return Err(format!(
-                    "A string value must be composed of strings and/or numbers, but found parameter \"{name}\" of type \"{}\" inside string value \"{s}\".",
-                    other.debug_type()
-                ));
-            }
-            None => {
-                return Err(format!(
-                    "You have requested a non-existent parameter \"{name}\"."
-                ));
-            }
-        }
-    }
-    text.push_str(rest);
-    if !text.is_empty() || parts.is_empty() {
-        parts.push(StrPart::Text(text));
-    }
-    Ok(parts)
-}
-
-/// A string argument: `%name%` alone is the compiled parameter itself
-/// (Symfony keeps whole-parameter references, so that `PhpDumper` can
-/// share the parameter's value); otherwise text with `%%`, `%env()%` and
-/// `%name%` parts.
-fn string_arg(s: &str, parameters: &HashMap<String, Value>) -> Result<ArgDef, String> {
-    if let Some(name) = s
-        .strip_prefix('%')
-        .and_then(|r| r.strip_suffix('%'))
-        .filter(|n| {
-            !n.is_empty()
-                && !n.contains('%')
-                && !n.chars().any(char::is_whitespace)
-                && !n.starts_with("env(")
-        })
-    {
-        let value = parameters
-            .get(name)
-            .ok_or_else(|| format!("You have requested a non-existent parameter \"{name}\"."))?;
-        return value_arg(value, parameters);
-    }
-    let parts = split(s, parameters, 0)?;
-    Ok(match parts.as_slice() {
-        [StrPart::Text(t)] => ArgDef::Value(Value::string(t.as_str())),
-        _ => ArgDef::Env(parts),
-    })
-}
-
-/// A parameter's value as an argument. Parameter strings are escaped as
-/// argument strings are (`%%`, `%env()%`).
-fn value_arg(value: &Value, parameters: &HashMap<String, Value>) -> Result<ArgDef, String> {
-    Ok(match value {
-        Value::String(s) => string_arg(&String::from_utf8_lossy(s.as_bytes()), parameters)?,
-        Value::Array(a) => ArgDef::Collection(
-            a.iter()
-                .map(|(k, v)| Ok((Some(k.clone()), value_arg(v, parameters)?)))
-                .collect::<Result<_, String>>()?,
-        ),
-        v => ArgDef::Value(v.clone()),
-    })
-}
 
 fn on_invalid(v: &str) -> Option<OnInvalid> {
     Some(match v {
@@ -408,9 +198,13 @@ impl Reader<'_> {
         Ok(out)
     }
 
+    /// The items of a collection or iterator: `XmlDumper` writes them as
+    /// elements of the collection's own name (`<property>` inside a
+    /// property).
     fn keyed(&mut self, node: NodeId) -> Result<Vec<(Option<Key>, ArgDef)>, Error> {
+        let element = self.doc.local_name(node).unwrap_or_default().to_owned();
         let mut items = Vec::new();
-        for (a, value) in self.arguments(node, "argument")? {
+        for (a, value) in self.arguments(node, &element)? {
             let key = self
                 .doc
                 .has_attribute(a, "key")
@@ -424,7 +218,6 @@ impl Reader<'_> {
         let doc = self.doc;
         let element = doc.local_name(a).unwrap_or_default().to_owned();
         self.expect(a, &element, &["type", "id", "key", "name", "on-invalid"])?;
-        let line = doc.line(a);
         let invalid = || {
             on_invalid(doc.get_attribute(a, "on-invalid")).ok_or_else(|| {
                 refuse(
@@ -441,7 +234,7 @@ impl Reader<'_> {
             "service" if doc.has_attribute(a, "id") => ArgDef::Ref {
                 id: doc.get_attribute(a, "id").to_owned(),
                 on_invalid: invalid()?,
-                line,
+                origin: origin(doc, a),
             },
             "service" => {
                 let inner = self.elements(a);
@@ -455,10 +248,17 @@ impl Reader<'_> {
                 self.expect(*s, "service", SERVICE_ATTRIBUTES)?;
                 ArgDef::Inline(self.service(*s, None)?)
             }
+            "service_closure" if !doc.has_attribute(a, "id") => {
+                return Err(refuse(
+                    doc,
+                    a,
+                    "unsupported argument type=\"service_closure\" of a value that is not a reference",
+                ));
+            }
             "service_closure" => ArgDef::Closure {
                 id: doc.get_attribute(a, "id").to_owned(),
                 on_invalid: invalid()?,
-                line,
+                origin: origin(doc, a),
             },
             "collection" => ArgDef::Collection(self.keyed(a)?),
             "iterator" => ArgDef::Iterator(self.keyed(a)?),
@@ -474,8 +274,8 @@ impl Reader<'_> {
                 v => ArgDef::Value(v),
             },
             // expression, binary, abstract, tagged_iterator,
-            // tagged_locator, service_locator: not in the demo's
-            // container; refused rather than guessed.
+            // tagged_locator, service_locator, env_closure: refused
+            // rather than guessed.
             other => {
                 return Err(refuse(
                     doc,
@@ -501,7 +301,7 @@ impl Reader<'_> {
                 service: ArgDef::Ref {
                     id: doc.get_attribute(f, "service").to_owned(),
                     on_invalid: OnInvalid::Exception,
-                    line: doc.line(f),
+                    origin: origin(doc, f),
                 },
                 method,
             });
@@ -531,6 +331,19 @@ impl Reader<'_> {
         }
     }
 
+    /// A `<tag>`'s name: its text when it has an attribute called `name`
+    /// (`<tag name="attribute value">tag name</tag>`), else its `name`.
+    fn tag_name(&self, t: NodeId) -> String {
+        let doc = self.doc;
+        if self.elements(t).is_empty() {
+            let text = doc.text_content(t);
+            if !text.is_empty() {
+                return text;
+            }
+        }
+        doc.get_attribute(t, "name").to_owned()
+    }
+
     /// Reads one definition; returns its index in `Graph::services`.
     fn service(&mut self, s: NodeId, id: Option<String>) -> Result<usize, Error> {
         let doc = self.doc;
@@ -556,7 +369,7 @@ impl Reader<'_> {
             id,
             inline,
             class: class.clone(),
-            line: doc.line(s),
+            origin: origin(doc, s),
             public: doc.get_attribute(s, "public") == "true",
             shared: doc.get_attribute(s, "shared") != "false",
             synthetic: doc.get_attribute(s, "synthetic") == "true",
@@ -601,16 +414,7 @@ impl Reader<'_> {
                 }
                 Some("factory") => def.factory = Some(self.factory(c, &class)?),
                 Some("configurator") => def.configurator = Some(self.factory(c, &class)?),
-                Some("tag") => {
-                    let attributes = doc
-                        .attributes(c)
-                        .iter()
-                        .filter(|a| a.local_name != "name")
-                        .map(|a| (a.local_name.clone(), a.value.clone()))
-                        .collect();
-                    def.tags
-                        .push((doc.get_attribute(c, "name").to_owned(), attributes));
-                }
+                Some("tag") => def.tags.push(self.tag_name(c)),
                 // A deprecation notice for users of the id; it changes
                 // nothing in how the service is built.
                 Some("deprecated") => {}
@@ -625,25 +429,5 @@ impl Reader<'_> {
         }
         self.graph.services[index] = def;
         Ok(index)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn env_placeholders_and_escaped_percent() {
-        let mut parameters = HashMap::new();
-        parameters.insert("p".to_owned(), Value::string("v%%w"));
-        assert_eq!(
-            split("a%%b%env(X)%c%p%%d days", &parameters, 0),
-            Ok(vec![
-                StrPart::Text("a%b".into()),
-                StrPart::Env("X".into()),
-                StrPart::Text("cv%w%d days".into())
-            ])
-        );
-        assert!(split("%missing%", &parameters, 0).is_err());
     }
 }

@@ -1638,6 +1638,37 @@ impl ContainerBuilder {
         Ok(value)
     }
 
+    /// Not upstream's: `resolveEnvPlaceholders($string)` (format `null`,
+    /// each placeholder back to `%env(NAME)%`) on one string, without
+    /// counting the env vars it finds (`getEnvCounters()`), so that a
+    /// reader of the compiled container (the Rust emitter) sees the
+    /// strings `XmlDumper` writes without changing the container.
+    pub fn env_placeholders_to_names(&self, text: &PhpString) -> PhpString {
+        if text.len() < 38 || !contains_ignore_case(text.as_bytes(), b"env_") {
+            return text.clone();
+        }
+        let env_placeholders = if self.parameter_bag.is_env_placeholder() {
+            self.parameter_bag.get_env_placeholders()
+        } else {
+            self.env_placeholders.clone()
+        };
+        let used_placeholders = find_placeholders(text.as_bytes());
+        let mut current = text.as_bytes().to_vec();
+        for (env, placeholders) in env_placeholders.iter() {
+            for placeholder in placeholders {
+                if !used_placeholders.contains(&placeholder.as_bytes()) {
+                    continue;
+                }
+                let name = format!("%env({env})%");
+                if current == placeholder.as_bytes() {
+                    return PhpString::from(name);
+                }
+                current = replace_ignore_case(&current, placeholder.as_bytes(), name.as_bytes());
+            }
+        }
+        PhpString::from(current)
+    }
+
     /// `getEnvCounters()`: every env var with a placeholder counts, if
     /// only as 0.
     pub fn get_env_counters(&mut self) -> IdMap<i64> {

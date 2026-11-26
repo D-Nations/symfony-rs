@@ -9,7 +9,7 @@ is not in `parity/sources.tsv`. Results and findings:
 
 | Crate | What it is |
 |---|---|
-| `compiler/` (`di-trial-compiler`) | Reads the compiled container that Symfony's `XmlDumper` writes, checks it, splits it into application and request scope, and emits Rust (quote + prettyplease). Used from `build.rs`. |
+| [`crates/di-emitter`](../../crates/di-emitter/README.md) (`symfony-di-emitter`) | The trial's compiler, now a workspace crate (November 26): reads the compiled container (a Rust `ContainerBuilder`, or the file Symfony's `XmlDumper` writes), checks it, splits it into application and request scope, and emits Rust (quote + prettyplease). Used from `demo/build.rs`. |
 | `runtime/` (`di-trial-runtime`) | What the emitted code calls: service cells, the re-entrant "configure once" guard, and placeholder instances that record arguments, factories, calls and properties. |
 | `demo/` (`di-trial-demo`) | symfony/demo's container (`data/container.xml`, recorded from PHP), compiled in `build.rs`; tests that resolve every service. |
 
@@ -21,7 +21,10 @@ passes (APP_ENV=prod, APP_DEBUG=0), as `PhpDumper` receives it, written by
 tagged iterators and locators with their resolved services, because
 `XmlDumper` writes only the tag. So this trial tests the back half of
 the M3 compiler (graph to Rust); the front half (loaders, extensions and
-compiler passes in Rust) is not in it.
+compiler passes in Rust) is not in it. Since November 26 the emitter also
+reads a `ContainerBuilder` compiled in Rust and gives the same graph as
+for its `XmlDumper` file (`crates/di-emitter/tests/equivalence.rs`); the
+demo keeps the PHP recording until the bundles are ported.
 
 ## Placeholders
 
@@ -39,12 +42,13 @@ arguments, `on-invalid` (exception, null, ignore, ignore_uninitialized),
 factories (class, service, inline service, function, `constructor`),
 method calls (with `returns-clone`), properties, configurators, `shared`,
 `lazy`, `synthetic`, `%param%`, `%%` and `%env()%` in strings. Everything
-else is refused at build time with its line (`compiler/tests/refusals.rs`).
+else is refused at build time with its line
+(`crates/di-emitter/tests/refusals.rs`).
 
 ## Run
 
 ```sh
-cargo test -p di-trial-compiler -p di-trial-demo
+cargo test -p symfony-di-emitter -p di-trial-demo
 scripts/record.sh di-trial    # re-record data/container.xml and tests/data/php_classes.json
 ```
 

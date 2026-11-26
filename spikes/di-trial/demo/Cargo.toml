@@ -11,7 +11,7 @@ php-value = { workspace = true }
 di-trial-runtime = { path = "../runtime" }
 
 [build-dependencies]
-di-trial-compiler = { path = "../compiler" }
+symfony-di-emitter = { path = "../../../crates/di-emitter" }
 
 [dev-dependencies]
 serde_json = "1.0.154"
