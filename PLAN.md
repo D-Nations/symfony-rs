@@ -1823,6 +1823,18 @@ Stack rows (searched November 22):
       mutations, each caught. Stage log docs/milestones/m2-a-session.md.
       Next: NativeSessionStorage and the save handlers (PHP's session
       extension), then `Request`'s session methods.
+- [x] Session, stage 2a (November 26): the save handlers
+      (`AbstractSessionHandler`, Strict, Null, Marshalling with the
+      identity marshaller, Migrating), `SessionUtils`, and the session
+      extension's state and header functions (`php_session`). The
+      upstream tests 41, 5 `n/a` (serializing a handler, igbinary); 1,200
+      handler chains recorded from PHP 8.4.27 (10,259 answers), which
+      found `isset($failed['data'])` and the `TypeError`'s declaring
+      class; 25 of 26 mutations caught (the one left is `open()`'s
+      header, for 2b). Stage log docs/milestones/m2-a-session-handlers.md.
+      Next, stage 2b: NativeSessionStorage, `session_start()`, the
+      proxies and NativeFileSessionHandler, then `Request`'s session
+      methods.
 
 ## M6 progress
 

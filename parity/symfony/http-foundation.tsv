@@ -626,23 +626,23 @@ Tests/Session/SessionTest.php	SessionTest::testSetIdAfterStart	ported	crates/htt
 Tests/Session/SessionTest.php	SessionTest::testSetName	ported	crates/http-foundation/tests/session_test.rs::testSetName
 Tests/Session/SessionTest.php	SessionTest::testStart	ported	crates/http-foundation/tests/session_test.rs::testStart
 Tests/Session/Storage/Handler/AbstractSessionHandlerTest.php	AbstractSessionHandlerTest::testSession	pending	
-Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testMarshall	pending	
-Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testMarshallInvalidData	pending	
-Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testUnmarshall	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testCannotBeSerialized	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testCannotBeUnserialized	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testClose	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testDestroy	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testGc	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testOpen	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testRead	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testReadFailure	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testReadReturnsEmptyStringWhenUnmarshallingFails	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testUpdateTimestamp	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testValidateId	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testWrite	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testWriteDoesNotMarshallEmptyData	pending	
-Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testWriteDoesNotMarshallIgbinaryEmptyData	pending	
+Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testMarshall	ported	crates/http-foundation/tests/identity_marshaller_test.rs::testMarshall
+Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testMarshallInvalidData	ported	crates/http-foundation/tests/identity_marshaller_test.rs::testMarshallInvalidData
+Tests/Session/Storage/Handler/IdentityMarshallerTest.php	IdentityMarshallerTest::testUnmarshall	ported	crates/http-foundation/tests/identity_marshaller_test.rs::testUnmarshall
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testCannotBeSerialized	n/a: serializes the handler; a Rust handler is no PHP object to give to serialize()	
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testCannotBeUnserialized	n/a: unserializes the handler; a Rust handler is no PHP object to give to unserialize()	
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testClose	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testClose
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testDestroy	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testDestroy
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testGc	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testGc
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testOpen	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testOpen
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testRead	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testRead
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testReadFailure	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testReadFailure
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testReadReturnsEmptyStringWhenUnmarshallingFails	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testReadReturnsEmptyStringWhenUnmarshallingFails
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testUpdateTimestamp	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testUpdateTimestamp
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testValidateId	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testValidateId
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testWrite	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testWrite
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testWriteDoesNotMarshallEmptyData	ported	crates/http-foundation/tests/marshalling_session_handler_test.rs::testWriteDoesNotMarshallEmptyData
+Tests/Session/Storage/Handler/MarshallingSessionHandlerTest.php	MarshallingSessionHandlerTest::testWriteDoesNotMarshallIgbinaryEmptyData	n/a: needs the igbinary extension, absent here as in the oracle image (PHPUnit skips it there)	
 Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php	MemcachedSessionHandlerTest::testCloseSession	pending	
 Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php	MemcachedSessionHandlerTest::testDestroySession	pending	
 Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php	MemcachedSessionHandlerTest::testGcSession	pending	
@@ -656,17 +656,17 @@ Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php	MemcachedSessionHa
 Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php	MemcachedSessionHandlerTest::testUpdateTimestampWithEmptyDataDestroysSession	pending	
 Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php	MemcachedSessionHandlerTest::testWriteSession	pending	
 Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php	MemcachedSessionHandlerTest::testWriteSessionWithLargeTTL	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testCannotBeSerialized	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testCannotBeUnserialized	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testClose	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testDestroy	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testGc	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testInstanceOf	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testOpen	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testRead	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testUpdateTimestamp	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testValidateId	pending	
-Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testWrite	pending	
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testCannotBeSerialized	n/a: serializes the handler; a Rust handler is no PHP object to give to serialize()	
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testCannotBeUnserialized	n/a: unserializes the handler; a Rust handler is no PHP object to give to unserialize()	
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testClose	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testClose
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testDestroy	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testDestroy
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testGc	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testGc
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testInstanceOf	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testInstanceOf
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testOpen	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testOpen
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testRead	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testRead
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testUpdateTimestamp	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testUpdateTimestamp
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testValidateId	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testValidateId
+Tests/Session/Storage/Handler/MigratingSessionHandlerTest.php	MigratingSessionHandlerTest::testWrite	ported	crates/http-foundation/tests/migrating_session_handler_test.rs::testWrite
 Tests/Session/Storage/Handler/MongoDbSessionHandlerTest.php	MongoDbSessionHandlerTest::testCloseMethodAlwaysReturnTrue	pending	
 Tests/Session/Storage/Handler/MongoDbSessionHandlerTest.php	MongoDbSessionHandlerTest::testConstructorShouldThrowExceptionForMissingOptions	pending	
 Tests/Session/Storage/Handler/MongoDbSessionHandlerTest.php	MongoDbSessionHandlerTest::testCreateFromClient	pending	
@@ -785,24 +785,24 @@ Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactor
 Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactoryTest::testCreateRedisHandlerFromDsn	pending	
 Tests/Session/Storage/Handler/SessionHandlerFactoryTest.php	SessionHandlerFactoryTest::testCredentialsAreNotExposedInTrace	pending	
 Tests/Session/Storage/Handler/SessionIdInterfaceTest.php	SessionIdInterfaceTest::testHandlersCreateSessionIds	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testCloseSession	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testDestroy	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testDestroyNewSession	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testDestroyNonEmptyNewSession	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testGc	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testOpen	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testRead	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testReadFailure	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testReadWithValidateIdMismatch	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testReadWithValidateIdOK	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testUpdateTimestamp	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdKO	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdKeepsIdWhenReadFails	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdKeepsIdWhenReadThrows	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdOK	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWrite	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWriteEmptyExistingSession	pending	
-Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWriteEmptyNewSession	pending	
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testCloseSession	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testCloseSession
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testDestroy	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testDestroy
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testDestroyNewSession	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testDestroyNewSession
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testDestroyNonEmptyNewSession	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testDestroyNonEmptyNewSession
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testGc	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testGc
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testOpen	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testOpen
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testRead	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testRead
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testReadFailure	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testReadFailure
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testReadWithValidateIdMismatch	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testReadWithValidateIdMismatch
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testReadWithValidateIdOK	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testReadWithValidateIdOK
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testUpdateTimestamp	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testUpdateTimestamp
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdKO	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testValidateIdKO
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdKeepsIdWhenReadFails	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testValidateIdKeepsIdWhenReadFails
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdKeepsIdWhenReadThrows	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testValidateIdKeepsIdWhenReadThrows
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testValidateIdOK	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testValidateIdOK
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWrite	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testWrite
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWriteEmptyExistingSession	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testWriteEmptyExistingSession
+Tests/Session/Storage/Handler/StrictSessionHandlerTest.php	StrictSessionHandlerTest::testWriteEmptyNewSession	ported	crates/http-foundation/tests/strict_session_handler_test.rs::testWriteEmptyNewSession
 Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testClear	ported	crates/http-foundation/tests/metadata_bag_test.rs::testClear
 Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testCookieLifetimeFromConstructor	ported	crates/http-foundation/tests/metadata_bag_test.rs::testCookieLifetimeFromConstructor
 Tests/Session/Storage/MetadataBagTest.php	MetadataBagTest::testDoesNotSkipLastUsedUpdate	ported	crates/http-foundation/tests/metadata_bag_test.rs::testDoesNotSkipLastUsedUpdate
