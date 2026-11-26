@@ -698,7 +698,7 @@ impl Response {
             FinishRequest::None => {
                 if !matches!(sapi.as_bytes(), b"cli" | b"phpdbg" | b"embed") {
                     Self::close_output_buffers(0, true);
-                    with_output(|o| o.calls.push(OutputCall::Flush));
+                    crate::php::flush();
                 }
             }
         }

@@ -331,6 +331,36 @@ pub fn with_output<R>(f: impl FnOnce(&mut Output) -> R) -> R {
     with_globals(|g| f(&mut g.output))
 }
 
+/// What the SAPI does at `flush()`: the HTTP adapter sends what was
+/// output so far.
+pub type FlushHook = Box<dyn FnMut()>;
+
+thread_local! {
+    static FLUSH: RefCell<Option<FlushHook>> = const { RefCell::new(None) };
+}
+
+/// Sets what `flush()` does on this thread for the request it runs.
+pub fn set_flush_hook(hook: Option<FlushHook>) {
+    FLUSH.with(|f| *f.borrow_mut() = hook);
+}
+
+/// `flush()`: the call is recorded, then the SAPI's hook runs (no output
+/// is borrowed while it runs).
+pub fn flush() {
+    with_output(|o| o.calls.push(OutputCall::Flush));
+    let hook = FLUSH.with(|f| f.borrow_mut().take());
+    if let Some(mut hook) = hook {
+        hook();
+        FLUSH.with(|f| {
+            let mut slot = f.borrow_mut();
+            // The hook may have replaced itself.
+            if slot.is_none() {
+                *slot = Some(hook);
+            }
+        });
+    }
+}
+
 impl Default for Globals {
     /// PHP 8.4.27's in the oracle: empty superglobals and body,
     /// `request_order` empty and `variables_order` `EGPCS` (no php.ini).

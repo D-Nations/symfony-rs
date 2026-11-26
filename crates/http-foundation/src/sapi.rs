@@ -1115,6 +1115,12 @@ impl Sapi {
         }
     }
 
+    /// The body written since the last call, for a web server passing it
+    /// on as it comes.
+    pub fn take_body(&mut self) -> Vec<u8> {
+        std::mem::take(&mut self.body)
+    }
+
     /// Whether the response has ended (`fastcgi_finish_request()`).
     pub fn is_finished(&self) -> bool {
         self.finished

@@ -22,7 +22,7 @@ use std::{
 };
 
 use axum::{
-    body::{Body, to_bytes},
+    body::{Body, HttpBody, to_bytes},
     http::{Request, StatusCode},
 };
 use php_value::{Handle, PhpString};
@@ -42,7 +42,7 @@ use symfony_http_kernel::{
 };
 use symfony_runtime::{
     http_kernel_runner::{HttpKernelRunner, RunnableKernel},
-    server::{FrontController, ServerConfig, fastcgi_params, into_response},
+    server::{FrontController, NGINX_BUFFER, ServerConfig, fastcgi_params, into_response},
 };
 use tower::ServiceExt;
 
@@ -290,6 +290,159 @@ async fn a_streamed_response_is_sent_by_its_callback() {
         &to_bytes(response.into_body(), 64).await.unwrap()[..],
         b"first second third"
     );
+}
+
+/// A kernel whose streamed response writes `first`, flushes, waits for
+/// the test, then writes `rest`; with the headers it is given.
+struct PausingKernel {
+    first: Vec<u8>,
+    rest: Vec<u8>,
+    headers: Vec<(&'static str, &'static str)>,
+    go: Arc<Mutex<Receiver<()>>>,
+}
+
+impl HttpKernelInterface for PausingKernel {
+    fn handle(&self, _: &RequestHandle, _: i64, _: bool) -> Result<ResponseHandle, Throwable> {
+        let (first, rest, go) = (self.first.clone(), self.rest.clone(), self.go.clone());
+        let callback = Arc::new(move || {
+            streamed_response::echo(PhpString::from(first.clone()));
+            streamed_response::flush();
+            // A closed channel (the test gave up) ends the wait too.
+            let _ = go.lock().unwrap().recv_timeout(Duration::from_secs(5));
+            streamed_response::echo(PhpString::from(rest.clone()));
+            Ok(())
+        });
+        let headers = ResponseHeaderBag::new(self.headers.iter().copied()).unwrap();
+        let response =
+            streamed_response::new(CallbackOrChunks::Callback(callback), 200, headers).unwrap();
+        Ok(Handle::new(response))
+    }
+}
+
+impl RunnableKernel for PausingKernel {}
+
+/// Serves a `PausingKernel`; the sender lets its script go on.
+async fn pausing(
+    first: &[u8],
+    rest: &[u8],
+    headers: Vec<(&'static str, &'static str)>,
+) -> (axum::response::Response, std::sync::mpsc::Sender<()>) {
+    let (go, wait) = channel();
+    let wait = Arc::new(Mutex::new(wait));
+    let (first, rest) = (first.to_vec(), rest.to_vec());
+    let kernel = Arc::new(move || {
+        let kernel: Arc<dyn RunnableKernel> = Arc::new(PausingKernel {
+            first: first.clone(),
+            rest: rest.clone(),
+            headers: headers.clone(),
+            go: wait.clone(),
+        });
+        Ok(kernel)
+    });
+    let front = FrontController::new(ServerConfig::default(), Ini::default(), kernel);
+    let response = Arc::new(front)
+        .router()
+        .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
+        .await
+        .unwrap();
+    (response, go)
+}
+
+/// The next piece of a body, or `None` when it has ended; `Err` when none
+/// came within the wait.
+async fn next_piece(body: &mut Body, wait: Duration) -> Result<Option<Vec<u8>>, ()> {
+    let frame = std::future::poll_fn(|cx| std::pin::Pin::new(&mut *body).poll_frame(cx));
+    match tokio::time::timeout(wait, frame).await {
+        Err(_) => Err(()),
+        Ok(None) => Ok(None),
+        Ok(Some(frame)) => Ok(Some(
+            frame
+                .unwrap()
+                .into_data()
+                .map(|d| d.to_vec())
+                .unwrap_or_default(),
+        )),
+    }
+}
+
+/// Every remaining byte of a body.
+async fn rest_of(body: &mut Body) -> Vec<u8> {
+    let mut all = Vec::new();
+    while let Ok(Some(piece)) = next_piece(body, Duration::from_secs(5)).await {
+        all.extend_from_slice(&piece);
+    }
+    all
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn x_accel_buffering_no_passes_each_flush_on() {
+    let (response, go) = pausing(b"first", b" rest", vec![("X-Accel-Buffering", "no")]).await;
+    assert_eq!(StatusCode::OK, response.status());
+    // nginx hides the header from the client, and sends no length.
+    assert!(response.headers().get("x-accel-buffering").is_none());
+    assert!(response.headers().get("content-length").is_none());
+    let mut body = response.into_body();
+    // The flushed part arrives while the script still waits.
+    assert_eq!(
+        Ok(Some(b"first".to_vec())),
+        next_piece(&mut body, Duration::from_secs(5)).await
+    );
+    go.send(()).unwrap();
+    assert_eq!(b" rest".to_vec(), rest_of(&mut body).await);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn buffering_holds_a_small_flush_until_the_end() {
+    let (response, go) = pausing(b"first", b" rest", Vec::new()).await;
+    // The head comes at the first flush; the body waits in nginx's buffer.
+    assert_eq!(StatusCode::OK, response.status());
+    let mut body = response.into_body();
+    assert_eq!(
+        Err(()),
+        next_piece(&mut body, Duration::from_millis(300)).await
+    );
+    go.send(()).unwrap();
+    assert_eq!(b"first rest".to_vec(), rest_of(&mut body).await);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn buffering_passes_a_full_buffer_on() {
+    let first = vec![b'a'; NGINX_BUFFER];
+    let (response, go) = pausing(&first, b"end", Vec::new()).await;
+    let mut body = response.into_body();
+    assert_eq!(
+        Ok(Some(first.clone())),
+        next_piece(&mut body, Duration::from_secs(5)).await
+    );
+    go.send(()).unwrap();
+    assert_eq!(b"end".to_vec(), rest_of(&mut body).await);
+}
+
+#[tokio::test]
+async fn nginx_hides_the_x_accel_headers() {
+    let response = into_response(
+        &CgiResponse {
+            headers: [
+                "X-Accel-Redirect: /protected/file",
+                "x-accel-expires: 10",
+                "X-Accel-Limit-Rate: 100",
+                "X-Accel-Buffering: no",
+                "X-Accel-Charset: utf-8",
+                "X-Accel-Other: kept",
+                "Content-Type: text/plain",
+            ]
+            .map(PhpString::from)
+            .to_vec(),
+            body: b"x".to_vec(),
+        },
+        false,
+    );
+    let names: Vec<&str> = response
+        .headers()
+        .keys()
+        .map(axum::http::HeaderName::as_str)
+        .collect();
+    assert_eq!(vec!["x-accel-other", "content-type"], names);
 }
 
 #[tokio::test(flavor = "multi_thread")]

@@ -1503,6 +1503,7 @@ name = "symfony-runtime"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "http-body",
  "php2rust-value",
  "symfony-event-dispatcher",
  "symfony-http-foundation",

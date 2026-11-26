@@ -73,7 +73,7 @@ impl HttpKernelRunner {
             crate::finish_request(OutputCall::LitespeedFinishRequest);
         } else {
             Response::close_output_buffers(0, true);
-            with_output(|o| o.calls.push(OutputCall::Flush));
+            symfony_http_foundation::php::flush();
         }
 
         if let Some(kernel) = self.kernel.as_terminable() {

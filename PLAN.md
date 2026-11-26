@@ -903,7 +903,17 @@ the PSR-7 bridge, and Notifier bridges nobody asks for.
     (the replay tests set it). Recommended: keep it off; (c) *invalid CGI
     header lines* (`NoColon`, a name with a space, a control byte), which
     PHP passes on and nginx answers with 502 for some: the adapter drops
-    the line and logs it. Recommended: keep. Also documented, not
+    the line and logs it. Recommended: keep; (d) *framing of a response
+    that ends before any `flush()`* (November 26): nginx passes a FastCGI
+    response without `Content-Length` on chunked; the adapter sends it
+    whole with the `Content-Length` axum computes. Flushed output is
+    already sent chunked. Making both chunked changes the converter
+    fixture's comparison rule, which requires exactly one
+    `Content-Length` equal to the body length (its recording came from
+    PHP's built-in server, which closed the connection instead).
+    Recommended: send it chunked, as nginx does, and have the fixture's
+    comparison skip framing headers. Until you decide, the adapter keeps
+    sending `Content-Length`. Also documented, not
     decided: warnings are logged, never displayed (`display_errors` off,
     as in production); the web server's own 404 for `/index.php/...` and
     `*.php` has an empty body where nginx sends its HTML page.
@@ -1383,6 +1393,7 @@ Stack rows (searched November 22):
 | ExpressionLanguage (searched November 25: crates.io, docs.rs) | No Rust port of Symfony's ExpressionLanguage. Expression crates with their own grammars and value rules: [evalexpr](https://docs.rs/evalexpr) (no `matches`, `..`, `?.`, `??`, attribute or method access, no compilation to PHP), [cel](https://docs.rs/cel) (Common Expression Language), [zen-expression](https://docs.rs/zen-expression) (ZEN rules) | Port of every PHP file except `SerializedParsedExpression.php`, on php-value and php-pcre (workspace crates); no new dependency (serde_json is already a test dependency) | Routing conditions and security expressions need Symfony's grammar, error texts, the PHP source `compile()` writes and PHP 8.4's operator semantics; 69,024 binary operations and 1,730 other cases recorded from PHP 8.4.27 pin them |
 | The listener execution seam: `CompiledEventDispatcher` (event-dispatcher; November 26) | Upstream's own [`CompiledEventDispatcher`](https://github.com/symfony/symfony/pull/66122) (Symfony 8.2, after the pinned 8.1: an ordered listener map built by the container, dispatch from it, thaw into a plain `EventDispatcher` on anything but `dispatch()`/`hasListeners()`); its rejected alternative [#66121](https://github.com/symfony/symfony/pull/66121) (the `addListener()` calls folded into `EventDispatcher`'s constructor, closures kept); Drupal's `ContainerAwareEventDispatcher` (a precompiled array changed in place, no fallback); on crates.io, [mod-events](https://docs.rs/crate/mod-events) (run-time registration behind a lock, typed handlers, no PHP identity or ordering semantics). The PLAN's `Kernel<C, L>` shape no longer applies: the ported kernel takes a dispatcher | 8.2's design, adapted to 8.1's behaviour: `ListenerMap` (sorted once; a dispatch takes no table lock and copies no list), `CompiledEventDispatcher<P: ListenerPipeline = ListenerMap>`, a thaw that shares the stored listener slots and re-sorts dispatched events' buckets; no deprecation notices; no new dependency | Upstream took this path, so M3's container output maps onto it; the fallback keeps every dynamic call exact without a second implementation of the table; the trait is where M3-A's generated per-event pipelines go |
 | HttpFoundation's `StreamedResponse.php` (November 26; no new search: the `Response.php` row covers the component) | A Rust type of its own converting into `Response` (as `JsonResponse` does), which loses the overrides `Response`'s own methods call (`prepare()` and `setNotModified()` call `setContent(null)`, `send()` calls `sendHeaders()`/`sendContent()`) once the kernel holds it as a `Response`; a trait object for every response; or `Response` carrying the subclass's state | `Response` holds an optional `Stream` (the subclass's properties) and its methods check for it as PHP's late binding does; the callback is an `Arc<dyn Fn>` writing through `php::Output`; no new dependency | One `Response` type for the kernel and listeners, every override applied where PHP applies it; `JsonResponse` and `RedirectResponse` override nothing `Response` calls, so they stay wrappers |
+| The front controller's incremental delivery, and `http-body` (November 26; no new search for the adapter: the HTTP adapter row covers it) | For the streaming body: axum's `Body::from_stream` (needs `futures-core`'s `Stream` trait as a direct dependency), implementing `http_body::Body` (needs `http-body` for `Frame`; axum re-exports the trait only), or `tokio-stream`'s `ReceiverStream` (a new crate). For when nginx passes output on: always at once, only at the end (the previous adapter), or as nginx documents it (`fastcgi_buffering` on by default, `X-Accel-Buffering: no` per response) | `http-body` 1.1 (hyperium, already in the lock through axum and hyper; depends on `bytes` and `http` only) with a `tokio` channel from the PHP thread; nginx's documented buffering with one-page pieces | The trait axum's own `Body` is built on, no adapter type and no new crate in the lock; the delivery follows the configuration the adapter emulates |
 
 - [ ] HttpFoundation (`symfony-http-foundation`), stage 1 (November 22;
       [docs/milestones/m2-a-http-foundation-bags.md](docs/milestones/m2-a-http-foundation-bags.md)):
@@ -1742,6 +1753,18 @@ Stack rows (searched November 22):
       front controller sends the output whole, not at each `flush()`
       (runtime README). Stage log docs/milestones/m2-a-streamed-response.md.
       Next: incremental delivery of flushed output in the front controller;
+      StreamedJsonResponse and EventStreamResponse.
+- [x] Incremental delivery (November 26): the front controller keeps a
+      live SAPI that `flush()` (a new `php::flush()` hook) advances; the
+      client gets the head once the headers are sent and the body as nginx
+      passes it on: at each `flush()` with `X-Accel-Buffering: no`, else
+      in 4 KiB pieces and the rest at the end, chunked without
+      `Content-Length`. nginx's hidden `X-Accel-*` headers are no longer
+      passed on. New direct dependency `http-body` (stack row above). Four
+      server tests; five mutations, each caught. A response that ends
+      before any `flush()` keeps axum's `Content-Length` (nginx would
+      chunk it; the fixture's comparison rule counts on one; owner's
+      call). Stage log docs/milestones/m2-a-streamed-delivery.md. Next:
       StreamedJsonResponse and EventStreamResponse.
 
 ## M6 progress
