@@ -150,6 +150,17 @@ impl Data {
         }
     }
 
+    /// `&$data[$key]`: the reference that holds the value, made (holding
+    /// `null`) when there is none.
+    pub fn reference(&mut self, key: &Key) -> Reference {
+        if let Some(i) = self.position(key) {
+            return self.entries[i].1.clone();
+        }
+        let reference = Reference::new(Value::Null);
+        self.entries.push((key.clone(), reference.clone()));
+        reference
+    }
+
     /// `$data[$key]`, for any key.
     pub fn value(&self, key: &Key) -> Option<Value> {
         self.position(key).map(|i| self.entries[i].1.get())
