@@ -75,7 +75,8 @@ pub struct AbstractAsset {
 }
 
 impl AbstractAsset {
-    /// `parent::__construct($name)` from `class`.
+    /// `parent::__construct($name)` from `class` (an optionally named
+    /// object's constructor passes `$name ?? ''`).
     pub fn new(
         class: &'static str,
         kind: AssetKind,
@@ -93,6 +94,11 @@ impl AbstractAsset {
             identifiers: Vec::new(),
             validate_future: false,
             object_name: None,
+        };
+        // AbstractOptionallyNamedObject::__construct(): `$name ?? ''`.
+        let name = match (kind, name) {
+            (AssetKind::OptionallyNamed, None) => Some(""),
+            (_, name) => name,
         };
         match name {
             None => deprecations::trigger("https://github.com/doctrine/dbal/pull/6610", || {
