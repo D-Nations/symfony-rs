@@ -1193,7 +1193,7 @@ fn testExtensionConfig() {
     let mut container = ContainerBuilder::new();
 
     let configs = container.get_extension_config("foo");
-    assert!(configs.is_empty());
+    assert_eq!(configs, [] as [php_value::PhpArray; 0]);
 
     let first = php_value::php_array!["foo" => "bar"];
     container.prepend_extension_config("foo", first.clone());

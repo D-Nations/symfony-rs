@@ -168,7 +168,10 @@ fn testNoDeprecationNoticeWhenReferencedByDeprecatedAlias() {
 
     let (result, deprecations) = collect(|| process(&mut container));
     result.unwrap();
-    assert!(deprecations.is_empty());
+    assert_eq!(
+        deprecations,
+        [] as [symfony_deprecation_contracts::Deprecation; 0]
+    );
 }
 
 #[test]
@@ -194,7 +197,10 @@ fn testNoDeprecationNoticeWhenReferencedByDeprecatedDefinition() {
 
     let (result, deprecations) = collect(|| process(&mut container));
     result.unwrap();
-    assert!(deprecations.is_empty());
+    assert_eq!(
+        deprecations,
+        [] as [symfony_deprecation_contracts::Deprecation; 0]
+    );
 }
 
 #[test]
