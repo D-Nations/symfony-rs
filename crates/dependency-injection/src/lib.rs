@@ -22,6 +22,7 @@ pub mod compiler;
 pub mod container_builder;
 pub mod container_interface;
 pub mod definition;
+pub mod dumper;
 pub mod env_var_loader_interface;
 pub mod env_var_processor;
 pub mod env_var_processor_interface;

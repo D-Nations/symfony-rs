@@ -99,13 +99,13 @@ Container.php	Container	284	ported	crates/dependency-injection/src/container.rs
 ContainerBuilder.php	ContainerBuilder	1155	ported	crates/dependency-injection/src/container_builder.rs
 ContainerInterface.php	ContainerInterface	20	ported	crates/dependency-injection/src/container_interface.rs
 Definition.php	Definition	410	ported	crates/dependency-injection/src/definition.rs
-Dumper/Dumper.php	Dumper	9	pending	
-Dumper/DumperInterface.php	DumperInterface	5	pending	
-Dumper/GraphvizDumper.php	GraphvizDumper	174	pending	
+Dumper/Dumper.php	Dumper	9	ported	crates/dependency-injection/src/dumper/dumper.rs
+Dumper/DumperInterface.php	DumperInterface	5	ported	crates/dependency-injection/src/dumper/dumper_interface.rs
+Dumper/GraphvizDumper.php	GraphvizDumper	174	ported	crates/dependency-injection/src/dumper/graphviz_dumper.rs
 Dumper/PhpDumper.php	PhpDumper	2046	pending	
 Dumper/Preloader.php	Preloader	91	pending	
-Dumper/XmlDumper.php	XmlDumper	385	pending	
-Dumper/YamlDumper.php	YamlDumper	303	pending	
+Dumper/XmlDumper.php	XmlDumper	385	ported	crates/dependency-injection/src/dumper/xml_dumper.rs
+Dumper/YamlDumper.php	YamlDumper	303	ported	crates/dependency-injection/src/dumper/yaml_dumper.rs
 EnvVarLoaderInterface.php	EnvVarLoaderInterface	5	ported	crates/dependency-injection/src/env_var_loader_interface.rs
 EnvVarProcessor.php	EnvVarProcessor	298	ported	crates/dependency-injection/src/env_var_processor.rs
 EnvVarProcessorInterface.php	EnvVarProcessorInterface	7	ported	crates/dependency-injection/src/env_var_processor_interface.rs
