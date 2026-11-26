@@ -10,7 +10,23 @@
 
 use std::collections::BTreeMap;
 
+use super::alias_deprecated_public_services_pass::AliasDeprecatedPublicServicesPass;
+use super::analyze_service_references_pass::AnalyzeServiceReferencesPass;
+use super::check_arguments_validity_pass::CheckArgumentsValidityPass;
+use super::check_circular_references_pass::CheckCircularReferencesPass;
+use super::check_definition_validity_pass::CheckDefinitionValidityPass;
+use super::check_exception_on_invalid_reference_behavior_pass::CheckExceptionOnInvalidReferenceBehaviorPass;
+use super::check_factory_builder_circular_reference_pass::CheckFactoryBuilderCircularReferencePass;
+use super::check_reference_validity_pass::CheckReferenceValidityPass;
 use super::compiler_pass_interface::{CompilerPassInterface, Pass};
+use super::decorator_service_pass::DecoratorServicePass;
+use super::definition_error_exception_pass::DefinitionErrorExceptionPass;
+use super::inline_service_definitions_pass::InlineServiceDefinitionsPass;
+use super::remove_abstract_definitions_pass::RemoveAbstractDefinitionsPass;
+use super::remove_build_parameters_pass::RemoveBuildParametersPass;
+use super::remove_private_aliases_pass::RemovePrivateAliasesPass;
+use super::remove_unused_definitions_pass::RemoveUnusedDefinitionsPass;
+use super::replace_alias_by_actual_definition_pass::ReplaceAliasByActualDefinitionPass;
 use crate::container_builder::ContainerBuilder;
 use crate::exception::{Error, Result};
 
@@ -156,36 +172,35 @@ impl PassConfig {
                 Pass::new(super::ResolveBindingsPass::new()),
                 pending("ServiceLocatorTagPass"),
                 pending("TagDecoratorPass"),
-                pending("DecoratorServicePass"),
-                pending("CheckDefinitionValidityPass"),
+                Pass::new(DecoratorServicePass::new()),
+                Pass::new(CheckDefinitionValidityPass),
                 pending_with("AutowirePass", "false"),
                 pending("ServiceLocatorTagPass"),
                 pending("ResolveTaggedIteratorArgumentPass"),
                 Pass::new(super::ResolveServiceSubscribersPass::new()),
                 Pass::new(super::ResolveReferencesToAliasesPass::new()),
                 Pass::new(super::ResolveInvalidReferencesPass::new()),
-                pending_with("AnalyzeServiceReferencesPass", "true"),
-                pending("CheckCircularReferencesPass"),
-                pending("CheckReferenceValidityPass"),
-                pending_with("CheckArgumentsValidityPass", "false"),
+                Pass::new(AnalyzeServiceReferencesPass::new(true, true)),
+                Pass::new(CheckCircularReferencesPass::new()),
+                Pass::new(CheckReferenceValidityPass::new()),
+                Pass::new(CheckArgumentsValidityPass::new(false)),
             ],
         )]);
         let removing = BTreeMap::from([(
             0,
             vec![
-                pending("RemovePrivateAliasesPass"),
-                pending("ReplaceAliasByActualDefinitionPass"),
-                pending("RemoveAbstractDefinitionsPass"),
-                pending("RemoveUnusedDefinitionsPass"),
-                pending("AnalyzeServiceReferencesPass"),
-                pending("CheckExceptionOnInvalidReferenceBehaviorPass"),
-                pending_with(
-                    "InlineServiceDefinitionsPass",
-                    "new AnalyzeServiceReferencesPass()",
-                ),
-                pending("AnalyzeServiceReferencesPass"),
-                pending("CheckFactoryBuilderCircularReferencePass"),
-                pending("DefinitionErrorExceptionPass"),
+                Pass::new(RemovePrivateAliasesPass),
+                Pass::new(ReplaceAliasByActualDefinitionPass::new()),
+                Pass::new(RemoveAbstractDefinitionsPass),
+                Pass::new(RemoveUnusedDefinitionsPass::new()),
+                Pass::new(AnalyzeServiceReferencesPass::default()),
+                Pass::new(CheckExceptionOnInvalidReferenceBehaviorPass::new()),
+                Pass::new(InlineServiceDefinitionsPass::new(Some(
+                    AnalyzeServiceReferencesPass::default(),
+                ))),
+                Pass::new(AnalyzeServiceReferencesPass::default()),
+                Pass::new(CheckFactoryBuilderCircularReferencePass),
+                Pass::new(DefinitionErrorExceptionPass::new()),
             ],
         )]);
         let after_removing = BTreeMap::from([
@@ -194,15 +209,12 @@ impl PassConfig {
                 vec![
                     Pass::new(super::ResolveHotPathPass::new()),
                     Pass::new(super::ResolveNoPreloadPass::new()),
-                    pending("AliasDeprecatedPublicServicesPass"),
+                    Pass::new(AliasDeprecatedPublicServicesPass::new()),
                 ],
             ),
             // Let build parameters be available as late as possible
             // Don't remove array parameters since ResolveParameterPlaceHoldersPass doesn't resolve them
-            (
-                -2048,
-                vec![pending_with("RemoveBuildParametersPass", "true")],
-            ),
+            (-2048, vec![Pass::new(RemoveBuildParametersPass::new(true))]),
         ]);
         Self {
             merge_pass: pending("MergeExtensionConfigurationPass"),
