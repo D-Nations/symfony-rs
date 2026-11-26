@@ -162,3 +162,6 @@ pub use resolve_service_subscribers_pass::ResolveServiceSubscribersPass;
 
 pub use tag_decorator_pass::TagDecoratorPass;
 pub use validate_env_placeholders_pass::ValidateEnvPlaceholdersPass;
+
+mod autowire_pass;
+pub use autowire_pass::{AutowirePass, new_autowire_attribute};

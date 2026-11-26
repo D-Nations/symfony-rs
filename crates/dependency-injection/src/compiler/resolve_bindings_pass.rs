@@ -98,7 +98,7 @@ fn strip_leading_backslashes(type_hint: &str) -> String {
 
 /// `Target::getParsedName()`: `lcfirst(str_replace(' ', '',
 /// ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $name))))`.
-fn parsed_name(name: &str) -> String {
+pub(crate) fn parsed_name(name: &str) -> String {
     let mut out = Vec::with_capacity(name.len());
     let mut upper_next = true;
     for &b in name.as_bytes() {
@@ -121,7 +121,10 @@ fn parsed_name(name: &str) -> String {
 
 /// `Target::parseName($parameter, parsedName: $parsedName)`: the name and
 /// the parsed name.
-fn parse_target_name(parameter: &ParameterMetadata, function: &str) -> Result<(String, String)> {
+pub(crate) fn parse_target_name(
+    parameter: &ParameterMetadata,
+    function: &str,
+) -> Result<(String, String)> {
     let Some(target) = parameter.attributes.iter().find(|a| {
         a.class
             .trim_start_matches('\\')
