@@ -1359,6 +1359,7 @@ dependencies = [
  "prettyplease",
  "proc-macro2",
  "quote",
+ "serde_json",
  "symfony-config",
  "symfony-dependency-injection",
  "syn 2.0.119",
