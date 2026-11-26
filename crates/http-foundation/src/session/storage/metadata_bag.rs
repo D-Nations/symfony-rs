@@ -165,8 +165,10 @@ impl MetadataBag {
         };
         meta.with(|value| {
             let meta = bag_array(value);
-            meta.insert(key(CREATED), Value::Int(now));
+            // `$meta[CREATED] = $meta[UPDATED] = ...` assigns from the
+            // right: a new array gets `u` before `c`.
             meta.insert(key(UPDATED), Value::Int(now));
+            meta.insert(key(CREATED), Value::Int(now));
             meta.insert(key(LIFETIME), Value::Int(lifetime));
         });
     }

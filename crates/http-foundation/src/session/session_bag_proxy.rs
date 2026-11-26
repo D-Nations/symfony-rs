@@ -25,6 +25,9 @@ use php_value::Value;
 use super::{Data, UsageReporter, session_bag_interface::SessionBagInterface};
 use crate::{exception::Result, php::Reference};
 
+/// `SessionBagProxy::class`.
+pub const CLASS: &str = "Symfony\\Component\\HttpFoundation\\Session\\SessionBagProxy";
+
 /// `new SessionBagProxy($bag, $data, $usageIndex, $usageReporter)`.
 pub struct SessionBagProxy {
     bag: Arc<dyn SessionBagInterface>,
@@ -93,6 +96,8 @@ impl SessionBagInterface for SessionBagProxy {
     }
 
     fn initialize(&self, array: &Reference) -> Result<()> {
+        // The parameter's type is checked before the body runs.
+        crate::session::require_array(&format!("{CLASS}::initialize"), "array", array)?;
         self.used();
         let key = self.bag.get_storage_key();
         self.data().bind(&key, array.clone());
