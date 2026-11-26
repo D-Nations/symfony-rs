@@ -1,5 +1,7 @@
 //! PHP 8's operators (src/ops.rs), against PHP 8.4.27's answers to the
 //! same expressions (run in the oracle image).
+//!
+//! Upstream: none
 
 use std::cmp::Ordering;
 

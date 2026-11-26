@@ -29,7 +29,8 @@ Nothing outside those tables is claimed.
 | [`symfony-string`](crates/string/README.md) | `symfony/string` | Byte, code point and Unicode strings, LazyString, inflectors |
 | [`symfony-filesystem`](crates/filesystem/README.md) | `symfony/filesystem` | The `dumpFile()` subset Config's caches use |
 | [`symfony-event-dispatcher`](crates/event-dispatcher/README.md), [contracts](crates/event-dispatcher-contracts/README.md) | `symfony/event-dispatcher` | Dispatcher, listeners, subscribers |
-| [`twig`](crates/twig/README.md) | `twig/twig` | M4 started: Source, errors, tokens, token stream, Lexer, nodes, extensions, expression and token parsers, Parser, node visitors |
+| [`twig`](crates/twig/README.md) | `twig/twig` | M4 started: Source, errors, tokens, token stream, Lexer, nodes, extensions, expression and token parsers, Parser, node visitors, the Rust compiler and the runtime (361 of 457 integration fixture cases pass) |
+| [`twig-integration`](crates/twig-integration/README.md) | `twig/twig` (tests) | Test crate: the integration fixtures, compiled at build time |
 | [`doctrine-dbal`](crates/doctrine-dbal/README.md) | `doctrine/dbal` | M6 started: the SQL parser and list-parameter expansion |
 | [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
 | [`symfony-deprecation-contracts`](crates/deprecation-contracts/README.md), [`psr-log`](crates/psr-log/README.md) | `symfony/deprecation-contracts`, `psr/log` | The contracts |
