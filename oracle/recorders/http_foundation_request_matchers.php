@@ -7,7 +7,8 @@
 // case), a method, server entries (a host, an invalid host,
 // SERVER_PORT as an int or a string, HTTPS, REMOTE_ADDR), headers, a body
 // (JSON or not) and attributes (strings, ints, a closure). It then asks
-// matchers built from pools whether they match: every RequestMatcher
+// matchers built from pools whether they match (two fixed scripts
+// first: SERVER_PORT as a string and as an int, without a host): every RequestMatcher
 // class, with lists given as arrays or comma-separated text (spaces,
 // tabs, empty items), patterns that do not compile, expressions over
 // the request object's getters and bags, and a ChainRequestMatcher of
@@ -134,6 +135,14 @@ namespace {
         };
     };
 
+    // With HTTP_HOST null (Request::create() sets 'localhost'), getPort()
+    // is SERVER_PORT as given: the
+    // string '8000' is not === 8000.
+    $fixed = [
+        [[['HTTP_HOST', null], ['SERVER_PORT', '8000']], [['port', 8000], ['port', 80]]],
+        [[['HTTP_HOST', null], ['SERVER_PORT', 8000]], [['port', 8000], ['port', 80]]],
+    ];
+
     $scripts = [];
     for ($n = 0; $n < 1500; ++$n) {
         $server = [];
@@ -161,6 +170,13 @@ namespace {
             'locale' => 0 === mt_rand(0, 4) ? 'en' : null,
         ];
         $matchers = array_map(static fn () => $spec(), range(1, 6));
+        if (isset($fixed[$n])) {
+            [$server, $ports] = $fixed[$n];
+            $matchers = [...$ports, ...\array_slice($matchers, 2)];
+            $requestSpec['server'] = $server;
+            // A URI with a host would set HTTP_HOST again.
+            $requestSpec['uri'] = base64_encode('/');
+        }
 
         $serverArray = [];
         foreach ($server as [$k, $v]) {
