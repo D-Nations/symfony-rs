@@ -28,6 +28,14 @@
 //              DateInterval($text), each ["ok", text] (the date as
 //              'Y-m-d H:i:s.u e', the interval as '%R %y %m %d %h %i %s'),
 //              ["false"] or ["throws", class, message].
+//   sqlite_platform
+//              SQLitePlatform on generated inputs: "expressions" ([call,
+//              arguments, outcome]), "create_table" ([table spec,
+//              outcome]) and "alter_table" ([old table spec, diff spec,
+//              outcome]); a table is built with the legacy Table methods
+//              (sqlite_table()), options as [[name, typed value], ...]; an
+//              outcome is ["ok", sql] or ["throws", class, message] (a
+//              TypeError's "called in" suffix removed).
 //
 // A mutable DateTime in a provider row is ["datetime_mutable", <the same
 // instant as a typed DateTimeImmutable>]; a
@@ -43,6 +51,31 @@ namespace PHPUnit\Framework {
             public static function assertIsString(mixed $actual, string $message = ''): void
             {
             }
+        }
+    }
+}
+
+// doctrine/deprecations is not installed: the test traits load and the
+// deprecations are dropped.
+namespace Doctrine\Deprecations {
+    if (!class_exists(Deprecation::class)) {
+        final class Deprecation
+        {
+            public static function trigger(string $package, string $link, string $message, mixed ...$args): void
+            {
+            }
+
+            public static function triggerIfCalledFromOutside(string $package, string $link, string $message, mixed ...$args): void
+            {
+            }
+        }
+    }
+}
+
+namespace Doctrine\Deprecations\PHPUnit {
+    if (!trait_exists(VerifyDeprecations::class)) {
+        trait VerifyDeprecations
+        {
         }
     }
 }
@@ -115,6 +148,7 @@ namespace {
         'Types/BinaryTest', 'Types/ConversionExceptionTest', 'Types/DateIntervalTest', 'Types/DateTest',
         'Types/DateTimeTest', 'Types/DateTimeTzTest', 'Types/JsonObjectTest', 'Types/JsonTest',
         'Types/TimeTest', 'Types/TypeTest',
+        'Platforms/SQLitePlatformTest',
     ];
     foreach ($classes as $path) {
         $reflection = new ReflectionClass('Doctrine\\DBAL\\Tests\\' . str_replace('/', '\\', $path));
@@ -484,6 +518,322 @@ namespace {
         $dateInterval[] = [base64_encode($text), date_outcome(static fn () => new DateInterval($text))];
     }
 
+    // SQLitePlatform on generated inputs (sqlite_platform).
+    function sqlite_outcome(callable $f): array
+    {
+        try {
+            $result = $f();
+        } catch (Throwable $e) {
+            // A TypeError names the PHP file and line of the call.
+            return ['throws', $e::class, preg_replace('/, called in \S+ on line \d+$/', '', $e->getMessage())];
+        }
+
+        return ['ok', $result];
+    }
+
+    function sqlite_column(array $spec): Doctrine\DBAL\Schema\Column
+    {
+        [$name, $type, $options] = $spec;
+
+        return new Doctrine\DBAL\Schema\Column($name, Doctrine\DBAL\Types\Type::getType($type), typed_decode_options($options));
+    }
+
+    function typed_decode_options(array $options): array
+    {
+        $out = [];
+        foreach ($options as [$key, $value]) {
+            $out[$key] = $value;
+        }
+
+        return $out;
+    }
+
+    function sqlite_table(array $spec): Doctrine\DBAL\Schema\Table
+    {
+        $table = new Doctrine\DBAL\Schema\Table($spec['name']);
+        foreach ($spec['columns'] as [$name, $type, $options]) {
+            $table->addColumn($name, $type, typed_decode_options($options));
+        }
+        if ($spec['pk'] !== null) {
+            $table->setPrimaryKey($spec['pk']);
+        }
+        foreach ($spec['indexes'] as [$name, $columns, $unique]) {
+            if ($unique) {
+                $table->addUniqueIndex($columns, $name);
+            } else {
+                $table->addIndex($columns, $name);
+            }
+        }
+        foreach ($spec['fks'] as [$name, $local, $foreignTable, $foreign, $options]) {
+            $table->addForeignKeyConstraint($foreignTable, $local, $foreign, typed_decode_options($options), $name);
+        }
+        if ($spec['comment'] !== null) {
+            $table->setComment($spec['comment']);
+        }
+
+        return $table;
+    }
+
+    mt_srand(20261126);
+    $pick = static fn (array $a) => $a[mt_rand(0, count($a) - 1)];
+    $sqlite = new Doctrine\DBAL\Platforms\SQLitePlatform();
+
+    $exprPieces = ['a', 'col', 't.c', "'x'", "'it''s'", '?', ':p', '1', '0', '-3', ' ', '%', '_', '\\', '"', '(', ')', ',', 'é', 'NULL'];
+    $expr = static function () use ($pick, $exprPieces): string {
+        $text = '';
+        for ($n = mt_rand(1, 4); $n > 0; --$n) {
+            $text .= $pick($exprPieces);
+        }
+
+        return $text;
+    };
+    $optional = static fn (callable $f) => mt_rand(0, 2) === 0 ? null : $f();
+    $units = ['seconds' => 'Seconds', 'minutes' => 'Minutes', 'hour' => 'Hour', 'days' => 'Days', 'weeks' => 'Weeks', 'month' => 'Month', 'quarters' => 'Quarters', 'years' => 'Years'];
+    $expressions = [];
+    $calls = ['trim', 'locate', 'substring', 'date_add', 'date_sub', 'date_diff', 'mod', 'concat', 'length', 'escape_like', 'quote_literal', 'quote_single_identifier', 'truncate', 'modify_limit', 'bit_and', 'bit_or'];
+    for ($i = 0; $i < 1500; ++$i) {
+        $call = $calls[$i % count($calls)];
+        switch ($call) {
+            case 'trim':
+                $mode = $pick(['UNSPECIFIED', 'LEADING', 'TRAILING', 'BOTH']);
+                $args = [$mode, $expr(), $optional(static fn () => $pick(["'x'", "' '", "'%'", "'a''b'", 'c', '?']))];
+                $f = static fn () => $sqlite->getTrimExpression($args[1], constant('Doctrine\\DBAL\\Platforms\\TrimMode::' . $mode), $args[2]);
+                break;
+            case 'locate':
+                $args = [$expr(), $expr(), $optional($expr)];
+                $f = static fn () => $sqlite->getLocateExpression(...$args);
+                break;
+            case 'substring':
+                $args = [$expr(), $expr(), $optional($expr)];
+                $f = static fn () => $sqlite->getSubstringExpression(...$args);
+                break;
+            case 'date_add':
+            case 'date_sub':
+                $unit = $pick(array_keys($units));
+                $args = [$unit, $expr(), $pick(['1', '-1', '0', '12', '?', ':n', 'col', '1 + 2', "'3'"])];
+                $method = 'getDate' . ($call === 'date_add' ? 'Add' : 'Sub') . $units[$unit] . 'Expression';
+                $f = static fn () => $sqlite->$method($args[1], $args[2]);
+                break;
+            case 'date_diff':
+                $args = [$expr(), $expr()];
+                $f = static fn () => $sqlite->getDateDiffExpression(...$args);
+                break;
+            case 'mod':
+            case 'bit_and':
+            case 'bit_or':
+                $args = [$expr(), $expr()];
+                $method = ['mod' => 'getModExpression', 'bit_and' => 'getBitAndComparisonExpression', 'bit_or' => 'getBitOrComparisonExpression'][$call];
+                $f = static fn () => $sqlite->$method(...$args);
+                break;
+            case 'concat':
+                $args = [];
+                for ($n = mt_rand(0, 4); $n > 0; --$n) {
+                    $args[] = $expr();
+                }
+                $f = static fn () => $sqlite->getConcatExpression(...$args);
+                break;
+            case 'length':
+                $args = [$expr()];
+                $f = static fn () => $sqlite->getLengthExpression(...$args);
+                break;
+            case 'escape_like':
+                $args = [$expr(), $pick(['\\', '!', '%', '_', '#'])];
+                $f = static fn () => $sqlite->escapeStringForLike(...$args);
+                break;
+            case 'quote_literal':
+            case 'quote_single_identifier':
+                $args = [$expr()];
+                $method = $call === 'quote_literal' ? 'quoteStringLiteral' : 'quoteSingleIdentifier';
+                $f = static fn () => $sqlite->$method(...$args);
+                break;
+            case 'truncate':
+                $args = [$pick(['t', 'users', 'main.users', 'select', 'Mixed', '"quoted"', '`bq`', 'a.b.c']), (bool) mt_rand(0, 1)];
+                $f = static fn () => $sqlite->getTruncateTableSQL(...$args);
+                break;
+            case 'modify_limit':
+                $args = [$pick(['SELECT * FROM t', 'SELECT 1', 'SELECT a FROM t ORDER BY a']), $optional(static fn () => mt_rand(-2, 20)), mt_rand(-1, 3) === -1 ? -1 : mt_rand(0, 30)];
+                $f = static fn () => $sqlite->modifyLimitQuery(...$args);
+                break;
+        }
+        $expressions[] = [$call, $args, sqlite_outcome($f)];
+    }
+
+    // Columns: [name, type, [[option, value], ...]].
+    $columnNames = ['id', 'name', 'Mixed', 'select', 'order', 'from_x', 'a b', 'col"q', 'é'];
+    $types = ['integer', 'bigint', 'smallint', 'string', 'ascii_string', 'text', 'boolean', 'decimal', 'float', 'smallfloat', 'date', 'date_immutable', 'datetime', 'datetime_immutable', 'datetimetz', 'time', 'guid', 'blob', 'binary', 'json', 'simple_array', 'dateinterval'];
+    $columnSpec = static function (?string $name = null) use ($pick, $columnNames, $types): array {
+        $type = $pick($types);
+        $options = [];
+        if (mt_rand(0, 1) === 1) {
+            $options[] = ['notnull', (bool) mt_rand(0, 1)];
+        }
+        if (mt_rand(0, 2) === 0) {
+            $options[] = ['default', $pick([null, 0, 1, 42, -7, '', 'abc', "it's", '1', true, false, 'CURRENT_TIMESTAMP', 'CURRENT_DATE', 'CURRENT_TIME', 1.5])];
+        }
+        if (mt_rand(0, 2) === 0) {
+            $options[] = ['length', $pick([null, 1, 10, 255, 4000])];
+        }
+        if (mt_rand(0, 3) === 0) {
+            $options[] = ['fixed', (bool) mt_rand(0, 1)];
+        }
+        if (mt_rand(0, 3) === 0) {
+            $options[] = ['precision', $pick([null, 5, 10])];
+            $options[] = ['scale', $pick([0, 2])];
+        }
+        if (mt_rand(0, 3) === 0) {
+            $options[] = ['unsigned', (bool) mt_rand(0, 1)];
+        }
+        if (mt_rand(0, 3) === 0) {
+            $options[] = ['autoincrement', (bool) mt_rand(0, 1)];
+        }
+        if (mt_rand(0, 3) === 0) {
+            $options[] = ['comment', $pick(['', 'a comment', "it's", "multi\nline", '--'])];
+        }
+        if (mt_rand(0, 12) === 0) {
+            $options[] = ['columnDefinition', $pick(['INTEGER NOT NULL', 'TEXT DEFAULT \'x\''])];
+        }
+
+        return [$name ?? $pick($columnNames), $type, $options];
+    };
+    $tableNames = ['t', 'users', 'main.users', 'select', 'Mixed', 'a.b', '"quoted"'];
+    $tableSpec = static function () use ($pick, $tableNames, $columnNames, $columnSpec): array {
+        $columns = [];
+        // Distinct column names, but now and then a repeated one.
+        $pool = $columnNames;
+        shuffle($pool);
+        for ($n = mt_rand(0, 4); $n > 0; --$n) {
+            $columns[] = $columnSpec(mt_rand(0, 15) === 0 ? $pick($columnNames) : array_pop($pool));
+        }
+        $names = array_values(array_unique(array_map(static fn ($c) => $c[0], $columns)));
+        $some = static function () use ($names, $pick): array {
+            if ($names === [] || mt_rand(0, 49) === 0) {
+                return [$pick(['missing', 'id'])];
+            }
+            $out = [];
+            for ($n = mt_rand(1, min(2, count($names))); $n > 0; --$n) {
+                $out[] = $pick($names);
+            }
+
+            return array_values(array_unique($out));
+        };
+        $indexes = [];
+        for ($n = mt_rand(0, 2); $n > 0; --$n) {
+            $indexes[] = [$pick([null, 'idx_a', 'idx_b', 'uniq_c', 'select']), $some(), (bool) mt_rand(0, 1)];
+        }
+        $fks = [];
+        for ($n = mt_rand(0, 2) === 0 ? mt_rand(1, 2) : 0; $n > 0; --$n) {
+            $options = [];
+            if (mt_rand(0, 1) === 1) {
+                $options[] = ['onDelete', $pick(['CASCADE', 'SET NULL', 'RESTRICT', 'NO ACTION', 'SET DEFAULT'])];
+            }
+            if (mt_rand(0, 2) === 0) {
+                $options[] = ['onUpdate', $pick(['CASCADE', 'RESTRICT'])];
+            }
+            if (mt_rand(0, 3) === 0) {
+                $options[] = ['deferrable', true];
+                $options[] = ['deferred', (bool) mt_rand(0, 1)];
+            }
+            $local = $some();
+            $fks[] = [$pick([null, 'fk_a', 'fk_b']), $local, $pick(['other', 'main.other', 'Other']), array_slice(['id', 'id2'], 0, count($local)), $options];
+        }
+
+        return [
+            'name' => $pick($tableNames),
+            'columns' => $columns,
+            'pk' => mt_rand(0, 2) === 0 ? null : (mt_rand(0, 1) ? $some() : null),
+            'indexes' => $indexes,
+            'fks' => $fks,
+            'comment' => mt_rand(0, 4) === 0 ? $pick(['a table', "it's", '']) : null,
+        ];
+    };
+    $typedSpec = static function (array $spec): array {
+        $typed = static fn (array $options) => array_map(static fn ($o) => [$o[0], typed_value($o[1])], $options);
+        $spec['columns'] = array_map(static fn ($c) => [$c[0], $c[1], $typed($c[2])], $spec['columns']);
+        $spec['fks'] = array_map(static fn ($f) => [$f[0], $f[1], $f[2], $f[3], $typed($f[4])], $spec['fks']);
+
+        return $spec;
+    };
+
+    $createTable = [];
+    for ($i = 0; $i < 600; ++$i) {
+        $spec = $tableSpec();
+        $createTable[] = [$typedSpec($spec), sqlite_outcome(static fn () => $sqlite->getCreateTableSQL(sqlite_table($spec)))];
+    }
+
+    $alterTable = [];
+    for ($i = 0; $i < 400; ++$i) {
+        $old = $tableSpec();
+        $oldColumns = array_values(array_unique(array_map(static fn ($c) => $c[0], $old['columns'])));
+        $oldIndexes = array_values(array_unique(array_filter(array_map(static fn ($x) => $x[0], $old['indexes']))));
+        $oldFks = array_values(array_unique(array_filter(array_map(static fn ($x) => $x[0], $old['fks']))));
+        $diff = ['added_columns' => [], 'dropped_columns' => [], 'changed_columns' => [], 'added_indexes' => [], 'dropped_indexes' => [], 'renamed_indexes' => [], 'added_fks' => [], 'dropped_fks' => []];
+        for ($n = mt_rand(0, 2); $n > 0; --$n) {
+            $diff['added_columns'][] = $columnSpec(mt_rand(0, 9) === 0 ? $pick(['id', 'name']) : $pick(['new_col', 'other', 'select', 'Added']));
+        }
+        foreach ($oldColumns as $name) {
+            $r = mt_rand(0, 4);
+            if ($r === 0) {
+                $diff['dropped_columns'][] = $name;
+            } elseif ($r === 1) {
+                $diff['changed_columns'][] = [$name, $columnSpec(mt_rand(0, 1) ? $name : $pick(['renamed', 'Renamed', 'order_x']))];
+            }
+        }
+        if (mt_rand(0, 9) === 0) {
+            $diff['dropped_columns'][] = 'missing';
+        }
+        for ($n = mt_rand(0, 1); $n > 0; --$n) {
+            $cols = $oldColumns === [] ? ['x'] : [$pick($oldColumns)];
+            $diff['added_indexes'][] = [$pick(['idx_new', 'uniq_new', 'idx_a']), $cols, (bool) mt_rand(0, 1)];
+        }
+        foreach ($oldIndexes as $name) {
+            $r = mt_rand(0, 3);
+            if ($r === 0) {
+                $diff['dropped_indexes'][] = $name;
+            } elseif ($r === 1 && $oldColumns !== []) {
+                $diff['renamed_indexes'][] = [$name, [$pick(['idx_renamed', 'Renamed_idx']), [$pick($oldColumns)], (bool) mt_rand(0, 1)]];
+            }
+        }
+        if (mt_rand(0, 3) === 0 && $oldColumns !== []) {
+            $diff['added_fks'][] = [$pick(['fk_new', null]), [$pick($oldColumns)], 'other', ['id'], mt_rand(0, 1) ? [['onDelete', 'CASCADE']] : []];
+        }
+        foreach ($oldFks as $name) {
+            if (mt_rand(0, 2) === 0) {
+                $diff['dropped_fks'][] = $name;
+            }
+        }
+        $outcome = sqlite_outcome(static function () use ($sqlite, $old, $diff) {
+            $table = sqlite_table($old);
+            $index = static fn (array $s) => new Doctrine\DBAL\Schema\Index($s[0], $s[1], $s[2]);
+            $renamed = [];
+            foreach ($diff['renamed_indexes'] as [$oldName, $s]) {
+                $renamed[$oldName] = $index($s);
+            }
+
+            return $sqlite->getAlterTableSQL(new Doctrine\DBAL\Schema\TableDiff(
+                $table,
+                addedColumns: array_map('sqlite_column', $diff['added_columns']),
+                changedColumns: array_map(static fn ($c) => new Doctrine\DBAL\Schema\ColumnDiff($table->getColumn($c[0]), sqlite_column($c[1])), $diff['changed_columns']),
+                droppedColumns: array_map(static fn ($n) => $table->getColumn($n), $diff['dropped_columns']),
+                addedIndexes: array_map($index, $diff['added_indexes']),
+                droppedIndexes: array_map(static fn ($n) => $table->getIndex($n), $diff['dropped_indexes']),
+                renamedIndexes: $renamed,
+                addedForeignKeys: array_map(static fn ($f) => new Doctrine\DBAL\Schema\ForeignKeyConstraint($f[1], $f[2], $f[3], $f[0] ?? '', typed_decode_options($f[4])), $diff['added_fks']),
+                droppedForeignKeys: array_map(static fn ($n) => $table->getForeignKey($n), $diff['dropped_fks']),
+            ));
+        });
+        $typedDiff = $diff;
+        $typedDiff['added_columns'] = $typedSpec(['columns' => $diff['added_columns'], 'fks' => []])['columns'];
+        $typedDiff['changed_columns'] = array_map(static fn ($c) => [$c[0], $typedSpec(['columns' => [$c[1]], 'fks' => []])['columns'][0]], $diff['changed_columns']);
+        $typedDiff['added_fks'] = $typedSpec(['columns' => [], 'fks' => $diff['added_fks']])['fks'];
+        $alterTable[] = [$typedSpec($old), $typedDiff, $outcome];
+    }
+
+    $sqlitePlatform = [
+        'expressions' => $expressions,
+        'create_table' => $createTable,
+        'alter_table' => $alterTable,
+    ];
+
     echo json_encode([
         'providers' => $providers,
         'parser' => $parser,
@@ -492,5 +842,6 @@ namespace {
         'create_from_format' => $createFromFormat,
         'date_create' => $dateCreate,
         'date_interval' => $dateInterval,
+        'sqlite_platform' => $sqlitePlatform,
     ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), "\n";
 }

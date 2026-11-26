@@ -1784,10 +1784,23 @@ Stack rows (searched November 25):
       and AutoIncrementColumn tests on `pdo_sqlite` in memory; the
       `SQLitePlatform` SQL they need is recorded
       (`scripts/record.sh doctrine-dbal-connection`), with PDO's answers
-      for bindings, errors, sequences and connect parameters. A platform
-      stand-in holds the place of `SQLitePlatform.php`. Differences in the
-      crate README.
-- [ ] D1 next: the SQLite platform; schema manager. The demo comparison stays
+      for bindings, errors, sequences and connect parameters. The driver uses the
+      ported `SQLitePlatform` (slice 5). Differences in the crate README.
+- [x] D1 slice 5 (SQLite platform): the rest of `AbstractPlatform.php`
+      (not the `SchemaDiff`, `Sequence` and `Connection` methods),
+      `SQLitePlatform.php`, `KeywordList` and `SQLiteKeywords`,
+      `DateIntervalUnit`, `TrimMode`, `TransactionIsolationLevel`,
+      `LockMode`, the platform exceptions, and the Schema value objects
+      (names and parser, `AbstractAsset`, `Column`, `Index`, the
+      constraints, `Table`, `TableDiff`, their editors, the collections,
+      the Schema exceptions). SQLitePlatformTest with the inherited
+      AbstractPlatformTestCase tests 92 of 96 (4 not run upstream on
+      SQLite); 292 Schema tests; 2,500 recorded `SQLitePlatform` outputs
+      (expressions, `CREATE TABLE`, `ALTER TABLE`) match. Differences in
+      the crate README (editor errors at `create()`, value equality for
+      identity). No new dependency.
+- [ ] D1 next: schema manager, Comparator, Schema/Sequence/View;
+      then D2 (ORM). The demo comparison stays
       paused (owner, November 23).
 
 ## Local development performance

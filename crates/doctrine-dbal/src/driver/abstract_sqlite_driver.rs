@@ -3,8 +3,8 @@
 //! class is a trait whose provided methods are the class's two methods; a
 //! `SQLite` driver forwards its `Driver` methods to them.
 //!
-//! The platform is the stand-in of `platforms/sqlite_platform_stand_in.rs`
-//! until `SQLitePlatform.php` is ported.
+//! The platform is `platforms/sqlite_platform.rs`, the port of
+//! `SQLitePlatform.php`.
 //!
 //! Doctrine source copyright (c) Doctrine Project; distributed under MIT.
 //!

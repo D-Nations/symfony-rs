@@ -216,7 +216,7 @@ impl Connection {
     /// `false`, no row).
     pub async fn get_database(&self) -> StdResult<Option<Value>> {
         let platform = self.get_database_platform().await?;
-        let query = platform.get_dummy_select_sql(&platform.get_current_database_expression());
+        let query = platform.get_dummy_select_sql(&platform.get_current_database_expression()?);
         self.fetch_one(&query, &PhpArray::new(), &ParameterTypes::new())
             .await
     }
@@ -381,7 +381,7 @@ impl Connection {
         let sql = self
             .get_database_platform()
             .await?
-            .get_set_transaction_isolation_sql(level);
+            .get_set_transaction_isolation_sql(level)?;
         self.execute_statement(&sql, &PhpArray::new(), &ParameterTypes::new())
             .await
     }

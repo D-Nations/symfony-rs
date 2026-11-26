@@ -120,12 +120,12 @@ impl AbstractPlatform for TestPlatform {
         get_time_type_declaration_sql
     );
 
-    fn get_current_database_expression(&self) -> String {
-        String::new()
+    fn get_current_database_expression(&self) -> Result<String, doctrine_dbal::Exception> {
+        Ok(String::new())
     }
 
-    fn get_set_transaction_isolation_sql(&self, _level: TransactionIsolationLevel) -> String {
-        String::new()
+    fn get_set_transaction_isolation_sql(&self, _level: TransactionIsolationLevel) -> Result<String, doctrine_dbal::Exception> {
+        Ok(String::new())
     }
 
     fn supports_savepoints(&self) -> bool {

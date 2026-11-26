@@ -31,6 +31,12 @@ pub mod tools;
 mod transaction_isolation_level;
 pub mod types;
 
+// Slice SQLite platform.
+pub mod deprecations;
+pub mod schema;
+
+pub use transaction_isolation_level::{LockMode, TransactionIsolationLevel};
+
 pub use array_parameter_type::ArrayParameterType;
 pub use configuration::Configuration;
 pub use connection::Connection;
@@ -43,4 +49,3 @@ pub use result::Result;
 pub use server_version_provider::{ServerVersionProvider, StaticServerVersionProvider};
 pub use sql_query::{ParameterTypes, Query};
 pub use statement::Statement;
-pub use transaction_isolation_level::TransactionIsolationLevel;

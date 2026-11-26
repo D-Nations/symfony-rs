@@ -37,7 +37,7 @@ assert_eq!(visitor.get_parameters(), &[Value::Int(1), Value::Int(2)]);
 | `AbstractPlatform` defaults: `createSelectSQLBuilder()` (`FOR UPDATE`, `SKIP LOCKED`), `createUnionSQLBuilder()`, `createWithSQLBuilder()`, `modifyLimitQuery()`/`doModifyLimitQuery()`, `getUnionSelectPartSQL()` (`(sub)`), `getUnionAllSQL()`, `getUnionDistinctSQL()` | `Platforms/AbstractPlatform.php` | oracle call sequences ("default" platform: the methods as PostgreSQLPlatform keeps them) |
 | `Type` trait and the process-wide registry: `getType()`, `hasType()`, `addType()` (class or instance), `overrideType()`, `lookupName()`, `getTypesMap()`, identity by instance; `TypeRegistry` and its `TypeNotFound`, `TypesAlreadyExists`, `TypeAlreadyRegistered`, `TypeNotRegistered`, `UnknownColumnType`, `TypeArgumentCountError` messages | `Types/Type.php`, `Types/TypeRegistry.php`, `Types/Types.php`, `Types/Exception/*.php` | TypeTest (4), TypeRegistryTest (13), TypeAlreadyRegisteredTest (1), TypeNotRegisteredTest (1) |
 | The 31 built-in types' PHP and database conversions, binding types, SQL declarations (through the platform) and `ConversionException` messages: strings, GUID, integers, floats, decimal, `BcMath\Number`, boolean, binary, blob, JSON and JSON object, simple array, enum, date, time, date-time (mutable, immutable, tz, UTC, variable) and date interval | `Types/*Type.php`, `Types/ConversionException.php`, `Types/Exception/*.php` | 164 tests of the 27 type test files (`tests/types_*_test.rs`; the inherited `BaseDateTypeTestCase` tests repeated in each date class), ConversionExceptionTest (4), SerializationFailedTest (1) |
-| The `AbstractPlatform` methods the types call (declaration snippets, boolean conversion, date formats) and the column exceptions they throw (`ColumnLengthRequired`, `ColumnPrecisionRequired`, `ColumnScaleRequired`, `ColumnValuesRequired`, `InvalidColumnDeclaration`) | `Platforms/AbstractPlatform.php` (partly), `Exception/*.php` | The type tests above, through a stub platform as upstream mocks it; no concrete platform is ported |
+| The `AbstractPlatform` methods the types call (declaration snippets, boolean conversion, date formats) and the column exceptions they throw (`ColumnLengthRequired`, `ColumnPrecisionRequired`, `ColumnScaleRequired`, `ColumnValuesRequired`, `InvalidColumnDeclaration`) | `Platforms/AbstractPlatform.php`, `Exception/*.php` | The type tests above, through a stub platform as upstream mocks it |
 | `DateTime::createFromFormat()`, `new DateTime($text)` and `new DateInterval($duration)` as the date types use them (in php-value) | php-value | 12,036 + 89 + 1,602 recorded answers (`tests/date_vectors.rs`); the texts refused are counted there |
 | `Connection`: lazy connect, `executeQuery()`, `executeStatement()`, `prepare()`, the `fetch*()` and `iterate*()` helpers, `insert()`/`update()`/`delete()`, list parameter expansion, type conversion of bound values, `quote()`/`quoteIdentifier()`, `lastInsertId()`, auto-commit, nested transactions with savepoints, rollback-only, `transactional()` with upstream's rollback rules, isolation levels, `close()`, and the conversion of driver exceptions (with the query) | `Connection.php`, `ConnectionException.php`, `TransactionIsolationLevel.php` | ConnectionTest (29 of 33, over a recording test driver); functional ConnectionTest (17 of 21), TransactionTest (1 of 6), WriteTest (19 of 20), NamedParametersTest, DataAccessTest (36), BooleanBindingTest, AutoIncrementColumnTest on `pdo_sqlite` |
 | `Result` and `Statement`: `fetchNumeric/Associative/One()`, `fetchAll*()`, `fetchAllKeyValue()` (`NoKeyValue`), `fetchAllAssociativeIndexed()`, `fetchFirstColumn()`, the `iterate*()` forms, `rowCount()`, `columnCount()`, `getColumnName()`, `bindValue()` with wrapper types, `executeQuery()`/`executeStatement()` | `Result.php`, `Statement.php`, `Driver/FetchUtils.php` | Functional ResultTest, StatementTest (11 of 12), Connection/FetchTest (16), Connection/FetchEmptyTest (6) |
@@ -45,14 +45,18 @@ assert_eq!(visitor.get_parameters(), &[Value::Int(1), Value::Int(2)]);
 | The `pdo_sqlite` driver on sqlx: value storage classes, PDO's binding conversions, `SQLSTATE` messages, `rowCount()`, `lastInsertId()` (`NoIdentityValue`), `quote()`, `getServerVersion()`, `path`/`memory` parameters | `Driver/PDO/SQLite/Driver.php`, `Driver/PDO/*.php`, `Driver/AbstractSQLiteDriver.php`, `Driver/*.php` interfaces | `tests/pdo_sqlite_vectors.rs` (recorded `pdo_sqlite` answers) |
 | `DriverManager::getConnection()` (driver map, `driverClass`, `wrapperClass` checks, URL parameters through `DsnParser`), `getAvailableDrivers()`; `DsnParser::parse()`; the `Configuration` parts the connection reads (auto-commit, type comments) | `DriverManager.php`, `Tools/DsnParser.php`, `Configuration.php` | DriverManagerTest (7 of 8), DsnParserTest (2), ConfigurationTest (2) |
 | `QueryBuilder` execution: `executeQuery()`, `executeStatement()` and the `fetch*()` methods over a `Connection` | `Query/QueryBuilder.php` | QueryBuilderTest execution tests (9; `tests/query_builder_execution_test.rs`) |
+| `SQLitePlatform`: expressions (trim, locate, substring, date arithmetic and difference, mod, concat, bit operations), `escapeStringForLike()`, quoting, `TRUNCATE`, limit/offset, column declarations and defaults, `CREATE TABLE` (primary keys, autoincrement, indexes, unique constraints, inline foreign keys, comments, `WITHOUT ROWID`), `ALTER TABLE` (`ADD COLUMN`, `RENAME`, and the temporary-table rebuild), indexes, foreign key SQL, transaction isolation, the reserved keywords (`SQLiteKeywords`, `KeywordList`), the `NotSupported` and `NoColumnsSpecifiedForTable` messages | `Platforms/SQLitePlatform.php`, `Platforms/AbstractPlatform.php`, `Platforms/Keywords/{KeywordList,SQLiteKeywords}.php`, `Platforms/{DateIntervalUnit,TrimMode}.php`, `Platforms/Exception/*.php`, `TransactionIsolationLevel.php`, `LockMode.php` | SQLitePlatformTest with the inherited AbstractPlatformTestCase tests (92 of 96; the other 4 upstream does not run on SQLite); 1,500 expression, 600 `CREATE TABLE` and 400 `ALTER TABLE` recorded outputs (`sqlite_platform_*_vectors` in `tests/platforms_sqlite_platform_test.rs`) |
+| Schema value objects: names and their parser, `AbstractAsset` (and its named subclasses), `Identifier`, `Column`, `ColumnDiff`, `Index`, `IndexedColumn`, `UniqueConstraint`, `ForeignKeyConstraint` (match type, referential actions, deferrability), `PrimaryKeyConstraint`, `Table`, `TableDiff`, `SchemaConfig`, their editors, the named object sets and the Schema exceptions | `Schema/*.php` (not `Schema.php`, `Sequence.php`, `View.php`, `Comparator.php` or the schema managers), `Schema/Name/**`, `Schema/Collections/**`, `Schema/Exception/*.php` | 292 tests of the Schema test classes (`tests/schema_*_test.rs`): TableTest 81 of 84, TableEditorTest 38, IndexTest 28, ForeignKeyConstraintEditorTest 18, ForeignKeyConstraintTest 16, ColumnTest 14 of 15, the Collections, Name, editor and constraint tests |
 
 Vectors: `scripts/record.sh doctrine-dbal` runs `oracle/recorders/doctrine_dbal.php`
 and writes `tests/data/php.json`: the upstream data providers, the
 tokens that the real parser gives for generated statements, and
 `QueryBuilder` call sequences with each call's result, the final SQL or
 exception, and the parameters, and PHP's answers for generated date
-formats, date texts and interval durations. Some date rows depend on the
-clock (`now`, an empty text), so a new recording changes them.
+formats, date texts and interval durations, and `SQLitePlatform`'s
+outputs on generated expressions, tables and table diffs (`sqlite_platform`).
+Some date rows depend on the clock (`now`, an empty text), so a new
+recording changes them.
 
 `ConnectionStandIn` is the part of `Connection.php` the query builder
 uses (`getDatabasePlatform()`, `quote()`, `createExpressionBuilder()`,
@@ -151,7 +155,6 @@ these cases. The owner decided not to copy these limits (PLAN.md, decision 21).
   that are not UTF-8 (`Exception` class `Unsupported`), where PHP casts;
   `getDecimalTypeDeclarationSQL()` likewise refuses an array or object
   precision or scale.
-- The `jsonb` deprecation (`Deprecation::trigger`) is not raised.
 - `TypeAlreadyRegistered` and `TypeNotRegistered` name the instance by a
   hash of its address, not by PHP's `spl_object_hash()`.
 - `BigIntType` with an out-of-range float throws the `AssertionError`
@@ -214,3 +217,58 @@ these cases. The owner decided not to copy these limits (PLAN.md, decision 21).
   `testPersistentConnection`, TransactionTest's five connection-loss
   tests, WriteTest `testLastInsertIdNotSupported`, ExceptionTest's
   invalid user, password and host tests.
+
+### SQLite platform and Schema
+
+- The `AbstractPlatform` methods that PHP declares abstract and that this
+  slice adds (`getLocateExpression()`, `getDateDiffExpression()`,
+  `getDateArithmeticIntervalExpression()`, `getCurrentDatabaseExpression()`,
+  `getAlterTableSQL()`, `getListViewsSQL()`,
+  `getSetTransactionIsolationSQL()`, `getCommonIntegerTypeDeclarationSQL()`)
+  have default bodies that throw `NotSupported` naming the method, and
+  `initializeDoctrineTypeMappings()` and `createReservedKeywordsList()`
+  default to empty. A platform that does not override them compiles; PHP
+  would refuse the class.
+- A platform's state (`$doctrineTypeMapping`, `$_keywords`) is a
+  `PlatformState` the platform hands out (`platform_state()`). A platform
+  that hands out none (the test stubs) has no type mapping, and
+  `getReservedKeywordsList()` builds a new list on each call.
+- `Deprecation::triggerIfCalledFromOutside()` is raised by the public
+  methods only; the crate's own code calls internal variants, which gives
+  PHP's result for a caller outside DBAL. The two outside-caller checks of
+  overridable methods are not reproduced: `getReservedKeywordsList()`
+  (6607) and `supportsColumnLengthIndexes()` (6886) raise nothing.
+- The editors (`TableEditor`, `ColumnEditor`, `IndexEditor`,
+  `ForeignKeyConstraintEditor`, `UniqueConstraintEditor`,
+  `PrimaryKeyConstraintEditor`) are by-value builders. A call PHP throws
+  from at once (an invalid name, an existing or missing object) keeps the
+  first error, and `create()` returns it; the tests check the exception
+  on `create()`.
+- PHP compares objects by identity where this port compares values:
+  `TableDiff::unsetAddedIndex()` and `unsetDroppedIndex()` remove every
+  equal index, and TableTest
+  `testAddingFulfillingExplicitIndexOverridingImplicitForeignKeyConstraintIndexWithSameName`
+  stays pending, as its last assertion tells two equal indexes apart by
+  identity.
+- SQL, identifiers and names are UTF-8 `String`s; a non-UTF-8 PHP string
+  given as an option or default is refused (`Unsupported`). A non-string
+  given to a `string` parameter (a `bool` column default passed to
+  `quoteStringLiteral()`) is the `TypeError` PHP raises under
+  `strict_types`, without PHP's `called in` suffix.
+- `$options` of `_getCreateTableSQL()` is the `CreateTableOptions` struct
+  (the table options plus `primary`, `primary_index`, `indexes`,
+  `uniqueConstraints` and `foreignKeys`).
+- Not ported: `createSchemaManager()`, `createMetadataProvider()`,
+  `getAlterSchemaSQL()` and the other `SchemaDiff`, `Sequence` and `View`
+  methods, the `Connection`-taking methods, `Schema.php`, `Sequence.php`,
+  `View.php`, `Comparator.php` and the schema managers. Their tests
+  (SchemaTest, SchemaEditorTest, SequenceTest, ViewTest, the SQLite
+  ComparatorTest and SQLiteSchemaManagerTest, the introspection and
+  metadata tests) stay pending; so do the AbstractAssetTest, ColumnTest
+  and TableTest tests that need the MySQL, PostgreSQL, Oracle or SQL
+  Server platforms.
+- AbstractOptionallyNamedObjectTest `testSetAccessToUninitializedName`
+  stays pending: it builds a subclass whose constructor skips
+  `parent::__construct()`, which `AbstractAsset::new()` cannot do.
+- `TransactionIsolationLevel` and `LockMode` are at the crate root, as in
+  PHP's namespace.

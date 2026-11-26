@@ -224,6 +224,10 @@ fn class_is_a(sub: &str, class: &str) -> bool {
     if sub == class {
         return true;
     }
+    // Slice SQLite platform: the Schema and Platforms exceptions.
+    if crate::schema::exception::ancestors(sub).contains(&class) {
+        return true;
+    }
     let column_type = [
         Exception::COLUMN_LENGTH_REQUIRED,
         Exception::COLUMN_PRECISION_REQUIRED,
