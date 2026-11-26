@@ -62,18 +62,18 @@ Response.php	Response	689	ported	crates/http-foundation/src/response.rs crates/h
 ResponseHeaderBag.php	ResponseHeaderBag	171	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs
 ServerBag.php	ServerBag	48	ported	crates/http-foundation/src/server_bag.rs crates/http-foundation/tests/server_bag_recorded.rs
 ServerEvent.php	ServerEvent	90	ported	crates/http-foundation/src/server_event.rs
-Session/Attribute/AttributeBag.php	AttributeBag	72	pending	
-Session/Attribute/AttributeBagInterface.php	AttributeBagInterface	11	pending	
-Session/Flash/AutoExpireFlashBag.php	AutoExpireFlashBag	78	pending	
-Session/Flash/FlashBag.php	FlashBag	73	pending	
-Session/Flash/FlashBagInterface.php	FlashBagInterface	14	pending	
-Session/FlashBagAwareSessionInterface.php	FlashBagAwareSessionInterface	6	pending	
-Session/Session.php	Session	150	pending	
-Session/SessionBagInterface.php	SessionBagInterface	8	pending	
-Session/SessionBagProxy.php	SessionBagProxy	58	pending	
-Session/SessionFactory.php	SessionFactory	19	pending	
-Session/SessionFactoryInterface.php	SessionFactoryInterface	5	pending	
-Session/SessionInterface.php	SessionInterface	24	pending	
+Session/Attribute/AttributeBag.php	AttributeBag	72	ported	crates/http-foundation/src/session/attribute/attribute_bag.rs
+Session/Attribute/AttributeBagInterface.php	AttributeBagInterface	11	ported	crates/http-foundation/src/session/attribute/attribute_bag_interface.rs
+Session/Flash/AutoExpireFlashBag.php	AutoExpireFlashBag	78	ported	crates/http-foundation/src/session/flash/auto_expire_flash_bag.rs
+Session/Flash/FlashBag.php	FlashBag	73	ported	crates/http-foundation/src/session/flash/flash_bag.rs
+Session/Flash/FlashBagInterface.php	FlashBagInterface	14	ported	crates/http-foundation/src/session/flash/flash_bag_interface.rs
+Session/FlashBagAwareSessionInterface.php	FlashBagAwareSessionInterface	6	ported	crates/http-foundation/src/session/flash_bag_aware_session_interface.rs
+Session/Session.php	Session	150	ported	crates/http-foundation/src/session/mod.rs
+Session/SessionBagInterface.php	SessionBagInterface	8	ported	crates/http-foundation/src/session/session_bag_interface.rs
+Session/SessionBagProxy.php	SessionBagProxy	58	ported	crates/http-foundation/src/session/session_bag_proxy.rs
+Session/SessionFactory.php	SessionFactory	19	ported	crates/http-foundation/src/session/session_factory.rs
+Session/SessionFactoryInterface.php	SessionFactoryInterface	5	ported	crates/http-foundation/src/session/session_factory_interface.rs
+Session/SessionInterface.php	SessionInterface	24	ported	crates/http-foundation/src/session/session_interface.rs
 Session/SessionUtils.php	SessionUtils	32	pending	
 Session/Storage/Handler/AbstractSessionHandler.php	AbstractSessionHandler	99	pending	
 Session/Storage/Handler/IdentityMarshaller.php	IdentityMarshaller	18	pending	
@@ -87,18 +87,18 @@ Session/Storage/Handler/PdoSessionHandler.php	PdoSessionHandler	615	pending
 Session/Storage/Handler/RedisSessionHandler.php	RedisSessionHandler	61	pending	
 Session/Storage/Handler/SessionHandlerFactory.php	SessionHandlerFactory	69	pending	
 Session/Storage/Handler/StrictSessionHandler.php	StrictSessionHandler	52	pending	
-Session/Storage/MetadataBag.php	MetadataBag	68	pending	
-Session/Storage/MockArraySessionStorage.php	MockArraySessionStorage	117	pending	
-Session/Storage/MockFileSessionStorage.php	MockFileSessionStorage	95	pending	
-Session/Storage/MockFileSessionStorageFactory.php	MockFileSessionStorageFactory	16	pending	
+Session/Storage/MetadataBag.php	MetadataBag	68	ported	crates/http-foundation/src/session/storage/metadata_bag.rs
+Session/Storage/MockArraySessionStorage.php	MockArraySessionStorage	117	ported	crates/http-foundation/src/session/storage/mock_array_session_storage.rs
+Session/Storage/MockFileSessionStorage.php	MockFileSessionStorage	95	ported	crates/http-foundation/src/session/storage/mock_file_session_storage.rs
+Session/Storage/MockFileSessionStorageFactory.php	MockFileSessionStorageFactory	16	ported	crates/http-foundation/src/session/storage/mock_file_session_storage_factory.rs
 Session/Storage/NativeSessionStorage.php	NativeSessionStorage	214	pending	
 Session/Storage/NativeSessionStorageFactory.php	NativeSessionStorageFactory	22	pending	
 Session/Storage/PhpBridgeSessionStorage.php	PhpBridgeSessionStorage	28	pending	
 Session/Storage/PhpBridgeSessionStorageFactory.php	PhpBridgeSessionStorageFactory	21	pending	
 Session/Storage/Proxy/AbstractProxy.php	AbstractProxy	44	pending	
 Session/Storage/Proxy/SessionHandlerProxy.php	SessionHandlerProxy	51	pending	
-Session/Storage/SessionStorageFactoryInterface.php	SessionStorageFactoryInterface	6	pending	
-Session/Storage/SessionStorageInterface.php	SessionStorageInterface	17	pending	
+Session/Storage/SessionStorageFactoryInterface.php	SessionStorageFactoryInterface	6	ported	crates/http-foundation/src/session/storage/session_storage_factory_interface.rs
+Session/Storage/SessionStorageInterface.php	SessionStorageInterface	17	ported	crates/http-foundation/src/session/storage/session_storage_interface.rs
 StreamedJsonResponse.php	StreamedJsonResponse	79	ported	crates/http-foundation/src/streamed_json_response.rs
 StreamedResponse.php	StreamedResponse	75	ported	crates/http-foundation/src/streamed_response.rs
 Test/Constraint/RequestAttributeValueSame.php	RequestAttributeValueSame	23	pending	

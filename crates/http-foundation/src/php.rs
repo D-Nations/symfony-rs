@@ -502,6 +502,125 @@ impl Stream {
     }
 }
 
+/// A PHP reference (`&$value`): a value several holders see and change
+/// together, as a session's bags share the storage's data. Clones are the
+/// same reference.
+#[derive(Debug, Clone, Default)]
+pub struct Reference(Arc<Mutex<Value>>);
+
+impl Reference {
+    pub fn new(value: Value) -> Self {
+        Self(Arc::new(Mutex::new(value)))
+    }
+
+    /// The value now.
+    pub fn get(&self) -> Value {
+        self.lock().clone()
+    }
+
+    /// `$reference = $value`.
+    pub fn set(&self, value: Value) {
+        *self.lock() = value;
+    }
+
+    /// The value, to read or change in place.
+    pub fn with<R>(&self, f: impl FnOnce(&mut Value) -> R) -> R {
+        f(&mut self.lock())
+    }
+
+    /// Whether two references are the same (`$a = &$b`).
+    pub fn same(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.0, &other.0)
+    }
+
+    fn lock(&self) -> std::sync::MutexGuard<'_, Value> {
+        self.0
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+    }
+}
+
+/// `$array[$key][] = $value` on the element `key` of `array`: a missing,
+/// null or `false` element becomes a list; a string or another scalar
+/// throws PHP's `\Error`.
+pub fn push_onto(array: &mut PhpArray, key: &php_value::Key, value: Value) -> Result<()> {
+    if array.get(key).is_none() {
+        array.insert(key.clone(), Value::Array(PhpArray::new()));
+    }
+    let Some(element) = array.get_mut(key) else {
+        return Ok(());
+    };
+    if matches!(element, Value::Null | Value::Bool(false)) {
+        *element = Value::Array(PhpArray::new());
+    }
+    match element {
+        Value::Array(list) => list.push(value).map(|_| ()).map_err(|_| {
+            Error::new(
+                Class::PhpError,
+                "Cannot add element to the array as the next element is already occupied",
+            )
+        }),
+        Value::String(_) => Err(Error::new(
+            Class::PhpError,
+            "[] operator not supported for strings",
+        )),
+        Value::Object(object) => Err(Error::new(
+            Class::PhpError,
+            format!("Cannot use object of type {} as array", object.class()),
+        )),
+        _ => Err(Error::new(
+            Class::PhpError,
+            "Cannot use a scalar value as an array",
+        )),
+    }
+}
+
+/// A value returned from a method declared `: array`; anything else is
+/// PHP's `\TypeError`.
+pub fn array_return(method: &str, value: Value) -> Result<PhpArray> {
+    match value {
+        Value::Array(array) => Ok(array),
+        other => Err(Error::new(
+            Class::PhpTypeError,
+            format!(
+                "{method}(): Return value must be of type array, {} returned",
+                other.value_name()
+            ),
+        )),
+    }
+}
+
+/// A value returned from a method declared `: int`, in coercive mode: a
+/// bool, a float in range (truncated, which PHP 8.1+ deprecates) or a
+/// numeric string converts.
+pub fn int_return(method: &str, value: &Value) -> Result<i64> {
+    let converted = match value {
+        Value::Int(i) => Some(*i),
+        Value::Bool(b) => Some(i64::from(*b)),
+        Value::Float(f) if f.is_finite() => float_to_int(f.trunc()),
+        Value::String(s) => int_argument(s.as_bytes()),
+        _ => None,
+    };
+    converted.ok_or_else(|| {
+        Error::new(
+            Class::PhpTypeError,
+            format!(
+                "{method}(): Return value must be of type int, {} returned",
+                value.value_name()
+            ),
+        )
+    })
+}
+
+#[expect(
+    clippy::cast_possible_truncation,
+    reason = "a truncated float in range, as PHP converts it"
+)]
+fn float_to_int(f: f64) -> Option<i64> {
+    const LIMIT: f64 = 9_223_372_036_854_775_808.0; // 2^63
+    (-LIMIT..LIMIT).contains(&f).then_some(f as i64)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

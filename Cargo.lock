@@ -1431,6 +1431,7 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "base64",
+ "getrandom",
  "php2rust-regex",
  "php2rust-value",
  "serde",

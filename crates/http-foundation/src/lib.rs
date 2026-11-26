@@ -39,6 +39,7 @@ pub mod sapi;
 pub mod scheme;
 pub mod server_bag;
 pub mod server_event;
+pub mod session;
 pub mod streamed_json_response;
 pub mod streamed_response;
 pub mod uploaded_file;
