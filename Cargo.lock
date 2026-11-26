@@ -931,6 +931,7 @@ dependencies = [
 [[package]]
 name = "php2rust-date"
 version = "0.1.0"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=934f4511d9b013f42d34166c979dc8762cc02fb9#934f4511d9b013f42d34166c979dc8762cc02fb9"
 dependencies = [
  "jiff 1.0.3",
  "php2rust-value",
@@ -939,10 +940,12 @@ dependencies = [
 [[package]]
 name = "php2rust-dom"
 version = "0.1.0"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=934f4511d9b013f42d34166c979dc8762cc02fb9#934f4511d9b013f42d34166c979dc8762cc02fb9"
 
 [[package]]
 name = "php2rust-regex"
 version = "0.1.0"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=934f4511d9b013f42d34166c979dc8762cc02fb9#934f4511d9b013f42d34166c979dc8762cc02fb9"
 dependencies = [
  "fancy-regex",
 ]
@@ -950,6 +953,7 @@ dependencies = [
 [[package]]
 name = "php2rust-value"
 version = "0.1.0"
+source = "git+https://github.com/D-Nations/php2rust-compatibility-tools?rev=934f4511d9b013f42d34166c979dc8762cc02fb9#934f4511d9b013f42d34166c979dc8762cc02fb9"
 dependencies = [
  "serde_json",
 ]
