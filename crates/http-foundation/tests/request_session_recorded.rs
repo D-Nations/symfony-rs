@@ -1,5 +1,5 @@
-//! Replays tests/data/request_session.json: 800 scripts recorded from PHP
-//! 8.4.27 by oracle/recorders/http_foundation_request_session.php, on
+//! Replays `tests/data/request_session.json`: 800 scripts recorded from PHP
+//! 8.4.27 by `oracle/recorders/http_foundation_request_session.php`, on
 //! `Request`'s and `RequestStack`'s session methods.
 //!
 //! Each script's operations run on requests that are handles, as PHP's
