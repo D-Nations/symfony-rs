@@ -1023,6 +1023,8 @@ crates/twig/src/compiler.rs	twig/twig	src/Node/CaptureNode.php	8c737079b726af72f
 crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/CallExpression.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/GetAttrExpression.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/NameExpression.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/FunctionNode/EnumFunction.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
+crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/FunctionNode/EnumCasesFunction.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/Binary/AddBinary.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/Binary/AndBinary.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
 crates/twig/src/compiler.rs	twig/twig	src/Node/Expression/Binary/BitwiseAndBinary.php	8c737079b726af72ff8ef3c595be9f6a810ea1ef
