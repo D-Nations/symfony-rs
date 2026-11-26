@@ -162,6 +162,7 @@ fn forget() {
     with_session(|s| {
         s.status = Status::None;
         s.id = PhpString::default();
+        s.id_given = false;
     });
 }
 
@@ -231,13 +232,18 @@ fn decode(function: &str, data: &[u8]) -> SessionResult<bool> {
 
 /// Decoding failed: the session destroyed, `$_SESSION` emptied.
 fn decode_failed(function: &str, module: &Module, id: &[u8]) -> SessionResult<()> {
-    module.destroy(id)?;
+    if !module.destroy(id)? {
+        warn(function, "Session object destruction failed");
+    }
     module.close()?;
     warn(
         function,
         "Failed to decode session object. Session has been destroyed",
     );
-    with_session(|s| s.data = SessionVar::Array(Data::default()));
+    with_session(|s| {
+        s.data = SessionVar::Array(Data::default());
+        s.handler_named = false;
+    });
     forget();
     Ok(())
 }
@@ -269,16 +275,13 @@ pub fn session_create_id(prefix: &[u8]) -> SessionResult<Option<PhpString>> {
 }
 
 /// A new id for the session; `None` (with PHP's warning) when the handler
-/// gives none.
+/// gives none. With `check`, an id `validateId()` says exists is made
+/// again: after three, a fourth is taken unchecked.
 fn new_id(function: &str, module: &Module, check: bool) -> SessionResult<Option<PhpString>> {
-    for _ in 0..3 {
-        let Some(id) = module.create_sid()? else {
-            break;
-        };
-        if !check {
-            return Ok(Some(id));
-        }
-        if !module.validate(id.as_bytes()).transpose()?.unwrap_or(false) {
+    let mut tries = 0;
+    while let Some(id) = module.create_sid()? {
+        tries += 1;
+        if !check || tries > 3 || !module.validate(id.as_bytes()).transpose()?.unwrap_or(false) {
             return Ok(Some(id));
         }
     }
@@ -293,22 +296,45 @@ fn new_id(function: &str, module: &Module, check: bool) -> SessionResult<Option<
     Ok(None)
 }
 
+/// Whether the session needs a new id: it has none, or strict mode's
+/// `validateId()` says no.
+fn renew_id(module: &Module, id: &PhpString) -> SessionResult<bool> {
+    if id.as_bytes().is_empty() {
+        return Ok(true);
+    }
+    if !ini_bool("use_strict_mode") {
+        return Ok(false);
+    }
+    match module.validate(id.as_bytes()) {
+        Some(valid) => Ok(!valid?),
+        None => Ok(false),
+    }
+}
+
 /// `session_start()`.
 pub fn session_start() -> SessionResult<bool> {
     const F: &str = "session_start";
     if session_status() == Status::Active {
+        // where the session started is not known here
+        super::raise(
+            8,
+            "session_start(): Ignoring session_start() because a session is already active (started from  on line 0)",
+        );
         return Ok(true);
     }
     let use_cookies = ini_bool("use_cookies");
     if use_cookies && super::headers_sent() {
+        warn(
+            F,
+            "Session cannot be started after headers have already been sent",
+        );
         return Ok(false);
     }
-    with_session(|s| s.data = SessionVar::Array(Data::default()));
     let name = session_name();
     let module = Module::current();
     let mut id = super::session_id();
     let mut from_cookie = false;
-    if id.as_bytes().is_empty()
+    if !with_session(|s| s.id_given)
         && use_cookies
         && let Some(cookie) = super::request_cookie(name.as_bytes())
         && !cookie.as_bytes().is_empty()
@@ -317,6 +343,7 @@ pub fn session_start() -> SessionResult<bool> {
         from_cookie = true;
     }
     if !module.open(path().as_bytes(), name.as_bytes())? {
+        module.close()?;
         warn(
             F,
             format!(
@@ -325,19 +352,14 @@ pub fn session_start() -> SessionResult<bool> {
                 shown(path().as_bytes())
             ),
         );
+        forget();
         return Ok(false);
     }
-    let renew = if id.as_bytes().is_empty() {
-        true
-    } else if ini_bool("use_strict_mode") {
-        match module.validate(id.as_bytes()) {
-            Some(valid) => !valid?,
-            None => false,
-        }
-    } else {
-        false
-    };
-    if renew {
+    with_session(|s| {
+        s.data = SessionVar::Array(Data::default());
+        s.tracked = true;
+    });
+    if renew_id(&module, &id)? {
         let Some(new) = new_id(F, &module, false)? else {
             return Ok(false);
         };
@@ -346,6 +368,7 @@ pub fn session_start() -> SessionResult<bool> {
     }
     with_session(|s| {
         s.id = id.clone();
+        s.id_given = true;
         s.status = Status::Active;
     });
     if use_cookies && !from_cookie {
@@ -371,11 +394,28 @@ pub fn session_start() -> SessionResult<bool> {
             return Err(error);
         }
     };
+    collect_garbage(&module)?;
     if !decode(F, data.as_bytes())? {
         decode_failed(F, &module, id.as_bytes())?;
         return Ok(false);
     }
     with_session(|s| s.original = Some(data));
+    if !send_cache_limiter() {
+        // where the output started is not known here
+        warn(
+            F,
+            "Session cache limiter cannot be sent after headers have already been sent (output started at )",
+        );
+        module.close()?;
+        forget();
+        return Ok(false);
+    }
+    Ok(true)
+}
+
+/// Garbage collection, `gc_probability` times in `gc_divisor`, after a
+/// session is read.
+fn collect_garbage(module: &Module) -> SessionResult<()> {
     let probability = ini_int("gc_probability");
     let divisor = ini_int("gc_divisor");
     if probability > 0
@@ -384,12 +424,7 @@ pub fn session_start() -> SessionResult<bool> {
     {
         module.gc(ini_int("gc_maxlifetime"))?;
     }
-    if !send_cache_limiter() {
-        module.close()?;
-        forget();
-        return Ok(false);
-    }
-    Ok(true)
+    Ok(())
 }
 
 /// Writes and closes the active session.
@@ -416,14 +451,19 @@ fn flush(function: &str) -> SessionResult<()> {
             }
         };
         if !written {
-            let message = match module {
+            let message = match &module {
                 Module::Files => format!(
                     "Failed to write session data (files). Please verify that the current setting of session.save_path is correct ({})",
                     shown(path().as_bytes())
                 ),
-                Module::User(_) => format!(
-                    "Failed to write session data using user defined save handler. (session.save_path: {}, handler: write)",
-                    shown(path().as_bytes())
+                Module::User(h) => format!(
+                    "Failed to write session data using user defined save handler. (session.save_path: {}, handler: {})",
+                    shown(path().as_bytes()),
+                    if with_session(|s| s.handler_named) {
+                        format!("{}::write", h.class())
+                    } else {
+                        "write".to_owned()
+                    }
                 ),
             };
             warn(function, message);
@@ -468,9 +508,23 @@ pub fn session_reset() -> SessionResult<bool> {
         return Ok(false);
     }
     let module = Module::current();
-    let id = super::session_id();
+    let mut id = super::session_id();
     module.open(path().as_bytes(), session_name().as_bytes())?;
+    if ini_bool("use_strict_mode")
+        && let Some(valid) = module.validate(id.as_bytes())
+        && !valid?
+    {
+        let Some(new) = new_id("session_reset", &module, false)? else {
+            return Ok(false);
+        };
+        id = new;
+        with_session(|s| s.id = id.clone());
+        if ini_bool("use_cookies") {
+            send_session_cookie(id.as_bytes());
+        }
+    }
     if let Some(data) = module.read("session_reset", id.as_bytes())? {
+        collect_garbage(&module)?;
         with_session(|s| s.data = SessionVar::Array(Data::default()));
         if !decode("session_reset", data.as_bytes())? {
             decode_failed("session_reset", &module, id.as_bytes())?;
@@ -495,6 +549,7 @@ pub fn session_destroy() -> SessionResult<bool> {
     }
     module.close()?;
     forget();
+    with_session(|s| s.tracked = false);
     Ok(destroyed)
 }
 
@@ -519,6 +574,8 @@ pub fn session_regenerate_id(delete_old_session: bool) -> SessionResult<bool> {
     let old = super::session_id();
     if delete_old_session {
         if !module.destroy(old.as_bytes())? {
+            module.close()?;
+            with_session(|s| s.status = Status::None);
             warn(
                 F,
                 format!(
@@ -529,9 +586,26 @@ pub fn session_regenerate_id(delete_old_session: bool) -> SessionResult<bool> {
             );
             return Ok(false);
         }
-    } else if let Some(entries) = entries() {
-        let text = encode(F, &entries)?.unwrap_or_default();
-        module.write(F, old.as_bytes(), text.as_bytes())?;
+    } else {
+        let text = if let Some(entries) = entries() {
+            encode(F, &entries)?.unwrap_or_default()
+        } else {
+            warn(F, "Cannot encode non-existent session");
+            PhpString::default()
+        };
+        if !module.write(F, old.as_bytes(), text.as_bytes())? {
+            module.close()?;
+            warn(
+                F,
+                format!(
+                    "Session write failed. ID: {} (path: {})",
+                    module.name(),
+                    shown(path().as_bytes())
+                ),
+            );
+            with_session(|s| s.status = Status::None);
+            return Ok(false);
+        }
     }
     module.close()?;
     if !module.open(path().as_bytes(), session_name().as_bytes())? {
@@ -552,16 +626,16 @@ pub fn session_regenerate_id(delete_old_session: bool) -> SessionResult<bool> {
     };
     with_session(|s| s.id = id.clone());
     let Some(data) = module.read(F, id.as_bytes())? else {
-        warn(
-            F,
+        module.close()?;
+        with_session(|s| s.status = Status::None);
+        return Err(thrown(Error::new(
+            crate::exception::Class::PhpError,
             format!(
                 "Failed to create(read) session ID: {} (path: {})",
                 module.name(),
                 shown(path().as_bytes())
             ),
-        );
-        forget();
-        return Ok(false);
+        )));
     };
     with_session(|s| s.original = Some(data));
     if ini_bool("use_cookies") {
@@ -583,16 +657,21 @@ pub fn session_gc() -> SessionResult<Option<i64>> {
     Module::current().gc(ini_int("gc_maxlifetime"))
 }
 
-/// `session_encode()`: `None` is PHP's `false`.
+/// `session_encode()`: `None` is PHP's `false`, also for an empty
+/// session. `$_SESSION` must be one a `session_start()` of this request
+/// set up, and an array.
 pub fn session_encode() -> SessionResult<Option<PhpString>> {
-    if session_status() != Status::Active {
-        warn("session_encode", "Cannot encode non-existent session");
+    const F: &str = "session_encode";
+    let entries = if with_session(|s| s.tracked) {
+        entries()
+    } else {
+        None
+    };
+    let Some(entries) = entries else {
+        warn(F, "Cannot encode non-existent session");
         return Ok(None);
-    }
-    match entries() {
-        Some(entries) => encode("session_encode", &entries),
-        None => Ok(None),
-    }
+    };
+    Ok(encode(F, &entries)?.filter(|text| !text.as_bytes().is_empty()))
 }
 
 /// `session_decode($data)`: entries merged into `$_SESSION` (`php`), or

@@ -3,8 +3,8 @@
 //! (`c`, `u` and `l` under `_sf2_meta`).
 //!
 //! The clock is `php_value::clock::time()`, which tests mock.
-//! `ini_get('session.cookie_lifetime')` is `0`, PHP's default: this crate
-//! has no native session storage yet to change it. The getters' `int`
+//! The lifetime defaults to `(int) ini_get('session.cookie_lifetime')`
+//! ([`crate::php_session`]). The getters' `int`
 //! return types and the `int $lastUsed` property convert as PHP does in
 //! coercive mode, or fail with its `\TypeError` and `\Error`.
 //!
@@ -34,9 +34,6 @@ pub const CREATED: &str = "c";
 pub const UPDATED: &str = "u";
 /// `MetadataBag::LIFETIME`.
 pub const LIFETIME: &str = "l";
-
-/// `ini_get('session.cookie_lifetime')`, PHP's default.
-const COOKIE_LIFETIME_INI: i64 = 0;
 
 fn key(name: &str) -> Key {
     Key::from_bytes(name.as_bytes())
@@ -157,7 +154,7 @@ impl MetadataBag {
         let now = time();
         let lifetime = lifetime
             .or(self.cookie_lifetime)
-            .unwrap_or(COOKIE_LIFETIME_INI);
+            .unwrap_or_else(|| crate::php_session::ini_int("cookie_lifetime"));
         let meta = {
             let mut state = self.state();
             state.last_used = Some(now);

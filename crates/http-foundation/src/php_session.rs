@@ -83,6 +83,9 @@ pub struct Warning {
     /// `E_WARNING`, ...
     pub level: i64,
     pub message: String,
+    /// PHP's own text, which `html_errors` escapes; a message an error
+    /// handler rewrote is passed on as it is.
+    pub html: bool,
 }
 
 /// `$_SESSION`.
@@ -152,9 +155,16 @@ const DEFAULTS: [(&str, &str); 21] = [
 
 /// The session extension's state for this request.
 #[derive(Debug, Clone)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "independent flags of PHP's session state, each read on its own"
+)]
 pub struct SessionState {
     pub status: Status,
     pub id: PhpString,
+    /// An id was given (`session_id($id)`, even `''`) or made: the next
+    /// `session_start()` does not read the cookie.
+    id_given: bool,
     ini: Vec<(String, PhpString)>,
     /// `$_SESSION`.
     pub data: SessionVar,
@@ -168,6 +178,16 @@ pub struct SessionState {
     in_create_sid: bool,
     /// `session_register_shutdown()` was called.
     shutdown_registered: bool,
+    /// A `session_start()` of this request set `$_SESSION` up, so
+    /// `session_encode()` has a session to encode.
+    tracked: bool,
+    /// PHP still names the user handler's class in its write warning; a
+    /// session that failed to decode leaves it nameless (`handler:
+    /// write`), as recorded once.
+    handler_named: bool,
+    /// The class `NativeSessionStorage::save()`'s error handler names in
+    /// the `session_write_close()` warnings raised meanwhile.
+    write_close_handler: Option<String>,
     files: files::FilesState,
 }
 
@@ -176,6 +196,7 @@ impl Default for SessionState {
         Self {
             status: Status::None,
             id: PhpString::default(),
+            id_given: false,
             ini: DEFAULTS
                 .iter()
                 .map(|(k, v)| ((*k).to_owned(), PhpString::from(*v)))
@@ -187,6 +208,9 @@ impl Default for SessionState {
             warnings: Vec::new(),
             in_create_sid: false,
             shutdown_registered: false,
+            tracked: false,
+            handler_named: false,
+            write_close_handler: None,
             files: files::FilesState::default(),
         }
     }
@@ -221,12 +245,48 @@ pub(crate) fn warn(function: &str, message: impl std::fmt::Display) {
     } else {
         format!("{function}(): {message}")
     };
+    raise(E_WARNING, message);
+}
+
+/// Raises `message` as it is, at `level` (`E_NOTICE` is 8).
+pub(crate) fn raise(level: i64, message: impl Into<String>) {
+    let mut message = message.into();
     with_session(|s| {
+        let mut html = true;
+        if let Some(class) = &s.write_close_handler
+            && level == E_WARNING
+            && message.starts_with("session_write_close():")
+        {
+            message = format!(
+                "session_write_close(): Failed to write session data with \"{class}\" handler"
+            );
+            html = false;
+        }
         s.warnings.push(Warning {
-            level: E_WARNING,
+            level,
             message,
+            html,
         });
     });
+}
+
+/// Runs `f` with `NativeSessionStorage::save()`'s error handler, which
+/// names `class` in each `session_write_close()` warning.
+pub fn with_write_close_handler<R>(class: String, f: impl FnOnce() -> R) -> R {
+    let outer = with_session(|s| s.write_close_handler.replace(class));
+    let result = f();
+    with_session(|s| s.write_close_handler = outer);
+    result
+}
+
+/// PHP's warning for a header sent after the output started; where it
+/// started is not known here.
+const HEADERS_SENT: &str =
+    "Cannot modify header information - headers already sent by (output started at )";
+
+/// PHP's warning for reading `$_SESSION` before a session set it.
+pub fn raise_undefined_session() {
+    raise(E_WARNING, "Undefined global variable $_SESSION");
 }
 
 /// The warnings raised since the last call, oldest first.
@@ -344,7 +404,7 @@ pub fn session_id() -> PhpString {
 }
 
 /// `session_id($id)`: the previous id, or `None` (PHP's `false`) while a
-/// session is active or once headers are sent.
+/// session is active or, with `use_cookies`, once headers are sent.
 pub fn set_session_id(id: impl Into<PhpString>) -> Option<PhpString> {
     if session_status() == Status::Active {
         warn(
@@ -353,7 +413,7 @@ pub fn set_session_id(id: impl Into<PhpString>) -> Option<PhpString> {
         );
         return None;
     }
-    if headers_sent() {
+    if ini_bool("use_cookies") && headers_sent() {
         warn(
             "session_id",
             "Session ID cannot be changed after headers have already been sent",
@@ -361,7 +421,10 @@ pub fn set_session_id(id: impl Into<PhpString>) -> Option<PhpString> {
         return None;
     }
     let id = id.into();
-    Some(with_session(|s| std::mem::replace(&mut s.id, id)))
+    Some(with_session(|s| {
+        s.id_given = true;
+        std::mem::replace(&mut s.id, id)
+    }))
 }
 
 /// `session_name()`.
@@ -468,6 +531,7 @@ pub fn session_set_save_handler(
     }
     with_session(|s| {
         s.handler = Some(handler);
+        s.handler_named = true;
         s.set_ini("save_handler", "user");
         if register_shutdown {
             s.shutdown_registered = true;
@@ -496,8 +560,13 @@ pub fn headers_list() -> Vec<PhpString> {
     sapi.headers_list()
 }
 
-/// `header($line, $replace)`.
+/// `header($line, $replace)`: not sent, with PHP's warning, once the
+/// headers are.
 pub fn header(line: impl Into<PhpString>, replace: bool) {
+    if headers_sent() {
+        raise(E_WARNING, HEADERS_SENT);
+        return;
+    }
     let line = line.into();
     with_output(|o| {
         o.calls.push(OutputCall::Header {
@@ -514,9 +583,15 @@ pub fn header_remove(name: impl Into<PhpString>) {
     with_output(|o| o.calls.push(OutputCall::HeaderRemove(name)));
 }
 
-/// `setcookie(...)`.
-pub fn setcookie(cookie: SetCookie) {
+/// `setcookie(...)`: `false`, with PHP's warning, once the headers are
+/// sent.
+pub fn setcookie(cookie: SetCookie) -> bool {
+    if headers_sent() {
+        raise(E_WARNING, HEADERS_SENT);
+        return false;
+    }
     with_output(|o| o.calls.push(OutputCall::SetCookie(cookie)));
+    true
 }
 
 /// The system time, in seconds.

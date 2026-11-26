@@ -100,7 +100,7 @@ pub trait SessionIdInterface {
 
 /// `session_create_id() ?: throw new \RuntimeException(...)`, which every
 /// handler's `create_sid()` is.
-pub(crate) fn create_sid() -> HandlerResult<PhpString> {
+pub fn create_sid() -> HandlerResult<PhpString> {
     match crate::php_session::session_create_id(b"")? {
         Some(id) if Value::String(id.clone()).is_truthy() => Ok(id),
         _ => Err(std::sync::Arc::new(crate::exception::Error::new(

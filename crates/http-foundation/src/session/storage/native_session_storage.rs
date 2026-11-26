@@ -35,8 +35,8 @@ use crate::{
     exception::{Class, Error, Result},
     php::with_globals,
     php_session::{
-        self, E_WARNING, SessionHandler, SessionVar, Status, ini_get, ini_set_value,
-        session_create_id, session_name, session_status, set_session_id,
+        self, SessionHandler, SessionVar, Status, ini_get, ini_set_value, session_create_id,
+        session_name, session_status, set_session_id,
     },
     session::{Data, session_bag_interface::SessionBagInterface},
 };
@@ -263,18 +263,13 @@ impl NativeSessionStorage {
                         *session = SessionVar::Array(Data::default());
                     }
                     SessionVar::Array(_) => {}
-                    SessionVar::Other(_) => return None,
+                    SessionVar::Other(other) => return Err(not_an_array(other, false)),
                 }
                 match session {
-                    SessionVar::Array(data) => Some(data.reference(&key)),
-                    _ => None,
+                    SessionVar::Array(data) => Ok(data.reference(&key)),
+                    SessionVar::Other(other) => Err(not_an_array(other, false)),
+                    SessionVar::Unset => Err(not_an_array(&Value::Null, false)),
                 }
-            })
-            .ok_or_else(|| {
-                Error::new(
-                    Class::NotPorted,
-                    "a $_SESSION that is not an array is not ported",
-                )
             })?;
             reference.with(|value| {
                 if value.as_array().is_none() {
@@ -353,11 +348,28 @@ impl NativeSessionStorage {
                 Ok(())
             }
             SessionVar::Unset | SessionVar::Other(Value::Null) => Ok(()),
-            SessionVar::Other(_) => Err(Error::new(
-                Class::NotPorted,
-                "a $_SESSION that is not an array is not ported",
-            )),
+            SessionVar::Other(other) => Err(not_an_array(other, true)),
         })
+    }
+}
+
+/// PHP's `\Error` for a `$_SESSION` that is not an array, used as one
+/// (`unset` for `unset($_SESSION[$key])`): for `true` and numbers; other
+/// values (strings, `false`, objects) are not ported.
+fn not_an_array(value: &Value, unset: bool) -> Error {
+    match value {
+        Value::Bool(true) | Value::Int(_) | Value::Float(_) => Error::new(
+            Class::PhpError,
+            if unset {
+                "Cannot unset offset in a non-array variable"
+            } else {
+                "Cannot use a scalar value as an array"
+            },
+        ),
+        _ => Error::new(
+            Class::NotPorted,
+            "a $_SESSION that is not an array is not ported",
+        ),
     }
 }
 
@@ -428,7 +440,14 @@ impl SessionStorageInterface for NativeSessionStorage {
     }
 
     fn save(&self) -> Result<()> {
+        // reading $_SESSION before PHP set it warns, each time
+        let undefined = || {
+            if php_session::with_session_var(|s| matches!(s, SessionVar::Unset)) {
+                php_session::raise_undefined_session();
+            }
+        };
         // Store a copy so we can restore the bags in case the session was not left empty
+        undefined();
         let session = php_session::with_session_var(|s| s.clone());
         let (keys, metadata_key, save_handler) = {
             let state = self.state();
@@ -445,6 +464,7 @@ impl SessionStorageInterface for NativeSessionStorage {
         for key in keys {
             Self::unset_if_empty(&Key::from_bytes(key.as_bytes()))?;
         }
+        undefined();
         php_session::with_session_var(|s| {
             if let SessionVar::Array(data) = s
                 && data.keys() == [Key::from_bytes(metadata_key.as_bytes())]
@@ -454,24 +474,14 @@ impl SessionStorageInterface for NativeSessionStorage {
         });
 
         // Register error handler to add information about the current save handler
-        let before = php_session::with_warnings(|w| w.len());
-        let written = php_session::session_write_close();
         let class = match &save_handler {
             SaveHandlerProxy::HandlerProxy(proxy) => proxy.get_handler().class(),
             SaveHandlerProxy::Proxy(proxy) => proxy.class().to_owned(),
         };
-        php_session::with_warnings(|warnings| {
-            for warning in warnings.iter_mut().skip(before) {
-                if warning.level == E_WARNING
-                    && warning.message.starts_with("session_write_close():")
-                {
-                    warning.message = format!(
-                        "session_write_close(): Failed to write session data with \"{class}\" handler"
-                    );
-                }
-            }
-        });
+        let written =
+            php_session::with_write_close_handler(class, php_session::session_write_close);
         // Restore only if not empty
+        undefined();
         php_session::with_session_var(|s| {
             if s.is_truthy() {
                 *s = session;
