@@ -388,14 +388,14 @@ Tests/RequestTest.php	RequestTest::testGetRequestUri	ported	crates/http-foundati
 Tests/RequestTest.php	RequestTest::testGetRequestUriWithoutRequiredHeader	ported	crates/http-foundation/tests/request_test.rs::testGetRequestUriWithoutRequiredHeader
 Tests/RequestTest.php	RequestTest::testGetSchemeAndHttpHost	ported	crates/http-foundation/tests/request_test.rs::testGetSchemeAndHttpHost
 Tests/RequestTest.php	RequestTest::testGetScriptName	ported	crates/http-foundation/tests/request_test.rs::testGetScriptName
-Tests/RequestTest.php	RequestTest::testGetSession	pending	
+Tests/RequestTest.php	RequestTest::testGetSession	ported	crates/http-foundation/tests/request_test.rs::testGetSession
 Tests/RequestTest.php	RequestTest::testGetSetMethod	ported	crates/http-foundation/tests/request_test.rs::testGetSetMethod
 Tests/RequestTest.php	RequestTest::testGetUri	ported	crates/http-foundation/tests/request_test.rs::testGetUri
 Tests/RequestTest.php	RequestTest::testGetUriForPath	ported	crates/http-foundation/tests/request_test.rs::testGetUriForPath
 Tests/RequestTest.php	RequestTest::testGetUser	ported	crates/http-foundation/tests/request_test.rs::testGetUser
 Tests/RequestTest.php	RequestTest::testGetUserInfo	ported	crates/http-foundation/tests/request_test.rs::testGetUserInfo
-Tests/RequestTest.php	RequestTest::testHasPreviousSession	pending	
-Tests/RequestTest.php	RequestTest::testHasSession	pending	
+Tests/RequestTest.php	RequestTest::testHasPreviousSession	ported	crates/http-foundation/tests/request_test.rs::testHasPreviousSession
+Tests/RequestTest.php	RequestTest::testHasSession	ported	crates/http-foundation/tests/request_test.rs::testHasSession
 Tests/RequestTest.php	RequestTest::testHostValidity	ported	crates/http-foundation/tests/request_test.rs::testHostValidity
 Tests/RequestTest.php	RequestTest::testHttpMethodOverrideCannotBeAppliedToCertainMethods	ported	crates/http-foundation/tests/request_test.rs::testHttpMethodOverrideCannotBeAppliedToCertainMethods
 Tests/RequestTest.php	RequestTest::testHttpMethodOverrideDisabledWithEmptyAllowedList	ported	crates/http-foundation/tests/request_test.rs::testHttpMethodOverrideDisabledWithEmptyAllowedList

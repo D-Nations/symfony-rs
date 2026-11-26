@@ -1847,6 +1847,15 @@ Stack rows (searched November 22):
       which found eleven behaviours of the extension; 24 of 24 mutations
       caught. Stage log docs/milestones/m2-a-native-session.md.
       Next: `Request`'s session methods.
+- [x] Session, stage 3 (November 27): `Request`'s session methods
+      (`getSession()` with its factory, `hasSession()`,
+      `hasPreviousSession()`, `setSession()`, `setSessionFactory()`) and
+      `RequestStack::getSession()`. RequestTest 116 of 120 (1 pending:
+      intl); 800 scripts recorded from PHP 8.4.27 (8,120 operations), all
+      matching; 8 of 8 mutations caught. Stage log
+      docs/milestones/m2-a-request-session.md. Next: the database and cache
+      session handlers and `SessionHandlerFactory`, and HttpKernel's
+      session listeners.
 
 ## M6 progress
 
