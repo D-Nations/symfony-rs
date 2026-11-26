@@ -28,6 +28,14 @@
 //              DateInterval($text), each ["ok", text] (the date as
 //              'Y-m-d H:i:s.u e', the interval as '%R %y %m %d %h %i %s'),
 //              ["false"] or ["throws", class, message].
+//   sqlite_platform
+//              SQLitePlatform on generated inputs: "expressions" ([call,
+//              arguments, outcome]), "create_table" ([table spec,
+//              outcome]) and "alter_table" ([old table spec, diff spec,
+//              outcome]); a table is built with the legacy Table methods
+//              (sqlite_table()), options as [[name, typed value], ...]; an
+//              outcome is ["ok", sql] or ["throws", class, message] (a
+//              TypeError's "called in" suffix removed).
 //
 // A mutable DateTime in a provider row is ["datetime_mutable", <the same
 // instant as a typed DateTimeImmutable>]; a
