@@ -36,7 +36,7 @@ fn bytes(json: &Json) -> Vec<u8> {
 
 /// The recorder's `typed()` tree as a value, or `None` for an object of
 /// a class the port does not have.
-fn value(json: &Json) -> Option<Value> {
+fn value(json: &Json, env: &Environment) -> Option<Value> {
     let tag = json[0].as_str().unwrap();
     Some(match tag {
         "n" => Value::Null,
@@ -51,21 +51,21 @@ fn value(json: &Json) -> Option<Value> {
                     Json::Number(n) => Key::Int(n.as_i64().unwrap()),
                     other => Key::Str(PhpString::from(bytes(&other[1]))),
                 };
-                array.insert(key, value(&pair[1])?);
+                array.insert(key, value(&pair[1], env)?);
             }
             Value::Array(array)
         }
-        "o" => object(json)?,
+        "o" => object(json, env)?,
         _ => return None,
     })
 }
 
 /// An object of a class the port has, from its recorded state.
-fn object(json: &Json) -> Option<Value> {
+fn object(json: &Json, env: &Environment) -> Option<Value> {
     use php_value::object::{ArrayIterator, ArrayObject, StdClass};
     use twig_integration::classes as c;
     let class = json[1].as_str()?;
-    let Value::Array(state) = value(json.get(2)?)? else {
+    let Value::Array(state) = value(json.get(2)?, env)? else {
         return None;
     };
     let get = |name: &str| state.get(&Key::from_bytes(name.as_bytes())).cloned();
@@ -79,6 +79,8 @@ fn object(json: &Json) -> Option<Value> {
     };
     let object: Arc<dyn PhpObject> = match class {
         "stdClass" => Arc::new(StdClass::from_array(state.clone())),
+        // `$twig->load($name)`: a wrapper of the case's environment
+        "Twig\\TemplateWrapper" => Arc::new(env.load(string("name").as_bytes()).ok()?),
         "ArrayObject" => Arc::new(ArrayObject::new(state.clone())),
         "ArrayIterator" => Arc::new(ArrayIterator::new(state.clone())),
         "Twig\\Markup" => {
@@ -151,7 +153,7 @@ fn text(s: &PhpString) -> String {
 /// What the case's `--DATA--` set: PHP's default zone and the core
 /// extension's date formats, zone and number format.
 fn apply_env(record: &Json, env: &Environment) {
-    let Some(Value::Array(state)) = record.get("env").and_then(value) else {
+    let Some(Value::Array(state)) = record.get("env").and_then(|j| value(j, env)) else {
         return;
     };
     let get = |name: &str| state.get(&Key::from_bytes(name.as_bytes())).cloned();
@@ -315,7 +317,7 @@ fn run(record: &Json, compiled: &generated::Compiled) -> Outcome {
 /// Renders `index.twig` with the case's data.
 fn render(record: &Json, env: &Environment) -> Outcome {
     let lossy = |b: &[u8]| String::from_utf8_lossy(b).into_owned();
-    let Some(data) = value(&record["data"]) else {
+    let Some(data) = value(&record["data"], env) else {
         return Outcome::Skip;
     };
     apply_env(record, env);
