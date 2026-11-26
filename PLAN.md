@@ -1746,6 +1746,14 @@ Stack rows (searched November 22):
 
 ## M6 progress
 
+**Owner, November 26:** the DBAL port moved, with its history, recorders
+and parity manifest, to its own repository
+[php2rust-doctrine-dbal](https://github.com/D-Nations/php2rust-doctrine-dbal)
+(package `php2rust-doctrine-dbal`). Its progress is tracked there; the
+rows below are the record up to the move. The ORM manifest stays here
+until the ORM port starts. php-value, php-pcre and php-dom moved the same
+day to php2rust-compatibility-tools.
+
 Stack rows (searched November 25):
 
 | Component | Options compared | Choice | Reason |
