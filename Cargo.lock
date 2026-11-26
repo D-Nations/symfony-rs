@@ -1436,6 +1436,7 @@ dependencies = [
  "serde",
  "serde_json",
  "symfony-deprecation-contracts",
+ "symfony-expression-language",
  "symfony-filesystem",
  "symfony-finder",
  "symfony-mime",

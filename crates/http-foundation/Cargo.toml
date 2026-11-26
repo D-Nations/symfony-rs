@@ -11,6 +11,7 @@ axum = "0.8.9"
 php-pcre = { workspace = true }
 php-value = { workspace = true }
 symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+symfony-expression-language = { path = "../expression-language" }
 symfony-filesystem = { path = "../filesystem" }
 symfony-finder = { path = "../finder" }
 symfony-mime = { path = "../mime" }

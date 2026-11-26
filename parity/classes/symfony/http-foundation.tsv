@@ -2,7 +2,7 @@
 AcceptHeader.php	AcceptHeader	162	ported	crates/http-foundation/src/accept_header.rs
 AcceptHeaderItem.php	AcceptHeaderItem	78	ported	crates/http-foundation/src/accept_header.rs
 BinaryFileResponse.php	BinaryFileResponse	260	ported	crates/http-foundation/src/binary_file_response.rs
-ChainRequestMatcher.php	ChainRequestMatcher	16	pending	
+ChainRequestMatcher.php	ChainRequestMatcher	16	ported	crates/http-foundation/src/chain_request_matcher.rs
 Cookie.php	Cookie	278	ported	crates/http-foundation/src/cookie.rs crates/http-foundation/tests/cookie_recorded.rs
 EventStreamResponse.php	EventStreamResponse	59	ported	crates/http-foundation/src/event_stream_response.rs
 Exception/BadRequestException.php	BadRequestException	4	ported	crates/http-foundation/src/exception.rs
@@ -45,18 +45,18 @@ RateLimiter/PeekableRequestRateLimiterInterface.php	PeekableRequestRateLimiterIn
 RateLimiter/RequestRateLimiterInterface.php	RequestRateLimiterInterface	8	pending	
 RedirectResponse.php	RedirectResponse	43	ported	crates/http-foundation/src/redirect_response.rs
 Request.php	Request	1267	ported	crates/http-foundation/src/accept_language.rs crates/http-foundation/src/lib.rs crates/http-foundation/src/request.rs crates/http-foundation/src/scheme.rs
-RequestMatcher/AttributesRequestMatcher.php	AttributesRequestMatcher	22	pending	
-RequestMatcher/ExpressionRequestMatcher.php	ExpressionRequestMatcher	24	pending	
-RequestMatcher/HeaderRequestMatcher.php	HeaderRequestMatcher	23	pending	
-RequestMatcher/HostRequestMatcher.php	HostRequestMatcher	13	pending	
-RequestMatcher/IpsRequestMatcher.php	IpsRequestMatcher	19	pending	
-RequestMatcher/IsJsonRequestMatcher.php	IsJsonRequestMatcher	10	pending	
-RequestMatcher/MethodRequestMatcher.php	MethodRequestMatcher	21	pending	
-RequestMatcher/PathRequestMatcher.php	PathRequestMatcher	13	pending	
-RequestMatcher/PortRequestMatcher.php	PortRequestMatcher	13	pending	
-RequestMatcher/QueryParameterRequestMatcher.php	QueryParameterRequestMatcher	18	pending	
-RequestMatcher/SchemeRequestMatcher.php	SchemeRequestMatcher	18	pending	
-RequestMatcherInterface.php	RequestMatcherInterface	5	pending	
+RequestMatcher/AttributesRequestMatcher.php	AttributesRequestMatcher	22	ported	crates/http-foundation/src/request_matcher/attributes_request_matcher.rs
+RequestMatcher/ExpressionRequestMatcher.php	ExpressionRequestMatcher	24	ported	crates/http-foundation/src/request_matcher/expression_request_matcher.rs
+RequestMatcher/HeaderRequestMatcher.php	HeaderRequestMatcher	23	ported	crates/http-foundation/src/request_matcher/header_request_matcher.rs
+RequestMatcher/HostRequestMatcher.php	HostRequestMatcher	13	ported	crates/http-foundation/src/request_matcher/host_request_matcher.rs
+RequestMatcher/IpsRequestMatcher.php	IpsRequestMatcher	19	ported	crates/http-foundation/src/request_matcher/ips_request_matcher.rs
+RequestMatcher/IsJsonRequestMatcher.php	IsJsonRequestMatcher	10	ported	crates/http-foundation/src/request_matcher/is_json_request_matcher.rs
+RequestMatcher/MethodRequestMatcher.php	MethodRequestMatcher	21	ported	crates/http-foundation/src/request_matcher/method_request_matcher.rs
+RequestMatcher/PathRequestMatcher.php	PathRequestMatcher	13	ported	crates/http-foundation/src/request_matcher/path_request_matcher.rs
+RequestMatcher/PortRequestMatcher.php	PortRequestMatcher	13	ported	crates/http-foundation/src/request_matcher/port_request_matcher.rs
+RequestMatcher/QueryParameterRequestMatcher.php	QueryParameterRequestMatcher	18	ported	crates/http-foundation/src/request_matcher/query_parameter_request_matcher.rs
+RequestMatcher/SchemeRequestMatcher.php	SchemeRequestMatcher	18	ported	crates/http-foundation/src/request_matcher/scheme_request_matcher.rs
+RequestMatcherInterface.php	RequestMatcherInterface	5	ported	crates/http-foundation/src/request_matcher_interface.rs
 RequestStack.php	RequestStack	53	ported	crates/http-foundation/src/request_stack.rs
 Response.php	Response	689	ported	crates/http-foundation/src/response.rs crates/http-kernel/src/lib.rs
 ResponseHeaderBag.php	ResponseHeaderBag	171	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs
