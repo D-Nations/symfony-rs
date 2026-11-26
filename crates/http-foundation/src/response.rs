@@ -34,6 +34,7 @@ use php_value::{
 };
 
 use crate::{
+    binary_file_response::BinaryFile,
     exception::{Class, Error, Result},
     header_bag::{HeaderValues, ResponseHeaderBag, Values},
     php::{
@@ -157,6 +158,8 @@ pub struct Response {
     sent_headers: Vec<(Key, Values)>,
     /// The `StreamedResponse` state, for an instance of that subclass.
     stream: Option<Box<Stream>>,
+    /// The `BinaryFileResponse` state, for an instance of that subclass.
+    binary: Option<Box<BinaryFile>>,
 }
 
 impl Default for Response {
@@ -171,6 +174,7 @@ impl Default for Response {
             charset: None,
             sent_headers: Vec::new(),
             stream: None,
+            binary: None,
         }
     }
 }
@@ -397,6 +401,29 @@ impl Response {
         Ok(response)
     }
 
+    /// The `BinaryFileResponse` state: `Some` for `$response instanceof
+    /// BinaryFileResponse`.
+    pub fn binary_file(&self) -> Option<&BinaryFile> {
+        self.binary.as_deref()
+    }
+
+    /// The `BinaryFileResponse` state, to change it.
+    pub fn binary_file_mut(&mut self) -> Option<&mut BinaryFile> {
+        self.binary.as_deref_mut()
+    }
+
+    /// `new BinaryFileResponse(...)`'s `parent::__construct(null,
+    /// $status, $headers)`, with the subclass's state.
+    pub(crate) fn with_binary_file(
+        status: i64,
+        headers: ResponseHeaderBag,
+        binary: BinaryFile,
+    ) -> Result<Self> {
+        let mut response = Self::new(None::<PhpString>, status, headers)?;
+        response.binary = Some(Box::new(binary));
+        Ok(response)
+    }
+
     /// The `StreamedResponse` state: `Some` for `$response instanceof
     /// StreamedResponse`.
     pub fn stream(&self) -> Option<&Stream> {
@@ -410,6 +437,9 @@ impl Response {
 
     /// `$response::class`.
     pub fn class(&self) -> &'static str {
+        if self.binary.is_some() {
+            return crate::binary_file_response::CLASS;
+        }
         match self.stream.as_deref() {
             Some(stream) if stream.event_stream().is_some() => crate::event_stream_response::CLASS,
             Some(stream) if stream.is_json() => crate::streamed_json_response::CLASS,
@@ -468,8 +498,19 @@ impl Response {
     }
 
     /// `prepare($request)`: makes the response compliant with RFC 2616
-    /// for the request it answers.
+    /// for the request it answers. A `BinaryFileResponse` also sets its
+    /// file's headers and the range to send.
     pub fn prepare(&mut self, request: &mut Request) -> Result<&mut Self> {
+        if self.binary.is_some() {
+            crate::binary_file_response::prepare(self, request)?;
+            return Ok(self);
+        }
+        self.prepare_parent(request)
+    }
+
+    /// `Response::prepare($request)`, which a subclass calls as
+    /// `parent::prepare()`.
+    pub(crate) fn prepare_parent(&mut self, request: &mut Request) -> Result<&mut Self> {
         if self.is_informational() || self.is_empty() {
             self.set_content(None)?;
             self.headers.remove("Content-Type");
@@ -667,6 +708,10 @@ impl Response {
     /// its callback instead, once; without one it throws
     /// `\LogicException`, and what the callback throws is passed on.
     pub fn send_content(&mut self) -> std::result::Result<&mut Self, Throwable> {
+        if self.binary.is_some() {
+            crate::binary_file_response::send_content(self)?;
+            return Ok(self);
+        }
         if let Some(stream) = &mut self.stream {
             stream.send_content()?;
             return Ok(self);
@@ -711,6 +756,15 @@ impl Response {
     /// only null, which marks its content as sent; other content throws
     /// `\LogicException`.
     pub fn set_content(&mut self, content: Option<PhpString>) -> Result<&mut Self> {
+        if self.binary.is_some() {
+            if content.is_some() {
+                return Err(Error::new(
+                    Class::PhpLogic,
+                    "The content cannot be set on a BinaryFileResponse instance.",
+                ));
+            }
+            return Ok(self);
+        }
         if let Some(stream) = &mut self.stream {
             if content.is_some() {
                 return Err(Error::new(
@@ -730,9 +784,10 @@ impl Response {
         &self.content
     }
 
-    /// `getContent()`: `None` is a `StreamedResponse`'s `false`.
+    /// `getContent()`: `None` is the `false` of a `StreamedResponse` and
+    /// a `BinaryFileResponse`.
     pub fn get_content(&self) -> Option<&PhpString> {
-        if self.stream.is_some() {
+        if self.stream.is_some() || self.binary.is_some() {
             return None;
         }
         Some(&self.content)

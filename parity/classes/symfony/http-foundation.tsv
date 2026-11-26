@@ -1,7 +1,7 @@
 # symfony/http-foundation at 30fa3efe6e736b0d06f5331cc6abe813582c0a26: upstream file	classes	code lines	status	rust files
 AcceptHeader.php	AcceptHeader	162	ported	crates/http-foundation/src/accept_header.rs
 AcceptHeaderItem.php	AcceptHeaderItem	78	ported	crates/http-foundation/src/accept_header.rs
-BinaryFileResponse.php	BinaryFileResponse	260	pending	
+BinaryFileResponse.php	BinaryFileResponse	260	ported	crates/http-foundation/src/binary_file_response.rs
 ChainRequestMatcher.php	ChainRequestMatcher	16	pending	
 Cookie.php	Cookie	278	ported	crates/http-foundation/src/cookie.rs crates/http-foundation/tests/cookie_recorded.rs
 EventStreamResponse.php	EventStreamResponse	59	ported	crates/http-foundation/src/event_stream_response.rs
@@ -31,7 +31,7 @@ File/Exception/PartialFileException.php	PartialFileException	4	ported	crates/htt
 File/Exception/UnexpectedTypeException.php	UnexpectedTypeException	8	ported	crates/http-foundation/src/exception.rs
 File/Exception/UploadException.php	UploadException	4	ported	crates/http-foundation/src/exception.rs
 File/File.php	File	70	ported	crates/http-foundation/src/file.rs
-File/Stream.php	Stream	8	pending	
+File/Stream.php	Stream	8	ported	crates/http-foundation/src/file_stream.rs
 File/UploadedFile.php	UploadedFile	148	ported	crates/http-foundation/src/uploaded_file.rs crates/http-foundation/tests/files_recorded.rs
 FileBag.php	FileBag	74	ported	crates/http-foundation/src/file_bag.rs crates/http-foundation/tests/files_recorded.rs
 HeaderBag.php	HeaderBag	146	ported	crates/http-foundation/src/header_bag.rs crates/http-foundation/tests/header_bags_recorded.rs

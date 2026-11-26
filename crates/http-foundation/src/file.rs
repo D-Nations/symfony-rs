@@ -26,6 +26,72 @@ use crate::{
     php::{self, DIRECTORY_SEPARATOR},
 };
 
+/// What `BinaryFileResponse` calls on its file: a `File`, or an object of
+/// a subclass that overrides some of these methods (`File\Stream`, or an
+/// application's own).
+pub trait FileLike: std::fmt::Debug + Send + Sync {
+    /// `getPathname()`.
+    fn get_pathname(&self) -> &[u8];
+
+    /// `getFilename()`: the path after its last `/`.
+    fn get_filename(&self) -> &[u8] {
+        let pathname = self.get_pathname();
+        match pathname.iter().rposition(|&c| c == b'/') {
+            Some(at) if pathname.len() > 1 => &pathname[at + 1..],
+            _ => pathname,
+        }
+    }
+
+    /// `getRealPath()`; `None` is PHP's `false`, which a URL also gives,
+    /// `file://` included (`tests/data/binary_file.json`).
+    fn get_real_path(&self) -> Option<Vec<u8>> {
+        let pathname = self.get_pathname();
+        if fs::scheme(pathname).is_some() {
+            return None;
+        }
+        fs::realpath(pathname)
+    }
+
+    /// `isReadable()`.
+    fn is_readable(&self) -> bool {
+        fs::is_readable(self.get_pathname())
+    }
+
+    /// `getSize()`: `None` is `false` (a `File\Stream`, of unknown size);
+    /// a file that cannot be read is PHP's `RuntimeException`.
+    fn get_size(&self) -> Result<Option<i64>> {
+        Ok(Some(stat(self.get_pathname(), "getSize")?.size))
+    }
+
+    /// `getMTime()`.
+    fn get_m_time(&self) -> Result<i64> {
+        Ok(stat(self.get_pathname(), "getMTime")?.mtime)
+    }
+
+    /// `getMimeType()`: the type the default `MimeTypes` guesses.
+    fn get_mime_type(&self) -> Result<Option<String>> {
+        Ok(MimeTypes::get_default().guess_mime_type(self.get_pathname())?)
+    }
+}
+
+fn stat(pathname: &[u8], method: &str) -> Result<fs::Stat> {
+    fs::stat(pathname).ok_or_else(|| {
+        Error::new(
+            Class::PhpRuntime,
+            format!(
+                "SplFileInfo::{method}(): stat failed for {}",
+                shown(pathname)
+            ),
+        )
+    })
+}
+
+impl FileLike for File {
+    fn get_pathname(&self) -> &[u8] {
+        &self.pathname
+    }
+}
+
 /// `new File($path, $checkPath)`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct File {
@@ -93,9 +159,10 @@ impl File {
         symfony_finder::php::extension(self.get_filename())
     }
 
-    /// `getRealPath()`; `None` is PHP's `false`.
+    /// `getRealPath()`; `None` is PHP's `false` (see
+    /// [`FileLike::get_real_path`]).
     pub fn get_real_path(&self) -> Option<Vec<u8>> {
-        fs::realpath(&self.pathname)
+        FileLike::get_real_path(self)
     }
 
     /// `isReadable()`.
@@ -104,15 +171,7 @@ impl File {
     }
 
     fn stat(&self, method: &str) -> Result<fs::Stat> {
-        fs::stat(&self.pathname).ok_or_else(|| {
-            Error::new(
-                Class::PhpRuntime,
-                format!(
-                    "SplFileInfo::{method}(): stat failed for {}",
-                    shown(&self.pathname)
-                ),
-            )
-        })
+        stat(&self.pathname, method)
     }
 
     /// `getSize()`; a file that cannot be read is PHP's `RuntimeException`.
