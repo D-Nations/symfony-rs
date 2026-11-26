@@ -54,7 +54,7 @@ const LINK_TYPE_INSTANCE: &str = "https://github.com/doctrine/dbal/pull/7490";
 const LINK_JSONB: &str = "https://github.com/doctrine/dbal/pull/6939";
 
 /// Object representation of a database column.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 #[allow(
     clippy::struct_excessive_bools,
     reason = "the properties of Column.php"
