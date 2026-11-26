@@ -1,5 +1,5 @@
 //! symfony/demo's compiled container, emitted as Rust by
-//! `di-trial-compiler` in `build.rs`. Every class is a placeholder that
+//! `symfony-di-emitter` in `build.rs`. Every class is a placeholder that
 //! records how PHP would have built it; see the trial's README.
 //!
 //! Upstream: none

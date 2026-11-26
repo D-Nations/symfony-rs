@@ -3,7 +3,7 @@
 //!
 //! Upstream: none
 
-use di_trial_compiler::{Config, Error, compile};
+use symfony_di_emitter::{Config, Error, compile};
 
 fn file(services: &str) -> String {
     format!(

@@ -6,7 +6,7 @@
 
 use std::{env, fmt::Write as _, fs, path::Path, process::ExitCode};
 
-use di_trial_compiler::{Config, compile};
+use symfony_di_emitter::{Config, compile};
 
 fn main() -> ExitCode {
     let input = "data/container.xml";
