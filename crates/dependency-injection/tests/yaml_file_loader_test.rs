@@ -10,7 +10,7 @@
 //!
 //! Not ported, by reason:
 //!
-//! - the fixture holds an `@=` expression (no ExpressionLanguage
+//! - the fixture holds an `@=` expression (no `ExpressionLanguage`
 //!   component): testLoadServices (services6.yml), testParsesIteratorArgument
 //!   (services9.yml)
 //! - needs `PhpFileLoader` (not ported): testLoadImports (services4.yml
@@ -25,7 +25,7 @@
 //! `reflection.*` ones: the port has no `ReflectionClassResource`.
 //!
 //! Upstream: symfony/dependency-injection Tests/Loader/YamlFileLoaderTest.php
-#![allow(non_snake_case, clippy::unwrap_used)]
+#![allow(non_snake_case, clippy::unwrap_used, clippy::disallowed_names)]
 
 mod loader_support;
 

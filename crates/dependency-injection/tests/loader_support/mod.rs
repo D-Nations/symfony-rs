@@ -27,13 +27,10 @@ pub fn fixtures() -> Option<String> {
         .is_dir()
         .then(|| FileResource::new(dir.to_string_lossy().as_bytes()).ok())
         .flatten();
-    match real {
-        Some(real) => Some(String::from_utf8_lossy(real.get_resource()).into_owned()),
-        None => {
-            eprintln!("skipped: upstream/ is not fetched (scripts/fetch-upstream.sh)");
-            None
-        }
+    if real.is_none() {
+        eprintln!("skipped: upstream/ is not fetched (scripts/fetch-upstream.sh)");
     }
+    real.map(|real| String::from_utf8_lossy(real.get_resource()).into_owned())
 }
 
 const DI: &str = "Symfony\\Component\\DependencyInjection\\Exception\\";
@@ -293,7 +290,7 @@ pub fn registry() -> Arc<ClassRegistry> {
         ClassMetadata::class(&f("PrototypeAsAlias\\AsProductionAlias"))
             .with_parent(&format!("{ATTRIBUTE}AsAlias")),
     );
-    r.add_class(alias("PrototypeAsAlias\\WithCustomAsAlias", &[&foo], vec![AttributeMetadata { class: f("PrototypeAsAlias\\AsProductionAlias"), arguments: php_array!["id" => foo.as_str(), "public" => false, "when" => php_array!["prod"]] }]));
+    r.add_class(alias("PrototypeAsAlias\\WithCustomAsAlias", &[], vec![AttributeMetadata { class: f("PrototypeAsAlias\\AsProductionAlias"), arguments: php_array!["id" => foo.as_str(), "public" => false, "when" => php_array!["prod"]] }]));
     r.add_class(alias(
         "PrototypeAsAlias\\WithAsAliasTargetOne",
         &[&foo],
