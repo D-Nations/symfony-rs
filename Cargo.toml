@@ -43,10 +43,11 @@ resolver = "3"
 # in code. To work on both repositories, override the git source with a
 # local path in an uncommitted .cargo/config.toml (see README.md).
 [workspace.dependencies]
-php-value = { package = "php2rust-value", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "703d6ca9b4f00b6c4c67113fea4b0c4df29f876d" }
-php-pcre = { package = "php2rust-regex", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "703d6ca9b4f00b6c4c67113fea4b0c4df29f876d" }
-php-dom = { package = "php2rust-dom", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "703d6ca9b4f00b6c4c67113fea4b0c4df29f876d" }
-php-date = { package = "php2rust-date", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "703d6ca9b4f00b6c4c67113fea4b0c4df29f876d" }
+php-value = { package = "php2rust-value", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }
+php-pcre = { package = "php2rust-regex", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }
+php-dom = { package = "php2rust-dom", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }
+php-date = { package = "php2rust-date", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }
+php-iconv = { package = "php2rust-iconv", git = "https://github.com/D-Nations/php2rust-compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }
 
 # Lints for every member that sets `[lints] workspace = true`. Members opt in
 # one at a time, once they pass with `-D warnings`; see PLAN.md

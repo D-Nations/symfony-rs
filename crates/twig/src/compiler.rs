@@ -250,6 +250,10 @@ pub fn core_callable(php: &str) -> Option<(&'static str, Vec<Parameter>)> {
         "Twig\\Extension\\CoreExtension::lower" => {
             (path("rt::core::lower"), vec![charset(), req("string")])
         }
+        "Twig\\Extension\\CoreExtension::convertEncoding" => (
+            path("rt::core::convert_encoding"),
+            vec![req("string"), req("to"), req("from")],
+        ),
         "Twig\\Extension\\CoreExtension::striptags" => (
             path("rt::core::striptags"),
             vec![req("string"), null("allowable_tags")],
