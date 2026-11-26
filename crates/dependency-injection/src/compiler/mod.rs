@@ -27,6 +27,7 @@ mod resolve_tagged_iterator_argument_pass;
 mod service_locator_tag_pass;
 mod service_reference_graph;
 mod tag_decorator_pass;
+mod validate_env_placeholders_pass;
 
 pub use abstract_recursive_pass::{AbstractRecursivePass, RecursivePassState, recursive_process};
 pub use add_behavior_describing_tags_pass::AddBehaviorDescribingTagsPass;
@@ -51,3 +52,4 @@ pub use service_reference_graph::{
     ServiceReferenceGraphNode,
 };
 pub use tag_decorator_pass::TagDecoratorPass;
+pub use validate_env_placeholders_pass::ValidateEnvPlaceholdersPass;

@@ -143,7 +143,7 @@ impl PassConfig {
             0,
             vec![
                 Pass::new(super::AutoAliasServicePass),
-                pending("ValidateEnvPlaceholdersPass"),
+                Pass::new(super::ValidateEnvPlaceholdersPass::new()),
                 pending("ResolveDecoratorStackPass"),
                 pending("ResolveAutowireInlineAttributesPass"),
                 pending("ResolveChildDefinitionsPass"),

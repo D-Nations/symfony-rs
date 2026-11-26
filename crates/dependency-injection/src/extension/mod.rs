@@ -57,6 +57,18 @@ pub trait ExtensionInterface: Send + Sync {
         None
     }
 
+    /// `$extension instanceof ConfigurationExtensionInterface` (or an
+    /// extension that is a `ConfigurationInterface` itself), then
+    /// `getConfiguration($config, $container)`: the configuration, `None`
+    /// for `null` or another extension.
+    fn get_configuration(
+        &self,
+        _config: &[PhpArray],
+        _container: &ContainerBuilder,
+    ) -> Option<Box<dyn symfony_config::definition::ConfigurationInterface>> {
+        None
+    }
+
     /// `$extension instanceof CompilerPassInterface`: the extension as a
     /// pass. An extension that is also added with `addCompilerPass()`
     /// returns that same handle, so `ExtensionCompilerPass` can tell it
