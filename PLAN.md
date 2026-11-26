@@ -1731,7 +1731,20 @@ Stack rows (searched November 25):
       guessed (counts in the crate README). `Doctrine\DBAL\Exception` is
       one struct (class, message, previous); the Query slice's typed
       exceptions convert into it.
-- [ ] D1 next: the SQLite platform; Connection on
+- [x] D1 slice 4 (SQLite platform): the rest of `AbstractPlatform.php`
+      (not the `SchemaDiff`, `Sequence` and `Connection` methods),
+      `SQLitePlatform.php`, `KeywordList` and `SQLiteKeywords`,
+      `DateIntervalUnit`, `TrimMode`, `TransactionIsolationLevel`,
+      `LockMode`, the platform exceptions, and the Schema value objects
+      (names and parser, `AbstractAsset`, `Column`, `Index`, the
+      constraints, `Table`, `TableDiff`, their editors, the collections,
+      the Schema exceptions). SQLitePlatformTest with the inherited
+      AbstractPlatformTestCase tests 92 of 96 (4 not run upstream on
+      SQLite); 292 Schema tests; 2,500 recorded `SQLitePlatform` outputs
+      (expressions, `CREATE TABLE`, `ALTER TABLE`) match. Differences in
+      the crate README (editor errors at `create()`, value equality for
+      identity). No new dependency.
+- [ ] D1 next: Connection on
       sqlx's SQLite driver; schema manager. The demo comparison stays
       paused (owner, November 23).
 
