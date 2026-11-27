@@ -102,16 +102,38 @@ fn guesses_as_php_finfo() {
             continue;
         }
         let entries = data[set].as_object().expect("a set");
-        let mut same = 0;
-        for (name, php) in entries {
-            let php = recorded(php);
-            let port = answer(&guesser, &base.join(name));
-            if php == port {
-                same += 1;
-            } else {
-                differences.insert((set.into(), name.clone()), (php, port));
+        let entries: Vec<_> = entries.iter().collect();
+        let workers = std::thread::available_parallelism().map_or(1, |n| n.get().min(4));
+        let chunk_size = entries.len().div_ceil(workers).max(1);
+        let same = std::thread::scope(|scope| {
+            let jobs: Vec<_> = entries
+                .chunks(chunk_size)
+                .map(|chunk| {
+                    let guesser = &guesser;
+                    scope.spawn(move || {
+                        let mut same = 0;
+                        let mut differences = Differences::new();
+                        for (name, value) in chunk {
+                            let php = recorded(value);
+                            let port = answer(guesser, &base.join(name));
+                            if php == port {
+                                same += 1;
+                            } else {
+                                differences.insert((set.into(), (*name).clone()), (php, port));
+                            }
+                        }
+                        (same, differences)
+                    })
+                })
+                .collect();
+            let mut same = 0;
+            for job in jobs {
+                let (matched, chunk_differences) = job.join().expect("fixture worker panicked");
+                same += matched;
+                differences.extend(chunk_differences);
             }
-        }
+            same
+        });
         counts.insert(set.to_string(), (same, entries.len()));
     }
     if std::env::var_os("SYMFONY_RS_WRITE_DIFFERENCES").is_some() {
