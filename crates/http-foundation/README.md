@@ -51,7 +51,7 @@ complete port of Symfony HttpFoundation.
 HTTP adapters bound body reads using `POST_MAX_SIZE` (8 MiB), and supply an
 empty body after a read failure. No socket I/O or body buffering is done by
 the parsers. The runtime dependencies are the already-used Axum, for
-`scheme`'s request-parts adapter, and the workspace's `php-value`, `php-pcre`, `symfony-deprecation-contracts` (Request's deprecations), and for the file classes
+`scheme`'s request-parts adapter, and `php-value`, `php-pcre`, `symfony-deprecation-contracts` (Request's deprecations), and for the file classes
 `symfony-mime`, `symfony-filesystem` and `symfony-finder`. JSON, serde and base64 are test dependencies.
 
 Run this crate independently with:
