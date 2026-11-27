@@ -69,8 +69,3 @@ symfony/var-dumper	v8.1.10	3412a5af7d34a19515a77890fc804fe8e50d1a4f	https://gith
 symfony/var-exporter	v8.1.10	e94442cdefc1df995528d26acb40d25c2d50504d	https://github.com/symfony/var-exporter.git
 symfony/web-profiler-bundle	v8.1.9	481a6d4b0b6bce7e83573576abcf01d9674cd934	https://github.com/symfony/web-profiler-bundle.git
 symfony/yaml	v8.1.9	6107ee26a25215c3df3af0a3315e56bb4fd0b7db	https://github.com/symfony/yaml.git
-twig/extra-bundle	v3.29.0	aaa2993e19293a99240c4c61aa461d743b0dd569	https://github.com/twigphp/twig-extra-bundle.git
-twig/html-extra	v3.29.0	7147611979df81edb78baf7d003860b72e335c3f	https://github.com/twigphp/html-extra.git
-twig/intl-extra	v3.30.0	211c603b3f7d5a8f6c6543a02fe9f82c09b18025	https://github.com/twigphp/intl-extra.git
-twig/markdown-extra	v3.29.0	8a8e3c28ed17b03ed4965b2e265a018d61f00ba5	https://github.com/twigphp/markdown-extra.git
-twig/twig	v3.30.0	8c737079b726af72ff8ef3c595be9f6a810ea1ef	https://github.com/twigphp/Twig.git

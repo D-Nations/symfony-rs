@@ -550,6 +550,16 @@ resolved from the compiled registry), whitespace control, sandbox later.
 Twig's `Fixtures/*.test` files are data-driven and port almost directly; add
 them to the manifest. TwigBridge (path, url, asset, csrf, trans, is_granted,
 form functions), TwigBundle, twig extras (intl, markdown, html, string).
+
+**Owner, November 27:** the Twig port (`crates/twig`, `crates/twig-integration`)
+moved, with its history, recorders and parity manifests, to its own
+repository [php2rust/twig](https://github.com/php2rust/twig) (packages
+`php2rust-twig`, library name `twig`, and `php2rust-twig-integration`). Its
+progress is tracked there. No crate here depends on it yet; a crate that
+does uses a git dependency pinned to a rev, and patches
+`https://github.com/php2rust/symfony-rs` to the local
+`crates/deprecation-contracts`, so that one deprecation handler sees
+Twig's deprecations. The twig-trial spike and its recorder stay here.
 Acceptance is staged:
 
 - **T1, language/compiler:** lexer/parser/precedence and Rust emission pass
