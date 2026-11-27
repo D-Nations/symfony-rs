@@ -1,0 +1,10 @@
+
+services:
+    service_container:
+        class: Symfony\Component\DependencyInjection\ContainerInterface
+        public: true
+        synthetic: true
+    example:
+        class: Example
+        public: true
+        file: 'C:\project\includes\foo.php'
