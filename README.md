@@ -43,9 +43,9 @@ repository is checked out beside this one):
 
 ```toml
 [patch."https://github.com/php2rust/compatibility-tools"]
-php2rust-value = { path = "../php2rust-compatibility-tools/crates/php2rust-value" }
-php2rust-regex = { path = "../php2rust-compatibility-tools/crates/php2rust-regex" }
-php2rust-dom = { path = "../php2rust-compatibility-tools/crates/php2rust-dom" }
+php2rust-value = { path = "../compatibility-tools/crates/php2rust-value" }
+php2rust-regex = { path = "../compatibility-tools/crates/php2rust-regex" }
+php2rust-dom = { path = "../compatibility-tools/crates/php2rust-dom" }
 ```
 
 When the change is merged there, update `rev` in the root `Cargo.toml`.
