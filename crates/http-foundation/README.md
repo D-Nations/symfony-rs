@@ -1,7 +1,7 @@
 # Symfony request compatibility subset
 
 Private workspace crate of symfony-rs, extracted from
-[symfony-demo-rs](https://github.com/D-Nations/symfony-demo-rs). It implements the
+[symfony-demo-rs](https://github.com/php2rust/symfony-demo-rs). It implements the
 request semantics already exercised by the demo, with the Symfony source
 named in each module. PHP's own parsing (query strings, form bodies,
 cookies, multipart) is written from the PHP manual and from PHP 8.4.27's
