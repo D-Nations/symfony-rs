@@ -7,7 +7,7 @@ publish = false
 description = "Port of the symfony/clock component"
 
 [dependencies]
-# PHP's date extension (moved to php2rust-compatibility-tools).
+# PHP's date extension (moved to php2rust/compatibility-tools-rs).
 php-date.workspace = true
 
 [dev-dependencies]

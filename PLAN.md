@@ -553,7 +553,7 @@ form functions), TwigBundle, twig extras (intl, markdown, html, string).
 
 **Owner, November 27:** the Twig port (`crates/twig`, `crates/twig-integration`)
 moved, with its history, recorders and parity manifests, to its own
-repository [php2rust/twig](https://github.com/php2rust/twig) (packages
+repository [php2rust/twig-rs](https://github.com/php2rust/twig-rs) (packages
 `php2rust-twig`, library name `twig`, and `php2rust-twig-integration`). Its
 progress is tracked there. No crate here depends on it yet; a crate that
 does uses a git dependency pinned to a rev, and patches
@@ -1871,11 +1871,15 @@ Stack rows (searched November 22):
 
 **Owner, November 26:** the DBAL port moved, with its history, recorders
 and parity manifest, to its own repository
-[php2rust-doctrine-dbal](https://github.com/D-Nations/php2rust-doctrine-dbal)
+[php2rust/doctrine-dbal-rs](https://github.com/php2rust/doctrine-dbal-rs)
 (package `php2rust-doctrine-dbal`). Its progress is tracked there; the
 rows below are the record up to the move. The ORM manifest stays here
 until the ORM port starts. php-value, php-pcre and php-dom moved the same
-day to php2rust-compatibility-tools.
+day to [php2rust/compatibility-tools-rs](https://github.com/php2rust/compatibility-tools-rs).
+**Owner, November 27:** the php2rust repositories moved from D-Nations to
+the [php2rust](https://github.com/php2rust) organization, each named with
+an `-rs` suffix: `symfony-rs`, `symfony-demo-rs`, `compatibility-tools-rs`,
+`doctrine-dbal-rs`, `doctrine-orm-rs`, `twig-rs`.
 
 Stack rows (searched November 25):
 

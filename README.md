@@ -3,7 +3,7 @@
 Rust crates that behave like Symfony components, proven against Symfony
 itself. They are the runtime that converted Symfony applications link
 against (php2rust's planned `symfony2rust`), and they are grown component by
-component from the [symfony-demo-rs](https://github.com/D-Nations/symfony-demo-rs)
+component from the [symfony-demo-rs](https://github.com/php2rust/symfony-demo-rs)
 port, which stays their first consumer and acceptance test.
 
 **Unofficial.** Not affiliated with or endorsed by Symfony SAS or the Symfony
@@ -30,18 +30,19 @@ Nothing outside those tables is claimed.
 | [`symfony-password-hasher`](crates/password-hasher/README.md) | `symfony/password-hasher` | Native (bcrypt, Argon2), sodium, PBKDF2, message digest, plaintext and migrating hashers, PasswordHasherFactory, UserPasswordHasher; not the `security:hash-password` command |
 | [`symfony-filesystem`](crates/filesystem/README.md) | `symfony/filesystem` | The `dumpFile()` subset Config's caches use |
 | [`symfony-event-dispatcher`](crates/event-dispatcher/README.md), [contracts](crates/event-dispatcher-contracts/README.md) | `symfony/event-dispatcher` | Dispatcher, listeners, subscribers |
-| `twig`, `twig-integration` | `twig/twig` | Moved on November 27 to [php2rust/twig](https://github.com/php2rust/twig) (packages `php2rust-twig`, library name `twig`, and `php2rust-twig-integration`), with their history, recorders and parity manifests |
-| `doctrine-dbal` | `doctrine/dbal` | Moved on November 26 to [php2rust-doctrine-dbal](https://github.com/D-Nations/php2rust-doctrine-dbal) (package `php2rust-doctrine-dbal`), with its history, recorders and parity manifest |
+| `twig`, `twig-integration` | `twig/twig` | Moved on November 27 to [php2rust/twig-rs](https://github.com/php2rust/twig-rs) (packages `php2rust-twig`, library name `twig`, and `php2rust-twig-integration`), with their history, recorders and parity manifests |
+| `doctrine-dbal` | `doctrine/dbal` | Moved on November 26 to [php2rust/doctrine-dbal-rs](https://github.com/php2rust/doctrine-dbal-rs) (package `php2rust-doctrine-dbal`), with its history, recorders and parity manifest |
 | [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md), [`symfony-clock`](crates/clock/README.md), [`symfony-expression-language`](crates/expression-language/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
 | [`symfony-deprecation-contracts`](crates/deprecation-contracts/README.md), [`psr-log`](crates/psr-log/README.md) | `symfony/deprecation-contracts`, `psr/log` | The contracts |
-| `php-value`, `php-dom`, `php-pcre` | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source. Moved on November 26 to [php2rust-compatibility-tools](https://github.com/D-Nations/php2rust-compatibility-tools) (packages `php2rust-value`, `php2rust-dom`, `php2rust-regex`), used here by a git dependency pinned in the root `Cargo.toml` |
+| `php-value`, `php-dom`, `php-pcre` | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source. Moved on November 26 to [php2rust/compatibility-tools-rs](https://github.com/php2rust/compatibility-tools-rs) (packages `php2rust-value`, `php2rust-dom`, `php2rust-regex`), used here by a git dependency pinned in the root `Cargo.toml` |
 | [`request-lab`](examples/request-lab/README.md) | — | Independent example application on the ported kernel (RouterListener, ControllerResolver, ArgumentResolver, HttpKernel) through the HTTP adapter |
 
-To change a php2rust-compatibility-tools crate and see the result here at
-once, add an uncommitted `.cargo/config.toml`:
+To change a php2rust/compatibility-tools-rs crate and see the result here
+at once, add an uncommitted `.cargo/config.toml` (the paths are where that
+repository is checked out beside this one):
 
 ```toml
-[patch."https://github.com/D-Nations/php2rust-compatibility-tools"]
+[patch."https://github.com/php2rust/compatibility-tools-rs"]
 php2rust-value = { path = "../php2rust-compatibility-tools/crates/php2rust-value" }
 php2rust-regex = { path = "../php2rust-compatibility-tools/crates/php2rust-regex" }
 php2rust-dom = { path = "../php2rust-compatibility-tools/crates/php2rust-dom" }
