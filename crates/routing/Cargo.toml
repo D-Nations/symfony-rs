@@ -16,7 +16,7 @@ php-pcre = { workspace = true }
 php-value = { workspace = true }
 psr-log = { path = "../psr-log" }
 symfony-config = { path = "../config", optional = true }
-symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+symfony-deprecation-contracts = { workspace = true }
 symfony-http-foundation = { path = "../http-foundation" }
 
 [dev-dependencies]
