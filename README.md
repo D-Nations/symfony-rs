@@ -34,15 +34,15 @@ Nothing outside those tables is claimed.
 | `doctrine-dbal` | `doctrine/dbal` | Moved on November 26 to [php2rust/doctrine-dbal-rs](https://github.com/php2rust/doctrine-dbal-rs) (package `php2rust-doctrine-dbal`), with its history, recorders and parity manifest |
 | [`symfony-yaml`](crates/yaml/README.md), [`symfony-dotenv`](crates/dotenv/README.md), [`symfony-finder`](crates/finder/README.md), [`symfony-css-selector`](crates/css-selector/README.md), [`symfony-options-resolver`](crates/options-resolver/README.md), [`symfony-stopwatch`](crates/stopwatch/README.md), [`symfony-clock`](crates/clock/README.md), [`symfony-expression-language`](crates/expression-language/README.md) | the same names | Complete: no pending upstream test (`parity/done.txt`) |
 | [`symfony-deprecation-contracts`](crates/deprecation-contracts/README.md), [`psr-log`](crates/psr-log/README.md) | `symfony/deprecation-contracts`, `psr/log` | The contracts |
-| `php-value`, `php-dom`, `php-pcre` | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source. Moved on November 26 to [php2rust/compatibility-tools-rs](https://github.com/php2rust/compatibility-tools-rs) (packages `php2rust-value`, `php2rust-dom`, `php2rust-regex`), used here by a git dependency pinned in the root `Cargo.toml` |
+| `php-value`, `php-dom`, `php-pcre` | — (PHP itself) | PHP values and engine rules, the DOM extension subset, `preg_*` patterns; written from PHP's recorded behaviour, no PHP source. Moved on November 26 to [php2rust/compatibility-tools](https://github.com/php2rust/compatibility-tools) (packages `php2rust-value`, `php2rust-dom`, `php2rust-regex`), used here by a git dependency pinned in the root `Cargo.toml` |
 | [`request-lab`](examples/request-lab/README.md) | — | Independent example application on the ported kernel (RouterListener, ControllerResolver, ArgumentResolver, HttpKernel) through the HTTP adapter |
 
-To change a php2rust/compatibility-tools-rs crate and see the result here
+To change a php2rust/compatibility-tools crate and see the result here
 at once, add an uncommitted `.cargo/config.toml` (the paths are where that
 repository is checked out beside this one):
 
 ```toml
-[patch."https://github.com/php2rust/compatibility-tools-rs"]
+[patch."https://github.com/php2rust/compatibility-tools"]
 php2rust-value = { path = "../php2rust-compatibility-tools/crates/php2rust-value" }
 php2rust-regex = { path = "../php2rust-compatibility-tools/crates/php2rust-regex" }
 php2rust-dom = { path = "../php2rust-compatibility-tools/crates/php2rust-dom" }
