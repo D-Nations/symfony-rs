@@ -1,2 +1,2 @@
 # symfony/deprecation-contracts at f3202fa1b5097b0af062dc978b32ecf63404e31d: upstream file	classes	code lines	status	rust files
-function.php	-	6	ported	crates/deprecation-contracts/src/lib.rs
+function.php	-	6	n/a: port moved to php2rust/symfony-deprecation-contracts-rs	
