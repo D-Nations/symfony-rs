@@ -13,7 +13,7 @@ console = ["dep:symfony-console"]
 [dependencies]
 php-value = { workspace = true }
 regex = "1.13.2"
-symfony-console = { path = "../console", optional = true }
+symfony-console = { workspace = true, optional = true }
 
 [dev-dependencies]
 # The tests cover the lint:yaml command too.

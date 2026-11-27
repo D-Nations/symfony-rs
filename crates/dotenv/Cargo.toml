@@ -13,7 +13,7 @@ console = ["dep:symfony-console", "dep:serde_json"]
 
 [dependencies]
 php-value = { workspace = true }
-symfony-console = { path = "../console", optional = true }
+symfony-console = { workspace = true, optional = true }
 serde_json = { version = "1.0.154", optional = true }
 
 [dev-dependencies]

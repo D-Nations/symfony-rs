@@ -14,7 +14,6 @@ members = [
     "crates/dependency-injection",
     "crates/di-emitter",
     "crates/translation",
-    "crates/console",
     "crates/http-foundation",
     "crates/routing",
     "crates/http-kernel",
@@ -41,6 +40,7 @@ resolver = "3"
 # in code. To work on both repositories, override the git source with a
 # local path in an uncommitted .cargo/config.toml (see README.md).
 [workspace.dependencies]
+symfony-console = { package = "php2rust-symfony-console", git = "https://github.com/php2rust/symfony-console-rs", rev = "8a0e6960e5fcc28f822ae9fd8131c5b8e5703085" }
 php-value = { package = "php2rust-value", git = "https://github.com/php2rust/compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }
 php-pcre = { package = "php2rust-regex", git = "https://github.com/php2rust/compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }
 php-dom = { package = "php2rust-dom", git = "https://github.com/php2rust/compatibility-tools", rev = "4585a15ed0263257317cdf818ebcad7ed7542db8" }

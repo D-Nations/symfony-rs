@@ -951,9 +951,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "php2rust-symfony-console"
+version = "0.1.0"
+source = "git+https://github.com/php2rust/symfony-console-rs?rev=8a0e6960e5fcc28f822ae9fd8131c5b8e5703085#8a0e6960e5fcc28f822ae9fd8131c5b8e5703085"
+dependencies = [
+ "fancy-regex",
+ "php2rust-symfony-deprecation-contracts",
+ "php2rust-symfony-string",
+ "php2rust-value",
+]
+
+[[package]]
 name = "php2rust-symfony-deprecation-contracts"
 version = "0.1.0"
 source = "git+https://github.com/php2rust/symfony-deprecation-contracts-rs?rev=2089fa1b805329c4e5f0794d51521b5df0a4528c#2089fa1b805329c4e5f0794d51521b5df0a4528c"
+
+[[package]]
+name = "php2rust-symfony-string"
+version = "0.1.0"
+source = "git+https://github.com/php2rust/symfony-console-rs?rev=8a0e6960e5fcc28f822ae9fd8131c5b8e5703085#8a0e6960e5fcc28f822ae9fd8131c5b8e5703085"
+dependencies = [
+ "getrandom",
+ "php2rust-regex",
+ "php2rust-value",
+ "unicode-normalization",
+ "unicode-segmentation",
+]
 
 [[package]]
 name = "php2rust-value"
@@ -1328,17 +1351,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "symfony-console"
-version = "0.1.0"
-dependencies = [
- "fancy-regex",
- "php2rust-symfony-deprecation-contracts",
- "php2rust-value",
- "serde_json",
- "symfony-string",
-]
-
-[[package]]
 name = "symfony-css-selector"
 version = "0.1.0"
 dependencies = [
@@ -1379,9 +1391,9 @@ dependencies = [
 name = "symfony-dotenv"
 version = "0.1.0"
 dependencies = [
+ "php2rust-symfony-console",
  "php2rust-value",
  "serde_json",
- "symfony-console",
  "symfony-dotenv",
 ]
 
@@ -1561,10 +1573,10 @@ dependencies = [
 name = "symfony-yaml"
 version = "0.1.0"
 dependencies = [
+ "php2rust-symfony-console",
  "php2rust-value",
  "regex",
  "serde_json",
- "symfony-console",
  "symfony-yaml",
 ]
 
