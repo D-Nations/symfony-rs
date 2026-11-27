@@ -951,6 +951,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "php2rust-symfony-deprecation-contracts"
+version = "0.1.0"
+source = "git+https://github.com/php2rust/symfony-deprecation-contracts-rs?rev=2089fa1b805329c4e5f0794d51521b5df0a4528c#2089fa1b805329c4e5f0794d51521b5df0a4528c"
+
+[[package]]
 name = "php2rust-value"
 version = "0.1.0"
 source = "git+https://github.com/php2rust/compatibility-tools?rev=4585a15ed0263257317cdf818ebcad7ed7542db8#4585a15ed0263257317cdf818ebcad7ed7542db8"
@@ -1312,10 +1317,10 @@ version = "0.1.0"
 dependencies = [
  "php2rust-dom",
  "php2rust-regex",
+ "php2rust-symfony-deprecation-contracts",
  "php2rust-value",
  "serde_json",
  "symfony-config",
- "symfony-deprecation-contracts",
  "symfony-filesystem",
  "symfony-finder",
  "symfony-yaml",
@@ -1327,9 +1332,9 @@ name = "symfony-console"
 version = "0.1.0"
 dependencies = [
  "fancy-regex",
+ "php2rust-symfony-deprecation-contracts",
  "php2rust-value",
  "serde_json",
- "symfony-deprecation-contracts",
  "symfony-string",
 ]
 
@@ -1346,18 +1351,14 @@ dependencies = [
 name = "symfony-dependency-injection"
 version = "0.1.0"
 dependencies = [
+ "php2rust-symfony-deprecation-contracts",
  "php2rust-value",
  "psr-container",
  "serde_json",
  "symfony-config",
- "symfony-deprecation-contracts",
  "symfony-dotenv",
  "symfony-yaml",
 ]
-
-[[package]]
-name = "symfony-deprecation-contracts"
-version = "0.1.0"
 
 [[package]]
 name = "symfony-di-emitter"
@@ -1433,10 +1434,10 @@ dependencies = [
  "base64",
  "getrandom",
  "php2rust-regex",
+ "php2rust-symfony-deprecation-contracts",
  "php2rust-value",
  "serde",
  "serde_json",
- "symfony-deprecation-contracts",
  "symfony-expression-language",
  "symfony-filesystem",
  "symfony-finder",
@@ -1450,11 +1451,11 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "base64",
+ "php2rust-symfony-deprecation-contracts",
  "php2rust-value",
  "psr-container",
  "psr-log",
  "serde_json",
- "symfony-deprecation-contracts",
  "symfony-event-dispatcher",
  "symfony-finder",
  "symfony-http-foundation",
@@ -1476,9 +1477,9 @@ dependencies = [
 name = "symfony-options-resolver"
 version = "0.1.0"
 dependencies = [
+ "php2rust-symfony-deprecation-contracts",
  "php2rust-value",
  "serde_json",
- "symfony-deprecation-contracts",
 ]
 
 [[package]]
@@ -1503,11 +1504,11 @@ name = "symfony-routing"
 version = "0.1.0"
 dependencies = [
  "php2rust-regex",
+ "php2rust-symfony-deprecation-contracts",
  "php2rust-value",
  "psr-log",
  "serde_json",
  "symfony-config",
- "symfony-deprecation-contracts",
  "symfony-http-foundation",
  "symfony-routing",
 ]

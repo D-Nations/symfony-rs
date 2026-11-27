@@ -9,7 +9,7 @@ description = "The parts of Symfony Console that the Yaml and Dotenv commands us
 [dependencies]
 php-value = { workspace = true }
 symfony-string = { path = "../string" }
-symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+symfony-deprecation-contracts = { workspace = true }
 fancy-regex = "0.20.2"
 
 [dev-dependencies]

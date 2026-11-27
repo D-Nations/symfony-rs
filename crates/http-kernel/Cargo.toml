@@ -9,7 +9,7 @@ description = "Symfony HttpKernel's request lifecycle on HttpFoundation, and a t
 [dependencies]
 axum = "0.8.9"
 php-value = { workspace = true }
-symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+symfony-deprecation-contracts = { workspace = true }
 symfony-event-dispatcher = { path = "../event-dispatcher" }
 symfony-http-foundation = { path = "../http-foundation" }
 psr-container = { path = "../psr-container" }

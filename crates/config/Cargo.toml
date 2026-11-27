@@ -15,7 +15,7 @@ yaml = ["dep:symfony-yaml"]
 php-dom = { workspace = true }
 php-pcre = { workspace = true }
 php-value = { workspace = true }
-symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+symfony-deprecation-contracts = { workspace = true }
 # GlobResource (Glob::toRegex(), the Finder fallback) and the filesystem
 # as PHP's stream layer presents it.
 symfony-finder = { path = "../finder" }

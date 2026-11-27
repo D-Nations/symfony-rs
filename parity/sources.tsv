@@ -531,7 +531,6 @@ crates/dependency-injection/tests/validate_env_placeholders_pass_test.rs	symfony
 crates/dependency-injection/tests/xml_dumper_test.rs	symfony/dependency-injection	Tests/Dumper/XmlDumperTest.php	9b34cad844bcbc878a05056e3ffac5377e0e140a
 crates/dependency-injection/tests/yaml_dumper_test.rs	symfony/dependency-injection	Tests/Dumper/YamlDumperTest.php	9b34cad844bcbc878a05056e3ffac5377e0e140a
 crates/dependency-injection/tests/yaml_file_loader_test.rs	symfony/dependency-injection	Tests/Loader/YamlFileLoaderTest.php	9b34cad844bcbc878a05056e3ffac5377e0e140a
-crates/deprecation-contracts/src/lib.rs	symfony/deprecation-contracts	function.php	f3202fa1b5097b0af062dc978b32ecf63404e31d
 crates/dotenv/src/command/debug_command.rs	symfony/dotenv	Command/DebugCommand.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/command/dotenv_dump_command.rs	symfony/dotenv	Command/DotenvDumpCommand.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182
 crates/dotenv/src/dotenv.rs	symfony/dotenv	Dotenv.php	4ea87b35c75f7052309ec9735c0eb5c1fd7d2182

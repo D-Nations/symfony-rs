@@ -556,10 +556,11 @@ moved, with its history, recorders and parity manifests, to its own
 repository [php2rust/twig-rs](https://github.com/php2rust/twig-rs) (packages
 `php2rust-twig`, library name `twig`, and `php2rust-twig-integration`). Its
 progress is tracked there. No crate here depends on it yet; a crate that
-does uses a git dependency pinned to a rev, and patches
-`https://github.com/php2rust/symfony-rs` to the local
-`crates/deprecation-contracts`, so that one deprecation handler sees
-Twig's deprecations. The twig-trial spike and its recorder stay here.
+does uses a git dependency pinned to a rev. Twig and this workspace take
+`symfony-deprecation-contracts` from the same git source
+([php2rust/symfony-deprecation-contracts-rs](https://github.com/php2rust/symfony-deprecation-contracts-rs),
+moved there on November 27), so that one deprecation handler sees Twig's
+deprecations. The twig-trial spike and its recorder stay here.
 Acceptance is staged:
 
 - **T1, language/compiler:** lexer/parser/precedence and Rust emission pass

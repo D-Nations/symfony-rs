@@ -8,7 +8,7 @@ description = "Port of the symfony/options-resolver component"
 
 [dependencies]
 php-value = { workspace = true }
-symfony-deprecation-contracts = { path = "../deprecation-contracts" }
+symfony-deprecation-contracts = { workspace = true }
 
 [dev-dependencies]
 php-value = { workspace = true, features = ["vectors"] }
