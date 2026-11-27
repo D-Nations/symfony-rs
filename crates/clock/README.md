@@ -4,7 +4,7 @@ Private workspace crate: a port of `symfony/clock` v8.1.9 (`945ea3b6`), as
 installed by symfony/demo. MIT; Symfony source and tests copyright Fabien
 Potencier. No PHP source code is used: the PHP date layer
 (`symfony_clock::php`, now the php2rust-date crate of
-[php2rust/compatibility-tools-rs](https://github.com/php2rust/compatibility-tools-rs)) is written from the PHP manual and from
+[php2rust/compatibility-tools](https://github.com/php2rust/compatibility-tools)) is written from the PHP manual and from
 recorded PHP answers. Unofficial, not
 affiliated with or endorsed by Symfony or PHP.
 

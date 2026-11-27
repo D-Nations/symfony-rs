@@ -1875,10 +1875,10 @@ and parity manifest, to its own repository
 (package `php2rust-doctrine-dbal`). Its progress is tracked there; the
 rows below are the record up to the move. The ORM manifest stays here
 until the ORM port starts. php-value, php-pcre and php-dom moved the same
-day to [php2rust/compatibility-tools-rs](https://github.com/php2rust/compatibility-tools-rs).
+day to [php2rust/compatibility-tools](https://github.com/php2rust/compatibility-tools).
 **Owner, November 27:** the php2rust repositories moved from D-Nations to
 the [php2rust](https://github.com/php2rust) organization, each named with
-an `-rs` suffix: `symfony-rs`, `symfony-demo-rs`, `compatibility-tools-rs`,
+an `-rs` suffix: `symfony-rs`, `symfony-demo-rs`, `compatibility-tools`,
 `doctrine-dbal-rs`, `doctrine-orm-rs`, `twig-rs`.
 
 Stack rows (searched November 25):
