@@ -56,10 +56,6 @@
 #   scripts/record.sh expression-language crates/expression-language/tests/data/php.json (needs upstream/)
 #   scripts/record.sh password-hasher crates/password-hasher/tests/data/php.json (needs upstream/; verifies tests/data/rust_hashes.json)
 #   scripts/record.sh http-foundation-releases oracle/out/{ip,header}_utils_<tag>.json (earlier releases, advisory checks)
-#   scripts/record.sh twig-lexer   crates/twig/tests/data/lexer.json (Twig\Lexer on the upstream fixtures and lexer_extra.json)
-#   scripts/record.sh twig-parser  crates/twig/tests/data/parser.json, parser_visitors.json and parser_sandbox.json (Twig\Parser trees without and with the node visitors, and with the sandbox visitor too)
-#   scripts/record.sh twig-integration crates/twig-integration/tests/data/integration.json (Twig's integration fixtures run by real Twig)
-#   scripts/record.sh twig-callable-parameters crates/twig/tests/data/callable_parameters.json (the sandbox's view of the core callables' parameters)
 #   scripts/record.sh di-parameter-bag crates/dependency-injection/tests/data/parameter_bag.json (ParameterBag)
 #   scripts/record.sh di-env-var-processor crates/dependency-injection/tests/data/env_var_processor.json (EnvVarProcessor)
 #   scripts/record.sh di-dumpers   crates/dependency-injection/tests/data/dumpers.json (XmlDumper, YamlDumper, GraphvizDumper; needs upstream/)
@@ -786,15 +782,6 @@ twig_trial() {
     echo "Twig trial output written to $out"
 }
 
-twig_lexer() {
-    local out=crates/twig/tests/data/lexer.json tmp
-    mkdir -p oracle/out
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/twig_lexer.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "templates")' "$tmp"
-    mv "$tmp" "$out"
-    echo "Twig lexer vectors written to $out"
-}
 
 di_parameter_bag() {
     local out=crates/dependency-injection/tests/data/parameter_bag.json tmp
@@ -828,20 +815,6 @@ di_dumpers() {
 
 
 
-twig_parser() {
-    local out tmp mode
-    mkdir -p oracle/out
-    for mode in plain visitors sandbox; do
-        out=crates/twig/tests/data/parser.json
-        [[ "$mode" == visitors ]] && out=crates/twig/tests/data/parser_visitors.json
-        [[ "$mode" == sandbox ]] && out=crates/twig/tests/data/parser_sandbox.json
-        tmp=$(mktemp -p oracle/out)
-        oracle oracle/recorders/twig_parser.php "$mode" > "$tmp"
-        python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "templates")' "$tmp"
-        mv "$tmp" "$out"
-        echo "Twig parser vectors written to $out"
-    done
-}
 
 clock() {
     local out=crates/clock/tests/data/php.json tmp
@@ -863,25 +836,7 @@ expression_language() {
     echo "ExpressionLanguage vectors written to $out"
 }
 
-twig_integration() {
-    local out=crates/twig-integration/tests/data/integration.json tmp
-    mkdir -p oracle/out
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/twig_integration.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "cases")' "$tmp"
-    mv "$tmp" "$out"
-    echo "Twig integration vectors written to $out"
-}
 
-twig_callable_parameters() {
-    local out=crates/twig/tests/data/callable_parameters.json tmp
-    mkdir -p oracle/out
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/twig_callable_parameters.php > "$tmp"
-    python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8"))), "callables")' "$tmp"
-    mv "$tmp" "$out"
-    echo "Twig callable parameters written to $out"
-}
 
 case "${1:-}" in
     routing) routing; routing_route; routing_request_context ;;
@@ -940,14 +895,10 @@ case "${1:-}" in
     expression-language) expression_language ;;
     password-hasher) password_hasher ;;
     http-foundation-releases) http_foundation_releases ;;
-    twig-lexer) twig_lexer ;;
-    twig-parser) twig_parser ;;
-    twig-integration) twig_integration ;;
-    twig-callable-parameters) twig_callable_parameters ;;
     di-parameter-bag) di_parameter_bag ;;
     di-env-var-processor) di_env_var_processor ;;
     di-dumpers) di_dumpers ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_streamed_response; http_foundation_event_stream; http_foundation_streamed_json; http_foundation_binary_file; http_foundation_request_matchers; http_foundation_session; http_foundation_session_handlers; http_foundation_native_session; http_foundation_request_session; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; twig_lexer; twig_parser; twig_integration; twig_callable_parameters; di_parameter_bag; di_env_var_processor; di_dumpers ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-streamed-response|http-foundation-event-stream|http-foundation-streamed-json|http-foundation-binary-file|http-foundation-request-matchers|http-foundation-session|http-foundation-session-handlers|http-foundation-native-session|http-foundation-request-session|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|twig-lexer|twig-parser|twig-integration|twig-callable-parameters|di-parameter-bag|di-env-var-processor|di-dumpers|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_streamed_response; http_foundation_event_stream; http_foundation_streamed_json; http_foundation_binary_file; http_foundation_request_matchers; http_foundation_session; http_foundation_session_handlers; http_foundation_native_session; http_foundation_request_session; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; di_parameter_bag; di_env_var_processor; di_dumpers ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-streamed-response|http-foundation-event-stream|http-foundation-streamed-json|http-foundation-binary-file|http-foundation-request-matchers|http-foundation-session|http-foundation-session-handlers|http-foundation-native-session|http-foundation-request-session|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|di-parameter-bag|di-env-var-processor|di-dumpers|all" >&2; exit 2 ;;
 esac
