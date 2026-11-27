@@ -24,7 +24,7 @@ Nothing outside those tables is claimed.
 | [`symfony-runtime`](crates/runtime/README.md) | `symfony/runtime` | HttpKernelRunner; the Axum adapter serving a ported kernel as nginx and PHP-FPM serve a front controller |
 | [`symfony-mime`](crates/mime/README.md) | `symfony/mime` | MimeTypes and its guessers (the `file` command, and finfo on a pure-Rust libmagic) |
 | [`symfony-config`](crates/config/README.md) | `symfony/config` | Definition, Builder, dumpers, XmlUtils, loaders, resources, ConfigCache |
-| [`symfony-console`](crates/console/README.md) | `symfony/console` | The parts the Yaml and Dotenv commands use |
+| `symfony-console` | `symfony/console` | The Yaml and Dotenv commands use the [standalone console crate](https://github.com/php2rust/symfony-console-rs) |
 | [`symfony-translation`](crates/translation/README.md) | `symfony/translation` | MessageCatalogue, XLIFF and Qt loaders |
 | [`symfony-string`](crates/string/README.md) | `symfony/string` | Byte, code point and Unicode strings, LazyString, inflectors |
 | [`symfony-password-hasher`](crates/password-hasher/README.md) | `symfony/password-hasher` | Native (bcrypt, Argon2), sodium, PBKDF2, message digest, plaintext and migrating hashers, PasswordHasherFactory, UserPasswordHasher; not the `security:hash-password` command |
@@ -211,7 +211,6 @@ percentage; later changes are authoritative in `parity/`):
 | symfony/cache | 1,080 | 0 | 0 | 1,080 |
 | symfony/clock | 36 | 36 | 0 | 0 |
 | symfony/config | 334 | 307 | 2 | 25 |
-| symfony/console | 1,152 | 320 | 11 | 821 |
 | symfony/css-selector | 85 | 80 | 5 | 0 |
 | symfony/debug-bundle | 11 | 0 | 0 | 11 |
 | symfony/dependency-injection | 1,436 | 0 | 0 | 1,436 |

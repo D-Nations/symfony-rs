@@ -25,7 +25,6 @@
 #   scripts/record.sh translation-xliff crates/translation/tests/data/xliff.json
 #   scripts/record.sh translation-catalogue crates/translation/tests/data/catalogue.json
 #   scripts/record.sh translation-qt crates/translation/tests/data/qt.json
-#   scripts/record.sh console      crates/console/tests/data/{strip_tags,builtins,table_test,table_vectors}.json
 #   scripts/record.sh string       crates/string/tests/data/{unicode,wordwrap,builtins,case,inflector,lazy,*_test}.*
 #   scripts/record.sh css-selector crates/css-selector/tests/data/php.json
 #   scripts/record.sh options-resolver crates/options-resolver/tests/data/*.json
@@ -583,33 +582,6 @@ translation_qt() {
     echo "Translation Qt vectors written to $out"
 }
 
-console() {
-    local out=crates/console/tests/data/strip_tags.json tmp
-    mkdir -p oracle/out "$(dirname "$out")"
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/console_strip_tags.php > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
-    mv "$tmp" "$out"
-    echo "Console strip_tags vectors written to $out"
-    out=crates/console/tests/data/builtins.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/console_builtins.php > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
-    mv "$tmp" "$out"
-    echo "Console built-in and find() vectors written to $out"
-    out=crates/console/tests/data/table_test.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/test_providers.php symfony/console Helper/TableTest > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
-    mv "$tmp" "$out"
-    echo "Console TableTest providers written to $out"
-    out=crates/console/tests/data/table_vectors.json
-    tmp=$(mktemp -p oracle/out)
-    oracle oracle/recorders/console_table.php > "$tmp"
-    python -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmp"
-    mv "$tmp" "$out"
-    echo "Console Table vectors written to $out"
-}
 
 string() {
     local out tmp name
@@ -875,7 +847,6 @@ case "${1:-}" in
     translation-qt) translation_qt ;;
     config-cache) config_cache ;;
     string) string ;;
-    console) console ;;
     css-selector) css_selector ;;
     options-resolver) options_resolver ;;
     finder) finder ;;
@@ -910,6 +881,6 @@ case "${1:-}" in
     di-dumpers) di_dumpers ;;
     di-yaml-windows-file) di_yaml_windows_file ;;
     twig-trial) twig_trial ;;
-    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; yaml; dotenv; config; string; console; css_selector; options_resolver; finder; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_streamed_response; http_foundation_event_stream; http_foundation_streamed_json; http_foundation_binary_file; http_foundation_request_matchers; http_foundation_session; http_foundation_session_handlers; http_foundation_native_session; http_foundation_request_session; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; di_parameter_bag; di_env_var_processor; di_dumpers; di_yaml_windows_file ;;
-    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|console|css-selector|options-resolver|finder|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-streamed-response|http-foundation-event-stream|http-foundation-streamed-json|http-foundation-binary-file|http-foundation-request-matchers|http-foundation-session|http-foundation-session-handlers|http-foundation-native-session|http-foundation-request-session|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|di-parameter-bag|di-env-var-processor|di-dumpers|di-yaml-windows-file|all" >&2; exit 2 ;;
+    all) routing; routing_route; routing_request_context; routing_url_generator; routing_url_matcher; routing_compiled_url_generator; multipart; request_vars; event_dispatcher; stopwatch; clock; yaml; dotenv; config; string; css_selector; options_resolver; finder; http_foundation; http_foundation_files; http_foundation_request; http_foundation_response; http_foundation_streamed_response; http_foundation_event_stream; http_foundation_streamed_json; http_foundation_binary_file; http_foundation_request_matchers; http_foundation_session; http_foundation_session_handlers; http_foundation_native_session; http_foundation_request_session; http_foundation_json_redirect; http_kernel_lifecycle; http_kernel_router_listener; http_kernel_welcome; http_kernel_argument_resolver; http_kernel_controller_resolver; http_kernel_container_controller_resolver; http_kernel_response_listener; runtime_fpm; routing_from_request; mime_fileinfo; password_hasher; expression_language; translation_xliff; translation_qt; config_cache; di_parameter_bag; di_env_var_processor; di_dumpers; di_yaml_windows_file ;;
+    *) echo "usage: scripts/record.sh routing|routing-route|routing-request-context|routing-from-request|routing-url-generator|routing-url-matcher|routing-compiled-url-generator|multipart|request-vars|second-app-w1|converter-fixture|di-trial|event-dispatcher|stopwatch|clock|yaml|yaml-unreadable|dotenv|config|config-xml-utils|config-loaders|string|css-selector|options-resolver|finder|http-foundation|http-foundation-files|http-foundation-request|http-foundation-response|http-foundation-streamed-response|http-foundation-event-stream|http-foundation-streamed-json|http-foundation-binary-file|http-foundation-request-matchers|http-foundation-session|http-foundation-session-handlers|http-foundation-native-session|http-foundation-request-session|http-foundation-json-redirect|http-kernel-lifecycle|http-kernel-router-listener|http-kernel-welcome|http-kernel-argument-resolver|http-kernel-controller-resolver|http-kernel-container-controller-resolver|http-kernel-response-listener|mime-fileinfo|password-hasher|expression-language|http-foundation-releases|translation-xliff|translation-qt|config-cache|twig-trial|di-parameter-bag|di-env-var-processor|di-dumpers|di-yaml-windows-file|all" >&2; exit 2 ;;
 esac

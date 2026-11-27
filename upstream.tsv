@@ -8,3 +8,4 @@ symfony/yaml/vendor/yaml/yaml-test-suite	https://github.com/yaml/yaml-test-suite
 # Second application for M1-D acceptance (PLAN.md decision 10), run as an
 # oracle and inventoried in docs/acceptance/second-app.md; never edited.
 apps/easyadmin-demo	https://github.com/EasyCorp/easyadmin-demo.git	119c6df2921867eb59cae083f807b8bb3cdd694a
+symfony/console	https://github.com/symfony/console.git	630e74196a2635ec0f06c12bd3fb47cfedf85157

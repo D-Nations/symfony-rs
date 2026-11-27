@@ -2028,3 +2028,11 @@ Host formatting/Clippy, Translation tests, source/parity checks and the full
 Linux workspace checks pass (restricted-capability container; unchanged
 Windows OS-message test failure recorded). Details in
 [docs/milestones/m5-a-translation-catalogue.md](docs/milestones/m5-a-translation-catalogue.md).
+
+### Console extraction (November 27)
+
+Use `php2rust-symfony-console` from `php2rust/symfony-console-rs` for the
+Yaml and Dotenv commands. The standalone port contains the same Console
+source as the former workspace crate and shares the existing compatibility
+and deprecation dependencies. Its parity inventory is preserved as a historical snapshot in the
+standalone repository.

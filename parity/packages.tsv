@@ -15,7 +15,6 @@ symfony/cache	v8.1.10	385f37a95296a9d4bc0204c9c49ee4765d4fe989	https://github.co
 symfony/cache-contracts	v3.7.1	9789738bc19af1106dc54d6afba9a0b467516cf2	https://github.com/symfony/cache-contracts.git
 symfony/clock	v8.1.9	945ea3b64d6da9c1c2c354fe5c07b27455df6442	https://github.com/symfony/clock.git
 symfony/config	v8.1.10	4a0e7dd1645b9213c71bf8bac205b7cdc30ce0ec	https://github.com/symfony/config.git
-symfony/console	v8.1.9	630e74196a2635ec0f06c12bd3fb47cfedf85157	https://github.com/symfony/console.git
 symfony/css-selector	v8.1.6	08e2905152a39cf3fd1745d83f8c483e258887d9	https://github.com/symfony/css-selector.git
 symfony/debug-bundle	v8.1.0	2da1f202b38f646dbee032529cfd8e727cd12cd1	https://github.com/symfony/debug-bundle.git
 symfony/dependency-injection	v8.1.10	9b34cad844bcbc878a05056e3ffac5377e0e140a	https://github.com/symfony/dependency-injection.git
