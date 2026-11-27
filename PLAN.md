@@ -557,7 +557,7 @@ repository [php2rust/twig](https://github.com/php2rust/twig) (packages
 `php2rust-twig`, library name `twig`, and `php2rust-twig-integration`). Its
 progress is tracked there. No crate here depends on it yet; a crate that
 does uses a git dependency pinned to a rev, and patches
-`https://github.com/D-Nations/symfony-rs` to the local
+`https://github.com/php2rust/symfony-rs` to the local
 `crates/deprecation-contracts`, so that one deprecation handler sees
 Twig's deprecations. The twig-trial spike and its recorder stay here.
 Acceptance is staged:
