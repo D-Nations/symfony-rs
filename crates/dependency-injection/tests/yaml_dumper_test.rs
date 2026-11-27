@@ -63,10 +63,37 @@ fn testAddParameters() {
     assert_recorded("yaml:container8", container8());
 }
 
+/// The pinned PHP YamlDumper quotes a Windows-style absolute file path.
+/// The expected bytes were recorded with the Symfony PHP oracle.
+#[test]
+fn dump_windows_file_path_matches_php() {
+    let mut container = ContainerBuilder::new();
+    container
+        .register("example", Some("Example"))
+        .unwrap()
+        .set_public(true)
+        .set_file(Some(r"C:\project\includes\foo.php"));
+    assert_eq!(
+        include_bytes!("data/yaml_windows_file.yml").as_slice(),
+        dump(&mut container)
+    );
+}
+
 #[test]
 fn testAddService() {
-    // ->dump() dumps services
-    assert_recorded("yaml:container9", container9());
+    // The PHP recording was made with a Unix path. Use a fixed Unix-style
+    // value so the host's drive letter cannot change YAML quoting before
+    // the path placeholder is substituted.
+    let mut container = container9();
+    container
+        .get_definition("method_call1")
+        .unwrap()
+        .set_file(Some("/__php2rust_fixture__/foo.php"));
+    let dumped = dump(&mut container);
+    let normalized = String::from_utf8(dumped)
+        .unwrap()
+        .replace("/__php2rust_fixture__/", "%path%");
+    assert_eq!(recorded("yaml:container9").unwrap(), normalized.as_bytes());
 
     let mut container = container_with_object_argument();
     let e = YamlDumper::new(&mut container)
